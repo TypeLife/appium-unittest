@@ -1,5 +1,6 @@
 import re
 
+from appium.webdriver.common.mobileby import MobileBy
 from selenium.webdriver.support.wait import WebDriverWait
 
 from library.elementfinder import ElementFinder
@@ -7,7 +8,7 @@ from library import config
 from appium import webdriver
 import time
 from library import locators
-from selenium.webdriver.support import expected_conditions as  EC
+from selenium.webdriver.support import expected_conditions as EC
 
 
 def current_driver():
@@ -43,6 +44,10 @@ class GuidePage(object):
         ElementFinder.find_element(locators.p_welcome_m_main_e_start_to_use).click()
         print('[Operation Finish]')
 
+    @staticmethod
+    def click_start_to_use():
+        ElementFinder.find_element(locators.p_welcome_m_main_e_start_to_use).click()
+
 
 class PermissionListPage(object):
     @staticmethod
@@ -73,11 +78,21 @@ class PermissionGrantPage(object):
             ElementFinder.find_element(locators.p_permission_grant_m_dialog_e_allow).click()
             EC.invisibility_of_element(locators.p_permission_grant_m_dialog_e_dialog_box)
 
-        # result = list(PermissionGrantPage.get_total_number_of_permissions_and_now_index_from_dialog_footer())
-        # while result[0] < result[1]:
-        #     result[0], result[
-        #         1] = PermissionGrantPage.get_total_number_of_permissions_and_now_index_from_dialog_footer()
-        #     ElementFinder.find_element(locators.p_permission_grant_m_dialog_e_allow).click()
-        #     EC.invisibility_of_element(locators.p_permission_grant_m_dialog_e_dialog_box)
-
         print('[Operation Finish]')
+
+
+class Login(object):
+    @staticmethod
+    def login_with_one_key_login():
+        WebDriverWait(current_driver(), 3).until(EC.element_to_be_clickable(locators.p_login_m_one_key_e_one_key_login))
+        ElementFinder.find_element(locators.p_login_m_one_key_e_phone_number).click()
+
+
+class System(object):
+    @staticmethod
+    def click_ok_if_popup_permission_dialog():
+        try:
+            EC.element_to_be_clickable((MobileBy.ANDROID_UIAUTOMATOR, 'new UiSelector().text("取消")'))
+            ElementFinder.find_element((MobileBy.ANDROID_UIAUTOMATOR, 'new UiSelector().text("取消")')).click()
+        except:
+            pass

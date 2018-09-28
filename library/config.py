@@ -1,6 +1,7 @@
 from appium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import threading
 
 default_desired_capability = {
     "platformName": "Android",
@@ -66,21 +67,13 @@ class DriverCache:
         return DriverCache.current_driver
 
     @staticmethod
-    def open_app(server, desired_caps, alis='Default'):
-        driver = webdriver.Remote(server, desired_caps)
-        # next_wait_time = 30
-        # for i in range(5):
-        #     try:
-        #         e = WebDriverWait(driver, next_wait_time, 0.5).until(
-        #             lambda d: d.find_element_by_android_uiautomator('new UiSelector().text("始终允许")'))
-        #         e.click()
-        #         next_wait_time = 1
-        #     except:
-        #         next_wait_time = 1
-        DriverCache.current_driver = driver
+    def open_app(server, desired_caps, alis=None):
         if alis in DriverCache.drivers.keys():
             raise Exception('Alis name(: {} ) has been registered'.format(alis))
-        DriverCache.register_driver(driver, alis)
+        driver = webdriver.Remote(server, desired_caps)
+        DriverCache.current_driver = driver
+        if alis:
+            DriverCache.register_driver(driver, alis)
         return DriverCache.current_driver
 
     @staticmethod

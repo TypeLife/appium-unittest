@@ -11,7 +11,8 @@ if __name__ == '__main__':
     root = os.path.dirname(os.path.abspath(__file__))
     report_path = os.path.join(root, 'report.html')
     # RunTest
-    suite = unittest.defaultTestLoader.discover(root)
+    suite = unittest.defaultTestLoader.discover(root, 'TestSuite*.py')
     with open(report_path, 'wb') as report:
         runner = HTMLTestRunner(report, title='Test Report')
         runner.run(suite)
+        report.close()
