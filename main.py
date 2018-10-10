@@ -1,7 +1,6 @@
 import os
 import sys
 import unittest
-import xmlrunner
 
 from HTMLTestRunner import HTMLTestRunner
 from library import utils
