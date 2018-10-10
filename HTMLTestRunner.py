@@ -618,12 +618,13 @@ class _TestResult(TestResult):
         #   stack trace,
         # )
         self.result = []
+        self.outputBuffer = io.StringIO()
 
 
     def startTest(self, test):
         TestResult.startTest(self, test)
         # just one buffer for both stdout and stderr
-        self.outputBuffer = io.StringIO()
+        # self.outputBuffer = io.StringIO()
         stdout_redirector.fp = self.outputBuffer
         stderr_redirector.fp = self.outputBuffer
         self.stdout0 = sys.stdout

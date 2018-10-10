@@ -1,17 +1,13 @@
 from appium import webdriver
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import threading
 
 default_desired_capability = {
     "platformName": "Android",
-    "platformVersion": "7.1",
-    "deviceName": "f9213901",
+    "platformVersion": "8.0",
+    "deviceName": "bb5671d",
     "automationName": "UiAutomator2",
     "newCommandTimeout": 600,
     "appPackage": "com.chinasofti.rcs",
     "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
-    "notReset": True
 }
 
 
@@ -78,8 +74,9 @@ class DriverCache:
 
     @staticmethod
     def close_current():
-        DriverCache.current_driver.quit()
-        DriverCache.current_driver = None
+        if DriverCache.current_driver is not None:
+            DriverCache.current_driver.quit()
+            DriverCache.current_driver = None
 
     @staticmethod
     def close_all():

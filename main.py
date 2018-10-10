@@ -1,6 +1,7 @@
 import os
 import sys
 import unittest
+import xmlrunner
 
 from HTMLTestRunner import HTMLTestRunner
 from library import utils
@@ -13,6 +14,6 @@ if __name__ == '__main__':
     # RunTest
     suite = unittest.defaultTestLoader.discover(root, 'TestSuite*.py')
     with open(report_path, 'wb') as report:
-        runner = HTMLTestRunner(report, title='Test Report')
+        # runner = xmlrunner.XMLTestRunner(output=report).run(suite)
+        runner = HTMLTestRunner(stream=report, title='Test Report')
         runner.run(suite)
-        report.close()
