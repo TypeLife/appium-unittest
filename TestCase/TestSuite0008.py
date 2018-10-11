@@ -39,6 +39,6 @@ class C0008(unittest.TestCase):
         keywords.MessageDetailPage.wait_for_message_detail_page_load()
         keywords.MessageDetailPage.wait_for_user_remind_popup()
         keywords.MessageDetailPage.accept_remind_dialog_and_close_it()
-
+        keywords.MessageDetailPage.input_message_and_send('1234567890 中文 English [呲牙1]')
 
         print('[Test OK]')

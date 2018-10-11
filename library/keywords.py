@@ -72,6 +72,23 @@ class Android(object):
     def go_back_to_app():
         current_driver().activate_app(current_driver().desired_capabilities['appPackage'])
 
+    @staticmethod
+    def execute_shell_command(command, *args):
+        """
+        Execute ADB shell commands (requires server flag --relaxed-security to be set)
+
+        例：execute_shell_command('am', 'start', '-n', 'com.example.demo/com.example.test.MainActivity')
+
+        :param command: 例：am,pm 等等可执行命令
+        :param args: 例：am,pm 等可执行命令的参数
+        :return:
+        """
+        script = {
+            'command': command,
+            'args': args
+        }
+        return current_driver().execute_script('mobile:shell', script)
+
 
 class Common(object):
     @staticmethod
@@ -516,8 +533,88 @@ class MessageDetailPage(object):
             print(current_driver().page_source)
             raise AssertionError("用户须知对话框不应该显示")
 
-    # @staticmethod
-    # def
+    # ==========================消息输入框==============================
+    @staticmethod
+    def input_text_to_message_input_box(text):
+        WebDriverWait(current_driver(), 3).until(
+            EC.element_to_be_clickable(locators.MessageDetailPage.p_message_m_bottom_e_message_input_box)
+        )
+        ElementFinder.find_element(locators.MessageDetailPage.p_message_m_bottom_e_message_input_box).send_keys(text)
+
+    @staticmethod
+    def wait_for_message_input_box_clickable():
+        WebDriverWait(current_driver(), 3).until(
+            EC.element_to_be_clickable(locators.MessageDetailPage.p_message_m_bottom_e_message_input_box)
+        )
+
+    @staticmethod
+    def wait_for_message_input_box_text_match(text):
+        WebDriverWait(current_driver(), 3).until(
+            lambda d: ElementFinder.find_element(
+                locators.MessageDetailPage.p_message_m_bottom_e_message_input_box).text == text
+        )
+
+    @staticmethod
+    def wait_for_message_input_box_text_contain(text):
+        WebDriverWait(current_driver(), 3).until(
+            lambda d: text in ElementFinder.find_element(
+                locators.MessageDetailPage.p_message_m_bottom_e_message_input_box).text
+        )
+
+    @staticmethod
+    def message_input_box_should_clickable():
+        EC.element_to_be_clickable(locators.MessageDetailPage.p_message_m_bottom_e_message_input_box)
+
+    @staticmethod
+    def message_input_box_text_should_be(text):
+        assert ElementFinder.find_element(
+            locators.MessageDetailPage.p_message_m_bottom_e_message_input_box).text == text
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @staticmethod
+    def input_message_and_send(message):
+        MessageDetailPage.input_text_to_message_input_box(message)
+        MessageDetailPage.click_send_message_button()
+
+    # ================================发送消息按钮========================
+    @staticmethod
+    def click_send_message_button():
+        WebDriverWait(current_driver(), 3).until(
+            EC.element_to_be_clickable(locators.MessageDetailPage.p_message_detail_m_bottom_e_send_message_button)
+        )
+        ElementFinder.find_element(locators.MessageDetailPage.p_message_detail_m_bottom_e_send_message_button).click()
+
+    @staticmethod
+    def wait_for_send_message_button_clickable():
+        WebDriverWait(current_driver(), 3).until(
+            EC.element_to_be_clickable(locators.MessageDetailPage.p_message_detail_m_bottom_e_send_message_button)
+        )
+
+    @staticmethod
+    def wait_for_send_message_button_text_match(text):
+        WebDriverWait(current_driver(), 3).until(
+            lambda d: ElementFinder.find_element(
+                locators.MessageDetailPage.p_message_detail_m_bottom_e_send_message_button).text == text
+        )
+
+    @staticmethod
+    def wait_for_send_message_button_text_contain(text):
+        WebDriverWait(current_driver(), 3).until(
+            lambda d: text in ElementFinder.find_element(
+                locators.MessageDetailPage.p_message_detail_m_bottom_e_send_message_button).text
+        )
+
+    @staticmethod
+    def send_message_button_should_clickable():
+        EC.element_to_be_clickable(locators.MessageDetailPage.p_message_detail_m_bottom_e_send_message_button)
+
+    @staticmethod
+    def send_message_button_text_should_be(text):
+        assert ElementFinder.find_element(
+            locators.MessageDetailPage.p_message_detail_m_bottom_e_send_message_button).text == text
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 class HomePageFooter(object):
@@ -808,6 +905,7 @@ class System(object):
             ElementFinder.find_element((MobileBy.ANDROID_UIAUTOMATOR, 'new UiSelector().text("取消")')).click()
         except:
             pass
+
 
 class Demo(object):
 

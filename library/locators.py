@@ -112,3 +112,9 @@ class MessageDetailPage:
     p_message_detail_m_dialog_e_ok_button = (
         MobileBy.ANDROID_UIAUTOMATOR, 'new UiSelector().resourceId("com.chinasofti.rcs:id/dialog_btn_ok")'
     )
+
+    p_message_m_bottom_e_message_input_box = (
+        MobileBy.ANDROID_UIAUTOMATOR, 'new UiSelector().resourceId("com.chinasofti.rcs:id/et_message")')
+
+    p_message_detail_m_bottom_e_send_message_button = (
+        MobileBy.ANDROID_UIAUTOMATOR, 'new UiSelector().resourceId("com.chinasofti.rcs:id/ib_send")')  # 发送
