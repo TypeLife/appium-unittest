@@ -13,35 +13,31 @@ class C0005(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        print('[SetupClass]')
         desired_caps = config.GlobalConfig.get_desired_caps()
         url = config.GlobalConfig.get_server_url()
-        keywords.Android.open_app(url, desired_caps)
-        print('[SetupClass OK]')
+        if not keywords.current_driver():
+            keywords.Android.open_app(url, desired_caps)
+        else:
+            keywords.current_driver().launch_app()
 
     @classmethod
     def tearDownClass(cls):
-        keywords.Android.closed_current_driver()
+        pass
+        # keywords.Android.closed_current_driver()
 
     def setUp(self):
-        print('[SetUp]')
         self.assertTrue(keywords.current_driver().is_app_installed('com.chinasofti.rcs'))
         # keywords.current_driver().launch_app('com.chinasofti.rcs')
         keywords.GuidePage.jump_over_the_guide_page()
         keywords.PermissionListPage.accept_all_permission_in_list()
         keywords.PermissionGrantPage.always_allow_popup_permission()
         keywords.current_driver().wait_activity('com.cmcc.cmrcs.android.ui.activities.OneKeyLoginActivity', 3)
-        print('[SetUp OK]')
 
     def tearDown(self):
         keywords.Android.back()
 
     def test_other_network_account_login(self):
-        """
-        异网账号登录
-        :return:
-        """
-        print('[Test Start]')
+        """异网账号登录"""
         keywords.Login.click_use_another_number_to_login()
         keywords.Login.wait_for_sms_login_page_load()
 
@@ -66,4 +62,3 @@ class C0005(unittest.TestCase):
         keywords.Login.click_i_know()
 
         keywords.current_driver().wait_activity('com.cmcc.cmrcs.android.ui.activities.HomeActivity', 20)
-        print('[Test OK]')

@@ -7,7 +7,10 @@ class Preconditions(object):
         # 打开app
         desired_caps = config.GlobalConfig.get_desired_caps()
         url = config.GlobalConfig.get_server_url()
-        keywords.Android.open_app(url, desired_caps)
+        if not keywords.current_driver():
+            keywords.Android.open_app(url, desired_caps)
+        else:
+            keywords.current_driver().launch_app()
 
         keywords.GuidePage.jump_over_the_guide_page()
         keywords.PermissionListPage.accept_all_permission_in_list()

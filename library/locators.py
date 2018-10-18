@@ -118,3 +118,18 @@ class MessageDetailPage:
 
     p_message_detail_m_bottom_e_send_message_button = (
         MobileBy.ANDROID_UIAUTOMATOR, 'new UiSelector().resourceId("com.chinasofti.rcs:id/ib_send")')  # 发送
+
+    p_message_detail_m_title_e_title = (
+        MobileBy.ANDROID_UIAUTOMATOR, 'new UiSelector().resourceId("com.chinasofti.rcs:id/title")')  # 标题
+
+    p_message_detail_m_message_list_e_message = (
+        MobileBy.ANDROID_UIAUTOMATOR, 'new UiSelector().resourceId("com.chinasofti.rcs:id/tv_message")')  # 消息
+
+    p_message_detail_m_message_list_e_send_ok_state = (
+        MobileBy.ANDROID_UIAUTOMATOR, 'new UiSelector().resourceId("com.chinasofti.rcs:id/iv_send_status")')  # 已发送状态图标
+
+    p_message_detail_m_message_list_e_has_send_by_sms = (
+        MobileBy.ANDROID_UIAUTOMATOR, 'new UiSelector().resourceId("com.chinasofti.rcs:id/tv_has_read")')  # 已转短信送达
+
+    p_message_detail_m_message_list_e_message_block = (
+        MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/rv_message_chat"]/android.widget.LinearLayout')  # 消息块

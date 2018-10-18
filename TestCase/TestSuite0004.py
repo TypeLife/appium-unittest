@@ -2,6 +2,7 @@ import re
 import unittest
 
 from appium import webdriver
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as  EC
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -13,33 +14,29 @@ class C0004(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        print('[SetupClass]')
         desired_caps = config.GlobalConfig.get_desired_caps()
         url = config.GlobalConfig.get_server_url()
-        keywords.Android.open_app(url, desired_caps)
-        print('[SetupClass OK]')
+        if not keywords.current_driver():
+            keywords.Android.open_app(url, desired_caps)
+        else:
+            keywords.current_driver().launch_app()
 
     @classmethod
     def tearDownClass(cls):
-        keywords.Android.closed_current_driver()
+        # keywords.Android.closed_current_driver()
+        pass
 
     def setUp(self):
-        print('[SetUp]')
         self.assertTrue(keywords.current_driver().is_app_installed('com.chinasofti.rcs'))
         keywords.GuidePage.jump_over_the_guide_page()
         keywords.PermissionListPage.accept_all_permission_in_list()
         keywords.Login.wait_for_one_key_login_page_load()
-        print('[SetUp OK]')
 
     def tearDown(self):
         keywords.Android.back()
 
     def test_switch_to_verification_code_login(self):
-        """
-        切换验证码登录
-        :return:
-        """
-        print('[Test Start]')
+        """切换验证码登录"""
         keywords.Login.click_use_another_number_to_login()
         keywords.Login.wait_for_sms_login_page_load()
 
@@ -62,6 +59,4 @@ class C0004(unittest.TestCase):
         keywords.Login.input_verification_code(code)
         keywords.Login.click_login()
         keywords.Login.click_i_know()
-
         keywords.current_driver().wait_activity('com.cmcc.cmrcs.android.ui.activities.HomeActivity', 20)
-        print('[Test OK]')
