@@ -3,7 +3,7 @@ import time
 
 from appium import webdriver
 from appium.webdriver.common.mobileby import MobileBy
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, NoAlertPresentException, TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -110,14 +110,27 @@ class Common(object):
     @staticmethod
     @TestLogger.log()
     def allow_all_permissions_if_needed():
+        def is_permission_alert_present(driver):
+            try:
+                alert = driver.switch_to.alert
+                return alert.accept
+            except NoAlertPresentException:
+                alert = ElementFinder.find_elements(
+                    (MobileBy.XPATH, '//*[@text="始终允许"]')) or ElementFinder.find_elements(
+                    (MobileBy.XPATH, '//*[@text="允许"]'))
+                if not alert:
+                    return False
+                return alert[0].click
+
         if current_driver().current_activity == 'com.android.packageinstaller.permission.ui.GrantPermissionsActivity':
             need = True
             while need:
                 try:
                     WebDriverWait(current_driver(), 1).until(
-                        EC.alert_is_present()
-                    )
-                    current_driver().switch_to.alert.accept()
+                        # EC.alert_is_present()
+                        is_permission_alert_present
+                    )()
+                    # current_driver().switch_to.alert.accept()
                 except:
                     need = False
 

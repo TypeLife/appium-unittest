@@ -3,7 +3,7 @@ from appium import webdriver
 default_desired_capability = {
     "platformName": "Android",
     "platformVersion": "8.0",
-    "deviceName": "bb5671d",
+    "deviceName": "192.168.200.112:5555",
     "automationName": "UiAutomator2",
     "newCommandTimeout": 600,
     "appPackage": "com.chinasofti.rcs",
