@@ -12,7 +12,7 @@ class C0006(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        pass
+        keywords.current_driver().close()
         # keywords.Android.closed_current_driver()
 
     def setUp(self):

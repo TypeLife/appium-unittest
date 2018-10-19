@@ -34,6 +34,7 @@ class C0004(unittest.TestCase):
 
     def tearDown(self):
         keywords.Android.back()
+        keywords.current_driver().close()
 
     def test_switch_to_verification_code_login(self):
         """切换验证码登录"""

@@ -13,7 +13,7 @@ class C0007(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         # keywords.Android.closed_current_driver(
-        pass
+        keywords.current_driver().close()
 
     def setUp(self):
         Preconditions.open_and_login_app_using_on_key_login()
