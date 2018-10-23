@@ -3,7 +3,7 @@ from appium import webdriver
 default_desired_capability = {
     "platformName": "Android",
     "platformVersion": "8.0",
-    "deviceName": "192.168.200.112:5555",
+    "deviceName": "192.168.200.115:5555",
     "automationName": "UiAutomator2",
     "newCommandTimeout": 600,
     "appPackage": "com.chinasofti.rcs",
@@ -73,13 +73,21 @@ class DriverCache:
         return DriverCache.current_driver
 
     @staticmethod
-    def close_current():
+    def close_app():
+        DriverCache.current_driver.close_app()
+
+    @staticmethod
+    def launch_app():
+        DriverCache.current_driver.launch_app()
+
+    @staticmethod
+    def quit_current():
         if DriverCache.current_driver is not None:
             DriverCache.current_driver.quit()
             DriverCache.current_driver = None
 
     @staticmethod
-    def close_all():
+    def quit_all():
         DriverCache.current_driver.close_app()
         for d in DriverCache.drivers.values():
             d.quit()

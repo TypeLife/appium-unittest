@@ -19,7 +19,7 @@ class C0003(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         """关闭APP"""
-        keywords.current_driver().close()
+        keywords.current_driver().close_app()
         # keywords.Android.closed_current_driver()
         pass
 

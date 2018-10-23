@@ -18,7 +18,7 @@ class C0002(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        config.DriverCache.close_current()
+        config.DriverCache.quit_current()
 
     def setUp(self):
         print('[SetUp]')

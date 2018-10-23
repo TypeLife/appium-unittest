@@ -1,9 +1,10 @@
+import os
 import re
 import time
 
 from appium import webdriver
 from appium.webdriver.common.mobileby import MobileBy
-from selenium.common.exceptions import NoSuchElementException, NoAlertPresentException, TimeoutException
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -36,15 +37,36 @@ def swipe_by_percent(start_x, start_y, end_x, end_y, duration=1000):
 
 class Android(object):
     @staticmethod
+    def capture_screen_shot(path):
+        if os.path.isfile(path):
+            os.remove(path)
+        dir_name, file_name = os.path.split(path)
+        if not os.path.isdir(dir_name):
+            os.makedirs(dir_name)
+        result = current_driver().get_screenshot_as_file(path)
+        return result
+
+    @staticmethod
     @TestLogger.log()
-    def open_app(server_url, desired_caps, alis=None):
+    def open_app(server_url=config.GlobalConfig.get_server_url(), desired_caps=config.GlobalConfig.get_desired_caps(),
+                 alis=None):
         """打开app"""
         config.DriverCache.open_app(server_url, desired_caps, alis)
 
     @staticmethod
     @TestLogger.log()
+    def closed_app():
+        config.DriverCache.close_app()
+
+    @staticmethod
+    @TestLogger.log()
+    def launch_app():
+        config.DriverCache.launch_app()
+
+    @staticmethod
+    @TestLogger.log()
     def closed_current_driver():
-        config.DriverCache.close_current()
+        config.DriverCache.quit_current()
 
     @staticmethod
     @TestLogger.log()
@@ -110,11 +132,11 @@ class Common(object):
     @staticmethod
     @TestLogger.log()
     def allow_all_permissions_if_needed():
-        def is_permission_alert_present(driver):
+        def get_accept_permission_handler(driver):
             try:
                 alert = driver.switch_to.alert
                 return alert.accept
-            except NoAlertPresentException:
+            except:
                 alert = ElementFinder.find_elements(
                     (MobileBy.XPATH, '//*[@text="始终允许"]')) or ElementFinder.find_elements(
                     (MobileBy.XPATH, '//*[@text="允许"]'))
@@ -122,13 +144,14 @@ class Common(object):
                     return False
                 return alert[0].click
 
-        if current_driver().current_activity == 'com.android.packageinstaller.permission.ui.GrantPermissionsActivity':
+        if current_driver().current_activity in ['com.android.packageinstaller.permission.ui.GrantPermissionsActivity',
+                                                 '.permission.ui.GrantPermissionsActivity']:
             need = True
             while need:
                 try:
                     WebDriverWait(current_driver(), 1).until(
                         # EC.alert_is_present()
-                        is_permission_alert_present
+                        get_accept_permission_handler
                     )()
                     # current_driver().switch_to.alert.accept()
                 except:
