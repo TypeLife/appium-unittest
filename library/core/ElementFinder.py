@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from selenium.webdriver.remote.webelement import WebElement as SeleniumWebElement
 
-from library.config import DriverCache
+from library.core.utils.WebDriverCache import DriverCache
 from selenium.webdriver import Remote
 
 

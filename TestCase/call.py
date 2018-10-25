@@ -1,7 +1,8 @@
 import unittest
-from library.core.testcase import TestCase
+from library.core.TestCase import TestCase
 
 
+@unittest.skip
 class CallTest(TestCase):
     """Call 模块"""
 

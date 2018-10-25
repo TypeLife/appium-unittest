@@ -2,8 +2,8 @@ import datetime
 import functools
 import os
 import re
-
-from library import settings, config
+from library.core.utils import ConfigManager
+from library.core.utils.WebDriverCache import DriverCache
 
 
 class TestLogger(object):
@@ -23,7 +23,6 @@ class TestLogger(object):
                     return result
                 except Exception as error:
                     TestLogger.log_level = "ERROR"
-                    TestLogger.take_screen_shot()
                     raise error
                 finally:
                     log_info = func.__doc__ if info is None else info
@@ -53,8 +52,9 @@ class TestLogger(object):
             print(' - '.join(
                 [
                     '\n' + datetime.datetime.now().__str__(),
-                    getattr(TestLogger.current_test, '_testMethodName', None),
+                    getattr(TestLogger.current_test.__class__, '__name__'),
                     TestLogger.log_level,
+                    getattr(TestLogger.current_test, '_testMethodName', None),
                     '********** TEST START **********'
                 ]
             ))
@@ -65,9 +65,54 @@ class TestLogger(object):
             print(' - '.join(
                 [
                     datetime.datetime.now().__str__(),
-                    getattr(TestLogger.current_test, '_testMethodName', None),
+                    getattr(TestLogger.current_test.__class__, '__name__'),
                     TestLogger.log_level,
-                    '********** TEST END **********'
+                    getattr(TestLogger.current_test, '_testMethodName', None),
+                    '********** TEST FINISHED **********'
+                ]
+            ))
+        TestLogger.current_test = None
+
+    @staticmethod
+    def test_fail(test):
+        TestLogger.take_screen_shot()
+        if getattr(test, '_testMethodName', None):
+            print(' - '.join(
+                [
+                    datetime.datetime.now().__str__(),
+                    getattr(test.__class__, '__name__'),
+                    TestLogger.log_level,
+                    getattr(test, '_testMethodName', None),
+                    '********** TEST FAIL **********'
+                ]
+            ))
+        TestLogger.current_test = None
+
+    @staticmethod
+    def test_error(test):
+        TestLogger.take_screen_shot()
+        if getattr(test, '_testMethodName', None):
+            print(' - '.join(
+                [
+                    datetime.datetime.now().__str__(),
+                    getattr(test.__class__, '__name__'),
+                    TestLogger.log_level,
+                    getattr(test, '_testMethodName', None),
+                    '********** TEST ERROR **********'
+                ]
+            ))
+        TestLogger.current_test = None
+
+    @staticmethod
+    def test_success(test):
+        if getattr(test, '_testMethodName', None):
+            print(' - '.join(
+                [
+                    datetime.datetime.now().__str__(),
+                    getattr(test.__class__, '__name__'),
+                    TestLogger.log_level,
+                    getattr(test, '_testMethodName', None),
+                    '********** TEST SUCCESS **********'
                 ]
             ))
         TestLogger.current_test = None
@@ -75,9 +120,9 @@ class TestLogger(object):
     @staticmethod
     def take_screen_shot():
         method_name = getattr(TestLogger.current_test, '_testMethodName', '')
-        exception_time = re.sub(r':|\.', '-', datetime.datetime.now().__str__())
+        exception_time = re.sub(r'[:.]', '-', datetime.datetime.now().__str__())
         file_name = "%(method)s - %(time)s.png" % {'method': method_name, 'time': exception_time}
-        path = os.path.join(settings.SCREEN_SHOT_PATH, file_name)
+        path = os.path.join(ConfigManager.get_screen_shot_path(), file_name)
         if capture_screen_shot(path):
             print(datetime.datetime.now().__str__() + ' - INFO - ' + "截图路径：" + path)
 
@@ -88,5 +133,6 @@ def capture_screen_shot(path):
     dir_name, file_name = os.path.split(path)
     if not os.path.isdir(dir_name):
         os.makedirs(dir_name)
-    result = config.DriverCache.current_driver.get_screenshot_as_file(path)
+    capture = getattr(DriverCache.current_driver, 'get_screenshot_as_file', lambda p: None)
+    result = capture(path)
     return result

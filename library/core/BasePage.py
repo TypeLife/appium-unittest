@@ -1,10 +1,11 @@
+import re
 from unicodedata import normalize
 
 from appium import webdriver
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.webdriver.support.wait import WebDriverWait
 
-from library import config
+from library.core.utils.WebDriverCache import DriverCache
 
 
 class BasePage(object):
@@ -17,8 +18,8 @@ class BasePage(object):
 
     @property
     def driver(self):
-        assert isinstance(config.DriverCache.current_driver, webdriver.Remote)
-        return config.DriverCache.current_driver
+        assert isinstance(DriverCache.current_driver, webdriver.Remote)
+        return DriverCache.current_driver
 
     def _get_platform(self):
         try:
@@ -64,6 +65,9 @@ class BasePage(object):
     def click_element(self, locator):
         self.get_element(locator).click()
 
+    def is_current_activity_match_this_page(self):
+        return self.driver == self.__class__.ACTIVITY
+
     def click_text(self, text, exact_match=False):
         if self._get_platform() == 'ios':
             if exact_match:
@@ -80,6 +84,37 @@ class BasePage(object):
 
     def input_text(self, locator, text):
         self.get_element(locator).send_keys(text)
+
+    def select_checkbox(self, locator):
+        """勾选复选框"""
+        if not self.is_selected(locator):
+            self.click_element(locator)
+
+    def unselect_checkbox(self, locator):
+        """去勾选复选框"""
+        if self.is_selected(locator):
+            self.click_element(locator)
+
+    def is_selected(self, locator):
+        el = self.get_element(locator)
+        result = el.get_attribute("checked")
+        if result.lower() == "true":
+            return True
+        return False
+
+    def checkbox_should_be_selected(self, locator):
+        # element = self.get_element(locator)
+        if not self.is_selected(locator):
+            raise AssertionError("Checkbox '%s' should have been selected "
+                                 "but was not." % locator)
+        return True
+
+    def checkbox_should_not_be_selected(self, locator):
+        # element = self.get_element(locator)
+        if self.is_selected(locator):
+            raise AssertionError("Checkbox '%s' should not have been selected "
+                                 "but was not." % locator)
+        return True
 
     def swipe_by_direction(self, locator, direction, duration=None):
         element = self.get_element(locator)
@@ -164,7 +199,7 @@ class BasePage(object):
     def page_should_not_contain_text(self, text):
         if self._is_text_present(text):
             raise AssertionError("Page should not have contained text '%s'" % text)
-            return True
+        return True
 
     def page_should_contain_element(self, locator):
         if not self._is_element_present(locator):
@@ -221,6 +256,27 @@ class BasePage(object):
                 message = "The text of element '%s' should have been '%s' but " \
                           "in fact it was '%s'." % (locator, expected, actual)
             raise AssertionError(message)
+        return True
+
+    def element_text_should_match(self, locator, pattern, full_match=True, regex=False):
+        element = self.get_element(locator)
+        actual = element.text
+        if regex:
+            if full_match:
+                pt = re.compile(pattern)
+                result = pt.fullmatch(actual)
+            else:
+                pt = re.compile(pattern)
+                result = pt.match(pattern)
+        else:
+            if full_match:
+                result = pattern == actual
+            else:
+                result = pattern in actual
+        if not result:
+            raise AssertionError(
+                "Expect is" + " match regex pattern" if regex else "" + ": " + pattern + "\n"
+                                                                   + "Actual is: " + actual + '\n')
         return True
 
     def wait_until(self, condition, timeout=8, auto_accept_permission_alert=True):

@@ -1,16 +1,8 @@
 import unittest
 
-from library.core.report.result import DefaultTestResult
-
 
 class TestCase(unittest.TestCase):
     """Login 模块"""
-
-    # def moduleSetUp(self):
-    #     pass
-    #
-    # def moduleTearDown(self):
-    #     pass
 
     def default_tearDown(self):
         """
@@ -27,19 +19,12 @@ class TestCase(unittest.TestCase):
         pass
 
     def setUp(self):
-        # self.moduleSetUp()
         setup = getattr(self, "setUp_{}".format(self._testMethodName), self.default_setUp)
         setup()
 
     def tearDown(self):
-        tear_down = getattr(self, "setUp_{}".format(self._testMethodName), self.default_tearDown)
+        tear_down = getattr(self, "tearDown_{}".format(self._testMethodName), self.default_tearDown)
         tear_down()
-        # self.moduleTearDown()
-
-    def run(self, result=None):
-        if result is None:
-            result = DefaultTestResult(verbosity=2)
-        super().run(result)
 
 
 if __name__ == '__main__':

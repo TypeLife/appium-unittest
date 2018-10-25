@@ -1,6 +1,6 @@
 import getopt
 
-from library import config
+from . import ConfigManager
 
 
 def parse_and_store_command_line_params(args):
@@ -107,7 +107,7 @@ def parse_and_store_command_line_params(args):
     ]
     # 无参数使用默认参数
     if not args:
-        config.GlobalConfig.set_desired_caps(config.default_desired_capability)
+        # config.GlobalConfig.set_desired_caps(config.default_desired_capability)
         return
 
     support_params = [capability + '=' for capability in general_capabilities]
@@ -129,13 +129,13 @@ def parse_and_store_command_line_params(args):
                 value = True if value.lower() == 'true' else False
             caps[opt] = value
         elif opt in server_opt_name:
-            config.GlobalConfig.set_server_url(value)
+            ConfigManager.set_server_url(value)
 
-    config.GlobalConfig.set_desired_caps(caps)
+    ConfigManager.set_desired_caps(caps)
 
     if __name__ == '__main__':
-        print(config.GlobalConfig.get_desired_caps())
-        print(config.GlobalConfig.get_server_url())
+        print(ConfigManager.get_desired_caps())
+        print(ConfigManager.get_server_url())
 
 
 if __name__ == '__main__':

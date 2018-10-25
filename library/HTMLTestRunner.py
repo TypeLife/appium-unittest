@@ -1,21 +1,15 @@
+# coding=utf-8
 """
 A TestRunner for use with the Python unit testing framework. It
 generates a HTML report to show the result at a glance.
-
 The simplest way to use this is to invoke its main method. E.g.
-
     import unittest
     import HTMLTestRunner
-
     ... define your tests ...
-
     if __name__ == '__main__':
         HTMLTestRunner.main()
-
-
 For more customization options, instantiates a HTMLTestRunner object.
 HTMLTestRunner is a counterpart to unittest's TextTestRunner. E.g.
-
     # output to a file
     fp = file('my_report.html', 'wb')
     runner = HTMLTestRunner.HTMLTestRunner(
@@ -23,23 +17,17 @@ HTMLTestRunner is a counterpart to unittest's TextTestRunner. E.g.
                 title='My unit test',
                 description='This demonstrates the report output by HTMLTestRunner.'
                 )
-
     # Use an external stylesheet.
     # See the Template_mixin class for more customizable options
     runner.STYLESHEET_TMPL = '<link rel="stylesheet" href="my_stylesheet.css" type="text/css">'
-
     # run the test
     runner.run(my_test_suite)
-
-
 ------------------------------------------------------------------------
 Copyright (c) 2004-2007, Wai Yip Tung
 All rights reserved.
-
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
-
 * Redistributions of source code must retain the above copyright notice,
   this list of conditions and the following disclaimer.
 * Redistributions in binary form must reproduce the above copyright
@@ -48,7 +36,6 @@ met:
 * Neither the name Wai Yip Tung nor the names of its contributors may be
   used to endorse or promote products derived from this software without
   specific prior written permission.
-
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
 IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
 TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
@@ -63,25 +50,29 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 # URL: http://tungwaiyip.info/software/HTMLTestRunner.html
-from library.core.testlogger import TestLogger
+from library.core.TestLogger import TestLogger
 
-__author__ = "Wai Yip Tung , bugmaster"
-__version__ = "0.8.2"
+__author__ = "Wai Yip Tung,  Findyou"
+__version__ = "0.8.2.2"
 
 """
 Change History
-
+Version 0.8.2.1 -Findyou
+* 改为支持python3
+Version 0.8.2.1 -Findyou
+* 支持中文，汉化
+* 调整样式，美化（需要连入网络，使用的百度的Bootstrap.js）
+* 增加 通过分类显示、测试人员、通过率的展示
+* 优化“详细”与“收起”状态的变换
+* 增加返回顶部的锚点
 Version 0.8.2
 * Show output inline instead of popup window (Viorel Lupu).
-
 Version in 0.8.1
 * Validated XHTML (Wolfgang Borgert).
 * Added description of test classes and test cases.
-
 Version in 0.8.0
 * Define Template_mixin class for customization.
 * Workaround a IE 6 bug that it does not treat <script> block as CDATA.
-
 Version in 0.7.1
 * Back port to Python 2.3 (Frank Horowitz).
 * Fix missing scroll bars in detail log (Podi).
@@ -91,6 +82,7 @@ Version in 0.7.1
 # TODO: simplify javascript using ,ore than 1 class in the class attribute?
 
 import datetime
+import io
 import sys
 import unittest
 from xml.sax import saxutils
@@ -106,25 +98,25 @@ from xml.sax import saxutils
 # e.g.
 #   >>> logging.basicConfig(stream=HTMLTestRunner.stdout_redirector)
 #   >>>
-#
-# class OutputRedirector(object):
-#     """ Wrapper to redirect stdout or stderr """
-#
-#     def __init__(self, fp):
-#         self.fp = fp
-#
-#     def write(self, s):
-#         self.fp.write(s)
-#
-#     def writelines(self, lines):
-#         self.fp.writelines(lines)
-#
-#     def flush(self):
-#         self.fp.flush()
-#
-#
-# stdout_redirector = OutputRedirector(sys.stdout)
-# stderr_redirector = OutputRedirector(sys.stderr)
+
+class OutputRedirector(object):
+    """ Wrapper to redirect stdout or stderr """
+
+    def __init__(self, fp):
+        self.fp = fp
+
+    def write(self, s):
+        self.fp.write(s)
+
+    def writelines(self, lines):
+        self.fp.writelines(lines)
+
+    def flush(self):
+        self.fp.flush()
+
+
+stdout_redirector = OutputRedirector(sys.stdout)
+stderr_redirector = OutputRedirector(sys.stderr)
 
 
 # ----------------------------------------------------------------------
@@ -133,9 +125,7 @@ from xml.sax import saxutils
 class Template_mixin(object):
     """
     Define a HTML template for report customerization and generation.
-
     Overall structure of an HTML report
-
     HTML
     +------------------------+
     |<html>                  |
@@ -171,13 +161,14 @@ class Template_mixin(object):
     """
 
     STATUS = {
-        0: 'pass',
-        1: 'fail',
-        2: 'error',
+        0: '通过',
+        1: '失败',
+        2: '错误',
     }
 
     DEFAULT_TITLE = '自动化测试报告'
     DEFAULT_DESCRIPTION = ''
+    DEFAULT_TESTER = ''
 
     # ------------------------------------------------------------------------
     # HTML Template
@@ -189,25 +180,27 @@ class Template_mixin(object):
     <title>%(title)s</title>
     <meta name="generator" content="%(generator)s"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-    <script src="http://apps.bdimg.com/libs/Chart.js/0.2.0/Chart.min.js"></script>
-    <!-- <link href="https://cdn.bootcss.com/echarts/3.8.5/echarts.common.min.js" rel="stylesheet">   -->
-    
+    <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
     %(stylesheet)s
 </head>
-<body>
-<script language="javascript" type="text/javascript"><!--
+<body class='%(ReportBackgroundStyle)s'>
+<script language="javascript" type="text/javascript">
 output_list = Array();
-
-/* level - 0:Summary; 1:Failed; 2:All */
+/*level 调整增加只显示通过用例的分类 --Findyou
+0:Summary //all hiddenRow
+1:Failed  //pt hiddenRow, ft none
+2:Pass    //pt none, ft hiddenRow
+3:All     //pt none, ft none
+*/
 function showCase(level) {
     trs = document.getElementsByTagName("tr");
     for (var i = 0; i < trs.length; i++) {
         tr = trs[i];
         id = tr.id;
         if (id.substr(0,2) == 'ft') {
-            if (level < 1) {
+            if (level == 2 || level == 0 ) {
                 tr.className = 'hiddenRow';
             }
             else {
@@ -215,22 +208,34 @@ function showCase(level) {
             }
         }
         if (id.substr(0,2) == 'pt') {
-            if (level > 1) {
-                tr.className = '';
+            if (level < 2) {
+                tr.className = 'hiddenRow';
             }
             else {
-                tr.className = 'hiddenRow';
+                tr.className = '';
             }
         }
     }
+    //加入【详细】切换文字变化 --Findyou
+    detail_class=document.getElementsByClassName('detail');
+	//console.log(detail_class.length)
+	if (level == 3) {
+		for (var i = 0; i < detail_class.length; i++){
+			detail_class[i].innerHTML="收起"
+		}
+	}
+	else{
+			for (var i = 0; i < detail_class.length; i++){
+			detail_class[i].innerHTML="详细"
+		}
+	}
 }
-
-
 function showClassDetail(cid, count) {
     var id_list = Array(count);
     var toHide = 1;
     for (var i = 0; i < count; i++) {
-        tid0 = 't' + cid.substr(1) + '.' + (i+1);
+        //ID修改 点 为 下划线 -Findyou
+        tid0 = 't' + cid.substr(1) + '_' + (i+1);
         tid = 'f' + tid0;
         tr = document.getElementById(tid);
         if (!tr) {
@@ -244,58 +249,27 @@ function showClassDetail(cid, count) {
     }
     for (var i = 0; i < count; i++) {
         tid = id_list[i];
+        //修改点击无法收起的BUG，加入【详细】切换文字变化 --Findyou
         if (toHide) {
-            document.getElementById('div_'+tid).style.display = 'none'
             document.getElementById(tid).className = 'hiddenRow';
+            document.getElementById(cid).innerText = "详细"
         }
         else {
             document.getElementById(tid).className = '';
+            document.getElementById(cid).innerText = "收起"
         }
     }
 }
-
-
-function showTestDetail(div_id){
-    var details_div = document.getElementById(div_id)
-    var displayState = details_div.style.display
-    // alert(displayState)
-    if (displayState != 'block' ) {
-        displayState = 'block'
-        details_div.style.display = 'block'
-    }
-    else {
-        details_div.style.display = 'none'
-    }
-}
-
-
 function html_escape(s) {
     s = s.replace(/&/g,'&amp;');
     s = s.replace(/</g,'&lt;');
     s = s.replace(/>/g,'&gt;');
     return s;
 }
-
-/* obsoleted by detail in <div>
-function showOutput(id, name) {
-    var w = window.open("", //url
-                    name,
-                    "resizable,scrollbars,status,width=800,height=450");
-    d = w.document;
-    d.write("<pre>");
-    d.write(html_escape(output_list[id]));
-    d.write("\n");
-    d.write("<a href='javascript:window.close()'>close</a>\n");
-    d.write("</pre>\n");
-    d.close();
-}
-*/
---></script>
-
+</script>
 %(heading)s
 %(report)s
 %(ending)s
-%(chart_script)s
 </body>
 </html>
 """
@@ -309,112 +283,33 @@ function showOutput(id, name) {
 
     STYLESHEET_TMPL = """
 <style type="text/css" media="screen">
-body        { font-family: verdana, arial, helvetica, sans-serif; font-size: 80%; }
+body        { font-family: Microsoft YaHei,Tahoma,arial,helvetica,sans-serif;padding: 20px; font-size: 80%; }
 table       { font-size: 100%; }
-pre         {  }
-
 /* -- heading ---------------------------------------------------------------------- */
-h1 {
-	font-size: 16pt;
-	color: gray;
-}
 .heading {
     margin-top: 0ex;
     margin-bottom: 1ex;
-	margin-left: 10px;
 }
-
-.heading .attribute {
-    margin-top: 1ex;
-    margin-bottom: 0;
-}
-
 .heading .description {
     margin-top: 4ex;
     margin-bottom: 6ex;
 }
-
-/* -- css div popup ------------------------------------------------------------------------ */
-a.popup_link {
-}
-
-a.popup_link:hover {
-    color: red;
-}
-
-.popup_window {
-    display: none;
-    position: relative;
-    left: 0px;
-    top: 0px;
-    /*border: solid #627173 1px; */
-    font-family: "Lucida Console", "Courier New", Courier, monospace;
-    text-align: left;
-    font-size: 8pt;
-    width: 500px;
-}
-
-}
+/* -- body   ------------------------------------------------------------------------ */
+.TestSuitePass   { background-color: #dff0d8; }
+.TestSuiteFail   { background-color: #efd7d7; }
 /* -- report ------------------------------------------------------------------------ */
-#show_detail_line {
-    margin-top: 3ex;
-    margin-bottom: 1ex;
-    margin-left: 10px;
-}
-#result_table {
-    width: 80%;
-    border-collapse: collapse;
-    border: 1px solid #777;
-    margin-left: 10px;
-}
-#header_row {
-    font-weight: bold;
-    color: #606060;
-    background-color: #f5f5f5;
-    border-top-width: 10px;
-    border-color: #d6e9c6;
-	font-size: 12px;
-}
-#result_table td {
-    border: 1px solid #f5f5f5;
-    padding: 2px;
-
-}
 #total_row  { font-weight: bold; }
-.passClass  { background-color: #d6e9c6; }
-.failClass  { background-color: #faebcc; }
-.errorClass { background-color: #ebccd1; }
-.passCase   { color: #6c6; }
-.failCase   { color: #c60; font-weight: bold; }
-.errorCase  { color: #c00; font-weight: bold; }
+table   { background-color: white }
+#.AllPass > td   { background-color: #dff0d8; }
+#.NotAllPass > td   { background-color: #d9534f; }
+tr.passClass > td  { background-color: #9fdc9f; }
+tr.failClass > td  { background-color: #ea7e7b; }
+tr.errorClass > td  { background-color: #ea7e7b; }
+.passCase   { color: #5cb85c; }
+.failCase   { color: #d9534f; font-weight: bold; }
+.errorCase  { color: #f0ad4e; font-weight: bold; }
 .hiddenRow  { display: none; }
 .testcase   { margin-left: 2em; }
-
-
-/* -- ending ---------------------------------------------------------------------- */
-#ending {
-}
-
-/* -- chars ---------------------------------------------------------------------- */
-.testChars {margin-left: 150px;}
-
-.btn-info1 {
-    color: #fff;
-    background-color: #d6e9c6;
-    border-color: #d6e9c6;
-}
-
-.btn-info2 {
-    color: #fff;
-    background-color: #faebcc;
-    border-color: #faebcc;
-}
-
-.btn-info3 {
-    color: #fff;
-    background-color: #ebccd1;
-    border-color: #ebccd1;
-}
 </style>
 """
 
@@ -423,81 +318,27 @@ a.popup_link:hover {
     #
 
     HEADING_TMPL = """<div class='heading'>
-<h1>%(title)s</h1>
+<h1 style="font-family: Microsoft YaHei">%(title)s</h1>
 %(parameters)s
 <p class='description'>%(description)s</p>
 </div>
-
-<div style="float:left; margin-left: 10px;">
-	<p> Test Case Pie charts </p>
-	<a class="btn btn-xs btn-info1">-通过-</a><br>
-	<a class="btn btn-xs btn-info2">-失败-</a><br>
-	<a class="btn btn-xs btn-info3">-错误-</a><br>
-</div>
-
-<div class="testChars">
-	<canvas id="myChart" width="250" height="250"></canvas>
-</div>
-
 """  # variables: (title, parameters, description)
 
-    # ------------------------------------------------------------------------
-    # Pie chart
-    #
-
-    ECHARTS_SCRIPT = """
-    <script type="text/javascript">
-var data = [
-	{
-		value: %(error)s,
-		color: "#ebccd1",
-		label: "Error",
-		labelColor: 'white',
-		labelFontSize: '16'
-	},
-	{
-		value : %(fail)s,
-		color : "#faebcc",
-		label: "Fail",
-		labelColor: 'white',
-		labelFontSize: '16'
-	},
-	{
-		value : %(Pass)s,
-		color : "#d6e9c6",
-		label : "Pass",
-		labelColor: 'white',
-		labelFontSize: '16'
-	}			
-]
-
-var newopts = {
-     animationSteps: 100,
- 		animationEasing: 'easeInOutQuart',
-}
-
-//Get the context of the canvas element we want to select
-var ctx = document.getElementById("myChart").getContext("2d");
-
-var myNewChart = new Chart(ctx).Pie(data,newopts);
-
-</script>
-	"""
-
-    HEADING_ATTRIBUTE_TMPL = """<p class='attribute'><strong>%(name)s:</strong> %(value)s</p>
+    HEADING_ATTRIBUTE_TMPL = """<p class='attribute'><strong>%(name)s : </strong> %(value)s</p>
 """  # variables: (name, value)
 
     # ------------------------------------------------------------------------
     # Report
     #
-
+    # 汉化,加美化效果 --Findyou
     REPORT_TMPL = """
-<p id='show_detail_line' style="margin-left: 10px;">
-<a href='javascript:showCase(0)' class="btn btn-xs btn-primary">概要</a>
-<a href='javascript:showCase(1)' class="btn btn-xs btn-danger">失败</a>
-<a href='javascript:showCase(2)' class="btn btn-xs btn-info">所有</a>
+<p id='show_detail_line'>
+<a class="btn btn-primary" href='javascript:showCase(0)'>概要{ %(passrate)s }</a>
+<a class="btn btn-danger" href='javascript:showCase(1)'>失败{ %(fail)s }</a>
+<a class="btn btn-success" href='javascript:showCase(2)'>通过{ %(Pass)s }</a>
+<a class="btn btn-info" href='javascript:showCase(3)'>所有{ %(count)s }</a>
 </p>
-<table id='result_table'>
+<table id='result_table' class="table table-condensed table-bordered table-hover">
 <colgroup>
 <col align='left' />
 <col align='right' />
@@ -506,65 +347,61 @@ var myNewChart = new Chart(ctx).Pie(data,newopts);
 <col align='right' />
 <col align='right' />
 </colgroup>
-<tr id='header_row' class="panel-title">
-    <td>用例集/用例</td>
+<tr id='header_row' class="text-center %(HeaderStyle)s" style="font-weight: bold;font-size: 14px;">
+    <td>用例集/测试用例</td>
     <td>总计</td>
     <td>通过</td>
     <td>失败</td>
     <td>错误</td>
-    <td>详情</td>
+    <td>详细</td>
 </tr>
 %(test_list)s
-<tr id='total_row'>
+<tr id='total_row' class="text-center active">
     <td>总计</td>
-    <td>%(count)s</td>
-    <td class="text text-success">%(Pass)s</td>
-    <td class="text text-danger">%(fail)s</td>
-    <td class="text text-warning">%(error)s</td>
-    <td>&nbsp;</td>
-</tr>
-</table>
-"""  # variables: (test_list, count, Pass, fail, error)
-
-    REPORT_CLASS_TMPL = r"""
-<tr class='%(style)s'>
-    <td>%(desc)s</td>
     <td>%(count)s</td>
     <td>%(Pass)s</td>
     <td>%(fail)s</td>
     <td>%(error)s</td>
-    <td><a href="javascript:showClassDetail('%(cid)s',%(count)s)">详情</a></td>
+    <td>通过率：%(passrate)s</td>
+</tr>
+</table>
+"""  # variables: (test_list, count, Pass, fail, error ,passrate)
+
+    REPORT_CLASS_TMPL = r"""
+<tr class='%(style)s'>
+    <td>%(desc)s</td>
+    <td class="text-center">%(count)s</td>
+    <td class="text-center">%(Pass)s</td>
+    <td class="text-center">%(fail)s</td>
+    <td class="text-center">%(error)s</td>
+    <td class="text-center"><a href="javascript:showClassDetail('%(cid)s',%(count)s)" class="detail" id='%(cid)s'>详细</a></td>
 </tr>
 """  # variables: (style, desc, count, Pass, fail, error, cid)
 
+    # 失败 的样式，去掉原来JS效果，美化展示效果  -Findyou
     REPORT_TEST_WITH_OUTPUT_TMPL = r"""
 <tr id='%(tid)s' class='%(Class)s'>
     <td class='%(style)s'><div class='testcase'>%(desc)s</div></td>
     <td colspan='5' align='center'>
-
-    <!--css div popup start-->
-    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_%(tid)s')" >
-        %(status)s</a>
-
-    <div id='div_%(tid)s' class="popup_window">
-        <div style='text-align: right; color:red;cursor:pointer'>
-        <a onfocus='this.blur();' onclick="document.getElementById('div_%(tid)s').style.display = 'none' " >
-           [x]</a>
-        </div>
-        <pre>
-        %(script)s
-        </pre>
+    <!--默认收起错误信息 -Findyou
+    <button id='btn_%(tid)s' type="button"  class="btn btn-danger btn-xs collapsed" data-toggle="collapse" data-target='#div_%(tid)s'>%(status)s</button>
+    <div id='div_%(tid)s' class="collapse" align='left'>  -->
+    <!-- 默认展开错误信息 -Findyou -->
+    <button id='btn_%(tid)s' type="button"  class="btn %(ButtonStyle)s btn-xs" data-toggle="collapse" data-target='#div_%(tid)s'>%(status)s</button>
+    <div id='div_%(tid)s' class="collapse in" align='left'>
+    <pre>
+    %(script)s
+    </pre>
     </div>
-    <!--css div popup end-->
-
     </td>
 </tr>
 """  # variables: (tid, Class, style, desc, status)
 
+    # 通过 的样式，加标签效果  -Findyou
     REPORT_TEST_NO_OUTPUT_TMPL = r"""
 <tr id='%(tid)s' class='%(Class)s'>
     <td class='%(style)s'><div class='testcase'>%(desc)s</div></td>
-    <td colspan='5' align='center'>%(status)s</td>
+    <td colspan='5' align='center'><span class="label label-success success">%(status)s</span></td>
 </tr>
 """  # variables: (tid, Class, style, desc, status)
 
@@ -575,8 +412,12 @@ var myNewChart = new Chart(ctx).Pie(data,newopts);
     # ------------------------------------------------------------------------
     # ENDING
     #
-
-    ENDING_TMPL = """<div id='ending'>&nbsp;</div>"""
+    # 增加返回顶部按钮  --Findyou
+    ENDING_TMPL = """<div id='ending'>&nbsp;</div>
+    <div style=" position:fixed;right:50px; bottom:30px; width:20px; height:20px;cursor:pointer">
+    <a href="#"><span class="glyphicon glyphicon-eject" style = "font-size:30px;" aria-hidden="true">
+    </span></a></div>
+    """
 
 
 # -------------------- The end of the Template class -------------------
@@ -589,14 +430,14 @@ class _TestResult(TestResult):
     # note: _TestResult is a pure representation of results.
     # It lacks the output and reporting ability compares to unittest._TextTestResult.
 
-    def __init__(self, verbosity=1, mirror_output=False):
-        super().__init__()
-        self.mirror_output = mirror_output
+    def __init__(self, verbosity=1):
+        super(_TestResult, self).__init__()
+        self.stdout0 = None
+        self.stderr0 = None
         self.success_count = 0
         self.failure_count = 0
         self.error_count = 0
         self.verbosity = verbosity
-        self.buffer = True
 
         # result is a list of result in 4 tuple
         # (
@@ -606,43 +447,43 @@ class _TestResult(TestResult):
         #   stack trace,
         # )
         self.result = []
-
-    def _restoreStdout(self):
-        self._mirrorOutput = self.mirror_output
-        super()._restoreStdout()
+        # 增加一个测试通过率 --Findyou
+        self.passrate = float(0)
 
     def startTest(self, test):
-        # TestResult.startTest(self, test)
-        super().startTest(test)
-        TestLogger.start_test(test)
+        super(_TestResult, self).startTest(test)
         # just one buffer for both stdout and stderr
-        # self.outputBuffer = io.StringIO()
-        # stdout_redirector.fp = self.outputBuffer
-        # stderr_redirector.fp = self.outputBuffer
-        # self.stdout0 = sys.stdout
-        # self.stderr0 = sys.stderr
-        # sys.stdout = stdout_redirector
-        # sys.stderr = stderr_redirector
+        self.outputBuffer = io.StringIO()
+        stdout_redirector.fp = self.outputBuffer
+        stderr_redirector.fp = self.outputBuffer
+        self.stdout0 = sys.stdout
+        self.stderr0 = sys.stderr
+        sys.stdout = stdout_redirector
+        sys.stderr = stderr_redirector
+        TestLogger.start_test(test)
 
     def complete_output(self):
         """
         Disconnect output redirection and return buffer.
         Safe to call multiple times.
         """
-        TestLogger.stop_test()
-        return self._stdout_buffer.getvalue()
+        if self.stdout0:
+            sys.stdout = self.stdout0
+            sys.stderr = self.stderr0
+            self.stdout0 = None
+            self.stderr0 = None
+        return self.outputBuffer.getvalue()
 
     def stopTest(self, test):
         # Usually one of addSuccess, addError or addFailure would have been called.
         # But there are some path in unittest that would bypass this.
         # We must disconnect stdout in stopTest(), which is guaranteed to be called.
-        self._mirrorOutput = True
-        super().stopTest(test)
         self.complete_output()
 
     def addSuccess(self, test):
+        TestLogger.test_success(test)
         self.success_count += 1
-        TestResult.addSuccess(self, test)
+        super(_TestResult, self).addSuccess(test)
         output = self.complete_output()
         self.result.append((0, test, output, ''))
         if self.verbosity > 1:
@@ -650,11 +491,12 @@ class _TestResult(TestResult):
             sys.stderr.write(str(test))
             sys.stderr.write('\n')
         else:
-            sys.stderr.write('.' + str(self.success_count))
+            sys.stderr.write('.')
 
     def addError(self, test, err):
+        TestLogger.test_error(test)
         self.error_count += 1
-        TestResult.addError(self, test, err)
+        super(_TestResult, self).addError(test, err)
         _, _exc_str = self.errors[-1]
         output = self.complete_output()
         self.result.append((2, test, output, _exc_str))
@@ -666,8 +508,9 @@ class _TestResult(TestResult):
             sys.stderr.write('E')
 
     def addFailure(self, test, err):
+        TestLogger.test_fail(test)
         self.failure_count += 1
-        TestResult.addFailure(self, test, err)
+        super(_TestResult, self).addFailure(test, err)
         _, _exc_str = self.failures[-1]
         output = self.complete_output()
         self.result.append((1, test, output, _exc_str))
@@ -683,7 +526,7 @@ class HTMLTestRunner(Template_mixin):
     """
     """
 
-    def __init__(self, stream=sys.stdout, verbosity=2, title=None, description=None):
+    def __init__(self, stream=sys.stdout, verbosity=1, title=None, description=None, tester=None):
         self.stream = stream
         self.verbosity = verbosity
         if title is None:
@@ -694,16 +537,20 @@ class HTMLTestRunner(Template_mixin):
             self.description = self.DEFAULT_DESCRIPTION
         else:
             self.description = description
+        if tester is None:
+            self.tester = self.DEFAULT_TESTER
+        else:
+            self.tester = tester
 
         self.startTime = datetime.datetime.now()
 
     def run(self, test):
         "Run the given test case or test suite."
-        result = _TestResult(self.verbosity, True)
+        result = _TestResult(self.verbosity)
         test(result)
         self.stopTime = datetime.datetime.now()
         self.generateReport(test, result)
-        # print(sys.stderr, '\nTime Elapsed: %s' % (self.stopTime-self.startTime))
+        print('\nTime Elapsed: %s' % (self.stopTime - self.startTime), file=sys.stderr)
         return result
 
     def sortResult(self, result_list):
@@ -713,13 +560,14 @@ class HTMLTestRunner(Template_mixin):
         classes = []
         for n, t, o, e in result_list:
             cls = t.__class__
-            if not cls in rmap:
+            if cls not in rmap:
                 rmap[cls] = []
                 classes.append(cls)
             rmap[cls].append((n, t, o, e))
         r = [(cls, rmap[cls]) for cls in classes]
         return r
 
+    # 替换测试结果status为通过率 --Findyou
     def getReportAttributes(self, result):
         """
         Return report attributes as a list of (name, value).
@@ -728,20 +576,21 @@ class HTMLTestRunner(Template_mixin):
         startTime = str(self.startTime)[:19]
         duration = str(self.stopTime - self.startTime)
         status = []
-        if result.success_count:
-            status.append('通过 %s' % result.success_count)
-        if result.failure_count:
-            status.append('失败 %s' % result.failure_count)
-        if result.error_count:
-            status.append('错误 %s' % result.error_count)
+        status.append('共 %s' % (result.success_count + result.failure_count + result.error_count))
+        if result.success_count: status.append('通过 %s' % result.success_count)
+        if result.failure_count: status.append('失败 %s' % result.failure_count)
+        if result.error_count:   status.append('错误 %s' % result.error_count)
         if status:
-            status = ' '.join(status)
+            status = '，'.join(status)
+            self.passrate = str("%.2f%%" % (float(result.success_count) / float(
+                result.success_count + result.failure_count + result.error_count) * 100))
         else:
             status = 'none'
         return [
+            ('测试人员', self.tester),
             ('开始时间', startTime),
-            ('执行耗时', duration),
-            ('测试结果', status),
+            ('合计耗时', duration),
+            ('测试结果', status + "，通过率= " + self.passrate),
         ]
 
     def generateReport(self, test, result):
@@ -751,7 +600,6 @@ class HTMLTestRunner(Template_mixin):
         heading = self._generate_heading(report_attrs)
         report = self._generate_report(result)
         ending = self._generate_ending()
-        chart = self._generate_chart(result)
         output = self.HTML_TMPL % dict(
             title=saxutils.escape(self.title),
             generator=generator,
@@ -759,13 +607,15 @@ class HTMLTestRunner(Template_mixin):
             heading=heading,
             report=report,
             ending=ending,
-            chart_script=chart,
+            ReportBackgroundStyle="TestSuitePass" if not (
+                    result.failure_count or result.error_count) else "TestSuiteFail"
         )
         self.stream.write(output.encode('utf8'))
 
     def _generate_stylesheet(self):
         return self.STYLESHEET_TMPL
 
+    # 增加Tester显示 -Findyou
     def _generate_heading(self, report_attrs):
         a_lines = []
         for name, value in report_attrs:
@@ -778,9 +628,11 @@ class HTMLTestRunner(Template_mixin):
             title=saxutils.escape(self.title),
             parameters=''.join(a_lines),
             description=saxutils.escape(self.description),
+            tester=saxutils.escape(self.tester),
         )
         return heading
 
+    # 生成报告  --Findyou添加注释
     def _generate_report(self, result):
         rows = []
         sortedResult = self.sortResult(result.result)
@@ -800,7 +652,7 @@ class HTMLTestRunner(Template_mixin):
                 name = cls.__name__
             else:
                 name = "%s.%s" % (cls.__module__, cls.__name__)
-            doc = cls.__doc__ or ""
+            doc = cls.__doc__ and cls.__doc__.split("\n")[0] or ""
             desc = doc and '%s: %s' % (name, doc) or name
 
             row = self.REPORT_CLASS_TMPL % dict(
@@ -823,36 +675,34 @@ class HTMLTestRunner(Template_mixin):
             Pass=str(result.success_count),
             fail=str(result.failure_count),
             error=str(result.error_count),
+            passrate=self.passrate,
+            HeaderStyle='AllPass' if not (result.error_count or result.failure_count) else 'NotAllPass'
         )
         return report
-
-    def _generate_chart(self, result):
-        chart = self.ECHARTS_SCRIPT % dict(
-            Pass=str(result.success_count),
-            fail=str(result.failure_count),
-            error=str(result.error_count),
-        )
-        return chart
 
     def _generate_report_test(self, rows, cid, tid, n, t, o, e):
         # e.g. 'pt1.1', 'ft1.1', etc
         has_output = bool(o or e)
-        tid = (n == 0 and 'p' or 'f') + 't%s.%s' % (cid + 1, tid + 1)
+        # ID修改点为下划线,支持Bootstrap折叠展开特效 - Findyou
+        tid = (n == 0 and 'p' or 'f') + 't%s_%s' % (cid + 1, tid + 1)
         name = t.id().split('.')[-1]
         doc = t.shortDescription() or ""
         desc = doc and ('%s: %s' % (name, doc)) or name
         tmpl = has_output and self.REPORT_TEST_WITH_OUTPUT_TMPL or self.REPORT_TEST_NO_OUTPUT_TMPL
 
+        # utf-8 支持中文 - Findyou
         # o and e should be byte string because they are collected from stdout and stderr?
         if isinstance(o, str):
             # TODO: some problem with 'string_escape': it escape \n and mess up formating
             # uo = unicode(o.encode('string_escape'))
+            # uo = o.decode('latin-1')
             uo = o
         else:
             uo = o
         if isinstance(e, str):
             # TODO: some problem with 'string_escape': it escape \n and mess up formating
             # ue = unicode(e.encode('string_escape'))
+            # ue = e.decode('latin-1')
             ue = e
         else:
             ue = e
@@ -865,7 +715,8 @@ class HTMLTestRunner(Template_mixin):
         row = tmpl % dict(
             tid=tid,
             Class=(n == 0 and 'hiddenRow' or 'none'),
-            style=n == 2 and 'errorCase' or (n == 1 and 'failCase' or 'none'),
+            style=n == 2 and 'errorCase' or (n == 1 and 'failCase' or 'passCase'),
+            ButtonStyle=n == 2 and 'btn-warning' or (n == 1 and 'btn-danger' or 'btn-success'),
             desc=desc,
             script=script,
             status=self.STATUS[n],
