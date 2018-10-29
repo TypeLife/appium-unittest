@@ -16,7 +16,7 @@ class TestLogger(object):
             @functools.wraps(func)
             def wrapper(*args, **kw):
                 # info = description if description else func.__doc__
-                template = '%(time)s - %(className)s - %(level)s - %(caseName)s - %(func)s - %(description)s'
+                template = '%(time)s - %(className)s - %(level)s - %(caseName)s - %(func)s - %(description)s - %(args)s'
                 TestLogger.log_level = "INFO"
                 try:
                     result = func(*args, **kw)
@@ -31,7 +31,10 @@ class TestLogger(object):
                                       'level': TestLogger.log_level,
                                       'caseName': getattr(TestLogger.current_test, '_testMethodName', None),
                                       'func': func.__name__,
-                                      'description': log_info if log_info else "no description"})
+                                      'description': log_info if log_info else "no description",
+                                      'args': '[Args: {} {}]'.format(args, kw)
+                                      }
+                          )
 
             return wrapper
 

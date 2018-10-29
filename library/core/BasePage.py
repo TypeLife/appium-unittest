@@ -55,6 +55,34 @@ class BasePage(object):
             return elements[0].is_displayed()
         return None
 
+    def _is_clickable(self, locator):
+        mapper = {
+            'true': True,
+            'false': False,
+            'True': True,
+            'False': False
+        }
+        element = self.get_element(locator)
+        value = element.get_attribute('clickable')
+        is_clickable = mapper[value.lower()]
+        return is_clickable
+
+    def execute_shell_command(self, command, *args):
+        """
+        Execute ADB shell commands (requires server flag --relaxed-security to be set)
+
+        例：execute_shell_command('am', 'start', '-n', 'com.example.demo/com.example.test.MainActivity')
+
+        :param command: 例：am,pm 等等可执行命令
+        :param args: 例：am,pm 等可执行命令的参数
+        :return:
+        """
+        script = {
+            'command': command,
+            'args': args
+        }
+        return self.driver.execute_script('mobile:shell', script)
+
     def _is_enabled(self, locator):
         element = self.get_element(locator)
         return element.is_enabled()
@@ -105,15 +133,15 @@ class BasePage(object):
     def checkbox_should_be_selected(self, locator):
         # element = self.get_element(locator)
         if not self.is_selected(locator):
-            raise AssertionError("Checkbox '%s' should have been selected "
-                                 "but was not." % locator[1])
+            raise AssertionError("Checkbox '{}' should have been selected "
+                                 "but was not.".format(locator))
         return True
 
     def checkbox_should_not_be_selected(self, locator):
         # element = self.get_element(locator)
         if self.is_selected(locator):
-            raise AssertionError("Checkbox '%s' should not have been selected "
-                                 "but was not." % locator[1])
+            raise AssertionError("Checkbox '{}' should not have been selected "
+                                 "but was not.".format(locator))
         return True
 
     def swipe_by_direction(self, locator, direction, duration=None):
@@ -192,50 +220,50 @@ class BasePage(object):
 
     def page_should_contain_text(self, text):
         if not self._is_text_present(text):
-            raise AssertionError("Page should have contained text '%s' "
+            raise AssertionError("Page should have contained text '{}' "
                                  "but did not" % text)
         return True
 
     def page_should_not_contain_text(self, text):
         if self._is_text_present(text):
-            raise AssertionError("Page should not have contained text '%s'" % text)
+            raise AssertionError("Page should not have contained text '{}'" % text)
         return True
 
     def page_should_contain_element(self, locator):
         if not self._is_element_present(locator):
-            raise AssertionError("Page should have contained element '%s' "
-                                 "but did not" % locator[1])
+            raise AssertionError("Page should have contained element '{}' "
+                                 "but did not".format(locator))
         return True
 
     def page_should_not_contain_element(self, locator):
         if self._is_element_present(locator):
-            raise AssertionError("Page should not have contained element '%s'" % locator[1])
+            raise AssertionError("Page should not have contained element {}".format(locator))
         return True
 
     def element_should_be_disabled(self, locator):
         if self._is_enabled(locator):
-            raise AssertionError("Element '%s' should be disabled "
-                                 "but did not" % locator[1])
+            raise AssertionError("Element '{}' should be disabled "
+                                 "but did not".format(locator))
         return True
 
     def element_should_be_enabled(self, locator):
         if not self._is_enabled(locator):
-            raise AssertionError("Element '%s' should be enabled "
-                                 "but did not" % locator[1])
+            raise AssertionError("Element '{}' should be enabled "
+                                 "but did not".format(locator))
         return True
 
     def element_should_be_visible(self, locator):
         if not self.get_element(locator).is_displayed():
-            raise AssertionError("Element '%s' should be visible "
-                                 "but did not" % locator[1])
+            raise AssertionError("Element '{}' should be visible "
+                                 "but did not".format(locator))
         return True
 
     def element_should_contain_text(self, locator, expected, message=''):
         actual = self._get_text(locator)
         if expected not in actual:
             if not message:
-                message = "Element '%s' should have contained text '%s' but " \
-                          "its text was '%s'." % (locator[1], expected, actual)
+                message = "Element '{}' should have contained text '{}' but " \
+                          "its text was '{}'.".format(locator, expected, actual)
             raise AssertionError(message)
         return True
 
@@ -243,8 +271,8 @@ class BasePage(object):
         actual = self._get_text(locator)
         if expected in actual:
             if not message:
-                message = "Element '%s' should not contain text '%s' but " \
-                          "it did." % (locator[1], expected)
+                message = "Element {} should not contain text '{}' but " \
+                          "it did.".format(locator, expected)
             raise AssertionError(message)
         return True
 
@@ -253,8 +281,8 @@ class BasePage(object):
         actual = element.text
         if expected != actual:
             if not message:
-                message = "The text of element '%s' should have been '%s' but " \
-                          "in fact it was '%s'." % (locator[1], expected, actual)
+                message = "The text of element '{}' should have been '{}' but in fact it was '{}'." \
+                    .format(locator, expected, actual)
             raise AssertionError(message)
         return True
 

@@ -472,7 +472,7 @@ class _TestResult(TestResult):
             sys.stderr = self.stderr0
             self.stdout0 = None
             self.stderr0 = None
-        return self.outputBuffer.getvalue()
+        return self.outputBuffer.getvalue() if hasattr(self, 'outputBuffer') else ''
 
     def stopTest(self, test):
         # Usually one of addSuccess, addError or addFailure would have been called.

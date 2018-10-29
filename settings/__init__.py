@@ -15,7 +15,7 @@ APPIUM_SETTING = {
 DEFAULT_DESIRED_CAPABILITY = {
     "platformName": "Android",
     "platformVersion": "8.0",
-    "deviceName": "192.168.200.132:5555",
+    "deviceName": "192.168.200.103:5555",
     "automationName": "UiAutomator2",
     "newCommandTimeout": 600,
     "appPackage": "com.chinasofti.rcs",

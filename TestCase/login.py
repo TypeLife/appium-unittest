@@ -60,7 +60,7 @@ class LoginTest(TestCase):
     def default_tearDown(self):
         pass
 
-    def test_login_C0003(self, phone_number='13510772034', login_time=60):
+    def tes_login_C0003(self, phone_number='13510772034', login_time=60):
         """移动账号登录"""
         OneKeyLoginPage(). \
             wait_for_page_load(). \
@@ -68,6 +68,21 @@ class LoginTest(TestCase):
             check_the_agreement(). \
             click_one_key_login()
 
+        MessagePage().wait_for_page_load(login_time)
+
+    def test_login_C0004(self, phone_number='13510772034', login_time=60):
+        """切换验证码登录"""
+        onekey = OneKeyLoginPage()
+        onekey.wait_for_page_load()
+        onekey.choose_another_way_to_login()
+
+        sms = SmsLoginPage()
+        sms.wait_for_page_load()
+        sms.input_phone_number(phone_number)
+        code = sms.get_verification_code()
+        sms.input_verification_code(code)
+        sms.click_login()
+        sms.click_i_know()
         MessagePage().wait_for_page_load(login_time)
 
 
