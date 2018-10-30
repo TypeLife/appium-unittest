@@ -1,4 +1,5 @@
 import re
+import unittest
 
 from appium.webdriver.common.mobileby import MobileBy
 
@@ -28,22 +29,37 @@ class SmsLoginPage(BasePage):
     @TestLogger.log()
     def get_verification_code(self, timeout=20):
         """获取验证码"""
-        try:
-            self.execute_shell_command('logcat', '-c')
-        except:
-            pass
-        self.click_element(self.__class__.locators["获取验证码"])
-        try:
-            result = self.wait_until(
-                condition=lambda d: re.findall(r'【登录验证】尊敬的用户：(\d+)是您本次登录的短信验证码，5分钟内有效',
-                                               self.execute_shell_command('logcat', 'appium:D', '*:S', '-m', '2')),
-                timeout=timeout
-            )
+        model = self._get_device_model()
+        if model in ['MI 6']:
+            try:
+                self.execute_shell_command('logcat', '-c')
+            except:
+                pass
+            self.click_element(self.__class__.locators["获取验证码"])
+            try:
+                result = self.wait_until(
+                    condition=lambda d: re.findall(r'【登录验证】尊敬的用户：\d+| 发送失败',
+                                                   self.execute_shell_command('logcat', 'appium:D', '*:S', '-d')),
+                    timeout=timeout,
+                )
+            except TimeoutError as e:
+                raise AssertionError(e.__str__())
             return result[0]
-        except TimeoutError as e:
-            raise AssertionError(e.__str__())
-        # log_info = self.execute_shell_command('logcat', 'appium:D', '*:S', '-m', '2')
-        # result = re.findall(r'【登录验证】尊敬的用户：(\d+)是您本次登录的短信验证码，5分钟内有效', log_info)
+        else:
+            try:
+                self.execute_shell_command('logcat', '-c')
+            except:
+                pass
+            self.click_element(self.__class__.locators["获取验证码"])
+            try:
+                result = self.wait_until(
+                    condition=lambda d: re.findall(r'【登录验证】尊敬的用户：\d+| 发送失败',
+                                                   self.execute_shell_command('logcat', 'appium:D', '*:S', '-d')),
+                    timeout=timeout,
+                )
+            except TimeoutError as e:
+                raise AssertionError(e.__str__())
+            return result[0]
 
     @TestLogger.log()
     def input_verification_code(self, code):
