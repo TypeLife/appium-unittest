@@ -60,7 +60,7 @@ class LoginTest(TestCase):
     def default_tearDown(self):
         pass
 
-    def tes_login_C0003(self, phone_number='13510772034', login_time=60):
+    def test_login_C0003(self, phone_number='13510772034', login_time=60):
         """移动账号登录"""
         OneKeyLoginPage(). \
             wait_for_page_load(). \
@@ -79,7 +79,7 @@ class LoginTest(TestCase):
         sms = SmsLoginPage()
         sms.wait_for_page_load()
         sms.input_phone_number(phone_number)
-        code = sms.get_verification_code()
+        code = sms.get_verification_code(60)
         sms.input_verification_code(code)
         sms.click_login()
         sms.click_i_know()

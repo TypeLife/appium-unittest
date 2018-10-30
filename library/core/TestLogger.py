@@ -63,14 +63,14 @@ class TestLogger(object):
             ))
 
     @staticmethod
-    def stop_test():
+    def stop_test(test):
         if getattr(TestLogger.current_test, '_testMethodName', None):
             print(' - '.join(
                 [
                     datetime.datetime.now().__str__(),
-                    getattr(TestLogger.current_test.__class__, '__name__'),
+                    getattr(test.__class__, '__name__'),
                     TestLogger.log_level,
-                    getattr(TestLogger.current_test, '_testMethodName', None),
+                    getattr(test, '_testMethodName', None),
                     '********** TEST FINISHED **********'
                 ]
             ))

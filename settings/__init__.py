@@ -1,11 +1,20 @@
 import os
+import datetime
 
-# 项目根目录路径、测试报告目录路径、截图存储路径
+NOW = datetime.datetime.now()
+
+# 项目根目录
 PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# 测试用例目录
 TEST_CASE_ROOT = os.path.join(PROJECT_PATH, 'TestCase')
+# 测试报告目录
 REPORT_PATH = os.path.join(PROJECT_PATH, 'report')
+# 测试报告HTML文件
 REPORT_HTML_PATH = os.path.join(REPORT_PATH, 'TestReport.html')
+# 屏幕截图存储路径
 SCREEN_SHOT_PATH = os.path.join(REPORT_PATH, 'screen-shot')
+# log文件存放目录
+LOG_FILE_PATH = os.path.join(REPORT_PATH, 'log')
 
 # Appium 服务地址
 APPIUM_SETTING = {
@@ -15,7 +24,7 @@ APPIUM_SETTING = {
 DEFAULT_DESIRED_CAPABILITY = {
     "platformName": "Android",
     "platformVersion": "8.0",
-    "deviceName": "192.168.200.103:5555",
+    "deviceName": "bb5671d",
     "automationName": "UiAutomator2",
     "newCommandTimeout": 600,
     "appPackage": "com.chinasofti.rcs",
