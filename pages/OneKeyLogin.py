@@ -5,6 +5,8 @@ from library.core.TestLogger import TestLogger
 
 
 class OneKeyLoginPage(BasePage):
+    """一键登录页"""
+
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.OneKeyLoginActivity'
 
     locators = {

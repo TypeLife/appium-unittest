@@ -5,6 +5,8 @@ from library.core.TestLogger import TestLogger
 
 
 class GuidePage(BasePage):
+    """引导页"""
+
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.SplashActivity'
 
     locators = {

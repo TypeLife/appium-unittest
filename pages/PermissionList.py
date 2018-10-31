@@ -5,6 +5,8 @@ from library.core.TestLogger import TestLogger
 
 
 class PermissionListPage(BasePage):
+    """权限列表页（引导页结束后会进入该页面）"""
+
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.PermissionListActivity'
 
     locators = {

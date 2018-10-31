@@ -5,6 +5,8 @@ from library.core.TestLogger import TestLogger
 
 
 class MessagePage(BasePage):
+    """消息页"""
+
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.HomeActivity'
 
     locators = {

@@ -8,6 +8,8 @@ from library.core.TestLogger import TestLogger
 
 
 class SmsLoginPage(BasePage):
+    """验证码登录页"""
+
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.SmsLoginActivity'
 
     locators = {
