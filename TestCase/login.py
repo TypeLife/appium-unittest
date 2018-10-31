@@ -28,18 +28,21 @@ class LoginTest(TestCase):
         # self.assertIn(Keywords.Android.get_network_state_code(), [2, 4, 6])  # 存在有网但是状态为0 的情况，不可以作为是否有网的条件
         guide_page = GuidePage()
         if guide_page.driver.current_activity == guide_page.ACTIVITY:
-            if guide_page._is_text_present("解锁“免费通信”新攻略"):
-                guide_page.swipe_to_the_second_banner()
-                guide_page.swipe_to_the_third_banner()
-                guide_page.click_start_the_experience()
+            # if guide_page._is_text_present("解锁“免费通信”新攻略"):
+            guide_page.wait_until(
+                lambda d: guide_page._is_text_present("解锁“免费通信”新攻略")
+            )
+            guide_page.swipe_to_the_second_banner()
+            guide_page.swipe_to_the_third_banner()
+            guide_page.click_start_the_experience()
 
-                # 确定
-                PermissionListPage(). \
-                    wait_for_page_load(). \
-                    click_submit_button()
+            # 确定
+            PermissionListPage(). \
+                wait_for_page_load(). \
+                click_submit_button()
 
-                # 等待页面进入一键登录页
-                OneKeyLoginPage().wait_for_page_load()
+            # 等待页面进入一键登录页
+            OneKeyLoginPage().wait_for_page_load()
 
         elif OneKeyLoginPage().is_current_activity_match_this_page():
             pass
