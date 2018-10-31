@@ -15,15 +15,15 @@ class MessagePage(BasePage):
         'com.chinasofti.rcs:id/pop_item_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/pop_item_layout'),
         'com.chinasofti.rcs:id/iconIV': (MobileBy.ID, 'com.chinasofti.rcs:id/iconIV'),
         '新建消息': (
-            MobileBy.XPATH, '//*[@resource_id ="com.chinasofti.rcs:id/pop_navi_text" and @text ="新建消息"]'),
+            MobileBy.XPATH, '//*[@text ="新建消息"]'),
         '免费短信': (
-            MobileBy.XPATH, '//*[@resource_id ="com.chinasofti.rcs:id/pop_navi_text" and @text ="新建消息"]'),
+            MobileBy.XPATH, '//*[@text ="免费短信"]'),
         '发起群聊': (
-            MobileBy.XPATH, '//*[@resource_id ="com.chinasofti.rcs:id/pop_navi_text" and @text ="新建消息"]'),
+            MobileBy.XPATH, '//*[@text ="发起群聊"]'),
         '分组群发': (
-            MobileBy.XPATH, '//*[@resource_id ="com.chinasofti.rcs:id/pop_navi_text" and @text ="新建消息"]'),
+            MobileBy.XPATH, '//*[@text ="分组群发"]'),
         '扫一扫': (
-            MobileBy.XPATH, '//*[@resource_id ="com.chinasofti.rcs:id/pop_navi_text" and @text ="新建消息"]'),
+            MobileBy.XPATH, '//*[@resource_id ="com.chinasofti.rcs:id/pop_navi_text" and @text ="扫一扫"]'),
         'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
         'android:id/content': (MobileBy.ID, 'android:id/content'),
         'com.chinasofti.rcs:id/activity_main': (MobileBy.ID, 'com.chinasofti.rcs:id/activity_main'),
