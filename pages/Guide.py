@@ -59,7 +59,7 @@ class GuidePage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self.page_should_contain_text('解锁“免费通信”新攻略')
+                condition=lambda d: self._is_text_present('解锁“免费通信”新攻略')
             )
         except:
             message = "引导页首页在限定的时间：{}s内没有加载完毕，或者没有包含文本：解锁“免费通信”新攻略".format(timeout)

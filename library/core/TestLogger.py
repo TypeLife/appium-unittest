@@ -2,8 +2,10 @@ import datetime
 import functools
 import os
 import re
-from library.core.utils import ConfigManager
-from library.core.utils.WebDriverCache import DriverCache
+
+from library.core.BasePage import BasePage
+from library.core.utils import ConfigManager, common
+from library.core.utils.common import capture_screen_shot
 
 
 class TestLogger(object):
@@ -24,17 +26,21 @@ class TestLogger(object):
                 except Exception as error:
                     TestLogger.log_level = "ERROR"
                     raise error
+
                 finally:
                     log_info = func.__doc__ if info is None else info
                     print(template % {'time': datetime.datetime.now().__str__(),
                                       'className': getattr(TestLogger.current_test.__class__, '__name__'),
                                       'level': TestLogger.log_level,
                                       'caseName': getattr(TestLogger.current_test, '_testMethodName', None),
-                                      'func': func.__name__,
+                                      'func': common.get_method_fullname(func),
                                       'description': log_info if log_info else "no description",
-                                      'args': '[Args: {} {}]'.format(args, kw)
+                                      'args': '[Args: {} {}]'.format(
+                                          args[1:] if bool(args[:1]) and isinstance(args[0], BasePage) else args,
+                                          kw),
                                       }
                           )
+                    TestLogger.log_level = "INFO"
 
             return wrapper
 
@@ -63,14 +69,14 @@ class TestLogger(object):
             ))
 
     @staticmethod
-    def stop_test():
+    def stop_test(test):
         if getattr(TestLogger.current_test, '_testMethodName', None):
             print(' - '.join(
                 [
                     datetime.datetime.now().__str__(),
-                    getattr(TestLogger.current_test.__class__, '__name__'),
+                    getattr(test.__class__, '__name__'),
                     TestLogger.log_level,
-                    getattr(TestLogger.current_test, '_testMethodName', None),
+                    getattr(test, '_testMethodName', None),
                     '********** TEST FINISHED **********'
                 ]
             ))
@@ -129,13 +135,12 @@ class TestLogger(object):
         if capture_screen_shot(path):
             print(datetime.datetime.now().__str__() + ' - INFO - ' + "截图路径：" + path)
 
-
-def capture_screen_shot(path):
-    if os.path.isfile(path):
-        os.remove(path)
-    dir_name, file_name = os.path.split(path)
-    if not os.path.isdir(dir_name):
-        os.makedirs(dir_name)
-    capture = getattr(DriverCache.current_driver, 'get_screenshot_as_file', lambda p: None)
-    result = capture(path)
-    return result
+# def capture_screen_shot(path):
+#     if os.path.isfile(path):
+#         os.remove(path)
+#     dir_name, file_name = os.path.split(path)
+#     if not os.path.isdir(dir_name):
+#         os.makedirs(dir_name)
+#     capture = getattr(DriverCache.current_driver, 'get_screenshot_as_file', lambda p: None)
+#     result = capture(path)
+#     return result

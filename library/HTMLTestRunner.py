@@ -51,6 +51,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # URL: http://tungwaiyip.info/software/HTMLTestRunner.html
 from library.core.TestLogger import TestLogger
+from library.core.utils import common
 
 __author__ = "Wai Yip Tung,  Findyou"
 __version__ = "0.8.2.2"
@@ -103,13 +104,18 @@ class OutputRedirector(object):
     """ Wrapper to redirect stdout or stderr """
 
     def __init__(self, fp):
+        self.mirror_log_output = True
         self.fp = fp
 
     def write(self, s):
         self.fp.write(s)
+        if self.mirror_log_output:
+            common.write_str_to_log_file(s)
 
     def writelines(self, lines):
         self.fp.writelines(lines)
+        if self.mirror_log_output:
+            common.write_lines_to_log_file(lines)
 
     def flush(self):
         self.fp.flush()
@@ -174,8 +180,8 @@ class Template_mixin(object):
     # HTML Template
 
     HTML_TMPL = r"""<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE  html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>%(title)s</title>
     <meta name="generator" content="%(generator)s"/>

@@ -1,3 +1,4 @@
+import re
 import unittest
 
 from library.core import Keywords
@@ -27,9 +28,10 @@ class LoginTest(TestCase):
         1、双卡手机
         2、测试机能正常联网
         """
-        self.assertIn(Keywords.Android.get_network_state_code(), [2, 4, 6])
+        # self.assertIn(Keywords.Android.get_network_state_code(), [2, 4, 6])  # 存在有网但是状态为0 的情况，不可以作为是否有网的条件
         guide_page = GuidePage()
         if guide_page.driver.current_activity == guide_page.ACTIVITY:
+            guide_page.wait_for_page_load()
             if guide_page._is_text_present("解锁“免费通信”新攻略"):
                 guide_page.swipe_to_the_second_banner()
                 guide_page.swipe_to_the_third_banner()
@@ -83,7 +85,9 @@ class LoginTest(TestCase):
         sms = SmsLoginPage()
         sms.wait_for_page_load()
         sms.input_phone_number(phone_number)
-        code = sms.get_verification_code()
+        result = sms.get_verification_code(60)
+        self.assertIn('【登录验证】尊敬的用户', result)
+        code = re.findall(r'\d+', result)
         sms.input_verification_code(code)
         sms.click_login()
         sms.click_i_know()

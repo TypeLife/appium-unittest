@@ -28,6 +28,17 @@ class BasePage(object):
             raise e
         return platform_name.lower()
 
+    def _get_device_model(self):
+        """获取设备型号"""
+        platform = self._get_platform()
+        if platform == 'android':
+            model = self.execute_shell_command('getprop', 'ro.product.model')
+            return model.strip()
+        elif platform == 'ios':
+            return 'ios'
+        else:
+            return 'other'
+
     def get_element(self, locator):
         return self.driver.find_element(*locator)
 
