@@ -23,8 +23,8 @@ APPIUM_SETTING = {
 # Driver 默认的 desired_capabilities
 DEFAULT_DESIRED_CAPABILITY = {
     "platformName": "Android",
-    "platformVersion": "8.0",
-    "deviceName": "WFVBB18511530482",
+    "platformVersion": "6.0",
+    "deviceName": "VCO7IFTKKZZ5FI9T",
     # "automationName": "UiAutomator2",
     "newCommandTimeout": 600,
     "appPackage": "com.chinasofti.rcs",

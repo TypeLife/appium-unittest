@@ -1,5 +1,6 @@
 import re
 import unittest
+import time
 
 from appium.webdriver.common.mobileby import MobileBy
 
@@ -80,6 +81,10 @@ class SmsLoginPage(BasePage):
             )
         except TimeoutError:
             raise AssertionError("登录按钮没有变成可点击状态")
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
         self.click_element(self.locators['登录'])
 
     @TestLogger.log()
@@ -108,3 +113,49 @@ class SmsLoginPage(BasePage):
                 message
             )
         return self
+
+    @TestLogger.log()
+    def wait_for_verify_code_load(self, timeout=60, auto_accept_alerts=True):
+        """等待短信验证码"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_text_present("登录验证")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(timeout)
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def wait_for_i_know_load(self, timeout=10, auto_accept_alerts=True):
+        """等待 我知道了"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_text_present("我知道了")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(timeout)
+            raise AssertionError(
+                message
+            )
+        return self
+    @TestLogger.log()
+    def get_verify_code_by_notice_board(self):
+        """根据通知栏获取登录验证码"""
+        self.click_element(self.__class__.locators["获取验证码"])
+        time.sleep(35)
+        # self.wait_for_verify_code_load()
+        # 打开通知栏，通过通知栏获取验证码
+        self.driver.open_notifications()
+        # 获取验证码
+        el = self.driver.find_element_by_android_uiautomator('new UiSelector().textContains("登录验证")')
+        code = re.findall('\d{3,8}', el.text)
+        # 通知栏回退
+        self.driver.back()
+        return code

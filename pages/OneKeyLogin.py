@@ -2,7 +2,7 @@ from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
-import time
+
 
 class OneKeyLoginPage(BasePage):
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.OneKeyLoginActivity'
@@ -17,7 +17,6 @@ class OneKeyLoginPage(BasePage):
     @TestLogger.log()
     def assert_phone_number_equals_to(self, phone_number):
         """等待手机号读取成功"""
-        time.sleep(8)
         self.element_text_should_be(self.__class__.locators["电话号码"], phone_number)
         return self
 
@@ -60,3 +59,21 @@ class OneKeyLoginPage(BasePage):
                 message
             )
         return self
+
+    @TestLogger.log()
+    def wait_for_tell_number_load(self, timeout=10, auto_accept_alerts=True):
+        """等待一键登录页面的‘将以本机号码登录’变成 手机号码 """
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_text_present_contains(self.locators["电话号码"], r"\d+", regex=True)
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(timeout)
+            raise AssertionError(
+                message
+            )
+        return self
+
+

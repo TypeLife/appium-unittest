@@ -306,7 +306,7 @@ class BasePage(object):
                 result = pt.fullmatch(actual)
             else:
                 pt = re.compile(pattern)
-                result = pt.match(pattern)
+                result = pt.match(actual)
         else:
             if full_match:
                 result = pattern == actual
@@ -360,3 +360,22 @@ class BasePage(object):
             auto_accept_alerts
         )
         return self
+
+    def _is_text_present_contains(self, locator, pattern, full_match=False, regex=False):
+        element = self.get_element(locator)
+        actual = element.text
+        if regex:
+            if full_match:
+                pt = re.compile(pattern)
+                result = pt.fullmatch(actual)
+            else:
+                pt = re.compile(pattern)
+                result = pt.search(actual)
+        else:
+            if full_match:
+                result = pattern == actual
+            else:
+                result = pattern in actual
+        if not result:
+            return False
+        return True
