@@ -83,6 +83,87 @@ class LoginTest(TestCase):
                 click_submit_button()
             SmsLoginPage().wait_for_page_load()
 
+    @staticmethod
+    def enter_login_page():
+        """移动单卡进入登录界面"""
+        guide_page = GuidePage()
+        if guide_page.driver.current_activity == guide_page.ACTIVITY:
+            # if guide_page._is_text_present("解锁“免费通信”新攻略"):
+            guide_page.wait_until(
+                lambda d: guide_page._is_text_present("解锁“免费通信”新攻略")
+            )
+            guide_page.swipe_to_the_second_banner()
+            guide_page.swipe_to_the_third_banner()
+            guide_page.click_start_the_experience()
+
+            # 确定
+            PermissionListPage(). \
+                wait_for_page_load(). \
+                click_submit_button()
+
+            # 等待页面进入一键登录页
+            OneKeyLoginPage().wait_for_page_load()
+        elif OneKeyLoginPage().is_current_activity_match_this_page():
+            pass
+        else:
+            Keywords.Android.launch_app()
+            guide_page.wait_for_page_load()
+            guide_page.swipe_to_the_second_banner()
+            guide_page.swipe_to_the_third_banner()
+            guide_page.click_start_the_experience()
+
+            # 确定
+            PermissionListPage(). \
+                wait_for_page_load(). \
+                click_submit_button()
+
+            # 等待页面进入一键登录页
+            OneKeyLoginPage().wait_for_page_load()
+
+    @staticmethod
+    def one_key_login(phone_number='14775970982', login_time=60):
+        """一键登录"""
+        LoginTest.enter_login_page()
+        OneKeyLoginPage(). \
+            wait_for_page_load(). \
+            wait_for_tell_number_load(timeout=60). \
+            assert_phone_number_equals_to(phone_number). \
+            check_the_agreement(). \
+            click_one_key_login()
+        MessagePage().wait_for_page_load(login_time)
+
+    def setUp_test_login_0001(self):
+        LoginTest.enter_login_page()
+
+    @unittest.skip("skip 测试test_login_0001")
+    def test_login_0001(self, phone_number='14775970982', login_time=60):
+        """ 本网非首次登录已设置头像-一键登录页面元素检查"""
+        oklp = OneKeyLoginPage()
+        # 检查一键登录
+        oklp.wait_for_page_load()
+        oklp.wait_for_tell_number_load(timeout=60)
+        # 检查电话号码
+        oklp.assert_phone_number_equals_to(phone_number)
+        # 检查 服务协议
+        oklp.page_should_contain_text("服务协议")
+        # 登录
+        oklp.check_the_agreement()
+        oklp.click_one_key_login()
+        MessagePage().wait_for_page_load(login_time)
+
+    def setUp_test_login_0002(self):
+        LoginTest.one_key_login()
+
+    def test_login_0002(self):
+        """已登录状态后，退出后台"""
+        mp = MessagePage()
+        # app进入后台
+        mp.run_app_in_background()
+        # 检查是否是进入后台之前的页面
+        mp.page_should_contain_text("我")
+        mp.page_should_contain_text("通讯录")
+        mp.page_should_contain_text("工作台")
+
     @unittest.skip("skip 移动账号登录")
     def test_login_C0003(self, phone_number='14775970982', login_time=60):
         """移动账号登录"""
@@ -144,7 +225,7 @@ class LoginTest(TestCase):
         """
         LoginTest.diff_card_enter_login_page()
 
-    # @unittest.skip("skip 单卡异网账户测试login_0052")
+    @unittest.skip("skip 单卡异网账户测试login_0052")
     def test_login_0052(self, phone_number='18681151872'):
         """短信验证码登录-异网不显示一键登录入口"""
         sl = SmsLoginPage()
