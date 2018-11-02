@@ -119,7 +119,7 @@ class LoginTest(TestCase):
         """
         LoginTest.diff_card_enter_login_page()
 
-    # @unittest.skip("skip 异网账户测试")
+    @unittest.skip("skip 单卡异网账户测试")
     def test_login_0050(self, phone_number='18681151872', login_time=60):
         """短信验证码登录-（联通）异网用户首次登录"""
         sl = SmsLoginPage()
@@ -136,6 +136,22 @@ class LoginTest(TestCase):
         # 点击‘我知道了’
         sl.click_i_know()
         MessagePage().wait_for_page_load(login_time)
+
+    def setUp_test_login_0052(self):
+        """
+        预置条件：
+        1、异网账号进入登录页面
+        """
+        LoginTest.diff_card_enter_login_page()
+
+    # @unittest.skip("skip 单卡异网账户测试login_0052")
+    def test_login_0052(self, phone_number='18681151872'):
+        """短信验证码登录-异网不显示一键登录入口"""
+        sl = SmsLoginPage()
+        # 输入电话号码
+        sl.input_phone_number(phone_number)
+        sl.page_should_not_contain_text("一键登录")
+
 
 if __name__ == '__main__':
     unittest.main()
