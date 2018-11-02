@@ -154,8 +154,10 @@ class SmsLoginPage(BasePage):
         # 打开通知栏，通过通知栏获取验证码
         self.driver.open_notifications()
         # 获取验证码
-        el = self.driver.find_element_by_android_uiautomator('new UiSelector().textContains("登录验证")')
-        code = re.findall('\d{3,8}', el.text)
+        el = self.driver.find_elements_by_android_uiautomator('new UiSelector().textContains("登录验证")')
+        code = None
+        if el:
+            code = re.findall('\d{3,8}', el[-1].text)
         # 通知栏回退
         self.driver.back()
         return code
