@@ -379,3 +379,7 @@ class BasePage(object):
         if not result:
             return False
         return True
+
+    def run_app_in_background(self, seconds=5):
+        """让 app 进入后台运行seconds 秒"""
+        self.driver.background_app(seconds)
