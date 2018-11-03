@@ -18,7 +18,7 @@ class SmsLoginPage(BasePage):
         "登录": (MobileBy.ID, 'com.chinasofti.rcs:id/btnLogin'),
         "已阅读并同意": (MobileBy.ID, 'com.chinasofti.rcs:id/agreement_checkbox'),
         "我知道了": (MobileBy.ID, 'com.chinasofti.rcs:id/btn_know'),
-
+        "和飞信软件许可及服务协议": (MobileBy.ID, "com.chinasofti.rcs:id/agreement_tv")
     }
 
     @TestLogger.log()
@@ -145,6 +145,7 @@ class SmsLoginPage(BasePage):
                 message
             )
         return self
+
     @TestLogger.log()
     def get_verify_code_by_notice_board(self):
         """根据通知栏获取登录验证码"""
@@ -161,3 +162,13 @@ class SmsLoginPage(BasePage):
         # 通知栏回退
         self.driver.back()
         return code
+
+    @TestLogger.log()
+    def click_license_agreement(self):
+        """点击和飞信软件许可及服务协议"""
+        self.click_element(self.__class__.locators["和飞信软件许可及服务协议"])
+
+    @TestLogger.log()
+    def login_btn_is_checked(self):
+        """获取登录按钮是否可点击"""
+        return self.get_element(self.__class__.locators["登录"]).get_attribute('checked')
