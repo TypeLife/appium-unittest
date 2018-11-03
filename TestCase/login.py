@@ -135,7 +135,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0001(self):
         LoginTest.enter_login_page()
 
-    @unittest.skip("skip 测试test_login_0001")
+    @unittest.skip("skip 本网单卡测试test_login_0001")
     def test_login_0001(self, phone_number='14775970982', login_time=60):
         """ 本网非首次登录已设置头像-一键登录页面元素检查"""
         oklp = OneKeyLoginPage()
@@ -154,6 +154,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0002(self):
         LoginTest.one_key_login()
 
+    @unittest.skip("skip 本网单卡测试test_login_0002")
     def test_login_0002(self):
         """已登录状态后，退出后台"""
         mp = MessagePage()
@@ -192,6 +193,19 @@ class LoginTest(TestCase):
         sms.click_login()
         sms.click_i_know()
         MessagePage().wait_for_page_load(login_time)
+
+    def setUp_test_login_0025(self):
+        """异网账号进入登录页面"""
+        LoginTest.diff_card_enter_login_page()
+
+    @unittest.skip("skip 单卡异网账户测试login_0025")
+    def test_login_0025(self):
+        """非首次已设置头像昵称登录短信登录页元素显示(异网单卡)"""
+        sl = SmsLoginPage()
+        sl.page_should_contain_text("输入本机号码")
+        sl.page_should_contain_text("输入验证码")
+        sl.page_should_contain_text("获取验证码")
+        self.assertEqual(sl.login_btn_is_checked(), 'false')
 
     def setUp_test_login_0050(self):
         """
