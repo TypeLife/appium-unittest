@@ -588,8 +588,11 @@ class HTMLTestRunner(Template_mixin):
         if result.error_count:   status.append('错误 %s' % result.error_count)
         if status:
             status = '，'.join(status)
-            self.passrate = str("%.2f%%" % (float(result.success_count) / float(
-                result.success_count + result.failure_count + result.error_count) * 100))
+            try:
+                self.passrate = str("%.2f%%" % (float(result.success_count) / float(
+                    result.success_count + result.failure_count + result.error_count) * 100))
+            except ZeroDivisionError:
+                self.passrate = 'N/A'
         else:
             status = 'none'
         return [
