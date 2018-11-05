@@ -18,7 +18,8 @@ class SmsLoginPage(BasePage):
         "登录": (MobileBy.ID, 'com.chinasofti.rcs:id/btnLogin'),
         "已阅读并同意": (MobileBy.ID, 'com.chinasofti.rcs:id/agreement_checkbox'),
         "我知道了": (MobileBy.ID, 'com.chinasofti.rcs:id/btn_know'),
-        "和飞信软件许可及服务协议": (MobileBy.ID, "com.chinasofti.rcs:id/agreement_tv")
+        "和飞信软件许可及服务协议": (MobileBy.ID, "com.chinasofti.rcs:id/agreement_tv"),
+        "切换另一号码登录": (MobileBy.ID, "com.chinasofti.rcs:id/change_to_one"),
     }
 
     @TestLogger.log()
