@@ -1,6 +1,7 @@
 import re
 from unicodedata import normalize
-
+import os
+import time
 from appium import webdriver
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.webdriver.support.wait import WebDriverWait
@@ -383,3 +384,19 @@ class BasePage(object):
     def run_app_in_background(self, seconds=5):
         """让 app 进入后台运行seconds 秒"""
         self.driver.background_app(seconds)
+
+    def get_error_code_info_by_adb(self, pattern, timeout=5):
+        """通过adb log 获取错误码信息"""
+        os.system("adb logcat -c")
+        cmd = ' adb logcat -d |findstr %s' % pattern
+        n = 0
+        code_info = None
+        while n < timeout:
+            code_info = os.popen(cmd).read()
+            if code_info:
+                break
+            else:
+                time.sleep(1)
+                n += 1
+                continue
+        return code_info
