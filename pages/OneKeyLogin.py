@@ -1,8 +1,8 @@
 from appium.webdriver.common.mobileby import MobileBy
-
+from appium.webdriver.common.touch_action import TouchAction
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
-
+from appium.webdriver.connectiontype import ConnectionType
 
 class OneKeyLoginPage(BasePage):
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.OneKeyLoginActivity'
@@ -11,7 +11,9 @@ class OneKeyLoginPage(BasePage):
         "电话号码": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_content'),
         "一键登录": (MobileBy.ID, 'com.chinasofti.rcs:id/one_key_login'),
         "切换另一号码登录": (MobileBy.ID, "com.chinasofti.rcs:id/change_to_smslogin"),
-        "已阅读并同意复选框": (MobileBy.ID, "com.chinasofti.rcs:id/agreement_checkbox")
+        "已阅读并同意复选框": (MobileBy.ID, "com.chinasofti.rcs:id/agreement_checkbox"),
+        "客户端头像": (MobileBy.ID, "com.chinasofti.rcs:id/login_iron"),
+        "和飞信软件许可及服务协议": (MobileBy.ID, "com.chinasofti.rcs:id/agreement_text")
     }
 
     @TestLogger.log()
@@ -76,4 +78,12 @@ class OneKeyLoginPage(BasePage):
             )
         return self
 
+    @TestLogger.log()
+    def click_client_logo_pic(self):
+        """点击客户端头像"""
+        self.click_element(self.__class__.locators["客户端头像"])
 
+    @TestLogger.log()
+    def click_license_agreement(self):
+        """点击和飞信软件许可及服务协议"""
+        self.click_element(self.__class__.locators["和飞信软件许可及服务协议"])
