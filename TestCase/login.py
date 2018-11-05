@@ -5,6 +5,7 @@ from library.core import Keywords
 from library.core.TestCase import TestCase
 from library.core.utils.WebDriverCache import DriverCache
 from pages import *
+from pages import Agreement
 import time
 from appium.webdriver.common.mobileby import MobileBy
 
@@ -160,6 +161,7 @@ class LoginTest(TestCase):
         mp = MessagePage()
         # app进入后台
         mp.run_app_in_background()
+        mp.wait_for_page_load()
         # 检查是否是进入后台之前的页面
         mp.page_should_contain_text("我")
         mp.page_should_contain_text("通讯录")
@@ -193,6 +195,35 @@ class LoginTest(TestCase):
         sms.click_login()
         sms.click_i_know()
         MessagePage().wait_for_page_load(login_time)
+
+    def setUp_test_login_0007(self):
+        LoginTest.enter_login_page()
+
+    @unittest.skip("skip 本网单卡测试test_login_0007")
+    def test_login_0007(self):
+        """服务条款检查"""
+        oklp = OneKeyLoginPage()
+        # 点击许可服务协议
+        oklp.click_license_agreement()
+        time.sleep(2)
+        text = """和飞信业务是中国移动提供的通信服务，用户首次登录和飞信客户端即表示同意开通本业务，本业务不收取订购费用。如使用和飞信进行发送短信、拨打电话等功能可能会收取一定的费用。"""
+        Agreement.AgreementPage().page_should_contain_text(text)
+
+    def setUp_test_login_0010(self):
+        LoginTest.enter_login_page()
+
+    @unittest.skip("skip 一移动一异网卡登录测试test_login_0010")
+    def test_login_0010(self):
+        """一移动一异网卡登录"""
+        oklp = OneKeyLoginPage()
+        # 切换另一号码登录
+        oklp.choose_another_way_to_login()
+        sms = SmsLoginPage()
+        sms.wait_for_page_load()
+        sms.page_should_contain_text("输入本机号码")
+        sms.page_should_contain_text("输入验证码")
+        sms.page_should_contain_text("获取验证码")
+        sms.page_should_contain_text("切换另一号码登录")
 
     def setUp_test_login_0025(self):
         """异网账号进入登录页面"""
