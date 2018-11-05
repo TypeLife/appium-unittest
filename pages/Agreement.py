@@ -11,8 +11,7 @@ class AgreementPage(BasePage):
     @TestLogger.log()
     def wait_for_license_agreement_load(self, timeout=10, auto_accept_alerts=True):
         """等待 和飞信软件许可及服务协议 加载"""
-        text = """和飞信业务是中国移动提供的通信服务，用户首次登录和飞信客户端即表示同意开通本业务，本业务不收取订购费
-        用。如使用和飞信进行发送短信、拨打电话等功能可能会收取一定的费用。"""
+        text = """和飞信业务是中国移动提供的通信服务，用户首次登录和飞信客户端即表示同意开通本业务，本业务不收取订购费用。如使用和飞信进行发送短信、拨打电话等功能可能会收取一定的费用。"""
         try:
             self.wait_until(
                 timeout=timeout,
