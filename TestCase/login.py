@@ -3,7 +3,7 @@ import unittest
 
 from library.core import Keywords
 from library.core.TestCase import TestCase
-from library.core.utils.WebDriverCache import DriverCache
+from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE
 from pages import *
 
 
@@ -12,8 +12,8 @@ class LoginTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        if DriverCache.current_driver is None:
-            Keywords.Android.open_app()
+        pro6 = MOBILE_DRIVER_CACHE.switch('M960BDQN229CH')
+        pro6.connect_mobile()
 
     @classmethod
     def tearDownClass(cls):
@@ -68,7 +68,7 @@ class LoginTest(TestCase):
         """移动账号登录"""
         OneKeyLoginPage(). \
             wait_for_page_load(). \
-            assert_phone_number_equals_to(phone_number). \
+            assert_phone_number_equals_to('13714240390'). \
             check_the_agreement(). \
             click_one_key_login()
 
