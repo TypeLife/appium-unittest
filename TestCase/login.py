@@ -8,6 +8,7 @@ from pages import *
 from pages import Agreement
 import time
 from appium.webdriver.common.mobileby import MobileBy
+from library.core.utils import WebDriverCache, ConfigManager
 
 
 class LoginTest(TestCase):
@@ -15,8 +16,9 @@ class LoginTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        if DriverCache.current_driver is None:
-            Keywords.Android.open_app()
+        # if DriverCache.current_driver is None:
+        #     Keywords.Android.open_app()
+        pass
 
     @classmethod
     def tearDownClass(cls):
@@ -133,8 +135,20 @@ class LoginTest(TestCase):
             click_one_key_login()
         MessagePage().wait_for_page_load(login_time)
 
+    @staticmethod
+    def open_app_first_time():
+        if DriverCache.current_driver is None:
+            Keywords.Android.open_app()
+
+    @staticmethod
+    def open_app_not_first_time():
+        """非首次登录打开app"""
+        desired_caps = ConfigManager.get_desired_caps()
+        desired_caps["noReset"] = True
+        Keywords.Android.open_app(desired_caps=desired_caps)
+
     def setUp_test_login_0001(self):
-        LoginTest.enter_login_page()
+        LoginTest.open_app_not_first_time()
 
     @unittest.skip("skip 本网单卡测试test_login_0001")
     def test_login_0001(self, phone_number='14775970982', login_time=60):
@@ -153,6 +167,7 @@ class LoginTest(TestCase):
         MessagePage().wait_for_page_load(login_time)
 
     def setUp_test_login_0002(self):
+        LoginTest.open_app_first_time()
         LoginTest.one_key_login()
 
     @unittest.skip("skip 本网单卡测试test_login_0002")
@@ -197,6 +212,7 @@ class LoginTest(TestCase):
         MessagePage().wait_for_page_load(login_time)
 
     def setUp_test_login_0007(self):
+        LoginTest.open_app_first_time()
         LoginTest.enter_login_page()
 
     @unittest.skip("skip 本网单卡测试test_login_0007")
@@ -209,7 +225,21 @@ class LoginTest(TestCase):
         text = """和飞信业务是中国移动提供的通信服务，用户首次登录和飞信客户端即表示同意开通本业务，本业务不收取订购费用。如使用和飞信进行发送短信、拨打电话等功能可能会收取一定的费用。"""
         Agreement.AgreementPage().page_should_contain_text(text)
 
+    def setUp_test_login_0009(self):
+        LoginTest.open_app_first_time()
+        LoginTest.enter_login_page()
+
+    # @unittest.skip("skip 本网单卡测试test_login_0009")
+    def test_login_0009(self):
+        """登录页面检查"""
+        oklp = OneKeyLoginPage()
+        oklp.page_should_contain_text("语言")
+        oklp.page_should_contain_text("一键登录")
+        oklp.page_should_contain_text("《和飞信软件许可及服务协议》")
+        oklp.page_should_contain_client_logo_pic()
+
     def setUp_test_login_0010(self):
+        LoginTest.open_app_first_time()
         LoginTest.enter_login_page()
 
     @unittest.skip("skip 一移动一异网卡登录测试test_login_0010")
@@ -227,6 +257,7 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0025(self):
         """异网账号进入登录页面"""
+        LoginTest.open_app_first_time()
         LoginTest.diff_card_enter_login_page()
 
     @unittest.skip("skip 单卡异网账户测试login_0025")
@@ -238,16 +269,76 @@ class LoginTest(TestCase):
         sl.page_should_contain_text("获取验证码")
         self.assertEqual(sl.login_btn_is_checked(), 'false')
 
+    def setUp_test_login_0026(self):
+        """
+        预置条件：
+        1、异网账号(非首次登录)进入登录页面
+        """
+        LoginTest.open_app_not_first_time()
+
+    @unittest.skip("skip 单卡（联通）输入验证码验证-异网用户测试login_0026")
+    def test_login_0026(self, phone_number='18681151872'):
+        """输入验证码验证-异网用户，正确有效的6位（断网)"""
+        sl = SmsLoginPage()
+        sl.wait_for_page_load()
+        # 获取网络链接状态
+        network_status = sl.get_network_status()
+        # 输入电话号码，点击获取验证码
+        sl.input_phone_number(phone_number)
+        # 获取验证码
+        code = sl.get_verify_code_by_notice_board()
+        self.assertIsNotNone(code)
+        # 输入验证码
+        sl.input_verification_code(code)
+        # 断开网络连接
+        sl.set_network_status(1)
+        # 点击登录
+        sl.click_login()
+        sl.wait_for_i_know_load()
+        # 点击‘我知道了’
+        sl.click_i_know()
+        # 网络异常提示
+        code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*102101", timeout=40)
+        self.assertIn("102101", code_info)
+        # 恢复网络连接
+        sl.set_network_status(network_status)
+
     def setUp_test_login_0050(self):
         """
         预置条件：
         1、异网账号进入登录页面
         """
+        LoginTest.open_app_first_time()
         LoginTest.diff_card_enter_login_page()
 
-    @unittest.skip("skip 单卡异网账户测试")
+    @unittest.skip("skip 单卡异网账户测试login_0050")
     def test_login_0050(self, phone_number='18681151872', login_time=60):
         """短信验证码登录-（联通）异网用户首次登录"""
+        sl = SmsLoginPage()
+        sl.wait_for_page_load()
+        # 输入电话号码，点击获取验证码
+        sl.input_phone_number(phone_number)
+        # 获取验证码
+        code = sl.get_verify_code_by_notice_board()
+        self.assertIsNotNone(code)
+        # 输入验证码，点击登录
+        sl.input_verification_code(code)
+        sl.click_login()
+        sl.wait_for_i_know_load()
+        # 点击‘我知道了’
+        sl.click_i_know()
+        MessagePage().wait_for_page_load(login_time)
+
+    def setUp_test_login_0051(self):
+        """
+        预置条件：
+        1、异网账号(非首次登录)进入登录页面
+        """
+        LoginTest.open_app_not_first_time()
+
+    @unittest.skip("skip 单卡异网账户测试login_0051")
+    def test_login_0051(self, phone_number='18681151872', login_time=60):
+        """短信验证码登录-异网用户登录（非首次)"""
         sl = SmsLoginPage()
         sl.wait_for_page_load()
         # 输入电话号码，点击获取验证码
@@ -268,6 +359,7 @@ class LoginTest(TestCase):
         预置条件：
         1、异网账号进入登录页面
         """
+        LoginTest.open_app_first_time()
         LoginTest.diff_card_enter_login_page()
 
     @unittest.skip("skip 单卡异网账户测试login_0052")
