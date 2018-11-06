@@ -1,8 +1,8 @@
 import re
 import unittest
 
-from library.core import Keywords
 from library.core.TestCase import TestCase
+from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE
 from pages import *
 
@@ -17,7 +17,7 @@ class LoginTest(TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        Keywords.Android.closed_current_driver()
+        MOBILE_DRIVER_CACHE.current.disconnect_mobile()
 
     def default_setUp(self):
         """
@@ -47,7 +47,7 @@ class LoginTest(TestCase):
         elif OneKeyLoginPage().is_current_activity_match_this_page():
             pass
         else:
-            Keywords.Android.launch_app()
+            MOBILE_DRIVER_CACHE.current.launch_app()
             guide_page.wait_for_page_load()
             guide_page.swipe_to_the_second_banner()
             guide_page.swipe_to_the_third_banner()
@@ -64,13 +64,15 @@ class LoginTest(TestCase):
     def default_tearDown(self):
         pass
 
-    def test_login_C0003(self, phone_number='13510772034', login_time=60):
+    def test_login_C0003(self, login_time=60):
         """移动账号登录"""
-        OneKeyLoginPage(). \
-            wait_for_page_load(). \
-            assert_phone_number_equals_to('13714240390'). \
-            check_the_agreement(). \
-            click_one_key_login()
+        onkey = OneKeyLoginPage()
+        onkey.wait_for_page_load()
+        numbers = onkey.mobile.get_cards(CardType.CHINA_MOBILE)
+        self.assertIsNotNone(numbers)
+        onkey.assert_phone_number_equals_to(numbers[0])
+        onkey.check_the_agreement()
+        onkey.click_one_key_login()
 
         MessagePage().wait_for_page_load(login_time)
 

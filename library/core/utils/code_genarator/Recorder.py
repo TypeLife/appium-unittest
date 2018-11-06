@@ -1,14 +1,13 @@
-import datetime
 import os
 import re
 import sys
 from collections import OrderedDict
-from xml.etree import ElementTree as ET
+from xml.etree import ElementTree as Et
 
 from appium.webdriver.common.mobileby import MobileBy
 
 import settings
-from library.core import Keywords
+from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE
 
 _ENCODING = sys.stdin.encoding if sys.stdin.encoding else "UTF-8"
 
@@ -56,11 +55,12 @@ def build_page_object(page_name=None, page_description=None, activity=None, loca
 
 
 def generate_page_object():
+    driver = MOBILE_DRIVER_CACHE.current.driver
     do = True
     while do:
-        activity = Keywords.current_driver().current_activity
-        page_source = Keywords.current_driver().page_source
-        tree = ET.XML(page_source)
+        activity = driver.current_activity
+        page_source = driver.page_source
+        tree = Et.XML(page_source)
         elements = []
 
         def parse(node):

@@ -1,12 +1,8 @@
 import json
-import re
 from abc import *
-from unicodedata import normalize
 
 from appium import webdriver
-from appium.webdriver.common.mobileby import MobileBy
 from selenium.common.exceptions import InvalidSessionIdException
-from selenium.webdriver.support.wait import WebDriverWait
 
 
 class MobileDriver(ABC):
@@ -26,7 +22,6 @@ class MobileDriver(ABC):
     def __del__(self):
         quit_driver = getattr(self.driver, 'quit', lambda: None)
         try:
-            print('Remove ' + self.__str__())
             quit_driver()
         except:
             pass
@@ -117,6 +112,9 @@ class MobileDriver(ABC):
 
     def is_android(self):
         return self.is_platform('android')
+
+    def launch_app(self):
+        self.driver.launch_app()
 
     def __str__(self):
         device_info = {

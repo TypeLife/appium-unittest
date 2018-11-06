@@ -1,12 +1,9 @@
 import re
 from unicodedata import normalize
 
-from appium import webdriver
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.webdriver.support.wait import WebDriverWait
 
-from library.core.mobile.mobiledriver import MobileDriver
-from library.core.utils.WebDriverCache import DriverCache
 from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE
 
 
@@ -20,8 +17,6 @@ class BasePage(object):
 
     @property
     def driver(self):
-        # assert isinstance(DriverCache.current_driver, webdriver.Remote)
-        # return DriverCache.current_driver
         return self.mobile.driver
 
     @property
