@@ -57,11 +57,13 @@ class MobileDriver(ABC):
         if not isinstance(card_slot, list):
             raise Exception('数据类型异常')
         for n in range(self.total_card_slot()):
-            if card_slot[n]['TYPE'] in self.supported_card_types():
-                cards.append(card_slot[n])
-            else:
-                raise Exception('该手机不支持' + card_slot[n]['TYPE'] + '类型SIM卡（支持类型：{}）'
-                                .format(self.supported_card_types()))
+            card = card_slot[n]
+            if isinstance(card, dict):
+                if card['TYPE'] in self.supported_card_types():
+                    cards.append(card)
+                else:
+                    raise Exception('该手机不支持' + card_slot[n]['TYPE'] + '类型SIM卡（支持类型：{}）'
+                                    .format(self.supported_card_types()))
         return cards
 
     def get_cards(self, card_type):
@@ -86,10 +88,17 @@ class MobileDriver(ABC):
 
     def connect_mobile(self):
         if self.driver is None:
-            self._driver = webdriver.Remote(self._remote_url, self._desired_caps, self._browser_profile, self._proxy,
-                                            self._keep_alive)
+            try:
+                self._driver = webdriver.Remote(self._remote_url, self._desired_caps, self._browser_profile,
+                                                self._proxy,
+                                                self._keep_alive)
+            except Exception as e:
+                raise RuntimeError('无法连接到 appium server: {}'.format(self._remote_url))
         elif not self.is_connection_created:
-            self.driver.start_session(self._desired_caps)
+            try:
+                self.driver.start_session(self._desired_caps)
+            except Exception as e:
+                raise RuntimeError('无法连接到 appium server: {}'.format(self._remote_url))
         else:
             return
 
