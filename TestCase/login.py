@@ -83,7 +83,7 @@ class LoginTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        pro6 = switch_to_mobile('M960BDQN229CH')
+        pro6 = switch_to_mobile('jlyuan')
         pro6.connect_mobile()
 
     @classmethod
@@ -212,7 +212,7 @@ class LoginTest(TestCase):
     @staticmethod
     def open_app_not_first_time():
         """非首次登录打开app"""
-        pro6 = switch_to_mobile('M960BDQN229CH')
+        pro6 = switch_to_mobile('jlyuan')
         pro6.connect_mobile()
         pro6.reset_app()
         Preconditions.already_in_one_key_login_page()
