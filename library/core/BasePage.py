@@ -5,7 +5,7 @@ from appium import webdriver
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.webdriver.support.wait import WebDriverWait
 
-from library.core.utils.WebDriverCache import DriverCache
+from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE
 
 
 class BasePage(object):
@@ -18,8 +18,13 @@ class BasePage(object):
 
     @property
     def driver(self):
-        assert isinstance(DriverCache.current_driver, webdriver.Remote)
-        return DriverCache.current_driver
+        return MOBILE_DRIVER_CACHE.current.driver
+
+    def background_app(self):
+        self.driver.background_app()
+
+    def terminate_app(self, app_id, **options):
+        self.terminate_app(app_id, **options)
 
     def _get_platform(self):
         try:
@@ -77,6 +82,25 @@ class BasePage(object):
         value = element.get_attribute('clickable')
         is_clickable = mapper[value.lower()]
         return is_clickable
+
+    def _is_element_text_match(self, locator, pattern, full_match=True, regex=False):
+        element = self.get_element(locator)
+        actual = element.text
+        if regex:
+            if full_match:
+                pt = re.compile(pattern)
+                result = pt.fullmatch(actual)
+            else:
+                pt = re.compile(pattern)
+                result = pt.search(actual)
+        else:
+            if full_match:
+                result = pattern == actual
+            else:
+                result = pattern in actual
+        if not result:
+            return False
+        return True
 
     def execute_shell_command(self, command, *args):
         """
@@ -298,6 +322,7 @@ class BasePage(object):
         return True
 
     def element_text_should_match(self, locator, pattern, full_match=True, regex=False):
+        """断言元素内文本，支持正则表达式"""
         element = self.get_element(locator)
         actual = element.text
         if regex:
@@ -306,7 +331,7 @@ class BasePage(object):
                 result = pt.fullmatch(actual)
             else:
                 pt = re.compile(pattern)
-                result = pt.match(pattern)
+                result = pt.search(actual)
         else:
             if full_match:
                 result = pattern == actual

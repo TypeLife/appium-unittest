@@ -3,10 +3,79 @@ import time
 import unittest
 
 from library.core.TestCase import TestCase
-from library.core.utils import ConfigManager
-from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE
+from library.core.common.simcardtype import CardType
+from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE, current_mobile, current_driver, switch_to_mobile
 from pages import *
 from pages import Agreement
+
+
+class Preconditions(object):
+    """
+    分解前置条件
+    """
+
+    @staticmethod
+    def single_cmcc_android_4g_client():
+        """
+        启动
+        1、4G，安卓客户端
+        2、移动卡
+        :return:
+        """
+        client = switch_to_mobile('M960BDQN229CH')
+        client.connect_mobile()
+
+    @staticmethod
+    def already_in_one_key_login_page():
+        """
+        1、已经进入一键登录页
+        :return:
+        """
+        # 如果当前页面已经是一键登录页，不做任何操作
+        one_key = OneKeyLoginPage()
+        if one_key.is_on_this_page():
+            return
+
+        # 如果当前页不是引导页第一页，重新启动app
+        guide_page = GuidePage()
+        if not guide_page.is_on_the_first_guide_page():
+            current_mobile().launch_app()
+            guide_page.wait_for_page_load(20)
+
+        # 跳过引导页
+        guide_page.swipe_to_the_second_banner()
+        guide_page.swipe_to_the_third_banner()
+        guide_page.click_start_the_experience()
+
+        # 点击权限列表页面的确定按钮
+        permission_list = PermissionListPage()
+        permission_list.wait_for_page_load()
+        permission_list.click_submit_button()
+        one_key.wait_for_page_load()
+
+    @staticmethod
+    def login_by_one_key_login():
+        """
+        从一键登录页面登录
+        :return:
+        """
+        # 等待号码加载完成后，点击一键登录
+        one_key = OneKeyLoginPage()
+        one_key.wait_for_tell_number_load()
+        one_key.click_one_key_login()
+
+        # 等待消息页
+        message_page = MessagePage()
+        message_page.wait_for_page_load()
+
+    @staticmethod
+    def terminate_app():
+        """
+        强制关闭app,退出后台
+        :return:
+        """
+        app_id = current_driver().desired_capability['appPackage']
+        current_mobile().termiate_app(app_id)
 
 
 class LoginTest(TestCase):
@@ -14,12 +83,13 @@ class LoginTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        pro6 = MOBILE_DRIVER_CACHE.switch('M960BDQN229CH')
+        pro6 = switch_to_mobile('M960BDQN229CH')
         pro6.connect_mobile()
 
     @classmethod
     def tearDownClass(cls):
-        MOBILE_DRIVER_CACHE.current.disconnect_mobile()
+        # current_mobile().disconnect_mobile()
+        pass
 
     def default_setUp(self):
         """
@@ -142,22 +212,38 @@ class LoginTest(TestCase):
     @staticmethod
     def open_app_not_first_time():
         """非首次登录打开app"""
-        desired_caps = ConfigManager.get_desired_caps()
-        desired_caps["noReset"] = True
-        MOBILE_DRIVER_CACHE.current.launch_app()
+        pro6 = switch_to_mobile('M960BDQN229CH')
+        pro6.connect_mobile()
+        pro6.reset_app()
+        Preconditions.already_in_one_key_login_page()
+        Preconditions.login_by_one_key_login()
+
+        message_page = MessagePage()
+        message_page.wait_for_page_load()
+        message_page.open_me_page()
+
+        me = MePage()
+        me.scroll_to_bottom()
+        me.click_setting_menu()
+
+        setting = SettingPage()
+        setting.scroll_to_bottom()
+        setting.click_logout()
+        setting.click_ok_of_alert()
 
     def setUp_test_login_0001(self):
         LoginTest.open_app_not_first_time()
 
-    @unittest.skip("skip 本网单卡测试test_login_0001")
-    def test_login_0001(self, phone_number='14775970982', login_time=60):
+    # @unittest.skip("skip 本网单卡测试test_login_0001")
+    def test_login_0001(self, login_time=60):
         """ 本网非首次登录已设置头像-一键登录页面元素检查"""
         oklp = OneKeyLoginPage()
         # 检查一键登录
         oklp.wait_for_page_load()
         oklp.wait_for_tell_number_load(timeout=60)
         # 检查电话号码
-        oklp.assert_phone_number_equals_to(phone_number)
+        phone_numbers = current_mobile().get_cards(CardType.CHINA_MOBILE)
+        oklp.assert_phone_number_equals_to(phone_numbers[0])
         # 检查 服务协议
         oklp.page_should_contain_text("服务协议")
         # 登录
@@ -174,7 +260,7 @@ class LoginTest(TestCase):
         """已登录状态后，退出后台"""
         mp = MessagePage()
         # app进入后台
-        mp.run_app_in_background()
+        current_mobile().background_app()
         mp.wait_for_page_load()
         # 检查是否是进入后台之前的页面
         mp.page_should_contain_text("我")

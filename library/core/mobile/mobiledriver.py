@@ -18,6 +18,7 @@ class MobileDriver(ABC):
         self._keep_alive = keep_alive
         self._card_slot = self._init_sim_card(card_slot)
         self._driver = None
+        self.turn_off_reset()
 
     def __del__(self):
         quit_driver = getattr(self.driver, 'quit', lambda: None)
@@ -63,7 +64,7 @@ class MobileDriver(ABC):
 
     def get_cards(self, card_type):
         """返回指定类型卡手机号列表"""
-        return [card['CARD_NUMBER'] for card in self._card_slot if card['TYPE'] == card_type]
+        return list([card['CARD_NUMBER'] for card in self._card_slot if card['TYPE'] == card_type])
 
     @abstractmethod
     def supported_card_types(self):
@@ -100,6 +101,14 @@ class MobileDriver(ABC):
     def disconnect_mobile(self):
         self.driver.quit()
 
+    def turn_on_reset(self):
+        """开启重置app（在获取session之前有效）"""
+        self._desired_caps['noReset'] = False
+
+    def turn_off_reset(self):
+        """关闭重置app（在获取session之前有效）"""
+        self._desired_caps['noReset'] = True
+
     def is_platform(self, platform):
         if self.is_connection_created:
             platform_name = self.driver.desired_capabilities['platformName']
@@ -115,6 +124,15 @@ class MobileDriver(ABC):
 
     def launch_app(self):
         self.driver.launch_app()
+
+    def terminate_app(self, app_id, **options):
+        self.driver.terminate_app(app_id, **options)
+
+    def background_app(self):
+        self.driver.background_app()
+
+    def reset_app(self):
+        self.driver.reset()
 
     def __str__(self):
         device_info = {

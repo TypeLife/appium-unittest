@@ -13,7 +13,7 @@ class SmsLoginPage(BasePage):
 
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.SmsLoginActivity'
 
-    locators = {
+    __locators = {
         "输入本机号码": (MobileBy.ID, 'com.chinasofti.rcs:id/edt_phone_number'),
         "输入验证码": (MobileBy.ID, 'com.chinasofti.rcs:id/edt_verify_sms'),
         "获取验证码": (MobileBy.ID, 'com.chinasofti.rcs:id/get_sms'),
@@ -27,7 +27,7 @@ class SmsLoginPage(BasePage):
     @TestLogger.log()
     def input_phone_number(self, phone_number):
         """输入电话号码"""
-        self.input_text(self.__class__.locators["输入本机号码"], phone_number)
+        self.input_text(self.__class__.__locators["输入本机号码"], phone_number)
         return self
 
     @TestLogger.log()
@@ -39,7 +39,7 @@ class SmsLoginPage(BasePage):
                 self.execute_shell_command('logcat', '-c')
             except:
                 pass
-            self.click_element(self.__class__.locators["获取验证码"])
+            self.click_element(self.__class__.__locators["获取验证码"])
             try:
                 result = self.wait_until(
                     condition=lambda d: re.findall(r'【登录验证】尊敬的用户：\d+| 发送失败',
@@ -54,7 +54,7 @@ class SmsLoginPage(BasePage):
                 self.execute_shell_command('logcat', '-c')
             except:
                 pass
-            self.click_element(self.__class__.locators["获取验证码"])
+            self.click_element(self.__class__.__locators["获取验证码"])
             try:
                 result = self.wait_until(
                     condition=lambda d: re.findall(r'【登录验证】尊敬的用户：\d+| 发送失败',
@@ -68,19 +68,19 @@ class SmsLoginPage(BasePage):
     @TestLogger.log()
     def click_get_code(self):
         """点击获取验证码"""
-        self.click_element(self.__class__.locators["获取验证码"])
+        self.click_element(self.__class__.__locators["获取验证码"])
 
     @TestLogger.log()
     def input_verification_code(self, code):
         """输入验证码"""
-        self.input_text(self.locators['输入验证码'], code)
+        self.input_text(self.__locators['输入验证码'], code)
 
     @TestLogger.log()
     def click_login(self):
         """点击登录"""
         try:
             self.wait_until(
-                condition=lambda d: self._is_clickable(self.locators['登录'])
+                condition=lambda d: self._is_clickable(self.__locators['登录'])
             )
         except TimeoutError:
             raise AssertionError("登录按钮没有变成可点击状态")
@@ -88,18 +88,18 @@ class SmsLoginPage(BasePage):
             self.driver.hide_keyboard()
         except:
             pass
-        self.click_element(self.locators['登录'])
+        self.click_element(self.__locators['登录'])
 
     @TestLogger.log()
     def click_i_know(self):
         """点击弹出框我知道了"""
         try:
             self.wait_until(
-                condition=lambda d: self.page_should_contain_element(self.locators['我知道了'])
+                condition=lambda d: self.page_should_contain_element(self.__locators['我知道了'])
             )
         except TimeoutError:
             raise AssertionError('弹出框按钮“我知道了”没有在页面出现')
-        self.click_element(self.locators['我知道了'])
+        self.click_element(self.__locators['我知道了'])
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
@@ -108,7 +108,7 @@ class SmsLoginPage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_element_present(self.__class__.locators["输入本机号码"])
+                condition=lambda d: self._is_element_present(self.__class__.__locators["输入本机号码"])
             )
         except:
             message = "页面在{}s内，没有加载成功".format(str(timeout))
@@ -152,7 +152,7 @@ class SmsLoginPage(BasePage):
     @TestLogger.log()
     def get_verify_code_by_notice_board(self):
         """根据通知栏获取登录验证码"""
-        self.click_element(self.__class__.locators["获取验证码"])
+        self.click_element(self.__class__.__locators["获取验证码"])
         time.sleep(35)
         # self.wait_for_verify_code_load()
         # 打开通知栏，通过通知栏获取验证码
@@ -169,9 +169,9 @@ class SmsLoginPage(BasePage):
     @TestLogger.log()
     def click_license_agreement(self):
         """点击和飞信软件许可及服务协议"""
-        self.click_element(self.__class__.locators["和飞信软件许可及服务协议"])
+        self.click_element(self.__class__.__locators["和飞信软件许可及服务协议"])
 
     @TestLogger.log()
     def login_btn_is_checked(self):
         """获取登录按钮是否可点击"""
-        return self.get_element(self.__class__.locators["登录"]).get_attribute('checked')
+        return self.get_element(self.__class__.__locators["登录"]).get_attribute('checked')

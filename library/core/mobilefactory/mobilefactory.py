@@ -1,5 +1,5 @@
 from library.core.common.supportedmodel import SupportedModel
-from library.core.mobile import *
+from mobileimplements import *
 
 try:
     from settings.mobile_driver_mapper import MOBILE_DRIVER_CREATORS
@@ -15,9 +15,9 @@ class MobileFactory:
     def from_available_devices_setting(key):
 
         try:
-            from settings import AVAILABLE_DEVICES
+            from settings.available_devices import AVAILABLE_DEVICES
         except ImportError as e:
-            raise ImportError('setting/__init__.py 中没有设置项：AVAILABLE_DEVICES')
+            raise ImportError('setting/available_devices.py 中没有设置项：AVAILABLE_DEVICES')
         mobile_config = AVAILABLE_DEVICES.get(key)
         if mobile_config is None:
             raise Exception('AVAILABLE_DEVICES 找不到键位：{} '.format(key) + '的设置')

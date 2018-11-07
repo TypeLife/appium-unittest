@@ -1,13 +1,15 @@
 import os
 import re
 import sys
+import time
 from collections import OrderedDict
 from xml.etree import ElementTree as Et
 
 from appium.webdriver.common.mobileby import MobileBy
 
 import settings
-from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE
+from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE, current_driver
+from settings.available_devices import AVAILABLE_DEVICES
 
 _ENCODING = sys.stdin.encoding if sys.stdin.encoding else "UTF-8"
 
@@ -25,11 +27,13 @@ def get_template(path):
 def build_page_object(page_name=None, page_description=None, activity=None, locator=None):
     temp = get_template(PAGE_OBJECT_TEMPLATE)
     file_path = ''
+    source_path = ''
     try_times = 0
     while not page_name:
         sys.stdout.write('请输入页面类名：')
         page_name = sys.stdin.readline().strip()
         file_path = os.path.join(DISTINCT_PATH, page_name + '.py')
+        source_path = os.path.join(DISTINCT_PATH, page_name + '.xml')
         if os.path.isfile(file_path):
             page_name = None
         try_times += 1
@@ -51,20 +55,26 @@ def build_page_object(page_name=None, page_description=None, activity=None, loca
     out = re.sub(r'(%\(Locator\)s)', locator, out)
     with open(file_path, 'w+', encoding='UTF-8') as f:
         f.write(out)
-        sys.stdout.write('Page object created on: ' + file_path)
+        sys.stdout.write('Page object created on: ' + file_path + '\n')
+
+    with open(source_path, 'w+', encoding='UTF-8') as f:
+        f.write(current_driver().page_source)
+        sys.stdout.write('Page source created on: ' + source_path + '\n')
 
 
 def generate_page_object():
-    driver = MOBILE_DRIVER_CACHE.current.driver
+    driver = current_driver()
     do = True
     while do:
+        sys.stdout.write('按回车键开始录制：')
+        sys.stdin.readline().strip().upper()
         activity = driver.current_activity
         page_source = driver.page_source
         tree = Et.XML(page_source)
         elements = []
 
         def parse(node):
-            for child in node.getchildren():
+            for child in list(node):
                 resource_id = child.get('resource-id')
                 text = child.get('text') if child.get('text') else resource_id
                 elements.append((text, (MobileBy.ID, resource_id)))
@@ -74,7 +84,24 @@ def generate_page_object():
         locators = re.sub(r"('[^)]+\),?)", r'\1\n', dict(OrderedDict(elements)).__repr__())
         locators = re.sub(r"(\('id')", r'(MobileBy.ID', locators)
         build_page_object(activity=activity, locator=locators)
-        sys.stdout.write('是否继续生成下一个(Y/N)：')
-        feedback = sys.stdin.read().strip().upper()
-        if feedback != 'Y':
-            break
+        sys.stdout.write('\n结束录制?(Y/N)：')
+        feedback = sys.stdin.readline().strip().upper()
+        if feedback == 'Y':
+            do = False
+
+
+if __name__ == '__main__':
+    sys.stdout.write("当前使用的手机为：" + MOBILE_DRIVER_CACHE.current.alis + '\n')
+    devices = '\n\t'.join(AVAILABLE_DEVICES.keys())
+    sys.stdout.write("可用手机：\n\t" + devices + '\n')
+    sys.stdout.write('是否切换手机(Y/N):')
+    resp = sys.stdin.readline().strip().upper()
+    if resp == 'Y':
+        sys.stdout.write('输入要切换的手机:')
+        target = sys.stdin.readline().strip()
+        MOBILE_DRIVER_CACHE.switch(target)
+    time.sleep(.5)
+    sys.stdout.write('开始连接手机并启动应用....\n')
+    MOBILE_DRIVER_CACHE.current._desired_caps['newCommandTimeout'] = 1200
+    MOBILE_DRIVER_CACHE.current.connect_mobile()
+    generate_page_object()

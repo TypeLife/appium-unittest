@@ -5,6 +5,7 @@ import re
 
 from library.core.BasePage import BasePage
 from library.core.utils import ConfigManager, common
+from library.core.utils.applicationcache import current_mobile
 from library.core.utils.common import capture_screen_shot
 
 
@@ -18,7 +19,8 @@ class TestLogger(object):
             @functools.wraps(func)
             def wrapper(*args, **kw):
                 # info = description if description else func.__doc__
-                template = '%(time)s - %(className)s - %(level)s - %(caseName)s - %(func)s - %(description)s - %(args)s'
+                template = '%(time)s - %(className)s - %(level)s - %(caseName)s - %(func)s ' \
+                           + '- [%(mobile)s]%(description)s - %(args)s'
                 TestLogger.log_level = "INFO"
                 try:
                     result = func(*args, **kw)
@@ -29,16 +31,17 @@ class TestLogger(object):
 
                 finally:
                     log_info = func.__doc__ if info is None else info
-                    print(template % {'time': datetime.datetime.now().__str__(),
-                                      'className': getattr(TestLogger.current_test.__class__, '__name__'),
-                                      'level': TestLogger.log_level,
-                                      'caseName': getattr(TestLogger.current_test, '_testMethodName', None),
-                                      'func': common.get_method_fullname(func),
-                                      'description': log_info if log_info else "no description",
-                                      'args': '[Args: {} {}]'.format(
-                                          args[1:] if bool(args[:1]) and isinstance(args[0], BasePage) else args,
-                                          kw),
-                                      }
+                    print(template % dict(time=datetime.datetime.now().__str__(),
+                                          className=getattr(TestLogger.current_test.__class__, '__name__'),
+                                          level=TestLogger.log_level,
+                                          caseName=getattr(TestLogger.current_test, '_testMethodName', None),
+                                          func=common.get_method_fullname(func),
+                                          mobile=current_mobile().__str__(),
+                                          description=log_info if log_info else "no description",
+                                          args='[Args: {} {}]'.format(
+                                              args[1:] if bool(args[:1]) and isinstance(args[0], BasePage) else args,
+                                              kw),
+                                          )
                           )
                     TestLogger.log_level = "INFO"
 

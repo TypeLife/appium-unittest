@@ -9,9 +9,15 @@ class GuidePage(BasePage):
 
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.SplashActivity'
 
-    locators = {
+    __locators = {
         "Banner": (MobileBy.ID, 'com.chinasofti.rcs:id/splash_view_pager'),
     }
+
+    @TestLogger.log()
+    def is_on_the_first_guide_page(self):
+        """判断当前页是否在引导页第一页"""
+        flag = self._is_text_present("解锁“免费通信”新攻略")
+        return flag
 
     @TestLogger.log()
     def swipe_to_the_second_banner(self):
@@ -24,7 +30,7 @@ class GuidePage(BasePage):
             )
         except:
             raise AssertionError('页面没有包含文本：体验“畅聊沟通”新视界')
-        self.swipe_by_direction(self.__class__.locators['Banner'], 'left', 200)
+        self.swipe_by_direction(self.__class__.__locators['Banner'], 'left', 200)
         return self
 
     @TestLogger.log()
@@ -38,7 +44,7 @@ class GuidePage(BasePage):
             )
         except:
             raise AssertionError('页面没有包含文本：体验“畅聊沟通”新视界')
-        self.swipe_by_direction(self.__class__.locators['Banner'], 'left', 200)
+        self.swipe_by_direction(self.__class__.__locators['Banner'], 'left', 200)
         return self
 
     @TestLogger.log()

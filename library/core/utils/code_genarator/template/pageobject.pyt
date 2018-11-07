@@ -8,4 +8,4 @@ class %(PageName)sPage(BasePage):
     """%(PageDescription)s"""
     ACTIVITY = '%(Activity)s'
 
-    locators = %(Locator)s
+    __locators = %(Locator)s
