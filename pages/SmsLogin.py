@@ -26,6 +26,10 @@ class SmsLoginPage(BasePage):
     def input_phone_number(self, phone_number):
         """输入电话号码"""
         self.input_text(self.__class__.locators["输入本机号码"], phone_number)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
         return self
 
     @TestLogger.log()
@@ -151,7 +155,7 @@ class SmsLoginPage(BasePage):
     def get_verify_code_by_notice_board(self):
         """根据通知栏获取登录验证码"""
         self.click_element(self.__class__.locators["获取验证码"])
-        time.sleep(35)
+        time.sleep(30)
         # self.wait_for_verify_code_load()
         # 打开通知栏，通过通知栏获取验证码
         self.driver.open_notifications()
