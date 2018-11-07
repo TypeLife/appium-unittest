@@ -1,5 +1,6 @@
 import re
 import unittest
+import time
 
 from appium.webdriver.common.mobileby import MobileBy
 
@@ -19,7 +20,8 @@ class SmsLoginPage(BasePage):
         "登录": (MobileBy.ID, 'com.chinasofti.rcs:id/btnLogin'),
         "已阅读并同意": (MobileBy.ID, 'com.chinasofti.rcs:id/agreement_checkbox'),
         "我知道了": (MobileBy.ID, 'com.chinasofti.rcs:id/btn_know'),
-
+        "和飞信软件许可及服务协议": (MobileBy.ID, "com.chinasofti.rcs:id/agreement_tv"),
+        "切换另一号码登录": (MobileBy.ID, "com.chinasofti.rcs:id/change_to_one"),
     }
 
     @TestLogger.log()
@@ -64,6 +66,11 @@ class SmsLoginPage(BasePage):
             return result[0]
 
     @TestLogger.log()
+    def click_get_code(self):
+        """点击获取验证码"""
+        self.click_element(self.__class__.locators["获取验证码"])
+
+    @TestLogger.log()
     def input_verification_code(self, code):
         """输入验证码"""
         self.input_text(self.locators['输入验证码'], code)
@@ -77,6 +84,10 @@ class SmsLoginPage(BasePage):
             )
         except TimeoutError:
             raise AssertionError("登录按钮没有变成可点击状态")
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
         self.click_element(self.locators['登录'])
 
     @TestLogger.log()
@@ -105,3 +116,62 @@ class SmsLoginPage(BasePage):
                 message
             )
         return self
+
+    @TestLogger.log()
+    def wait_for_verify_code_load(self, timeout=60, auto_accept_alerts=True):
+        """等待短信验证码"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_text_present("登录验证")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(timeout)
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def wait_for_i_know_load(self, timeout=10, auto_accept_alerts=True):
+        """等待 我知道了"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_text_present("我知道了")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(timeout)
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def get_verify_code_by_notice_board(self):
+        """根据通知栏获取登录验证码"""
+        self.click_element(self.__class__.locators["获取验证码"])
+        time.sleep(35)
+        # self.wait_for_verify_code_load()
+        # 打开通知栏，通过通知栏获取验证码
+        self.driver.open_notifications()
+        # 获取验证码
+        el = self.driver.find_elements_by_android_uiautomator('new UiSelector().textContains("登录验证")')
+        code = None
+        if el:
+            code = re.findall('\d{3,8}', el[-1].text)
+        # 通知栏回退
+        self.driver.back()
+        return code
+
+    @TestLogger.log()
+    def click_license_agreement(self):
+        """点击和飞信软件许可及服务协议"""
+        self.click_element(self.__class__.locators["和飞信软件许可及服务协议"])
+
+    @TestLogger.log()
+    def login_btn_is_checked(self):
+        """获取登录按钮是否可点击"""
+        return self.get_element(self.__class__.locators["登录"]).get_attribute('checked')

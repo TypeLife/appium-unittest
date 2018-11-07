@@ -1,7 +1,5 @@
-import datetime
 import os
-
-from .available_devices import AVAILABLE_DEVICES
+import datetime
 
 NOW = datetime.datetime.now()
 
@@ -17,3 +15,18 @@ REPORT_HTML_PATH = os.path.join(REPORT_PATH, 'TestReport.html')
 SCREEN_SHOT_PATH = os.path.join(REPORT_PATH, 'screen-shot', NOW.date().__str__())
 # log文件存放目录
 LOG_FILE_PATH = os.path.join(REPORT_PATH, 'log')
+
+# Appium 服务地址
+APPIUM_SETTING = {
+    "REMOTE_URL": "http://127.0.0.1:4723/wd/hub"
+}
+# Driver 默认的 desired_capabilities
+DEFAULT_DESIRED_CAPABILITY = {
+    "platformName": "Android",
+    "platformVersion": "8.0",
+    "deviceName": "bb5671d",
+    "automationName": "UiAutomator2",
+    "newCommandTimeout": 600,
+    "appPackage": "com.chinasofti.rcs",
+    "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+}

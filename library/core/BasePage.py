@@ -1,10 +1,11 @@
 import re
 from unicodedata import normalize
 
+from appium import webdriver
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.webdriver.support.wait import WebDriverWait
 
-from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE
+from library.core.utils.WebDriverCache import DriverCache
 
 
 class BasePage(object):
@@ -17,15 +18,8 @@ class BasePage(object):
 
     @property
     def driver(self):
-        return self.mobile.driver
-
-    @property
-    def mobile(self):
-        return MOBILE_DRIVER_CACHE.current
-
-    @staticmethod
-    def switch_to_mobile(alis):
-        return MOBILE_DRIVER_CACHE.switch(alis)
+        assert isinstance(DriverCache.current_driver, webdriver.Remote)
+        return DriverCache.current_driver
 
     def _get_platform(self):
         try:
@@ -65,25 +59,6 @@ class BasePage(object):
     def _is_element_present(self, locator):
         elements = self.get_elements(locator)
         return len(elements) > 0
-
-    def _is_element_text_match(self, locator, pattern, full_match=True, regex=False):
-        element = self.get_element(locator)
-        actual = element.text
-        if regex:
-            if full_match:
-                pt = re.compile(pattern)
-                result = pt.fullmatch(actual)
-            else:
-                pt = re.compile(pattern)
-                result = pt.search(pattern)
-        else:
-            if full_match:
-                result = pattern == actual
-            else:
-                result = pattern in actual
-        if not result:
-            return False
-        return True
 
     def _is_visible(self, locator):
         elements = self.get_elements(locator)
@@ -331,7 +306,7 @@ class BasePage(object):
                 result = pt.fullmatch(actual)
             else:
                 pt = re.compile(pattern)
-                result = pt.search(pattern)
+                result = pt.match(pattern)
         else:
             if full_match:
                 result = pattern == actual
