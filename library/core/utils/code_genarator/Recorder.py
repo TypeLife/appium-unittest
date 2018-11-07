@@ -52,7 +52,8 @@ def build_page_object(page_name=None, page_description=None, activity=None, loca
     out = re.sub(r"(%\(PageName\)s)", page_name, temp)
     out = re.sub(r'(%\(PageDescription\)s)', page_description, out)
     out = re.sub(r'(%\(Activity\)s)', activity, out)
-    out = re.sub(r'(%\(Locator\)s)', locator, out)
+    out = out.replace("%(Locator)s", locator)
+    # out = re.sub(r'(%\(Locator\)s)', locator, out)
     with open(file_path, 'w+', encoding='UTF-8') as f:
         f.write(out)
         sys.stdout.write('Page object created on: ' + file_path + '\n')
@@ -103,5 +104,6 @@ if __name__ == '__main__':
     time.sleep(.5)
     sys.stdout.write('开始连接手机并启动应用....\n')
     MOBILE_DRIVER_CACHE.current._desired_caps['newCommandTimeout'] = 1200
+    MOBILE_DRIVER_CACHE.current.turn_on_reset()
     MOBILE_DRIVER_CACHE.current.connect_mobile()
     generate_page_object()
