@@ -49,7 +49,6 @@ class Preconditions(object):
 
         # 点击权限列表页面的确定按钮
         permission_list = PermissionListPage()
-        permission_list.wait_for_page_load()
         permission_list.click_submit_button()
         one_key.wait_for_page_load()
 
@@ -63,10 +62,15 @@ class Preconditions(object):
         one_key = OneKeyLoginPage()
         one_key.wait_for_tell_number_load()
         one_key.click_one_key_login()
+        one_key.click_read_agreement_detail()
+
+        # 同意协议
+        agreement = AgreementDetailPage()
+        agreement.click_agree_button()
 
         # 等待消息页
         message_page = MessagePage()
-        message_page.wait_for_page_load()
+        message_page.wait_for_page_load(20)
 
     @staticmethod
     def terminate_app():
@@ -83,7 +87,7 @@ class LoginTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        pro6 = switch_to_mobile('jlyuan')
+        pro6 = switch_to_mobile('M960BDQN229CH')
         pro6.connect_mobile()
 
     @classmethod
@@ -212,7 +216,7 @@ class LoginTest(TestCase):
     @staticmethod
     def open_app_not_first_time():
         """非首次登录打开app"""
-        pro6 = switch_to_mobile('jlyuan')
+        pro6 = switch_to_mobile('M960BDQN229CH')
         pro6.connect_mobile()
         pro6.reset_app()
         Preconditions.already_in_one_key_login_page()
@@ -245,9 +249,9 @@ class LoginTest(TestCase):
         phone_numbers = current_mobile().get_cards(CardType.CHINA_MOBILE)
         oklp.assert_phone_number_equals_to(phone_numbers[0])
         # 检查 服务协议
-        oklp.page_should_contain_text("服务协议")
+        oklp.page_should_contain_text("服务条款")
         # 登录
-        oklp.check_the_agreement()
+        # oklp.check_the_agreement()
         oklp.click_one_key_login()
         MessagePage().wait_for_page_load(login_time)
 
@@ -417,7 +421,7 @@ class LoginTest(TestCase):
         code = sl.get_verify_code_by_notice_board()
         self.assertIsNotNone(code)
         # 输入错误验证码
-        code = str(int(code[0])+1)
+        code = str(int(code[0]) + 1)
         sl.input_verification_code(code)
         # 点击登录
         sl.click_login()

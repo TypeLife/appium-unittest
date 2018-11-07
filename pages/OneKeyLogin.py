@@ -15,7 +15,9 @@ class OneKeyLoginPage(BasePage):
         "切换另一号码登录": (MobileBy.ID, "com.chinasofti.rcs:id/change_to_smslogin"),
         "已阅读并同意复选框": (MobileBy.ID, "com.chinasofti.rcs:id/agreement_checkbox"),
         "客户端头像": (MobileBy.ID, "com.chinasofti.rcs:id/login_iron"),
-        "和飞信软件许可及服务协议": (MobileBy.ID, "com.chinasofti.rcs:id/agreement_text")
+        "和飞信软件许可及服务协议": (MobileBy.ID, "com.chinasofti.rcs:id/agreement_text"),
+        '提示内容': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_content'),
+        '查看详情': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_check_detail'),
     }
 
     @TestLogger.log()
@@ -29,31 +31,36 @@ class OneKeyLoginPage(BasePage):
     @TestLogger.log()
     def assert_phone_number_equals_to(self, phone_number):
         """等待手机号读取成功"""
-        self.element_text_should_be(self.__class__.__locators["电话号码"], phone_number)
+        self.element_text_should_be(self.__locators["电话号码"], phone_number)
         return self
 
     @TestLogger.log()
     def click_one_key_login(self):
         """点击一键登录"""
-        self.click_element(self.__class__.__locators["一键登录"])
+        self.click_element(self.__locators["一键登录"])
+
+    @TestLogger.log()
+    def click_read_agreement_detail(self):
+        """点击查看详情"""
+        self.click_element(self.__locators['查看详情'])
 
     @TestLogger.log()
     def choose_another_way_to_login(self):
         """选择验证码登录"""
-        self.click_element(self.__class__.__locators["切换另一号码登录"])
+        self.click_element(self.__locators["切换另一号码登录"])
 
     @TestLogger.log()
     def check_the_agreement(self):
         """勾选我已阅读XXX协议复选框"""
-        self.select_checkbox(self.__class__.__locators["已阅读并同意复选框"])
-        self.checkbox_should_be_selected(self.__class__.__locators["已阅读并同意复选框"])
+        self.select_checkbox(self.__locators["已阅读并同意复选框"])
+        self.checkbox_should_be_selected(self.__locators["已阅读并同意复选框"])
         return self
 
     @TestLogger.log()
     def uncheck_the_agreement(self):
         """去勾选我已阅读XXX协议复选框"""
-        self.unselect_checkbox(self.__class__.__locators["已阅读并同意复选框"])
-        self.checkbox_should_not_be_selected(self.__class__.__locators["已阅读并同意复选框"])
+        self.unselect_checkbox(self.__locators["已阅读并同意复选框"])
+        self.checkbox_should_not_be_selected(self.__locators["已阅读并同意复选框"])
         return self
 
     @TestLogger.log()
@@ -91,14 +98,14 @@ class OneKeyLoginPage(BasePage):
     @TestLogger.log()
     def click_client_logo_pic(self):
         """点击客户端头像"""
-        self.click_element(self.__class__.__locators["客户端头像"])
+        self.click_element(self.__locators["客户端头像"])
 
     @TestLogger.log()
     def click_license_agreement(self):
         """点击和飞信软件许可及服务协议"""
-        self.click_element(self.__class__.__locators["和飞信软件许可及服务协议"])
+        self.click_element(self.__locators["和飞信软件许可及服务协议"])
 
     @TestLogger.log()
     def page_should_contain_client_logo_pic(self):
         """登录页客户端头像检查"""
-        self.page_should_contain_element(self.__class__.locators["客户端头像"])
+        self.page_should_contain_element(self.__locators["客户端头像"])
