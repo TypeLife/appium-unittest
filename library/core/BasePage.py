@@ -5,7 +5,7 @@ import time
 from appium import webdriver
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.webdriver.support.wait import WebDriverWait
-
+from appium.webdriver.connectiontype import ConnectionType
 from library.core.utils.WebDriverCache import DriverCache
 
 
@@ -55,6 +55,7 @@ class BasePage(object):
     def _is_text_present(self, text):
         text_norm = normalize('NFD', text)
         source_norm = normalize('NFD', self.get_source())
+        # print(source_norm)
         return text_norm in source_norm
 
     def _is_element_present(self, locator):
@@ -400,3 +401,29 @@ class BasePage(object):
                 n += 1
                 continue
         return code_info
+
+    def get_network_status(self):
+        """获取网络链接状态"""
+        return self.driver.network_connection
+
+    def set_network_status(self, status):
+        """设置网络
+        Connection types are specified here:
+        https://code.google.com/p/selenium/source/browse/spec-draft.md?repo=mobile#120
+        Value (Alias)      | Data | Wifi | Airplane Mode
+        -------------------------------------------------
+        0 (None)           | 0    | 0    | 0
+        1 (Airplane Mode)  | 0    | 0    | 1
+        2 (Wifi only)      | 0    | 1    | 0
+        4 (Data only)      | 1    | 0    | 0
+        6 (All network on) | 1    | 1    | 0
+
+        class ConnectionType(object):
+            NO_CONNECTION = 0
+            AIRPLANE_MODE = 1
+            WIFI_ONLY = 2
+            DATA_ONLY = 4
+            ALL_NETWORK_ON = 6
+
+        """
+        self.driver.set_network_connection(status)
