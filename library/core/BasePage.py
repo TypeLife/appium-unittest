@@ -1,7 +1,8 @@
+import os
 import re
+import time
 from unicodedata import normalize
 
-from appium import webdriver
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -385,3 +386,68 @@ class BasePage(object):
             auto_accept_alerts
         )
         return self
+
+    def _is_text_present_contains(self, locator, pattern, full_match=False, regex=False):
+        element = self.get_element(locator)
+        actual = element.text
+        if regex:
+            if full_match:
+                pt = re.compile(pattern)
+                result = pt.fullmatch(actual)
+            else:
+                pt = re.compile(pattern)
+                result = pt.search(actual)
+        else:
+            if full_match:
+                result = pattern == actual
+            else:
+                result = pattern in actual
+        if not result:
+            return False
+        return True
+
+    def run_app_in_background(self, seconds=5):
+        """让 app 进入后台运行seconds 秒"""
+        self.driver.background_app(seconds)
+
+    def get_error_code_info_by_adb(self, pattern, timeout=5):
+        """通过adb log 获取错误码信息"""
+        os.system("adb logcat -c")
+        cmd = ' adb logcat -d |findstr %s' % pattern
+        n = 0
+        code_info = None
+        while n < timeout:
+            code_info = os.popen(cmd).read()
+            if code_info:
+                break
+            else:
+                time.sleep(1)
+                n += 1
+                continue
+        return code_info
+
+    def get_network_status(self):
+        """获取网络链接状态"""
+        return self.driver.network_connection
+
+    def set_network_status(self, status):
+        """设置网络
+        Connection types are specified here:
+        https://code.google.com/p/selenium/source/browse/spec-draft.md?repo=mobile#120
+        Value (Alias)      | Data | Wifi | Airplane Mode
+        -------------------------------------------------
+        0 (None)           | 0    | 0    | 0
+        1 (Airplane Mode)  | 0    | 0    | 1
+        2 (Wifi only)      | 0    | 1    | 0
+        4 (Data only)      | 1    | 0    | 0
+        6 (All network on) | 1    | 1    | 0
+
+        class ConnectionType(object):
+            NO_CONNECTION = 0
+            AIRPLANE_MODE = 1
+            WIFI_ONLY = 2
+            DATA_ONLY = 4
+            ALL_NETWORK_ON = 6
+
+        """
+        self.driver.set_network_connection(status)

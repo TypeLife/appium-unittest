@@ -97,3 +97,8 @@ class OneKeyLoginPage(BasePage):
     def click_license_agreement(self):
         """点击和飞信软件许可及服务协议"""
         self.click_element(self.__class__.__locators["和飞信软件许可及服务协议"])
+
+    @TestLogger.log()
+    def page_should_contain_client_logo_pic(self):
+        """登录页客户端头像检查"""
+        self.page_should_contain_element(self.__class__.locators["客户端头像"])

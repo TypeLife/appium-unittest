@@ -1,5 +1,4 @@
 import re
-import unittest
 import time
 
 from appium.webdriver.common.mobileby import MobileBy
@@ -28,6 +27,10 @@ class SmsLoginPage(BasePage):
     def input_phone_number(self, phone_number):
         """输入电话号码"""
         self.input_text(self.__class__.__locators["输入本机号码"], phone_number)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
         return self
 
     @TestLogger.log()

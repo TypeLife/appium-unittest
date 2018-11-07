@@ -296,6 +296,19 @@ class LoginTest(TestCase):
         sms.click_i_know()
         MessagePage().wait_for_page_load(login_time)
 
+    def setUp_test_login_0006(self):
+        LoginTest.open_app_first_time()
+        LoginTest.enter_login_page()
+
+    @unittest.skip("skip 本网单卡测试test_login_0006")
+    def test_login_0006(self):
+        """服务条款检查"""
+        oklp = OneKeyLoginPage()
+        # 点击许可服务协议
+        oklp.click_license_agreement()
+        time.sleep(5)
+        Agreement.AgreementPage().wait_for_license_agreement_load()
+
     def setUp_test_login_0007(self):
         LoginTest.open_app_first_time()
         LoginTest.enter_login_page()
@@ -306,7 +319,7 @@ class LoginTest(TestCase):
         oklp = OneKeyLoginPage()
         # 点击许可服务协议
         oklp.click_license_agreement()
-        time.sleep(2)
+        time.sleep(5)
         text = """和飞信业务是中国移动提供的通信服务，用户首次登录和飞信客户端即表示同意开通本业务，本业务不收取订购费用。如使用和飞信进行发送短信、拨打电话等功能可能会收取一定的费用。"""
         Agreement.AgreementPage().page_should_contain_text(text)
 
@@ -314,7 +327,7 @@ class LoginTest(TestCase):
         LoginTest.open_app_first_time()
         LoginTest.enter_login_page()
 
-    # @unittest.skip("skip 本网单卡测试test_login_0009")
+    @unittest.skip("skip 本网单卡测试test_login_0009")
     def test_login_0009(self):
         """登录页面检查"""
         oklp = OneKeyLoginPage()
@@ -387,6 +400,60 @@ class LoginTest(TestCase):
         self.assertIn("102101", code_info)
         # 恢复网络连接
         sl.set_network_status(network_status)
+
+    def setUp_test_login_0027(self):
+        """异网账号进入登录页面"""
+        LoginTest.open_app_first_time()
+        LoginTest.diff_card_enter_login_page()
+
+    @unittest.skip("skip 单卡（联通）输入验证码验证--错误的6位测试login_0027")
+    def test_login_0027(self, phone_number='18681151872'):
+        """输入验证码验证-错误的6位（异网用户）"""
+        sl = SmsLoginPage()
+        sl.wait_for_page_load()
+        # 输入电话号码，点击获取验证码
+        sl.input_phone_number(phone_number)
+        # 获取验证码
+        code = sl.get_verify_code_by_notice_board()
+        self.assertIsNotNone(code)
+        # 输入错误验证码
+        code = str(int(code[0])+1)
+        sl.input_verification_code(code)
+        # 点击登录
+        sl.click_login()
+        sl.wait_for_i_know_load()
+        # 点击‘我知道了’
+        sl.click_i_know()
+        # 获取异常提示
+        code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*103108", timeout=40)
+        self.assertIn("103108", code_info)
+
+    def setUp_test_login_0029(self):
+        """异网账号进入登录页面"""
+        LoginTest.open_app_first_time()
+        LoginTest.diff_card_enter_login_page()
+
+    # @unittest.skip("skip 单卡（联通）输入验证码验证--正确失效的6位验证码login_0029")
+    def test_login_0029(self, phone_number='18681151872'):
+        """输入验证码验证-（异网）正确失效的6位验证码"""
+        sl = SmsLoginPage()
+        sl.wait_for_page_load()
+        # 输入电话号码，点击获取验证码
+        sl.input_phone_number(phone_number)
+        # 获取验证码
+        code = sl.get_verify_code_by_notice_board()
+        self.assertIsNotNone(code)
+        # 输入失效的验证码
+        time.sleep(300)
+        sl.input_verification_code(code[0])
+        # 点击登录
+        sl.click_login()
+        sl.wait_for_i_know_load()
+        # 点击‘我知道了’
+        sl.click_i_know()
+        # 获取异常提示
+        code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*103108", timeout=40)
+        self.assertIn("103108", code_info)
 
     def setUp_test_login_0050(self):
         """
