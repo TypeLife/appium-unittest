@@ -79,7 +79,7 @@ class MePage(FooterPage):
     def scroll_to_bottom(self):
         """滑到菜单底部"""
         self.wait_until(
-            condition=lambda d: self.get_element(self.__locators['我'])
+            condition=lambda d: self.get_element(self.__locators['页头-我'])
         )
         self.swipe_by_direction(self.__locators['菜单区域'], 'up')
 
