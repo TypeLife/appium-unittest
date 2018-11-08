@@ -22,7 +22,7 @@ class Preconditions(object):
         2、移动卡
         :return:
         """
-        client = switch_to_mobile('M960BDQN229CH')
+        client = switch_to_mobile('jlyuan')
         client.connect_mobile()
 
     @staticmethod
@@ -113,12 +113,12 @@ class LoginTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        pro6 = switch_to_mobile('M960BDQN229CH')
-        pro6.connect_mobile()
-
+        # pro6 = switch_to_mobile('jlyuan')
+        # pro6.connect_mobile()
+        pass
     @classmethod
     def tearDownClass(cls):
-        # current_mobile().disconnect_mobile()
+        current_mobile().disconnect_mobile()
         pass
 
     def default_setUp(self):
@@ -294,6 +294,7 @@ class LoginTest(TestCase):
         # 3、退出后台
         current_mobile().press_home_key()
 
+    @unittest.skip("skip 本网单卡测试test_login_0002")
     def test_login_0002(self):
         """已登录状态后，退出后台"""
         current_mobile().activate_app('com.chinasofti.rcs')
@@ -467,7 +468,7 @@ class LoginTest(TestCase):
         LoginTest.open_app_first_time()
         LoginTest.diff_card_enter_login_page()
 
-    # @unittest.skip("skip 单卡（联通）输入验证码验证--正确失效的6位验证码login_0029")
+    @unittest.skip("skip 单卡（联通）输入验证码验证--正确失效的6位验证码login_0029")
     def test_login_0029(self, phone_number='18681151872'):
         """输入验证码验证-（异网）正确失效的6位验证码"""
         sl = SmsLoginPage()
