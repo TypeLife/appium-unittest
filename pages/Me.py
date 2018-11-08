@@ -19,8 +19,9 @@ class MePage(FooterPage):
             MobileBy.ID, 'com.chinasofti.rcs:id/constraintLayout_home_tab'),
         'com.chinasofti.rcs:id/viewPager': (MobileBy.ID, 'com.chinasofti.rcs:id/viewPager'),
         'com.chinasofti.rcs:id/titleBar': (MobileBy.ID, 'com.chinasofti.rcs:id/titleBar'),
-        '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe'),
-        'com.chinasofti.rcs:id/qr_code_imageview': (MobileBy.ID, 'com.chinasofti.rcs:id/qr_code_imageview'),
+        '页头-我': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title'),
+        '页脚-我': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tvMe" and @selected="true"]'),
+        '二维码入口': (MobileBy.ID, 'com.chinasofti.rcs:id/qr_code_imageview'),
         'com.chinasofti.rcs:id/rl_person': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_person'),
         'com.chinasofti.rcs:id/fl_name': (MobileBy.ID, 'com.chinasofti.rcs:id/fl_name'),
         '请完善名片': (MobileBy.ID, 'com.chinasofti.rcs:id/card_name_hint'),
@@ -89,3 +90,19 @@ class MePage(FooterPage):
             condition=lambda d: self.get_element(self.__locators['设置'])
         ).click()
         # self.click_element(self.__locators['设置'])
+
+    @TestLogger.log()
+    def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
+        """判断页面是否包含选中状态的“我”页脚标签"""
+        try:
+            self.wait_until(
+                condition=lambda d: self.get_element(self.__locators['页脚-我']),
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self

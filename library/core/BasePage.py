@@ -21,8 +21,8 @@ class BasePage(object):
     def driver(self):
         return MOBILE_DRIVER_CACHE.current.driver
 
-    def background_app(self):
-        self.driver.background_app()
+    def background_app(self, seconds):
+        self.driver.background_app(seconds)
 
     def terminate_app(self, app_id, **options):
         self.terminate_app(app_id, **options)

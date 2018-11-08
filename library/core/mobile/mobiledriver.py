@@ -128,11 +128,37 @@ class MobileDriver(ABC):
     def terminate_app(self, app_id, **options):
         self.driver.terminate_app(app_id, **options)
 
-    def background_app(self):
-        self.driver.background_app()
+    def background_app(self, seconds):
+        self.driver.background_app(seconds)
+
+    def activate_app(self, app_id):
+        self.driver.activate_app(app_id)
 
     def reset_app(self):
         self.driver.reset()
+
+    def press_home_key(self):
+        """模拟手机HOME键"""
+        if self.is_android():
+            self.execute_shell_command('input', 'keyevent', 3)
+        else:
+            raise NotImplementedError('IOS 点击HOME键未实现')
+
+    def execute_shell_command(self, command, *args):
+        """
+        Execute ADB shell commands (requires server flag --relaxed-security to be set)
+
+        例：execute_shell_command('am', 'start', '-n', 'com.example.demo/com.example.test.MainActivity')
+
+        :param command: 例：am,pm 等等可执行命令
+        :param args: 例：am,pm 等可执行命令的参数
+        :return:
+        """
+        script = {
+            'command': command,
+            'args': args
+        }
+        return self.driver.execute_script('mobile:shell', script)
 
     def __str__(self):
         device_info = {

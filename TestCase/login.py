@@ -15,7 +15,7 @@ class Preconditions(object):
     """
 
     @staticmethod
-    def single_cmcc_android_4g_client():
+    def select_single_cmcc_android_4g_client():
         """
         启动
         1、4G，安卓客户端
@@ -26,7 +26,7 @@ class Preconditions(object):
         client.connect_mobile()
 
     @staticmethod
-    def already_in_one_key_login_page():
+    def make_already_in_one_key_login_page():
         """
         1、已经进入一键登录页
         :return:
@@ -73,6 +73,27 @@ class Preconditions(object):
         message_page.wait_for_page_load(20)
 
     @staticmethod
+    def take_logout_operation_if_already_login():
+        """已登录状态，执行登出操作"""
+        message_page = MessagePage()
+        message_page.wait_for_page_load()
+        message_page.open_me_page()
+
+        me = MePage()
+        me.scroll_to_bottom()
+        me.click_setting_menu()
+
+        setting = SettingPage()
+        setting.scroll_to_bottom()
+        setting.click_logout()
+        setting.click_ok_of_alert()
+
+    @staticmethod
+    def app_start_for_the_first_time():
+        """首次启动APP（使用重置APP代替）"""
+        current_mobile().reset_app()
+
+    @staticmethod
     def terminate_app():
         """
         强制关闭app,退出后台
@@ -80,6 +101,11 @@ class Preconditions(object):
         """
         app_id = current_driver().desired_capability['appPackage']
         current_mobile().termiate_app(app_id)
+
+    @staticmethod
+    def background_app(seconds):
+        """后台运行"""
+        current_mobile().background_app(seconds)
 
 
 class LoginTest(TestCase):
@@ -139,106 +165,107 @@ class LoginTest(TestCase):
     def default_tearDown(self):
         pass
 
-    @staticmethod
-    def diff_card_enter_login_page():
-        """异网卡进入登录界面"""
-        guide_page = GuidePage()
-        if guide_page.driver.current_activity == guide_page.ACTIVITY:
-            guide_page.wait_until(
-                lambda d: guide_page._is_text_present("解锁“免费通信”新攻略")
-            )
-            guide_page.swipe_to_the_second_banner()
-            guide_page.swipe_to_the_third_banner()
-            guide_page.click_start_the_experience()
-
-            # 确定
-            PermissionListPage(). \
-                wait_for_page_load(). \
-                click_submit_button()
-            SmsLoginPage().wait_for_page_load()
-
-    @staticmethod
-    def enter_login_page():
-        """移动单卡进入登录界面"""
-        guide_page = GuidePage()
-        if guide_page.driver.current_activity == guide_page.ACTIVITY:
-            # if guide_page._is_text_present("解锁“免费通信”新攻略"):
-            guide_page.wait_until(
-                lambda d: guide_page._is_text_present("解锁“免费通信”新攻略")
-            )
-            guide_page.swipe_to_the_second_banner()
-            guide_page.swipe_to_the_third_banner()
-            guide_page.click_start_the_experience()
-
-            # 确定
-            PermissionListPage(). \
-                wait_for_page_load(). \
-                click_submit_button()
-
-            # 等待页面进入一键登录页
-            OneKeyLoginPage().wait_for_page_load()
-        elif OneKeyLoginPage().is_current_activity_match_this_page():
-            pass
-        else:
-            MOBILE_DRIVER_CACHE.current.launch_app()
-            guide_page.wait_for_page_load()
-            guide_page.swipe_to_the_second_banner()
-            guide_page.swipe_to_the_third_banner()
-            guide_page.click_start_the_experience()
-
-            # 确定
-            PermissionListPage(). \
-                wait_for_page_load(). \
-                click_submit_button()
-
-            # 等待页面进入一键登录页
-            OneKeyLoginPage().wait_for_page_load()
-
-    @staticmethod
-    def one_key_login(phone_number='14775970982', login_time=60):
-        """一键登录"""
-        LoginTest.enter_login_page()
-        OneKeyLoginPage(). \
-            wait_for_page_load(). \
-            wait_for_tell_number_load(timeout=60). \
-            assert_phone_number_equals_to(phone_number). \
-            check_the_agreement(). \
-            click_one_key_login()
-        MessagePage().wait_for_page_load(login_time)
-
-    @staticmethod
-    def open_app_first_time():
-        """首次启动不是这样用"""
-        # TODO
-        if MOBILE_DRIVER_CACHE.current.is_connection_created:
-            MOBILE_DRIVER_CACHE.current.launch_app()
-
-    @staticmethod
-    def open_app_not_first_time():
-        """非首次登录打开app"""
-        pro6 = switch_to_mobile('M960BDQN229CH')
-        pro6.connect_mobile()
-        pro6.reset_app()
-        Preconditions.already_in_one_key_login_page()
-        Preconditions.login_by_one_key_login()
-
-        message_page = MessagePage()
-        message_page.wait_for_page_load()
-        message_page.open_me_page()
-
-        me = MePage()
-        me.scroll_to_bottom()
-        me.click_setting_menu()
-
-        setting = SettingPage()
-        setting.scroll_to_bottom()
-        setting.click_logout()
-        setting.click_ok_of_alert()
+    # @staticmethod
+    # def diff_card_enter_login_page():
+    #     """异网卡进入登录界面"""
+    #     guide_page = GuidePage()
+    #     if guide_page.driver.current_activity == guide_page.ACTIVITY:
+    #         guide_page.wait_until(
+    #             lambda d: guide_page._is_text_present("解锁“免费通信”新攻略")
+    #         )
+    #         guide_page.swipe_to_the_second_banner()
+    #         guide_page.swipe_to_the_third_banner()
+    #         guide_page.click_start_the_experience()
+    #
+    #         # 确定
+    #         PermissionListPage(). \
+    #             wait_for_page_load(). \
+    #             click_submit_button()
+    #         SmsLoginPage().wait_for_page_load()
+    #
+    # @staticmethod
+    # def enter_login_page():
+    #     """移动单卡进入登录界面"""
+    #     guide_page = GuidePage()
+    #     if guide_page.driver.current_activity == guide_page.ACTIVITY:
+    #         # if guide_page._is_text_present("解锁“免费通信”新攻略"):
+    #         guide_page.wait_until(
+    #             lambda d: guide_page._is_text_present("解锁“免费通信”新攻略")
+    #         )
+    #         guide_page.swipe_to_the_second_banner()
+    #         guide_page.swipe_to_the_third_banner()
+    #         guide_page.click_start_the_experience()
+    #
+    #         # 确定
+    #         PermissionListPage(). \
+    #             wait_for_page_load(). \
+    #             click_submit_button()
+    #
+    #         # 等待页面进入一键登录页
+    #         OneKeyLoginPage().wait_for_page_load()
+    #     elif OneKeyLoginPage().is_current_activity_match_this_page():
+    #         pass
+    #     else:
+    #         MOBILE_DRIVER_CACHE.current.launch_app()
+    #         guide_page.wait_for_page_load()
+    #         guide_page.swipe_to_the_second_banner()
+    #         guide_page.swipe_to_the_third_banner()
+    #         guide_page.click_start_the_experience()
+    #
+    #         # 确定
+    #         PermissionListPage(). \
+    #             wait_for_page_load(). \
+    #             click_submit_button()
+    #
+    #         # 等待页面进入一键登录页
+    #         OneKeyLoginPage().wait_for_page_load()
+    #
+    # @staticmethod
+    # def one_key_login(phone_number='14775970982', login_time=60):
+    #     """一键登录"""
+    #     LoginTest.enter_login_page()
+    #     OneKeyLoginPage(). \
+    #         wait_for_page_load(). \
+    #         wait_for_tell_number_load(timeout=60). \
+    #         assert_phone_number_equals_to(phone_number). \
+    #         check_the_agreement(). \
+    #         click_one_key_login()
+    #     MessagePage().wait_for_page_load(login_time)
+    #
+    # @staticmethod
+    # def open_app_first_time():
+    #     """重置APP可以当成首次启动APP"""
+    #     current_mobile().reset_app()
+    #
+    # @staticmethod
+    # def open_app_not_first_time():
+    #     """非首次登录打开app"""
+    #     pro6 = switch_to_mobile('M960BDQN229CH')
+    #     pro6.connect_mobile()
+    #     pro6.reset_app()
+    #     Preconditions.already_in_one_key_login_page()
+    #     Preconditions.login_by_one_key_login()
+    #
+    #     message_page = MessagePage()
+    #     message_page.wait_for_page_load()
+    #     message_page.open_me_page()
+    #
+    #     me = MePage()
+    #     me.scroll_to_bottom()
+    #     me.click_setting_menu()
+    #
+    #     setting = SettingPage()
+    #     setting.scroll_to_bottom()
+    #     setting.click_logout()
+    #     setting.click_ok_of_alert()
 
     def setUp_test_login_0001(self):
-        LoginTest.open_app_not_first_time()
+        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.make_already_in_one_key_login_page()
+        Preconditions.login_by_one_key_login()
+        Preconditions.take_logout_operation_if_already_login()
 
-    # @unittest.skip("skip 本网单卡测试test_login_0001")
     def test_login_0001(self, login_time=60):
         """ 本网非首次登录已设置头像-一键登录页面元素检查"""
         oklp = OneKeyLoginPage()
@@ -256,20 +283,23 @@ class LoginTest(TestCase):
         MessagePage().wait_for_page_load(login_time)
 
     def setUp_test_login_0002(self):
-        LoginTest.open_app_first_time()
-        LoginTest.one_key_login()
+        # 1、已登录
+        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.make_already_in_one_key_login_page()
+        Preconditions.login_by_one_key_login()
+        # 2、进入我页面（切换到后台之前不应该停留在消息页面，防止误判）
+        MessagePage().open_me_page()
+        MePage.wait_for_page_load()
+        # 3、退出后台
+        current_mobile().press_home_key()
 
-    @unittest.skip("skip 本网单卡测试test_login_0002")
     def test_login_0002(self):
         """已登录状态后，退出后台"""
-        mp = MessagePage()
-        # app进入后台
-        current_mobile().background_app()
+        current_mobile().activate_app('com.chinasofti.rcs')
+        mp = MePage()
+        # 验证打开的页面是否是退出之前的界面（我 页面）
         mp.wait_for_page_load()
-        # 检查是否是进入后台之前的页面
-        mp.page_should_contain_text("我")
-        mp.page_should_contain_text("通讯录")
-        mp.page_should_contain_text("工作台")
 
     @unittest.skip("skip 移动账号登录")
     def test_login_C0003(self, phone_number='14775970982', login_time=60):
@@ -528,4 +558,4 @@ class LoginTest(TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    pass
