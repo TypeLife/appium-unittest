@@ -470,7 +470,7 @@ class LoginTest(TestCase):
         LoginTest.open_app_first_time()
         LoginTest.diff_card_enter_login_page()
 
-    # @unittest.skip("skip 单卡（联通）输入验证码验证--正确失效的6位验证码login_0029")
+    @unittest.skip("skip 单卡（联通）输入验证码验证--正确失效的6位验证码login_0029")
     def test_login_0029(self, phone_number='18681151872'):
         """输入验证码验证-（异网）正确失效的6位验证码"""
         sl = SmsLoginPage()

@@ -3,7 +3,8 @@ import os
 import re
 
 import settings
-from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE
+from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE, current_mobile
+from library.core.utils.connectioncache import NoConnection
 
 
 def open_or_create(path, mode='r'):
@@ -59,6 +60,8 @@ def capture_screen_shot(path):
     dir_name, file_name = os.path.split(path)
     if not os.path.isdir(dir_name):
         os.makedirs(dir_name)
-    capture = getattr(MOBILE_DRIVER_CACHE.current.driver, 'get_screenshot_as_file', lambda p: None)
-    result = capture(path)
-    return result
+    if not isinstance(current_mobile(), NoConnection):
+        capture = getattr(MOBILE_DRIVER_CACHE.current.driver, 'get_screenshot_as_file', lambda p: None)
+        result = capture(path)
+        return result
+    return

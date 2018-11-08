@@ -21,11 +21,8 @@ class MobileDriver(ABC):
         self.turn_off_reset()
 
     def __del__(self):
-        quit_driver = getattr(self.driver, 'quit', lambda: None)
-        try:
-            quit_driver()
-        except:
-            pass
+        if self.is_connection_created:
+            self.driver.quit()
 
     @property
     def alis(self):
@@ -99,7 +96,8 @@ class MobileDriver(ABC):
             return
 
     def disconnect_mobile(self):
-        self.driver.quit()
+        if self.is_connection_created:
+            self.driver.quit()
 
     def turn_on_reset(self):
         """开启重置app（在获取session之前有效）"""

@@ -18,4 +18,6 @@ class MobileManager(ConnectionCache):
                 self.register(mobile, key)
 
     def close_all(self, closer_method='disconnect_mobile'):
-        super(MobileManager, self).close_all()
+        for conn in self._connections:
+            getattr(conn, closer_method)()
+        return self.current
