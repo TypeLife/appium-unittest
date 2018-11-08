@@ -23,7 +23,7 @@ class Preconditions(object):
         2、移动卡
         :return:
         """
-        client = switch_to_mobile('M960BDQN229CH')
+        client = switch_to_mobile('jlyuan')
         client.connect_mobile()
 
     @staticmethod
@@ -114,12 +114,12 @@ class LoginTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        pro6 = switch_to_mobile('M960BDQN229CH')
-        pro6.connect_mobile()
-
+        # pro6 = switch_to_mobile('jlyuan')
+        # pro6.connect_mobile()
+        pass
     @classmethod
     def tearDownClass(cls):
-        # current_mobile().disconnect_mobile()
+        current_mobile().disconnect_mobile()
         pass
 
     def default_setUp(self):
