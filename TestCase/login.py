@@ -267,7 +267,8 @@ class LoginTest(TestCase):
         Preconditions.login_by_one_key_login()
         Preconditions.take_logout_operation_if_already_login()
 
-    @tags('SMOKE', 'SIT')
+    # @tags('SMOKE', 'SIT')
+    @unittest.skip("skip 本网单卡测试test_login_0006")
     def test_login_0001(self, login_time=60):
         """ 本网非首次登录已设置头像-一键登录页面元素检查"""
         oklp = OneKeyLoginPage()
@@ -292,11 +293,12 @@ class LoginTest(TestCase):
         Preconditions.login_by_one_key_login()
         # 2、进入我页面（切换到后台之前不应该停留在消息页面，防止误判）
         MessagePage().open_me_page()
-        MePage.wait_for_page_load()
+        MePage().wait_for_page_load()
         # 3、退出后台
         current_mobile().press_home_key()
 
-    @tags('SIT', 'UIT')
+    # @tags('SIT', 'UIT')
+    @unittest.skip("skip 本网单卡测试test_login_0002")
     def test_login_0002(self):
         """已登录状态后，退出后台"""
         current_mobile().activate_app('com.chinasofti.rcs')
