@@ -185,6 +185,13 @@ class BasePage(object):
         return True
 
     def swipe_by_direction(self, locator, direction, duration=None):
+        """
+        在元素内滑动
+        :param locator: 定位器
+        :param direction: 方向（left,right,up,down）
+        :param duration: 持续时间ms
+        :return:
+        """
         element = self.get_element(locator)
         rect = element.rect
         left, right = int(rect['x']) + 1, int(rect['x'] + rect['width']) - 1
