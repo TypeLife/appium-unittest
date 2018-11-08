@@ -5,6 +5,7 @@ import unittest
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE, current_mobile, current_driver, switch_to_mobile
+from library.core.utils.testcasefilter import tags
 from pages import *
 from pages import Agreement
 
@@ -266,6 +267,7 @@ class LoginTest(TestCase):
         Preconditions.login_by_one_key_login()
         Preconditions.take_logout_operation_if_already_login()
 
+    @tags('SMOKE', 'SIT')
     def test_login_0001(self, login_time=60):
         """ 本网非首次登录已设置头像-一键登录页面元素检查"""
         oklp = OneKeyLoginPage()
@@ -294,6 +296,7 @@ class LoginTest(TestCase):
         # 3、退出后台
         current_mobile().press_home_key()
 
+    @tags('SIT', 'UIT')
     def test_login_0002(self):
         """已登录状态后，退出后台"""
         current_mobile().activate_app('com.chinasofti.rcs')
