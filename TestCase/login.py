@@ -194,18 +194,19 @@ class LoginTest(TestCase):
         MessagePage().wait_for_page_load(login_time)
 
     def setUp_test_login_0006(self):
-        LoginTest.open_app_first_time()
-        LoginTest.enter_login_page()
+        """选择移动卡手机进入一键登录页面"""
+        Preconditions.select_single_cmcc_android_4g_client()
+        current_mobile().reset_app()
+        Preconditions.make_already_in_one_key_login_page()
 
-    @unittest.skip("skip 本网单卡测试test_login_0006")
+    @tags('ALL')
     def test_login_0006(self):
         """服务条款检查"""
-        # TODO XIN
         oklp = OneKeyLoginPage()
         # 点击许可服务协议
         oklp.click_license_agreement()
-        time.sleep(5)
-        Agreement.AgreementPage().wait_for_license_agreement_load()
+        # 检查服务条款内容
+        AgreementPage().wait_for_license_agreement_load()
 
     def setUp_test_login_0007(self):
         LoginTest.open_app_first_time()

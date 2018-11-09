@@ -6,7 +6,8 @@ __all__ = [
     "SmsLoginPage",
     "MePage",
     "SettingPage",
-    "AgreementDetailPage"
+    "AgreementDetailPage",
+    "AgreementPage",
 ]
 from .Guide import GuidePage
 from .PermissionList import PermissionListPage
@@ -16,3 +17,4 @@ from .SmsLogin import SmsLoginPage
 from .Me import MePage
 from .Setting import SettingPage
 from .AgreementDetail import AgreementDetailPage
+from .Agreement import AgreementPage
