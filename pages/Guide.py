@@ -24,7 +24,7 @@ class GuidePage(BasePage):
         """从引导页第一屏左滑到第二屏"""
         try:
             self.wait_until(
-                timeout=1,
+                timeout=5,
                 auto_accept_permission_alert=True,
                 condition=lambda d: self._is_text_present("解锁“免费通信”新攻略")
             )
@@ -38,7 +38,7 @@ class GuidePage(BasePage):
         """从引导页第二屏左滑到第三屏"""
         try:
             self.wait_until(
-                timeout=1,
+                timeout=5,
                 auto_accept_permission_alert=True,
                 condition=lambda d: self._is_text_present("体验“畅聊沟通”新视界")
             )
@@ -52,7 +52,7 @@ class GuidePage(BasePage):
         """点击引导页第三屏的开始体验"""
         try:
             self.wait_until(
-                timeout=1,
+                timeout=5,
                 auto_accept_permission_alert=True,
                 condition=lambda d: self._is_text_present("开始体验")
             )
