@@ -177,7 +177,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 测试条件是双卡")
     def test_login_C0004(self, phone_number='14775970982', login_time=60):
         """切换验证码登录"""
-        # TODO 框架改动，待修复
+        # TODO XIN
         onekey = OneKeyLoginPage()
         onekey.wait_for_page_load()
         onekey.choose_another_way_to_login()
