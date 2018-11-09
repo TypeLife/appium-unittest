@@ -177,7 +177,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 测试条件是双卡")
     def test_login_C0004(self, phone_number='14775970982', login_time=60):
         """切换验证码登录"""
-        # TODO 框架改动，待修复
+        # TODO XIN
         onekey = OneKeyLoginPage()
         onekey.wait_for_page_load()
         onekey.choose_another_way_to_login()
@@ -197,16 +197,21 @@ class LoginTest(TestCase):
         """进入一键登录页"""
         Preconditions.select_single_cmcc_android_4g_client()
         Preconditions.app_start_for_the_first_time()
+        """选择移动卡手机进入一键登录页面"""
+        Preconditions.select_single_cmcc_android_4g_client()
+        current_mobile().reset_app()
         Preconditions.make_already_in_one_key_login_page()
 
-    @unittest.skip("skip 本网单卡测试test_login_0006")
+    @tags('ALL')
     def test_login_0006(self):
         """服务条款检查"""
-        # TODO XIN
         oklp = OneKeyLoginPage()
         # 点击许可服务协议
         oklp.click_license_agreement()
         Agreement.AgreementPage().wait_for_license_agreement_load()
+        # 检查服务条款内容
+        AgreementPage().wait_for_license_agreement_load()
+
 
     def setUp_test_login_0007(self):
         """进入一键登录页"""
