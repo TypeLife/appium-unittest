@@ -89,7 +89,7 @@ class OneKeyLoginPage(BasePage):
                 condition=lambda d: self._is_element_text_match(self.__locators["电话号码"], r"\d+", regex=True)
             )
         except:
-            message = "页面在{}s内，没有加载成功".format(timeout)
+            message = "电话号码在{}s内，没有加载成功".format(timeout)
             raise AssertionError(
                 message
             )
