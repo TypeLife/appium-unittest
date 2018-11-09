@@ -278,7 +278,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 单卡异网账户测试login_0025")
     def test_login_0025(self):
         """非首次已设置头像昵称登录短信登录页元素显示(异网单卡)"""
-        # TODO 框架改动，待修复
+        # TODO jlyuan
         sl = SmsLoginPage()
         sl.page_should_contain_text("输入本机号码")
         sl.page_should_contain_text("输入验证码")
@@ -295,7 +295,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 单卡（联通）输入验证码验证-异网用户测试login_0026")
     def test_login_0026(self, phone_number='18681151872'):
         """输入验证码验证-异网用户，正确有效的6位（断网)"""
-        # TODO 框架改动，待修复
+        # TODO jlyuan
         sl = SmsLoginPage()
         sl.wait_for_page_load()
         # 获取网络链接状态
@@ -328,7 +328,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 单卡（联通）输入验证码验证--错误的6位测试login_0027")
     def test_login_0027(self, phone_number='18681151872'):
         """输入验证码验证-错误的6位（异网用户）"""
-        # TODO 框架改动，待修复
+        # TODO jlyuan
         sl = SmsLoginPage()
         sl.wait_for_page_load()
         # 输入电话号码，点击获取验证码
