@@ -4,14 +4,15 @@ import unittest
 
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
-from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE, current_mobile, current_driver, switch_to_mobile
+from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
 from pages import Agreement
 
 REQUIRED_MOBILES = {
     "测试机": 'M960BDQN229CH',
-    "辅助机": 'jlyuan'
+    "辅助机": 'jlyuan',
+    "移动 IOS客户端": '',
 }
 
 
@@ -113,6 +114,7 @@ class Preconditions(object):
         """后台运行"""
         current_mobile().background_app(seconds)
 
+
 class LoginTest(TestCase):
     """Login 模块"""
 
@@ -160,9 +162,10 @@ class LoginTest(TestCase):
         # 验证打开的页面是否是退出之前的界面（我 页面）
         mp.wait_for_page_load()
 
-    @unittest.skip("skip 移动账号登录")
+    @unittest.skip("IOS 还不支持")
     def test_login_C0003(self, phone_number='14775970982', login_time=60):
         """移动账号登录"""
+        # TODO IOS手机还没做
         OneKeyLoginPage(). \
             wait_for_page_load(). \
             assert_phone_number_equals_to(phone_number). \
@@ -174,6 +177,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 测试条件是双卡")
     def test_login_C0004(self, phone_number='14775970982', login_time=60):
         """切换验证码登录"""
+        # TODO 框架改动，待修复
         onekey = OneKeyLoginPage()
         onekey.wait_for_page_load()
         onekey.choose_another_way_to_login()
@@ -196,6 +200,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 本网单卡测试test_login_0006")
     def test_login_0006(self):
         """服务条款检查"""
+        # TODO 框架改动，待修复
         oklp = OneKeyLoginPage()
         # 点击许可服务协议
         oklp.click_license_agreement()
@@ -209,6 +214,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 本网单卡测试test_login_0007")
     def test_login_0007(self):
         """服务条款检查"""
+        # TODO 框架改动，待修复
         oklp = OneKeyLoginPage()
         # 点击许可服务协议
         oklp.click_license_agreement()
@@ -223,6 +229,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 本网单卡测试test_login_0009")
     def test_login_0009(self):
         """登录页面检查"""
+        # TODO 框架改动，待修复
         oklp = OneKeyLoginPage()
         oklp.page_should_contain_text("语言")
         oklp.page_should_contain_text("一键登录")
@@ -236,6 +243,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 一移动一异网卡登录测试test_login_0010")
     def test_login_0010(self):
         """一移动一异网卡登录"""
+        # TODO 框架改动，待修复
         oklp = OneKeyLoginPage()
         # 切换另一号码登录
         oklp.choose_another_way_to_login()
@@ -254,6 +262,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 单卡异网账户测试login_0025")
     def test_login_0025(self):
         """非首次已设置头像昵称登录短信登录页元素显示(异网单卡)"""
+        # TODO 框架改动，待修复
         sl = SmsLoginPage()
         sl.page_should_contain_text("输入本机号码")
         sl.page_should_contain_text("输入验证码")
@@ -270,6 +279,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 单卡（联通）输入验证码验证-异网用户测试login_0026")
     def test_login_0026(self, phone_number='18681151872'):
         """输入验证码验证-异网用户，正确有效的6位（断网)"""
+        # TODO 框架改动，待修复
         sl = SmsLoginPage()
         sl.wait_for_page_load()
         # 获取网络链接状态
@@ -302,6 +312,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 单卡（联通）输入验证码验证--错误的6位测试login_0027")
     def test_login_0027(self, phone_number='18681151872'):
         """输入验证码验证-错误的6位（异网用户）"""
+        # TODO 框架改动，待修复
         sl = SmsLoginPage()
         sl.wait_for_page_load()
         # 输入电话号码，点击获取验证码
@@ -329,6 +340,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 单卡（联通）输入验证码验证--正确失效的6位验证码login_0029")
     def test_login_0029(self, phone_number='18681151872'):
         """输入验证码验证-（异网）正确失效的6位验证码"""
+        # TODO 框架改动，待修复
         sl = SmsLoginPage()
         sl.wait_for_page_load()
         # 输入电话号码，点击获取验证码
@@ -359,6 +371,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 单卡异网账户测试login_0050")
     def test_login_0050(self, phone_number='18681151872', login_time=60):
         """短信验证码登录-（联通）异网用户首次登录"""
+        # TODO 框架改动，待修复
         sl = SmsLoginPage()
         sl.wait_for_page_load()
         # 输入电话号码，点击获取验证码
@@ -384,6 +397,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 单卡异网账户测试login_0051")
     def test_login_0051(self, phone_number='18681151872', login_time=60):
         """短信验证码登录-异网用户登录（非首次)"""
+        # TODO 框架改动，待修复
         sl = SmsLoginPage()
         sl.wait_for_page_load()
         # 输入电话号码，点击获取验证码
@@ -410,6 +424,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 单卡异网账户测试login_0052")
     def test_login_0052(self, phone_number='18681151872'):
         """短信验证码登录-异网不显示一键登录入口"""
+        # TODO 框架改动，待修复
         sl = SmsLoginPage()
         # 输入电话号码
         sl.input_phone_number(phone_number)
