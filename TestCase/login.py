@@ -10,9 +10,11 @@ from pages import *
 from pages import Agreement
 
 REQUIRED_MOBILES = {
-    "测试机": 'M960BDQN229CH',
-    "辅助机": 'jlyuan',
+    # "测试机": 'M960BDQN229CH',
+    # "辅助机": 'jlyuan',
     "移动 IOS客户端": '',
+    "测试机": 'jlyuan',
+    "辅助机": 'M960BDQN229CH',
 }
 
 
@@ -224,27 +226,29 @@ class LoginTest(TestCase):
         Agreement.AgreementPage().wait_for_license_agreement_load()
 
     def setUp_test_login_0009(self):
-        LoginTest.open_app_first_time()
-        LoginTest.enter_login_page()
+        """进入一键登录页"""
+        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.make_already_in_one_key_login_page()
 
     @unittest.skip("skip 本网单卡测试test_login_0009")
     def test_login_0009(self):
         """登录页面检查"""
-        # TODO jlyuan
         oklp = OneKeyLoginPage()
         oklp.page_should_contain_text("语言")
         oklp.page_should_contain_text("一键登录")
-        oklp.page_should_contain_text("《和飞信软件许可及服务协议》")
+        oklp.page_should_contain_text("服务条款")
         oklp.page_should_contain_client_logo_pic()
 
     def setUp_test_login_0010(self):
-        LoginTest.open_app_first_time()
-        LoginTest.enter_login_page()
+        """进入一键登录页"""
+        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.make_already_in_one_key_login_page()
 
     @unittest.skip("skip 一移动一异网卡登录测试test_login_0010")
     def test_login_0010(self):
         """一移动一异网卡登录"""
-        # TODO jlyuan
         oklp = OneKeyLoginPage()
         # 切换另一号码登录
         oklp.choose_another_way_to_login()
