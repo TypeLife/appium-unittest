@@ -163,7 +163,7 @@ class LoginTest(TestCase):
         mp.wait_for_page_load()
 
     @unittest.skip("IOS 还不支持")
-    def test_login_C0003(self, phone_number='14775970982', login_time=60):
+    def test_login_0003(self, phone_number='14775970982', login_time=60):
         """移动账号登录"""
         # TODO IOS手机还没做
         OneKeyLoginPage(). \
