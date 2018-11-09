@@ -162,9 +162,9 @@ class LoginTest(TestCase):
         # 验证打开的页面是否是退出之前的界面（我 页面）
         mp.wait_for_page_load()
 
-    @unittest.skip("IOS 还不支持")
+    @unittest.skip("IOS先不做")
     def test_login_0003(self, phone_number='14775970982', login_time=60):
-        """移动账号登录"""
+        """登录页面检查"""
         # TODO IOS手机还没做
         OneKeyLoginPage(). \
             wait_for_page_load(). \
@@ -182,7 +182,7 @@ class LoginTest(TestCase):
 
     @unittest.skip("存在自动化无法实现的高频点击操作")
     def test_login_0004(self, phone_number='14775970982', login_time=60):
-        """切换验证码登录"""
+        """登录页面检查"""
         # TODO XIN  存在自动化无法实现的高频点击操作
         onekey = OneKeyLoginPage()
         onekey.wait_for_page_load()
@@ -199,6 +199,12 @@ class LoginTest(TestCase):
         sms.click_i_know()
         MessagePage().wait_for_page_load(login_time)
 
+    @unittest.skip("IOS用例先不做")
+    def test_login_0005(self):
+        """登录页面检查"""
+        # TODO IOS用例先不做
+        pass
+
     def setUp_test_login_0006(self):
         """选择安卓移动卡手机进入一键登录页面"""
         Preconditions.select_single_cmcc_android_4g_client()
@@ -213,7 +219,6 @@ class LoginTest(TestCase):
         oklp.click_license_agreement()
         # 检查服务条款内容
         AgreementPage().wait_for_license_agreement_load()
-
 
     def setUp_test_login_0007(self):
         """进入一键登录页"""
