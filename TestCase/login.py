@@ -234,7 +234,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 本网单卡测试test_login_0009")
     def test_login_0009(self):
         """登录页面检查"""
-        # TODO 框架改动，待修复
+        # TODO jlyuan
         oklp = OneKeyLoginPage()
         oklp.page_should_contain_text("语言")
         oklp.page_should_contain_text("一键登录")
@@ -248,7 +248,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 一移动一异网卡登录测试test_login_0010")
     def test_login_0010(self):
         """一移动一异网卡登录"""
-        # TODO 框架改动，待修复
+        # TODO jlyuan
         oklp = OneKeyLoginPage()
         # 切换另一号码登录
         oklp.choose_another_way_to_login()
