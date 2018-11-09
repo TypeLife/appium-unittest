@@ -200,7 +200,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 本网单卡测试test_login_0006")
     def test_login_0006(self):
         """服务条款检查"""
-        # TODO 框架改动，待修复
+        # TODO XIN
         oklp = OneKeyLoginPage()
         # 点击许可服务协议
         oklp.click_license_agreement()
