@@ -194,9 +194,6 @@ class LoginTest(TestCase):
         MessagePage().wait_for_page_load(login_time)
 
     def setUp_test_login_0006(self):
-        """进入一键登录页"""
-        Preconditions.select_single_cmcc_android_4g_client()
-        Preconditions.app_start_for_the_first_time()
         """选择移动卡手机进入一键登录页面"""
         Preconditions.select_single_cmcc_android_4g_client()
         current_mobile().reset_app()
@@ -208,7 +205,6 @@ class LoginTest(TestCase):
         oklp = OneKeyLoginPage()
         # 点击许可服务协议
         oklp.click_license_agreement()
-        Agreement.AgreementPage().wait_for_license_agreement_load()
         # 检查服务条款内容
         AgreementPage().wait_for_license_agreement_load()
 
