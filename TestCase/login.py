@@ -194,8 +194,10 @@ class LoginTest(TestCase):
         MessagePage().wait_for_page_load(login_time)
 
     def setUp_test_login_0006(self):
-        LoginTest.open_app_first_time()
-        LoginTest.enter_login_page()
+        """进入一键登录页"""
+        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.make_already_in_one_key_login_page()
 
     @unittest.skip("skip 本网单卡测试test_login_0006")
     def test_login_0006(self):
@@ -204,23 +206,21 @@ class LoginTest(TestCase):
         oklp = OneKeyLoginPage()
         # 点击许可服务协议
         oklp.click_license_agreement()
-        time.sleep(5)
         Agreement.AgreementPage().wait_for_license_agreement_load()
 
     def setUp_test_login_0007(self):
-        LoginTest.open_app_first_time()
-        LoginTest.enter_login_page()
+        """进入一键登录页"""
+        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.make_already_in_one_key_login_page()
 
     @unittest.skip("skip 本网单卡测试test_login_0007")
     def test_login_0007(self):
         """服务条款检查"""
-        # TODO jlyuan
         oklp = OneKeyLoginPage()
         # 点击许可服务协议
         oklp.click_license_agreement()
-        time.sleep(5)
-        text = """和飞信业务是中国移动提供的通信服务，用户首次登录和飞信客户端即表示同意开通本业务，本业务不收取订购费用。如使用和飞信进行发送短信、拨打电话等功能可能会收取一定的费用。"""
-        Agreement.AgreementPage().page_should_contain_text(text)
+        Agreement.AgreementPage().wait_for_license_agreement_load()
 
     def setUp_test_login_0009(self):
         LoginTest.open_app_first_time()
