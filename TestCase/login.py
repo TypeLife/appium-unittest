@@ -117,10 +117,8 @@ class Preconditions(object):
         current_mobile().background_app(seconds)
 
     @staticmethod
-    def diff_card_enter_login_page():
-        """异网卡进入短信登录界面"""
-        client = switch_to_mobile(REQUIRED_MOBILES['测试机'])
-        client.connect_mobile()
+    def diff_card_make_already_in_sms_login_page():
+        """确保异网卡已在短信登录界面"""
         sms = SmsLoginPage()
         if sms.is_on_this_page():
             return
@@ -138,6 +136,37 @@ class Preconditions(object):
             wait_for_page_load(). \
             click_submit_button()
         SmsLoginPage().wait_for_page_load()
+
+    @staticmethod
+    def diff_card_enter_sms_login_page():
+        """异网卡进入短信登录界面"""
+        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.diff_card_make_already_in_sms_login_page()
+
+    @staticmethod
+    def diff_card_login_by_sms(phone_number="18681151872", login_time=60):
+        """异网卡短信登录"""
+        sl = SmsLoginPage()
+        sl.wait_for_page_load()
+        # 输入电话号码，点击获取验证码
+        sl.input_phone_number(phone_number)
+        # 获取验证码
+        code = sl.get_verify_code_by_notice_board()
+        # 输入验证码
+        sl.input_verification_code(code)
+        # 点击登录
+        sl.click_login()
+        time.sleep(0.5)
+        if sl._is_text_present("查看详情"):
+            # 查看详情
+            sl.click_read_agreement_detail()
+            # 同意协议
+            agreement = AgreementDetailPage()
+            agreement.click_agree_button()
+        if sl._is_text_present("我知道了"):
+            # 点击‘我知道了’
+            sl.click_i_know()
+        MessagePage().wait_for_page_load(login_time)
 
 class LoginTest(TestCase):
     """Login 模块"""
@@ -294,7 +323,7 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0025(self):
         """异网账号进入登录页面"""
-        Preconditions.diff_card_enter_login_page()
+        Preconditions.diff_card_enter_sms_login_page()
 
     @unittest.skip("skip 单卡异网账户测试login_0025")
     def test_login_0025(self):
@@ -306,7 +335,7 @@ class LoginTest(TestCase):
         self.assertEqual(sl.login_btn_is_checked(), 'false')
 
     def setUp_test_login_0026(self):
-        Preconditions.diff_card_enter_login_page()
+        Preconditions.diff_card_enter_sms_login_page()
 
     @unittest.skip("skip 单卡（联通）输入验证码验证-异网用户测试login_0026")
     def test_login_0026(self, phone_number='18681151872'):
@@ -344,9 +373,9 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0027(self):
         """异网账号进入登录页面"""
-        Preconditions.diff_card_enter_login_page()
+        Preconditions.diff_card_enter_sms_login_page()
 
-    # @unittest.skip("skip 单卡（联通）输入验证码验证--错误的6位测试login_0027")
+    @unittest.skip("skip 单卡（联通）输入验证码验证--错误的6位测试login_0027")
     def test_login_0027(self, phone_number='18681151872'):
         """输入验证码验证-错误的6位（异网用户）"""
         sl = SmsLoginPage()
@@ -403,71 +432,49 @@ class LoginTest(TestCase):
         code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*103108", timeout=40)
         self.assertIn("103108", code_info)
 
-    def setUp_test_login_0050(self):
+    def setUp_test_login_0049(self):
         """
         预置条件：
-        1、异网账号进入登录页面
+        1、异网账号首次进入登录页面
         """
-        LoginTest.open_app_first_time()
-        LoginTest.diff_card_enter_login_page()
+        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @unittest.skip("skip 单卡异网账户测试login_0050")
-    def test_login_0050(self, phone_number='18681151872', login_time=60):
+    # @unittest.skip("skip 单卡异网账户测试login_0049")
+    def test_login_0049(self, phone_number='18681151872', login_time=60):
         """短信验证码登录-（联通）异网用户首次登录"""
-        # TODO jlyuan
-        sl = SmsLoginPage()
-        sl.wait_for_page_load()
-        # 输入电话号码，点击获取验证码
-        sl.input_phone_number(phone_number)
-        # 获取验证码
-        code = sl.get_verify_code_by_notice_board()
-        self.assertIsNotNone(code)
-        # 输入验证码，点击登录
-        sl.input_verification_code(code)
-        sl.click_login()
-        sl.wait_for_i_know_load()
-        # 点击‘我知道了’
-        sl.click_i_know()
-        MessagePage().wait_for_page_load(login_time)
+        Preconditions.diff_card_enter_sms_login_page()
 
-    def setUp_test_login_0051(self):
+    def setUp_test_login_0050(self):
         """
         预置条件：
         1、异网账号(非首次登录)进入登录页面
         """
-        LoginTest.open_app_not_first_time()
+        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @unittest.skip("skip 单卡异网账户测试login_0051")
-    def test_login_0051(self, phone_number='18681151872', login_time=60):
+    # @unittest.skip("skip 单卡异网账户测试login_0050")
+    def test_login_0050(self, phone_number='18681151872', login_time=60):
         """短信验证码登录-异网用户登录（非首次)"""
-        # TODO jlyuan
-        sl = SmsLoginPage()
-        sl.wait_for_page_load()
-        # 输入电话号码，点击获取验证码
-        sl.input_phone_number(phone_number)
-        # 获取验证码
-        code = sl.get_verify_code_by_notice_board()
-        self.assertIsNotNone(code)
-        # 输入验证码，点击登录
-        sl.input_verification_code(code)
-        sl.click_login()
-        sl.wait_for_i_know_load()
-        # 点击‘我知道了’
-        sl.click_i_know()
-        MessagePage().wait_for_page_load(login_time)
+        # 登录
+        Preconditions.diff_card_login_by_sms()
+        # 退出
+        Preconditions.take_logout_operation_if_already_login()
+        # 登录
+        Preconditions.diff_card_login_by_sms()
 
-    def setUp_test_login_0052(self):
+
+    def setUp_test_login_0051(self):
         """
         预置条件：
         1、异网账号进入登录页面
         """
-        LoginTest.open_app_first_time()
-        LoginTest.diff_card_enter_login_page()
+        Preconditions.diff_card_enter_sms_login_page()
 
-    @unittest.skip("skip 单卡异网账户测试login_0052")
-    def test_login_0052(self, phone_number='18681151872'):
+    @unittest.skip("skip 单卡异网账户测试login_0051")
+    def test_login_0051(self, phone_number='18681151872'):
         """短信验证码登录-异网不显示一键登录入口"""
-        # TODO jlyuan
         sl = SmsLoginPage()
         # 输入电话号码
         sl.input_phone_number(phone_number)
