@@ -424,17 +424,21 @@ class BasePage(object):
     def get_error_code_info_by_adb(self, pattern, timeout=5):
         """通过adb log 获取错误码信息"""
         os.system("adb logcat -c")
-        cmd = ' adb logcat -d |findstr %s' % pattern
+        cmd = ' adb logcat -d |findstr %s > tmp.txt' % pattern
         n = 0
         code_info = None
         while n < timeout:
-            code_info = os.popen(cmd).read()
-            if code_info:
-                break
-            else:
-                time.sleep(1)
-                n += 1
-                continue
+            os.system(cmd)
+            with open("tmp.txt", 'r', encoding="utf-8") as f:
+                code_info = f.read()
+                if code_info:
+                    break
+                else:
+                    time.sleep(1)
+                    n += 1
+                    continue
+        if os.path.exists("tmp.txt"):
+            os.remove("tmp.txt")
         return code_info
 
     def get_network_status(self):
