@@ -116,6 +116,28 @@ class Preconditions(object):
         """后台运行"""
         current_mobile().background_app(seconds)
 
+    @staticmethod
+    def diff_card_enter_login_page():
+        """异网卡进入短信登录界面"""
+        client = switch_to_mobile(REQUIRED_MOBILES['测试机'])
+        client.connect_mobile()
+        sms = SmsLoginPage()
+        if sms.is_on_this_page():
+            return
+        current_mobile().reset_app()
+        guide_page = GuidePage()
+        guide_page.wait_until(
+            lambda d: guide_page._is_text_present("解锁“免费通信”新攻略")
+        )
+        guide_page.swipe_to_the_second_banner()
+        guide_page.swipe_to_the_third_banner()
+        guide_page.click_start_the_experience()
+
+        # 确定
+        PermissionListPage(). \
+            wait_for_page_load(). \
+            click_submit_button()
+        SmsLoginPage().wait_for_page_load()
 
 class LoginTest(TestCase):
     """Login 模块"""
@@ -272,13 +294,11 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0025(self):
         """异网账号进入登录页面"""
-        LoginTest.open_app_first_time()
-        LoginTest.diff_card_enter_login_page()
+        Preconditions.diff_card_enter_login_page()
 
     @unittest.skip("skip 单卡异网账户测试login_0025")
     def test_login_0025(self):
         """非首次已设置头像昵称登录短信登录页元素显示(异网单卡)"""
-        # TODO jlyuan
         sl = SmsLoginPage()
         sl.page_should_contain_text("输入本机号码")
         sl.page_should_contain_text("输入验证码")
@@ -286,16 +306,11 @@ class LoginTest(TestCase):
         self.assertEqual(sl.login_btn_is_checked(), 'false')
 
     def setUp_test_login_0026(self):
-        """
-        预置条件：
-        1、异网账号(非首次登录)进入登录页面
-        """
-        LoginTest.open_app_not_first_time()
+        Preconditions.diff_card_enter_login_page()
 
     @unittest.skip("skip 单卡（联通）输入验证码验证-异网用户测试login_0026")
     def test_login_0026(self, phone_number='18681151872'):
         """输入验证码验证-异网用户，正确有效的6位（断网)"""
-        # TODO jlyuan
         sl = SmsLoginPage()
         sl.wait_for_page_load()
         # 获取网络链接状态
@@ -311,24 +326,29 @@ class LoginTest(TestCase):
         sl.set_network_status(1)
         # 点击登录
         sl.click_login()
-        sl.wait_for_i_know_load()
-        # 点击‘我知道了’
-        sl.click_i_know()
+        time.sleep(0.5)
+        if sl._is_text_present("查看详情"):
+            # 查看详情
+            sl.click_read_agreement_detail()
+            # 同意协议
+            agreement = AgreementDetailPage()
+            agreement.click_agree_button()
+        if sl._is_text_present("我知道了"):
+            # 点击‘我知道了’
+            sl.click_i_know()
         # 网络异常提示
-        code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*102101", timeout=40)
+        code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*102101", timeout=30)
         self.assertIn("102101", code_info)
         # 恢复网络连接
         sl.set_network_status(network_status)
 
     def setUp_test_login_0027(self):
         """异网账号进入登录页面"""
-        LoginTest.open_app_first_time()
-        LoginTest.diff_card_enter_login_page()
+        Preconditions.diff_card_enter_login_page()
 
-    @unittest.skip("skip 单卡（联通）输入验证码验证--错误的6位测试login_0027")
+    # @unittest.skip("skip 单卡（联通）输入验证码验证--错误的6位测试login_0027")
     def test_login_0027(self, phone_number='18681151872'):
         """输入验证码验证-错误的6位（异网用户）"""
-        # TODO jlyuan
         sl = SmsLoginPage()
         sl.wait_for_page_load()
         # 输入电话号码，点击获取验证码
@@ -337,13 +357,20 @@ class LoginTest(TestCase):
         code = sl.get_verify_code_by_notice_board()
         self.assertIsNotNone(code)
         # 输入错误验证码
-        code = str(int(code[0]) + 1)
+        code = str(int(code) + 1)
         sl.input_verification_code(code)
         # 点击登录
         sl.click_login()
-        sl.wait_for_i_know_load()
-        # 点击‘我知道了’
-        sl.click_i_know()
+        time.sleep(0.5)
+        if sl._is_text_present("查看详情"):
+            # 查看详情
+            sl.click_read_agreement_detail()
+            # 同意协议
+            agreement = AgreementDetailPage()
+            agreement.click_agree_button()
+        if sl._is_text_present("我知道了"):
+            # 点击‘我知道了’
+            sl.click_i_know()
         # 获取异常提示
         code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*103108", timeout=40)
         self.assertIn("103108", code_info)
