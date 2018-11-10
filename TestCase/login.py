@@ -383,7 +383,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 单卡（联通）输入验证码验证--正确失效的6位验证码login_0029")
     def test_login_0029(self, phone_number='18681151872'):
         """输入验证码验证-（异网）正确失效的6位验证码"""
-        # TODO 框架改动，待修复
+        # TODO jlyuan
         sl = SmsLoginPage()
         sl.wait_for_page_load()
         # 输入电话号码，点击获取验证码
@@ -414,7 +414,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 单卡异网账户测试login_0050")
     def test_login_0050(self, phone_number='18681151872', login_time=60):
         """短信验证码登录-（联通）异网用户首次登录"""
-        # TODO 框架改动，待修复
+        # TODO jlyuan
         sl = SmsLoginPage()
         sl.wait_for_page_load()
         # 输入电话号码，点击获取验证码
@@ -440,7 +440,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 单卡异网账户测试login_0051")
     def test_login_0051(self, phone_number='18681151872', login_time=60):
         """短信验证码登录-异网用户登录（非首次)"""
-        # TODO 框架改动，待修复
+        # TODO jlyuan
         sl = SmsLoginPage()
         sl.wait_for_page_load()
         # 输入电话号码，点击获取验证码
@@ -467,7 +467,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 单卡异网账户测试login_0052")
     def test_login_0052(self, phone_number='18681151872'):
         """短信验证码登录-异网不显示一键登录入口"""
-        # TODO 框架改动，待修复
+        # TODO jlyuan
         sl = SmsLoginPage()
         # 输入电话号码
         sl.input_phone_number(phone_number)
