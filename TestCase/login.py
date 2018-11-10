@@ -406,13 +406,11 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0029(self):
         """异网账号进入登录页面"""
-        LoginTest.open_app_first_time()
-        LoginTest.diff_card_enter_login_page()
+        Preconditions.diff_card_enter_sms_login_page()
 
     @unittest.skip("skip 单卡（联通）输入验证码验证--正确失效的6位验证码login_0029")
     def test_login_0029(self, phone_number='18681151872'):
         """输入验证码验证-（异网）正确失效的6位验证码"""
-        # TODO jlyuan
         sl = SmsLoginPage()
         sl.wait_for_page_load()
         # 输入电话号码，点击获取验证码
@@ -422,12 +420,19 @@ class LoginTest(TestCase):
         self.assertIsNotNone(code)
         # 输入失效的验证码
         time.sleep(300)
-        sl.input_verification_code(code[0])
+        sl.input_verification_code(code)
         # 点击登录
         sl.click_login()
-        sl.wait_for_i_know_load()
-        # 点击‘我知道了’
-        sl.click_i_know()
+        time.sleep(0.5)
+        if sl._is_text_present("查看详情"):
+            # 查看详情
+            sl.click_read_agreement_detail()
+            # 同意协议
+            agreement = AgreementDetailPage()
+            agreement.click_agree_button()
+        if sl._is_text_present("我知道了"):
+            # 点击‘我知道了’
+            sl.click_i_know()
         # 获取异常提示
         code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*103108", timeout=40)
         self.assertIn("103108", code_info)
@@ -441,8 +446,8 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    # @unittest.skip("skip 单卡异网账户测试login_0049")
-    def test_login_0049(self, phone_number='18681151872', login_time=60):
+    @unittest.skip("skip 单卡异网账户测试login_0049")
+    def test_login_0049(self):
         """短信验证码登录-（联通）异网用户首次登录"""
         Preconditions.diff_card_enter_sms_login_page()
 
@@ -454,8 +459,8 @@ class LoginTest(TestCase):
         Preconditions.select_single_cmcc_android_4g_client()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    # @unittest.skip("skip 单卡异网账户测试login_0050")
-    def test_login_0050(self, phone_number='18681151872', login_time=60):
+    @unittest.skip("skip 单卡异网账户测试login_0050")
+    def test_login_0050(self):
         """短信验证码登录-异网用户登录（非首次)"""
         # 登录
         Preconditions.diff_card_login_by_sms()
