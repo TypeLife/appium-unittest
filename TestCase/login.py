@@ -321,6 +321,50 @@ class LoginTest(TestCase):
         sms.page_should_contain_text("获取验证码")
         sms.page_should_contain_text("切换另一号码登录")
 
+    def setUp_test_login_0022(self):
+        """进入一键登录页"""
+        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.make_already_in_one_key_login_page()
+
+    # @unittest.skip("skip 一移动一异网卡登录测试test_login_0010")
+    def test_login_0022(self, phone_number='18681151872'):
+        """一移动一异网卡登录"""
+        oklp = OneKeyLoginPage()
+        # 获取网络链接状态
+        network_status = oklp.get_network_status()
+        # 断开网络连接
+        oklp.set_network_status(1)
+        # 页面检查
+        oklp.page_should_contain_text("语言")
+        oklp.page_should_contain_text("一键登录")
+        oklp.page_should_contain_text("服务条款")
+        # 切换另一号码登录
+        oklp.choose_another_way_to_login()
+        sms = SmsLoginPage()
+        sms.wait_for_page_load()
+        sms.page_should_contain_text("切换另一号码登录")
+        self.assertEqual(sms.login_btn_is_checked(), 'false')
+        sms.input_phone_number(phone_number)
+        sms.input_verification_code(654805)
+        # 点击登录
+        sms.click_login()
+        time.sleep(0.5)
+        if sms._is_text_present("查看详情"):
+            # 查看详情
+            sms.click_read_agreement_detail()
+            # 同意协议
+            agreement = AgreementDetailPage()
+            agreement.click_agree_button()
+        if sms._is_text_present("我知道了"):
+            # 点击‘我知道了’
+            sms.click_i_know()
+        # 网络异常提示
+        code_info = sms.get_error_code_info_by_adb("com.chinasofti.rcs.*102101", timeout=30)
+        self.assertIn("102101", code_info)
+        # 恢复网络连接
+        sms.set_network_status(network_status)
+
     def setUp_test_login_0025(self):
         """异网账号进入登录页面"""
         Preconditions.diff_card_enter_sms_login_page()
@@ -441,7 +485,7 @@ class LoginTest(TestCase):
         """异网账号进入登录页面"""
         Preconditions.diff_card_enter_sms_login_page()
 
-    # @unittest.skip("skip 单卡（联通）测试login_0036")
+    @unittest.skip("skip 单卡（联通）测试login_0036")
     def test_login_0036(self, phone_number='18681151872'):
         """验证码重新获取后-（异网用户）输入之前的验证码提示"""
         sl = SmsLoginPage()
