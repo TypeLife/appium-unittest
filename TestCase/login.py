@@ -437,6 +437,55 @@ class LoginTest(TestCase):
         code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*103108", timeout=40)
         self.assertIn("103108", code_info)
 
+    def setUp_test_login_0036(self):
+        """异网账号进入登录页面"""
+        Preconditions.diff_card_enter_sms_login_page()
+
+    # @unittest.skip("skip 单卡（联通）测试login_0036")
+    def test_login_0036(self, phone_number='18681151872'):
+        """验证码重新获取后-（异网用户）输入之前的验证码提示"""
+        sl = SmsLoginPage()
+        sl.wait_for_page_load()
+        # 输入电话号码，点击获取验证码
+        sl.input_phone_number(phone_number)
+        # 获取验证码
+        code1 = sl.get_verify_code_by_notice_board()
+        self.assertIsNotNone(code1)
+        time.sleep(30)
+        # 第二次获取验证码
+        code2 = sl.get_verify_code_by_notice_board()
+        # 输入之前的验证码
+        sl.input_verification_code(code1)
+        # 点击登录
+        sl.click_login()
+        time.sleep(0.5)
+        if sl._is_text_present("查看详情"):
+            # 查看详情
+            sl.click_read_agreement_detail()
+            # 同意协议
+            agreement = AgreementDetailPage()
+            agreement.click_agree_button()
+        if sl._is_text_present("我知道了"):
+            # 点击‘我知道了’
+            sl.click_i_know()
+        # 获取异常提示
+        code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*103108", timeout=40)
+        self.assertIn("103108", code_info)
+
+    def setUp_test_login_0048(self):
+        """
+        预置条件：
+        1、异网账号首次进入登录页面
+        """
+        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.diff_card_make_already_in_sms_login_page()
+
+    @unittest.skip("skip 单卡异网账户测试login_0048")
+    def test_login_0048(self):
+        """短信验证码登录-（电信）异网用户首次登录"""
+        Preconditions.diff_card_enter_sms_login_page()
+
     def setUp_test_login_0049(self):
         """
         预置条件：
