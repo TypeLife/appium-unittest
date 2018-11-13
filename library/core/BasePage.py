@@ -356,6 +356,8 @@ class BasePage(object):
         return True
 
     def wait_until(self, condition, timeout=8, auto_accept_permission_alert=True):
+        this = self
+
         def execute_condition(driver):
             """如果有弹窗，自动允许"""
 
@@ -365,21 +367,21 @@ class BasePage(object):
                     alert = d.switch_to.alert
                     return alert.accept
                 except:
-                    alert = self.get_elements((MobileBy.XPATH, '//*[@text="始终允许"]')) \
-                            or self.get_elements((MobileBy.XPATH, '//*[@text="允许"]'))
+                    alert = this.get_elements((MobileBy.XPATH, '//*[@text="始终允许"]')) \
+                            or this.get_elements((MobileBy.XPATH, '//*[@text="允许"]'))
                     if not alert:
                         return False
                     return alert[0].click
 
             if auto_accept_permission_alert:
-                if self.driver.current_activity in [
+                if this.driver.current_activity in [
                     'com.android.packageinstaller.permission.ui.GrantPermissionsActivity',
                     '.permission.ui.GrantPermissionsActivity'
                 ]:
                     need = True
                     while need:
                         try:
-                            WebDriverWait(self.driver, 1).until(
+                            WebDriverWait(this.driver, 1).until(
                                 get_accept_permission_handler
                             )()
                         except:
