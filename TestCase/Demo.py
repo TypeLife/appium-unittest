@@ -6,7 +6,7 @@ from library.core.utils.testcasefilter import tags
 from pages import *
 
 REQUIRED_MOBILES = {
-    "测试机": 'jlyuan',
+    "测试机": 'single_mobile',
     "辅助机2": 'M960BDQN229CH',
 }
 
