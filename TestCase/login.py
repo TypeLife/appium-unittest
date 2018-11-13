@@ -416,7 +416,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    # @unittest.skip("skip 一移动一异网卡登录测试test_login_0010")
+    @tags('ALL')
     def test_login_0022(self, phone_number='18681151872'):
         """一移动一异网卡登录"""
         oklp = OneKeyLoginPage()
