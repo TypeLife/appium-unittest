@@ -186,18 +186,20 @@ class Preconditions(object):
         SmsLoginPage().wait_for_page_load()
 
     @staticmethod
-    def diff_card_enter_sms_login_page():
+    def diff_card_enter_sms_login_page(required_mobiles_key):
         """异网卡进入短信登录界面"""
-        Preconditions.select_single_cmcc_android_4g_client()
+        client = switch_to_mobile(REQUIRED_MOBILES[required_mobiles_key])
+        client.connect_mobile()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
     @staticmethod
-    def diff_card_login_by_sms(phone_number="18681151872", login_time=60):
+    def diff_card_login_by_sms(card_type, login_time=60):
         """异网卡短信登录"""
         sl = SmsLoginPage()
         sl.wait_for_page_load()
-        # 输入电话号码，点击获取验证码
-        sl.input_phone_number(phone_number)
+        phone_numbers = current_mobile().get_cards(card_type)
+        # 输入电话号码
+        sl.input_phone_number(phone_numbers[0])
         # 获取验证码
         code = sl.get_verify_code_by_notice_board()
         # 输入验证码
@@ -227,7 +229,7 @@ class LoginTest(TestCase):
         Preconditions.login_by_one_key_login()
         Preconditions.take_logout_operation_if_already_login()
 
-    @tags('DEBUG')
+    @tags('ALL')
     def test_login_0001(self, login_time=60):
         """ 本网非首次登录已设置头像-一键登录页面元素检查"""
         oklp = OneKeyLoginPage()
@@ -450,7 +452,7 @@ class LoginTest(TestCase):
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL')
-    def test_login_0022(self, phone_number='18681151872'):
+    def test_login_0022(self):
         """一移动一异网卡登录"""
         oklp = OneKeyLoginPage()
         # 获取网络链接状态
@@ -467,7 +469,8 @@ class LoginTest(TestCase):
         sms.wait_for_page_load()
         sms.page_should_contain_text("切换另一号码登录")
         self.assertEqual(sms.login_btn_is_checked(), 'false')
-        sms.input_phone_number(phone_number)
+        phone_numbers = current_mobile().get_cards(CardType.CHINA_UNION)
+        sms.input_phone_number(phone_numbers[0])
         sms.input_verification_code(654805)
         # 点击登录
         sms.click_login()
@@ -523,14 +526,15 @@ class LoginTest(TestCase):
         Preconditions.diff_card_make_already_in_sms_login_page()
 
     @unittest.skip("skip 单卡（联通）输入验证码验证-异网用户测试login_0026")
-    def test_login_0026(self, phone_number='18681151872'):
+    def test_login_0026(self):
         """输入验证码验证-异网用户，正确有效的6位（断网)"""
         sl = SmsLoginPage()
         sl.wait_for_page_load()
         # 获取网络链接状态
         network_status = sl.get_network_status()
-        # 输入电话号码，点击获取验证码
-        sl.input_phone_number(phone_number)
+        # 输入电话号码
+        phone_numbers = current_mobile().get_cards(CardType.CHINA_UNION)
+        sl.input_phone_number(phone_numbers[0])
         # 获取验证码
         code = sl.get_verify_code_by_notice_board()
         self.assertIsNotNone(code)
@@ -562,12 +566,13 @@ class LoginTest(TestCase):
         Preconditions.diff_card_make_already_in_sms_login_page()
 
     @unittest.skip("skip 单卡（联通）输入验证码验证--错误的6位测试login_0027")
-    def test_login_0027(self, phone_number='18681151872'):
+    def test_login_0027(self):
         """输入验证码验证-错误的6位（异网用户）"""
         sl = SmsLoginPage()
         sl.wait_for_page_load()
-        # 输入电话号码，点击获取验证码
-        sl.input_phone_number(phone_number)
+        # 输入电话号码
+        phone_numbers = current_mobile().get_cards(CardType.CHINA_UNION)
+        sl.input_phone_number(phone_numbers[0])
         # 获取验证码
         code = sl.get_verify_code_by_notice_board()
         self.assertIsNotNone(code)
@@ -596,12 +601,13 @@ class LoginTest(TestCase):
         Preconditions.diff_card_make_already_in_sms_login_page()
 
     @unittest.skip("skip 单卡（联通）输入验证码验证--正确失效的6位验证码login_0029")
-    def test_login_0029(self, phone_number='18681151872'):
+    def test_login_0029(self):
         """输入验证码验证-（异网）正确失效的6位验证码"""
         sl = SmsLoginPage()
         sl.wait_for_page_load()
-        # 输入电话号码，点击获取验证码
-        sl.input_phone_number(phone_number)
+        # 输入电话号码
+        phone_numbers = current_mobile().get_cards(CardType.CHINA_UNION)
+        sl.input_phone_number(phone_numbers[0])
         # 获取验证码
         code = sl.get_verify_code_by_notice_board()
         self.assertIsNotNone(code)
@@ -630,12 +636,13 @@ class LoginTest(TestCase):
         Preconditions.diff_card_make_already_in_sms_login_page()
 
     @unittest.skip("skip 单卡（联通）测试login_0036")
-    def test_login_0036(self, phone_number='18681151872'):
+    def test_login_0036(self):
         """验证码重新获取后-（异网用户）输入之前的验证码提示"""
         sl = SmsLoginPage()
         sl.wait_for_page_load()
-        # 输入电话号码，点击获取验证码
-        sl.input_phone_number(phone_number)
+        # 输入电话号码
+        phone_numbers = current_mobile().get_cards(CardType.CHINA_UNION)
+        sl.input_phone_number(phone_numbers[0])
         # 获取验证码
         code1 = sl.get_verify_code_by_notice_board()
         self.assertIsNotNone(code1)
@@ -672,7 +679,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 单卡异网账户测试login_0048")
     def test_login_0048(self):
         """短信验证码登录-（电信）异网用户首次登录"""
-        Preconditions.diff_card_enter_sms_login_page()
+        Preconditions.diff_card_login_by_sms(CardType.CHINA_TELECOM)
 
     def setUp_test_login_0049(self):
         """
@@ -686,7 +693,7 @@ class LoginTest(TestCase):
     @unittest.skip("skip 单卡异网账户测试login_0049")
     def test_login_0049(self):
         """短信验证码登录-（联通）异网用户首次登录"""
-        Preconditions.diff_card_enter_sms_login_page()
+        Preconditions.diff_card_login_by_sms(CardType.CHINA_UNION)
 
     def setUp_test_login_0050(self):
         """
@@ -700,11 +707,11 @@ class LoginTest(TestCase):
     def test_login_0050(self):
         """短信验证码登录-异网用户登录（非首次)"""
         # 登录
-        Preconditions.diff_card_login_by_sms()
+        Preconditions.diff_card_login_by_sms(CardType.CHINA_UNION)
         # 退出
         Preconditions.take_logout_operation_if_already_login()
         # 登录
-        Preconditions.diff_card_login_by_sms()
+        Preconditions.diff_card_login_by_sms(CardType.CHINA_UNION)
 
     def setUp_test_login_0051(self):
         """
@@ -715,11 +722,12 @@ class LoginTest(TestCase):
         Preconditions.diff_card_make_already_in_sms_login_page()
 
     @unittest.skip("skip 单卡异网账户测试login_0051")
-    def test_login_0051(self, phone_number='18681151872'):
+    def test_login_0051(self):
         """短信验证码登录-异网不显示一键登录入口"""
         sl = SmsLoginPage()
         # 输入电话号码
-        sl.input_phone_number(phone_number)
+        phone_numbers = current_mobile().get_cards(CardType.CHINA_UNION)
+        sl.input_phone_number(phone_numbers[0])
         sl.page_should_not_contain_text("一键登录")
 
 

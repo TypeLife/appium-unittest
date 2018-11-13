@@ -129,7 +129,7 @@ AVAILABLE_DEVICES = {
             }
         ]
     },
-    'mobile_and_other': {
+    'mobile_and_union': {
         "MODEL": SupportedModel.RED_MI_NOTE_4X,
         "SERVER_URL": 'http://192.168.200.103:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
