@@ -410,6 +410,30 @@ class LoginTest(TestCase):
         sms.page_should_contain_text("获取验证码")
         sms.page_should_contain_text("切换另一号码登录")
 
+    def setUp_test_login_0020(self):
+        """进入一键登录页"""
+    Preconditions.select_single_cmcc_android_4g_client()
+    Preconditions.make_already_in_one_key_login_page()
+
+    @unittest.skip("skip 双移动卡登录测试login_0020")
+    def test_login_0020(self):
+        """双移动卡登录"""
+        oklp = OneKeyLoginPage()
+        # 获取网络链接状态
+        network_status = oklp.get_network_status()
+        # 断开网络连接
+        oklp.set_network_status(1)
+        # 检查一键登录
+        oklp.wait_for_page_load()
+        oklp.wait_for_tell_number_load(timeout=60)
+        # 切换另一号码登录
+        oklp.choose_another_way_to_login()
+        oklp.wait_for_page_load()
+        oklp.wait_for_tell_number_load(timeout=60)
+        # 恢复网络连接
+        oklp.set_network_status(network_status)
+
+
     def setUp_test_login_0022(self):
         """进入一键登录页"""
         Preconditions.select_single_cmcc_android_4g_client()
@@ -453,6 +477,23 @@ class LoginTest(TestCase):
         self.assertIn("102101", code_info)
         # 恢复网络连接
         sms.set_network_status(network_status)
+
+    def setUp_test_login_0023(self):
+        """进入一键登录页"""
+    Preconditions.select_single_cmcc_android_4g_client()
+    Preconditions.make_already_in_one_key_login_page()
+
+    @unittest.skip("skip 双移动卡登录测试login_0023")
+    def test_login_0023(self):
+        """双移动卡登录"""
+        oklp = OneKeyLoginPage()
+        # 检查一键登录
+        oklp.wait_for_page_load()
+        oklp.wait_for_tell_number_load(timeout=60)
+        # 切换另一号码登录
+        oklp.choose_another_way_to_login()
+        oklp.wait_for_page_load()
+        oklp.wait_for_tell_number_load(timeout=60)
 
     def setUp_test_login_0025(self):
         """异网账号进入登录页面"""
