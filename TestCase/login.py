@@ -207,6 +207,7 @@ class Preconditions(object):
             sl.click_i_know()
         MessagePage().wait_for_page_load(login_time)
 
+
 class LoginTest(TestCase):
     """Login 模块"""
 
@@ -318,7 +319,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @unittest.skip("skip 本网单卡测试test_login_0007")
+    @tags('ALL')
     def test_login_0007(self):
         """服务条款检查"""
         oklp = OneKeyLoginPage()
@@ -382,7 +383,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @unittest.skip("skip 本网单卡测试test_login_0009")
+    @tags('ALL')
     def test_login_0009(self):
         """登录页面检查"""
         oklp = OneKeyLoginPage()
@@ -397,7 +398,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @unittest.skip("skip 一移动一异网卡登录测试test_login_0010")
+    @tags('ALL')
     def test_login_0010(self):
         """一移动一异网卡登录"""
         oklp = OneKeyLoginPage()
@@ -432,7 +433,6 @@ class LoginTest(TestCase):
         oklp.wait_for_tell_number_load(timeout=60)
         # 恢复网络连接
         oklp.set_network_status(network_status)
-
 
     def setUp_test_login_0022(self):
         """进入一键登录页"""
@@ -691,7 +691,6 @@ class LoginTest(TestCase):
         Preconditions.take_logout_operation_if_already_login()
         # 登录
         Preconditions.diff_card_login_by_sms()
-
 
     def setUp_test_login_0051(self):
         """
