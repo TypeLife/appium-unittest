@@ -10,12 +10,12 @@ from pages import *
 from pages import Agreement
 
 REQUIRED_MOBILES = {
-    'Android-移动': 'M960BDQN229CH',
+    'Android-移动': 'single_mobile',
     'IOS-移动': '',
-    'Android-XX': '',
-    'Android-移动-XX': '',
-    'Android-移动-移动': '',
-    'Android-XX-XX': '',
+    'Android-XX': 'single_telecom',
+    'Android-移动-XX': 'mobile_and_union',
+    'Android-移动-移动': 'double_mobile',
+    'Android-XX-XX': 'others_double',
 }
 
 
