@@ -178,3 +178,25 @@ class SmsLoginPage(BasePage):
     def login_btn_is_checked(self):
         """获取登录按钮是否可点击"""
         return self.get_element(self.__class__.__locators["登录"]).get_attribute('checked')
+
+    @TestLogger.log()
+    def wait_one_key_or_sms_login_page_load(self, timeout=20):
+        def determine_login_page(d):
+            if self.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/one_key_login')):
+                return 'one_key'
+            elif self.get_elements(self.__locators['输入本机号码']):
+                return 'sms'
+            else:
+                return False
+
+        try:
+            page_name = self.wait_until(
+                condition=determine_login_page,
+                timeout=timeout
+            )
+            return page_name
+        except:
+            message = "页面在{}s内，没有加载成功".format(timeout)
+            raise AssertionError(
+                message
+            )

@@ -25,7 +25,7 @@ class PermissionListPage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self.page_should_contain_element(self.__class__.__locators["确定"])
+                condition=lambda d: self._is_element_present(self.__locators["确定"])
             )
         except:
             message = "页面在{}s内，没有加载成功".format(timeout)

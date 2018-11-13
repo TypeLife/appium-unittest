@@ -80,6 +80,12 @@ class OneKeyLoginPage(BasePage):
         return self
 
     @TestLogger.log()
+    def get_login_number(self):
+        """获取一键登录界面的电话号码"""
+        number = self._get_text(self.__locators['电话号码'])
+        return number
+
+    @TestLogger.log()
     def wait_for_tell_number_load(self, timeout=10, auto_accept_alerts=True):
         """等待一键登录页面的‘将以本机号码登录’变成 手机号码 """
         try:
@@ -104,6 +110,28 @@ class OneKeyLoginPage(BasePage):
     def click_license_agreement(self):
         """点击和飞信软件许可及服务协议"""
         self.click_element(self.__locators["和飞信软件许可及服务协议"])
+
+    @TestLogger.log()
+    def wait_one_key_or_sms_login_page_load(self, timeout=20):
+        def determine_login_page(d):
+            if self.get_elements(self.__locators['一键登录']):
+                return 'one_key'
+            elif self.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/edt_phone_number')):
+                return 'sms'
+            else:
+                return False
+
+        try:
+            page_name = self.wait_until(
+                condition=determine_login_page,
+                timeout=timeout
+            )
+            return page_name
+        except:
+            message = "页面在{}s内，没有加载成功".format(timeout)
+            raise AssertionError(
+                message
+            )
 
     @TestLogger.log()
     def page_should_contain_client_logo_pic(self):

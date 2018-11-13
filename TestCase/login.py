@@ -10,9 +10,10 @@ from pages import *
 from pages import Agreement
 
 REQUIRED_MOBILES = {
-    "测试机": 'M960BDQN229CH',
+    "测试机": 'M960BDQN229CH',  # 单卡、移动、魅族
     "辅助机": 'jlyuan',
     "移动 IOS客户端": '',
+    "辅助机2": 'MI6',  # 单卡异网卡Android
 }
 
 
@@ -31,6 +32,12 @@ class Preconditions(object):
         """
         client = switch_to_mobile(REQUIRED_MOBILES['测试机'])
         client.connect_mobile()
+
+    @staticmethod
+    def select_assisted_mobile2():
+        """切换到单卡、异网卡Android手机 并启动应用"""
+        switch_to_mobile(REQUIRED_MOBILES['辅助机2'])
+        current_mobile().connect_mobile()
 
     @staticmethod
     def make_already_in_one_key_login_page():
@@ -57,7 +64,39 @@ class Preconditions(object):
         # 点击权限列表页面的确定按钮
         permission_list = PermissionListPage()
         permission_list.click_submit_button()
-        one_key.wait_for_page_load()
+        one_key.wait_for_page_load(30)
+
+    @staticmethod
+    def make_already_in_sms_login_page():
+        """
+        1、已经进入短信登录页
+        :return:
+        """
+        # 如果当前页面已经是一键登录页，不做任何操作
+        one_key = OneKeyLoginPage()
+        if one_key.is_on_this_page():
+            return
+
+        # 如果当前页不是引导页第一页，重新启动app
+        guide_page = GuidePage()
+        if not guide_page.is_on_the_first_guide_page():
+            current_mobile().launch_app()
+            guide_page.wait_for_page_load(20)
+
+        # 跳过引导页
+        guide_page.swipe_to_the_second_banner()
+        guide_page.swipe_to_the_third_banner()
+        guide_page.click_start_the_experience()
+
+        # 点击权限列表页面的确定按钮
+        permission_list = PermissionListPage()
+        permission_list.wait_for_page_load(30)
+        permission_list.click_submit_button()
+        page_name = one_key.wait_one_key_or_sms_login_page_load(30)
+        if page_name == 'sms':
+            return
+        one_key.choose_another_way_to_login()
+        SmsLoginPage().wait_for_page_load()
 
     @staticmethod
     def login_by_one_key_login():
@@ -67,7 +106,7 @@ class Preconditions(object):
         """
         # 等待号码加载完成后，点击一键登录
         one_key = OneKeyLoginPage()
-        one_key.wait_for_tell_number_load()
+        one_key.wait_for_tell_number_load(30)
         one_key.click_one_key_login()
         one_key.click_read_agreement_detail()
 
@@ -77,7 +116,7 @@ class Preconditions(object):
 
         # 等待消息页
         message_page = MessagePage()
-        message_page.wait_for_page_load(20)
+        message_page.wait_for_page_load(60)
 
     @staticmethod
     def take_logout_operation_if_already_login():
@@ -233,6 +272,56 @@ class LoginTest(TestCase):
         # 点击许可服务协议
         oklp.click_license_agreement()
         Agreement.AgreementPage().wait_for_license_agreement_load()
+
+    def setUp_test_login_0008(self):
+        """测试机登录客户端、辅助机打开到验证码登录页"""
+        # A手机已经登录
+        Preconditions.select_single_cmcc_android_4g_client()
+        current_mobile().reset_app()
+        Preconditions.make_already_in_one_key_login_page()
+        one_key = OneKeyLoginPage().wait_for_tell_number_load(60)
+        self.login_number = one_key.get_login_number()
+        Preconditions.login_by_one_key_login()
+
+        # B手机进入短信登录界面
+        Preconditions.select_assisted_mobile2()
+        current_mobile().reset_app()
+        Preconditions.make_already_in_sms_login_page()
+
+    @tags('ALL')
+    def test_login_0008(self):
+        """下线提醒"""
+        # 切换到辅助机2，并用测试机的号码登录
+        switch_to_mobile(REQUIRED_MOBILES['辅助机2'])
+        sms_page = SmsLoginPage()
+        sms_page.wait_for_page_load(30)
+        sms_page.input_phone_number(self.login_number)
+        # sms_page.click_get_code()
+
+        # 切换回测试机取验证码
+        mobile1 = switch_to_mobile(REQUIRED_MOBILES['测试机'])
+        with mobile1.listen_verification_code(120) as code:
+            switch_to_mobile(REQUIRED_MOBILES['辅助机2'])
+            sms_page.click_get_code()
+        # code = sms_page.listen_verification_code(60)
+
+        # 切换到辅助机2
+        switch_to_mobile(REQUIRED_MOBILES['辅助机2'])
+        sms_page.input_verification_code(code)
+        sms_page.click_login()
+        OneKeyLoginPage().click_read_agreement_detail()
+        AgreementDetailPage().click_agree_button()
+        sms_page.click_i_know()
+
+        message_page = MessagePage()
+        message_page.wait_for_page_load(60)
+
+        # 切换回测试机等待下线提示
+        switch_to_mobile(REQUIRED_MOBILES['测试机'])
+        message_page.wait_until(
+            condition=lambda d: message_page._is_text_present('下线通知'),
+            timeout=30
+        )
 
     def setUp_test_login_0009(self):
         LoginTest.open_app_first_time()
