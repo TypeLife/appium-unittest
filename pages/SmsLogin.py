@@ -21,6 +21,7 @@ class SmsLoginPage(BasePage):
         "我知道了": (MobileBy.ID, 'com.chinasofti.rcs:id/btn_know'),
         "和飞信软件许可及服务协议": (MobileBy.ID, "com.chinasofti.rcs:id/agreement_tv"),
         "切换另一号码登录": (MobileBy.ID, "com.chinasofti.rcs:id/change_to_one"),
+        '查看详情': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_check_detail')
     }
 
     @TestLogger.log()
@@ -156,7 +157,7 @@ class SmsLoginPage(BasePage):
     def get_verify_code_by_notice_board(self):
         """根据通知栏获取登录验证码"""
         self.click_element(self.__class__.__locators["获取验证码"])
-        time.sleep(35)
+        time.sleep(30)
         # self.wait_for_verify_code_load()
         # 打开通知栏，通过通知栏获取验证码
         self.driver.open_notifications()
@@ -165,6 +166,8 @@ class SmsLoginPage(BasePage):
         code = None
         if el:
             code = re.findall('\d{3,8}', el[-1].text)
+            if code:
+                code = code[0]
         # 通知栏回退
         self.driver.back()
         return code
@@ -178,6 +181,35 @@ class SmsLoginPage(BasePage):
     def login_btn_is_checked(self):
         """获取登录按钮是否可点击"""
         return self.get_element(self.__class__.__locators["登录"]).get_attribute('checked')
+
+    @TestLogger.log()
+    def is_on_this_page(self):
+        """当前页面是否在短信登录页"""
+        el = self.get_elements(self.__locators['输入本机号码'])
+        if len(el) > 0:
+            return True
+        return False
+
+    @TestLogger.log()
+    def click_read_agreement_detail(self):
+        """点击查看详情"""
+        self.click_element(self.__locators['查看详情'])
+
+    @TestLogger.log()
+    def wait_for_detail_load(self, timeout=10, auto_accept_alerts=True):
+        """等待 查看详情"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_text_present("查看详情")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(timeout)
+            raise AssertionError(
+                message
+            )
+        return self
 
     @TestLogger.log()
     def wait_one_key_or_sms_login_page_load(self, timeout=20):
