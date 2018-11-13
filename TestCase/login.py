@@ -327,7 +327,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @unittest.skip("skip 本网单卡测试test_login_0007")
+    @tags('ALL')
     def test_login_0007(self):
         """服务条款检查"""
         oklp = OneKeyLoginPage()
@@ -391,7 +391,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @unittest.skip("skip 本网单卡测试test_login_0009")
+    @tags('ALL')
     def test_login_0009(self):
         """登录页面检查"""
         oklp = OneKeyLoginPage()
@@ -407,7 +407,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @unittest.skip("skip 一移动一异网卡登录测试test_login_0010")
+    @tags('ALL')
     def test_login_0010(self):
         """一移动一异网卡登录"""
         oklp = OneKeyLoginPage()
