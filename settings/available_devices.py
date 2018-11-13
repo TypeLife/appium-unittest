@@ -41,7 +41,7 @@ AVAILABLE_DEVICES = {
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '13510772034'
+                'CARD_NUMBER': '13537795364'
             },
             None
         ]

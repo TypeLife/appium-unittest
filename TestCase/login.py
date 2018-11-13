@@ -10,12 +10,12 @@ from pages import *
 from pages import Agreement
 
 REQUIRED_MOBILES = {
-    # "测试机": 'M960BDQN229CH',  # 单卡、移动、魅族
-    # "辅助机": 'jlyuan',
-    "移动 IOS客户端": '',
-    "测试机": 'jlyuan',
-    "辅助机": 'M960BDQN229CH',
-    # "辅助机2": 'MI6',  # 单卡异网卡Android
+    'Android-移动': 'M960BDQN229CH',
+    'IOS-移动': '',
+    'Android-XX': '',
+    'Android-移动-XX': '',
+    'Android-移动-移动': '',
+    'Android-XX-XX': '',
 }
 
 
@@ -34,6 +34,13 @@ class Preconditions(object):
         """
         client = switch_to_mobile(REQUIRED_MOBILES['测试机'])
         client.connect_mobile()
+
+    @staticmethod
+    def select_mobile(category):
+        """选择手机手机"""
+        client = switch_to_mobile(REQUIRED_MOBILES[category])
+        client.connect_mobile()
+        return client
 
     @staticmethod
     def select_assisted_mobile2():
@@ -129,6 +136,8 @@ class Preconditions(object):
 
         me = MePage()
         me.scroll_to_bottom()
+        me.scroll_to_bottom()
+        me.scroll_to_bottom()
         me.click_setting_menu()
 
         setting = SettingPage()
@@ -212,13 +221,13 @@ class LoginTest(TestCase):
     """Login 模块"""
 
     def setUp_test_login_0001(self):
-        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.select_mobile('Android-移动')
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
         Preconditions.login_by_one_key_login()
         Preconditions.take_logout_operation_if_already_login()
 
-    @tags('ALL')
+    @tags('DEBUG')
     def test_login_0001(self, login_time=60):
         """ 本网非首次登录已设置头像-一键登录页面元素检查"""
         oklp = OneKeyLoginPage()
@@ -237,7 +246,7 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0002(self):
         # 1、已登录
-        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.select_mobile('Android-移动')
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
         Preconditions.login_by_one_key_login()
@@ -269,7 +278,7 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0004(self):
         """选择安卓移动卡手机进入一键登录页面"""
-        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.select_mobile('Android-移动')
         current_mobile().reset_app()
         Preconditions.make_already_in_one_key_login_page()
 
@@ -300,7 +309,7 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0006(self):
         """选择安卓移动卡手机进入一键登录页面"""
-        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.select_mobile('Android-移动')
         current_mobile().reset_app()
         Preconditions.make_already_in_one_key_login_page()
 
@@ -315,7 +324,7 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0007(self):
         """进入一键登录页"""
-        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.select_mobile('Android-移动')
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
@@ -330,7 +339,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0008(self):
         """测试机登录客户端、辅助机打开到验证码登录页"""
         # A手机已经登录
-        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.select_mobile('Android-移动')
         current_mobile().reset_app()
         Preconditions.make_already_in_one_key_login_page()
         one_key = OneKeyLoginPage().wait_for_tell_number_load(60)
@@ -338,7 +347,7 @@ class LoginTest(TestCase):
         Preconditions.login_by_one_key_login()
 
         # B手机进入短信登录界面
-        Preconditions.select_assisted_mobile2()
+        Preconditions.select_mobile('Android-XX')
         current_mobile().reset_app()
         Preconditions.make_already_in_sms_login_page()
 
@@ -346,21 +355,21 @@ class LoginTest(TestCase):
     def test_login_0008(self):
         """下线提醒"""
         # 切换到辅助机2，并用测试机的号码登录
-        switch_to_mobile(REQUIRED_MOBILES['辅助机2'])
+        Preconditions.select_mobile('Android-XX')
         sms_page = SmsLoginPage()
         sms_page.wait_for_page_load(30)
         sms_page.input_phone_number(self.login_number)
         # sms_page.click_get_code()
 
         # 切换回测试机取验证码
-        mobile1 = switch_to_mobile(REQUIRED_MOBILES['测试机'])
+        mobile1 = Preconditions.select_mobile('Android-移动')
         with mobile1.listen_verification_code(120) as code:
             switch_to_mobile(REQUIRED_MOBILES['辅助机2'])
             sms_page.click_get_code()
         # code = sms_page.listen_verification_code(60)
 
         # 切换到辅助机2
-        switch_to_mobile(REQUIRED_MOBILES['辅助机2'])
+        Preconditions.select_mobile('Android-XX')
         sms_page.input_verification_code(code)
         sms_page.click_login()
         OneKeyLoginPage().click_read_agreement_detail()
@@ -371,7 +380,7 @@ class LoginTest(TestCase):
         message_page.wait_for_page_load(60)
 
         # 切换回测试机等待下线提示
-        switch_to_mobile(REQUIRED_MOBILES['测试机'])
+        Preconditions.select_mobile('Android-移动')
         message_page.wait_until(
             condition=lambda d: message_page._is_text_present('下线通知'),
             timeout=30
@@ -379,7 +388,7 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0009(self):
         """进入一键登录页"""
-        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.select_mobile('Android-移动')
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
@@ -394,7 +403,7 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0010(self):
         """进入一键登录页"""
-        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.select_mobile('Android-移动-XX')
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
@@ -413,8 +422,8 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0020(self):
         """进入一键登录页"""
-    Preconditions.select_single_cmcc_android_4g_client()
-    Preconditions.make_already_in_one_key_login_page()
+        Preconditions.select_mobile('Android-移动-移动')
+        Preconditions.make_already_in_one_key_login_page()
 
     @unittest.skip("skip 双移动卡登录测试login_0020")
     def test_login_0020(self):
@@ -436,7 +445,7 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0022(self):
         """进入一键登录页"""
-        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.select_mobile('Android-移动-XX')
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
@@ -480,8 +489,8 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0023(self):
         """进入一键登录页"""
-    Preconditions.select_single_cmcc_android_4g_client()
-    Preconditions.make_already_in_one_key_login_page()
+        Preconditions.select_mobile('Android-移动-移动')
+        Preconditions.make_already_in_one_key_login_page()
 
     @unittest.skip("skip 双移动卡登录测试login_0023")
     def test_login_0023(self):
@@ -497,7 +506,8 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0025(self):
         """异网账号进入登录页面"""
-        Preconditions.diff_card_enter_sms_login_page()
+        Preconditions.select_mobile('Android-XX')
+        Preconditions.diff_card_make_already_in_sms_login_page()
 
     @unittest.skip("skip 单卡异网账户测试login_0025")
     def test_login_0025(self):
@@ -509,7 +519,8 @@ class LoginTest(TestCase):
         self.assertEqual(sl.login_btn_is_checked(), 'false')
 
     def setUp_test_login_0026(self):
-        Preconditions.diff_card_enter_sms_login_page()
+        Preconditions.select_mobile('Android-XX')
+        Preconditions.diff_card_make_already_in_sms_login_page()
 
     @unittest.skip("skip 单卡（联通）输入验证码验证-异网用户测试login_0026")
     def test_login_0026(self, phone_number='18681151872'):
@@ -547,7 +558,8 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0027(self):
         """异网账号进入登录页面"""
-        Preconditions.diff_card_enter_sms_login_page()
+        Preconditions.select_mobile('Android-XX')
+        Preconditions.diff_card_make_already_in_sms_login_page()
 
     @unittest.skip("skip 单卡（联通）输入验证码验证--错误的6位测试login_0027")
     def test_login_0027(self, phone_number='18681151872'):
@@ -580,7 +592,8 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0029(self):
         """异网账号进入登录页面"""
-        Preconditions.diff_card_enter_sms_login_page()
+        Preconditions.select_mobile('Android-XX')
+        Preconditions.diff_card_make_already_in_sms_login_page()
 
     @unittest.skip("skip 单卡（联通）输入验证码验证--正确失效的6位验证码login_0029")
     def test_login_0029(self, phone_number='18681151872'):
@@ -613,7 +626,8 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0036(self):
         """异网账号进入登录页面"""
-        Preconditions.diff_card_enter_sms_login_page()
+        Preconditions.select_mobile('Android-XX')
+        Preconditions.diff_card_make_already_in_sms_login_page()
 
     @unittest.skip("skip 单卡（联通）测试login_0036")
     def test_login_0036(self, phone_number='18681151872'):
@@ -651,7 +665,7 @@ class LoginTest(TestCase):
         预置条件：
         1、异网账号首次进入登录页面
         """
-        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.select_mobile('Android-XX')
         Preconditions.app_start_for_the_first_time()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
@@ -665,7 +679,7 @@ class LoginTest(TestCase):
         预置条件：
         1、异网账号首次进入登录页面
         """
-        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.select_mobile('Android-XX')
         Preconditions.app_start_for_the_first_time()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
@@ -679,7 +693,7 @@ class LoginTest(TestCase):
         预置条件：
         1、异网账号(非首次登录)进入登录页面
         """
-        Preconditions.select_single_cmcc_android_4g_client()
+        Preconditions.select_mobile('Android-XX')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
     @unittest.skip("skip 单卡异网账户测试login_0050")
@@ -697,7 +711,8 @@ class LoginTest(TestCase):
         预置条件：
         1、异网账号进入登录页面
         """
-        Preconditions.diff_card_enter_sms_login_page()
+        Preconditions.select_mobile('Android-XX')
+        Preconditions.diff_card_make_already_in_sms_login_page()
 
     @unittest.skip("skip 单卡异网账户测试login_0051")
     def test_login_0051(self, phone_number='18681151872'):
