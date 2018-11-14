@@ -68,6 +68,7 @@ class Preconditions(object):
             guide_page.wait_for_page_load(20)
 
         # 跳过引导页
+        guide_page.wait_for_page_load(30)
         guide_page.swipe_to_the_second_banner()
         guide_page.swipe_to_the_third_banner()
         guide_page.click_start_the_experience()
@@ -231,7 +232,7 @@ class LoginTest(TestCase):
         Preconditions.login_by_one_key_login()
         Preconditions.take_logout_operation_if_already_login()
 
-    @tags('ALL')
+    @tags('ALL', '移动')
     def test_login_0001(self, login_time=60):
         """ 本网非首次登录已设置头像-一键登录页面元素检查"""
         oklp = OneKeyLoginPage()
@@ -260,7 +261,7 @@ class LoginTest(TestCase):
         # 3、退出后台
         current_mobile().press_home_key()
 
-    @tags('ALL')
+    @tags('ALL', '移动')
     def test_login_0002(self):
         """已登录状态后，退出后台"""
         current_mobile().activate_app('com.chinasofti.rcs')
@@ -287,15 +288,16 @@ class LoginTest(TestCase):
         Preconditions.make_already_in_one_key_login_page()
 
     @unittest.skip("存在自动化无法实现的高频点击操作")
-    def test_login_0004(self, phone_number='14775970982', login_time=60):
+    def test_login_0004(self):
         """登录页面检查"""
         # TODO XIN  存在自动化无法实现的高频点击操作
-        onekey = OneKeyLoginPage()
-        onekey.wait_for_page_load()
-        onekey.choose_another_way_to_login()
+        one_key = OneKeyLoginPage()
+        one_key.wait_for_page_load()
+        one_key.choose_another_way_to_login()
 
         sms = SmsLoginPage()
         sms.wait_for_page_load()
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
         sms.input_phone_number(phone_number)
         result = sms.get_verification_code(60)
         self.assertIn('【登录验证】尊敬的用户', result)
@@ -303,7 +305,7 @@ class LoginTest(TestCase):
         sms.input_verification_code(code)
         sms.click_login()
         sms.click_i_know()
-        MessagePage().wait_for_page_load(login_time)
+        MessagePage().wait_for_page_load(60)
 
     @unittest.skip("IOS用例先不做")
     def test_login_0005(self):
@@ -317,7 +319,7 @@ class LoginTest(TestCase):
         current_mobile().reset_app()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL')
+    @tags('ALL', '移动')
     def test_login_0006(self):
         """服务条款检查"""
         oklp = OneKeyLoginPage()
@@ -332,7 +334,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL')
+    @tags('ALL', '移动')
     def test_login_0007(self):
         """服务条款检查"""
         oklp = OneKeyLoginPage()
@@ -355,7 +357,7 @@ class LoginTest(TestCase):
         current_mobile().reset_app()
         Preconditions.make_already_in_sms_login_page()
 
-    @tags('ALL')
+    @tags('ALL', '移动-电信')
     def test_login_0008(self):
         """下线提醒"""
         # 切换到辅助机2，并用测试机的号码登录
@@ -397,7 +399,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL')
+    @tags('ALL', '移动')
     def test_login_0009(self):
         """登录页面检查"""
         oklp = OneKeyLoginPage()
@@ -615,7 +617,9 @@ class LoginTest(TestCase):
         code = sl.get_verify_code_by_notice_board()
         self.assertIsNotNone(code)
         # 输入失效的验证码
-        time.sleep(300)
+        for i in range(10):
+            xxx = sl.driver.current_activity
+            time.sleep(30)
         sl.input_verification_code(code)
         # 点击登录
         sl.click_login()
@@ -635,10 +639,10 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0036(self):
         """异网账号进入登录页面"""
-        Preconditions.select_mobile('Android-移动')
+        Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL')
+    @tags('ALL', '联通')
     def test_login_0036(self):
         """验证码重新获取后-（异网用户）输入之前的验证码提示"""
         sl = SmsLoginPage()
@@ -671,8 +675,11 @@ class LoginTest(TestCase):
         self.assertIn("103108", code_info)
 
     def setUp_test_login_0047(self):
-        pass
+        Preconditions.select_mobile('Android-电信')
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.make_already_in_sms_login_page()
 
+    @unittest.skip('移动单卡短信登录做不了')
     def test_login_0047(self):
         """验证码获取-重新获取，输入框已输内容清空"""
         # TODO 移动单卡短信登录做不了
@@ -746,8 +753,8 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL')
-    def test_login_0052(self, login_time=60):
+    @tags('ALL', '移动')
+    def test_login_0052(self):
         """ 界面点击“语言”按钮"""
         oklp = OneKeyLoginPage()
         oklp.wait_for_page_load()
@@ -759,7 +766,9 @@ class LoginTest(TestCase):
         # 点击完成
         sml.click_finish()
         # 检查繁体中文
-        oklp.page_should_contain_text("一鍵登入")
+        oklp.wait_until(
+            condition=lambda d: oklp._is_text_present('一鍵登入')
+        )
 
 
 if __name__ == '__main__':

@@ -4,9 +4,8 @@ import time
 from unicodedata import normalize
 
 from appium.webdriver.common.mobileby import MobileBy
-from selenium.webdriver.support.wait import WebDriverWait
 
-from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE
+from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE, current_mobile
 
 
 class BasePage(object):
@@ -20,6 +19,9 @@ class BasePage(object):
     @property
     def driver(self):
         return MOBILE_DRIVER_CACHE.current.driver
+
+    def mobile(self):
+        return current_mobile()
 
     def background_app(self, seconds):
         self.driver.background_app(seconds)
@@ -335,61 +337,11 @@ class BasePage(object):
 
     def element_text_should_match(self, locator, pattern, full_match=True, regex=False):
         """断言元素内文本，支持正则表达式"""
-        element = self.get_element(locator)
-        actual = element.text
-        if regex:
-            if full_match:
-                pt = re.compile(pattern)
-                result = pt.fullmatch(actual)
-            else:
-                pt = re.compile(pattern)
-                result = pt.search(actual)
-        else:
-            if full_match:
-                result = pattern == actual
-            else:
-                result = pattern in actual
-        if not result:
-            raise AssertionError(
-                "Expect is" + " match regex pattern" if regex else "" + ": " + pattern + "\n"
-                                                                   + "Actual is: " + actual + '\n')
-        return True
+        return self.mobile().assert_element_text_should_match(locator, pattern, full_match, regex)
 
     def wait_until(self, condition, timeout=8, auto_accept_permission_alert=True):
-        this = self
-
-        def execute_condition(driver):
-            """如果有弹窗，自动允许"""
-
-            def get_accept_permission_handler(d):
-                """获取允许权限弹窗的方法句柄"""
-                try:
-                    alert = d.switch_to.alert
-                    return alert.accept
-                except:
-                    alert = this.get_elements((MobileBy.XPATH, '//*[@text="始终允许"]')) \
-                            or this.get_elements((MobileBy.XPATH, '//*[@text="允许"]'))
-                    if not alert:
-                        return False
-                    return alert[0].click
-
-            if auto_accept_permission_alert:
-                if this.driver.current_activity in [
-                    'com.android.packageinstaller.permission.ui.GrantPermissionsActivity',
-                    '.permission.ui.GrantPermissionsActivity'
-                ]:
-                    need = True
-                    while need:
-                        try:
-                            WebDriverWait(this.driver, 1).until(
-                                get_accept_permission_handler
-                            )()
-                        except:
-                            need = False
-            return condition(driver)
-
-        wait = WebDriverWait(self.driver, timeout)
-        return wait.until(execute_condition)
+        return self.mobile().wait_until(condition, timeout=timeout,
+                                        auto_accept_permission_alert=auto_accept_permission_alert)
 
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
         """默认使用activity作为判断页面是否加载的条件，继承类应该重写该方法"""
