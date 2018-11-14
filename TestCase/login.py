@@ -732,6 +732,26 @@ class LoginTest(TestCase):
         sl.input_phone_number(phone_numbers[0])
         sl.page_should_not_contain_text("一键登录")
 
+    def setUp_test_login_0052(self):
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.make_already_in_one_key_login_page()
+
+    @tags('ALL')
+    def test_login_0052(self, login_time=60):
+        """ 界面点击“语言”按钮"""
+        oklp = OneKeyLoginPage()
+        oklp.wait_for_page_load()
+        # 点击“语言”按钮
+        oklp.click_language()
+        sml = MeSetMultiLanguagePage()
+        # 点击繁体中文
+        sml.select_traditional_chinese()
+        # 点击完成
+        sml.click_finish()
+        # 检查繁体中文
+        oklp.page_should_contain_text("一鍵登入")
+
 
 if __name__ == '__main__':
     pass
