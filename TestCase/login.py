@@ -669,6 +669,14 @@ class LoginTest(TestCase):
         code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*103108", timeout=40)
         self.assertIn("103108", code_info)
 
+    def setUp_test_login_0047(self):
+        pass
+
+    def test_login_0047(self):
+        """验证码获取-重新获取，输入框已输内容清空"""
+        # TODO 移动单卡短信登录做不了
+        pass
+
     def setUp_test_login_0048(self):
         """
         预置条件：
