@@ -12,8 +12,10 @@ from pages import Agreement
 REQUIRED_MOBILES = {
     'Android-移动': 'single_mobile',
     'IOS-移动': '',
-    'Android-XX': 'single_telecom',
-    'Android-移动-XX': 'mobile_and_union',
+    'Android-电信': 'single_telecom',
+    'Android-联通': 'single_union',
+    'Android-移动-联通': 'mobile_and_union',
+    'Android-移动-电信': '',
     'Android-移动-移动': 'double_mobile',
     'Android-XX-XX': 'others_double',
 }
@@ -349,7 +351,7 @@ class LoginTest(TestCase):
         Preconditions.login_by_one_key_login()
 
         # B手机进入短信登录界面
-        Preconditions.select_mobile('Android-XX')
+        Preconditions.select_mobile('Android-电信')
         current_mobile().reset_app()
         Preconditions.make_already_in_sms_login_page()
 
@@ -357,7 +359,7 @@ class LoginTest(TestCase):
     def test_login_0008(self):
         """下线提醒"""
         # 切换到辅助机2，并用测试机的号码登录
-        Preconditions.select_mobile('Android-XX')
+        Preconditions.select_mobile('Android-电信')
         sms_page = SmsLoginPage()
         sms_page.wait_for_page_load(30)
         sms_page.input_phone_number(self.login_number)
@@ -371,7 +373,7 @@ class LoginTest(TestCase):
         # code = sms_page.listen_verification_code(60)
 
         # 切换到辅助机2
-        Preconditions.select_mobile('Android-XX')
+        Preconditions.select_mobile('Android-电信')
         sms_page.input_verification_code(code)
         sms_page.click_login()
         OneKeyLoginPage().click_read_agreement_detail()
@@ -405,7 +407,7 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0010(self):
         """进入一键登录页"""
-        Preconditions.select_mobile('Android-移动-XX')
+        Preconditions.select_mobile('Android-移动-联通')
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
@@ -427,7 +429,7 @@ class LoginTest(TestCase):
         Preconditions.select_mobile('Android-移动-移动')
         Preconditions.make_already_in_one_key_login_page()
 
-    @unittest.skip("skip 双移动卡登录测试login_0020")
+    @tags('ALL')
     def test_login_0020(self):
         """双移动卡登录"""
         oklp = OneKeyLoginPage()
@@ -447,7 +449,7 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0022(self):
         """进入一键登录页"""
-        Preconditions.select_mobile('Android-移动-XX')
+        Preconditions.select_mobile('Android-移动-联通')
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
@@ -495,7 +497,7 @@ class LoginTest(TestCase):
         Preconditions.select_mobile('Android-移动-移动')
         Preconditions.make_already_in_one_key_login_page()
 
-    @unittest.skip("skip 双移动卡登录测试login_0023")
+    @tags('ALL')
     def test_login_0023(self):
         """双移动卡登录"""
         oklp = OneKeyLoginPage()
@@ -509,10 +511,10 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0025(self):
         """异网账号进入登录页面"""
-        Preconditions.select_mobile('Android-XX')
+        Preconditions.select_mobile('Android-电信')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @unittest.skip("skip 单卡异网账户测试login_0025")
+    @tags('ALL')
     def test_login_0025(self):
         """非首次已设置头像昵称登录短信登录页元素显示(异网单卡)"""
         sl = SmsLoginPage()
@@ -522,10 +524,10 @@ class LoginTest(TestCase):
         self.assertEqual(sl.login_btn_is_checked(), 'false')
 
     def setUp_test_login_0026(self):
-        Preconditions.select_mobile('Android-XX')
+        Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @unittest.skip("skip 单卡（联通）输入验证码验证-异网用户测试login_0026")
+    @tags('ALL')
     def test_login_0026(self):
         """输入验证码验证-异网用户，正确有效的6位（断网)"""
         sl = SmsLoginPage()
@@ -562,10 +564,10 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0027(self):
         """异网账号进入登录页面"""
-        Preconditions.select_mobile('Android-XX')
+        Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @unittest.skip("skip 单卡（联通）输入验证码验证--错误的6位测试login_0027")
+    @tags('ALL')
     def test_login_0027(self):
         """输入验证码验证-错误的6位（异网用户）"""
         sl = SmsLoginPage()
@@ -597,10 +599,10 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0029(self):
         """异网账号进入登录页面"""
-        Preconditions.select_mobile('Android-XX')
+        Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @unittest.skip("skip 单卡（联通）输入验证码验证--正确失效的6位验证码login_0029")
+    @tags('ALL')
     def test_login_0029(self):
         """输入验证码验证-（异网）正确失效的6位验证码"""
         sl = SmsLoginPage()
@@ -632,10 +634,10 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0036(self):
         """异网账号进入登录页面"""
-        Preconditions.select_mobile('Android-XX')
+        Preconditions.select_mobile('Android-移动')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @unittest.skip("skip 单卡（联通）测试login_0036")
+    @tags('ALL')
     def test_login_0036(self):
         """验证码重新获取后-（异网用户）输入之前的验证码提示"""
         sl = SmsLoginPage()
@@ -672,11 +674,11 @@ class LoginTest(TestCase):
         预置条件：
         1、异网账号首次进入登录页面
         """
-        Preconditions.select_mobile('Android-XX')
+        Preconditions.select_mobile('Android-电信')
         Preconditions.app_start_for_the_first_time()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @unittest.skip("skip 单卡异网账户测试login_0048")
+    @tags('ALL')
     def test_login_0048(self):
         """短信验证码登录-（电信）异网用户首次登录"""
         Preconditions.diff_card_login_by_sms(CardType.CHINA_TELECOM)
@@ -686,11 +688,11 @@ class LoginTest(TestCase):
         预置条件：
         1、异网账号首次进入登录页面
         """
-        Preconditions.select_mobile('Android-XX')
+        Preconditions.select_mobile('Android-联通')
         Preconditions.app_start_for_the_first_time()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @unittest.skip("skip 单卡异网账户测试login_0049")
+    @tags('ALL')
     def test_login_0049(self):
         """短信验证码登录-（联通）异网用户首次登录"""
         Preconditions.diff_card_login_by_sms(CardType.CHINA_UNION)
@@ -700,10 +702,10 @@ class LoginTest(TestCase):
         预置条件：
         1、异网账号(非首次登录)进入登录页面
         """
-        Preconditions.select_mobile('Android-XX')
+        Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @unittest.skip("skip 单卡异网账户测试login_0050")
+    @tags('ALL')
     def test_login_0050(self):
         """短信验证码登录-异网用户登录（非首次)"""
         # 登录
@@ -718,10 +720,10 @@ class LoginTest(TestCase):
         预置条件：
         1、异网账号进入登录页面
         """
-        Preconditions.select_mobile('Android-XX')
+        Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @unittest.skip("skip 单卡异网账户测试login_0051")
+    @tags('ALL')
     def test_login_0051(self):
         """短信验证码登录-异网不显示一键登录入口"""
         sl = SmsLoginPage()
