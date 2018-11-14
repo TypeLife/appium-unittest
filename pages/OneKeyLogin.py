@@ -18,7 +18,13 @@ class OneKeyLoginPage(BasePage):
         "和飞信软件许可及服务协议": (MobileBy.ID, "com.chinasofti.rcs:id/agreement_text"),
         '提示内容': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_content'),
         '查看详情': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_check_detail'),
+        '语言': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_language'),
     }
+
+    @TestLogger.log()
+    def click_language(self):
+        """点击语言"""
+        self.click_element(self.__locators["语言"])
 
     @TestLogger.log()
     def is_on_this_page(self):
