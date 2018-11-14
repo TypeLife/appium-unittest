@@ -634,7 +634,7 @@ class LoginTest(TestCase):
 
     def setUp_test_login_0036(self):
         """异网账号进入登录页面"""
-        Preconditions.select_mobile('Android-移动')
+        Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
     @tags('ALL')
