@@ -8,6 +8,7 @@ __all__ = [
     "SettingPage",
     "AgreementDetailPage",
     "AgreementPage",
+    "MeSetMultiLanguagePage",
 ]
 from .Guide import GuidePage
 from .PermissionList import PermissionListPage
@@ -18,3 +19,4 @@ from .Me import MePage
 from .Setting import SettingPage
 from .AgreementDetail import AgreementDetailPage
 from .Agreement import AgreementPage
+from .MeSetMultiLanguage import MeSetMultiLanguagePage
