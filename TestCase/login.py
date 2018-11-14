@@ -368,7 +368,8 @@ class LoginTest(TestCase):
         # 切换回测试机取验证码
         mobile1 = Preconditions.select_mobile('Android-移动')
         with mobile1.listen_verification_code(120) as code:
-            switch_to_mobile(REQUIRED_MOBILES['辅助机2'])
+            # 切换到手机2获取验证码
+            switch_to_mobile(REQUIRED_MOBILES['Android-电信'])
             sms_page.click_get_code()
         # code = sms_page.listen_verification_code(60)
 
