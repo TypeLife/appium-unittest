@@ -1,4 +1,6 @@
+import base64
 import contextlib
+import hashlib
 import json
 import re
 from abc import *
@@ -571,6 +573,21 @@ class MobileDriver(ABC):
 
         """
         self.driver.set_network_connection(status)
+
+    def push_file(self, to_path, file_path):
+        """推送apk到手机"""
+        with open(file_path, 'rb') as f:
+            content = f.read()
+            mda = hashlib.md5(content).hexdigest()
+        b64 = str(base64.b64encode(content), 'UTF-8')
+        self.driver.push_file(to_path, b64)
+        if self.is_android():
+            # 安卓使用shell命令验证MD5
+            mdb = self.execute_shell_command('md5sum', '-b', to_path).strip()
+            return mda == mdb
+        else:
+            # TODO IOS MD5验证待实现
+            return True
 
     def __str__(self):
         device_info = {
