@@ -1,5 +1,3 @@
-from appium.webdriver.common.mobileby import MobileBy
-
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
@@ -16,7 +14,7 @@ class AgreementPage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_text_present(text)
+                condition=lambda d: self.is_text_present(text)
             )
         except:
             message = "页面在{}s内，没有加载成功".format(timeout)

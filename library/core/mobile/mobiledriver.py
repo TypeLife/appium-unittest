@@ -4,13 +4,12 @@ import hashlib
 import json
 import re
 from abc import *
+from unicodedata import normalize
 
 from appium import webdriver
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.common.exceptions import InvalidSessionIdException
 from selenium.webdriver.support.wait import WebDriverWait
-
-from library.core.utils.normalizing import normalize
 
 
 class MobileDriver(ABC):
@@ -223,7 +222,7 @@ class MobileDriver(ABC):
                     alert = d.switch_to.alert
                     return alert.accept
                 except:
-                    alert = this.get_elements((MobileBy.XPATH, '//*[@text="始终允许" or @text="允许"]'))
+                    alert = this.get_elements((MobileBy.XPATH, '//android.widget.Button[@text="始终允许" or @text="允许"]'))
                     if not alert:
                         return False
                     return alert[0].click
@@ -270,16 +269,21 @@ class MobileDriver(ABC):
     def get_elements(self, locator):
         return self.driver.find_elements(*locator)
 
-    def _get_text(self, locator):
+    def get_text(self, locator):
+        """获取元素文本"""
+        self.wait_until(
+            condition=lambda d: self.get_elements(locator)
+        )
         elements = self.get_elements(locator)
         if len(elements) > 0:
             return elements[0].text
         return None
 
-    def _is_text_present(self, text):
+    def is_text_present(self, text):
         text_norm = normalize('NFD', text)
         source_norm = normalize('NFD', self.get_source())
-        return text_norm in source_norm
+        result = text_norm in source_norm
+        return result
 
     def _is_element_present(self, locator):
         elements = self.get_elements(locator)
@@ -350,8 +354,11 @@ class MobileDriver(ABC):
                 _xpath = u'//*[contains(@{},"{}")]'.format('text', text)
             self.get_element((MobileBy.XPATH, _xpath)).click()
 
-    def input_text(self, locator, text):
-        self.get_element(locator).send_keys(text)
+    def input_text(self, locator, text, default_timeout=5):
+        self.wait_until(
+            condition=lambda d: self.get_element(locator),
+            timeout=default_timeout
+        ).send_keys(text)
 
     def select_checkbox(self, locator):
         """勾选复选框"""
@@ -466,12 +473,12 @@ class MobileDriver(ABC):
             self.driver.swipe(x_start, y_start, x_offset, y_offset, duration)
 
     def assert_screen_contain_text(self, text):
-        if not self._is_text_present(text):
+        if not self.is_text_present(text):
             raise AssertionError("Page should have contained text '{}' "
                                  "but did not" % text)
 
     def assert_screen_should_not_contain_text(self, text):
-        if self._is_text_present(text):
+        if self.is_text_present(text):
             raise AssertionError("Page should not have contained text '{}'" % text)
 
     def assert_screen_should_contain_element(self, locator):
@@ -499,7 +506,7 @@ class MobileDriver(ABC):
                                  "but did not".format(locator))
 
     def assert_element_should_contain_text(self, locator, expected, message=''):
-        actual = self._get_text(locator)
+        actual = self.get_text(locator)
         if expected not in actual:
             if not message:
                 message = "Element '{}' should have contained text '{}' but " \
@@ -507,7 +514,7 @@ class MobileDriver(ABC):
             raise AssertionError(message)
 
     def assert_element_should_not_contain_text(self, locator, expected, message=''):
-        actual = self._get_text(locator)
+        actual = self.get_text(locator)
         if expected in actual:
             if not message:
                 message = "Element {} should not contain text '{}' but " \

@@ -29,7 +29,7 @@ class MXPro6Plus(MobileDriver):
                     alert = d.switch_to.alert
                     return alert.accept
                 except:
-                    alert = this.get_elements((MobileBy.XPATH, '//*[@text="始终允许" or @text="允许"]'))
+                    alert = this.get_elements((MobileBy.XPATH, '//android.widget.Button[@text="始终允许" or @text="允许"]'))
                     if not alert:
                         return False
                     return alert[0].click

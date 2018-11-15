@@ -48,7 +48,7 @@ class MeSetMultiLanguagePage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_text_present('设置语言')
+                condition=lambda d: self.is_text_present('设置语言')
             )
         except:
             message = "设置语言页面在限定的时间：{}s内没有加载完毕，或者没有包含文本：设置语言".format(timeout)

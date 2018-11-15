@@ -1,6 +1,5 @@
 from appium.webdriver.common.mobileby import MobileBy
 
-from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 from pages.Footer import FooterPage
 
@@ -16,15 +15,15 @@ class MessagePage(FooterPage):
         'com.chinasofti.rcs:id/pop_item_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/pop_item_layout'),
         'com.chinasofti.rcs:id/iconIV': (MobileBy.ID, 'com.chinasofti.rcs:id/iconIV'),
         '新建消息': (
-            MobileBy.XPATH, '//*[@text ="新建消息"]'),
+            MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/pop_navi_text" @text ="新建消息"]'),
         '免费短信': (
-            MobileBy.XPATH, '//*[@text ="免费短信"]'),
+            MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/pop_navi_text" @text ="免费短信"]'),
         '发起群聊': (
-            MobileBy.XPATH, '//*[@text ="发起群聊"]'),
+            MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/pop_navi_text" @text ="发起群聊"]'),
         '分组群发': (
-            MobileBy.XPATH, '//*[@text ="分组群发"]'),
+            MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/pop_navi_text" @text ="分组群发"]'),
         '扫一扫': (
-            MobileBy.XPATH, '//*[@resource_id ="com.chinasofti.rcs:id/pop_navi_text" and @text ="扫一扫"]'),
+            MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/pop_navi_text" and @text ="扫一扫"]'),
         'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
         'android:id/content': (MobileBy.ID, 'android:id/content'),
         'com.chinasofti.rcs:id/activity_main': (MobileBy.ID, 'com.chinasofti.rcs:id/activity_main'),
@@ -51,6 +50,41 @@ class MessagePage(FooterPage):
         '通讯录': (MobileBy.ID, 'com.chinasofti.rcs:id/tvContact'),
         '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe')
     }
+
+    @TestLogger.log()
+    def click_plus_icon(self):
+        """点击加号图标"""
+        self.click_element(self.__locators['+号'])
+
+    @TestLogger.log()
+    def click_new_message(self):
+        """点击新建消息"""
+        self.click_element(self.__locators['新建消息'])
+
+    @TestLogger.log()
+    def click_new_message(self):
+        """点击免费短信"""
+        self.click_element(self.__locators['免费短信'])
+
+    @TestLogger.log()
+    def click_new_message(self):
+        """点击发起群聊"""
+        self.click_element(self.__locators['发起群聊'])
+
+    @TestLogger.log()
+    def click_new_message(self):
+        """点击分组群发"""
+        self.click_element(self.__locators['分组群发'])
+
+    @TestLogger.log()
+    def click_new_message(self):
+        """点击扫一扫息"""
+        self.click_element(self.__locators['扫一扫'])
+
+    @TestLogger.log()
+    def search(self, keyword):
+        """搜索"""
+        self.input_text(self.__locators['搜索'], keyword)
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):

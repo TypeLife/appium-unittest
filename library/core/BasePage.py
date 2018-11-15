@@ -1,7 +1,6 @@
 import os
 import re
 import time
-from unicodedata import normalize
 
 from appium.webdriver.common.mobileby import MobileBy
 
@@ -20,6 +19,7 @@ class BasePage(object):
     def driver(self):
         return MOBILE_DRIVER_CACHE.current.driver
 
+    @property
     def mobile(self):
         return current_mobile()
 
@@ -53,16 +53,15 @@ class BasePage(object):
     def get_elements(self, locator):
         return self.driver.find_elements(*locator)
 
-    def _get_text(self, locator):
+    def get_text(self, locator):
         elements = self.get_elements(locator)
         if len(elements) > 0:
             return elements[0].text
         return None
 
-    def _is_text_present(self, text):
-        text_norm = normalize('NFD', text)
-        source_norm = normalize('NFD', self.get_source())
-        return text_norm in source_norm
+    def is_text_present(self, text):
+        """检查屏幕是否包含文本"""
+        return self.mobile.is_text_present(text)
 
     def _is_element_present(self, locator):
         elements = self.get_elements(locator)
@@ -129,11 +128,7 @@ class BasePage(object):
         return self.driver.page_source
 
     def click_element(self, locator, default_timeout=5):
-        self.wait_until(
-            condition=lambda d: self.get_element(locator),
-            timeout=default_timeout
-        ).click()
-        # self.get_element(locator).click()
+        self.mobile.click_element(locator, default_timeout)
 
     def is_current_activity_match_this_page(self):
         return self.driver == self.__class__.ACTIVITY
@@ -153,7 +148,7 @@ class BasePage(object):
             self.get_element((MobileBy.XPATH, _xpath)).click()
 
     def input_text(self, locator, text):
-        self.get_element(locator).send_keys(text)
+        self.mobile.input_text(locator, text)
 
     def select_checkbox(self, locator):
         """勾选复选框"""
@@ -268,13 +263,13 @@ class BasePage(object):
             self.driver.swipe(x_start, y_start, x_offset, y_offset, duration)
 
     def page_should_contain_text(self, text):
-        if not self._is_text_present(text):
+        if not self.is_text_present(text):
             raise AssertionError("Page should have contained text '{}' "
                                  "but did not" % text)
         return True
 
     def page_should_not_contain_text(self, text):
-        if self._is_text_present(text):
+        if self.is_text_present(text):
             raise AssertionError("Page should not have contained text '{}'" % text)
         return True
 
@@ -308,7 +303,7 @@ class BasePage(object):
         return True
 
     def element_should_contain_text(self, locator, expected, message=''):
-        actual = self._get_text(locator)
+        actual = self.get_text(locator)
         if expected not in actual:
             if not message:
                 message = "Element '{}' should have contained text '{}' but " \
@@ -317,7 +312,7 @@ class BasePage(object):
         return True
 
     def element_should_not_contain_text(self, locator, expected, message=''):
-        actual = self._get_text(locator)
+        actual = self.get_text(locator)
         if expected in actual:
             if not message:
                 message = "Element {} should not contain text '{}' but " \
@@ -337,11 +332,11 @@ class BasePage(object):
 
     def element_text_should_match(self, locator, pattern, full_match=True, regex=False):
         """断言元素内文本，支持正则表达式"""
-        return self.mobile().assert_element_text_should_match(locator, pattern, full_match, regex)
+        return self.mobile.assert_element_text_should_match(locator, pattern, full_match, regex)
 
     def wait_until(self, condition, timeout=8, auto_accept_permission_alert=True):
-        return self.mobile().wait_until(condition, timeout=timeout,
-                                        auto_accept_permission_alert=auto_accept_permission_alert)
+        return self.mobile.wait_until(condition, timeout=timeout,
+                                      auto_accept_permission_alert=auto_accept_permission_alert)
 
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
         """默认使用activity作为判断页面是否加载的条件，继承类应该重写该方法"""

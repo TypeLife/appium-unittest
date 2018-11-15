@@ -30,7 +30,7 @@ class RedmiNote4X(MobileDriver):
     def _actions_after_send_get_code_request(self, context, max_wait_time):
         self.open_notifications()
         message = self.wait_until(
-            condition=lambda d: self._get_text((MobileBy.XPATH, '//*[contains(@text,"登录验证")]')),
+            condition=lambda d: self.get_text((MobileBy.XPATH, '//*[contains(@text,"登录验证")]')),
             timeout=max_wait_time
         )
         code = re.findall(r'【登录验证】尊敬的用户：(\d+)', message)

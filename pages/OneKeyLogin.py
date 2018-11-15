@@ -76,7 +76,7 @@ class OneKeyLoginPage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self.element_should_be_enabled(self.__class__.__locators["一键登录"])
+                condition=lambda d: self._is_element_present(self.__class__.__locators["一键登录"])
             )
         except:
             message = "页面在{}s内，没有加载成功".format(timeout)
@@ -88,7 +88,7 @@ class OneKeyLoginPage(BasePage):
     @TestLogger.log()
     def get_login_number(self):
         """获取一键登录界面的电话号码"""
-        number = self._get_text(self.__locators['电话号码'])
+        number = self.get_text(self.__locators['电话号码'])
         return number
 
     @TestLogger.log()

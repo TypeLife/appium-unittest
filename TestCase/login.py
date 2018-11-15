@@ -10,7 +10,7 @@ from pages import *
 from pages import Agreement
 
 REQUIRED_MOBILES = {
-    'Android-移动': 'single_mobile',
+    'Android-移动': 'M960BDQN229CH',
     'IOS-移动': '',
     'Android-电信': 'single_telecom',
     'Android-联通': 'single_union',
@@ -176,7 +176,7 @@ class Preconditions(object):
         current_mobile().reset_app()
         guide_page = GuidePage()
         guide_page.wait_until(
-            lambda d: guide_page._is_text_present("解锁“免费通信”新攻略")
+            lambda d: guide_page.is_text_present("解锁“免费通信”新攻略")
         )
         guide_page.swipe_to_the_second_banner()
         guide_page.swipe_to_the_third_banner()
@@ -210,13 +210,13 @@ class Preconditions(object):
         # 点击登录
         sl.click_login()
         time.sleep(0.5)
-        if sl._is_text_present("查看详情"):
+        if sl.is_text_present("查看详情"):
             # 查看详情
             sl.click_read_agreement_detail()
             # 同意协议
             agreement = AgreementDetailPage()
             agreement.click_agree_button()
-        if sl._is_text_present("我知道了"):
+        if sl.is_text_present("我知道了"):
             # 点击‘我知道了’
             sl.click_i_know()
         MessagePage().wait_for_page_load(login_time)
@@ -389,7 +389,7 @@ class LoginTest(TestCase):
         # 切换回测试机等待下线提示
         Preconditions.select_mobile('Android-移动')
         message_page.wait_until(
-            condition=lambda d: message_page._is_text_present('下线通知'),
+            condition=lambda d: message_page.is_text_present('下线通知'),
             timeout=30
         )
 
@@ -480,13 +480,13 @@ class LoginTest(TestCase):
         # 点击登录
         sms.click_login()
         time.sleep(0.5)
-        if sms._is_text_present("查看详情"):
+        if sms.is_text_present("查看详情"):
             # 查看详情
             sms.click_read_agreement_detail()
             # 同意协议
             agreement = AgreementDetailPage()
             agreement.click_agree_button()
-        if sms._is_text_present("我知道了"):
+        if sms.is_text_present("我知道了"):
             # 点击‘我知道了’
             sms.click_i_know()
         # 网络异常提示
@@ -550,13 +550,13 @@ class LoginTest(TestCase):
         # 点击登录
         sl.click_login()
         time.sleep(0.5)
-        if sl._is_text_present("查看详情"):
+        if sl.is_text_present("查看详情"):
             # 查看详情
             sl.click_read_agreement_detail()
             # 同意协议
             agreement = AgreementDetailPage()
             agreement.click_agree_button()
-        if sl._is_text_present("我知道了"):
+        if sl.is_text_present("我知道了"):
             # 点击‘我知道了’
             sl.click_i_know()
         # 网络异常提示
@@ -587,13 +587,13 @@ class LoginTest(TestCase):
         # 点击登录
         sl.click_login()
         time.sleep(0.5)
-        if sl._is_text_present("查看详情"):
+        if sl.is_text_present("查看详情"):
             # 查看详情
             sl.click_read_agreement_detail()
             # 同意协议
             agreement = AgreementDetailPage()
             agreement.click_agree_button()
-        if sl._is_text_present("我知道了"):
+        if sl.is_text_present("我知道了"):
             # 点击‘我知道了’
             sl.click_i_know()
         # 获取异常提示
@@ -624,13 +624,13 @@ class LoginTest(TestCase):
         # 点击登录
         sl.click_login()
         time.sleep(0.5)
-        if sl._is_text_present("查看详情"):
+        if sl.is_text_present("查看详情"):
             # 查看详情
             sl.click_read_agreement_detail()
             # 同意协议
             agreement = AgreementDetailPage()
             agreement.click_agree_button()
-        if sl._is_text_present("我知道了"):
+        if sl.is_text_present("我知道了"):
             # 点击‘我知道了’
             sl.click_i_know()
         # 获取异常提示
@@ -661,13 +661,13 @@ class LoginTest(TestCase):
         # 点击登录
         sl.click_login()
         time.sleep(0.5)
-        if sl._is_text_present("查看详情"):
+        if sl.is_text_present("查看详情"):
             # 查看详情
             sl.click_read_agreement_detail()
             # 同意协议
             agreement = AgreementDetailPage()
             agreement.click_agree_button()
-        if sl._is_text_present("我知道了"):
+        if sl.is_text_present("我知道了"):
             # 点击‘我知道了’
             sl.click_i_know()
         # 获取异常提示
@@ -767,7 +767,7 @@ class LoginTest(TestCase):
         sml.click_finish()
         # 检查繁体中文
         oklp.wait_until(
-            condition=lambda d: oklp._is_text_present('一鍵登入')
+            condition=lambda d: oklp.is_text_present('一鍵登入')
         )
 
 

@@ -156,7 +156,7 @@ class Preconditions(object):
         current_mobile().reset_app()
         guide_page = GuidePage()
         guide_page.wait_until(
-            lambda d: guide_page._is_text_present("解锁“免费通信”新攻略")
+            lambda d: guide_page.is_text_present("解锁“免费通信”新攻略")
         )
         guide_page.swipe_to_the_second_banner()
         guide_page.swipe_to_the_third_banner()
@@ -224,7 +224,7 @@ class Demo(TestCase):
         # 切换回测试机等待下线提示
         switch_to_mobile(REQUIRED_MOBILES['测试机'])
         message_page.wait_until(
-            condition=lambda d: message_page._is_text_present('下线通知'),
+            condition=lambda d: message_page.is_text_present('下线通知'),
             timeout=30
         )
 

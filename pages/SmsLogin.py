@@ -128,7 +128,7 @@ class SmsLoginPage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_text_present("登录验证")
+                condition=lambda d: self.is_text_present("登录验证")
             )
         except:
             message = "页面在{}s内，没有加载成功".format(timeout)
@@ -144,7 +144,7 @@ class SmsLoginPage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_text_present("我知道了")
+                condition=lambda d: self.is_text_present("我知道了")
             )
         except:
             message = "页面在{}s内，没有加载成功".format(timeout)
@@ -202,7 +202,7 @@ class SmsLoginPage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_text_present("查看详情")
+                condition=lambda d: self.is_text_present("查看详情")
             )
         except:
             message = "页面在{}s内，没有加载成功".format(timeout)
