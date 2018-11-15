@@ -40,7 +40,8 @@ class GroupChatSetPage(BasePage):
                   'com.chinasofti.rcs:id/group_manage': (MobileBy.ID, 'com.chinasofti.rcs:id/group_manage'),
                   '群管理': (MobileBy.ID, 'com.chinasofti.rcs:id/left_group_manage_tv'),
                   '消息免打扰': (MobileBy.ID, 'com.chinasofti.rcs:id/left_message_interruption_tv'),
-                  '关闭': (MobileBy.ID, 'com.chinasofti.rcs:id/chat_set_to_top_switch'),
+                  '消息免打扰开关': (MobileBy.ID, 'com.chinasofti.rcs:id/switch_undisturb'),
+                  '置顶聊天开关': (MobileBy.ID, 'com.chinasofti.rcs:id/chat_set_to_top_switch'),
                   '置顶聊天': (MobileBy.ID, 'com.chinasofti.rcs:id/chat_set_to_top_tv'),
                   'com.chinasofti.rcs:id/tv_serarch_chat_record': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/tv_serarch_chat_record'),
@@ -49,6 +50,22 @@ class GroupChatSetPage(BasePage):
                   '清空聊天记录': (MobileBy.ID, 'com.chinasofti.rcs:id/left_empty_chat_tv'),
                   '删除并退出': (MobileBy.ID, 'com.chinasofti.rcs:id/delete_and_exit')
                   }
+
+    @TestLogger.log()
+    def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
+        """等待群聊设置页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("群聊设置")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
 
     @TestLogger.log()
     def click_add_member(self):
@@ -64,3 +81,87 @@ class GroupChatSetPage(BasePage):
     def click_modify_group_name(self):
         """点击 > 修改群聊名称"""
         self.click_element(self.__locators['修改群聊名称'])
+
+    @TestLogger.log()
+    def click_QRCode(self):
+        """点击群二维码"""
+        self.click_element(self.__locators['群二维码'])
+
+    @TestLogger.log()
+    def click_my_card(self):
+        """点击我在本群的昵称"""
+        self.click_element(self.__locators['我在本群的昵称'])
+
+    @TestLogger.log()
+    def click_group_manage(self):
+        """点击群管理"""
+        self.click_element(self.__locators['群管理'])
+
+    @TestLogger.log()
+    def click_switch_undisturb(self):
+        """点击消息免打扰开关"""
+        self.click_element(self.__locators['消息免打扰开关'])
+
+    @TestLogger.log()
+    def get_switch_undisturb_status(self):
+        """获取消息免打扰开关状态"""
+        el = self.driver.find_element(self.__locators['消息免打扰开关'])
+        return el.get_attribute("checked") == "true"
+
+    @TestLogger.log()
+    def get_chat_set_to_top_switch_status(self):
+        """获取置顶聊天开关状态"""
+        el = self.driver.find_element(self.__locators['置顶聊天开关'])
+        return el.get_attribute("checked") == "true"
+
+    @TestLogger.log()
+    def click_chat_set_to_top_switch(self):
+        """点击置顶聊天开关"""
+        self.click_element(self.__locators['置顶聊天开关'])
+
+    @TestLogger.log()
+    def click_find_chat_record(self):
+        """点击查找聊天内容"""
+        self.click_element(self.__locators['查找聊天内容'])
+
+    @TestLogger.log()
+    def click_clear_chat_record(self):
+        """点击清空聊天记录"""
+        self.click_element(self.__locators['清空聊天记录'])
+
+    @TestLogger.log()
+    def click_delete_and_exit(self):
+        """点击删除并退出"""
+        self.click_element(self.__locators['删除并退出'])
+
+    @TestLogger.log()
+    def wait_clear_chat_record_confirmation_box_load(self, timeout=10, auto_accept_alerts=True):
+        """等待 聊天记录清除确认框"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("是否清空聊天记录")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(timeout)
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def wait_exist_and_delete_confirmation_box_load(self, timeout=10, auto_accept_alerts=True):
+        """等待 解散群成员确认框加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("解散群")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(timeout)
+            raise AssertionError(
+                message
+            )
+        return self
