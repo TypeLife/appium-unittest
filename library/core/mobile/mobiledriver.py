@@ -8,7 +8,7 @@ from unicodedata import normalize
 
 from appium import webdriver
 from appium.webdriver.common.mobileby import MobileBy
-from selenium.common.exceptions import InvalidSessionIdException
+from selenium.common.exceptions import InvalidSessionIdException, WebDriverException
 from selenium.webdriver.support.wait import WebDriverWait
 
 
@@ -95,7 +95,7 @@ class MobileDriver(ABC):
             try:
                 t = self.driver.current_package
                 return True
-            except InvalidSessionIdException:
+            except InvalidSessionIdException or WebDriverException:
                 return False
 
     def connect_mobile(self):

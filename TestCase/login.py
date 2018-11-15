@@ -771,5 +771,8 @@ class LoginTest(TestCase):
         )
 
 
+# from library.core.utils.testcasefilter import set_tags
+#
+# set_tags('DEBUG')
 if __name__ == '__main__':
     pass

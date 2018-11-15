@@ -5,7 +5,7 @@ from pages.Footer import FooterPage
 
 
 class MessagePage(FooterPage):
-    """消息页"""
+    """主页 - 消息页"""
 
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.HomeActivity'
 
@@ -15,13 +15,13 @@ class MessagePage(FooterPage):
         'com.chinasofti.rcs:id/pop_item_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/pop_item_layout'),
         'com.chinasofti.rcs:id/iconIV': (MobileBy.ID, 'com.chinasofti.rcs:id/iconIV'),
         '新建消息': (
-            MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/pop_navi_text" @text ="新建消息"]'),
+            MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/pop_navi_text" and @text ="新建消息"]'),
         '免费短信': (
-            MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/pop_navi_text" @text ="免费短信"]'),
+            MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/pop_navi_text" and @text ="免费短信"]'),
         '发起群聊': (
-            MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/pop_navi_text" @text ="发起群聊"]'),
+            MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/pop_navi_text" and @text ="发起群聊"]'),
         '分组群发': (
-            MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/pop_navi_text" @text ="分组群发"]'),
+            MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/pop_navi_text" and @text ="分组群发"]'),
         '扫一扫': (
             MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/pop_navi_text" and @text ="扫一扫"]'),
         'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
@@ -32,19 +32,14 @@ class MessagePage(FooterPage):
             MobileBy.ID, 'com.chinasofti.rcs:id/constraintLayout_home_tab'),
         'com.chinasofti.rcs:id/viewPager': (MobileBy.ID, 'com.chinasofti.rcs:id/viewPager'),
         'com.chinasofti.rcs:id/toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/toolbar'),
-        '消息': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMessage'),
-        'com.chinasofti.rcs:id/action_add': (MobileBy.ID, 'com.chinasofti.rcs:id/action_add'),
+        '页头-消息': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMessage'),
         'com.chinasofti.rcs:id/rv_conv_list': (MobileBy.ID, 'com.chinasofti.rcs:id/rv_conv_list'),
         '搜索': (MobileBy.ID, 'com.chinasofti.rcs:id/search_edit'),
-        'com.chinasofti.rcs:id/rl_conv_list_item': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_conv_list_item'),
-        'com.chinasofti.rcs:id/svd_head': (MobileBy.ID, 'com.chinasofti.rcs:id/svd_head'),
-        'com.chinasofti.rcs:id/ll_top': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_top'),
-        '和飞信团队': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_conv_name'),
-        '11:00': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_date'),
-        'com.chinasofti.rcs:id/ll_bottom': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_bottom'),
-        'Hi，你好！欢迎使用和飞信！如果需要…': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_content'),
-        'com.chinasofti.rcs:id/viewLine': (MobileBy.ID, 'com.chinasofti.rcs:id/viewLine'),
-        'com.chinasofti.rcs:id/view_bg_home_tab': (MobileBy.ID, 'com.chinasofti.rcs:id/view_bg_home_tab'),
+        '列表-消息块': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_conv_list_item'),
+        '消息头像': (MobileBy.ID, 'com.chinasofti.rcs:id/svd_head'),
+        '消息名称': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_conv_name'),
+        '消息时间': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_date'),
+        '消息简要内容': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_content'),
         '通话': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCall'),
         '工作台': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCircle'),
         '通讯录': (MobileBy.ID, 'com.chinasofti.rcs:id/tvContact'),
@@ -52,7 +47,7 @@ class MessagePage(FooterPage):
     }
 
     @TestLogger.log()
-    def click_plus_icon(self):
+    def click_add_icon(self):
         """点击加号图标"""
         self.click_element(self.__locators['+号'])
 
@@ -62,29 +57,74 @@ class MessagePage(FooterPage):
         self.click_element(self.__locators['新建消息'])
 
     @TestLogger.log()
-    def click_new_message(self):
+    def assert_new_message_text_equal_to(self, expect):
+        """检查新建消息菜单文本"""
+        actual = self.wait_until(
+            condition=lambda d: self.get_element(self.__locators['新建消息'])
+        ).text
+        if actual != expect:
+            raise AssertionError('期望值:"{}"\n实际值:"{}"\n'.format(expect, actual))
+
+    @TestLogger.log()
+    def click_free_sms(self):
         """点击免费短信"""
         self.click_element(self.__locators['免费短信'])
 
     @TestLogger.log()
-    def click_new_message(self):
+    def assert_free_sms_text_equal_to(self, expect):
+        """检查免费短信菜单文本"""
+        actual = self.wait_until(
+            condition=lambda d: self.get_element(self.__locators['免费短信'])
+        ).text
+        if actual != expect:
+            raise AssertionError('期望值:"{}"\n实际值:"{}"\n'.format(expect, actual))
+
+    @TestLogger.log()
+    def click_group_chat(self):
         """点击发起群聊"""
         self.click_element(self.__locators['发起群聊'])
 
     @TestLogger.log()
-    def click_new_message(self):
+    def assert_group_chat_text_equal_to(self, expect):
+        """检查发起群聊菜单文本"""
+        actual = self.wait_until(
+            condition=lambda d: self.get_element(self.__locators['发起群聊'])
+        ).text
+        if actual != expect:
+            raise AssertionError('期望值:"{}"\n实际值:"{}"\n'.format(expect, actual))
+
+    @TestLogger.log()
+    def click_group_mass(self):
         """点击分组群发"""
         self.click_element(self.__locators['分组群发'])
 
     @TestLogger.log()
-    def click_new_message(self):
-        """点击扫一扫息"""
+    def assert_group_mass_text_equal_to(self, expect):
+        """检查分组群发菜单文本"""
+        actual = self.wait_until(
+            condition=lambda d: self.get_element(self.__locators['分组群发'])
+        ).text
+        if actual != expect:
+            raise AssertionError('期望值:"{}"\n实际值:"{}"\n'.format(expect, actual))
+
+    @TestLogger.log()
+    def click_take_a_scan(self):
+        """点击扫一扫"""
         self.click_element(self.__locators['扫一扫'])
 
     @TestLogger.log()
-    def search(self, keyword):
+    def assert_take_a_scan_text_equal_to(self, expect):
+        """检查扫一扫菜单文本"""
+        actual = self.wait_until(
+            condition=lambda d: self.get_element(self.__locators['扫一扫'])
+        ).text
+        if actual != expect:
+            raise AssertionError('期望值:"{}"\n实际值:"{}"\n'.format(expect, actual))
+
+    @TestLogger.log()
+    def click_search(self):
         """搜索"""
-        self.input_text(self.__locators['搜索'], keyword)
+        self.click_element(self.__locators['搜索'])
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
