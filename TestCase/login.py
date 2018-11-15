@@ -10,7 +10,7 @@ from pages import *
 from pages import Agreement
 
 REQUIRED_MOBILES = {
-    'Android-移动': 'M960BDQN229CH',
+    'Android-移动': 'single_mobile',
     'IOS-移动': '',
     'Android-电信': 'single_telecom',
     'Android-联通': 'single_union',
@@ -20,6 +20,8 @@ REQUIRED_MOBILES = {
     'Android-XX-XX': 'others_double',
 }
 
+from library.core.utils.testcasefilter import set_tags
+set_tags('联通')
 
 class Preconditions(object):
     """
@@ -414,7 +416,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL')
+    @tags('ALL', '移动-联通')
     def test_login_0010(self):
         """一移动一异网卡登录"""
         oklp = OneKeyLoginPage()
@@ -432,7 +434,7 @@ class LoginTest(TestCase):
         Preconditions.select_mobile('Android-移动-移动')
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL')
+    @tags('ALL', "移动-移动")
     def test_login_0020(self):
         """双移动卡登录"""
         oklp = OneKeyLoginPage()
@@ -456,12 +458,10 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL')
+    @tags('ALL', "移动-联通")
     def test_login_0022(self):
         """一移动一异网卡登录"""
         oklp = OneKeyLoginPage()
-        # 获取网络链接状态
-        network_status = oklp.get_network_status()
         # 断开网络连接
         oklp.set_network_status(1)
         # 页面检查
@@ -492,15 +492,18 @@ class LoginTest(TestCase):
         # 网络异常提示
         code_info = sms.get_error_code_info_by_adb("com.chinasofti.rcs.*102101", timeout=30)
         self.assertIn("102101", code_info)
+
+    def tearDown_test_login_0022(self):
         # 恢复网络连接
-        sms.set_network_status(network_status)
+        oklp = OneKeyLoginPage()
+        oklp.set_network_status(6)
 
     def setUp_test_login_0023(self):
         """进入一键登录页"""
         Preconditions.select_mobile('Android-移动-移动')
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL')
+    @tags('ALL', "移动-移动")
     def test_login_0023(self):
         """双移动卡登录"""
         oklp = OneKeyLoginPage()
@@ -517,7 +520,7 @@ class LoginTest(TestCase):
         Preconditions.select_mobile('Android-电信')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL')
+    @tags('ALL', "联通")
     def test_login_0025(self):
         """非首次已设置头像昵称登录短信登录页元素显示(异网单卡)"""
         sl = SmsLoginPage()
@@ -530,13 +533,11 @@ class LoginTest(TestCase):
         Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL')
+    @tags('ALL', "联通")
     def test_login_0026(self):
         """输入验证码验证-异网用户，正确有效的6位（断网)"""
         sl = SmsLoginPage()
         sl.wait_for_page_load()
-        # 获取网络链接状态
-        network_status = sl.get_network_status()
         # 输入电话号码
         phone_numbers = current_mobile().get_cards(CardType.CHINA_UNION)
         sl.input_phone_number(phone_numbers[0])
@@ -562,15 +563,18 @@ class LoginTest(TestCase):
         # 网络异常提示
         code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*102101", timeout=30)
         self.assertIn("102101", code_info)
+
+    def tearDown_test_login_0026(self):
         # 恢复网络连接
-        sl.set_network_status(network_status)
+        sl = SmsLoginPage()
+        sl.set_network_status(6)
 
     def setUp_test_login_0027(self):
         """异网账号进入登录页面"""
         Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL')
+    @tags('ALL', "联通")
     def test_login_0027(self):
         """输入验证码验证-错误的6位（异网用户）"""
         sl = SmsLoginPage()
@@ -605,7 +609,7 @@ class LoginTest(TestCase):
         Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL')
+    @tags('ALL', "联通")
     def test_login_0029(self):
         """输入验证码验证-（异网）正确失效的6位验证码"""
         sl = SmsLoginPage()
@@ -617,9 +621,9 @@ class LoginTest(TestCase):
         code = sl.get_verify_code_by_notice_board()
         self.assertIsNotNone(code)
         # 输入失效的验证码
-        for i in range(10):
+        for i in range(60):
             xxx = sl.driver.current_activity
-            time.sleep(30)
+            time.sleep(5)
         sl.input_verification_code(code)
         # 点击登录
         sl.click_login()
@@ -694,7 +698,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL')
+    @tags('ALL', "电信")
     def test_login_0048(self):
         """短信验证码登录-（电信）异网用户首次登录"""
         Preconditions.diff_card_login_by_sms(CardType.CHINA_TELECOM)
@@ -708,7 +712,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL')
+    @tags('ALL', "联通")
     def test_login_0049(self):
         """短信验证码登录-（联通）异网用户首次登录"""
         Preconditions.diff_card_login_by_sms(CardType.CHINA_UNION)
@@ -721,7 +725,7 @@ class LoginTest(TestCase):
         Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL')
+    @tags('ALL', "联通")
     def test_login_0050(self):
         """短信验证码登录-异网用户登录（非首次)"""
         # 登录
@@ -739,7 +743,7 @@ class LoginTest(TestCase):
         Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL')
+    @tags('ALL', "联通")
     def test_login_0051(self):
         """短信验证码登录-异网不显示一键登录入口"""
         sl = SmsLoginPage()
