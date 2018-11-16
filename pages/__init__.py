@@ -1,21 +1,29 @@
 __all__ = [
-    "MePage",
-    "MeSetMultiLanguagePage",
-    "SearchPage",
-    "SettingPage",
-    "ContactDetailsPage",
-    "NewContactPage",
-    "GuidePage",
-    "PermissionListPage",
-    "AgreementDetailPage",
-    "AgreementPage",
-    "OneKeyLoginPage",
+    'SearchPage',
+    'SettingPage',
+    'ContactDetailsPage',
+    'NewContactPage',
+    'GuidePage',
+    'PermissionListPage',
+    'AgreementDetailPage',
+    'AgreementPage',
+    'OneKeyLoginPage',
     'SmsLoginPage',
+    'MePage',
+    'MeSetCallPage',
+    'MeSetContactsManagerPage',
+    'MeSetDialPage',
+    'MeSetDialWayPage',
+    'MeSetFontSizePage',
+    'MeSetFuHaoPage',
+    'MeSetImprovePlanPage',
+    'MeSetMultiLanguagePage',
+    'MeSetNewsNoticePage',
+    'MeSetUpPage',
+    'MeSmsSetPage',
     'MessagePage',
 ]
 
-from .Me import MePage
-from .MeSetMultiLanguage import MeSetMultiLanguagePage
 from .Search import SearchPage
 from .Setting import SettingPage
 from .contacts import ContactDetailsPage
@@ -26,4 +34,16 @@ from .login import AgreementDetailPage
 from .login import AgreementPage
 from .login import OneKeyLoginPage
 from .login import SmsLoginPage
+from .me import MePage
+from .me import MeSetCallPage
+from .me import MeSetContactsManagerPage
+from .me import MeSetDialPage
+from .me import MeSetDialWayPage
+from .me import MeSetFontSizePage
+from .me import MeSetFuHaoPage
+from .me import MeSetImprovePlanPage
+from .me import MeSetMultiLanguagePage
+from .me import MeSetNewsNoticePage
+from .me import MeSetUpPage
+from .me import MeSmsSetPage
 from .message import MessagePage

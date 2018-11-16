@@ -1,11 +1,10 @@
 from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
-from library.core.TestLogger import TestLogger
 
 
-class MeSetUpPage(BasePage):
-    """我 -> 设置 页面"""
+class MeSetNewsNoticePage(BasePage):
+    """我-》设置-》消息通知"""
     ACTIVITY = 'com.cmicc.module_aboutme.ui.activity.SettingActivity'
 
     locators = {'': (MobileBy.ID, ''),
@@ -35,12 +34,5 @@ class MeSetUpPage(BasePage):
                 'com.chinasofti.rcs:id/upload_log_setting': (MobileBy.ID, 'com.chinasofti.rcs:id/upload_log_setting'),
                 '参与体验改善计划': (MobileBy.ID, 'com.chinasofti.rcs:id/upload_log_setting_text'),
                 'android:id/statusBarBackground': (MobileBy.ID, 'android:id/statusBarBackground'),
-                'android:id/navigationBarBackground': (MobileBy.ID, 'android:id/navigationBarBackground'),
-                # 设置-》退出
-                '确定退出？': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_message'),
-                'com.chinasofti.rcs:id/btn_container': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_container'),
-                '取消': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
-                '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
-                # 设置-》短信设置
-
+                'android:id/navigationBarBackground': (MobileBy.ID, 'android:id/navigationBarBackground')
                 }
