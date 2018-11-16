@@ -8,7 +8,7 @@ class GroupChatSetPage(BasePage):
     """群聊设置页面"""
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.GroupSettingActivity'
 
-    __locators = {'': (MobileBy.ID, ''),
+    __locators = {'菜单区域': (MobileBy.CLASS_NAME, 'android.widget.ScrollView'),
                   'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
                   'android:id/content': (MobileBy.ID, 'android:id/content'),
                   'com.chinasofti.rcs:id/layout_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/layout_toolbar'),
@@ -177,3 +177,11 @@ class GroupChatSetPage(BasePage):
     def click_cancel(self):
         """点击取消"""
         self.click_element(self.__locators['取消'])
+
+    @TestLogger.log()
+    def scroll_to_bottom(self):
+        """滑到菜单底部"""
+        self.wait_until(
+            condition=lambda d: self.get_element(self.__locators['群聊设置'])
+        )
+        self.swipe_by_direction(self.__locators['菜单区域'], 'up')
