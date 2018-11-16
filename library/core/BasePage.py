@@ -415,3 +415,7 @@ class BasePage(object):
 
         """
         self.driver.set_network_connection(status)
+
+    def hide_keyboard(self, key_name=None, key=None, strategy=None):
+        """隐藏键盘"""
+        self.mobile.hide_keyboard(key_name, key, strategy)
