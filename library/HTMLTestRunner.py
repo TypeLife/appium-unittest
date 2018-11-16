@@ -50,7 +50,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 # URL: http://tungwaiyip.info/software/HTMLTestRunner.html
-from library.core.TestLogger import TestLogger
 from library.core.utils import common
 
 __author__ = "Wai Yip Tung,  Findyou"
@@ -466,6 +465,7 @@ class _TestResult(TestResult):
         self.stderr0 = sys.stderr
         sys.stdout = stdout_redirector
         sys.stderr = stderr_redirector
+        from library.core.TestLogger import TestLogger
         TestLogger.start_test(test)
 
     def complete_output(self):
@@ -487,6 +487,7 @@ class _TestResult(TestResult):
         self.complete_output()
 
     def addSuccess(self, test):
+        from library.core.TestLogger import TestLogger
         TestLogger.test_success(test)
         self.success_count += 1
         super(_TestResult, self).addSuccess(test)
@@ -500,6 +501,7 @@ class _TestResult(TestResult):
             sys.stderr.write('.')
 
     def addError(self, test, err):
+        from library.core.TestLogger import TestLogger
         TestLogger.test_error(test)
         self.error_count += 1
         super(_TestResult, self).addError(test, err)
@@ -514,6 +516,7 @@ class _TestResult(TestResult):
             sys.stderr.write('E')
 
     def addFailure(self, test, err):
+        from library.core.TestLogger import TestLogger
         TestLogger.test_fail(test)
         self.failure_count += 1
         super(_TestResult, self).addFailure(test, err)

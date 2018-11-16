@@ -11,6 +11,8 @@ from appium.webdriver.common.mobileby import MobileBy
 from selenium.common.exceptions import InvalidSessionIdException, WebDriverException
 from selenium.webdriver.support.wait import WebDriverWait
 
+from library.core.TestLogger import TestLogger
+
 
 class MobileDriver(ABC):
 
@@ -595,6 +597,11 @@ class MobileDriver(ABC):
         else:
             # TODO IOS MD5验证待实现
             return True
+
+    @TestLogger.log()
+    def hide_keyboard(self, key_name=None, key=None, strategy=None):
+        """隐藏键盘"""
+        self.driver.hide_keyboard(key_name, key, strategy)
 
     def __str__(self):
         device_info = {

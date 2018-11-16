@@ -432,3 +432,7 @@ class BasePage(object):
             return True
         except:
             return False
+
+    def hide_keyboard(self, key_name=None, key=None, strategy=None):
+        """隐藏键盘"""
+        self.mobile.hide_keyboard(key_name, key, strategy)

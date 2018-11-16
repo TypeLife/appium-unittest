@@ -7,7 +7,7 @@ from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
-from pages import Agreement
+from pages.login import Agreement
 
 REQUIRED_MOBILES = {
     'Android-移动': 'single_mobile',
