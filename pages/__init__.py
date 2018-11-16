@@ -9,14 +9,16 @@ __all__ = [
     "AgreementDetailPage",
     "AgreementPage",
     "MeSetMultiLanguagePage",
+    "SearchPage",
 ]
-from .Guide import GuidePage
-from .PermissionList import PermissionListPage
-from .OneKeyLogin import OneKeyLoginPage
-from .Message import MessagePage
-from .SmsLogin import SmsLoginPage
-from .Me import MePage
-from .Setting import SettingPage
-from .AgreementDetail import AgreementDetailPage
 from .Agreement import AgreementPage
+from .AgreementDetail import AgreementDetailPage
+from .Guide import GuidePage
+from .Me import MePage
 from .MeSetMultiLanguage import MeSetMultiLanguagePage
+from .Message import MessagePage
+from .OneKeyLogin import OneKeyLoginPage
+from .PermissionList import PermissionListPage
+from .Search import SearchPage
+from .Setting import SettingPage
+from .SmsLogin import SmsLoginPage
