@@ -18,14 +18,14 @@ __all__ = [
     'MeSetFuHaoPage',
     'MeSetImprovePlanPage',
     'MeSetMultiLanguagePage',
-    'MeSetNewsNoticePage',
+    'SetMessageNoticePage',
     'MeSetUpPage',
     'MeSmsSetPage',
     'MessagePage',
 ]
 
+from pages.me.Setting import SettingPage
 from .Search import SearchPage
-from .Setting import SettingPage
 from .contacts import ContactDetailsPage
 from .contacts import NewContactPage
 from .guide import GuidePage
@@ -43,7 +43,7 @@ from .me import MeSetFontSizePage
 from .me import MeSetFuHaoPage
 from .me import MeSetImprovePlanPage
 from .me import MeSetMultiLanguagePage
-from .me import MeSetNewsNoticePage
 from .me import MeSetUpPage
 from .me import MeSmsSetPage
+from .me import SetMessageNoticePage
 from .message import MessagePage

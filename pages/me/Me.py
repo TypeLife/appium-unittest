@@ -74,21 +74,32 @@ class MePage(FooterPage):
 
     }
 
-    @TestLogger.log()
+    @TestLogger.log("滑到菜单底部")
     def scroll_to_bottom(self):
         """滑到菜单底部"""
         self.wait_until(
             condition=lambda d: self.get_element(self.__locators['页头-我'])
         )
-        self.swipe_by_direction(self.__locators['菜单区域'], 'up')
+
+        # 如果找到“设置”菜单，则当作已经滑到底部
+        if self._is_element_present(self.__locators['设置']):
+            return True
+        max_try = 5
+        current = 0
+        while current < max_try:
+            current += 1
+            self.swipe_by_direction(self.__locators['菜单区域'], 'up')
+            if self._is_element_present(self.__locators['设置']):
+                break
+        return True
 
     @TestLogger.log()
     def click_setting_menu(self):
         """点击设置菜单"""
+        self.scroll_to_bottom()
         self.wait_until(
             condition=lambda d: self.get_element(self.__locators['设置'])
         ).click()
-        # self.click_element(self.__locators['设置'])
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
