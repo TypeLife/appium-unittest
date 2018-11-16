@@ -48,7 +48,9 @@ class GroupChatSetPage(BasePage):
                   '查找聊天内容': (MobileBy.ID, 'com.chinasofti.rcs:id/left_find_chat_record_tv'),
                   'com.chinasofti.rcs:id/tv_chat_empty': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_chat_empty'),
                   '清空聊天记录': (MobileBy.ID, 'com.chinasofti.rcs:id/left_empty_chat_tv'),
-                  '删除并退出': (MobileBy.ID, 'com.chinasofti.rcs:id/delete_and_exit')
+                  '删除并退出': (MobileBy.ID, 'com.chinasofti.rcs:id/delete_and_exit'),
+                  "确认": (MobileBy.XPATH, '//*[@text ="确认"]'),
+                  "取消": (MobileBy.XPATH, '//*[@text ="取消"]')
                   }
 
     @TestLogger.log()
@@ -105,13 +107,13 @@ class GroupChatSetPage(BasePage):
     @TestLogger.log()
     def get_switch_undisturb_status(self):
         """获取消息免打扰开关状态"""
-        el = self.driver.find_element(self.__locators['消息免打扰开关'])
+        el = self.get_element(self.__locators['消息免打扰开关'])
         return el.get_attribute("checked") == "true"
 
     @TestLogger.log()
     def get_chat_set_to_top_switch_status(self):
         """获取置顶聊天开关状态"""
-        el = self.driver.find_element(self.__locators['置顶聊天开关'])
+        el = self.get_element(self.__locators['置顶聊天开关'])
         return el.get_attribute("checked") == "true"
 
     @TestLogger.log()
@@ -165,3 +167,13 @@ class GroupChatSetPage(BasePage):
                 message
             )
         return self
+
+    @TestLogger.log()
+    def click_confirm(self):
+        """点击确认"""
+        self.click_element(self.__locators['确认'])
+
+    @TestLogger.log()
+    def click_cancel(self):
+        """点击取消"""
+        self.click_element(self.__locators['取消'])

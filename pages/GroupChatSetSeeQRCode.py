@@ -25,6 +25,48 @@ class GroupChatSetSeeQRCodePage(BasePage):
                   'com.chinasofti.rcs:id/left_below': (MobileBy.ID, 'com.chinasofti.rcs:id/left_below'),
                   'com.chinasofti.rcs:id/right_below': (MobileBy.ID, 'com.chinasofti.rcs:id/right_below'),
                   '该二维码7天内(11月22日前)有效': (MobileBy.ID, 'com.chinasofti.rcs:id / group_qr_date'),
-                  'com.chinasofti.rcs:id/qecode_share_btn': (MobileBy.ID, 'com.chinasofti.rcs:id/qecode_share_btn'),
-                  'com.chinasofti.rcs:id/qecode_save_btn': (MobileBy.ID, 'com.chinasofti.rcs:id/qecode_save_btn')
+                  '群二维码分享': (MobileBy.ID, 'com.chinasofti.rcs:id/qecode_share_btn'),
+                  '群二维码下载': (MobileBy.ID, 'com.chinasofti.rcs:id/qecode_save_btn')
                   }
+
+    @TestLogger.log()
+    def wait_for_page_load(self, timeout=10, auto_accept_alerts=True):
+        """等待群二维码页面页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__locators['群二维码分享'])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def click_qecode_share_btn(self):
+        """点击群二维码分享"""
+        self.click_element(self.__class__.__locators["群二维码分享"])
+
+    @TestLogger.log()
+    def click_qecode_save_btn(self):
+        """点击群二维码下载"""
+        self.click_element(self.__class__.__locators["群二维码下载"])
+
+    @TestLogger.log()
+    def wait_for_save_qecode_tips_load(self, timeout=8, auto_accept_alerts=True):
+        """等待 已保存 提示加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_toast_exist("已保存", timeout)
+            )
+        except:
+            message = "页面在{}s内，没有“已保存”提示加载".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
