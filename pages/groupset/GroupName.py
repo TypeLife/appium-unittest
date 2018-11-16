@@ -4,7 +4,7 @@ from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
 
-class GroupChatSetPage(BasePage):
+class GroupNamePage(BasePage):
     """群聊名称修改页面"""
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.GroupNameActivity'
 
