@@ -1,24 +1,29 @@
 __all__ = [
-    "GuidePage",
-    "PermissionListPage",
-    "OneKeyLoginPage",
-    "MessagePage",
-    "SmsLoginPage",
     "MePage",
-    "SettingPage",
-    "AgreementDetailPage",
-    "AgreementPage",
     "MeSetMultiLanguagePage",
     "SearchPage",
+    "SettingPage",
+    "ContactDetailsPage",
+    "NewContactPage",
+    "GuidePage",
+    "PermissionListPage",
+    "AgreementDetailPage",
+    "AgreementPage",
+    "OneKeyLoginPage",
+    'SmsLoginPage',
+    'MessagePage',
 ]
-from pages.guide.Guide import GuidePage
-from pages.guide.PermissionList import PermissionListPage
-from pages.login.Agreement import AgreementPage
-from pages.login.AgreementDetail import AgreementDetailPage
-from pages.login.OneKeyLogin import OneKeyLoginPage
-from pages.login.SmsLogin import SmsLoginPage
-from pages.message.Message import MessagePage
+
 from .Me import MePage
 from .MeSetMultiLanguage import MeSetMultiLanguagePage
 from .Search import SearchPage
 from .Setting import SettingPage
+from .contacts import ContactDetailsPage
+from .contacts import NewContactPage
+from .guide import GuidePage
+from .guide import PermissionListPage
+from .login import AgreementDetailPage
+from .login import AgreementPage
+from .login import OneKeyLoginPage
+from .login import SmsLoginPage
+from .message import MessagePage
