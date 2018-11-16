@@ -5,7 +5,8 @@ import time
 from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE, current_mobile
-
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class BasePage(object):
     """PageObject 应该从该基类继承"""
@@ -415,6 +416,22 @@ class BasePage(object):
 
         """
         self.driver.set_network_connection(status)
+
+    def is_toast_exist(self, text, timeout=30, poll_frequency=0.5):
+        """is toast exist, return True or False
+        :Args:
+         - text   - toast文本内容
+         - timeout - 最大超时时间，默认30s
+         - poll_frequency  - 间隔查询时间，默认0.5s查询一次
+        :Usage:
+         is_toast_exist("toast的内容")
+        """
+        try:
+            toast_loc = ("xpath", ".//*[contains(@text,'%s')]" % text)
+            WebDriverWait(self.driver, timeout, poll_frequency).until(EC.presence_of_element_located(toast_loc))
+            return True
+        except:
+            return False
 
     def hide_keyboard(self, key_name=None, key=None, strategy=None):
         """隐藏键盘"""

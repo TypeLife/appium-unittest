@@ -17,5 +17,27 @@ class GroupChatSetManagerPage(BasePage):
                   'com.chinasofti.rcs:id/group_transfer': (MobileBy.ID, 'com.chinasofti.rcs:id/group_transfer'),
                   '群主管理权转让': (MobileBy.ID, 'com.chinasofti.rcs:id/group_transfer_tv'),
                   'com.chinasofti.rcs:id/group_disband': (MobileBy.ID, 'com.chinasofti.rcs:id/group_disband'),
-                  '解散群': (MobileBy.ID, 'com.chinasofti.rcs:id/group_disband_tv')
+                  '解散群': (MobileBy.ID, 'com.chinasofti.rcs:id/group_disband_tv'),
+                  "确认": (MobileBy.XPATH, '//*[@text ="确认"]'),
+                  "取消": (MobileBy.XPATH, '//*[@text ="取消"]')
                   }
+
+    @TestLogger.log()
+    def click_confirm(self):
+        """点击确认"""
+        self.click_element(self.__locators['确认'])
+
+    @TestLogger.log()
+    def click_cancel(self):
+        """点击取消"""
+        self.click_element(self.__locators['取消'])
+
+    @TestLogger.log()
+    def click_group_disband(self):
+        """点击解散群"""
+        self.click_element(self.__locators['解散群'])
+
+    @TestLogger.log()
+    def click_group_transfer(self):
+        """点击群主管理权转让"""
+        self.click_element(self.__locators['群主管理权转让'])

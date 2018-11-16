@@ -22,6 +22,12 @@ __all__ = [
     'MeSetUpPage',
     'MeSmsSetPage',
     'MessagePage',
+    'GroupChatSetPage',
+    'GroupChatSetManagerPage',
+    'GroupChatSetModifyMyCardPage',
+    'GroupChatSetSeeMembersPage',
+    'GroupChatSetSeeQRCodePage',
+    'GroupNamePage',
 ]
 
 from pages.me.Setting import SettingPage
@@ -47,3 +53,9 @@ from .me import MeSetUpPage
 from .me import MeSmsSetPage
 from .me import SetMessageNoticePage
 from .message import MessagePage
+from .groupset import GroupChatSetPage
+from .groupset import GroupChatSetManagerPage
+from .groupset import GroupChatSetModifyMyCardPage
+from .groupset import GroupChatSetSeeMembersPage
+from .groupset import GroupChatSetSeeQRCodePage
+from .groupset import GroupNamePage
