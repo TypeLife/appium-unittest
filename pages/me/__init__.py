@@ -11,6 +11,7 @@ __all__ = [
     'SetMessageNoticePage',
     'MeSetUpPage',
     'MeSmsSetPage',
+    'SettingPage',
 ]
 from .Me import MePage
 from .MeSetCall import MeSetCallPage
@@ -24,3 +25,4 @@ from .MeSetMultiLanguage import MeSetMultiLanguagePage
 from .MeSetUp import MeSetUpPage
 from .MeSmsSet import MeSmsSetPage
 from .SetMessageNotice import SetMessageNoticePage
+from .Setting import SettingPage
