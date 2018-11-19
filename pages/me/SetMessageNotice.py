@@ -157,6 +157,8 @@ class SetMessageNoticePage(BasePage):
         if not self._is_element_present(locator):
             # 找不到就翻页找到菜单再点击，
             self.scroll_to_top()
+            if self._is_element_present(locator):
+                return
             max_try = 5
             current = 0
             while current < max_try:
@@ -164,7 +166,8 @@ class SetMessageNoticePage(BasePage):
                 self.page_down()
                 if self._is_element_present(locator):
                     return
-            raise NoSuchElementException('页面找不到元素：{}'.format(locator))
+                if self._is_on_the_end_of_menu_view():
+                    raise NoSuchElementException('页面找不到元素：{}'.format(locator))
 
     def _is_on_the_start_of_menu_view(self):
         """判断是否在菜单开头"""

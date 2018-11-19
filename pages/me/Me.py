@@ -1,4 +1,5 @@
 from appium.webdriver.common.mobileby import MobileBy
+from selenium.common.exceptions import NoSuchElementException
 
 from library.core.TestLogger import TestLogger
 from pages.components.Footer import FooterPage
@@ -24,7 +25,7 @@ class MePage(FooterPage):
         'com.chinasofti.rcs:id/rl_person': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_person'),
         'com.chinasofti.rcs:id/fl_name': (MobileBy.ID, 'com.chinasofti.rcs:id/fl_name'),
         '请完善名片': (MobileBy.ID, 'com.chinasofti.rcs:id/card_name_hint'),
-        '14775970982': (MobileBy.ID, 'com.chinasofti.rcs:id/card_photo_num'),
+        '电话号码': (MobileBy.ID, 'com.chinasofti.rcs:id/card_photo_num'),
         '查看并编辑个人资料': (MobileBy.ID, 'com.chinasofti.rcs:id/check_user_profile'),
         'com.chinasofti.rcs:id/profile_photo_out': (MobileBy.ID, 'com.chinasofti.rcs:id/profile_photo_out'),
         'com.chinasofti.rcs:id/avatar_bg_id': (MobileBy.ID, 'com.chinasofti.rcs:id/avatar_bg_id'),
@@ -74,6 +75,29 @@ class MePage(FooterPage):
 
     }
 
+    @TestLogger.log("点击菜单项")
+    def click_menu(self, menu):
+        locator = [MobileBy.XPATH, '//*[@text="{}"]'.format(menu)]
+        self._find_menu(locator)
+        self.click_element(locator)
+
+    @TestLogger.log()
+    def scroll_to_top(self):
+        self.wait_until(
+            condition=lambda d: self.get_element(self.__locators['菜单区域'])
+        )
+        # 如果找到“短信设置”菜单，则当作已经滑到底部
+        if self._is_on_the_start_of_menu_view():
+            return True
+        max_try = 5
+        current = 0
+        while current < max_try:
+            current += 1
+            self.page_up()
+            if self._is_on_the_start_of_menu_view():
+                break
+        return True
+
     @TestLogger.log("滑到菜单底部")
     def scroll_to_bottom(self):
         """滑到菜单底部"""
@@ -82,14 +106,14 @@ class MePage(FooterPage):
         )
 
         # 如果找到“设置”菜单，则当作已经滑到底部
-        if self._is_element_present(self.__locators['设置']):
+        if self._is_on_the_end_of_menu_view():
             return True
         max_try = 5
         current = 0
         while current < max_try:
             current += 1
-            self.swipe_by_direction(self.__locators['菜单区域'], 'up')
-            if self._is_element_present(self.__locators['设置']):
+            self.page_down()
+            if self._is_on_the_end_of_menu_view():
                 break
         return True
 
@@ -116,3 +140,42 @@ class MePage(FooterPage):
                 message
             )
         return self
+
+    @TestLogger.log("下一页")
+    def page_down(self):
+        self.wait_until(
+            condition=lambda d: self.get_element(self.__locators['菜单区域'])
+        )
+        self.swipe_by_direction(self.__locators['菜单区域'], 'up')
+
+    @TestLogger.log("下一页")
+    def page_up(self):
+        self.wait_until(
+            condition=lambda d: self.get_element(self.__locators['菜单区域'])
+        )
+        self.swipe_by_direction(self.__locators['菜单区域'], 'down')
+
+    @TestLogger.log()
+    def _find_menu(self, locator):
+        if not self._is_element_present(locator):
+            # 找不到就翻页找到菜单再点击，
+            self.scroll_to_top()
+            if self._is_element_present(locator):
+                return
+            max_try = 5
+            current = 0
+            while current < max_try:
+                current += 1
+                self.page_down()
+                if self._is_element_present(locator):
+                    return
+                if self._is_on_the_end_of_menu_view():
+                    raise NoSuchElementException('页面找不到元素：{}'.format(locator))
+
+    def _is_on_the_start_of_menu_view(self):
+        """判断是否在菜单开头"""
+        return self._is_element_present(self.__locators['电话号码'])
+
+    def _is_on_the_end_of_menu_view(self):
+        """判断是否在菜单开头"""
+        return self._is_element_present(self.__locators['设置'])
