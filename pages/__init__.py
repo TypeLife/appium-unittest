@@ -1,6 +1,6 @@
 __all__ = [
     'SearchPage',
-    'SettingPage',
+
     'ContactDetailsPage',
     'NewContactPage',
     'GuidePage',
@@ -18,7 +18,8 @@ __all__ = [
     'MeSetFuHaoPage',
     'MeSetImprovePlanPage',
     'MeSetMultiLanguagePage',
-    'MeSetNewsNoticePage',
+    'SetMessageNoticePage',
+    'SettingPage',
     'MeSetUpPage',
     'MeSmsSetPage',
     'MessagePage',
@@ -31,9 +32,14 @@ __all__ = [
 ]
 
 from .Search import SearchPage
-from .Setting import SettingPage
 from .contacts import ContactDetailsPage
 from .contacts import NewContactPage
+from .groupset import GroupChatSetManagerPage
+from .groupset import GroupChatSetModifyMyCardPage
+from .groupset import GroupChatSetPage
+from .groupset import GroupChatSetSeeMembersPage
+from .groupset import GroupChatSetSeeQRCodePage
+from .groupset import GroupNamePage
 from .guide import GuidePage
 from .guide import PermissionListPage
 from .login import AgreementDetailPage
@@ -49,13 +55,8 @@ from .me import MeSetFontSizePage
 from .me import MeSetFuHaoPage
 from .me import MeSetImprovePlanPage
 from .me import MeSetMultiLanguagePage
-from .me import MeSetNewsNoticePage
 from .me import MeSetUpPage
 from .me import MeSmsSetPage
+from .me import SetMessageNoticePage
+from .me import SettingPage
 from .message import MessagePage
-from .groupset import GroupChatSetPage
-from .groupset import GroupChatSetManagerPage
-from .groupset import GroupChatSetModifyMyCardPage
-from .groupset import GroupChatSetSeeMembersPage
-from .groupset import GroupChatSetSeeQRCodePage
-from .groupset import GroupNamePage

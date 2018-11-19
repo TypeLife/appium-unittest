@@ -8,9 +8,10 @@ __all__ = [
     'MeSetFuHaoPage',
     'MeSetImprovePlanPage',
     'MeSetMultiLanguagePage',
-    'MeSetNewsNoticePage',
+    'SetMessageNoticePage',
     'MeSetUpPage',
     'MeSmsSetPage',
+    'SettingPage',
 ]
 from .Me import MePage
 from .MeSetCall import MeSetCallPage
@@ -21,6 +22,7 @@ from .MeSetFontSize import MeSetFontSizePage
 from .MeSetFuHao import MeSetFuHaoPage
 from .MeSetImprovePlan import MeSetImprovePlanPage
 from .MeSetMultiLanguage import MeSetMultiLanguagePage
-from .MeSetNewsNotice import MeSetNewsNoticePage
 from .MeSetUp import MeSetUpPage
 from .MeSmsSet import MeSmsSetPage
+from .SetMessageNotice import SetMessageNoticePage
+from .Setting import SettingPage

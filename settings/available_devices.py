@@ -5,7 +5,7 @@ from library.core.common.supportedmodel import SupportedModel
 AVAILABLE_DEVICES = {
     'MI6': {
         "MODEL": SupportedModel.MI6,
-        "SERVER_URL": 'http://192.168.200.196:4723/wd/hub',
+        "SERVER_URL": 'http://192.168.200.139:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "8.0",
@@ -28,7 +28,7 @@ AVAILABLE_DEVICES = {
     },
     'M960BDQN229CH': {
         "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
-        "SERVER_URL": 'http://192.168.200.196:4724/wd/hub',
+        "SERVER_URL": 'http://192.168.200.139:4724/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",
