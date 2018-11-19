@@ -48,7 +48,7 @@ AVAILABLE_DEVICES = {
     },
     'single_mobile': {
         "MODEL": SupportedModel.RED_MI_NOTE_4X,
-        "SERVER_URL": 'http://192.168.200.103:4723/wd/hub',
+        "SERVER_URL": 'http://192.168.200.138:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",

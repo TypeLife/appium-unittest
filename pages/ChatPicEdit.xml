@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hierarchy rotation="0">
+    <android.widget.FrameLayout index="0" text="" class="android.widget.FrameLayout" package="com.chinasofti.rcs"
+                                content-desc="" checkable="false" checked="false" clickable="false" enabled="true"
+                                focusable="false" focused="false" scrollable="false" long-clickable="false"
+                                password="false" selected="false" bounds="[0,0][1080,1920]" resource-id="" instance="0">
+        <android.widget.LinearLayout index="0" text="" class="android.widget.LinearLayout" package="com.chinasofti.rcs"
+                                     content-desc="" checkable="false" checked="false" clickable="false" enabled="true"
+                                     focusable="false" focused="false" scrollable="false" long-clickable="false"
+                                     password="false" selected="false" bounds="[0,0][1080,1920]" resource-id=""
+                                     instance="0">
+            <android.widget.FrameLayout index="0" text="" class="android.widget.FrameLayout"
+                                        package="com.chinasofti.rcs" content-desc="" checkable="false" checked="false"
+                                        clickable="false" enabled="true" focusable="false" focused="false"
+                                        scrollable="false" long-clickable="false" password="false" selected="false"
+                                        bounds="[0,0][1080,1920]" resource-id="android:id/content" instance="1">
+                <android.widget.FrameLayout index="0" text="" class="android.widget.FrameLayout"
+                                            package="com.chinasofti.rcs" content-desc="" checkable="false"
+                                            checked="false" clickable="false" enabled="true" focusable="false"
+                                            focused="false" scrollable="false" long-clickable="false" password="false"
+                                            selected="false" bounds="[0,0][1080,1920]" resource-id="" instance="2">
+                    <android.widget.ViewSwitcher index="0" text="" class="android.widget.ViewSwitcher"
+                                                 package="com.chinasofti.rcs" content-desc="" checkable="false"
+                                                 checked="false" clickable="false" enabled="true" focusable="false"
+                                                 focused="false" scrollable="false" long-clickable="false"
+                                                 password="false" selected="false" bounds="[0,0][1080,1920]"
+                                                 resource-id="com.chinasofti.rcs:id/vs_op" instance="0">
+                        <android.widget.LinearLayout index="0" text="" class="android.widget.LinearLayout"
+                                                     package="com.chinasofti.rcs" content-desc="" checkable="false"
+                                                     checked="false" clickable="false" enabled="true" focusable="false"
+                                                     focused="false" scrollable="false" long-clickable="false"
+                                                     password="false" selected="false" bounds="[0,0][1080,1920]"
+                                                     resource-id="" instance="1">
+                            <android.widget.FrameLayout index="0" text="" class="android.widget.FrameLayout"
+                                                        package="com.chinasofti.rcs" content-desc="" checkable="false"
+                                                        checked="false" clickable="false" enabled="true"
+                                                        focusable="false" focused="false" scrollable="false"
+                                                        long-clickable="false" password="false" selected="false"
+                                                        bounds="[0,0][1080,161]" resource-id="" instance="3">
+                                <android.widget.TextView index="0" text="取消" class="android.widget.TextView"
+                                                         package="com.chinasofti.rcs" content-desc="" checkable="false"
+                                                         checked="false" clickable="true" enabled="true"
+                                                         focusable="true" focused="false" scrollable="false"
+                                                         long-clickable="false" password="false" selected="false"
+                                                         bounds="[36,60][132,125]"
+                                                         resource-id="com.chinasofti.rcs:id/tv_cancel" instance="0"/>
+                                <android.widget.TextView index="1" text="保存" class="android.widget.TextView"
+                                                         package="com.chinasofti.rcs" content-desc="" checkable="false"
+                                                         checked="false" clickable="true" enabled="true"
+                                                         focusable="true" focused="false" scrollable="false"
+                                                         long-clickable="false" password="false" selected="false"
+                                                         bounds="[948,60][1044,125]"
+                                                         resource-id="com.chinasofti.rcs:id/tv_done" instance="1"/>
+                            </android.widget.FrameLayout>
+                            <android.view.View index="1" text="" class="android.view.View" package="com.chinasofti.rcs"
+                                               content-desc="" checkable="false" checked="false" clickable="false"
+                                               enabled="true" focusable="false" focused="false" scrollable="false"
+                                               long-clickable="false" password="false" selected="false"
+                                               bounds="[0,1782][1080,1785]" resource-id="" instance="0"/>
+                            <android.widget.RadioGroup index="2" text="" class="android.widget.RadioGroup"
+                                                       package="com.chinasofti.rcs" content-desc="" checkable="false"
+                                                       checked="false" clickable="false" enabled="true"
+                                                       focusable="false" focused="false" scrollable="false"
+                                                       long-clickable="false" password="false" selected="false"
+                                                       bounds="[0,1785][1080,1920]"
+                                                       resource-id="com.chinasofti.rcs:id/rg_modes" instance="0">
+                                <android.widget.RadioButton NAF="true" index="0" text=""
+                                                            class="android.widget.RadioButton"
+                                                            package="com.chinasofti.rcs" content-desc=""
+                                                            checkable="true" checked="false" clickable="true"
+                                                            enabled="true" focusable="true" focused="false"
+                                                            scrollable="false" long-clickable="false" password="false"
+                                                            selected="false" bounds="[52,1816][124,1888]"
+                                                            resource-id="com.chinasofti.rcs:id/rb_doodle" instance="0"/>
+                                <android.widget.RadioButton NAF="true" index="1" text=""
+                                                            class="android.widget.RadioButton"
+                                                            package="com.chinasofti.rcs" content-desc=""
+                                                            checkable="true" checked="false" clickable="true"
+                                                            enabled="true" focusable="true" focused="false"
+                                                            scrollable="false" long-clickable="false" password="false"
+                                                            selected="false" bounds="[229,1816][301,1888]"
+                                                            resource-id="com.chinasofti.rcs:id/rb_mosaic" instance="1"/>
+                                <android.widget.ImageButton index="2" text="" class="android.widget.ImageButton"
+                                                            package="com.chinasofti.rcs" content-desc="文字"
+                                                            checkable="false" checked="false" clickable="true"
+                                                            enabled="true" focusable="true" focused="false"
+                                                            scrollable="false" long-clickable="false" password="false"
+                                                            selected="false" bounds="[406,1816][478,1888]"
+                                                            resource-id="com.chinasofti.rcs:id/btn_text" instance="0"/>
+                                <android.widget.ImageButton index="3" text="" class="android.widget.ImageButton"
+                                                            package="com.chinasofti.rcs" content-desc="裁剪"
+                                                            checkable="false" checked="false" clickable="true"
+                                                            enabled="true" focusable="true" focused="false"
+                                                            scrollable="false" long-clickable="false" password="false"
+                                                            selected="false" bounds="[584,1816][656,1888]"
+                                                            resource-id="com.chinasofti.rcs:id/btn_clip" instance="1"/>
+                                <android.widget.ImageButton index="4" text="" class="android.widget.ImageButton"
+                                                            package="com.chinasofti.rcs" content-desc="发送"
+                                                            checkable="false" checked="false" clickable="true"
+                                                            enabled="true" focusable="true" focused="false"
+                                                            scrollable="false" long-clickable="false" password="false"
+                                                            selected="false" bounds="[868,1815][1027,1890]"
+                                                            resource-id="com.chinasofti.rcs:id/btn_send" instance="2"/>
+                            </android.widget.RadioGroup>
+                        </android.widget.LinearLayout>
+                    </android.widget.ViewSwitcher>
+                    <android.widget.FrameLayout index="1" text="" class="android.widget.FrameLayout"
+                                                package="com.chinasofti.rcs" content-desc="" checkable="false"
+                                                checked="false" clickable="false" enabled="true" focusable="false"
+                                                focused="false" scrollable="false" long-clickable="false"
+                                                password="false" selected="false" bounds="[0,0][1080,1920]"
+                                                resource-id="com.chinasofti.rcs:id/image_canvas" instance="4"/>
+                </android.widget.FrameLayout>
+            </android.widget.FrameLayout>
+        </android.widget.LinearLayout>
+    </android.widget.FrameLayout>
+</hierarchy>

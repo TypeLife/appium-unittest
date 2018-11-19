@@ -36,11 +36,11 @@ class GroupChatPage(BasePage):
                   'com.chinasofti.rcs:id/ll_text_input': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_text_input'),
                   'com.chinasofti.rcs:id/layout_for_message': (MobileBy.ID, 'com.chinasofti.rcs:id/layout_for_message'),
                   'com.chinasofti.rcs:id/ll_rich_panel': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_rich_panel'),
-                  'com.chinasofti.rcs:id/ib_pic': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic'),
-                  'com.chinasofti.rcs:id/ib_take_photo': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_take_photo'),
-                  'com.chinasofti.rcs:id/ib_profile': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
-                  'com.chinasofti.rcs:id/ib_gif': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_gif'),
-                  'com.chinasofti.rcs:id/ib_more': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
+                  '选择图片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic'),
+                  '选择相机': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_take_photo'),
+                  '选择联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
+                  '选择gif': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_gif'),
+                  '选择更多': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
                   'com.chinasofti.rcs:id/input_divider_inside': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/input_divider_inside'),
                   'com.chinasofti.rcs:id/input_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/input_layout'),
@@ -50,3 +50,29 @@ class GroupChatPage(BasePage):
                   'com.chinasofti.rcs:id/ib_audio': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_audio'),
                   'com.chinasofti.rcs:id/ib_record_red_dot': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_record_red_dot')
                   }
+
+    @TestLogger.log()
+    def click_pic(self):
+        """点击选择图片"""
+        self.click_element(self.__class__.__locators["选择图片"])
+
+    @TestLogger.log()
+    def click_take_photo(self):
+        """点击选择相机"""
+        self.click_element(self.__class__.__locators["选择相机"])
+
+    @TestLogger.log()
+    def click_profile(self):
+        """点击选择联系人"""
+        self.click_element(self.__class__.__locators["选择联系人"])
+
+    @TestLogger.log()
+    def click_gif(self):
+        """点击选择gif"""
+        self.click_element(self.__class__.__locators["选择gif"])
+
+    @TestLogger.log()
+    def click_more(self):
+        """点击选择更多"""
+        self.click_element(self.__class__.__locators["选择更多"])
+
