@@ -27,6 +27,7 @@ class SelectOneGroupPage(BasePage):
                   'com.chinasofti.rcs:id/contact_image': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_image'),
                   '群聊002': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
                   '群聊001': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
+                  '群聊名': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
                   'com.chinasofti.rcs:id/contact_index_bar_view': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_view'),
                   'com.chinasofti.rcs:id/contact_index_bar_container': (
@@ -58,3 +59,18 @@ class SelectOneGroupPage(BasePage):
                   'Z': (MobileBy.ID, ''),
                   '#': (MobileBy.ID, '')
                   }
+
+    @TestLogger.log()
+    def get_group_name(self):
+        """获取群名"""
+        els = self.get_elements(self.__class__.__locators["群聊名"])
+        group_names = []
+        if els:
+            for el in els:
+                group_names.append(el.text)
+        return group_names
+
+    @TestLogger.log()
+    def select_one_group_by_name(self, name):
+        """通过群名选择一个群"""
+        self.click_element((MobileBy.XPATH, '//*[@text ="%s"]' % name))

@@ -25,9 +25,24 @@ class SelectGroupChatPage(BasePage):
                   'com.chinasofti.rcs:id/recyclerView_recently_person': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView_recently_person'),
                   'com.chinasofti.rcs:id/local_contacts': (MobileBy.ID, 'com.chinasofti.rcs:id/local_contacts'),
-                  '选择一个群': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint'),
+                  '选择一个群': (MobileBy.XPATH, '//*[@text ="选择一个群"]'),
                   'com.chinasofti.rcs:id/arrow_right': (MobileBy.ID, 'com.chinasofti.rcs:id/arrow_right'),
-                  '选择和通讯录联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint'),
-                  '本地联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint'),
+                  '选择和通讯录联系人': (MobileBy.XPATH, '//*[@text ="选择和通讯录联系人"]'),
+                  '本地联系人': (MobileBy.XPATH, '//*[@text ="本地联系人"]'),
                   '最近聊天': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint')
                   }
+
+    @TestLogger.log()
+    def click_select_one_group(self):
+        """点击 选择一个群"""
+        self.click_element(self.__class__.__locators["选择一个群"])
+
+    @TestLogger.log()
+    def click_he_contacts(self):
+        """点击 选择和通讯录联系人"""
+        self.click_element(self.__class__.__locators["选择和通讯录联系人"])
+
+    @TestLogger.log()
+    def click_local_contacts(self):
+        """点击 本地联系人"""
+        self.click_element(self.__class__.__locators["本地联系人"])
