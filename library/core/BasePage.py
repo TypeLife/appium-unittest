@@ -3,10 +3,11 @@ import re
 import time
 
 from appium.webdriver.common.mobileby import MobileBy
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE, current_mobile
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+
 
 class BasePage(object):
     """PageObject 应该从该基类继承"""
@@ -338,6 +339,20 @@ class BasePage(object):
     def wait_until(self, condition, timeout=8, auto_accept_permission_alert=True):
         return self.mobile.wait_until(condition, timeout=timeout,
                                       auto_accept_permission_alert=auto_accept_permission_alert)
+
+    def wait_condition_and_listen_unexpected(
+            self,
+            condition,
+            timeout=8,
+            auto_accept_permission_alert=True,
+            unexpected=None
+    ):
+        return self.mobile.wait_condition_and_listen_unexpected(
+            condition,
+            timeout=timeout,
+            auto_accept_permission_alert=auto_accept_permission_alert,
+            unexpected=unexpected
+        )
 
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
         """默认使用activity作为判断页面是否加载的条件，继承类应该重写该方法"""

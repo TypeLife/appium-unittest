@@ -1,4 +1,5 @@
 from appium.webdriver.common.mobileby import MobileBy
+from selenium.common.exceptions import TimeoutException
 
 from library.core.TestLogger import TestLogger
 from pages.components.Footer import FooterPage
@@ -136,6 +137,29 @@ class MessagePage(FooterPage):
                 condition=lambda d: self._is_element_present(self.__class__.__locators["+号"])
             )
         except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def wait_login_success(self, timeout=8, auto_accept_alerts=True):
+        """等待消息页面加载（自动允许权限）"""
+
+        def unexpect():
+            result = self._is_element_present(
+                [MobileBy.XPATH, '//*[@text="当前网络不可用(102101)，请检查网络设置"]'])
+            return result
+
+        try:
+            self.wait_condition_and_listen_unexpected(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["+号"]),
+                unexpected=unexpect
+            )
+        except TimeoutException:
             message = "页面在{}s内，没有加载成功".format(str(timeout))
             raise AssertionError(
                 message
