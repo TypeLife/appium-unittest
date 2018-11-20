@@ -4,8 +4,8 @@ from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
 
-class GroupChatPage(BasePage):
-    """群聊天页面"""
+class ChatMorePage(BasePage):
+    """聊天 更多 页面"""
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.MessageDetailActivity'
 
     __locators = {'': (MobileBy.ID, ''),
@@ -16,7 +16,8 @@ class GroupChatPage(BasePage):
                   'com.chinasofti.rcs:id/id_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/id_toolbar'),
                   'com.chinasofti.rcs:id/back': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
                   'com.chinasofti.rcs:id/back_arrow': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
-                  '群聊001(2)': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
+                  '群聊0012(3)': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
+                  'com.chinasofti.rcs:id/iv_slient': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_slient'),
                   'com.chinasofti.rcs:id/action_multicall': (MobileBy.ID, 'com.chinasofti.rcs:id/action_multicall'),
                   'com.chinasofti.rcs:id/action_setting': (MobileBy.ID, 'com.chinasofti.rcs:id/action_setting'),
                   'com.chinasofti.rcs:id/view_line': (MobileBy.ID, 'com.chinasofti.rcs:id/view_line'),
@@ -24,80 +25,53 @@ class GroupChatPage(BasePage):
                   'com.chinasofti.rcs:id/message_editor_layout': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/message_editor_layout'),
                   'com.chinasofti.rcs:id/rv_message_chat': (MobileBy.ID, 'com.chinasofti.rcs:id/rv_message_chat'),
-                  '14:58': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_time'),
-                  'frank': (MobileBy.ID, 'com.chinasofti.rcs:id/text_name'),
-                  '[呲牙1]': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'),
+                  'com.chinasofti.rcs:id/imgae_fl': (MobileBy.ID, 'com.chinasofti.rcs:id/imgae_fl'),
+                  'com.chinasofti.rcs:id/layout_loading': (MobileBy.ID, 'com.chinasofti.rcs:id/layout_loading'),
+                  'com.chinasofti.rcs:id/imageview_msg_image': (
+                  MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_image'),
                   'com.chinasofti.rcs:id/svd_head': (MobileBy.ID, 'com.chinasofti.rcs:id/svd_head'),
-                  '呵呵': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'),
-                  'mobile0489': (MobileBy.ID, 'com.chinasofti.rcs:id/text_name'),
-                  'APP test': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'),
                   'com.chinasofti.rcs:id/iv_bkg': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_bkg'),
                   'com.chinasofti.rcs:id/input_and_menu': (MobileBy.ID, 'com.chinasofti.rcs:id/input_and_menu'),
                   'com.chinasofti.rcs:id/ll_text_input': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_text_input'),
                   'com.chinasofti.rcs:id/layout_for_message': (MobileBy.ID, 'com.chinasofti.rcs:id/layout_for_message'),
+                  'com.chinasofti.rcs:id/chat_rich_media_vp': (MobileBy.ID, 'com.chinasofti.rcs:id/chat_rich_media_vp'),
+                  'com.chinasofti.rcs:id/iocn_img': (MobileBy.ID, 'com.chinasofti.rcs:id/iocn_img'),
+                  '文件': (MobileBy.XPATH, '//*[@text="文件"]'),
+                  '群短信': (MobileBy.XPATH, '//*[@text="群短信"]'),
+                  '位置': (MobileBy.XPATH, '//*[@text="位置"]'),
+                  '红包': (MobileBy.XPATH, '//*[@text="红包"]'),
                   'com.chinasofti.rcs:id/ll_rich_panel': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_rich_panel'),
-                  '选择图片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic'),
-                  '选择相机': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_take_photo'),
-                  '选择联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
-                  '选择gif': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_gif'),
-                  '选择更多': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
+                  'com.chinasofti.rcs:id/ib_pic': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic'),
+                  'com.chinasofti.rcs:id/ib_take_photo': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_take_photo'),
+                  'com.chinasofti.rcs:id/ib_profile': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
+                  'com.chinasofti.rcs:id/ib_gif': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_gif'),
+                  'com.chinasofti.rcs:id/ib_more': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
                   'com.chinasofti.rcs:id/input_divider_inside': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/input_divider_inside'),
                   'com.chinasofti.rcs:id/input_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/input_layout'),
                   'com.chinasofti.rcs:id/fl_edit_panel': (MobileBy.ID, 'com.chinasofti.rcs:id/fl_edit_panel'),
                   '说点什么...': (MobileBy.ID, 'com.chinasofti.rcs:id/et_message'),
                   'com.chinasofti.rcs:id/ib_expression': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression'),
-                  '语音按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_audio'),
-                  '发送按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_send'),
-                  'com.chinasofti.rcs:id/ib_record_red_dot': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_record_red_dot')
+                  'com.chinasofti.rcs:id/ib_audio': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_audio')
                   }
 
     @TestLogger.log()
-    def click_pic(self):
-        """点击选择图片"""
-        self.click_element(self.__class__.__locators["选择图片"])
+    def click_file(self):
+        """点击文件"""
+        self.click_element(self.__class__.__locators["文件"])
 
     @TestLogger.log()
-    def click_take_photo(self):
-        """点击选择相机"""
-        self.click_element(self.__class__.__locators["选择相机"])
+    def click_group_smss(self):
+        """点击群短信"""
+        self.click_element(self.__class__.__locators["群短信"])
 
     @TestLogger.log()
-    def click_profile(self):
-        """点击选择联系人"""
-        self.click_element(self.__class__.__locators["选择联系人"])
+    def click_location(self):
+        """点击位置"""
+        self.click_element(self.__class__.__locators["位置"])
 
     @TestLogger.log()
-    def click_gif(self):
-        """点击选择gif"""
-        self.click_element(self.__class__.__locators["选择gif"])
+    def click_red_packet(self):
+        """点击红包"""
+        self.click_element(self.__class__.__locators["红包"])
 
-    @TestLogger.log()
-    def click_more(self):
-        """点击选择更多"""
-        self.click_element(self.__class__.__locators["选择更多"])
-
-    @TestLogger.log()
-    def input_message(self, message):
-        """输入聊天信息"""
-        self.input_text(self.__class__.__locators["说点什么..."], message)
-        try:
-            self.driver.hide_keyboard()
-        except:
-            pass
-        return self
-
-    @TestLogger.log()
-    def send_message(self):
-        """发送聊天信息"""
-        self.click_element(self.__class__.__locators["发送按钮"])
-
-    @TestLogger.log()
-    def page_should_contain_audio_btn(self):
-        """语音按钮检查"""
-        self.page_should_contain_element(self.__locators["语音按钮"])
-
-    @TestLogger.log()
-    def page_should_contain_send_btn(self):
-        """发送按钮检查"""
-        self.page_should_contain_element(self.__locators["发送按钮"])

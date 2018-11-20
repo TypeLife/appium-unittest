@@ -104,6 +104,6 @@ if __name__ == '__main__':
     time.sleep(.5)
     sys.stdout.write('开始连接手机并启动应用....\n')
     MOBILE_DRIVER_CACHE.current._desired_caps['newCommandTimeout'] = 1200
-    MOBILE_DRIVER_CACHE.current.turn_on_reset()
+    # MOBILE_DRIVER_CACHE.current.turn_on_reset()
     MOBILE_DRIVER_CACHE.current.connect_mobile()
     generate_page_object()
