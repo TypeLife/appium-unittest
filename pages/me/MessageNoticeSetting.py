@@ -5,7 +5,7 @@ from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
 
-class SetMessageNoticePage(BasePage):
+class MessageNoticeSettingPage(BasePage):
     """我-》设置-》消息通知"""
     ACTIVITY = 'com.cmicc.module_aboutme.ui.activity.SettingActivity'
 
@@ -44,7 +44,6 @@ class SetMessageNoticePage(BasePage):
             return
         elif current_status in close_states:
             self.click_element(switch_locator)
-            assert self.get_text(switch_locator) in open_states
         else:
             raise Exception("{} not in {} and {}".format(current_status, open_states, close_states))
 
@@ -67,7 +66,6 @@ class SetMessageNoticePage(BasePage):
         current_status = self.get_text(switch_locator)
         if current_status in open_states:
             self.click_element(switch_locator)
-            assert self.get_text(switch_locator) in close_states
         elif current_status in close_states:
             return
         else:

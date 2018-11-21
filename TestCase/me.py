@@ -92,8 +92,7 @@ class Preconditions(object):
     def reset_and_relaunch_app():
         """首次启动APP（使用重置APP代替）"""
         app_package = 'com.chinasofti.rcs'
-        if current_driver().current_package == app_package:
-            current_driver().activate_app(app_package)
+        current_driver().activate_app(app_package)
         current_mobile().reset_app()
 
     @staticmethod
@@ -135,7 +134,7 @@ class MeMsgSettingTest(TestCase):
     @tags("ALL", "SMOKE")
     def test_me_msg_setting_0001(self):
         """接收139邮箱助手信息默认开启"""
-        msg_setting = SetMessageNoticePage()
+        msg_setting = MessageNoticeSettingPage()
         msg_setting.assert_menu_item_has_been_turn_on('接收139邮箱助手消息')
 
     @staticmethod
@@ -155,7 +154,7 @@ class MeMsgSettingTest(TestCase):
     @tags("ALL", "SMOKE")
     def test_me_msg_setting_0004(self):
         """接收OA消息默认开启"""
-        msg_setting = SetMessageNoticePage()
+        msg_setting = MessageNoticeSettingPage()
         msg_setting.assert_menu_item_has_been_turn_on('接收OA消息')
 
     @staticmethod
@@ -171,6 +170,30 @@ class MeMsgSettingTest(TestCase):
 
         setting_page = SettingPage()
         setting_page.click_menu("消息通知")
+
+
+class MeSmsSettingTest(TestCase):
+    """我-短信设置"""
+
+    @tags("ALL", "SMOKE")
+    def test_me_sms_setting_0001(self):
+        """短信设置默认关闭状态"""
+        sms_setting = SmsSettingPage()
+        sms_setting.assert_menu_item_has_been_turn_off('应用内收发短信')
+
+    @staticmethod
+    def setUp_test_me_sms_setting_0001():
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_one_key_login_page()
+        Preconditions.login_by_one_key_login()
+
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.click_menu('设置')
+
+        setting_page = SettingPage()
+        setting_page.click_menu("短信设置")
 
 
 # from library.core.utils.testcasefilter import set_tags

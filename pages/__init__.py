@@ -1,6 +1,5 @@
 __all__ = [
     'SearchPage',
-
     'ContactDetailsPage',
     'NewContactPage',
     'GuidePage',
@@ -18,10 +17,10 @@ __all__ = [
     'MeSetFuHaoPage',
     'MeSetImprovePlanPage',
     'MeSetMultiLanguagePage',
-    'SetMessageNoticePage',
+    'MessageNoticeSettingPage',
     'SettingPage',
     'MeSetUpPage',
-    'MeSmsSetPage',
+    'SmsSettingPage',
     'MessagePage',
     'GroupChatSetPage',
     'GroupChatSetManagerPage',
@@ -56,7 +55,7 @@ from .me import MeSetFuHaoPage
 from .me import MeSetImprovePlanPage
 from .me import MeSetMultiLanguagePage
 from .me import MeSetUpPage
-from .me import MeSmsSetPage
-from .me import SetMessageNoticePage
+from .me import MessageNoticeSettingPage
 from .me import SettingPage
+from .me import SmsSettingPage
 from .message import MessagePage
