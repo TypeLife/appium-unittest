@@ -68,7 +68,7 @@ class Preconditions(object):
 
         # 等待消息页
         message_page = MessagePage()
-        message_page.wait_for_page_load(60)
+        message_page.wait_login_success(60)
 
     @staticmethod
     def take_logout_operation_if_already_login():

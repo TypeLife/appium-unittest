@@ -20,8 +20,6 @@ REQUIRED_MOBILES = {
     'Android-XX-XX': 'others_double',
 }
 
-from library.core.utils.testcasefilter import set_tags
-set_tags('联通')
 
 class Preconditions(object):
     """
@@ -227,7 +225,8 @@ class Preconditions(object):
 class LoginTest(TestCase):
     """Login 模块"""
 
-    def setUp_test_login_0001(self):
+    @staticmethod
+    def setUp_test_login_0001():
         Preconditions.select_mobile('Android-移动')
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
@@ -251,7 +250,8 @@ class LoginTest(TestCase):
         oklp.click_one_key_login()
         MessagePage().wait_for_page_load(login_time)
 
-    def setUp_test_login_0002(self):
+    @staticmethod
+    def setUp_test_login_0002():
         # 1、已登录
         Preconditions.select_mobile('Android-移动')
         Preconditions.app_start_for_the_first_time()
@@ -283,7 +283,8 @@ class LoginTest(TestCase):
 
         MessagePage().wait_for_page_load(login_time)
 
-    def setUp_test_login_0004(self):
+    @staticmethod
+    def setUp_test_login_0004():
         """选择安卓移动卡手机进入一键登录页面"""
         Preconditions.select_mobile('Android-移动')
         current_mobile().reset_app()
@@ -315,7 +316,8 @@ class LoginTest(TestCase):
         # TODO IOS用例先不做
         pass
 
-    def setUp_test_login_0006(self):
+    @staticmethod
+    def setUp_test_login_0006():
         """选择安卓移动卡手机进入一键登录页面"""
         Preconditions.select_mobile('Android-移动')
         current_mobile().reset_app()
@@ -330,7 +332,8 @@ class LoginTest(TestCase):
         # 检查服务条款内容
         AgreementPage().wait_for_license_agreement_load()
 
-    def setUp_test_login_0007(self):
+    @staticmethod
+    def setUp_test_login_0007():
         """进入一键登录页"""
         Preconditions.select_mobile('Android-移动')
         Preconditions.app_start_for_the_first_time()
@@ -395,7 +398,8 @@ class LoginTest(TestCase):
             timeout=30
         )
 
-    def setUp_test_login_0009(self):
+    @staticmethod
+    def setUp_test_login_0009():
         """进入一键登录页"""
         Preconditions.select_mobile('Android-移动')
         Preconditions.app_start_for_the_first_time()
@@ -410,7 +414,8 @@ class LoginTest(TestCase):
         oklp.page_should_contain_text("服务条款")
         oklp.page_should_contain_client_logo_pic()
 
-    def setUp_test_login_0010(self):
+    @staticmethod
+    def setUp_test_login_0010():
         """进入一键登录页"""
         Preconditions.select_mobile('Android-移动-联通')
         Preconditions.app_start_for_the_first_time()
@@ -429,7 +434,8 @@ class LoginTest(TestCase):
         sms.page_should_contain_text("获取验证码")
         sms.page_should_contain_text("切换另一号码登录")
 
-    def setUp_test_login_0020(self):
+    @staticmethod
+    def setUp_test_login_0020():
         """进入一键登录页"""
         Preconditions.select_mobile('Android-移动-移动')
         Preconditions.make_already_in_one_key_login_page()
@@ -452,7 +458,8 @@ class LoginTest(TestCase):
         # 恢复网络连接
         oklp.set_network_status(network_status)
 
-    def setUp_test_login_0022(self):
+    @staticmethod
+    def setUp_test_login_0022():
         """进入一键登录页"""
         Preconditions.select_mobile('Android-移动-联通')
         Preconditions.app_start_for_the_first_time()
@@ -493,12 +500,14 @@ class LoginTest(TestCase):
         code_info = sms.get_error_code_info_by_adb("com.chinasofti.rcs.*102101", timeout=30)
         self.assertIn("102101", code_info)
 
-    def tearDown_test_login_0022(self):
+    @staticmethod
+    def tearDown_test_login_0022():
         # 恢复网络连接
         oklp = OneKeyLoginPage()
         oklp.set_network_status(6)
 
-    def setUp_test_login_0023(self):
+    @staticmethod
+    def setUp_test_login_0023():
         """进入一键登录页"""
         Preconditions.select_mobile('Android-移动-移动')
         Preconditions.make_already_in_one_key_login_page()
@@ -515,7 +524,8 @@ class LoginTest(TestCase):
         oklp.wait_for_page_load()
         oklp.wait_for_tell_number_load(timeout=60)
 
-    def setUp_test_login_0025(self):
+    @staticmethod
+    def setUp_test_login_0025():
         """异网账号进入登录页面"""
         Preconditions.select_mobile('Android-电信')
         Preconditions.diff_card_make_already_in_sms_login_page()
@@ -529,7 +539,8 @@ class LoginTest(TestCase):
         sl.page_should_contain_text("获取验证码")
         self.assertEqual(sl.login_btn_is_checked(), 'false')
 
-    def setUp_test_login_0026(self):
+    @staticmethod
+    def setUp_test_login_0026():
         Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
@@ -564,12 +575,14 @@ class LoginTest(TestCase):
         code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*102101", timeout=30)
         self.assertIn("102101", code_info)
 
-    def tearDown_test_login_0026(self):
+    @staticmethod
+    def tearDown_test_login_0026():
         # 恢复网络连接
         sl = SmsLoginPage()
         sl.set_network_status(6)
 
-    def setUp_test_login_0027(self):
+    @staticmethod
+    def setUp_test_login_0027():
         """异网账号进入登录页面"""
         Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
@@ -604,7 +617,8 @@ class LoginTest(TestCase):
         code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*103108", timeout=40)
         self.assertIn("103108", code_info)
 
-    def setUp_test_login_0029(self):
+    @staticmethod
+    def setUp_test_login_0029():
         """异网账号进入登录页面"""
         Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
@@ -641,7 +655,8 @@ class LoginTest(TestCase):
         code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*103108", timeout=40)
         self.assertIn("103108", code_info)
 
-    def setUp_test_login_0036(self):
+    @staticmethod
+    def setUp_test_login_0036():
         """异网账号进入登录页面"""
         Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
@@ -678,7 +693,8 @@ class LoginTest(TestCase):
         code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*103108", timeout=40)
         self.assertIn("103108", code_info)
 
-    def setUp_test_login_0047(self):
+    @staticmethod
+    def setUp_test_login_0047():
         Preconditions.select_mobile('Android-电信')
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_sms_login_page()
@@ -689,7 +705,8 @@ class LoginTest(TestCase):
         # TODO 移动单卡短信登录做不了
         pass
 
-    def setUp_test_login_0048(self):
+    @staticmethod
+    def setUp_test_login_0048():
         """
         预置条件：
         1、异网账号首次进入登录页面
@@ -703,7 +720,8 @@ class LoginTest(TestCase):
         """短信验证码登录-（电信）异网用户首次登录"""
         Preconditions.diff_card_login_by_sms(CardType.CHINA_TELECOM)
 
-    def setUp_test_login_0049(self):
+    @staticmethod
+    def setUp_test_login_0049():
         """
         预置条件：
         1、异网账号首次进入登录页面
@@ -717,7 +735,8 @@ class LoginTest(TestCase):
         """短信验证码登录-（联通）异网用户首次登录"""
         Preconditions.diff_card_login_by_sms(CardType.CHINA_UNION)
 
-    def setUp_test_login_0050(self):
+    @staticmethod
+    def setUp_test_login_0050():
         """
         预置条件：
         1、异网账号(非首次登录)进入登录页面
@@ -735,7 +754,8 @@ class LoginTest(TestCase):
         # 登录
         Preconditions.diff_card_login_by_sms(CardType.CHINA_UNION)
 
-    def setUp_test_login_0051(self):
+    @staticmethod
+    def setUp_test_login_0051():
         """
         预置条件：
         1、异网账号进入登录页面
@@ -752,7 +772,8 @@ class LoginTest(TestCase):
         sl.input_phone_number(phone_numbers[0])
         sl.page_should_not_contain_text("一键登录")
 
-    def setUp_test_login_0052(self):
+    @staticmethod
+    def setUp_test_login_0052():
         Preconditions.select_mobile('Android-移动')
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
