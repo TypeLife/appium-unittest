@@ -1,5 +1,5 @@
-import os
 import datetime
+import os
 
 NOW = datetime.datetime.now()
 
@@ -15,3 +15,11 @@ REPORT_HTML_PATH = os.path.join(REPORT_PATH, 'TestReport.html')
 SCREEN_SHOT_PATH = os.path.join(REPORT_PATH, 'screen-shot', NOW.date().__str__())
 # log文件存放目录
 LOG_FILE_PATH = os.path.join(REPORT_PATH, 'log')
+
+# 公共邮箱
+EMAIL = dict(
+    SMTP_SERVER='smtp.163.com',
+    SSL_PORT='465',
+    USERNAME='cmcchefeixin@163.com',
+    PASSWORD='cmcc2018'
+)
