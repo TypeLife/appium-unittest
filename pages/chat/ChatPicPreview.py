@@ -4,7 +4,7 @@ from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
 
-class GroupChatPicPreviewPage(BasePage):
+class ChatPicPreviewPage(BasePage):
     """群聊选择照片->预览 页面"""
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.GalleryChangedActivity'
 

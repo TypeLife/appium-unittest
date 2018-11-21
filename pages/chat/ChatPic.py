@@ -4,8 +4,8 @@ from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
 
-class GroupChatPicPage(BasePage):
-    """群聊选择照片页面"""
+class ChatPicPage(BasePage):
+    """选择照片页面"""
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.GalleryActivity'
 
     __locators = {'': (MobileBy.ID, ''),
