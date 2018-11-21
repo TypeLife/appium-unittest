@@ -6,6 +6,7 @@ from appium.webdriver.common.mobileby import MobileBy
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+from library.core.TestLogger import TestLogger
 from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE, current_mobile
 
 
@@ -60,6 +61,10 @@ class BasePage(object):
         if len(elements) > 0:
             return elements[0].text
         return None
+
+    @TestLogger.log("获取控件属性")
+    def get_element_attribute(self, locator, attr, wait_time=0):
+        return self.mobile.get_element_attribute(locator, attr, wait_time)
 
     def is_text_present(self, text):
         """检查屏幕是否包含文本"""

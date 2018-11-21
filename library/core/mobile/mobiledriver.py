@@ -8,7 +8,8 @@ from unicodedata import normalize
 
 from appium import webdriver
 from appium.webdriver.common.mobileby import MobileBy
-from selenium.common.exceptions import InvalidSessionIdException, WebDriverException
+from selenium.common.exceptions import InvalidSessionIdException, WebDriverException, TimeoutException, \
+    NoSuchElementException
 from selenium.webdriver.support.wait import WebDriverWait
 
 from library.core.TestLogger import TestLogger
@@ -321,6 +322,18 @@ class MobileDriver(ABC):
         if len(elements) > 0:
             return elements[0].text
         return None
+
+    @TestLogger.log("获取控件属性")
+    def get_element_attribute(self, locator, attr, wait_time=0):
+        try:
+            widget = self.wait_until(
+                condition=lambda d: self.get_element(locator),
+                timeout=wait_time
+            )
+            value = widget.get_attribute(attr)
+            return value
+        except TimeoutException:
+            raise NoSuchElementException("找不到控件：{}".format(locator))
 
     def is_text_present(self, text):
         text_norm = normalize('NFD', text)
