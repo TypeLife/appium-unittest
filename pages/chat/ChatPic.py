@@ -78,9 +78,9 @@ class GroupChatPicPage(BasePage):
     @TestLogger.log()
     def send_btn_is_enabled(self):
         """获取发送按钮状态是否可点击"""
-        self._is_enabled(self.__class__.__locators["发送"])
+        return self._is_enabled(self.__class__.__locators["发送"])
 
     @TestLogger.log()
     def send_preview_is_enabled(self):
         """获取预览按钮状态是否可点击"""
-        self._is_enabled(self.__class__.__locators["预览"])
+        return self._is_enabled(self.__class__.__locators["预览"])
