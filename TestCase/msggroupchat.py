@@ -22,6 +22,7 @@ REQUIRED_MOBILES = {
 
 class Preconditions(object):
     """前置条件"""
+
     @staticmethod
     def select_mobile(category):
         """选择手机手机"""
@@ -153,18 +154,82 @@ class Preconditions(object):
         group_name = "mygroup" + phone_number[-4:]
         return group_name
 
+
 class MsgGroupChatTest(TestCase):
     """消息->群聊 模块"""
 
+    @classmethod
+    def setUpClass(cls):
+        """进入群聊聊天会话页面"""
+        Preconditions.enter_group_chat_page()
+
     def default_setUp(self):
-        pass
+        """确保每个用例运行前在群聊聊天会话页面"""
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            return
+        else:
+            current_mobile().disconnect_mobile()
+            Preconditions.enter_group_chat_page()
 
     def default_tearDown(self):
         pass
+        # current_mobile().disconnect_mobile()
 
-    def test_something(self):
-        """description"""
-        Preconditions.enter_group_chat_page()
-        self.assertEqual(True, True)
+    def test_msg_group_chat_0001(self):
+        """在群聊聊天会话页面，发送一段字符数等于“0”的文本字符"""
+        gcp = GroupChatPage()
+        # 语音按钮检查
+        gcp.page_should_contain_audio_btn()
 
+    def test_msg_group_chat_0002(self):
+        """在群聊聊天会话页面，发送一段字符数大于“0”的文本字符"""
+        gcp = GroupChatPage()
+        info = "Hello everyone!"
+        gcp.input_message(info)
+        gcp.page_should_contain_send_btn()
+        gcp.send_message()
+        gcp.page_should_contain_text(info)
 
+    def test_msg_group_chat_0003(self):
+        """在群聊聊天会话页面，发送一段字符数小于等于“5000”的文本字符"""
+        gcp = GroupChatPage()
+        info = "Hello everyone, Welcome to my group, I hope my group can bring you happy."
+        gcp.input_message(info)
+        gcp.page_should_contain_send_btn()
+        gcp.send_message()
+        gcp.page_should_contain_text(info)
+
+    def test_msg_group_chat_0004(self):
+        """在群聊聊天会话页面，发送一段字符数等于“5000”的文本字符"""
+        gcp = GroupChatPage()
+        info = "哈哈" * 2500
+        gcp.input_message(info)
+        gcp.page_should_contain_send_btn()
+        gcp.send_message()
+
+    def test_msg_group_chat_0006(self):
+        """在群聊聊天会话页面，发送相册内的图片"""
+        gcp = GroupChatPage()
+        # 点击图片按钮
+        gcp.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        flag = cpg.send_btn_is_enabled()
+        # 不选择图片，发送按钮不可点击
+        self.assertEquals(flag, False)
+        # 回到聊天回话页面
+        cpg.click_back()
+
+    def test_msg_group_chat_0007(self):
+        """在群聊聊天会话页面，发送相册内的图片"""
+        gcp = GroupChatPage()
+        # 点击图片按钮
+        gcp.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        # 选择图片
+        cpg.select_pic()
+        # 发送按钮可点击
+        self.assertTrue(cpg.send_btn_is_enabled())
+        cpg.click_send()
