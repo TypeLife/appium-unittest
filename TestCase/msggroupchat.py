@@ -178,58 +178,102 @@ class MsgGroupChatTest(TestCase):
 
     def test_msg_group_chat_0001(self):
         """在群聊聊天会话页面，发送一段字符数等于“0”的文本字符"""
+        # 1.在当前聊天会话页面，在输入框中不输入任何内容，输入框右边展示的按钮是否是语音按钮
         gcp = GroupChatPage()
         # 语音按钮检查
         gcp.page_should_contain_audio_btn()
 
     def test_msg_group_chat_0002(self):
         """在群聊聊天会话页面，发送一段字符数大于“0”的文本字符"""
+        # 1.在当前聊天会话页面，在输入框中输入一段文本，字符数大于0
         gcp = GroupChatPage()
         info = "Hello everyone!"
         gcp.input_message(info)
+        # 2.点击输入框右边高亮展示的发送按钮，发送此段文本
         gcp.page_should_contain_send_btn()
         gcp.send_message()
         gcp.page_should_contain_text(info)
 
     def test_msg_group_chat_0003(self):
         """在群聊聊天会话页面，发送一段字符数小于等于“5000”的文本字符"""
+        # 1.在当前聊天会话页面，在输入框中输入一段文本，字符数小于5000
         gcp = GroupChatPage()
         info = "Hello everyone, Welcome to my group, I hope my group can bring you happy."
         gcp.input_message(info)
+        # 2.点击输入框右边高亮展示的发送按钮，发送此段文本
         gcp.page_should_contain_send_btn()
         gcp.send_message()
         gcp.page_should_contain_text(info)
 
     def test_msg_group_chat_0004(self):
         """在群聊聊天会话页面，发送一段字符数等于“5000”的文本字符"""
+        # 1.在当前聊天会话页面，在输入框中输入一段文本，字符数等于5000
         gcp = GroupChatPage()
         info = "哈哈" * 2500
         gcp.input_message(info)
+        # 2.点击输入框右边高亮展示的发送按，发送此段文本
         gcp.page_should_contain_send_btn()
         gcp.send_message()
 
     def test_msg_group_chat_0006(self):
         """在群聊聊天会话页面，发送相册内的图片"""
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
         gcp = GroupChatPage()
         # 点击图片按钮
         gcp.click_pic()
         cpg = ChatPicPage()
         cpg.wait_for_page_load()
+        # 2.不选择照片时，发送按钮是否置灰展示并且不可点击
         flag = cpg.send_btn_is_enabled()
-        # 不选择图片，发送按钮不可点击
         self.assertEquals(flag, False)
         # 回到聊天回话页面
         cpg.click_back()
 
     def test_msg_group_chat_0007(self):
         """在群聊聊天会话页面，发送相册内的图片"""
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
         gcp = GroupChatPage()
         # 点击图片按钮
         gcp.click_pic()
         cpg = ChatPicPage()
         cpg.wait_for_page_load()
-        # 选择图片
+        # 2.选择一张照片，点击右下角高亮展示的发送按钮，发送此照片
         cpg.select_pic()
         # 发送按钮可点击
         self.assertTrue(cpg.send_btn_is_enabled())
         cpg.click_send()
+
+    def test_msg_group_chat_0011(self):
+        """在群聊聊天会话页面，发送相册内的图片"""
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
+        gcp = GroupChatPage()
+        gcp.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        # 2.选择一张照片，直接点击当前选中的图片，是否会放大展示当前图片
+        cpg.click_pic_preview()
+        cppp = ChatPicPreviewPage()
+        cppp.wait_for_page_load()
+        # 3、当前放大图片的左上角是否会展示格式为：当前图片张数/当前相册的总张数
+        preview_info = cppp.get_pic_preview_info()
+        self.assertIsNotNone(re.match(r'预览\(\d+/\d+\)', preview_info))
+        cppp.click_back()
+        cpg.click_back()
+
+    def test_msg_group_chat_0012(self):
+        """在群聊聊天会话页面，发送相册内的图片"""
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
+        gcp = GroupChatPage()
+        gcp.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2、选择2张照片后，点击左下角的预览按钮，当前图片预览放大后，右上角的编辑按钮是否已隐藏
+        cpp.select_pic(n=2)
+        cpp.click_preview()
+        pic_preview = ChatPicPreviewPage()
+        pic_preview.wait_for_page_load()
+        # 3、当前放大页面的右下角发送按钮，是否高亮展示并且展示当前已选择的图片数量
+        send_num = pic_preview.get_pic_send_num()
+        self.assertEqual(send_num, '2')
+        # 4、点击发送按钮，能否进行发送
+        pic_preview.click_send()
