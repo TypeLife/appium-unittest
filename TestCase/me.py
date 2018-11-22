@@ -7,6 +7,7 @@ from pages import *
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
+    'Android-移动1': ''
 }
 
 
@@ -183,6 +184,33 @@ class MeSmsSettingTest(TestCase):
 
     @staticmethod
     def setUp_test_me_sms_setting_0001():
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_one_key_login_page()
+        Preconditions.login_by_one_key_login()
+
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.click_menu('设置')
+
+        setting_page = SettingPage()
+        setting_page.click_menu("短信设置")
+
+    @unittest.skip('需要完成另一台手机发送短信过来')
+    def test_me_sms_setting_0002(self):
+        """开启应用内收发短信"""
+        sms_setting = SmsSettingPage()
+        sms_setting.turn_on('应用内收发短信')
+        sms_setting.click_button('我知道了')
+        sms_setting.assert_menu_item_has_been_turn_on('应用内收发短信')
+        sms_setting.click_back()
+
+        SettingPage().click_back()
+        MePage().open_message_page()
+        # TODO 需要完成另一台手机发送短信过来
+
+    @staticmethod
+    def setUp_test_me_sms_setting_0002():
         Preconditions.connect_mobile('Android-移动')
         Preconditions.reset_and_relaunch_app()
         Preconditions.make_already_in_one_key_login_page()

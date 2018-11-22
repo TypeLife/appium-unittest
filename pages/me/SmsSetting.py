@@ -10,13 +10,17 @@ class SmsSettingPage(BasePage):
     ACTIVITY = 'com.cmicc.module_aboutme.ui.activity.SmsSettingActivity'
 
     __locators = {
-        '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
+        '返回上一页': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
         '短信设置': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
         '菜单列表框': (MobileBy.XPATH, '//android.widget.ScrollView/android.widget.LinearLayout'),
         '应用内收发短信': (MobileBy.ID, 'com.chinasofti.rcs:id/switch_sms'),
         '关闭': (MobileBy.ID, 'com.chinasofti.rcs:id/switch_sms'),
         '弹框提示内容': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_content'),
     }
+
+    @TestLogger.log('点击返回上一页图标')
+    def click_back(self):
+        self.click_element(self.__locators['返回上一页'])
 
     @TestLogger.log('点击按钮')
     def click_button(self, name):

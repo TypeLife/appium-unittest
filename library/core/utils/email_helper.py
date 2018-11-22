@@ -11,9 +11,12 @@ def send_email(to_addr, subject, body):
     :return:
     """
     import settings
+    import uuid
     sender_name = settings.EMAIL.get('USERNAME')
     receivers = to_addr if isinstance(to_addr, list) else [to_addr]
-
+    # 在主题后面加UUID，防止邮件被判定为垃圾邮件
+    uid = uuid.uuid4().__str__()
+    subject = '{} - {}'.format(subject, uid)
     message = _build_email_header(sender_name, receivers, subject, body)
 
     with _get_email_server() as server:
@@ -32,4 +35,6 @@ def _build_email_header(sender, receivers, subject, body):
     message['From'] = "{}".format(sender)
     message['To'] = ','.join(receivers)
     message['Subject'] = subject
+    message['X-Coremail-Locale'] = 'zh_CN'
+    message['X-Mailer'] = 'Coremail Webmail Server Version SP_ntes V3.5 build'
     return message.as_string()

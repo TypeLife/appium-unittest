@@ -17,6 +17,7 @@ SCREEN_SHOT_PATH = os.path.join(REPORT_PATH, 'screen-shot', NOW.date().__str__()
 LOG_FILE_PATH = os.path.join(REPORT_PATH, 'log')
 
 # 公共邮箱
+# 登录密码：hfx@2018
 EMAIL = dict(
     SMTP_SERVER='smtp.163.com',
     SSL_PORT='465',
