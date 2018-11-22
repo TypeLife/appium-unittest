@@ -1,5 +1,5 @@
 from appium.webdriver.common.mobileby import MobileBy
-
+import time
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
@@ -115,6 +115,7 @@ class GroupChatPage(BasePage):
     def send_message(self):
         """发送聊天信息"""
         self.click_element(self.__class__.__locators["发送按钮"])
+        time.sleep(1)
 
     @TestLogger.log()
     def page_should_contain_audio_btn(self):

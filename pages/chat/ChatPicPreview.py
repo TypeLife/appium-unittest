@@ -16,7 +16,7 @@ class ChatPicPreviewPage(BasePage):
                   'com.chinasofti.rcs:id/left_back': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
                   'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn'),
-                  '预览(1/2)': (MobileBy.ID, 'com.chinasofti.rcs:id / select_picture_custom_toolbar_title_text'),
+                  '预览(1/2)': (MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_title_text'),
                   '编辑': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_editimage'),
                   'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
                   'com.chinasofti.rcs:id/vp_preview': (MobileBy.ID, 'com.chinasofti.rcs:id/vp_preview'),
@@ -37,6 +37,12 @@ class ChatPicPreviewPage(BasePage):
         info = el.text
         num = info[-2]
         return num
+
+    @TestLogger.log()
+    def get_pic_preview_info(self):
+        """获取预览信息"""
+        el = self.get_element(self.__class__.__locators["预览(1/2)"])
+        return el.text
 
     @TestLogger.log()
     def get_pic_send_num(self):

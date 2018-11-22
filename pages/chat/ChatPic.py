@@ -1,5 +1,5 @@
 from appium.webdriver.common.mobileby import MobileBy
-
+import time
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
@@ -13,7 +13,7 @@ class ChatPicPage(BasePage):
                   'android:id/content': (MobileBy.ID, 'android:id/content'),
                   'com.chinasofti.rcs:id/select_picture_custom_toolbar': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar'),
-                  'com.chinasofti.rcs:id/left_back': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
+                  '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
                   'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn'),
                   '所有照片': (MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_title_text'),
@@ -42,6 +42,22 @@ class ChatPicPage(BasePage):
                   }
 
     @TestLogger.log()
+    def wait_for_page_load(self, timeout=10, auto_accept_alerts=True):
+        """等待选择照片页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["所有照片"])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
     def select_video(self, n=0):
         """选择视频
          :Args:
@@ -66,9 +82,24 @@ class ChatPicPage(BasePage):
             pics[i].click()
 
     @TestLogger.log()
-    def click_send(self):
+    def click_pic_preview(self):
+        """点击图片阅览"""
+        pics = self.get_elements(self.__class__.__locators["所有图片"])
+        if not pics:
+            raise AssertionError("There is no pic.")
+        pics[0].click()
+        pics[0].parent.find_element(MobileBy.ID, 'com.chinasofti.rcs:id/iv_gallery').click()
+
+    @TestLogger.log()
+    def click_send(self, n=3):
         """点击发送"""
         self.click_element(self.__class__.__locators["发送"])
+        time.sleep(n)
+
+    @TestLogger.log()
+    def click_back(self):
+        """点击返回"""
+        self.click_element(self.__class__.__locators["返回"])
 
     @TestLogger.log()
     def click_preview(self):
