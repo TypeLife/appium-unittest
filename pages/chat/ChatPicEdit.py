@@ -4,8 +4,8 @@ from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
 
-class GroupChatPicEditPage(BasePage):
-    """群聊选择照片->预览->编辑 页面"""
+class ChatPicEditPage(BasePage):
+    """选择照片->预览->编辑 页面"""
     ACTIVITY = 'com.juphoon.imgeditor.PictureEditActivity'
 
     __locators = {'': (MobileBy.ID, ''),

@@ -69,7 +69,7 @@ class SelectLocalContactsPage(BasePage):
         return phones
 
     @TestLogger.log()
-    def select_one_group_by_name(self, name):
+    def select_one_member_by_name(self, name):
         """通过人名选择一个联系人"""
         self.click_element((MobileBy.XPATH, '//*[@text ="%s"]' % name))
 

@@ -28,6 +28,11 @@ __all__ = [
     'GroupChatSetSeeMembersPage',
     'GroupChatSetSeeQRCodePage',
     'GroupNamePage',
+    'SelectContactsPage',
+    'SelectOneGroupPage',
+    'SelectLocalContactsPage',
+    'CreateGroupNamePage',
+    'GroupChatPage',
 ]
 
 from .Search import SearchPage
@@ -59,3 +64,10 @@ from .me import MessageNoticeSettingPage
 from .me import SettingPage
 from .me import SmsSettingPage
 from .message import MessagePage
+from .SelectContacts import SelectContactsPage
+from .SelectOneGroup import SelectOneGroupPage
+from .SelectLocalContacts import SelectLocalContactsPage
+from .CreateGroupName import CreateGroupNamePage
+from .GroupChat import GroupChatPage
+
+

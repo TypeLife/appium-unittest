@@ -17,7 +17,7 @@ class GroupChatPage(BasePage):
                   'com.chinasofti.rcs:id/back': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
                   'com.chinasofti.rcs:id/back_arrow': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
                   '群聊001(2)': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
-                  'com.chinasofti.rcs:id/action_multicall': (MobileBy.ID, 'com.chinasofti.rcs:id/action_multicall'),
+                  '多方通话': (MobileBy.ID, 'com.chinasofti.rcs:id/action_multicall'),
                   'com.chinasofti.rcs:id/action_setting': (MobileBy.ID, 'com.chinasofti.rcs:id/action_setting'),
                   'com.chinasofti.rcs:id/view_line': (MobileBy.ID, 'com.chinasofti.rcs:id/view_line'),
                   'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
@@ -51,6 +51,30 @@ class GroupChatPage(BasePage):
                   '发送按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_send'),
                   'com.chinasofti.rcs:id/ib_record_red_dot': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_record_red_dot')
                   }
+
+    @TestLogger.log()
+    def wait_for_page_load(self, timeout=10, auto_accept_alerts=True):
+        """等待群聊页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["多方通话"])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def is_on_this_page(self):
+        """当前页面是否在群聊天页"""
+        el = self.get_elements(self.__locators['多方通话'])
+        if len(el) > 0:
+            return True
+        return False
 
     @TestLogger.log()
     def click_pic(self):

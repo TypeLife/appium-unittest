@@ -4,7 +4,7 @@ from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
 
-class SelectGroupChatPage(BasePage):
+class SelectContactsPage(BasePage):
     """选择联系人页面"""
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.ContactsSelectActivity'
 
