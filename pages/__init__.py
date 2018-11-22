@@ -33,6 +33,15 @@ __all__ = [
     'SelectLocalContactsPage',
     'CreateGroupNamePage',
     'GroupChatPage',
+    "ChatAudioPage",
+    "ChatGIFPage",
+    "ChatMorePage",
+    "ChatPhotoPage",
+    "ChatPicPage",
+    "ChatPicEditPage",
+    "ChatPicPreviewPage",
+    "ChatSelectFilePage",
+    "ChatSelectLocalFilePage",
 ]
 
 from .Search import SearchPage
@@ -69,5 +78,14 @@ from .SelectOneGroup import SelectOneGroupPage
 from .SelectLocalContacts import SelectLocalContactsPage
 from .CreateGroupName import CreateGroupNamePage
 from .GroupChat import GroupChatPage
+from .chat import ChatAudioPage
+from .chat import ChatGIFPage
+from .chat import ChatMorePage
+from .chat import ChatPhotoPage
+from .chat import ChatPicPage
+from .chat import ChatPicEditPage
+from .chat import ChatPicPreviewPage
+from .chat import ChatSelectFilePage
+from .chat import ChatSelectLocalFilePage
 
 
