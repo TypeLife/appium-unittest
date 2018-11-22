@@ -74,7 +74,8 @@ class ChatPicPreviewPage(BasePage):
         self.click_element(self.__class__.__locators["返回"])
 
     @TestLogger.log()
-    def click_send(self, n=3):
+    def click_send(self, times=3):
         """点击发送"""
         self.click_element(self.__class__.__locators["发送(2)"])
-        time.sleep(n)
+        # 发送图片需要时间
+        time.sleep(times)
