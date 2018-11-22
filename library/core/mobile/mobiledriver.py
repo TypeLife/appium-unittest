@@ -652,10 +652,31 @@ class MobileDriver(ABC):
             # TODO IOS MD5验证待实现
             return True
 
-    @TestLogger.log()
+    @TestLogger.log('隐藏键盘')
     def hide_keyboard(self, key_name=None, key=None, strategy=None):
         """隐藏键盘"""
         self.driver.hide_keyboard(key_name, key, strategy)
+
+    @TestLogger.log('发送短信')
+    def send_sms(self, to, content, card_index=0):
+        if self.is_android():
+            self.terminate_app('com.android.mms')
+            self.execute_shell_command('am', 'start', '-a', 'android.intent.action.SENDTO', '-d', 'sms:', '-e',
+                                       'sms_body', content, '--ez', 'exit_on_sent', 'true')
+            self.execute_shell_command('input', 'text', to)
+            self.click_element([MobileBy.XPATH, '//*[@content-desc="发送"]'])
+        elif self.is_ios():
+            # TODO IOS发短信功能待实现
+            pass
+        else:
+            pass
+
+    def set_clipboard_text(self, text, label=None):
+        self.driver.set_clipboard_text(text, label)
+
+    @TestLogger.log("粘贴")
+    def paste(self):
+        pass
 
     def __str__(self):
         device_info = {

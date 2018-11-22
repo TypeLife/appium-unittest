@@ -23,6 +23,10 @@ class MessageNoticeSettingPage(BasePage):
         '接收139邮箱助手消息': (MobileBy.ID, 'com.chinasofti.rcs:id/switch_139'),
     }
 
+    @TestLogger.log('点击返回上一页图标')
+    def click_back(self):
+        self.click_element(self.__locators['返回上一页'])
+
     @TestLogger.log("打开设置项")
     def turn_on(self, item):
         """

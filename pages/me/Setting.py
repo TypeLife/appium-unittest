@@ -14,7 +14,7 @@ class SettingPage(BasePage):
         'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
         'android:id/content': (MobileBy.ID, 'android:id/content'),
         'com.chinasofti.rcs:id/id_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/id_toolbar'),
-        'com.chinasofti.rcs:id/back': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
+        '返回上一页': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
         '设置': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
         'com.chinasofti.rcs:id/setting_sms': (MobileBy.ID, 'com.chinasofti.rcs:id/setting_sms'),
         '短信设置': (MobileBy.ID, 'com.chinasofti.rcs:id/setting_sms_text'),
@@ -42,6 +42,10 @@ class SettingPage(BasePage):
         '取消': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
         '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok')
     }
+
+    @TestLogger.log('点击返回上一页图标')
+    def click_back(self):
+        self.click_element(self.__locators['返回上一页'])
 
     @TestLogger.log("点击菜单")
     def click_menu(self, menu):
