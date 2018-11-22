@@ -1,5 +1,5 @@
 from appium.webdriver.common.mobileby import MobileBy
-
+import time
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
@@ -13,7 +13,7 @@ class ChatPicPreviewPage(BasePage):
                   'android:id/content': (MobileBy.ID, 'android:id/content'),
                   'com.chinasofti.rcs:id/select_picture_custom_toolbar': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar'),
-                  'com.chinasofti.rcs:id/left_back': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
+                  '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
                   'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn'),
                   '预览(1/2)': (MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_title_text'),
@@ -27,8 +27,24 @@ class ChatPicPreviewPage(BasePage):
                   'com.chinasofti.rcs:id/iv_select': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_select'),
                   '选择': (MobileBy.ID, ''),
                   '原图': (MobileBy.ID, 'com.chinasofti.rcs:id/cb_original_photo'),
-                  '发送(2)': (MobileBy.ID, 'com.chinasofti.rcs: id /btn_send ')
+                  '发送(2)': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_send')
                   }
+
+    @TestLogger.log()
+    def wait_for_page_load(self, timeout=10, auto_accept_alerts=True):
+        """等待照片预览页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["预览(1/2)"])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
 
     @TestLogger.log()
     def get_pic_preview_num(self):
@@ -51,3 +67,14 @@ class ChatPicPreviewPage(BasePage):
         info = el.text
         num = info[-2]
         return num
+
+    @TestLogger.log()
+    def click_back(self):
+        """点击返回"""
+        self.click_element(self.__class__.__locators["返回"])
+
+    @TestLogger.log()
+    def click_send(self, n=3):
+        """点击发送"""
+        self.click_element(self.__class__.__locators["发送(2)"])
+        time.sleep(n)
