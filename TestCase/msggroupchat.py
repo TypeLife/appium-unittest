@@ -277,3 +277,81 @@ class MsgGroupChatTest(TestCase):
         self.assertEqual(send_num, '2')
         # 4、点击发送按钮，能否进行发送
         pic_preview.click_send()
+
+    def test_msg_group_chat_0013(self):
+        """在群聊聊天会话页面，发送相册内的图片"""
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
+        gcp = GroupChatPage()
+        gcp.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2.选择9张图片后，相册详情右下角的发送按钮上方是否会高亮展示，并且展示已选择的图片数量
+        cpp.select_pic(n=9)
+        self.assertTrue(cpp.send_btn_is_enabled())
+        send_num = cpp.get_pic_send_num()
+        self.assertEqual(send_num, '9')
+        # 3.点击相册详情右下角的发送按钮，能否进行发送
+        cpp.click_send(times=5)
+
+    def test_msg_group_chat_0014(self):
+        """在群聊聊天会话页面，发送相册内的图片"""
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
+        gcp = GroupChatPage()
+        gcp.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2、在当前页面选择第10张图片，是否会有提示
+        cpp.select_pic(n=10)
+        flag = cpp.is_toast_exist("最多只能选择9张照片")
+        self.assertTrue(flag)
+        cpp.click_back()
+
+    def test_msg_group_chat_0015(self):
+        """在群聊聊天会话页面，发送相册内的图片"""
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
+        gcp = GroupChatPage()
+        gcp.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2、在当前页面选择图片和视频时，是否会有提示
+        cpp.select_pic()
+        cpp.select_video()
+        flag = cpp.is_toast_exist("不能同时选择照片和视频")
+        self.assertTrue(flag)
+        cpp.click_back()
+
+    def test_msg_group_chat_0016(self):
+        """在群聊聊天会话页面，发送相册内的视频"""
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
+        gcp = GroupChatPage()
+        gcp.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2、在当前相册详情页面，选择一个视频，右下角的发送按钮是否会高亮展示
+        cpp.select_video()
+        self.assertTrue(cpp.send_btn_is_enabled())
+        cpp.click_back()
+
+    def test_msg_group_chat_0017(self):
+        """在群聊聊天会话页面，发送相册内的视频"""
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
+        gcp = GroupChatPage()
+        gcp.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2、在当前相册详情页面，相册详情中是否会展示其中视频的可播放长度
+        times = cpp.get_video_times()
+        for time in times:
+            self.assertIsNotNone(re.match(r'\d+:\d+', time))
+        cpp.click_back()
+
+    def test_msg_group_chat_0018(self):
+        """在群聊聊天会话页面，发送相册内的视频"""
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
+        gcp = GroupChatPage()
+        gcp.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2、在当前相册详情页面，选择一个视频后，点击左下角的预览按钮，是否会以预览模式放大展示当前视频
+        # 3、预览展示的视频页面中，是否存在点击可播放的三角形按钮
+        # 4、预览播放视频中途，点击左上角的返回按钮，是否可以返回到上一级页面

@@ -33,6 +33,7 @@ class ChatPicPage(BasePage):
                   'com.chinasofti.rcs:id/rliv_select': (MobileBy.ID, 'com.chinasofti.rcs:id/rliv_select'),
                   'com.chinasofti.rcs:id/iv_select': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_select'),
                   '00:03': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_video_time'),
+                  '视频时长': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_video_time'),
                   'com.chinasofti.rcs:id/rl_panel': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_panel'),
                   '所有视频': (MobileBy.XPATH, "//*[@resource-id='com.chinasofti.rcs:id/iv_video_icon']/../android.widget.RelativeLayout[@resource-id='com.chinasofti.rcs:id/rliv_select']"),
                   '所有图片': (MobileBy.XPATH, "//android.widget.RelativeLayout[@resource-id='com.chinasofti.rcs:id/rl_img']/android.widget.RelativeLayout[1][not(contains(@resource-id,'com.chinasofti.rcs:id/iv_video_icon'))]"),
@@ -60,8 +61,7 @@ class ChatPicPage(BasePage):
     @TestLogger.log()
     def select_video(self, n=0):
         """选择视频
-         :Args:
-         - n   - 第n个视频
+         :Args: - n  - 第n个视频
         """
         videos = self.get_elements(self.__class__.__locators["所有视频"])
         if videos:
@@ -69,6 +69,18 @@ class ChatPicPage(BasePage):
                 videos[n].click()
             except:
                 raise AssertionError("There is no %s video." % n)
+        else:
+            raise AssertionError("no video")
+
+    @TestLogger.log()
+    def get_video_times(self):
+        """获取视频时长"""
+        videos = self.get_elements(self.__class__.__locators["视频时长"])
+        times = []
+        if videos:
+            for el in videos:
+                times.append(el.text)
+            return times
         else:
             raise AssertionError("no video")
 
@@ -91,10 +103,10 @@ class ChatPicPage(BasePage):
         pics[0].parent.find_element(MobileBy.ID, 'com.chinasofti.rcs:id/iv_gallery').click()
 
     @TestLogger.log()
-    def click_send(self, n=3):
+    def click_send(self, times=3):
         """点击发送"""
         self.click_element(self.__class__.__locators["发送"])
-        time.sleep(n)
+        time.sleep(times)
 
     @TestLogger.log()
     def click_back(self):
@@ -115,3 +127,11 @@ class ChatPicPage(BasePage):
     def send_preview_is_enabled(self):
         """获取预览按钮状态是否可点击"""
         return self._is_enabled(self.__class__.__locators["预览"])
+
+    @TestLogger.log()
+    def get_pic_send_num(self):
+        """获取图片发送数量"""
+        el = self.get_element(self.__class__.__locators["发送"])
+        info = el.text
+        num = info[-2]
+        return num
