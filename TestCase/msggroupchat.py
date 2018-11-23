@@ -176,6 +176,7 @@ class MsgGroupChatTest(TestCase):
         pass
         # current_mobile().disconnect_mobile()
 
+    @tags('ALL',)
     def test_msg_group_chat_0001(self):
         """在群聊聊天会话页面，发送一段字符数等于“0”的文本字符"""
         # 1.在当前聊天会话页面，在输入框中不输入任何内容，输入框右边展示的按钮是否是语音按钮
@@ -183,6 +184,7 @@ class MsgGroupChatTest(TestCase):
         # 语音按钮检查
         gcp.page_should_contain_audio_btn()
 
+    @tags('ALL',)
     def test_msg_group_chat_0002(self):
         """在群聊聊天会话页面，发送一段字符数大于“0”的文本字符"""
         # 1.在当前聊天会话页面，在输入框中输入一段文本，字符数大于0
@@ -194,6 +196,7 @@ class MsgGroupChatTest(TestCase):
         gcp.send_message()
         gcp.page_should_contain_text(info)
 
+    @tags('ALL',)
     def test_msg_group_chat_0003(self):
         """在群聊聊天会话页面，发送一段字符数小于等于“5000”的文本字符"""
         # 1.在当前聊天会话页面，在输入框中输入一段文本，字符数小于5000
@@ -205,6 +208,7 @@ class MsgGroupChatTest(TestCase):
         gcp.send_message()
         gcp.page_should_contain_text(info)
 
+    @tags('ALL',)
     def test_msg_group_chat_0004(self):
         """在群聊聊天会话页面，发送一段字符数等于“5000”的文本字符"""
         # 1.在当前聊天会话页面，在输入框中输入一段文本，字符数等于5000
@@ -215,6 +219,7 @@ class MsgGroupChatTest(TestCase):
         gcp.page_should_contain_send_btn()
         gcp.send_message()
 
+    @tags('ALL',)
     def test_msg_group_chat_0006(self):
         """在群聊聊天会话页面，发送相册内的图片"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -229,6 +234,7 @@ class MsgGroupChatTest(TestCase):
         # 回到聊天回话页面
         cpg.click_back()
 
+    @tags('ALL',)
     def test_msg_group_chat_0007(self):
         """在群聊聊天会话页面，发送相册内的图片"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -243,6 +249,7 @@ class MsgGroupChatTest(TestCase):
         self.assertTrue(cpg.send_btn_is_enabled())
         cpg.click_send()
 
+    @tags('ALL',)
     def test_msg_group_chat_0011(self):
         """在群聊聊天会话页面，发送相册内的图片"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -260,6 +267,7 @@ class MsgGroupChatTest(TestCase):
         cppp.click_back()
         cpg.click_back()
 
+    @tags('ALL',)
     def test_msg_group_chat_0012(self):
         """在群聊聊天会话页面，发送相册内的图片"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -278,6 +286,7 @@ class MsgGroupChatTest(TestCase):
         # 4、点击发送按钮，能否进行发送
         pic_preview.click_send()
 
+    @tags('ALL',)
     def test_msg_group_chat_0013(self):
         """在群聊聊天会话页面，发送相册内的图片"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -293,6 +302,7 @@ class MsgGroupChatTest(TestCase):
         # 3.点击相册详情右下角的发送按钮，能否进行发送
         cpp.click_send(times=5)
 
+    @tags('ALL',)
     def test_msg_group_chat_0014(self):
         """在群聊聊天会话页面，发送相册内的图片"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -306,6 +316,7 @@ class MsgGroupChatTest(TestCase):
         self.assertTrue(flag)
         cpp.click_back()
 
+    @tags('ALL',)
     def test_msg_group_chat_0015(self):
         """在群聊聊天会话页面，发送相册内的图片"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -320,6 +331,7 @@ class MsgGroupChatTest(TestCase):
         self.assertTrue(flag)
         cpp.click_back()
 
+    @tags('ALL',)
     def test_msg_group_chat_0016(self):
         """在群聊聊天会话页面，发送相册内的视频"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -332,6 +344,7 @@ class MsgGroupChatTest(TestCase):
         self.assertTrue(cpp.send_btn_is_enabled())
         cpp.click_back()
 
+    @tags('ALL',)
     def test_msg_group_chat_0017(self):
         """在群聊聊天会话页面，发送相册内的视频"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -345,6 +358,7 @@ class MsgGroupChatTest(TestCase):
             self.assertIsNotNone(re.match(r'\d+:\d+', time))
         cpp.click_back()
 
+    @tags('ALL',)
     def test_msg_group_chat_0018(self):
         """在群聊聊天会话页面，发送相册内的视频"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -353,5 +367,58 @@ class MsgGroupChatTest(TestCase):
         cpp = ChatPicPage()
         cpp.wait_for_page_load()
         # 2、在当前相册详情页面，选择一个视频后，点击左下角的预览按钮，是否会以预览模式放大展示当前视频
+        cpp.select_video()
+        cpp.click_preview()
+        video_preview = ChatPicPreviewPage()
+        video_preview.wait_for_video_preview_load()
         # 3、预览展示的视频页面中，是否存在点击可播放的三角形按钮
+        self.assertTrue(video_preview.play_video_btn_is_enabled())
         # 4、预览播放视频中途，点击左上角的返回按钮，是否可以返回到上一级页面
+        video_preview.play_video()
+        video_preview.click_back()
+        cpp.wait_for_page_load()
+        cpp.click_back()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0019(self):
+        """在群聊聊天会话页面，发送相册内的视频"""
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
+        gcp = GroupChatPage()
+        gcp.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2.在当前相册详情页面，选择2个视频，选择第二个视频时，是否会提示：最多只能选择1个视频的提示
+        cpp.select_video(n=0)
+        cpp.select_video(n=1)
+        flag = cpp.is_toast_exist("最多只能选择1个视频")
+        self.assertTrue(flag)
+        cpp.click_back()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0020(self):
+        """在群聊聊天会话页面，发送相册内的视频"""
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
+        gcp = GroupChatPage()
+        gcp.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2、在当前相册详情页面，选择一张照片或者视频后，点击左上角的返回按钮，是否可以返回到聊天会话页面
+        cpp.select_pic()
+        cpp.click_back()
+        gcp.wait_for_page_load()
+
+
+    @tags('ALL',)
+    def test_msg_group_chat_0022(self):
+        """在群聊聊天会话页面，拍照发送照片"""
+        # 1、在当前聊天会话页面，点击输入框上方的相机图标，进入到相机拍摄页面
+        # 2、在相机拍摄页面，轻触拍摄按钮，是否可以拍摄成功一张照片
+        # 3、照片拍摄成功后，点击左边的返回按钮，是否可以删除本次拍摄的照片
+        # 4、重新拍摄一张照片后，点击右边的√按钮，是否可以发送这张照片
+
+    @tags('ALL',)
+    def test_msg_group_chat_0023(self):
+        """在群聊聊天会话页面，拍照发送照片"""
+        # 1、在当前聊天会话页面，点击输入框上方的相机图标，进入到相机拍摄页面
+        # 2、在相机拍摄页面，长按拍摄按钮，是否可以进入到录像模式
+        # 3.在录像模式下，长按录像按钮，1秒钟之后，松开手指，是否会提示：拍摄失败
