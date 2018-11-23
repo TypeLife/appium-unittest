@@ -22,5 +22,5 @@ EMAIL = dict(
     SMTP_SERVER='smtp.163.com',
     SSL_PORT='465',
     USERNAME='cmcchefeixin@163.com',
-    PASSWORD='cmcc2018'
+    SMTP_PASSWORD='cmcc2018'
 )

@@ -63,7 +63,8 @@ class MobileDriver(ABC):
         """卡槽数量，例如: 1、2"""
         raise NotImplementedError("This method must be implemented!")
 
-    def _init_capability(self, caps):
+    @staticmethod
+    def _init_capability(caps):
         return caps
 
     def _init_sim_card(self, card_slot):
@@ -81,9 +82,18 @@ class MobileDriver(ABC):
                                     .format(self.supported_card_types()))
         return cards
 
-    def get_cards(self, card_type):
+    def get_cards(self, card_type=None):
         """返回指定类型卡手机号列表"""
-        return list([card['CARD_NUMBER'] for card in self._card_slot if card['TYPE'] == card_type])
+        cards = [card for card in self._card_slot if card is not None]
+        if card_type is None:
+            return list(
+                [card.get('CARD_NUMBER') for card in cards]
+            )
+        if not isinstance(card_type, list):
+            card_type = [card_type]
+        return list(
+            [card.get('CARD_NUMBER') for card in self._card_slot if (card is not None) and (card['TYPE'] in card_type)]
+        )
 
     @abstractmethod
     def supported_card_types(self):
@@ -659,12 +669,28 @@ class MobileDriver(ABC):
 
     @TestLogger.log('发送短信')
     def send_sms(self, to, content, card_index=0):
+        """
+        发送短信
+        :param to: 目标号码
+        :param content: 短信内容
+        :param card_index: 使用的需要，默认使用第一张卡
+        :return:
+        """
         if self.is_android():
             self.terminate_app('com.android.mms')
             self.execute_shell_command('am', 'start', '-a', 'android.intent.action.SENDTO', '-d', 'sms:', '-e',
                                        'sms_body', content, '--ez', 'exit_on_sent', 'true')
             self.execute_shell_command('input', 'text', to)
             self.click_element([MobileBy.XPATH, '//*[@content-desc="发送"]'])
+            if len(self.get_cards()) > 1:
+                locator = [MobileBy.XPATH,
+                           '//*[contains(@text,"中国移动") or contains(@text,"中国联通") or contains(@text,"中国电信")]']
+                self.wait_until(
+                    condition=lambda d: len(self.get_elements(locator)) > card_index
+                )
+                send_bys = self.get_elements(
+                    locator)
+                send_bys[card_index].click()
         elif self.is_ios():
             # TODO IOS发短信功能待实现
             pass

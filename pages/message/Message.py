@@ -1,5 +1,6 @@
 from appium.webdriver.common.mobileby import MobileBy
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.webdriver.support import expected_conditions as ec
 
 from library.core.TestLogger import TestLogger
 from pages.components.Footer import FooterPage
@@ -34,9 +35,9 @@ class MessagePage(FooterPage):
         'com.chinasofti.rcs:id/viewPager': (MobileBy.ID, 'com.chinasofti.rcs:id/viewPager'),
         'com.chinasofti.rcs:id/toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/toolbar'),
         '页头-消息': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMessage'),
-        'com.chinasofti.rcs:id/rv_conv_list': (MobileBy.ID, 'com.chinasofti.rcs:id/rv_conv_list'),
+        '消息列表': (MobileBy.ID, 'com.chinasofti.rcs:id/rv_conv_list'),
         '搜索': (MobileBy.ID, 'com.chinasofti.rcs:id/search_edit'),
-        '列表-消息块': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_conv_list_item'),
+        '消息项': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_conv_list_item'),
         '消息头像': (MobileBy.ID, 'com.chinasofti.rcs:id/svd_head'),
         '消息名称': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_conv_name'),
         '消息时间': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_date'),
@@ -155,9 +156,13 @@ class MessagePage(FooterPage):
     def wait_login_success(self, timeout=8, auto_accept_alerts=True):
         """等待消息页面加载（自动允许权限）"""
 
-        def unexpect():
+        def unexpected():
             result = self._is_element_present(
-                [MobileBy.XPATH, '//*[@text="当前网络不可用(102101)，请检查网络设置"]'])
+                [MobileBy.XPATH,
+                 '//*[@text="当前网络不可用(102101)，请检查网络设置" or' +
+                 ' @text="服务器繁忙或加载超时,请耐心等待" or' +
+                 ' @text="网络连接超时(102102)，请使用短信验证码登录"' +
+                 ']'])
             return result
 
         try:
@@ -165,7 +170,7 @@ class MessagePage(FooterPage):
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
                 condition=lambda d: self._is_element_present(self.__class__.__locators["+号"]),
-                unexpected=unexpect
+                unexpected=unexpected
             )
         except TimeoutException:
             message = "页面在{}s内，没有加载成功".format(str(timeout))
@@ -173,3 +178,99 @@ class MessagePage(FooterPage):
                 message
             )
         return self
+
+    @TestLogger.log("检查列表第一项消息标题")
+    def assert_first_message_title_in_list_is(self, title, max_wait_time=5):
+        self.scroll_to_top()
+        try:
+            self.wait_until(
+                condition=lambda d: self.get_text(self.__locators['消息名称']) == title,
+                timeout=max_wait_time,
+                auto_accept_permission_alert=False
+            )
+        except TimeoutException:
+            raise AssertionError('"{} != {}"'.format(self.get_text(self.__locators['消息名称']), title))
+
+    @TestLogger.log()
+    def click_message(self, title, max_wait_time=5):
+        locator = [MobileBy.XPATH,
+                   '//*[@resource-id="com.chinasofti.rcs:id/rl_conv_list_item" and ' +
+                   './/*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text="{}"]]'.format(title)]
+        self.find_message(title, max_wait_time)
+        self.click_element(locator)
+
+    @TestLogger.log("往下翻页")
+    def find_message(self, title, max_wait_time=5):
+        locator = [MobileBy.XPATH,
+                   '//*[@resource-id="com.chinasofti.rcs:id/rl_conv_list_item" and ' +
+                   './/*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text="{}"]]'.format(title)]
+        if not self._is_element_present(locator):
+            # 找不到就翻页找到菜单再点击，
+            self.scroll_to_top()
+            if self._is_element_present(locator):
+                return
+            if not self.get_elements(self.__locators['消息项']):
+                try:
+                    self.wait_until(
+                        condition=lambda d: self.get_element(locator),
+                        timeout=max_wait_time,
+                        auto_accept_permission_alert=False
+                    )
+                    return
+                except TimeoutException:
+                    raise NoSuchElementException('页面找不到元素：{}'.format(locator))
+            max_try = 20
+            current = 0
+            while current < max_try:
+                first_item = self.get_element(self.__locators['消息项'])
+                current += 1
+                self.page_down()
+                if self._is_element_present(locator):
+                    return
+                if not ec.staleness_of(first_item)(True):
+                    break
+            self.scroll_to_top()
+            try:
+                self.wait_until(
+                    condition=lambda d: self.get_element(locator),
+                    timeout=max_wait_time,
+                    auto_accept_permission_alert=False
+                )
+                return
+            except TimeoutException:
+                raise NoSuchElementException('页面找不到元素：{}'.format(locator))
+
+    @TestLogger.log("回到列表顶部")
+    def scroll_to_top(self):
+        self.wait_until(
+            condition=lambda d: self.get_element(self.__locators['消息列表'])
+        )
+        # 如果找到“短信设置”菜单，则当作已经滑到底部
+        if self._is_on_the_start_of_list_view():
+            return True
+        max_try = 50
+        current = 0
+        while current < max_try:
+            current += 1
+            self.page_up()
+            if self._is_on_the_start_of_list_view():
+                break
+        return True
+
+    @TestLogger.log("下一页")
+    def page_down(self):
+        self.wait_until(
+            condition=lambda d: self.get_element(self.__locators['消息列表'])
+        )
+        self.swipe_by_direction(self.__locators['消息列表'], 'up')
+
+    @TestLogger.log("下一页")
+    def page_up(self):
+        self.wait_until(
+            condition=lambda d: self.get_element(self.__locators['消息列表'])
+        )
+        self.swipe_by_direction(self.__locators['消息列表'], 'down')
+
+    def _is_on_the_start_of_list_view(self):
+        """判断是否列表开头"""
+        return self._is_element_present(self.__locators['搜索'])

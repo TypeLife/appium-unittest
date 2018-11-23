@@ -152,6 +152,32 @@ class MeMsgSettingTest(TestCase):
         setting_page = SettingPage()
         setting_page.click_menu("消息通知")
 
+    @tags("ALL", "SMOKE", "DEBUG")
+    def test_me_msg_setting_0002(self):
+        """开启接收139邮箱助手信息"""
+        msg_setting = MessageNoticeSettingPage()
+        msg_setting.turn_on('接收139邮箱助手消息')
+        msg_setting.click_back()
+
+        SettingPage().click_back()
+        MePage().open_message_page()
+
+        msg_page = MessagePage()
+
+    @staticmethod
+    def setUp_test_me_msg_setting_0002():
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_one_key_login_page()
+        Preconditions.login_by_one_key_login()
+
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.click_menu('设置')
+
+        setting_page = SettingPage()
+        setting_page.click_menu("消息通知")
+
     @tags("ALL", "SMOKE")
     def test_me_msg_setting_0004(self):
         """接收OA消息默认开启"""
