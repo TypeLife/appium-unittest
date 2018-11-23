@@ -5,10 +5,10 @@ from email.mime.text import MIMEText
 def send_email(to_addr, subject, body):
     """
     使用公共邮箱发送邮件
-    :param to_addr:
-    :param subject:
-    :param body:
-    :return:
+    :param to_addr: 收件地址
+    :param subject: 主题
+    :param body: 邮件内容
+    :return: 返回邮件主题名称（尾部自动附加用作防垃圾邮件拦截的UUID值）
     """
     import settings
     import uuid
@@ -20,8 +20,9 @@ def send_email(to_addr, subject, body):
     message = _build_email_header(sender_name, receivers, subject, body)
 
     with _get_email_server() as server:
-        server.login(settings.EMAIL.get('USERNAME'), settings.EMAIL.get('PASSWORD'))
+        server.login(settings.EMAIL.get('USERNAME'), settings.EMAIL.get('SMTP_PASSWORD'))
         server.sendmail(settings.EMAIL.get('USERNAME'), receivers, message)
+        return subject
 
 
 def _get_email_server():
