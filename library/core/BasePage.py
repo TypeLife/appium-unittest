@@ -5,7 +5,7 @@ import time
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-
+from appium.webdriver.common.touch_action import TouchAction
 from library.core.TestLogger import TestLogger
 from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE, current_mobile
 
@@ -456,3 +456,7 @@ class BasePage(object):
     def hide_keyboard(self, key_name=None, key=None, strategy=None):
         """隐藏键盘"""
         self.mobile.hide_keyboard(key_name, key, strategy)
+
+    def press(self, el, times=3000):
+        """按压操作"""
+        TouchAction(self.driver).long_press(el, duration=times).wait(1).perform()
