@@ -17,12 +17,14 @@ def send_email(to_addr, subject, body):
     # 在主题后面加UUID，防止邮件被判定为垃圾邮件
     uid = uuid.uuid4().__str__()
     subject = '{} - {}'.format(subject, uid)
+    body = '{} - {}'.format(body, uid)
     message = _build_email_header(sender_name, receivers, subject, body)
 
     with _get_email_server() as server:
         server.login(settings.EMAIL.get('USERNAME'), settings.EMAIL.get('SMTP_PASSWORD'))
         server.sendmail(settings.EMAIL.get('USERNAME'), receivers, message)
-        return subject
+        print('邮件已发送到：{}'.format(to_addr))
+        return subject, body
 
 
 def _get_email_server():

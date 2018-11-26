@@ -1,6 +1,7 @@
 import unittest
 
 from library.core.TestCase import TestCase
+from library.core.utils import email_helper
 from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
@@ -60,6 +61,7 @@ class Preconditions(object):
         # 等待号码加载完成后，点击一键登录
         one_key = OneKeyLoginPage()
         one_key.wait_for_tell_number_load(30)
+        login_number = one_key.get_login_number()
         one_key.click_one_key_login()
         one_key.click_read_agreement_detail()
 
@@ -70,6 +72,7 @@ class Preconditions(object):
         # 等待消息页
         message_page = MessagePage()
         message_page.wait_login_success(60)
+        return login_number
 
     @staticmethod
     def take_logout_operation_if_already_login():
@@ -152,24 +155,64 @@ class MeMsgSettingTest(TestCase):
         setting_page = SettingPage()
         setting_page.click_menu("消息通知")
 
-    @tags("ALL", "SMOKE", "DEBUG")
+    @tags("ALL", "SMOKE")
     def test_me_msg_setting_0002(self):
         """开启接收139邮箱助手信息"""
         msg_setting = MessageNoticeSettingPage()
         msg_setting.turn_on('接收139邮箱助手消息')
+        msg_setting.assert_menu_item_has_been_turn_on('接收139邮箱助手消息')
         msg_setting.click_back()
 
         SettingPage().click_back()
         MePage().open_message_page()
 
         msg_page = MessagePage()
+        to_address = self.login_number + '@139.com'
+        email_subject, body = email_helper.send_email(to_address, '工作日报终稿', '更新内容！')
+        msg_page.assert_first_message_title_in_list_is('139邮箱助手', 30)
+        msg_page.click_message('139邮箱助手')
 
-    @staticmethod
-    def setUp_test_me_msg_setting_0002():
+        assistant_page = EmailAssistantPage()
+        assistant_page.assert_the_first_message_is('cmcchefeixin', 30)
+        assistant_page.click_message('cmcchefeixin')
+
+        email_list = EmailListPage()
+        email_list.assert_the_newest_email_is(email_subject, 30)
+
+    def setUp_test_me_msg_setting_0002(self):
         Preconditions.connect_mobile('Android-移动')
         Preconditions.reset_and_relaunch_app()
         Preconditions.make_already_in_one_key_login_page()
-        Preconditions.login_by_one_key_login()
+        self.login_number = Preconditions.login_by_one_key_login()
+
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.click_menu('设置')
+
+        setting_page = SettingPage()
+        setting_page.click_menu("消息通知")
+
+    @tags("ALL", "SMOKE", "DEBUG")
+    def test_me_msg_setting_0003(self):
+        """关闭接收139邮箱助手信息"""
+        msg_setting = MessageNoticeSettingPage()
+        msg_setting.turn_off('接收139邮箱助手消息')
+        msg_setting.assert_menu_item_has_been_turn_off('接收139邮箱助手消息')
+        msg_setting.click_back()
+
+        SettingPage().click_back()
+        MePage().open_message_page()
+
+        msg_page = MessagePage()
+        to_address = self.login_number + '@139.com'
+        email_helper.send_email(to_address, '工作日报终稿', '更新内容！')
+        msg_page.assert_139_message_not_appear(30)
+
+    def setUp_test_me_msg_setting_0003(self):
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_one_key_login_page()
+        self.login_number = Preconditions.login_by_one_key_login()
 
         me_page = MePage()
         me_page.open_me_page()
