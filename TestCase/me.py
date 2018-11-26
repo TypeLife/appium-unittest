@@ -192,7 +192,7 @@ class MeMsgSettingTest(TestCase):
         setting_page = SettingPage()
         setting_page.click_menu("消息通知")
 
-    @tags("ALL", "SMOKE", "DEBUG")
+    @tags("ALL", "SMOKE")
     def test_me_msg_setting_0003(self):
         """关闭接收139邮箱助手信息"""
         msg_setting = MessageNoticeSettingPage()
