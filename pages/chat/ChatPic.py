@@ -68,7 +68,7 @@ class ChatPicPage(BasePage):
             try:
                 videos[n].click()
             except:
-                raise AssertionError("There is no %s video." % n)
+                raise AssertionError("There is no %s video." % (n+1))
         else:
             raise AssertionError("no video")
 
