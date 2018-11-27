@@ -1,5 +1,7 @@
 import unittest
 
+from selenium.common.exceptions import TimeoutException
+
 from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
 from library.core.utils.testcasefilter import tags
@@ -120,8 +122,14 @@ class Preconditions(object):
         2.当前在消息页面
         """
         message_page = MessagePage()
-        if message_page.is_on_this_page():
+        try:
+            message_page.wait_until(
+                condition=lambda d: message_page.is_on_this_page(),
+                timeout=3
+            )
             return
+        except TimeoutException:
+            pass
         Preconditions.reset_and_relaunch_app()
         Preconditions.make_already_in_one_key_login_page()
         Preconditions.login_by_one_key_login()
@@ -163,3 +171,30 @@ class MessageSearchTest(TestCase):
         """
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'SMOKE')
+    def test_msg_search_0002(self):
+        """搜索框正常弹起和收起"""
+        message_page = MessagePage()
+        message_page.scroll_to_top()
+        message_page.click_search()
+
+        search_page = SearchPage()
+        search_page.assert_keyboard_is_display(5)
+        search_page.hide_keyboard()
+        search_page.assert_keyboard_is_hided()
+
+    @staticmethod
+    def setUp_test_msg_search_0002():
+        """
+        1、联网正常
+        2、已登录客户端
+        3、当前在消息页面
+        """
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+
+    @staticmethod
+    def tearDown_test_msg_search_0002():
+        search_page = SearchPage()
+        search_page.click_back_button()

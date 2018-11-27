@@ -675,6 +675,9 @@ class MobileDriver(ABC):
             # TODO IOS MD5验证待实现
             return True
 
+    def is_keyboard_shown(self):
+        return self.driver.is_keyboard_shown()
+
     @TestLogger.log('隐藏键盘')
     def hide_keyboard(self, key_name=None, key=None, strategy=None):
         """隐藏键盘"""
