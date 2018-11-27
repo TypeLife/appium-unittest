@@ -1,3 +1,4 @@
+import argparse
 import os
 import re
 import sys
@@ -92,6 +93,10 @@ def generate_page_object():
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--reset', '-r', type=bool)
+    args = parser.parse_args()
+
     sys.stdout.write("当前使用的手机为：" + MOBILE_DRIVER_CACHE.current.alis + '\n')
     devices = '\n\t'.join(AVAILABLE_DEVICES.keys())
     sys.stdout.write("可用手机：\n\t" + devices + '\n')
@@ -103,7 +108,8 @@ if __name__ == '__main__':
         MOBILE_DRIVER_CACHE.switch(target)
     time.sleep(.5)
     sys.stdout.write('开始连接手机并启动应用....\n')
-    MOBILE_DRIVER_CACHE.current._desired_caps['newCommandTimeout'] = 1200
-    # MOBILE_DRIVER_CACHE.current.turn_on_reset()
+    MOBILE_DRIVER_CACHE.current._desired_caps['newCommandTimeout'] = 600
+    if args.reset:
+        MOBILE_DRIVER_CACHE.current.turn_on_reset()
     MOBILE_DRIVER_CACHE.current.connect_mobile()
     generate_page_object()

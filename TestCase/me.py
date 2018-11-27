@@ -1,4 +1,5 @@
 import unittest
+import uuid
 
 from library.core.TestCase import TestCase
 from library.core.utils import email_helper
@@ -8,7 +9,7 @@ from pages import *
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
-    'Android-移动1': ''
+    'Android-XX': ''  # 用来发短信
 }
 
 
@@ -265,7 +266,7 @@ class MeSmsSettingTest(TestCase):
         setting_page = SettingPage()
         setting_page.click_menu("短信设置")
 
-    @unittest.skip('需要完成另一台手机发送短信过来')
+    @tags('ALL', 'SMOKE')
     def test_me_sms_setting_0002(self):
         """开启应用内收发短信"""
         sms_setting = SmsSettingPage()
@@ -276,14 +277,27 @@ class MeSmsSettingTest(TestCase):
 
         SettingPage().click_back()
         MePage().open_message_page()
-        # TODO 需要完成另一台手机发送短信过来
 
-    @staticmethod
-    def setUp_test_me_sms_setting_0002():
+        # 切到另一台手机发短信，一定要确保配置的卡顺序与实际手机卡槽位置一致
+        mobile2 = Preconditions.connect_mobile('Android-XX')
+        content = uuid.uuid4().__str__()
+        send_number, card_type = mobile2.send_sms(self.login_number, content)
+
+        # 切回来继续操作
+        Preconditions.connect_mobile('Android-移动')
+        msg_page = MessagePage()
+        msg_page.click_message(send_number, 15)
+
+        chat_page = ChatWindowPage()
+        if chat_page.is_tips_display():
+            chat_page.directly_close_tips_alert()
+        chat_page.assert_message_content_display(content)
+
+    def setUp_test_me_sms_setting_0002(self):
         Preconditions.connect_mobile('Android-移动')
         Preconditions.reset_and_relaunch_app()
         Preconditions.make_already_in_one_key_login_page()
-        Preconditions.login_by_one_key_login()
+        self.login_number = Preconditions.login_by_one_key_login()
 
         me_page = MePage()
         me_page.open_me_page()

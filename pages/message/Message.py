@@ -179,6 +179,14 @@ class MessagePage(FooterPage):
             )
         return self
 
+    @TestLogger.log('检查是否收到某个号码的短信')
+    def assert_get_sms_of(self, phone_number, content, max_wait_time=30):
+        try:
+            self.click_message(phone_number, max_wait_time)
+        except NoSuchElementException:
+            raise AssertionError('没有收到{}的消息'.format(phone_number))
+
+
     @TestLogger.log("检查列表第一项消息标题")
     def assert_first_message_title_in_list_is(self, title, max_wait_time=5):
         self.scroll_to_top()

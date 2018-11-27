@@ -21,6 +21,7 @@ __all__ = [
     'SettingPage',
     'MeSetUpPage',
     'SmsSettingPage',
+    'ChatWindowPage',
     'EmailAssistantPage',
     'EmailDetailPage',
     'EmailListPage',
@@ -89,6 +90,7 @@ from .me import MeSetUpPage
 from .me import MessageNoticeSettingPage
 from .me import SettingPage
 from .me import SmsSettingPage
+from .message import ChatWindowPage
 from .message import EmailAssistantPage
 from .message import EmailDetailPage
 from .message import EmailListPage
