@@ -19,3 +19,4 @@ from .ChatPicEdit import ChatPicEditPage
 from .ChatPicPreview import ChatPicPreviewPage
 from .ChatSelectFile import ChatSelectFilePage
 from .ChatSelectLocalFile import ChatSelectLocalFilePage
+from .ChatProfile import ChatProfilePage
