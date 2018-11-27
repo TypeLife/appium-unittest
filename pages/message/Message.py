@@ -48,6 +48,16 @@ class MessagePage(FooterPage):
         '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe')
     }
 
+    @TestLogger.log('检查顶部搜索框是否显示')
+    def assert_search_box_is_display(self, max_wait_time=5):
+        try:
+            self.wait_until(
+                condition=lambda d: self._is_element_present(self.__locators['搜索']),
+                timeout=max_wait_time
+            )
+        except TimeoutException:
+            raise AssertionError('搜索框没有显示：{}'.format(self.__locators['搜索']))
+
     @TestLogger.log()
     def is_on_this_page(self):
         """当前页面是否在消息页"""
@@ -185,7 +195,6 @@ class MessagePage(FooterPage):
             self.click_message(phone_number, max_wait_time)
         except NoSuchElementException:
             raise AssertionError('没有收到{}的消息'.format(phone_number))
-
 
     @TestLogger.log("检查列表第一项消息标题")
     def assert_first_message_title_in_list_is(self, title, max_wait_time=5):
