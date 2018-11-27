@@ -242,6 +242,54 @@ class MeMsgSettingTest(TestCase):
         setting_page = SettingPage()
         setting_page.click_menu("消息通知")
 
+    @tags('ALL', 'SMOKE')
+    def test_me_msg_setting_0005(self):
+        """开启接收OA消息(只验证开关，不验证消息接收)"""
+        msg_setting = MessageNoticeSettingPage()
+        msg_setting.turn_on('接收OA消息')
+        msg_setting.assert_menu_item_has_been_turn_on('接收OA消息')
+
+    @staticmethod
+    def setUp_test_me_msg_setting_0005():
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_one_key_login_page()
+        Preconditions.login_by_one_key_login()
+
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.click_menu('设置')
+
+        setting_page = SettingPage()
+        setting_page.click_menu("消息通知")
+        msg_setting = MessageNoticeSettingPage()
+        msg_setting.turn_off('接收OA消息')
+        msg_setting.assert_menu_item_has_been_turn_off('接收OA消息')
+
+    @tags('ALL', 'SMOKE')
+    def test_me_msg_setting_0006(self):
+        """关闭接收OA消息(只验证开关，不验证消息接收)"""
+        msg_setting = MessageNoticeSettingPage()
+        msg_setting.turn_off('接收OA消息')
+        msg_setting.assert_menu_item_has_been_turn_off('接收OA消息')
+
+    @staticmethod
+    def setUp_test_me_msg_setting_0006():
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_one_key_login_page()
+        Preconditions.login_by_one_key_login()
+
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.click_menu('设置')
+
+        setting_page = SettingPage()
+        setting_page.click_menu("消息通知")
+        msg_setting = MessageNoticeSettingPage()
+        msg_setting.turn_on('接收OA消息')
+        msg_setting.assert_menu_item_has_been_turn_on('接收OA消息')
+
 
 class MeSmsSettingTest(TestCase):
     """我-短信设置"""
