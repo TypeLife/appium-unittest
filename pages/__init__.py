@@ -1,5 +1,4 @@
 __all__ = [
-    'SearchPage',
     'ContactDetailsPage',
     'NewContactPage',
     'GuidePage',
@@ -21,6 +20,7 @@ __all__ = [
     'SettingPage',
     'MeSetUpPage',
     'SmsSettingPage',
+    'ChatWindowPage',
     'EmailAssistantPage',
     'EmailDetailPage',
     'EmailListPage',
@@ -46,22 +46,37 @@ __all__ = [
     "ChatSelectFilePage",
     "ChatSelectLocalFilePage",
     "ChatProfilePage",
+    'SearchPage',
 ]
 
 from .CreateGroupName import CreateGroupNamePage
+from .CreateGroupName import CreateGroupNamePage
 from .GroupChat import GroupChatPage
-from .Search import SearchPage
+from .GroupChat import GroupChatPage
+from .SelectContacts import SelectContactsPage
 from .SelectContacts import SelectContactsPage
 from .SelectLocalContacts import SelectLocalContactsPage
+from .SelectLocalContacts import SelectLocalContactsPage
+from .SelectOneGroup import SelectOneGroupPage
 from .SelectOneGroup import SelectOneGroupPage
 from .chat import ChatAudioPage
+from .chat import ChatAudioPage
+from .chat import ChatGIFPage
 from .chat import ChatGIFPage
 from .chat import ChatMorePage
+from .chat import ChatMorePage
+from .chat import ChatPhotoPage
 from .chat import ChatPhotoPage
 from .chat import ChatPicEditPage
+from .chat import ChatPicEditPage
+from .chat import ChatPicPage
 from .chat import ChatPicPage
 from .chat import ChatPicPreviewPage
+from .chat import ChatPicPreviewPage
+from .chat import ChatProfilePage
 from .chat import ChatSelectFilePage
+from .chat import ChatSelectFilePage
+from .chat import ChatSelectLocalFilePage
 from .chat import ChatSelectLocalFilePage
 from .contacts import ContactDetailsPage
 from .contacts import NewContactPage
@@ -90,23 +105,9 @@ from .me import MeSetUpPage
 from .me import MessageNoticeSettingPage
 from .me import SettingPage
 from .me import SmsSettingPage
+from .message import ChatWindowPage
 from .message import EmailAssistantPage
 from .message import EmailDetailPage
 from .message import EmailListPage
 from .message import MessagePage
-from .SelectContacts import SelectContactsPage
-from .SelectOneGroup import SelectOneGroupPage
-from .SelectLocalContacts import SelectLocalContactsPage
-from .CreateGroupName import CreateGroupNamePage
-from .GroupChat import GroupChatPage
-from .chat import ChatAudioPage
-from .chat import ChatGIFPage
-from .chat import ChatMorePage
-from .chat import ChatPhotoPage
-from .chat import ChatPicPage
-from .chat import ChatPicEditPage
-from .chat import ChatPicPreviewPage
-from .chat import ChatSelectFilePage
-from .chat import ChatSelectLocalFilePage
-from .chat import ChatProfilePage
-
+from .search import SearchPage

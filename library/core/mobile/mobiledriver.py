@@ -8,7 +8,7 @@ from unicodedata import normalize
 
 from appium import webdriver
 from appium.webdriver.common.mobileby import MobileBy
-from selenium.common.exceptions import InvalidSessionIdException, WebDriverException, TimeoutException, \
+from selenium.common.exceptions import TimeoutException, \
     NoSuchElementException
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -95,6 +95,15 @@ class MobileDriver(ABC):
             [card.get('CARD_NUMBER') for card in self._card_slot if (card is not None) and (card['TYPE'] in card_type)]
         )
 
+    @TestLogger.log('获取手机卡号')
+    def get_card(self, index):
+        """
+        获取手机卡信息
+        :param index: 卡槽位置
+        :return: 号码、运营商类型
+        """
+        return self._card_slot[index].get('CARD_NUMBER'), self._card_slot[index].get('TYPE')
+
     @abstractmethod
     def supported_card_types(self):
         """返回手机卡支持类型列表"""
@@ -108,7 +117,7 @@ class MobileDriver(ABC):
             try:
                 t = self.driver.current_package
                 return True
-            except InvalidSessionIdException or WebDriverException:
+            except Exception:  # InvalidSessionIdException or WebDriverException:
                 return False
 
     def connect_mobile(self):
@@ -399,6 +408,10 @@ class MobileDriver(ABC):
     def get_source(self):
         return self.driver.page_source
 
+    @TestLogger.log('点击坐标')
+    def tap(self, positions, duration=None):
+        self.driver.tap(positions, duration)
+
     def click_element(self, locator, default_timeout=5):
         self.wait_until(
             condition=lambda d: self.get_element(locator),
@@ -662,6 +675,9 @@ class MobileDriver(ABC):
             # TODO IOS MD5验证待实现
             return True
 
+    def is_keyboard_shown(self):
+        return self.driver.is_keyboard_shown()
+
     @TestLogger.log('隐藏键盘')
     def hide_keyboard(self, key_name=None, key=None, strategy=None):
         """隐藏键盘"""
@@ -691,6 +707,7 @@ class MobileDriver(ABC):
                 send_bys = self.get_elements(
                     locator)
                 send_bys[card_index].click()
+            return self.get_card(card_index)
         elif self.is_ios():
             # TODO IOS发短信功能待实现
             pass

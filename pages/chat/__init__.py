@@ -8,6 +8,7 @@ __all__ = [
     "ChatPicPreviewPage",
     "ChatSelectFilePage",
     "ChatSelectLocalFilePage",
+    "ChatProfilePage",
 ]
 
 from .ChatAudio import ChatAudioPage
@@ -17,6 +18,6 @@ from .ChatPhoto import ChatPhotoPage
 from .ChatPic import ChatPicPage
 from .ChatPicEdit import ChatPicEditPage
 from .ChatPicPreview import ChatPicPreviewPage
+from .ChatProfile import ChatProfilePage
 from .ChatSelectFile import ChatSelectFilePage
 from .ChatSelectLocalFile import ChatSelectLocalFilePage
-from .ChatProfile import ChatProfilePage

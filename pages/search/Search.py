@@ -1,6 +1,7 @@
 from xml.sax import saxutils
 
 from appium.webdriver.common.mobileby import MobileBy
+from selenium.common.exceptions import TimeoutException
 
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
@@ -28,6 +29,26 @@ class SearchPage(BasePage):
         '公众号名字': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_conv_name'),
         'android:id/statusBarBackground': (MobileBy.ID, 'android:id/statusBarBackground')
     }
+
+    @TestLogger.log("检查键盘是否弹出")
+    def assert_keyboard_is_display(self, max_wait_time=3):
+        try:
+            self.wait_until(
+                condition=lambda d: self.mobile.is_keyboard_shown(),
+                timeout=max_wait_time
+            )
+        except TimeoutException:
+            raise AssertionError('键盘没有弹出')
+
+    @TestLogger.log("检查键盘是否弹出")
+    def assert_keyboard_is_hided(self, max_wait_time=3):
+        try:
+            self.wait_until(
+                condition=lambda d: not self.mobile.is_keyboard_shown(),
+                timeout=max_wait_time
+            )
+        except TimeoutException:
+            raise AssertionError('键盘没有收回')
 
     @TestLogger.log("点击返回")
     def click_back_button(self):
