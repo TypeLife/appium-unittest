@@ -1,5 +1,5 @@
 from appium.webdriver.common.mobileby import MobileBy
-
+import time
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
@@ -50,6 +50,22 @@ class ChatGIFPage(BasePage):
                   }
 
     @TestLogger.log()
+    def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
+        """等待聊天gif页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["所有gif"])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
     def input_message(self, message):
         """输入搜索信息"""
         self.input_text(self.__class__.__locators["趣图搜搜..."], message)
@@ -59,6 +75,7 @@ class ChatGIFPage(BasePage):
     def send_message(self):
         """发送聊天信息"""
         self.click_element(self.__class__.__locators["发送按钮"])
+        time.sleep(1)
 
     @TestLogger.log()
     def close_gif(self):
@@ -71,5 +88,12 @@ class ChatGIFPage(BasePage):
         els = self.get_elements(self.__class__.__locators["所有gif"])
         if els and n < len(els):
             els[n].click()
+            time.sleep(3)
         else:
-            raise AssertionError("There is no gif.")
+            raise AssertionError("There is no %s gif." % n)
+
+    @TestLogger.log()
+    def is_gif_exist(self):
+        """是否存在gif"""
+        els = self.get_elements(self.__class__.__locators["所有gif"])
+        return len(els) > 0

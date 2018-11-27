@@ -46,6 +46,7 @@ __all__ = [
     "ChatPicPreviewPage",
     "ChatSelectFilePage",
     "ChatSelectLocalFilePage",
+    "ChatProfilePage",
 ]
 
 from .CreateGroupName import CreateGroupNamePage
@@ -95,3 +96,19 @@ from .message import EmailAssistantPage
 from .message import EmailDetailPage
 from .message import EmailListPage
 from .message import MessagePage
+from .SelectContacts import SelectContactsPage
+from .SelectOneGroup import SelectOneGroupPage
+from .SelectLocalContacts import SelectLocalContactsPage
+from .CreateGroupName import CreateGroupNamePage
+from .GroupChat import GroupChatPage
+from .chat import ChatAudioPage
+from .chat import ChatGIFPage
+from .chat import ChatMorePage
+from .chat import ChatPhotoPage
+from .chat import ChatPicPage
+from .chat import ChatPicEditPage
+from .chat import ChatPicPreviewPage
+from .chat import ChatSelectFilePage
+from .chat import ChatSelectLocalFilePage
+from .chat import ChatProfilePage
+

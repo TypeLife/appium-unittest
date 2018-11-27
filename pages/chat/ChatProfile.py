@@ -14,7 +14,7 @@ class ChatProfilePage(BasePage):
                   'com.chinasofti.rcs:id/pop_10g_window_drop_view': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/pop_10g_window_drop_view'),
                   'com.chinasofti.rcs:id/id_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/id_toolbar'),
-                  'com.chinasofti.rcs:id/back': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
+                  '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
                   '选择联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
                   'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
                   'com.chinasofti.rcs:id/top_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/top_layout'),
@@ -128,13 +128,12 @@ class ChatProfilePage(BasePage):
     def send_card(self):
         """发送名片"""
         self.click_element(self.__class__.__locators['发送名片'])
-        time.sleep(3)
+        time.sleep(5)
 
     @TestLogger.log()
     def cancel_send_card(self):
         """取消发送名片"""
         self.click_element(self.__class__.__locators['取消发送名片'])
-        time.sleep(3)
 
     @TestLogger.log()
     def wait_for_card_page_load(self, timeout=10, auto_accept_alerts=True):
@@ -167,3 +166,18 @@ class ChatProfilePage(BasePage):
                 message
             )
         return self
+
+    @TestLogger.log()
+    def search(self, condition):
+        """搜索联系人"""
+        self.input_text(self.__class__.__locators["搜索或输入手机号"], condition)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+        return self
+
+    @TestLogger.log()
+    def click_back(self):
+        """点击返回"""
+        self.click_element(self.__class__.__locators["返回"])

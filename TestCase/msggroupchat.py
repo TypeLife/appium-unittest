@@ -1,6 +1,7 @@
 import re
 import time
 import unittest
+import random
 
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
@@ -41,7 +42,8 @@ class Preconditions(object):
         # 如果当前页不是引导页第一页，重新启动app
         guide_page = GuidePage()
         if not guide_page.is_on_the_first_guide_page():
-            current_mobile().launch_app()
+            # current_mobile().launch_app()
+            current_mobile().reset_app()
             guide_page.wait_for_page_load(20)
 
         # 跳过引导页
@@ -407,18 +409,106 @@ class MsgGroupChatTest(TestCase):
         cpp.click_back()
         gcp.wait_for_page_load()
 
-
     @tags('ALL',)
     def test_msg_group_chat_0022(self):
         """在群聊聊天会话页面，拍照发送照片"""
         # 1、在当前聊天会话页面，点击输入框上方的相机图标，进入到相机拍摄页面
+        gcp = GroupChatPage()
+        gcp.click_take_photo()
         # 2、在相机拍摄页面，轻触拍摄按钮，是否可以拍摄成功一张照片
+        cpp = ChatPhotoPage()
+        cpp.take_photo()
         # 3、照片拍摄成功后，点击左边的返回按钮，是否可以删除本次拍摄的照片
+        cpp.click_back()
         # 4、重新拍摄一张照片后，点击右边的√按钮，是否可以发送这张照片
+        cpp.take_photo()
+        cpp.send_photo()
 
-    @tags('ALL',)
+    @unittest.skip("无法实现")
     def test_msg_group_chat_0023(self):
         """在群聊聊天会话页面，拍照发送照片"""
+        # 无法实现：appium执行按压1s操作服务器响应需要3s，在这3s时间内toast提示已消失，无法捕获提示
         # 1、在当前聊天会话页面，点击输入框上方的相机图标，进入到相机拍摄页面
+        gcp = GroupChatPage()
+        gcp.click_take_photo()
         # 2、在相机拍摄页面，长按拍摄按钮，是否可以进入到录像模式
+        video = ChatPhotoPage()
+        video.wait_for_page_load()
+        video.record_video(times=1000)
         # 3.在录像模式下，长按录像按钮，1秒钟之后，松开手指，是否会提示：拍摄失败
+        flag = video.is_toast_exist("拍摄失败", timeout=5, poll_frequency=0.01)
+        self.assertTrue(flag)
+        video.click_back()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0024(self):
+        """在群聊聊天会话页面，拍照发送照片"""
+        # 1、在当前聊天会话页面，点击输入框上方的相机图标，进入到相机拍摄页面
+        gcp = GroupChatPage()
+        gcp.click_take_photo()
+        # 2、在相机拍摄页面，长按拍摄按钮，进入到录像模式
+        video = ChatPhotoPage()
+        video.wait_for_page_load()
+        # 3.在录像模式下，长按录像按钮，10秒钟之后，松开手指，是否会展示并且自动播放当前录制的10秒录像
+        video.record_video(times=11000)
+        video.wait_for_record_video_after_page_load()
+        # 4.在录像展示页面，点击左边的返回按钮，是否可以删除本次录像
+        video.click_back()
+        video.take_photo_back()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0025(self):
+        """在群聊聊天会话页面，拍照发送照片"""
+        # 1、在当前聊天会话页面，点击输入框上方的相机图标，进入到相机拍摄页面
+        gcp = GroupChatPage()
+        gcp.click_take_photo()
+        # 2、在相机拍摄页面，长按拍摄按钮，进入到录像模式
+        video = ChatPhotoPage()
+        video.wait_for_page_load()
+        # 3.在录像模式下，长按录像按钮，10秒钟之后，松开手指，是否会展示并且自动播放当前录制的10秒录像
+        video.record_video(times=11000)
+        video.wait_for_record_video_after_page_load()
+        # 4.在录像展示页面，点击右边的√按钮，是否可以发送本次录像
+        video.send_video()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0027(self):
+        """在群聊聊天会话页面，拍照发送照片/录像"""
+        # 1、在当前聊天会话页面，点击输入框上方的相机图标，进入到相机拍摄页面
+        gcp = GroupChatPage()
+        gcp.click_take_photo()
+        # 2、在相机拍摄页面，点击左下角倒三角，是否可以返回到聊天会话页面
+        video = ChatPhotoPage()
+        video.wait_for_page_load()
+        video.take_photo_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0028(self):
+        """在群聊聊天会话页面，发送名片消息"""
+        # 1.在当前聊天会话页面，点击输入框上方的名片图标，进入到名片详情页面
+        gcp = GroupChatPage()
+        gcp.click_profile()
+        # 2.在名片详情页面，是否可以选择本地联系人名片，进行发送
+        cpp = ChatProfilePage()
+        cpp.wait_for_page_load()
+        cpp.select_card()
+        cpp.wait_for_card_page_load()
+        cpp.send_card()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0029(self):
+        """在群聊聊天会话页面，发送名片消息"""
+        # 1.在当前聊天会话页面，点击输入框上方的名片图标，进入到名片详情页面
+        gcp = GroupChatPage()
+        gcp.click_profile()
+        # 2.在名片详情页面，是否可以搜索选择本地联系人名片，进行发送
+        cpp = ChatProfilePage()
+        cpp.wait_for_page_load()
+        names = cpp.get_contacts_name()
+        # 随机选择一个联系人，进行搜索发送
+        cpp.search(random.choice(names))
+        cpp.select_card()
+        cpp.wait_for_card_page_load()
+        cpp.send_card()
+

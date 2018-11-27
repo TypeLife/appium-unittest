@@ -38,7 +38,7 @@ class GroupChatPage(BasePage):
                   'com.chinasofti.rcs:id/ll_rich_panel': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_rich_panel'),
                   '选择图片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic'),
                   '选择相机': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_take_photo'),
-                  '选择联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
+                  '选择名片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
                   '选择gif': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_gif'),
                   '选择更多': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
                   'com.chinasofti.rcs:id/input_divider_inside': (
@@ -88,8 +88,8 @@ class GroupChatPage(BasePage):
 
     @TestLogger.log()
     def click_profile(self):
-        """点击选择联系人"""
-        self.click_element(self.__class__.__locators["选择联系人"])
+        """点击选择名片"""
+        self.click_element(self.__class__.__locators["选择名片"])
 
     @TestLogger.log()
     def click_gif(self):
