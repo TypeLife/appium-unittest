@@ -191,7 +191,19 @@ class MessagePage(FooterPage):
         except TimeoutException:
             raise AssertionError('"{} != {}"'.format(self.get_text(self.__locators['消息名称']), title))
 
-    @TestLogger.log()
+    @TestLogger.log('检查页面有没有出现139邮箱消息')
+    def assert_139_message_not_appear(self, max_wait_time=30):
+        self.scroll_to_top()
+        try:
+            self.wait_until(
+                condition=lambda d: self.is_text_present('139邮箱助手'),
+                timeout=max_wait_time
+            )
+        except TimeoutException:
+            return
+        raise AssertionError('消息列表中不应该显示139邮箱消息，但实际上有显示')
+
+    @TestLogger.log('点击消息')
     def click_message(self, title, max_wait_time=5):
         locator = [MobileBy.XPATH,
                    '//*[@resource-id="com.chinasofti.rcs:id/rl_conv_list_item" and ' +
@@ -199,7 +211,18 @@ class MessagePage(FooterPage):
         self.find_message(title, max_wait_time)
         self.click_element(locator)
 
-    @TestLogger.log("往下翻页")
+    @TestLogger.log("检查最新的一条消息的Title")
+    def assert_the_first_message_is(self, title, max_wait_time=5):
+        self.scroll_to_top()
+        try:
+            self.wait_until(
+                condition=lambda d: self.get_text(self.__locators['消息名称']) == title,
+                timeout=max_wait_time
+            )
+        except TimeoutException:
+            raise AssertionError('{}秒内没有找到"{}"的最新消息'.format(max_wait_time, title))
+
+    @TestLogger.log("寻找定位消息")
     def find_message(self, title, max_wait_time=5):
         locator = [MobileBy.XPATH,
                    '//*[@resource-id="com.chinasofti.rcs:id/rl_conv_list_item" and ' +

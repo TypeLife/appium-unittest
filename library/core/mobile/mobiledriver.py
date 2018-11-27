@@ -702,7 +702,8 @@ class MobileDriver(ABC):
 
     @TestLogger.log("粘贴")
     def paste(self):
-        pass
+        # TODO
+        raise NotImplementedError('该方法未实现')
 
     def __str__(self):
         device_info = {
