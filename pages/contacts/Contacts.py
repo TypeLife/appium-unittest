@@ -18,7 +18,7 @@ class ContactsPage(BasePage):
             MobileBy.ID, 'com.chinasofti.rcs:id/constraintLayout_home_tab'),
         'com.chinasofti.rcs:id/viewPager': (MobileBy.ID, 'com.chinasofti.rcs:id/viewPager'),
         '通讯录': (MobileBy.ID, 'com.chinasofti.rcs:id/tvContact'),
-        'com.chinasofti.rcs:id/action_add': (MobileBy.ID, 'com.chinasofti.rcs:id/action_add'),
+        '+号': (MobileBy.ID, 'com.chinasofti.rcs:id/action_add'),
         '搜索': (MobileBy.ID, 'com.chinasofti.rcs:id/et_search'),
         'com.chinasofti.rcs:id/recyclerView_contactList': (
             MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView_contactList'),
@@ -53,6 +53,10 @@ class ContactsPage(BasePage):
         '工作台': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCircle'),
         '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe')
     }
+
+    @TestLogger.log('点击+号')
+    def click_add(self):
+        self.click_element(self.__locators['+号'])
 
     @TestLogger.log()
     def get_phone_number(self):
