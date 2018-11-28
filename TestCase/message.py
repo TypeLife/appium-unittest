@@ -1,4 +1,5 @@
 import unittest
+import uuid
 
 from selenium.common.exceptions import TimeoutException
 
@@ -115,21 +116,22 @@ class Preconditions(object):
         current_mobile().press_home_key()
 
     @staticmethod
-    def make_already_in_message_page():
+    def make_already_in_message_page(reset_required=False):
         """
         前置条件：
         1.已登录客户端
         2.当前在消息页面
         """
-        message_page = MessagePage()
-        try:
-            message_page.wait_until(
-                condition=lambda d: message_page.is_on_this_page(),
-                timeout=3
-            )
-            return
-        except TimeoutException:
-            pass
+        if not reset_required:
+            message_page = MessagePage()
+            try:
+                message_page.wait_until(
+                    condition=lambda d: message_page.is_on_this_page(),
+                    timeout=3
+                )
+                return
+            except TimeoutException:
+                pass
         Preconditions.reset_and_relaunch_app()
         Preconditions.make_already_in_one_key_login_page()
         Preconditions.login_by_one_key_login()
@@ -196,5 +198,194 @@ class MessageSearchTest(TestCase):
 
     @staticmethod
     def tearDown_test_msg_search_0002():
+        search_page = SearchPage()
+        search_page.click_back_button()
+
+    @tags('ALL', 'SMOKE')
+    def test_msg_search_0003(self):
+        """搜索关键字"""
+        message_page = MessagePage()
+        message_page.scroll_to_top()
+        message_page.click_search()
+
+        search_page = SearchPage()
+        if search_page.mobile.is_keyboard_shown():
+            search_page.hide_keyboard()
+        search_key = '陈'
+        search_page.input_search_keyword(search_key)
+        search_page.hide_keyboard_if_display()
+        # 联系人数量
+        contact_count = 0
+        # 群聊数量
+        group_chat_count = 0
+        # 聊天记录数量
+        chat_count = 0
+        now_go_to = None
+        for result in search_page.iterate_list():
+            category = search_page.determine_list_item_type(result)
+            if category in ['联系人', '群聊', '聊天记录', '公众号']:
+                now_go_to = category
+            if category == 0:
+                if now_go_to == '联系人':
+                    contact_count += 1
+                elif now_go_to == '群聊':
+                    group_chat_count += 1
+                elif now_go_to == '聊天记录':
+                    chat_count += 1
+                else:
+                    pass
+        self.assertGreater(contact_count, 0, '匹配到有关“{}”的联系人信息'.format(search_key))
+        self.assertEqual(chat_count, 0, '聊天记录不为空')
+        self.assertEqual(group_chat_count, 0, '群聊记录群聊记录不为空')
+
+    @staticmethod
+    def setUp_test_msg_search_0003():
+        """
+        1、联网正常
+        2、首次登录客户端，没有群聊和聊天记录
+        3、当前全局搜索页面
+        """
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page(reset_required=True)
+
+    @staticmethod
+    def tearDown_test_msg_search_0003():
+        search_page = SearchPage()
+        search_page.click_back_button()
+
+    @tags('ALL', 'SMOKE')
+    def test_msg_search_0004(self):
+        """搜索关键字"""
+        message_page = MessagePage()
+        message_page.scroll_to_top()
+        message_page.click_search()
+
+        search_page = SearchPage()
+        if search_page.mobile.is_keyboard_shown():
+            search_page.hide_keyboard()
+        search_key = '群'
+        search_page.input_search_keyword(search_key)
+        search_page.hide_keyboard_if_display()
+        # 联系人数量
+        contact_count = 0
+        # 群聊数量
+        group_chat_count = 0
+        # 聊天记录数量
+        chat_count = 0
+        # 列表顺序【联系人】-【群聊】-【聊天记录】板块顺序
+        list_order = []
+        now_go_to = None
+        for result in search_page.iterate_list():
+            category = search_page.determine_list_item_type(result)
+            if category in ['联系人', '群聊', '聊天记录', '公众号']:
+                now_go_to = category
+                if category in ['联系人', '群聊', '聊天记录']:
+                    list_order.append(category)
+            if category == 0:
+                if now_go_to == '联系人':
+                    contact_count += 1
+                elif now_go_to == '群聊':
+                    group_chat_count += 1
+                elif now_go_to == '聊天记录':
+                    chat_count += 1
+                else:
+                    pass
+        self.assertLessEqual(contact_count, 3, '匹配到有关“{}”的联系人信息'.format(search_key))
+        self.assertLessEqual(chat_count, 3, '聊天记录不为空')
+        self.assertLessEqual(group_chat_count, 3, '群聊记录群聊记录不为空')
+        if len(list_order) > 0:
+            self.assertEqual(list_order[0], '联系人')
+        if len(list_order) > 1:
+            self.assertEqual(list_order[1], '群聊')
+        if len(list_order) > 2:
+            self.assertEqual(list_order[2], '聊天记录')
+
+    @staticmethod
+    def setUp_test_msg_search_0004():
+        """
+        1、联网正常
+        2、已登录客户端
+        3、当前全局搜索页面
+        """
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page(reset_required=True)
+
+    @staticmethod
+    def tearDown_test_msg_search_0004():
+        search_page = SearchPage()
+        search_page.click_back_button()
+
+    @tags('ALL', 'SMOKE')
+    def test_msg_search_0005(self):
+        """会话窗口点击后退"""
+
+        # 先创建一个名字唯一的联系人名并发一条内容唯一的消息文本
+        contacts_page = ContactsPage()
+        contacts_page.open_contacts_page()
+        contacts_page.click_add()
+
+        create_page = CreateContactPage()
+        uid = uuid.uuid4().__str__()
+        number = '17611681917'
+
+        create_page.hide_keyboard_if_display()
+        create_page.create_contact(uid, number)
+
+        detail_page = ContactDetailsPage()
+        detail_page.click_message_icon()
+
+        chat = ChatWindowPage()
+        if chat.is_tips_display():
+            chat.directly_close_tips_alert()
+        message_content = uuid.uuid4().__str__()
+        chat.send_message(message_content)
+
+        # 返回消息页并进入搜索页面
+        chat.click_back()
+        detail_page.click_back_icon()
+        message_page = MessagePage()
+        message_page.open_message_page()
+        message_page.scroll_to_top()
+        message_page.click_search()
+        search_page = SearchPage()
+        if search_page.mobile.is_keyboard_shown():
+            search_page.hide_keyboard()
+
+        # 输入关键字进行搜索
+        search_key = uid
+        search_page.input_search_keyword(search_key)
+        search_page.hide_keyboard_if_display()
+
+        now_go_to = None
+        for result in search_page.iterate_list():
+            category = search_page.determine_list_item_type(result)
+            if category in ['联系人', '群聊', '聊天记录', '公众号']:
+                now_go_to = category
+            if now_go_to == '联系人' and category == 0:
+                result.click()
+                break
+        detail_page.wait_for_page_load()
+        detail_page.click_message_icon()
+        if chat.is_tips_display():
+            chat.directly_close_tips_alert()
+        chat.assert_message_content_display(message_content)
+        chat.click_back()
+        detail_page.click_back_icon()
+        # 检查搜索关键字
+        search_page.wait_for_page_load()
+        search_page.assert_current_search_keyword_is(search_key)
+
+    @staticmethod
+    def setUp_test_msg_search_0005():
+        """
+        1、联网正常
+        2、已登录客户端
+        3、当前全局搜索页面
+        """
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page(reset_required=True)
+
+    @staticmethod
+    def tearDown_test_msg_search_0005():
         search_page = SearchPage()
         search_page.click_back_button()
