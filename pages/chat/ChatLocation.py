@@ -1,82 +1,125 @@
 from appium.webdriver.common.mobileby import MobileBy
-
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
+import time
 
 
-class ChatMorePage(BasePage):
-    """聊天 更多 页面"""
-    ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.MessageDetailActivity'
+class ChatLocationPage(BasePage):
+    """聊天 位置 页面"""
+    ACTIVITY = 'com.cmicc.module_message.ui.activity.GDLocationActvity'
 
-    __locators = {'': (MobileBy.ID, ''),
-                  'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
-                  'android:id/content': (MobileBy.ID, 'android:id/content'),
-                  'com.chinasofti.rcs:id/pop_10g_window_drop_view': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/pop_10g_window_drop_view'),
-                  'com.chinasofti.rcs:id/id_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/id_toolbar'),
-                  'com.chinasofti.rcs:id/back': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
-                  'com.chinasofti.rcs:id/back_arrow': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
-                  '群聊0012(3)': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
-                  'com.chinasofti.rcs:id/iv_slient': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_slient'),
-                  'com.chinasofti.rcs:id/action_multicall': (MobileBy.ID, 'com.chinasofti.rcs:id/action_multicall'),
-                  'com.chinasofti.rcs:id/action_setting': (MobileBy.ID, 'com.chinasofti.rcs:id/action_setting'),
-                  'com.chinasofti.rcs:id/view_line': (MobileBy.ID, 'com.chinasofti.rcs:id/view_line'),
-                  'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
-                  'com.chinasofti.rcs:id/message_editor_layout': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/message_editor_layout'),
-                  'com.chinasofti.rcs:id/rv_message_chat': (MobileBy.ID, 'com.chinasofti.rcs:id/rv_message_chat'),
-                  'com.chinasofti.rcs:id/imgae_fl': (MobileBy.ID, 'com.chinasofti.rcs:id/imgae_fl'),
-                  'com.chinasofti.rcs:id/layout_loading': (MobileBy.ID, 'com.chinasofti.rcs:id/layout_loading'),
-                  'com.chinasofti.rcs:id/imageview_msg_image': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_image'),
-                  'com.chinasofti.rcs:id/svd_head': (MobileBy.ID, 'com.chinasofti.rcs:id/svd_head'),
-                  'com.chinasofti.rcs:id/iv_bkg': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_bkg'),
-                  'com.chinasofti.rcs:id/input_and_menu': (MobileBy.ID, 'com.chinasofti.rcs:id/input_and_menu'),
-                  'com.chinasofti.rcs:id/ll_text_input': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_text_input'),
-                  'com.chinasofti.rcs:id/layout_for_message': (MobileBy.ID, 'com.chinasofti.rcs:id/layout_for_message'),
-                  'com.chinasofti.rcs:id/chat_rich_media_vp': (MobileBy.ID, 'com.chinasofti.rcs:id/chat_rich_media_vp'),
-                  'com.chinasofti.rcs:id/iocn_img': (MobileBy.ID, 'com.chinasofti.rcs:id/iocn_img'),
-                  '文件': (MobileBy.XPATH, '//*[@text="文件"]'),
-                  '群短信': (MobileBy.XPATH, '//*[@text="群短信"]'),
-                  '位置': (MobileBy.XPATH, '//*[@text="位置"]'),
-                  '红包': (MobileBy.XPATH, '//*[@text="红包"]'),
-                  'com.chinasofti.rcs:id/ll_rich_panel': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_rich_panel'),
-                  'com.chinasofti.rcs:id/ib_pic': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic'),
-                  'com.chinasofti.rcs:id/ib_take_photo': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_take_photo'),
-                  'com.chinasofti.rcs:id/ib_profile': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
-                  'com.chinasofti.rcs:id/ib_gif': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_gif'),
-                  '关闭更多': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
-                  'com.chinasofti.rcs:id/input_divider_inside': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/input_divider_inside'),
-                  'com.chinasofti.rcs:id/input_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/input_layout'),
-                  'com.chinasofti.rcs:id/fl_edit_panel': (MobileBy.ID, 'com.chinasofti.rcs:id/fl_edit_panel'),
-                  '说点什么...': (MobileBy.ID, 'com.chinasofti.rcs:id/et_message'),
-                  'com.chinasofti.rcs:id/ib_expression': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression'),
-                  'com.chinasofti.rcs:id/ib_audio': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_audio')
-                  }
+    __locators = {
+        'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
+        'android:id/content': (MobileBy.ID, 'android:id/content'),
+        '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
+        'com.chinasofti.rcs:id/location_back_btn': (MobileBy.ID, 'com.chinasofti.rcs:id/location_back_btn'),
+        '位置': (MobileBy.ID, 'com.chinasofti.rcs:id/location_title'),
+        'com.chinasofti.rcs:id/select_rl': (MobileBy.ID, 'com.chinasofti.rcs:id/select_rl'),
+        '发送': (MobileBy.ID, 'com.chinasofti.rcs:id/location_ok_btn'),
+        'com.chinasofti.rcs:id/map_info_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/map_info_layout'),
+        'com.chinasofti.rcs:id/gd_map_view': (MobileBy.ID, 'com.chinasofti.rcs:id/gd_map_view'),
+        'com.chinasofti.rcs:id/location_round_tips': (
+            MobileBy.ID, 'com.chinasofti.rcs:id/location_round_tips'),
+        '可选附近500米范围内的地点': (MobileBy.ID, 'com.chinasofti.rcs:id/location_round_tips_text'),
+        'com.chinasofti.rcs:id/location_poi_list': (MobileBy.ID, 'com.chinasofti.rcs:id/location_poi_list'),
+        'com.chinasofti.rcs:id/poi_list_item_root_view': (
+            MobileBy.ID, 'com.chinasofti.rcs:id/poi_list_item_root_view'),
+        '中国银行24小时自助银行(环城路)': (MobileBy.ID, 'com.chinasofti.rcs:id/poi_list_item_title'),
+        '地址详细信息': (
+            MobileBy.ID, 'com.chinasofti.rcs:id/poi_list_item_detail'),
+        'com.chinasofti.rcs:id/poi_list_item_select': (
+            MobileBy.ID, 'com.chinasofti.rcs:id/poi_list_item_select'),
+        '中国铁路二十二局': (MobileBy.ID, 'com.chinasofti.rcs:id/poi_list_item_title'),
+        '广东省深圳市坂田街道雪岗北路133号天安云谷对面中国铁路二十二局': (MobileBy.ID, 'com.chinasofti.rcs:id/poi_list_item_detail'),
+        '博兴大厦': (MobileBy.ID, 'com.chinasofti.rcs:id/poi_list_item_title'),
+        '广东省深圳市坂田街道岗头发展大厦岗头村中心围一区8号博兴大厦博兴大厦': (MobileBy.ID, 'com.chinasofti.rcs:id/poi_list_item_detail'),
+        '岗头发展大厦': (MobileBy.ID, 'com.chinasofti.rcs:id/poi_list_item_title'),
+        '广东省深圳市坂田街道办雪岗北路133号岗头发展大厦': (MobileBy.ID, 'com.chinasofti.rcs:id/poi_list_item_detail'),
+        '选择项': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/poi_list_item_root_view"]/android.widget.ImageView'),
+        '第一项': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/poi_list_item_root_view" and @index="0"]/android.widget.ImageView'),
+        '其它项': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/poi_list_item_root_view" and not(android.widget.ImageView)]'),
+        # 权限框
+        '允许': (MobileBy.XPATH, '//android.widget.Button[@text="允许"]'),
+        '拒绝': (MobileBy.XPATH, '//android.widget.Button[@text="拒绝"]'),
+        '要允许 和飞信 通过网络或者卫星对您的手机定位吗？': (MobileBy.ID, 'com.lbe.security.miui:id/permission_message'),
+    }
 
     @TestLogger.log()
-    def click_file(self):
-        """点击文件"""
-        self.click_element(self.__class__.__locators["文件"])
+    def select_other_item(self):
+        """选择其它项"""
+        els = self.get_elements(self.__class__.__locators["其它项"])
+        if els:
+            els[0].click()
+        else:
+            print("no locations info")
 
     @TestLogger.log()
-    def click_group_smss(self):
-        """点击群短信"""
-        self.click_element(self.__class__.__locators["群短信"])
+    def is_selected_first_item(self):
+        """检查默认是否选择的是第一项"""
+        els = self.get_elements(self.__class__.__locators["第一项"])
+        if els:
+            return True
+        return False
 
     @TestLogger.log()
-    def click_location(self):
-        """点击位置"""
-        self.click_element(self.__class__.__locators["位置"])
+    def get_location_info(self):
+        """获取发送的位置信息"""
+        el = self.get_element(self.__class__.__locators["选择项"])
+        addr_info = el.parent.find_element(*self.__class__.__locators["地址详细信息"]).text
+        return addr_info
+
+
 
     @TestLogger.log()
-    def click_red_packet(self):
-        """点击红包"""
-        self.click_element(self.__class__.__locators["红包"])
+    def click_allow(self):
+        """点击允许"""
+        self.click_element(self.__class__.__locators["允许"])
 
     @TestLogger.log()
-    def close_more(self):
-        """关闭更多的隐藏图标（文件，群短信，位置，红包）"""
-        self.click_element(self.__class__.__locators["关闭更多"])
+    def click_back(self):
+        """点击返回"""
+        self.click_element(self.__class__.__locators["返回"])
+
+    @TestLogger.log()
+    def click_send(self):
+        """点击发送"""
+        self.click_element(self.__class__.__locators["发送"])
+        time.sleep(3)
+
+    @TestLogger.log()
+    def send_btn_is_enabled(self):
+        """获取发送按钮状态是否可点击"""
+        return self._is_enabled(self.__class__.__locators["发送"])
+
+    @TestLogger.log()
+    def wait_for_page_load(self, timeout=10, auto_accept_alerts=True):
+        """等待位置页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["地址详细信息"])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def wait_for_permission_message_load(self, timeout=6, auto_accept_alerts=False):
+        """等待权限允许申请弹窗加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators['要允许 和飞信 通过网络或者卫星对您的手机定位吗？'])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
 
