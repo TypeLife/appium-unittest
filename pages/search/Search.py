@@ -31,6 +31,11 @@ class SearchPage(BasePage):
         'android:id/statusBarBackground': (MobileBy.ID, 'android:id/statusBarBackground')
     }
 
+    @TestLogger.log('如果键盘弹出，就收回键盘')
+    def hide_keyboard_if_display(self):
+        if self.mobile.is_keyboard_shown():
+            self.hide_keyboard()
+
     @TestLogger.log("检查键盘是否弹出")
     def assert_keyboard_is_display(self, max_wait_time=3):
         try:

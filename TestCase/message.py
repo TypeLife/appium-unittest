@@ -212,6 +212,7 @@ class MessageSearchTest(TestCase):
             search_page.hide_keyboard()
         search_key = '陈'
         search_page.input_search_keyword(search_key)
+        search_page.hide_keyboard_if_display()
         # 联系人数量
         contact_count = 0
         # 群聊数量
@@ -248,5 +249,67 @@ class MessageSearchTest(TestCase):
 
     @staticmethod
     def tearDown_test_msg_search_0003():
+        search_page = SearchPage()
+        search_page.click_back_button()
+
+    @tags('ALL', 'SMOKE')
+    def test_msg_search_0004(self):
+        """搜索关键字"""
+        message_page = MessagePage()
+        message_page.scroll_to_top()
+        message_page.click_search()
+
+        search_page = SearchPage()
+        if search_page.mobile.is_keyboard_shown():
+            search_page.hide_keyboard()
+        search_key = '0'
+        search_page.input_search_keyword(search_key)
+        search_page.hide_keyboard_if_display()
+        # 联系人数量
+        contact_count = 0
+        # 群聊数量
+        group_chat_count = 0
+        # 聊天记录数量
+        chat_count = 0
+        # 列表顺序【联系人】-【群聊】-【聊天记录】板块顺序
+        list_order = []
+        now_go_to = None
+        for result in search_page.iterate_list():
+            category = search_page.determine_list_item_type(result)
+            if category in ['联系人', '群聊', '聊天记录', '公众号']:
+                now_go_to = category
+                if category in ['联系人', '群聊', '聊天记录']:
+                    list_order.append(category)
+            if category == 0:
+                if now_go_to == '联系人':
+                    contact_count += 1
+                elif now_go_to == '群聊':
+                    group_chat_count += 1
+                elif now_go_to == '聊天记录':
+                    chat_count += 1
+                else:
+                    pass
+        self.assertLessEqual(contact_count, 3, '匹配到有关“{}”的联系人信息'.format(search_key))
+        self.assertLessEqual(chat_count, 3, '聊天记录不为空')
+        self.assertLessEqual(group_chat_count, 3, '群聊记录群聊记录不为空')
+        if len(list_order) > 0:
+            self.assertEqual(list_order[0], '联系人')
+        if len(list_order) > 1:
+            self.assertEqual(list_order[1], '群聊')
+        if len(list_order) > 2:
+            self.assertEqual(list_order[2], '聊天记录')
+
+    @staticmethod
+    def setUp_test_msg_search_0004():
+        """
+        1、联网正常
+        2、首次登录客户端，没有群聊和聊天记录
+        3、当前全局搜索页面
+        """
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page(reset_required=True)
+
+    @staticmethod
+    def tearDown_test_msg_search_0004():
         search_page = SearchPage()
         search_page.click_back_button()
