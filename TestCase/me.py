@@ -294,7 +294,7 @@ class MeMsgSettingTest(TestCase):
 class MeSmsSettingTest(TestCase):
     """我-短信设置"""
 
-    @tags("ALL", "SMOKE")
+    @tags("ALL", "SMOKE", 'DEBUG')
     def test_me_sms_setting_0001(self):
         """短信设置默认关闭状态"""
         sms_setting = SmsSettingPage()
@@ -314,7 +314,7 @@ class MeSmsSettingTest(TestCase):
         setting_page = SettingPage()
         setting_page.click_menu("短信设置")
 
-    @tags('ALL', 'SMOKE')
+    @tags('ALL', 'SMOKE', 'DEBUG')
     def test_me_sms_setting_0002(self):
         """开启应用内收发短信"""
         sms_setting = SmsSettingPage()

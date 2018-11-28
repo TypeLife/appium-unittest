@@ -2,6 +2,7 @@ from xml.sax import saxutils
 
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support import expected_conditions as ec
 
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
@@ -183,3 +184,53 @@ class SearchPage(BasePage):
             return True
         else:
             return False
+
+    @TestLogger.log('迭代搜索结果')
+    def iterate_list(self):
+        """
+        迭代消息列表,默认从上往下
+        :return:
+        """
+        item_locator = [MobileBy.XPATH, '//*[../../*[@scrollable="true"]]']
+        items = self.get_elements(item_locator)
+        if not items:
+            return
+        while True:
+            last_one = items[-1]
+            pre = last_one.location
+            yield from items
+            self.page_down()
+            post = last_one.location
+            # 如果元素消失或者坐标发生变化，表示翻页后列表有新数据
+            post_y, pre_y = post.get('y'), pre.get('y')
+            if ec.staleness_of(last_one)(True) or post_y < pre_y:
+                new_items = self.get_elements(item_locator)
+                stale_items = []
+
+                for item in items:
+                    if items.index(item) + 1 >= len(items):
+                        break
+                    if item.location == items[items.index(item) + 1].location:
+                        stale_items.append(item)
+                    else:
+                        break
+                old_items = items[len(stale_items):]
+                items = new_items[len(old_items):]
+                if not items:
+                    return
+                continue
+            return
+
+    @TestLogger.log('判断列表项类型')
+    def determine_list_item_type(self, item):
+        is_list_item = 0  # 搜索结果
+        tips = 1  # 提示语"搜索和通讯录联系人..."
+        split_lines = item.find_elements(MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/text_hint"]')
+        search_tips = item.find_elements(MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/content"]')
+
+        if not split_lines and not search_tips:
+            return is_list_item
+        if split_lines:
+            return split_lines[0].text
+        if search_tips:
+            return tips

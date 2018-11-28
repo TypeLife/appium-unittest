@@ -470,6 +470,25 @@ class MobileDriver(ABC):
                                  "but was not.".format(locator))
         return True
 
+    @TestLogger.log('点到点滑动')
+    def swipe_point_to_point(self, from_position, to_position, duration=None):
+        if self.is_android():
+            self.driver.swipe(
+                from_position[0],
+                from_position[1],
+                to_position[0],
+                to_position[1],
+                duration
+            )
+        else:
+            self.driver.swipe(
+                from_position[0],
+                from_position[1],
+                to_position[0] - from_position[0],
+                to_position[1] - from_position[1],
+                duration
+            )
+
     def swipe_by_direction(self, locator, direction, duration=None):
         """
         在元素内滑动
