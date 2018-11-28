@@ -16,8 +16,8 @@ class ChatWindowPage(ChatNoticeDialog, BasePage):
         'com.chinasofti.rcs:id/pop_10g_window_drop_view': (
             MobileBy.ID, 'com.chinasofti.rcs:id/pop_10g_window_drop_view'),
         'com.chinasofti.rcs:id/id_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/id_toolbar'),
-        'com.chinasofti.rcs:id/back': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
-        'com.chinasofti.rcs:id/back_arrow': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
+        '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
+        '返回箭头': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
         '13537795364': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
         'com.chinasofti.rcs:id/action_call': (MobileBy.ID, 'com.chinasofti.rcs:id/action_call'),
         'com.chinasofti.rcs:id/action_setting': (MobileBy.ID, 'com.chinasofti.rcs:id/action_setting'),
@@ -43,12 +43,30 @@ class ChatWindowPage(ChatNoticeDialog, BasePage):
         'com.chinasofti.rcs:id/input_divider_inside': (MobileBy.ID, 'com.chinasofti.rcs:id/input_divider_inside'),
         'com.chinasofti.rcs:id/input_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/input_layout'),
         'com.chinasofti.rcs:id/fl_edit_panel': (MobileBy.ID, 'com.chinasofti.rcs:id/fl_edit_panel'),
-        '说点什么...': (MobileBy.ID, 'com.chinasofti.rcs:id/et_message'),
+        '说点什么': (MobileBy.ID, 'com.chinasofti.rcs:id/et_message'),
+        '发送按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_send'),
         'com.chinasofti.rcs:id/ib_expression': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression'),
         'com.chinasofti.rcs:id/ib_audio': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_audio'),
         'com.chinasofti.rcs:id/ib_record_red_dot': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_record_red_dot'),
         'android:id/statusBarBackground': (MobileBy.ID, 'android:id/statusBarBackground')
     }
+
+    @TestLogger.log('点击返回')
+    def click_back(self):
+        self.click_element(self.__locators['返回'])
+
+    @TestLogger.log('输入消息文本')
+    def input_message_text(self, content):
+        self.input_text(self.__locators['说点什么'], content)
+
+    @TestLogger.log('点击发送按钮')
+    def click_send_button(self):
+        self.click_element(self.__locators['发送按钮'])
+
+    @TestLogger.log('发送消息')
+    def send_message(self, content):
+        self.input_message_text(content)
+        self.click_send_button()
 
     @TestLogger.log('检查是否收到期望的消息内容')
     def assert_message_content_display(self, content, max_wait_time=5):

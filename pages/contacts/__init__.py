@@ -1,8 +1,8 @@
 __all__ = [
     'ContactDetailsPage',
     'ContactsPage',
-    'NewContactPage',
+    'CreateContactPage',
 ]
 from .ContactDetails import ContactDetailsPage
 from .Contacts import ContactsPage
-from .NewContact import NewContactPage
+from .CreateContact import CreateContactPage

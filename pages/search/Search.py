@@ -71,6 +71,11 @@ class SearchPage(BasePage):
         """输入搜索关键字"""
         self.input_text(self.__locators['输入关键词快速搜索'], keyword)
 
+    @TestLogger.log('检查当前搜索框内容')
+    def assert_current_search_keyword_is(self, keyword):
+        """检查当前搜索框内容"""
+        self.element_text_should_be(self.__locators['输入关键词快速搜索'], keyword)
+
     @TestLogger.log('检查搜索到的联系人名字')
     def assert_contact_name_display(self, name, timeout=0):
         """检查搜索到的联系人名字"""
@@ -196,7 +201,7 @@ class SearchPage(BasePage):
         迭代消息列表,默认从上往下
         :return:
         """
-        item_locator = [MobileBy.XPATH, '//*[../../*[@scrollable="true"]]']
+        item_locator = [MobileBy.XPATH, '//*[../../*[@resource-id="com.chinasofti.rcs:id/single_result_list"]]']
         items = self.get_elements(item_locator)
         if not items:
             return

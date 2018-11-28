@@ -1,4 +1,5 @@
 import unittest
+import uuid
 
 from selenium.common.exceptions import TimeoutException
 
@@ -262,7 +263,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         if search_page.mobile.is_keyboard_shown():
             search_page.hide_keyboard()
-        search_key = '0'
+        search_key = '群'
         search_page.input_search_keyword(search_key)
         search_page.hide_keyboard_if_display()
         # 联系人数量
@@ -303,7 +304,7 @@ class MessageSearchTest(TestCase):
     def setUp_test_msg_search_0004():
         """
         1、联网正常
-        2、首次登录客户端，没有群聊和聊天记录
+        2、已登录客户端
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
@@ -311,5 +312,80 @@ class MessageSearchTest(TestCase):
 
     @staticmethod
     def tearDown_test_msg_search_0004():
+        search_page = SearchPage()
+        search_page.click_back_button()
+
+    @tags('ALL', 'SMOKE')
+    def test_msg_search_0005(self):
+        """会话窗口点击后退"""
+
+        # 先创建一个名字唯一的联系人名并发一条内容唯一的消息文本
+        contacts_page = ContactsPage()
+        contacts_page.open_contacts_page()
+        contacts_page.click_add()
+
+        create_page = CreateContactPage()
+        uid = uuid.uuid4().__str__()
+        number = '17611681917'
+
+        create_page.hide_keyboard_if_display()
+        create_page.create_contact(uid, number)
+
+        detail_page = ContactDetailsPage()
+        detail_page.click_message_icon()
+
+        chat = ChatWindowPage()
+        if chat.is_tips_display():
+            chat.directly_close_tips_alert()
+        message_content = uuid.uuid4().__str__()
+        chat.send_message(message_content)
+
+        # 返回消息页并进入搜索页面
+        chat.click_back()
+        detail_page.click_back_icon()
+        message_page = MessagePage()
+        message_page.open_message_page()
+        message_page.scroll_to_top()
+        message_page.click_search()
+        search_page = SearchPage()
+        if search_page.mobile.is_keyboard_shown():
+            search_page.hide_keyboard()
+
+        # 输入关键字进行搜索
+        search_key = uid
+        search_page.input_search_keyword(search_key)
+        search_page.hide_keyboard_if_display()
+
+        now_go_to = None
+        for result in search_page.iterate_list():
+            category = search_page.determine_list_item_type(result)
+            if category in ['联系人', '群聊', '聊天记录', '公众号']:
+                now_go_to = category
+            if now_go_to == '联系人' and category == 0:
+                result.click()
+                break
+        detail_page.wait_for_page_load()
+        detail_page.click_message_icon()
+        if chat.is_tips_display():
+            chat.directly_close_tips_alert()
+        chat.assert_message_content_display(message_content)
+        chat.click_back()
+        detail_page.click_back_icon()
+        # 检查搜索关键字
+        search_page.wait_for_page_load()
+        search_page.assert_current_search_keyword_is(search_key)
+
+    @staticmethod
+    def setUp_test_msg_search_0005():
+        """
+        1、联网正常
+        2、已登录客户端
+        3、当前全局搜索页面
+        """
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page(reset_required=True)
+
+    @staticmethod
+    def tearDown_test_msg_search_0005():
         search_page = SearchPage()
         search_page.click_back_button()
