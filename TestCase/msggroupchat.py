@@ -512,3 +512,93 @@ class MsgGroupChatTest(TestCase):
         cpp.wait_for_card_page_load()
         cpp.send_card()
 
+    @tags('ALL',)
+    def test_msg_group_chat_0030(self):
+        """在群聊聊天会话页面，发送名片消息"""
+        # 1.在当前聊天会话页面，点击输入框上方的名片图标，可进入到名片详情页面
+        gcp = GroupChatPage()
+        gcp.click_profile()
+        # 2.在名片详情页面，不可以搜索选择陌生联系人名片，进行发送
+        cpp = ChatProfilePage()
+        cpp.wait_for_page_load()
+        names = cpp.get_contacts_name()
+        # 构造陌生联系人名
+        name = ""
+        while True:
+            info = "在名片详情页面，不可以搜索选择陌生联系人名片，进行发送"
+            name = random.choices(info, k=3)
+            if name not in names:
+                break
+        cpp.search(name)
+        flag = cpp.select_card()
+        self.assertFalse(flag)
+        cpp.click_back()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0033(self):
+        """在群聊聊天会话页面，发送名片消息"""
+        # 1.在当前聊天会话页面，点击输入框上方的名片图标，进入到名片详情页面
+        gcp = GroupChatPage()
+        gcp.click_profile()
+        # 2.在名片详情页面，点击右侧的索引字母，索引字母定位搜索是否正常
+        cpp = ChatProfilePage()
+        cpp.wait_for_page_load()
+        # 获取所有右侧索引字母，随机选择一个点击
+        letters = cpp.get_letters_index()
+        letter = random.choice(letters)
+        cpp.click_letter_index(letter)
+        left_lets = cpp.get_left_letters()
+        self.assertIn(letter, left_lets)
+        cpp.click_back()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0034(self):
+        """在群聊聊天会话页面，发送GIF图片消息"""
+        # 1.在当前聊天会话页面，点击输入框上方的GIF图标，进入到GIF图片展示页面
+        gcp = GroupChatPage()
+        gcp.click_gif()
+        # 2、在GIF图片展示页面，直接点击上方展示的GIF图片，能否可以进行发送
+        gif = ChatGIFPage()
+        gif.wait_for_page_load()
+        gif.send_gif()
+        # 3.在GIF图片展示页面，多次点击上方展示的GIF图片，发送出去的GIF图片是否会展示多张
+        gif.send_gif()
+        gif.send_gif()
+        # 4、点击输入框左上角的X按钮是否可以关闭GIF图片的展示
+        gif.close_gif()
+        gcp.page_should_not_contain_text("趣图搜搜")
+
+    @tags('ALL',)
+    def test_msg_group_chat_0035(self):
+        """在群聊聊天会话页面，发送GIF图片消息"""
+        # 1.在当前聊天会话页面，点击输入框上方的GIF图标，进入到GIF图片展示页面
+        gcp = GroupChatPage()
+        gcp.click_gif()
+        gif = ChatGIFPage()
+        gif.wait_for_page_load()
+        # 2、在输入框中输入英文、中文、字符、数字、表情，是否可以搜索出对应的GIF图片
+        # 3、在输入框中输入的搜索条件，搜索不出对应的GIF图片时，是否会提示：无搜索结果,换个热词试试
+        infos = ["appium", "哈哈", "a", "123456", "w(ﾟДﾟ)w"]
+        for info in infos:
+            gif.input_message(info)
+            toast_flag = gif.is_toast_exist("无搜索结果，换个热词试试", timeout=3)
+            gif_flag = gif.is_gif_exist()
+            self.assertNotEqual(toast_flag, gif_flag)
+        gif.close_gif()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0036(self):
+        """在群聊聊天会话页面，发送GIF图片消息"""
+        # 1.在当前聊天会话页面，点击输入框上方的GIF图标，进入到GIF图片展示页面
+        gcp = GroupChatPage()
+        gcp.click_gif()
+        gif = ChatGIFPage()
+        gif.wait_for_page_load()
+        # 2、在GIF图片展示页面，点击输入框右边的语音，是否可以切换到语音模式页面
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if gcp.is_text_present("请选择您偏好的语音发送模式"):
+            audio.click_sure()
+        audio.wait_for_page_load()
+        audio.click_exit()
+

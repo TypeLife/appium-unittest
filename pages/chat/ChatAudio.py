@@ -52,13 +52,25 @@ class ChatAudioPage(BasePage):
                   '无法识别，请重试': (MobileBy.ID, 'com.chinasofti.rcs:id/recoder_tip'),
                   'com.chinasofti.rcs:id/record_audio_btn': (MobileBy.ID, 'com.chinasofti.rcs:id/record_audio_btn'),
                   '退出': (MobileBy.ID, 'com.chinasofti.rcs:id/recodr_audio_exit'),
-                  '设置': (MobileBy.ID, 'com.chinasofti.rcs:id/recodr_audio_finish')
+                  '设置': (MobileBy.ID, 'com.chinasofti.rcs:id/recodr_audio_finish'),
+                  # 语音发送模式选择页面
+                  '请选择您偏好的语音发送模式:': (MobileBy.XPATH, '//*[@text="请选择您偏好的语音发送模式:")]'),
+                  '同时发送语音+文字(语音识别)': (MobileBy.ID, 'com.chinasofti.rcs:id/select_send_audio_and_text'),
+                  '仅发送文字(语音识别)': (MobileBy.ID, 'com.chinasofti.rcs:id/select_send_text'),
+                  '仅发送语音': (MobileBy.ID, 'com.chinasofti.rcs:id/select_send_voice'),
+                  '取消': (MobileBy.ID, 'com.chinasofti.rcs:id/select_send_audio_type_cancel'),
+                  '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/select_send_audio_type_confirm'),
                   }
 
     @TestLogger.log()
     def click_exit(self):
         """点击退出"""
         self.click_element(self.__class__.__locators["退出"])
+
+    @TestLogger.log()
+    def click_sure(self):
+        """点击确定"""
+        self.click_element(self.__class__.__locators["确定"])
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):

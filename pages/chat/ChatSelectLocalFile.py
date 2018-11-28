@@ -1,5 +1,5 @@
 from appium.webdriver.common.mobileby import MobileBy
-
+import time
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
@@ -15,7 +15,7 @@ class ChatSelectLocalFilePage(BasePage):
                   MobileBy.ID, 'com.chinasofti.rcs:id/pop_10g_window_drop_view'),
                   'com.chinasofti.rcs:id/select_picture_custom_toolbar': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar'),
-                  'com.chinasofti.rcs:id/left_back': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
+                  '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
                   'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn'),
                   'SD卡内存': (MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_title_text'),
@@ -36,6 +36,7 @@ class ChatSelectLocalFilePage(BasePage):
                   'test_video.mp4': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_file_name'),
                   '2.2M': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_size'),
                   '文件大小': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_size'),
+                  '选择文件大小': (MobileBy.XPATH, "//android.widget.CheckBox[@checked='true']/preceding-sibling::android.widget.RelativeLayout/*[@resource-id='com.chinasofti.rcs:id/textview_file_size']"),
                   '10:19': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_create_time'),
                   'txt文件': (MobileBy.XPATH, '//*[contains(@text,".txt")]'),
                   'jpg文件': (MobileBy.XPATH, '//*[contains(@text,".jpg")]'),
@@ -44,10 +45,21 @@ class ChatSelectLocalFilePage(BasePage):
                   'mp4文件': (MobileBy.XPATH, '//*[contains(@text,".mp4")]'),
                   'docx文件': (MobileBy.XPATH, '//*[contains(@text,".docx")]'),
                   'avi文件': (MobileBy.XPATH, '//*[contains(@text,".avi")]'),
+                  'BPG文件': (MobileBy.XPATH, '//*[contains(@text,".BPG")]'),
                   'com.chinasofti.rcs:id/rl_panel': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_panel'),
                   '已选: 2.2M': (MobileBy.XPATH, '//*[contains(@text,"已选:")]'),
-                  '发送': (MobileBy.ID, 'com.chinasofti.rcs:id/button_send')
+                  '发送': (MobileBy.ID, 'com.chinasofti.rcs:id/button_send'),
+                  # 视频选择页面
+                  '视频': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_file_name'),
+                  # 照片选择页面
+                  '照片': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_file_name'),
+                  # 音乐选择页面
+                  '音乐': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_file_name'),
                   }
+    @TestLogger.log()
+    def click_back(self):
+        """点击返回"""
+        self.click_element(self.__class__.__locators["返回"])
 
     @TestLogger.log("下一页")
     def page_up(self):
@@ -66,12 +78,12 @@ class ChatSelectLocalFilePage(BasePage):
                 if self._is_element_present(locator):
                     return self.get_element(locator)
                 c += 1
-            raise AssertionError('页面找不到元素：{}'.format(locator))
+            return None
 
     @TestLogger.log()
-    def get_file_size(self, element):
-        """获取文件大小"""
-        size_el = element.parent.find_element(MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_size')
+    def get_file_size(self):
+        """获取选择的文件大小"""
+        size_el = self.get_element(self.__class__.__locators['选择文件大小'])
         return size_el.text
 
     @TestLogger.log()
@@ -84,7 +96,11 @@ class ChatSelectLocalFilePage(BasePage):
     def select_file(self, file_type):
         """选择文件"""
         el = self.find_element_by_swipe(self.__class__.__locators[file_type])
-        el.click()
+        if el:
+            el.click()
+            return el
+        else:
+            print("在SD卡根目录无%s类型的文件，请预置相应类型文件" % file_type)
 
     @TestLogger.log()
     def send_btn_is_enabled(self):
@@ -92,7 +108,8 @@ class ChatSelectLocalFilePage(BasePage):
         return self._is_enabled(self.__class__.__locators["发送"])
 
     @TestLogger.log()
-    def click_send(self):
+    def click_send(self, timeout=4):
         """点击发送"""
         self.click_element(self.__class__.__locators["发送"])
+        time.sleep(timeout)
 

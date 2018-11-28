@@ -98,7 +98,7 @@ class GroupChatPage(BasePage):
 
     @TestLogger.log()
     def click_more(self):
-        """点击选择更多"""
+        """点击选择更多 +"""
         self.click_element(self.__class__.__locators["选择更多"])
 
     @TestLogger.log()
@@ -126,3 +126,8 @@ class GroupChatPage(BasePage):
     def page_should_contain_send_btn(self):
         """发送按钮检查"""
         self.page_should_contain_element(self.__locators["发送按钮"])
+
+    @TestLogger.log()
+    def click_audio_btn(self):
+        """点击语音按钮"""
+        self.click_element(self.__class__.__locators["语音按钮"])

@@ -15,7 +15,7 @@ class ChatSelectFilePage(BasePage):
                   MobileBy.ID, 'com.chinasofti.rcs:id/pop_10g_window_drop_view'),
                   'com.chinasofti.rcs:id/select_picture_custom_toolbar': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar'),
-                  'com.chinasofti.rcs:id/left_back': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
+                  '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
                   'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn'),
                   '选择文件': (MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_title_text'),
@@ -25,6 +25,27 @@ class ChatSelectFilePage(BasePage):
                   '照片': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_pic'),
                   '音乐': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_music'),
                   }
+
+    @TestLogger.log()
+    def click_back(self):
+        """点击返回"""
+        self.click_element(self.__class__.__locators["返回"])
+
+    @TestLogger.log()
+    def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
+        """等待选择文件页面加载 """
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["选择文件"])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(timeout)
+            raise AssertionError(
+                message
+            )
+        return self
 
     @TestLogger.log()
     def click_local_file(self):

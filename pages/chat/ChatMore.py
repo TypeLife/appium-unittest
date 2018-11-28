@@ -45,7 +45,7 @@ class ChatMorePage(BasePage):
                   'com.chinasofti.rcs:id/ib_take_photo': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_take_photo'),
                   'com.chinasofti.rcs:id/ib_profile': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
                   'com.chinasofti.rcs:id/ib_gif': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_gif'),
-                  'com.chinasofti.rcs:id/ib_more': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
+                  '关闭更多': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
                   'com.chinasofti.rcs:id/input_divider_inside': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/input_divider_inside'),
                   'com.chinasofti.rcs:id/input_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/input_layout'),
@@ -74,4 +74,9 @@ class ChatMorePage(BasePage):
     def click_red_packet(self):
         """点击红包"""
         self.click_element(self.__class__.__locators["红包"])
+
+    @TestLogger.log()
+    def close_more(self):
+        """关闭更多的隐藏图标（文件，群短信，位置，红包）"""
+        self.click_element(self.__class__.__locators["关闭更多"])
 
