@@ -25,10 +25,12 @@ class Preconditions(object):
     """前置条件"""
 
     @staticmethod
-    def select_mobile(category):
-        """选择手机手机"""
+    def select_mobile(category, reset=False):
+        """选择手机"""
         client = switch_to_mobile(REQUIRED_MOBILES[category])
         client.connect_mobile()
+        if reset:
+            current_mobile().reset_app()
         return client
 
     @staticmethod
@@ -78,9 +80,9 @@ class Preconditions(object):
         message_page.wait_for_page_load(60)
 
     @staticmethod
-    def make_already_in_message_page():
+    def make_already_in_message_page(reset=False):
         """确保应用在消息页面"""
-        Preconditions.select_mobile('Android-移动')
+        Preconditions.select_mobile('Android-移动', reset)
         # 如果在消息页，不做任何操作
         mess = MessagePage()
         if mess.is_on_this_page():
@@ -91,10 +93,10 @@ class Preconditions(object):
         Preconditions.login_by_one_key_login()
 
     @staticmethod
-    def make_already_have_my_group():
+    def make_already_have_my_group(reset=False):
         """确保有群，没有群则创建群名为mygroup+电话号码后4位的群"""
         # 消息页面
-        Preconditions.make_already_in_message_page()
+        Preconditions.make_already_in_message_page(reset)
         mess = MessagePage()
         mess.wait_for_page_load()
         # 点击 +
@@ -103,6 +105,20 @@ class Preconditions(object):
         mess.click_group_chat()
         # 选择联系人界面，选择一个群
         sc = SelectContactsPage()
+        times = 10
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(1)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
         sc.click_select_one_group()
         # 群名
         group_name = Preconditions.get_group_chat_name()
@@ -132,10 +148,10 @@ class Preconditions(object):
         GroupChatPage().wait_for_page_load()
 
     @staticmethod
-    def enter_group_chat_page():
+    def enter_group_chat_page(reset=False):
         """进入群聊聊天会话页面"""
         # 确保已有群
-        Preconditions.make_already_have_my_group()
+        Preconditions.make_already_have_my_group(reset)
         # 如果有群，会在选择一个群页面，没有创建群后会在群聊页面
         scp = GroupChatPage()
         sogp = SelectOneGroupPage()
@@ -601,4 +617,124 @@ class MsgGroupChatTest(TestCase):
             audio.click_sure()
         audio.wait_for_page_load()
         audio.click_exit()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0037(self):
+        """在群聊聊天会话页面，点击输入框右上角的+号，展示隐藏图标按钮"""
+        # 1.在当前聊天会话页面，点击输入框右上方的+号，是否会展示隐藏功能图标
+        gcp = GroupChatPage()
+        gcp.click_more()
+        gcp.page_should_contain_text("文件")
+        gcp.page_should_contain_text("群短信")
+        gcp.page_should_contain_text("位置")
+        gcp.page_should_contain_text("红包")
+        gcp.click_more()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0038(self):
+        """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，文件功能图标"""
+        files = ['txt文件', 'pdf文件', 'docx文件', 'jpg文件', 'xlsx文件', 'BPG文件', 'mp4文件', 'avi文件']
+        for file_type in files:
+            # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
+            gcp = GroupChatPage()
+            gcp.click_more()
+            # 2.点击展示的隐藏功能图标，文件图标，进入到文件选择页面
+            more_page = ChatMorePage()
+            more_page.click_file()
+            # 3、点击本地文件，进入到本地文件中，选择.txt,.pdf,.docx,.xlsx,.jpg,.BPG,.MP4,.AVI等格式的文件，
+            # 选择完成后，右下角的发送按钮是否变成高亮展示
+            csf = ChatSelectFilePage()
+            csf.wait_for_page_load()
+            csf.click_local_file()
+            local_file = ChatSelectLocalFilePage()
+            file = local_file.select_file(file_type)
+            if file:
+                self.assertTrue(local_file.send_btn_is_enabled())
+                # 4.选择文件后，左下角是否会展示已选择文件的大小
+                file_size = local_file.get_file_size()
+                select_file_size = local_file.get_selected_file_size()
+                self.assertIn(file_size, select_file_size)
+                # 5.右下角的发送按钮高亮展示后，点击发送按钮，是否可以进行发送
+                local_file.click_send()
+            else:
+                local_file.click_back()
+                csf.click_back()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0039(self):
+        """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，文件功能图标"""
+        # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
+        gcp = GroupChatPage()
+        gcp.click_more()
+        # 2.点击展示的隐藏功能图标，文件图标，进入到文件选择页面
+        more_page = ChatMorePage()
+        more_page.click_file()
+        # 3.点击视频选择项，进入到本地视频详情展示页面。当前页面的发送按钮，是否默认置灰展示
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_video()
+        local_file = ChatSelectLocalFilePage()
+        self.assertFalse(local_file.send_btn_is_enabled())
+        # 4.选择一个视频之后，左下角是否会展示当前选择视频的大小，右下角的发送按钮变成高亮展示
+        el = local_file.select_file("视频")
+        if el:
+            self.assertTrue(local_file.send_btn_is_enabled())
+            # 5.点击右下角高亮展示的发送按钮，是否可以发送
+            local_file.click_send()
+        else:
+            local_file.click_back()
+            csf.click_back()
+            raise AssertionError("There is no video")
+
+    @tags('ALL',)
+    def test_msg_group_chat_0040(self):
+        """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，文件功能图标"""
+        # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
+        gcp = GroupChatPage()
+        gcp.click_more()
+        # 2.点击展示的隐藏功能图标，文件图标，进入到文件选择页面
+        more_page = ChatMorePage()
+        more_page.click_file()
+        # 3.点击照片选择项，进入到本地照片详情展示页面。当前页面的发送按钮，是否默认置灰展示
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_pic()
+        local_file = ChatSelectLocalFilePage()
+        self.assertFalse(local_file.send_btn_is_enabled())
+        # 4、选择一张照片之后，左下角是否会展示当前选择照片的大小，右下角的发送按钮变成高亮展示
+        el = local_file.select_file("照片")
+        if el:
+            self.assertTrue(local_file.send_btn_is_enabled())
+            # 5.点击右下角高亮展示的发送按钮，是否可以发送
+            local_file.click_send()
+        else:
+            local_file.click_back()
+            csf.click_back()
+            raise AssertionError("There is no picture")
+
+    @tags('ALL',)
+    def test_msg_group_chat_0041(self):
+        """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，文件功能图标"""
+        # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
+        gcp = GroupChatPage()
+        gcp.click_more()
+        # 2.点击展示的隐藏功能图标，文件图标，进入到文件选择页面
+        more_page = ChatMorePage()
+        more_page.click_file()
+        # 3.点击音乐选择项，进入到本地音乐文件详情展示页面。当前页面的发送按钮，是否默认置灰展示
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_music()
+        local_file = ChatSelectLocalFilePage()
+        self.assertFalse(local_file.send_btn_is_enabled())
+        # 4.选择一个音乐文件之后，左下角是否会展示当前选择音乐文件的大小，右下角的发送按钮变成高亮展示
+        el = local_file.select_file("音乐")
+        if el:
+            self.assertTrue(local_file.send_btn_is_enabled())
+            # 5.点击右下角高亮展示的发送按钮，是否可以发送
+            local_file.click_send()
+        else:
+            local_file.click_back()
+            csf.click_back()
+            raise AssertionError("There is no music")
 
