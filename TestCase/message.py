@@ -560,7 +560,7 @@ class MessageSearchTest(TestCase):
         chat = ChatWindowPage()
         if chat.is_tips_display():
             chat.directly_close_tips_alert()
-        a_to_z = 'abcdefghijklmnopqrstuvwxyz'
+        a_to_z = 'abcDEFghijklmnopqrstuvwxyz'
         message_content = '其他字符' + a_to_z + '其他字符'
         chat.send_message(message_content)
 
@@ -580,7 +580,7 @@ class MessageSearchTest(TestCase):
             search_page.hide_keyboard()
 
         # 用消息内容作为关键字搜索
-        search_key = a_to_z
+        search_key = a_to_z.lower()
         search_page.input_search_keyword(search_key)
         search_page.hide_keyboard_if_display()
         now_go_to = None
