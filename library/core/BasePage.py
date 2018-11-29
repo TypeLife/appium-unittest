@@ -135,8 +135,8 @@ class BasePage(object):
     def get_source(self):
         return self.driver.page_source
 
-    def click_element(self, locator, default_timeout=5):
-        self.mobile.click_element(locator, default_timeout)
+    def click_element(self, locator, default_timeout=5, auto_accept_permission_alert=True):
+        self.mobile.click_element(locator, default_timeout, auto_accept_permission_alert)
 
     def is_current_activity_match_this_page(self):
         return self.driver == self.__class__.ACTIVITY

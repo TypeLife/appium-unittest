@@ -209,7 +209,9 @@ class SearchPage(BasePage):
         while True:
             last_one = items[-1]
             pre = last_one.location
-            yield from items
+            for i in items:
+                yield i
+                items = self.get_elements(item_locator)
             self.page_down()
             post = last_one.location
             # 如果元素消失或者坐标发生变化，表示翻页后列表有新数据
@@ -285,4 +287,4 @@ class SearchPage(BasePage):
             else:
                 if pattern.lower() in t:
                     return
-        raise AssertionError('搜索结果"{}"没有找到与关键字"{}"完全匹配的文本'.format(texts, pattern))
+        raise AssertionError('搜索结果"{}"没有找到包含关键字"{}"的文本'.format(texts, pattern))

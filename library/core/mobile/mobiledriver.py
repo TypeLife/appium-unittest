@@ -412,10 +412,11 @@ class MobileDriver(ABC):
     def tap(self, positions, duration=None):
         self.driver.tap(positions, duration)
 
-    def click_element(self, locator, default_timeout=5):
+    def click_element(self, locator, default_timeout=5, auto_accept_permission_alert=True):
         self.wait_until(
             condition=lambda d: self.get_element(locator),
-            timeout=default_timeout
+            timeout=default_timeout,
+            auto_accept_permission_alert=auto_accept_permission_alert
         ).click()
         # self.get_element(locator).click()
 
