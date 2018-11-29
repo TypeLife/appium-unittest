@@ -763,3 +763,43 @@ class MessageSearchTest(TestCase):
     def tearDown_test_msg_search_0010():
         search_page = SearchPage()
         search_page.click_back_button()
+
+    @tags('ALL', 'SMOKE')
+    def test_msg_search_0011(self):
+        """搜索不存在的关键字"""
+
+        # 消息页
+        message_page = MessagePage()
+        message_page.open_message_page()
+        message_page.scroll_to_top()
+        message_page.click_search()
+
+        # 全局搜索页
+        search_page = SearchPage()
+        if search_page.mobile.is_keyboard_shown():
+            search_page.hide_keyboard()
+
+        # 用消息内容作为关键字搜索
+        search_key = '奇货可居'
+        search_page.input_search_keyword(search_key)
+        search_page.hide_keyboard_if_display()
+
+        # 检查无结果提示是否显示
+        search_page.assert_no_result_tips_display()
+        # 检查搜索和通讯录联系人入口是否显示
+        search_page.assert_hetongxunlu_entry_is_display()
+
+    @staticmethod
+    def setUp_test_msg_search_0011():
+        """
+        1、联网正常
+        2、已登录客户端
+        3、当前全局搜索页面
+        """
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page(reset_required=False)
+
+    @staticmethod
+    def tearDown_test_msg_search_0011():
+        search_page = SearchPage()
+        search_page.click_back_button()

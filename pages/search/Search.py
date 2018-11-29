@@ -2,14 +2,15 @@ import re
 from xml.sax import saxutils
 
 from appium.webdriver.common.mobileby import MobileBy
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as ec
 
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
+from pages.components import SearchBar
+from pages.components.keyboard import Keyboard
 
 
-class SearchPage(BasePage):
+class SearchPage(SearchBar, Keyboard, BasePage):
     """快速搜索"""
     ACTIVITY = 'com.cmicc.module_contact.activitys.SearchActivity'
 
@@ -32,31 +33,6 @@ class SearchPage(BasePage):
         'android:id/statusBarBackground': (MobileBy.ID, 'android:id/statusBarBackground')
     }
 
-    @TestLogger.log('如果键盘弹出，就收回键盘')
-    def hide_keyboard_if_display(self):
-        if self.mobile.is_keyboard_shown():
-            self.hide_keyboard()
-
-    @TestLogger.log("检查键盘是否弹出")
-    def assert_keyboard_is_display(self, max_wait_time=3):
-        try:
-            self.wait_until(
-                condition=lambda d: self.mobile.is_keyboard_shown(),
-                timeout=max_wait_time
-            )
-        except TimeoutException:
-            raise AssertionError('键盘没有弹出')
-
-    @TestLogger.log("检查键盘是否弹出")
-    def assert_keyboard_is_hided(self, max_wait_time=3):
-        try:
-            self.wait_until(
-                condition=lambda d: not self.mobile.is_keyboard_shown(),
-                timeout=max_wait_time
-            )
-        except TimeoutException:
-            raise AssertionError('键盘没有收回')
-
     @TestLogger.log("点击返回")
     def click_back_button(self):
         """点击返回"""
@@ -67,15 +43,9 @@ class SearchPage(BasePage):
         """搜索和通讯录联系人"""
         self.click_element(self.__locators['搜索和通讯录联系人'])
 
-    @TestLogger.log('输入搜索关键字')
-    def input_search_keyword(self, keyword):
-        """输入搜索关键字"""
-        self.input_text(self.__locators['输入关键词快速搜索'], keyword)
-
-    @TestLogger.log('检查当前搜索框内容')
-    def assert_current_search_keyword_is(self, keyword):
-        """检查当前搜索框内容"""
-        self.element_text_should_be(self.__locators['输入关键词快速搜索'], keyword)
+    @TestLogger.log('检查搜索和通讯录联系人入口是否出现')
+    def assert_hetongxunlu_entry_is_display(self):
+        self.mobile.assert_screen_should_contain_element(self.__locators['搜索和通讯录联系人'])
 
     @TestLogger.log('检查搜索到的联系人名字')
     def assert_contact_name_display(self, name, timeout=0):
