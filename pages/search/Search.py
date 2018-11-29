@@ -1,3 +1,4 @@
+import re
 from xml.sax import saxutils
 
 from appium.webdriver.common.mobileby import MobileBy
@@ -244,3 +245,44 @@ class SearchPage(BasePage):
             return split_lines[0].text
         if search_tips:
             return tips
+
+    @TestLogger.log('搜索结果是否精准匹配关键字')
+    def assert_search_result_full_match_keyword(self, item, keyword):
+        """
+        :param item: 搜索结果列表中的一项，必须是列表项的跟节点元素
+        :param keyword: 搜索关键字
+        :return:
+        """
+        texts = []
+        sub_items = item.find_elements('xpath', '//*')
+        for si in sub_items:
+            text = si.text
+            if text:
+                texts.append(text)
+        for t in texts:
+            if keyword == t:
+                return
+        raise AssertionError('搜索结果"{}"没有找到与关键字"{}"完全匹配的文本'.format(texts, keyword))
+
+    @TestLogger.log('搜索结果是否匹配关键字')
+    def assert_search_result_match_keyword(self, item, pattern, regex=False):
+        """
+        :param item: 搜索结果列表中的一项，必须是列表项的跟节点元素
+        :param pattern: 匹配模式
+        :param regex: 是否使用正则匹配
+        :return:
+        """
+        texts = []
+        sub_items = item.find_elements('xpath', '//*')
+        for si in sub_items:
+            text = si.text
+            if text:
+                texts.append(text)
+        for t in texts:
+            if regex:
+                if re.search(pattern, t):
+                    return
+            else:
+                if pattern in t:
+                    return
+        raise AssertionError('搜索结果"{}"没有找到与关键字"{}"完全匹配的文本'.format(texts, pattern))
