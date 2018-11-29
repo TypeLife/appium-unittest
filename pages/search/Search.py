@@ -256,11 +256,11 @@ class SearchPage(BasePage):
         texts = []
         sub_items = item.find_elements('xpath', '//*')
         for si in sub_items:
-            text = si.text
+            text = si.text.lower()
             if text:
                 texts.append(text)
         for t in texts:
-            if keyword == t:
+            if keyword.lower() == t:
                 return
         raise AssertionError('搜索结果"{}"没有找到与关键字"{}"完全匹配的文本'.format(texts, keyword))
 
@@ -275,7 +275,7 @@ class SearchPage(BasePage):
         texts = []
         sub_items = item.find_elements('xpath', '//*')
         for si in sub_items:
-            text = si.text
+            text = si.text.lower()
             if text:
                 texts.append(text)
         for t in texts:
@@ -283,6 +283,6 @@ class SearchPage(BasePage):
                 if re.search(pattern, t):
                     return
             else:
-                if pattern in t:
+                if pattern.lower() in t:
                     return
         raise AssertionError('搜索结果"{}"没有找到与关键字"{}"完全匹配的文本'.format(texts, pattern))
