@@ -14,7 +14,7 @@ class SelectContactsPage(BasePage):
                   'com.chinasofti.rcs:id/pop_10g_window_drop_view': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/pop_10g_window_drop_view'),
                   'com.chinasofti.rcs:id/id_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/id_toolbar'),
-                  'com.chinasofti.rcs:id/back': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
+                  '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
                   '选择联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
                   '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_sure'),
                   'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
@@ -31,6 +31,24 @@ class SelectContactsPage(BasePage):
                   '本地联系人': (MobileBy.XPATH, '//*[@text ="本地联系人"]'),
                   '最近聊天': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint')
                   }
+
+    @TestLogger.log()
+    def wait_for_page_load(self, timeout=3, auto_accept_alerts=True):
+        """等待选择联系人页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["选择一个群"])
+            )
+            return True
+        except:
+            return False
+
+    @TestLogger.log()
+    def click_back(self):
+        """点击 返回"""
+        self.click_element(self.__class__.__locators["返回"])
 
     @TestLogger.log()
     def click_select_one_group(self):

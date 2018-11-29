@@ -20,8 +20,7 @@ class ChatPicPage(BasePage):
                   'com.chinasofti.rcs:id/select_rl': (MobileBy.ID, 'com.chinasofti.rcs:id/select_rl'),
                   'com.chinasofti.rcs:id/drop_down_image': (MobileBy.ID, 'com.chinasofti.rcs:id/drop_down_image'),
                   'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
-                  'com.chinasofti.rcs:id/recyclerView_gallery': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView_gallery'),
+                  '列表容器': (MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView_gallery'),
                   'com.chinasofti.rcs:id/rl_img': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_img'),
                   'com.chinasofti.rcs:id/iv_video_icon': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_video_icon'),
                   'com.chinasofti.rcs:id/imageview_video_start_background': (
@@ -58,6 +57,11 @@ class ChatPicPage(BasePage):
             )
         return self
 
+    @TestLogger.log("下一页")
+    def page_up(self):
+        """向上滑动一页"""
+        self.swipe_by_direction(self.__locators['列表容器'], 'up')
+
     @TestLogger.log()
     def select_video(self, n=0):
         """选择视频
@@ -68,9 +72,9 @@ class ChatPicPage(BasePage):
             try:
                 videos[n].click()
             except:
-                raise AssertionError("There is no %s video." % (n+1))
+                raise AssertionError("在所有照片首页没有 %s 个视频，请上传视频." % (n+1))
         else:
-            raise AssertionError("no video")
+            raise AssertionError("在所有照片首页没有视频")
 
     @TestLogger.log()
     def get_video_times(self):
@@ -82,14 +86,14 @@ class ChatPicPage(BasePage):
                 times.append(el.text)
             return times
         else:
-            raise AssertionError("no video")
+            raise AssertionError("在所有照片首页没有视频")
 
     @TestLogger.log()
     def select_pic(self, n=1):
         """选择n个图片"""
         pics = self.get_elements(self.__class__.__locators["所有图片"])
         if n > len(pics):
-            raise AssertionError("There is no %s pic." % n)
+            raise AssertionError("在所有照片首页没有 %s 张图片，请上传图片." % n)
         for i in range(n):
             pics[i].click()
 
