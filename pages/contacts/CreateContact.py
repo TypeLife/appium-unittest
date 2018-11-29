@@ -69,14 +69,20 @@ class CreateContactPage(Keyboard, BasePage):
 
     @TestLogger.log('创建联系人')
     def create_contact(self, name, number, company='', position='', email=''):
-        self.input_name(name)
-        self.hide_keyboard_if_display()
-        self.input_number(number)
-        self.hide_keyboard_if_display()
-        self.input_company(company)
-        self.hide_keyboard_if_display()
-        self.input_position(position)
-        self.hide_keyboard_if_display()
-        self.input_email_address(email)
+        if name:
+            self.hide_keyboard_if_display()
+            self.input_name(name)
+        if number:
+            self.hide_keyboard_if_display()
+            self.input_number(number)
+        if company:
+            self.hide_keyboard_if_display()
+            self.input_company(company)
+        if position:
+            self.hide_keyboard_if_display()
+            self.input_position(position)
+        if email:
+            self.hide_keyboard_if_display()
+            self.input_email_address(email)
         self.hide_keyboard_if_display()
         self.save_contact()
