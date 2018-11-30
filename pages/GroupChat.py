@@ -18,7 +18,7 @@ class GroupChatPage(BasePage):
                   'com.chinasofti.rcs:id/back_arrow': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
                   '群聊001(2)': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
                   '多方通话': (MobileBy.ID, 'com.chinasofti.rcs:id/action_multicall'),
-                  'com.chinasofti.rcs:id/action_setting': (MobileBy.ID, 'com.chinasofti.rcs:id/action_setting'),
+                  '设置': (MobileBy.ID, 'com.chinasofti.rcs:id/action_setting'),
                   'com.chinasofti.rcs:id/view_line': (MobileBy.ID, 'com.chinasofti.rcs:id/view_line'),
                   'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
                   'com.chinasofti.rcs:id/message_editor_layout': (
@@ -51,6 +51,12 @@ class GroupChatPage(BasePage):
                   '发送按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_send'),
                   'com.chinasofti.rcs:id/ib_record_red_dot': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_record_red_dot')
                   }
+
+    @TestLogger.log()
+    def click_setting(self):
+        """点击设置"""
+        self.click_element(self.__class__.__locators["设置"])
+
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=10, auto_accept_alerts=True):

@@ -60,6 +60,14 @@ class ChatAudioPage(BasePage):
                   '仅发送语音': (MobileBy.ID, 'com.chinasofti.rcs:id/select_send_voice'),
                   '取消': (MobileBy.ID, 'com.chinasofti.rcs:id/select_send_audio_type_cancel'),
                   '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/select_send_audio_type_confirm'),
+                  '选项': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/select_send_audio_type_root_view"]/android.widget.LinearLayout/android.widget.ImageView[@selected="true"]/../android.widget.TextView'),
+                  '未选项': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/select_send_audio_type_root_view"]/android.widget.LinearLayout/android.widget.ImageView[@selected="false"]/../android.widget.TextView'),
+                  # 弹窗权限页面
+                  '不再询问': (MobileBy.ID, 'com.lbe.security.miui:id/do_not_ask_checkbox'),
+                  '要允许 和飞信 录制音频吗？': (MobileBy.ID, 'com.lbe.security.miui:id/permission_message'),
+                  '拒绝': (MobileBy.ID, 'android:id/button2'),
+                  '允许': (MobileBy.XPATH, '//android.widget.Button[@text="允许"]'),
+
                   }
 
     @TestLogger.log()
@@ -68,9 +76,24 @@ class ChatAudioPage(BasePage):
         self.click_element(self.__class__.__locators["退出"])
 
     @TestLogger.log()
+    def get_selected_item(self):
+        """获取选择的语音模式"""
+        return self.get_element(self.__class__.__locators["选项"]).text
+
+    @TestLogger.log()
+    def select_other_audio_item(self):
+        """选择其它语音模式项"""
+        self.click_element(self.__class__.__locators["未选项"])
+
+    @TestLogger.log()
     def click_sure(self):
         """点击确定"""
         self.click_element(self.__class__.__locators["确定"])
+
+    @TestLogger.log()
+    def click_cancel(self):
+        """点击取消"""
+        self.click_element(self.__class__.__locators["取消"])
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
@@ -87,3 +110,36 @@ class ChatAudioPage(BasePage):
                 message
             )
         return self
+
+    @TestLogger.log()
+    def wait_for_audio_type_select_page_load(self, timeout=4, auto_accept_alerts=False):
+        """等待语音发送模式选择页面加载 """
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators['仅发送语音'])
+            )
+            return True
+        except:
+            return False
+
+
+    @TestLogger.log()
+    def wait_for_audio_allow_page_load(self, timeout=4, auto_accept_alerts=False):
+        """等待语音权限申请允许弹窗页面加载 """
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators['要允许 和飞信 录制音频吗？'])
+            )
+            return True
+        except:
+            return False
+
+    @TestLogger.log()
+    def click_allow(self):
+        """点击允许"""
+        self.click_element(self.__class__.__locators["允许"], auto_accept_permission_alert=False)
+
