@@ -958,3 +958,109 @@ class MessageSearchTest(TestCase):
     def tearDown_test_msg_search_0012():
         search_page = SearchPage()
         search_page.click_back_button()
+
+    @tags('ALL', 'SMOKE')
+    def test_msg_search_0013(self):
+        """搜索群聊版块不存在的关键字"""
+        key_message = '大佬'
+        # 消息页
+        message_page = MessagePage()
+        message_page.open_message_page()
+        message_page.click_search()
+
+        # 全局搜索页
+        search_page = SearchPage()
+        if search_page.mobile.is_keyboard_shown():
+            search_page.hide_keyboard()
+
+        # 用消息内容作为关键字搜索
+        search_key = key_message
+        search_page.input_search_keyword(search_key)
+        search_page.hide_keyboard_if_display()
+        now_go_to = None
+        # 聊天记录是否显示
+        contact_results = []
+        chat_history = []
+        for result in search_page.search_list_iterator():
+            category = search_page.determine_list_item_type(result)
+            if category in ['联系人', '群聊', '聊天记录', '公众号']:
+                self.assertNotEqual(category, '群聊', '检查点："群聊"板块不展示')
+                now_go_to = category
+            if now_go_to in ['联系人'] and category == 0:
+                # 检查搜索结果是否包含关键字
+                contact_results.append(result)
+            if now_go_to in ['聊天记录'] and category == 0:
+                # 检查搜索结果是否包含关键字
+                chat_history.append(result)
+        self.assertEqual(len(contact_results), 3, '检查点：联系人最多显示3条')
+        self.assertEqual(len(chat_history), 3, '检查点：聊天记录最多显示3条')
+
+    @staticmethod
+    def setUp_test_msg_search_0013():
+        """
+        1、联网正常
+        2、已登录客户端
+        3、当前全局搜索页面
+        """
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page(reset_required=False)
+        key_message = '大佬'
+        # 消息页
+        message_page = MessagePage()
+
+        # 创建群
+        message_page.open_contacts_page()
+        contacts_page = ContactsPage()
+        contacts_page.open_group_chat_list()
+        group_list = GroupListPage()
+        for group_name in ['群聊1', '群聊2', '群聊3', '群聊4']:
+            group_list.wait_for_page_load()
+            group_list.click_search_input()
+            group_search = GroupListSearchPage()
+            group_search.input_search_keyword(group_name)
+            if group_search.is_group_in_list(group_name):
+                group_search.click_group(group_name)
+                chat = ChatWindowPage()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                chat.send_message(key_message)
+                chat.click_back()
+                group_search.wait_for_page_load()
+                group_search.click_back()
+            else:
+                group_search.click_back()
+                group_list.click_create_group()
+                select_page = SelectContactPage()
+                select_page.search_and_select_contact('13922996261', '13922996262')
+                build_page = BuildGroupChatPage()
+                build_page.create_group_chat(group_name)
+                chat = ChatWindowPage()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                chat.send_message(key_message)
+                chat.click_back()
+
+        group_list.click_back()
+
+        # 创建联系人
+        for uid in [key_message + '1', key_message + '2', key_message + '3', key_message + '4']:
+            contacts_page.click_search_box()
+            contact_search = ContactListSearchPage()
+            contact_search.wait_for_page_load()
+            contact_search.input_search_keyword(uid)
+            if contact_search.is_contact_in_list(uid):
+                contact_search.click_back()
+            else:
+                contact_search.click_back()
+                contacts_page.click_add()
+                create_page = CreateContactPage()
+                number = '13800138000'
+                create_page.hide_keyboard_if_display()
+                create_page.create_contact(uid, number)
+                detail_page = ContactDetailsPage()
+                detail_page.click_back_icon()
+
+    @staticmethod
+    def tearDown_test_msg_search_0013():
+        search_page = SearchPage()
+        search_page.click_back_button()

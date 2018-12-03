@@ -755,7 +755,10 @@ class MobileDriver(ABC):
         :param item_locator: 列表项定位器
         :return:
         """
-        scroll_view = self.get_element(scroll_view_locator)
+        if self.get_elements(scroll_view_locator):
+            scroll_view = self.get_element(scroll_view_locator)
+        else:
+            return
 
         items = self.get_elements(item_locator)
         if not items:
