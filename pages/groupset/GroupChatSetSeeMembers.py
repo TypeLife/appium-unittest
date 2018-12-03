@@ -44,6 +44,7 @@ class GroupChatSetSeeMembersPage(BasePage):
                   '邀请人员名字': (MobileBy.ID,  'com.chinasofti.rcs:id/phone'),
                   # 成员简介页 'com.cmicc.module_aboutme.ui.activity.UserProfileShowActivity'
                   'profile返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
+                  'profile返回2': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_smart_call_detail_back'),
                   '个人名字': (MobileBy.ID, 'com.chinasofti.rcs:id/profile_name'),
                   '电话': (MobileBy.XPATH,  '//*[@text ="电话"]'),
                   '公司': (MobileBy.XPATH, '//*[@text ="公司"]'),
@@ -59,6 +60,7 @@ class GroupChatSetSeeMembersPage(BasePage):
         except:
             pass
         return self
+
     @TestLogger.log()
     def click_back(self):
         """群成员列表页返回"""
@@ -130,7 +132,11 @@ class GroupChatSetSeeMembersPage(BasePage):
     @TestLogger.log()
     def profile_back(self):
         """profile页点击返回"""
-        self.click_element(self.__class__.__locators["profile返回"])
+        try:
+            self.click_element(self.__class__.__locators["profile返回"])
+        except:
+            self.click_element(self.__class__.__locators["profile返回2"])
+
 
     @TestLogger.log()
     def click_invite_prompt(self):
