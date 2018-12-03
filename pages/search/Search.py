@@ -2,6 +2,7 @@ import re
 from xml.sax import saxutils
 
 from appium.webdriver.common.mobileby import MobileBy
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as ec
 
 from library.core.BasePage import BasePage
@@ -268,3 +269,13 @@ class SearchPage(SearchBar, Keyboard, BasePage):
         scroll_view_locator = self.__locators['搜索结果列表']
         item_locator = [MobileBy.XPATH, '//*[../../*[@resource-id="com.chinasofti.rcs:id/single_result_list"]]']
         yield from self.mobile.list_iterator(scroll_view_locator, item_locator)
+
+    @TestLogger.log('获取联系人名')
+    def get_contact_name(self, contact):
+        assert isinstance(contact, (list, tuple, WebElement))
+        if isinstance(contact, (list, tuple)):
+            item = self.get_element(contact)
+        else:
+            item = contact
+        contact_name = item.find_element(*self.__locators['联系人名字']).text
+        return contact_name
