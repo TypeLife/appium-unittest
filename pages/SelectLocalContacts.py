@@ -24,7 +24,7 @@ class SelectLocalContactsPage(BasePage):
                   'com.chinasofti.rcs:id/bottom_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/bottom_layout'),
                   'com.chinasofti.rcs:id/contact_selection_list_view': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/contact_selection_list_view'),
-                  'com.chinasofti.rcs:id/contact_list': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list'),
+                  '容器列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list'),
                   'com.chinasofti.rcs:id/contact_list_item': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
                   'com.chinasofti.rcs:id/asp_selecttion_contact_content': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/asp_selecttion_contact_content'),
@@ -45,7 +45,9 @@ class SelectLocalContactsPage(BasePage):
                   'com.chinasofti.rcs:id/contact_index_bar_view': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_view'),
                   'com.chinasofti.rcs:id/contact_index_bar_container': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_container')
+                  MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_container'),
+                  # 删除成员
+                  '确定删除': (MobileBy.XPATH, '//*[@text="确定"]'),
                   }
 
     @TestLogger.log()
@@ -64,6 +66,11 @@ class SelectLocalContactsPage(BasePage):
         self.click_element(self.__class__.__locators["返回"])
 
     @TestLogger.log()
+    def click_sure_del(self):
+        """点击确定删除成员"""
+        self.click_element(self.__class__.__locators["确定删除"])
+
+    @TestLogger.log()
     def get_phone_numbers(self):
         """获取电话号码"""
         els = self.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'))
@@ -74,9 +81,30 @@ class SelectLocalContactsPage(BasePage):
         return phones
 
     @TestLogger.log()
+    def search(self, text):
+        """搜索联系人"""
+        self.input_text(self.__class__.__locators["搜索或输入手机号"], text)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+
+    @TestLogger.log()
     def select_one_member_by_name(self, name):
         """通过人名选择一个联系人"""
         self.click_element((MobileBy.XPATH, '//*[@text ="%s"]' % name))
+
+    @TestLogger.log()
+    def search_and_select_one_member_by_name(self, name):
+        """搜索选择联系人"""
+        self.input_text(self.__class__.__locators["搜索或输入手机号"], name)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+        self.click_element(self.__class__.__locators["联系人名"])
+
+
 
     @TestLogger.log()
     def click_sure(self):
@@ -92,3 +120,75 @@ class SelectLocalContactsPage(BasePage):
     def get_sure_btn_text(self):
         """获取确定点击按钮文本"""
         return self.get_element(self.__class__.__locators["确定"]).text
+
+    @TestLogger.log()
+    def contacts_is_selected(self, name):
+        """获取联系人的选择状态"""
+        selected_els = self.get_elements((MobileBy.XPATH, '//*[@text ="%s"]/../../android.widget.RelativeLayout/android.widget.ImageView[@resource-id="com.chinasofti.rcs:id/select_icon"]' % name))
+        if selected_els:
+            return True
+        else:
+            return False
+
+    def page_up(self):
+        """向上滑动一页"""
+        self.swipe_by_direction(self.__class__.__locators['容器列表'], 'up')
+
+    def swipe_to_top(self, times=100):
+        """滑动到顶部"""
+        while times > 0:
+            self.swipe_by_direction(self.__class__.__locators['容器列表'], 'down')
+            flag = self.is_text_present("选择和通讯录联系人")
+            if flag:
+                break
+            times = times - 1
+
+    @TestLogger.log()
+    def get_all_contacts_name(self):
+        """获取所有联系人名"""
+        els = self.get_elements(self.__class__.__locators["联系人名"])
+        contacts_name = []
+        if els:
+            for el in els:
+                contacts_name.append(el.text)
+        else:
+            raise AssertionError("No contacts, please add contacts in address book.")
+        flag = True
+        while flag:
+            self.page_up()
+            els = self.get_elements(self.__class__.__locators["联系人名"])
+            for el in els:
+                if el.text not in contacts_name:
+                    contacts_name.append(el.text)
+                    flag = True
+                else:
+                    flag = False
+        return contacts_name
+
+    @TestLogger.log()
+    def swipe_select_one_member_by_name(self, name, times=15):
+        """通过人名选择一个联系人"""
+        while times > 0:
+            els = self.get_elements((MobileBy.XPATH, '//*[@text ="%s"]' % name))
+            if els:
+                els[0].click()
+                break
+            self.page_up()
+            times = times - 1
+        return "no %s" % name
+
+    @TestLogger.log()
+    def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
+        """等待选择联系人页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("选择联系人")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
