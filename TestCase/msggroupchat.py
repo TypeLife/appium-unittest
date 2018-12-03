@@ -738,3 +738,248 @@ class MsgGroupChatTest(TestCase):
             csf.click_back()
             raise AssertionError("There is no music")
 
+    @tags('ALL',)
+    def test_msg_group_chat_0043(self):
+        """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，位置功能图标"""
+        # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
+        gcp = GroupChatPage()
+        gcp.click_more()
+        # 2.点击展示的隐藏功能图标，位置功能图标，进入到位置详情展示页面
+        more_page = ChatMorePage()
+        more_page.click_location()
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        # 3.在当前页面底部展示的地标选择项中，是否会默认选中第一项。
+        self.assertTrue(location_page.is_selected_first_item())
+        # 4.位置底部，地标选择项是否可以手动切换选择项
+        location_page.select_other_item()
+        # 5.选择完成后，点击右上角的发送按钮，是否可以发送
+        addr = location_page.get_location_info()
+        location_page.click_send()
+        gcp.wait_for_page_load()
+        gcp.page_should_contain_text(addr)
+
+    @tags('ALL',)
+    def test_msg_group_chat_0044(self):
+        """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，位置功能图标"""
+        # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
+        gcp = GroupChatPage()
+        gcp.click_more()
+        # 2.点击展示的隐藏功能图标，位置功能图标，进入到位置详情展示页面
+        more_page = ChatMorePage()
+        more_page.click_location()
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        # 3.在当前页面底部展示的地标选择项中，是否会默认选中第一项。
+        self.assertTrue(location_page.is_selected_first_item())
+        # 4、直接点击当前页面的右上角发送按钮，是否可以发送默认选择项位置
+        addr = location_page.get_location_info()
+        location_page.click_send()
+        gcp.wait_for_page_load()
+        gcp.page_should_contain_text(addr)
+
+    @staticmethod
+    def setUp_test_msg_group_chat_0420():
+        """重置应用后进入群聊聊天会话页面"""
+        Preconditions.enter_group_chat_page(reset=True)
+        # 确保每个用例运行前在群聊聊天会话页面
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            return
+        else:
+            current_mobile().disconnect_mobile()
+            Preconditions.enter_group_chat_page(reset=True)
+
+    @tags('ALL',)
+    def test_msg_group_chat_0420(self):
+        """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，位置功能图标"""
+        # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
+        gcp = GroupChatPage()
+        gcp.click_more()
+        # 2.点击展示的隐藏功能图标，位置功能图标，是否会弹出权限允许申请弹窗
+        more_page = ChatMorePage()
+        more_page.click_location()
+        location_page = ChatLocationPage()
+        location_page.wait_for_permission_message_load()
+        location_page.wait_for_page_load()
+        location_page.click_back()
+        gcp.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_group_chat_0470():
+        """重置应用后进入群聊聊天会话页面"""
+        Preconditions.enter_group_chat_page(reset=True)
+        # 确保每个用例运行前在群聊聊天会话页面
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            return
+        else:
+            current_mobile().disconnect_mobile()
+            Preconditions.enter_group_chat_page(reset=True)
+
+    @tags('ALL',)
+    def test_msg_group_chat_0470(self):
+        """在群聊聊天会话页面，点击输入框右边的语音按钮"""
+        # 1.在当前聊天会话页面，点击输入框右边的语音按钮，在未获取录音权限时，是否会弹出权限申请允许弹窗
+        gcp = GroupChatPage()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        flag = audio.wait_for_audio_allow_page_load()
+        self.assertTrue(flag)
+        audio.click_allow()
+        audio.page_should_contain_text("退出")
+        audio.click_exit()
+        gcp.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_group_chat_0480():
+        """重置应用后进入群聊聊天会话页面"""
+        Preconditions.enter_group_chat_page(reset=True)
+        # 确保每个用例运行前在群聊聊天会话页面
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            return
+        else:
+            current_mobile().disconnect_mobile()
+            Preconditions.enter_group_chat_page(reset=True)
+
+    @tags('ALL',)
+    def test_msg_group_chat_0480(self):
+        """首次使用语音功能"""
+        # 1、点击输入框右边的语音按钮，跳转到的页面是否是语音模式设置页面
+        gcp = GroupChatPage()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        flag = audio.wait_for_audio_type_select_page_load()
+        self.assertTrue(flag)
+        # 2、默认展示的选择项是否是，语音+文字模式
+        info = audio.get_selected_item()
+        self.assertIn("语音+文字", info)
+        audio.click_sure()
+        audio.wait_for_page_load()
+        audio.click_exit()
+        gcp.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_group_chat_0520():
+        """重置应用后进入群聊聊天会话页面"""
+        Preconditions.enter_group_chat_page(reset=True)
+        # 确保每个用例运行前在群聊聊天会话页面
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            return
+        else:
+            current_mobile().disconnect_mobile()
+            Preconditions.enter_group_chat_page(reset=True)
+
+    @tags('ALL',)
+    def test_msg_group_chat_0520(self):
+        """在群聊聊天会话页面，点击输入框右边的语音按钮"""
+        # 1.在当前聊天会话页面，点击输入框右边的语音按钮，进入到语音录制页面
+        gcp = GroupChatPage()
+        gcp.click_audio_btn()
+        # 2.首次使用语音录制功能时，点击语音按钮是否会跳转到，语音模式选择页面
+        audio = ChatAudioPage()
+        flag = audio.wait_for_audio_type_select_page_load()
+        self.assertTrue(flag)
+        # 3.在语音模式选择页面，是否会默认展示已选择：同时发送语音+文字（语音识别）选择项
+        info = audio.get_selected_item()
+        self.assertIn("同时发送语音+文字(语音识别)", info)
+        # 4.在语音模式选择页面，是否可以手动更改已选择的模式
+        audio.select_other_audio_item()
+        # 5.更改模式后，点击右下角的确定按钮，是否可以跳转到语音录制页面
+        audio.click_sure()
+        audio.wait_for_page_load()
+        audio.click_exit()
+        gcp.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_group_chat_0530():
+        """重置应用后进入群聊聊天会话页面"""
+        Preconditions.enter_group_chat_page(reset=True)
+        # 确保每个用例运行前在群聊聊天会话页面
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            return
+        else:
+            current_mobile().disconnect_mobile()
+            Preconditions.enter_group_chat_page(reset=True)
+
+    @tags('ALL', )
+    def test_msg_group_chat_0530(self):
+        """在群聊聊天会话页面，点击输入框右边的语音按钮"""
+        # 1.在当前聊天会话页面，点击输入框右边的语音按钮，进入到语音录制页面
+        gcp = GroupChatPage()
+        gcp.click_audio_btn()
+        # 2.首次使用语音录制功能时，点击语音按钮会跳转到，语音模式选择页面
+        audio = ChatAudioPage()
+        flag = audio.wait_for_audio_type_select_page_load()
+        self.assertTrue(flag)
+        # 3.在语音模式选择页面，点击取消是否可以返回到聊天会话页面
+        audio.click_cancel()
+        audio.wait_for_page_load()
+        audio.click_exit()
+        gcp.wait_for_page_load()
+
+    @tags('ALL', )
+    def test_msg_group_chat_0058(self):
+        """在群聊聊天设置页面"""
+        # 1.在聊天设置页面，点击群成员展示的右边“>”三角形符号，是否可以展示群成员列表
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.click_group_member_show()
+        group_member = GroupChatSetSeeMembersPage()
+        group_member.wait_for_page_load()
+        # 2.在展示的群成员列表上方是否会展示，未进群提示
+        flag = group_member.is_others_not_in_group()
+        if flag:
+            # 3.点击未进群提示，是否可以进入到未进群成员展示列表
+            group_member.click_invite_prompt()
+            group_member.wait_for_invite_page_load()
+            group_member.invite_back()
+            group_set.click_group_member_show()
+            group_member.wait_for_page_load()
+        # 4.点击群成员列表中的成员，是否可以跳转到个人profile页
+        group_member.click_group_member()
+        group_member.wait_for_profile_page_load()
+        group_member.profile_back()
+        # 5.在群成员列表上方的搜索框，通过英文（大、小写）、中文、等搜索条件，搜索出符合条件的结果
+        names = group_member.get_all_group_member_names()
+        group_member.search(names[0])
+        results = group_member.get_all_group_member_names()
+        self.assertIn(names[0], results)
+        group_member.click_back()
+        group_set.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL', )
+    def test_msg_group_chat_0060(self):
+        """在群聊聊天设置页面"""
+        # 1.在聊天设置页面，点击群成员右下角展示+号，添加成员按钮，是否会跳转到联系人选择器页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_add_member()
+        # 2.在联系人选择器页面，是否可以选择本地联系人
+        # 3、在联系人选择器页面，是否可以选择和通讯录联系人
+        # 4、在联系人选择器页面，未选择任何联系人时，右上角展示的确定按钮是否是置灰展示
+        contacts_page = SelectLocalContactsPage()
+        contacts_page.wait_for_page_load()
+        # 选择与否获取的属性都是可点击
+        # flag = contacts_page.sure_btn_is_enabled()
+        # self.assertFalse(flag)
+        # 5、选择联系人后，右上角的确定按钮上是否会展示已选择人数加剩余可选择人数，例：确定（2/462）
+        names = contacts_page.get_contacts_name()
+        for name in names:
+            contacts_page.select_one_member_by_name(name)
+        info = contacts_page.get_sure_btn_text()
+        self.assertIsNotNone(re.match(r'确定\(\d+/\d+\)', info))
+        # 返回聊天页面
+        contacts_page.click_back()
+        group_set.click_back()
+        gcp.wait_for_page_load()

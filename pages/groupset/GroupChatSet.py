@@ -12,10 +12,11 @@ class GroupChatSetPage(BasePage):
                   'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
                   'android:id/content': (MobileBy.ID, 'android:id/content'),
                   'com.chinasofti.rcs:id/layout_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/layout_toolbar'),
-                  'com.chinasofti.rcs:id/left_back': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
+                  '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
                   '群聊设置': (MobileBy.ID, 'com.chinasofti.rcs:id/text_title'),
                   'com.chinasofti.rcs:id/show_more_member': (MobileBy.ID, 'com.chinasofti.rcs:id/show_more_member'),
                   '群成员(2人)': (MobileBy.ID, 'com.chinasofti.rcs:id/member_count'),
+                  '群成员展开>': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/member_count"]/../android.widget.ImageView'),
                   'com.chinasofti.rcs:id/member_list': (MobileBy.ID, 'com.chinasofti.rcs:id/member_list'),
                   'com.chinasofti.rcs:id/iv_avatar': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_avatar'),
                   'com.chinasofti.rcs:id/iv_head': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_head'),
@@ -70,6 +71,16 @@ class GroupChatSetPage(BasePage):
         return self
 
     @TestLogger.log()
+    def click_group_member_show(self):
+        """点击群成员展示>"""
+        self.click_element(self.__class__.__locators["群成员展开>"])
+
+    @TestLogger.log()
+    def click_back(self):
+        """点击返回"""
+        self.click_element(self.__class__.__locators["返回"])
+
+    @TestLogger.log()
     def click_add_member(self):
         """点击 '+ ': 添加成员"""
         self.driver.find_elements(MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/tv_name"]')[-2].click()
@@ -81,7 +92,7 @@ class GroupChatSetPage(BasePage):
 
     @TestLogger.log()
     def click_modify_group_name(self):
-        """点击 > 修改群聊名称"""
+        """点击 修改群聊名称"""
         self.click_element(self.__locators['修改群聊名称'])
 
     @TestLogger.log()

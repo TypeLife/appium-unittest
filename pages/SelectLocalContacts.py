@@ -14,7 +14,7 @@ class SelectLocalContactsPage(BasePage):
                   'com.chinasofti.rcs:id/pop_10g_window_drop_view': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/pop_10g_window_drop_view'),
                   'com.chinasofti.rcs:id/id_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/id_toolbar'),
-                  'com.chinasofti.rcs:id/back': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
+                  '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
                   '选择联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
                   '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_sure'),
                   'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
@@ -59,6 +59,11 @@ class SelectLocalContactsPage(BasePage):
         return contacts_name
 
     @TestLogger.log()
+    def click_back(self):
+        """点击返回"""
+        self.click_element(self.__class__.__locators["返回"])
+
+    @TestLogger.log()
     def get_phone_numbers(self):
         """获取电话号码"""
         els = self.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'))
@@ -77,3 +82,13 @@ class SelectLocalContactsPage(BasePage):
     def click_sure(self):
         """点击确定"""
         self.click_element(self.__class__.__locators["确定"])
+
+    @TestLogger.log()
+    def sure_btn_is_enabled(self):
+        """确定按钮是否可点击"""
+        return self._is_enabled(self.__class__.__locators["确定"])
+
+    @TestLogger.log()
+    def get_sure_btn_text(self):
+        """获取确定点击按钮文本"""
+        return self.get_element(self.__class__.__locators["确定"]).text

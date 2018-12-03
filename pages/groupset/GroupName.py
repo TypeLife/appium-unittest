@@ -9,6 +9,7 @@ class GroupNamePage(BasePage):
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.GroupNameActivity'
 
     __locators = {'': (MobileBy.ID, ''),
+                  "返回": (MobileBy.ID, "com.chinasofti.rcs:id/back"),
                   "修改群聊名称": (MobileBy.ID, "com.chinasofti.rcs:id/change_name"),
                   "保存": (MobileBy.ID, "com.chinasofti.rcs:id/group_name_save"),
                   "群聊名称编辑框": (MobileBy.ID, "com.chinasofti.rcs:id/edit_query"),
@@ -29,6 +30,16 @@ class GroupNamePage(BasePage):
     def click_save(self):
         """点击保存"""
         self.click_element(self.__class__.__locators["保存"])
+
+    @TestLogger.log()
+    def save_btn_is_enabled(self):
+        """获取保存按钮状态是否可点击"""
+        return self._is_enabled(self.__class__.__locators["保存"])
+
+    @TestLogger.log()
+    def click_back(self):
+        """点击返回"""
+        self.click_element(self.__class__.__locators["返回"])
 
     @TestLogger.log()
     def click_delete_group_name(self):
