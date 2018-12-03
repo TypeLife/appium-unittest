@@ -810,110 +810,6 @@ class MessageSearchTest(TestCase):
         key_message = '给个红包'
         # 消息页
         message_page = MessagePage()
-
-        # 创建第一个群
-        message_page.click_add_icon()
-        message_page.click_group_chat()
-        select_page = SelectContactPage()
-        select_page.search_and_select_contact('13922996261', '13922996262')
-        build_page = BuildGroupChatPage()
-        build_page.create_group_chat('给个红包1')
-        chat = ChatWindowPage()
-        if chat.is_tips_display():
-            chat.directly_close_tips_alert()
-        # chat.send_message(key_message)
-        chat.click_back()
-
-        # 创建第二个群
-        message_page.click_add_icon()
-        message_page.click_group_chat()
-        select_page = SelectContactPage()
-        select_page.search_and_select_contact('13922996261', '13922996262')
-        build_page = BuildGroupChatPage()
-        build_page.create_group_chat('给个红包2')
-        chat = ChatWindowPage()
-        if chat.is_tips_display():
-            chat.directly_close_tips_alert()
-        # chat.send_message(key_message)
-        chat.click_back()
-
-        # 创建第三个群
-        message_page.click_add_icon()
-        message_page.click_group_chat()
-        select_page = SelectContactPage()
-        select_page.search_and_select_contact('13922996261', '13922996262')
-        build_page = BuildGroupChatPage()
-        build_page.create_group_chat('给个红包3')
-        chat = ChatWindowPage()
-        if chat.is_tips_display():
-            chat.directly_close_tips_alert()
-        # chat.send_message(key_message)
-        chat.click_back()
-
-        # 创建第四个群
-        message_page.click_add_icon()
-        message_page.click_group_chat()
-        select_page = SelectContactPage()
-        select_page.search_and_select_contact('13922996261', '13922996262')
-        build_page = BuildGroupChatPage()
-        build_page.create_group_chat('给个红包4')
-        chat = ChatWindowPage()
-        if chat.is_tips_display():
-            chat.directly_close_tips_alert()
-        # chat.send_message(key_message)
-        chat.click_back()
-        # message_page.open_message_page()
-        # message_page.scroll_to_top()
-        # message_page.click_search()
-
-        # 创建第一个联系人
-        contacts_page = ContactsPage()
-        contacts_page.open_contacts_page()
-        contacts_page.click_add()
-        create_page = CreateContactPage()
-        uid = key_message + '1'
-        number = '13800138000'
-        create_page.hide_keyboard_if_display()
-        create_page.create_contact(uid, number)
-        detail_page = ContactDetailsPage()
-        detail_page.click_back_icon()
-
-        # 创建第一个联系人
-        contacts_page = ContactsPage()
-        contacts_page.open_contacts_page()
-        contacts_page.click_add()
-        create_page = CreateContactPage()
-        uid = key_message + '2'
-        number = '13800138002'
-        create_page.hide_keyboard_if_display()
-        create_page.create_contact(uid, number)
-        detail_page = ContactDetailsPage()
-        detail_page.click_back_icon()
-
-        # 创建第一个联系人
-        contacts_page = ContactsPage()
-        contacts_page.open_contacts_page()
-        contacts_page.click_add()
-        create_page = CreateContactPage()
-        uid = key_message + '3'
-        number = '13800138003'
-        create_page.hide_keyboard_if_display()
-        create_page.create_contact(uid, number)
-        detail_page = ContactDetailsPage()
-        detail_page.click_back_icon()
-
-        # 创建第一个联系人
-        contacts_page = ContactsPage()
-        contacts_page.open_contacts_page()
-        contacts_page.click_add()
-        create_page = CreateContactPage()
-        uid = key_message + '4'
-        number = '13800138004'
-        create_page.hide_keyboard_if_display()
-        create_page.create_contact(uid, number)
-        detail_page = ContactDetailsPage()
-        detail_page.click_back_icon()
-
         message_page.open_message_page()
         message_page.click_search()
 
@@ -952,7 +848,55 @@ class MessageSearchTest(TestCase):
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
-        Preconditions.make_already_in_message_page(reset_required=True)
+        Preconditions.make_already_in_message_page(reset_required=False)
+        key_message = '给个红包'
+        # 消息页
+        message_page = MessagePage()
+
+        # 创建群
+        message_page.open_contacts_page()
+        contacts_page = ContactsPage()
+        contacts_page.open_group_chat_list()
+        group_list = GroupListPage()
+        for group_name in [key_message + '1', key_message + '2', key_message + '3', key_message + '4']:
+            group_list.wait_for_page_load()
+            group_list.click_search_input()
+            group_search = GroupListSearchPage()
+            group_search.input_search_keyword(group_name)
+            if group_search.is_group_in_list(group_name):
+                group_search.click_back()
+            else:
+                group_search.click_back()
+                group_list.click_create_group()
+                select_page = SelectContactPage()
+                select_page.search_and_select_contact('13922996261', '13922996262')
+                build_page = BuildGroupChatPage()
+                build_page.create_group_chat(group_name)
+                chat = ChatWindowPage()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                chat.click_back()
+
+        group_list.click_back()
+
+        # 创建联系人
+        names = [key_message + '1', key_message + '2', key_message + '3', key_message + '4']
+        for uid in names:
+            contacts_page.click_search_box()
+            contact_search = ContactListSearchPage()
+            contact_search.wait_for_page_load()
+            contact_search.input_search_keyword(uid)
+            if contact_search.is_contact_in_list(uid):
+                contact_search.click_back()
+            else:
+                contact_search.click_back()
+                contacts_page.click_add()
+                create_page = CreateContactPage()
+                number = '1380013800{}'.format(names.index(uid))
+                create_page.hide_keyboard_if_display()
+                create_page.create_contact(uid, number)
+                detail_page = ContactDetailsPage()
+                detail_page.click_back_icon()
 
     @staticmethod
     def tearDown_test_msg_search_0012():
@@ -1043,7 +987,8 @@ class MessageSearchTest(TestCase):
         group_list.click_back()
 
         # 创建联系人
-        for uid in [key_message + '1', key_message + '2', key_message + '3', key_message + '4']:
+        names = [key_message + '1', key_message + '2', key_message + '3', key_message + '4']
+        for uid in names:
             contacts_page.click_search_box()
             contact_search = ContactListSearchPage()
             contact_search.wait_for_page_load()
@@ -1054,7 +999,7 @@ class MessageSearchTest(TestCase):
                 contact_search.click_back()
                 contacts_page.click_add()
                 create_page = CreateContactPage()
-                number = '13800138000'
+                number = '1380013800{}'.format(names.index(uid))
                 create_page.hide_keyboard_if_display()
                 create_page.create_contact(uid, number)
                 detail_page = ContactDetailsPage()
