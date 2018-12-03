@@ -228,6 +228,17 @@ class MessagePage(FooterPage):
         self.find_message(title, max_wait_time)
         self.click_element(locator)
 
+    @TestLogger.log('置顶消息')
+    def set_top_for_message(self, title, max_wait_time=5):
+        locator = [MobileBy.XPATH,
+                   '//*[@resource-id="com.chinasofti.rcs:id/rl_conv_list_item" and ' +
+                   './/*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text="{}"]]'.format(title)]
+        self.find_message(title, max_wait_time)
+        message = self.get_element(locator)
+        position_x, position_y = message.location.get('x'), message.location.get('y')
+        self.mobile.tap([(position_x, position_y)], 1000)
+        self.click_text('置顶聊天')
+
     @TestLogger.log("检查最新的一条消息的Title")
     def assert_the_first_message_is(self, title, max_wait_time=5):
         self.scroll_to_top()

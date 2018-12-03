@@ -277,5 +277,6 @@ class SearchPage(SearchBar, Keyboard, BasePage):
             item = self.get_element(contact)
         else:
             item = contact
-        contact_name = item.find_element(*self.__locators['联系人名字']).text
+        contact_name = item.find_element(*[MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" or ' +
+                                           '@resource-id="com.chinasofti.rcs:id/tv_conv_name"]']).text
         return contact_name
