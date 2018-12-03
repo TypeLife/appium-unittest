@@ -2,6 +2,7 @@ import re
 from xml.sax import saxutils
 
 from appium.webdriver.common.mobileby import MobileBy
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as ec
 
 from library.core.BasePage import BasePage
@@ -258,3 +259,24 @@ class SearchPage(SearchBar, Keyboard, BasePage):
                 if pattern.lower() in t:
                     return
         raise AssertionError('搜索结果"{}"没有找到包含关键字"{}"的文本'.format(texts, pattern))
+
+    @TestLogger.log('迭代搜索列表')
+    def search_list_iterator(self):
+        """
+        迭代消息列表,默认从上往下
+        :return:
+        """
+        scroll_view_locator = self.__locators['搜索结果列表']
+        item_locator = [MobileBy.XPATH, '//*[../../*[@resource-id="com.chinasofti.rcs:id/single_result_list"]]']
+        yield from self.mobile.list_iterator(scroll_view_locator, item_locator)
+
+    @TestLogger.log('获取联系人名')
+    def get_contact_name(self, contact):
+        assert isinstance(contact, (list, tuple, WebElement))
+        if isinstance(contact, (list, tuple)):
+            item = self.get_element(contact)
+        else:
+            item = contact
+        contact_name = item.find_element(*[MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" or ' +
+                                           '@resource-id="com.chinasofti.rcs:id/tv_conv_name"]']).text
+        return contact_name

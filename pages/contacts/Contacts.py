@@ -22,7 +22,8 @@ class ContactsPage(FooterPage):
         '搜索': (MobileBy.ID, 'com.chinasofti.rcs:id/et_search'),
         'com.chinasofti.rcs:id/recyclerView_contactList': (
             MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView_contactList'),
-        'com.chinasofti.rcs:id/contact_list': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list'),
+        '通讯录列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list'),
+        '列表项': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_list"]/*'),
         '群聊': (MobileBy.ID, 'com.chinasofti.rcs:id/first_item'),
         '标签分组': (MobileBy.ID, 'com.chinasofti.rcs:id/second_item'),
         '公众号': (MobileBy.ID, 'com.chinasofti.rcs:id/third_item'),
@@ -57,6 +58,38 @@ class ContactsPage(FooterPage):
     @TestLogger.log('点击+号')
     def click_add(self):
         self.click_element(self.__locators['+号'])
+
+    @TestLogger.log('点击搜索框')
+    def click_search_box(self):
+        self.click_element(self.__locators['搜索'])
+
+    @TestLogger.log('打开群聊列表')
+    def open_group_chat_list(self):
+        self.click_element(self.__locators['群聊'])
+
+    @TestLogger.log("滚动列表到顶部")
+    def scroll_to_top(self):
+        self.wait_until(
+            condition=lambda d: self.get_element(self.__locators['通讯录列表'])
+        )
+        if self._is_element_present(self.__locators['群聊']):
+            return True
+        while True:
+            self.swipe_by_direction(self.__locators['通讯录列表'], 'up')
+            if self._is_element_present(self.__locators['群聊']):
+                break
+        return True
+
+    @TestLogger.log('判断列表是否存在XXX联系人')
+    def is_contact_in_list(self, name):
+        self.scroll_to_top()
+        groups = self.mobile.list_iterator(self.__locators['通讯录列表'], self.__locators['列表项'])
+        for group in groups:
+            if group.find_elements(MobileBy.XPATH,
+                                   '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and ' +
+                                   '@text="{}"]'.format(name)):
+                return True
+        return False
 
     @TestLogger.log()
     def get_phone_number(self):

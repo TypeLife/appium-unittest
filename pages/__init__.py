@@ -1,7 +1,10 @@
 __all__ = [
     'ContactDetailsPage',
+    'ContactListSearchPage',
     'ContactsPage',
     'CreateContactPage',
+    'GroupListPage',
+    'GroupListSearchPage',
     'GuidePage',
     'PermissionListPage',
     'AgreementDetailPage',
@@ -48,6 +51,8 @@ __all__ = [
     "ChatSelectLocalFilePage",
     "ChatProfilePage",
     "ChatLocationPage",
+    "BuildGroupChatPage",
+    "SelectContactPage",
     'SearchPage',
 ]
 
@@ -58,6 +63,7 @@ from .SelectLocalContacts import SelectLocalContactsPage
 from .SelectOneGroup import SelectOneGroupPage
 from .chat import ChatAudioPage
 from .chat import ChatGIFPage
+from .chat import ChatLocationPage
 from .chat import ChatMorePage
 from .chat import ChatPhotoPage
 from .chat import ChatPicEditPage
@@ -66,10 +72,12 @@ from .chat import ChatPicPreviewPage
 from .chat import ChatProfilePage
 from .chat import ChatSelectFilePage
 from .chat import ChatSelectLocalFilePage
-from .chat import ChatLocationPage
 from .contacts import ContactDetailsPage
+from .contacts import ContactListSearchPage
 from .contacts import ContactsPage
 from .contacts import CreateContactPage
+from .contacts import GroupListPage
+from .contacts import GroupListSearchPage
 from .groupset import GroupChatSetManagerPage
 from .groupset import GroupChatSetModifyMyCardPage
 from .groupset import GroupChatSetPage
@@ -100,4 +108,6 @@ from .message import EmailAssistantPage
 from .message import EmailDetailPage
 from .message import EmailListPage
 from .message import MessagePage
+from .others import BuildGroupChatPage
+from .others import SelectContactPage
 from .search import SearchPage

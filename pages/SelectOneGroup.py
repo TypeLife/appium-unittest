@@ -12,26 +12,26 @@ class SelectOneGroupPage(BasePage):
                   'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
                   'android:id/content': (MobileBy.ID, 'android:id/content'),
                   'com.chinasofti.rcs:id/select_picture_custom_toolbar': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar'),
                   '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
                   'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn'),
                   '选择一个群': (MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_title_text'),
                   '搜索群组': (MobileBy.ID, 'com.chinasofti.rcs:id/et_search'),
                   'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
                   'com.chinasofti.rcs:id/recyclerView_contactList': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView_contactList'),
-                  'com.chinasofti.rcs:id/contact_list': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list'),
-                  'com.chinasofti.rcs:id/rl_group_list_item': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_group_list_item'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView_contactList'),
+                  '群列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list'),
+                  '列表项': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_group_list_item'),
                   'Q': (MobileBy.ID, ''),
                   'com.chinasofti.rcs:id/contact_image': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_image'),
                   '群聊002': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
                   '群聊001': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
                   '群聊名': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
                   'com.chinasofti.rcs:id/contact_index_bar_view': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_view'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_view'),
                   'com.chinasofti.rcs:id/contact_index_bar_container': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_container'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_container'),
                   'A': (MobileBy.ID, ''),
                   'B': (MobileBy.ID, ''),
                   'C': (MobileBy.ID, ''),
@@ -73,7 +73,8 @@ class SelectOneGroupPage(BasePage):
     @TestLogger.log()
     def select_one_group_by_name(self, name):
         """通过群名选择一个群"""
-        self.click_element((MobileBy.XPATH, '//*[@text ="%s"]' % name))
+        self.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text ="%s"]' % name))
 
     @TestLogger.log()
     def click_back(self):
@@ -102,4 +103,17 @@ class SelectOneGroupPage(BasePage):
         el = self.get_elements(self.__locators['选择一个群'])
         if len(el) > 0:
             return True
+        return False
+
+    @TestLogger.log('搜索群')
+    def search_group(self, group_name):
+        self.input_text(self.__locators['搜索群组'], group_name)
+
+    @TestLogger.log('判断列表中是否包含XX群')
+    def is_group_in_list(self, name):
+        iterator = self.mobile.list_iterator(self.__locators['群列表'], self.__locators['列表项'])
+        for group in iterator:
+            if group.find_elements('xpath', '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and ' +
+                                            '@text="{}"]'.format(name)):
+                return True
         return False
