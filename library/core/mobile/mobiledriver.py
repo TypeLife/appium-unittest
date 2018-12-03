@@ -10,6 +10,7 @@ from appium import webdriver
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.common.exceptions import TimeoutException, \
     NoSuchElementException
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
 
 from library.core.TestLogger import TestLogger
@@ -498,7 +499,12 @@ class MobileDriver(ABC):
         :param duration: 持续时间ms
         :return:
         """
-        element = self.get_element(locator)
+        if isinstance(locator, (list, tuple)):
+            element = self.get_element(locator)
+        elif isinstance(locator, WebElement):
+            element = locator
+        else:
+            raise TypeError('Type of {} is not a list like or WebElement'.format(locator))
         rect = element.rect
         left, right = int(rect['x']) + 1, int(rect['x'] + rect['width']) - 1
         top, bottom = int(rect['y']) + 1, int(rect['y'] + rect['height']) - 1
@@ -741,6 +747,56 @@ class MobileDriver(ABC):
     def paste(self):
         # TODO
         raise NotImplementedError('该方法未实现')
+
+    def list_iterator(self, scroll_view_locator, item_locator):
+        """
+        迭代列表内容
+        :param scroll_view_locator: 列表容器的定位器
+        :param item_locator: 列表项定位器
+        :return:
+        """
+        scroll_view = self.get_element(scroll_view_locator)
+
+        items = self.get_elements(item_locator)
+        if not items:
+            return
+        for i in items:
+
+            # 判断元素位置是否已经超过滚动视图的中点
+            scroll_view_center = scroll_view.location.get('y') + scroll_view.size.get('height') // 2
+            if i.location.get('y') > scroll_view_center:
+                pre_y = i.location.get('y')
+
+                # 稳定的滑动最少要在press后保持600ms才能移动
+                minimum_hold_time = 600
+                self.swipe_by_direction(i, 'up', minimum_hold_time)
+                post_y = i.location.get('y')
+                if pre_y == post_y:
+
+                    # 坐标没变化就把剩下的抛出去然后结束循环
+                    yield from items[items.index(i):]
+                    return
+                else:
+
+                    # 坐标变化就更新找出的列表
+                    restorer = items[:items.index(i)]
+                    items.clear()
+                    refreshed_items = self.get_elements(item_locator)
+                    if not refreshed_items:
+                        return
+                    for refreshed_item in refreshed_items:
+                        if refreshed_item.location.get('y') == post_y:
+                            the_rests = refreshed_items[refreshed_items.index(refreshed_item):]
+                            restorer.extend(the_rests)
+                            break
+                    items.extend(restorer)
+            yield i
+            refreshed_items = self.get_elements(item_locator)
+            refreshed_items.reverse()
+            for refreshed_item in refreshed_items:
+                offset = -1 - refreshed_items.index(refreshed_item)
+                if abs(offset) <= len(items):
+                    items[offset] = refreshed_item
 
     def __str__(self):
         device_info = {

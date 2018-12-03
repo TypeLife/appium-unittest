@@ -258,3 +258,13 @@ class SearchPage(SearchBar, Keyboard, BasePage):
                 if pattern.lower() in t:
                     return
         raise AssertionError('搜索结果"{}"没有找到包含关键字"{}"的文本'.format(texts, pattern))
+
+    @TestLogger.log('迭代搜索列表')
+    def search_list_iterator(self):
+        """
+        迭代消息列表,默认从上往下
+        :return:
+        """
+        scroll_view_locator = self.__locators['搜索结果列表']
+        item_locator = [MobileBy.XPATH, '//*[../../*[@resource-id="com.chinasofti.rcs:id/single_result_list"]]']
+        yield from self.mobile.list_iterator(scroll_view_locator, item_locator)

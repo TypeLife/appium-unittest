@@ -99,7 +99,7 @@ class MessagePage(FooterPage):
         if actual != expect:
             raise AssertionError('期望值:"{}"\n实际值:"{}"\n'.format(expect, actual))
 
-    @TestLogger.log()
+    @TestLogger.log('点击发起群聊')
     def click_group_chat(self):
         """点击发起群聊"""
         self.click_element(self.__locators['发起群聊'])
