@@ -1330,3 +1330,28 @@ class MessageSearchTest(TestCase):
         show_more.click_back()
         search_page = SearchPage()
         search_page.click_back_button()
+
+    @tags('ALL', 'SMOKE')
+    def test_msg_search_0018(self):
+        """清空搜索条件"""
+        message_page = MessagePage()
+        message_page.scroll_to_top()
+        message_page.click_search()
+
+        search_page = SearchPage()
+        search_page.input_search_keyword('关键字')
+        search_page.click_clear_keyword_button()
+        # 检查点: 置灰语：搜索
+        search_page.assert_current_search_keyword_is('输入关键词快速搜索')
+        search_page.click_back_button()
+        message_page.assert_search_box_text_is('搜索')
+
+    @staticmethod
+    def setUp_test_msg_search_0018():
+        """
+        1、联网正常
+        2、已登录客户端
+        3、当前在消息页面
+        """
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()

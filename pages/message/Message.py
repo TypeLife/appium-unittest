@@ -58,6 +58,10 @@ class MessagePage(FooterPage):
         except TimeoutException:
             raise AssertionError('搜索框没有显示：{}'.format(self.__locators['搜索']))
 
+    @TestLogger.log('检查顶部搜索框是否显示')
+    def assert_search_box_text_is(self, text):
+        self.mobile.assert_element_text_should_be(self.__locators['搜索'], text, '搜索框文本与"{}"不匹配'.format(text))
+
     @TestLogger.log()
     def is_on_this_page(self):
         """当前页面是否在消息页"""
