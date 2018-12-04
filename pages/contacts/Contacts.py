@@ -37,6 +37,7 @@ class ContactsPage(FooterPage):
         '15338821645': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_phone'),
         'F': (MobileBy.ID, ''),
         'frank': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
+        '联系人名': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         '18681151872': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_phone'),
         'H': (MobileBy.ID, ''),
         '和飞信电话': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
@@ -102,3 +103,7 @@ class ContactsPage(FooterPage):
         else:
             raise AssertionError("contacts is empty!")
         return phones
+
+    def page_up(self):
+        """向上滑动一页"""
+        self.swipe_by_direction(self.__class__.__locators['通讯录列表'], 'up')
