@@ -1261,3 +1261,72 @@ class MessageSearchTest(TestCase):
     def tearDown_test_msg_search_0016():
         search_page = SearchPage()
         search_page.click_back_button()
+
+    def test_msg_search_0017(self):
+        """查看更多联系人"""
+        key_message = '给个红包'
+        # 消息页
+        message_page = MessagePage()
+        message_page.open_message_page()
+        message_page.click_search()
+
+        # 全局搜索页
+        search_page = SearchPage()
+        if search_page.mobile.is_keyboard_shown():
+            search_page.hide_keyboard()
+
+        # 用消息内容作为关键字搜索
+        search_key = key_message
+        search_page.input_search_keyword(search_key)
+        search_page.hide_keyboard_if_display()
+        now_go_to = None
+        # 聊天记录是否显示
+        results = []
+        for result in search_page.search_list_iterator():
+            category = search_page.determine_list_item_type(result)
+            if category in ['联系人', '群聊', '聊天记录', '公众号']:
+                now_go_to = category
+            if now_go_to in ['联系人'] and category == 0:
+                # 检查搜索结果是否包含关键字
+                name = search_page.get_contact_name(result)
+                self.assertIn(search_key, name)
+                results.append(name)
+        self.assertEqual(3, len(results), '检查点：搜索结果中聊天记录排序是： 按时间排序')
+
+        search_page.click_clear_keyword_button()
+        search_page.input_search_keyword(search_key)
+        search_page.hide_keyboard_if_display()
+        # 聊天记录是否显示
+        searching = None
+        for result in search_page.search_list_iterator():
+            category = search_page.determine_list_item_type(result)
+            if category == '联系人':
+                searching = result
+                # 检查是否显示查看更多入口
+                search_page.assert_show_more_is_display(result)
+                break
+        self.assertIsNotNone(searching, '页面应该显示"联系人"板块')
+        search_page.click_show_more(searching)
+
+        show_more = GlobalSearchContactPage()
+        try:
+            show_more.wait_for_page_load()
+        except TimeoutException:
+            raise AssertionError('查看更多联系人页面没有打开')
+
+    @staticmethod
+    def setUp_test_msg_search_0017():
+        """
+        1、联网正常
+        2、已登录客户端
+        3、当前全局搜索页面
+        """
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page(reset_required=False)
+
+    @staticmethod
+    def tearDown_test_msg_search_0017():
+        show_more = GlobalSearchContactPage()
+        show_more.click_back()
+        search_page = SearchPage()
+        search_page.click_back_button()

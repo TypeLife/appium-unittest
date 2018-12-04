@@ -53,6 +53,8 @@ __all__ = [
     "ChatLocationPage",
     "BuildGroupChatPage",
     "SelectContactPage",
+    'GlobalSearchContactPage',
+    'GlobalSearchGroupPage',
     'SearchPage',
 ]
 
@@ -110,4 +112,6 @@ from .message import EmailListPage
 from .message import MessagePage
 from .others import BuildGroupChatPage
 from .others import SelectContactPage
+from .search import GlobalSearchContactPage
+from .search import GlobalSearchGroupPage
 from .search import SearchPage
