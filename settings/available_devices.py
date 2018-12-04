@@ -28,7 +28,7 @@ AVAILABLE_DEVICES = {
     },
     'M960BDQN229CH': {
         "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
-        "SERVER_URL": 'http://192.168.200.113:4724/wd/hub',
+        "SERVER_URL": 'http://192.168.100.153:4724/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",

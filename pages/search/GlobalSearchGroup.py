@@ -24,3 +24,23 @@ class GlobalSearchGroupPage(Keyboard, BasePage):
     @TestLogger.log('点击返回')
     def click_back(self):
         self.click_element(self.__locators['返回'])
+
+    @TestLogger.log('输入搜索关键字')
+    def search(self, keyword):
+        self.input_text(self.__locators['输入关键字搜索'], keyword)
+
+    @TestLogger.log('清空搜索关键字')
+    def clear_search_keyword(self):
+        self.click_element(self.__locators['清空关键字'])
+
+    @TestLogger.log('检查列表是否包含XX群组')
+    def assert_list_contains_group(self, name):
+        groups = self.mobile.list_iterator(self.__locators['列表'], self.__locators['列表项'])
+        find_out = False
+        for group in groups:
+            group_name = group.find_element(*self.__locators['群名']).text
+            if name == group_name:
+                find_out = True
+                break
+        if not find_out:
+            raise AssertionError('列表没有找到名字等于"{}"的群组'.format(name))
