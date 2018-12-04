@@ -1,5 +1,5 @@
 from appium.webdriver.common.mobileby import MobileBy
-
+import re
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
@@ -69,6 +69,16 @@ class GroupChatSetPage(BasePage):
                 message
             )
         return self
+
+    @TestLogger.log()
+    def get_group_total_member(self):
+        """获取群成员总人数"""
+        el = self.get_element(self.__class__.__locators['群成员(2人)'])
+        res = re.search(r"\d+", el.text)
+        if res:
+            return int(res.group())
+        else:
+            return 0
 
     @TestLogger.log()
     def click_group_member_show(self):

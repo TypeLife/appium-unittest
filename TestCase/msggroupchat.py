@@ -2,7 +2,7 @@ import re
 import time
 import unittest
 import random
-
+import uuid
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
@@ -952,6 +952,14 @@ class MsgGroupChatTest(TestCase):
         group_member.search(names[0])
         results = group_member.get_all_group_member_names()
         self.assertIn(names[0], results)
+        name1 = str(uuid.uuid1()) + "Name"
+        group_member.search(name1)
+        results1 = group_member.get_all_group_member_names()
+        self.assertEqual(0, len(results1))
+        name2 = str(uuid.uuid1()) + "中文"
+        group_member.search(name2)
+        results2 = group_member.get_all_group_member_names()
+        self.assertEqual(0, len(results2))
         group_member.click_back()
         group_set.click_back()
         gcp.wait_for_page_load()
@@ -983,3 +991,126 @@ class MsgGroupChatTest(TestCase):
         contacts_page.click_back()
         group_set.click_back()
         gcp.wait_for_page_load()
+
+    @tags('ALL', )
+    def test_msg_group_chat_0061(self):
+        """在群聊聊天设置页面"""
+        # 1.在聊天设置页面，点击群成员右下角展示+号，添加成员按钮，是否会跳转到联系人选择器页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_add_member()
+        # 2.在联系人选择器页面，单击是否可以选择联系人
+        contacts_page = SelectLocalContactsPage()
+        contacts_page.wait_for_page_load()
+        names = contacts_page.get_contacts_name()
+        contacts_page.select_one_member_by_name(names[0])
+        flag = contacts_page.contacts_is_selected(names[0])
+        self.assertTrue(flag)
+        # 3.在联系人选择器页面，点击是否可以取消联系人的选择状态
+        contacts_page.select_one_member_by_name(names[0])
+        flag = contacts_page.contacts_is_selected(names[0])
+        self.assertFalse(flag)
+        contacts_page.click_back()
+        group_set.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL', )
+    def test_msg_group_chat_0062(self):
+        """在群聊聊天设置页面"""
+        # 1.在聊天设置页面，点击群成员右下角展示+号，添加成员按钮，跳转到联系人选择器页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_add_member()
+        # 2.在联系人选择器页面，选择多个联系人之后，点击左上角的返回按钮，
+        # 是否可以返回到聊天会话页面并且清除已选择的联系人选择状态
+        contacts_page = SelectLocalContactsPage()
+        contacts_page.wait_for_page_load()
+        names = contacts_page.get_contacts_name()
+        for name in names:
+            contacts_page.select_one_member_by_name(name)
+        contacts_page.click_back()
+        group_set.wait_for_page_load()
+        group_set.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL', )
+    def test_msg_group_chat_0063(self):
+        """在群聊聊天设置页面"""
+        # 1.在聊天设置页面，点击群成员右下角展示+号，添加成员按钮，跳转到联系人选择器页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_add_member()
+        # 2.在联系人选择页面，把剩余可选择人数全部勾选上，点击右上角的确定按钮，是否可以发送邀请
+        contacts_page = SelectLocalContactsPage()
+        contacts_page.wait_for_page_load()
+        names = contacts_page.get_all_contacts_name()
+        contacts_page.swipe_to_top()
+        for name in names:
+            contacts_page.search_and_select_one_member_by_name(name)
+        contacts_page.click_sure()
+        gcp.wait_for_page_load()
+        gcp.page_should_contain_text("发出群邀请")
+
+    @tags('ALL', )
+    def test_msg_group_chat_0064(self):
+        """在群聊聊天设置页面，添加群成员"""
+        # 1.在聊天设置页面，点击群成员右下角展示+号，添加成员按钮，跳转到联系人选择器页面
+        # 2.在联系人选择页面，勾选人数超出剩余可勾选人数，是否会提示
+
+    @tags('ALL', )
+    def test_msg_group_chat_0065(self):
+        """在群聊聊天设置页面，删除群成员"""
+        # 1.在聊天设置页面，点击群成员右下角展示-号，移除群成员按钮，是否会跳转到群成员移除列表展示页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        nums = group_set.get_group_total_member()
+        if nums != 1:
+            print("当前群聊中只能有群主,请预置条件")
+            group_set.click_back()
+            gcp.wait_for_page_load()
+            return
+        group_set.click_del_member()
+        group_set.wait_for_page_load()
+        group_set.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL', )
+    def test_msg_group_chat_0066(self):
+        """在群聊聊天设置页面，删除群成员"""
+        # 1.在聊天设置页面，点击群成员右下角展示-号，移除群成员按钮，是否可以跳转到群成员移除列表展示页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        nums = group_set.get_group_total_member()
+        if nums < 3:
+            print("当前群聊成员需要大于2,请预置条件")
+            group_set.click_back()
+            gcp.wait_for_page_load()
+            return
+        # 2.在群成员展示列表中，未选择需要进行移除的成员时，右上角的确定按钮是否默认置灰展示
+        group_set.click_del_member()
+        contacts = SelectLocalContactsPage()
+        contacts.wait_for_page_load()
+        # 3.在群成员展示列表中，点击勾选一个成员，右上角的确定是否会高亮展示并且展示已选择的移除数量
+        names = contacts.get_contacts_name()
+        contacts.select_one_member_by_name(names[0])
+        # 4.点击右上角高亮展示的确定按钮，是否可以移除当前成员
+        contacts.click_sure()
+        contacts.click_sure_del()
+        group_set.wait_for_page_load()
+        group_set.click_back()
+        # 5.被移除的成员，是否会收到一条系统通知，你已被群主请出群聊
+        # 6.在群聊聊天会话页面，是否会展示一条，XX被移除群聊的信息
+        gcp.wait_for_page_load()
+        gcp.page_should_contain_text("移出群")
+
+
