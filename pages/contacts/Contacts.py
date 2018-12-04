@@ -104,10 +104,32 @@ class ContactsPage(FooterPage):
             raise AssertionError("contacts is empty!")
         return phones
 
-    def page_down(self):
-        """向下滑动一页"""
-        self.swipe_by_direction(self.__class__.__locators['通讯录列表'], 'down')
+    def page_up(self):
+        """向上滑动一页"""
+        self.swipe_by_direction(self.__class__.__locators['通讯录列表'], 'up')
 
     def swipe_half_page_up(self):
         """向上滑动半页"""
-        self.swipe_by_percent_on_screen(50, 70, 50, 40, 450)
+        self.swipe_by_percent_on_screen(50, 70, 50, 40, 800)
+
+    @TestLogger.log()
+    def get_all_contacts_name(self):
+        """获取所有联系人名"""
+        els = self.get_elements(self.__class__.__locators["联系人名"])
+        contacts_name = []
+        if els:
+            for el in els:
+                contacts_name.append(el.text)
+        else:
+            raise AssertionError("No contacts, please add contacts in address book.")
+        flag = True
+        while flag:
+            self.swipe_half_page_up()
+            els = self.get_elements(self.__class__.__locators["联系人名"])
+            for el in els:
+                if el.text not in contacts_name:
+                    contacts_name.append(el.text)
+                    flag = True
+                else:
+                    flag = False
+        return contacts_name

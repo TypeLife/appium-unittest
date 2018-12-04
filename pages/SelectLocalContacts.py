@@ -1,5 +1,5 @@
 from appium.webdriver.common.mobileby import MobileBy
-
+import time
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
@@ -98,13 +98,8 @@ class SelectLocalContactsPage(BasePage):
     def search_and_select_one_member_by_name(self, name):
         """搜索选择联系人"""
         self.input_text(self.__class__.__locators["搜索或输入手机号"], name)
-        try:
-            self.driver.hide_keyboard()
-        except:
-            pass
         self.click_element(self.__class__.__locators["联系人名"])
-
-
+        time.sleep(0.1)
 
     @TestLogger.log()
     def click_sure(self):
