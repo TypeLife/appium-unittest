@@ -1355,3 +1355,47 @@ class MessageSearchTest(TestCase):
         """
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'SMOKE')
+    def test_msg_search_0019(self):
+        """更改搜索关键字"""
+        # 消息页
+        message_page = MessagePage()
+        message_page.open_message_page()
+        message_page.click_search()
+
+        # 全局搜索页
+        search_page = SearchPage()
+        if search_page.mobile.is_keyboard_shown():
+            search_page.hide_keyboard()
+
+        # 用消息内容作为关键字搜索
+        search_key = '测试'
+        search_page.input_search_keyword(search_key)
+        search_page.hide_keyboard_if_display()
+        # 更换关键字
+        search_key = '给个红包'
+        search_page.input_search_keyword(search_key)
+        search_page.hide_keyboard_if_display()
+        # 聊天记录是否显示
+
+        for result in search_page.search_list_iterator():
+            category = search_page.determine_list_item_type(result)
+            if category == 0:
+                # 检查搜索结果是否包含关键字
+                search_page.assert_search_result_match_keyword(result, search_key)
+
+    @staticmethod
+    def setUp_test_msg_search_0019():
+        """
+        1、联网正常
+        2、已登录客户端
+        3、当前在消息页面
+        """
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+
+    @staticmethod
+    def tearDown_test_msg_search_0019():
+        search_page = SearchPage()
+        search_page.click_back_button()
