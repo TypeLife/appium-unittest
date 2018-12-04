@@ -1123,3 +1123,7 @@ class MsgGroupChatTest(TestCase):
         # 5.被移除的成员，是否会收到一条系统通知，你已被群主请出群聊
         # 7.在群聊聊天会话页面，是否会展示一条，XX被移除群聊的信息
 
+
+    @tags('ALL', )
+    def test_msg_group_chat_0068(self):
+        """在群聊聊天设置页面，删除群成员"""
