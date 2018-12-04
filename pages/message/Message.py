@@ -237,7 +237,15 @@ class MessagePage(FooterPage):
         message = self.get_element(locator)
         position_x, position_y = message.location.get('x'), message.location.get('y')
         self.mobile.tap([(position_x, position_y)], 1000)
-        self.click_text('置顶聊天')
+        if self.is_text_present('取消置顶'):
+            el = self.get_element([MobileBy.XPATH, '//*[@text="取消置顶"]'])
+            position_y, position_y = el.location.get('x'), el.location.get('y') - 100
+            self.mobile.tap([(position_x, position_y)])
+            return
+        if self.is_text_present('置顶聊天'):
+            self.click_text('置顶聊天')
+        else:
+            raise NoSuchElementException('没找到“置顶消息”菜单')
 
     @TestLogger.log("检查最新的一条消息的Title")
     def assert_the_first_message_is(self, title, max_wait_time=5):

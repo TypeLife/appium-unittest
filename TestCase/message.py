@@ -1099,7 +1099,7 @@ class MessageSearchTest(TestCase):
         search_page.click_back_button()
 
     def test_msg_search_0015(self):
-        """搜索联系人排序"""
+        """搜索群聊排序"""
         key_message = '大佬'
         # 消息页
         message_page = MessagePage()
@@ -1177,5 +1177,87 @@ class MessageSearchTest(TestCase):
 
     @staticmethod
     def tearDown_test_msg_search_0015():
+        search_page = SearchPage()
+        search_page.click_back_button()
+
+    def test_msg_search_0016(self):
+        """搜索聊天记录排序"""
+        key_message = '新消息'
+        # 消息页
+        message_page = MessagePage()
+
+        # 创建群
+        message_page.open_contacts_page()
+        contacts_page = ContactsPage()
+        contacts_page.open_group_chat_list()
+        group_list = GroupListPage()
+        for group_name in ['群聊1', '群聊2']:
+            group_list.wait_for_page_load()
+            group_list.click_search_input()
+            group_search = GroupListSearchPage()
+            group_search.input_search_keyword(group_name)
+            if group_search.is_group_in_list(group_name):
+                group_search.click_group(group_name)
+                chat = ChatWindowPage()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                chat.send_message(key_message)
+                chat.click_back()
+                group_search.wait_for_page_load()
+                group_search.click_back()
+            else:
+                group_search.click_back()
+                group_list.click_create_group()
+                select_page = SelectContactPage()
+                select_page.search_and_select_contact('13922996261', '13922996262')
+                build_page = BuildGroupChatPage()
+                build_page.create_group_chat(group_name)
+                chat = ChatWindowPage()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                chat.send_message(key_message)
+                chat.click_back()
+        group_list.click_back()
+        # 消息页
+        message_page = MessagePage()
+        message_page.open_message_page()
+        message_page.set_top_for_message('群聊1')
+        message_page.click_search()
+
+        # 全局搜索页
+        search_page = SearchPage()
+        if search_page.mobile.is_keyboard_shown():
+            search_page.hide_keyboard()
+
+        # 用消息内容作为关键字搜索
+        search_key = key_message
+        search_page.input_search_keyword(search_key)
+        search_page.hide_keyboard_if_display()
+        now_go_to = None
+        # 聊天记录是否显示
+        results = []
+        for result in search_page.search_list_iterator():
+            category = search_page.determine_list_item_type(result)
+            if category in ['联系人', '群聊', '聊天记录', '公众号']:
+                now_go_to = category
+            if now_go_to in ['聊天记录'] and category == 0:
+                # 检查搜索结果是否包含关键字
+                name = search_page.get_contact_name(result)
+                results.append(name)
+        self.assertEqual('群聊2', results[0], '检查点：搜索结果中聊天记录排序是： 按时间排序')
+        self.assertEqual('群聊1', results[1], '检查点：搜索结果中聊天记录排序是： 按时间排序')
+
+    @staticmethod
+    def setUp_test_msg_search_0016():
+        """
+        1、联网正常
+        2、已登录客户端
+        3、当前全局搜索页面
+        """
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page(reset_required=False)
+
+    @staticmethod
+    def tearDown_test_msg_search_0016():
         search_page = SearchPage()
         search_page.click_back_button()
