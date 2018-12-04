@@ -1355,7 +1355,7 @@ class MessageSearchTest(TestCase):
         """
         1、联网正常
         2、已登录客户端
-        3、当前在消息页面
+        3、当前联系人搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
@@ -1394,7 +1394,7 @@ class MessageSearchTest(TestCase):
         """
         1、联网正常
         2、已登录客户端
-        3、当前在消息页面
+        3、当前联系人搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
@@ -1539,7 +1539,7 @@ class MessageSearchTest(TestCase):
         """
         1、联网正常
         2、已登录客户端
-        3、当前全局搜索页面
+        3、当前群聊搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page(reset_required=False)
