@@ -1010,6 +1010,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button() @ tags('ALL', 'SMOKE')
 
+    @tags('ALL', 'SMOKE')
     def test_msg_search_0014(self):
         """搜索联系人排序"""
         key_message = '大佬'
@@ -1098,6 +1099,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
+    @tags('ALL', 'SMOKE')
     def test_msg_search_0015(self):
         """搜索群聊排序"""
         key_message = '大佬'
@@ -1180,6 +1182,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
+    @tags('ALL', 'SMOKE')
     def test_msg_search_0016(self):
         """搜索聊天记录排序"""
         key_message = '新消息'
@@ -1262,6 +1265,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
+    @tags('ALL', 'SMOKE')
     def test_msg_search_0017(self):
         """查看更多联系人"""
         key_message = '给个红包'
