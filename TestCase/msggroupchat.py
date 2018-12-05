@@ -20,6 +20,8 @@ REQUIRED_MOBILES = {
     'Android-XX-XX': 'others_double',
 }
 
+from library.core.utils.testcasefilter import set_tags
+set_tags('DEBUG')
 
 class Preconditions(object):
     """前置条件"""
@@ -194,7 +196,7 @@ class MsgGroupChatTest(TestCase):
         pass
         # current_mobile().disconnect_mobile()
 
-    @tags('ALL',)
+    @tags('ALL', 'DEBUG')
     def test_msg_group_chat_0001(self):
         """在群聊聊天会话页面，发送一段字符数等于“0”的文本字符"""
         # 1.在当前聊天会话页面，在输入框中不输入任何内容，输入框右边展示的按钮是否是语音按钮
@@ -202,7 +204,7 @@ class MsgGroupChatTest(TestCase):
         # 语音按钮检查
         gcp.page_should_contain_audio_btn()
 
-    @tags('ALL',)
+    @tags('ALL', 'DEBUG')
     def test_msg_group_chat_0002(self):
         """在群聊聊天会话页面，发送一段字符数大于“0”的文本字符"""
         # 1.在当前聊天会话页面，在输入框中输入一段文本，字符数大于0
@@ -1278,6 +1280,125 @@ class MsgGroupChatTest(TestCase):
         group_name.wait_for_page_load()
         # 2.在群聊名称修改页面，不修改直接点击右上角的保存按钮，是否可以进行保存
         group_name.click_save()
+        group_set.wait_for_page_load()
+        group_set.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0071(self):
+        """在聊天设置页面，修改群聊名称"""
+        # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_modify_group_name()
+        group_name = GroupNamePage()
+        group_name.wait_for_page_load()
+        # 2、在群聊名称修改页面，录入29个英文（大小写）字母字符，点击右上角的保存按钮是否可以保存
+        old_name = Preconditions.get_group_chat_name()
+        new_name = "PreconditionsGetGroupChatName"
+        group_name.input_group_name(new_name)
+        group_name.click_save()
+        flag = group_name.is_toast_exist("修改成功")
+        self.assertTrue(flag)
+        group_set.wait_for_page_load()
+        # 改回之前的名字
+        group_set.click_modify_group_name()
+        group_name.input_group_name(old_name)
+        group_name.click_save()
+        group_set.wait_for_page_load()
+        group_set.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0072(self):
+        """在聊天设置页面，修改群聊名称"""
+        # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_modify_group_name()
+        group_name = GroupNamePage()
+        group_name.wait_for_page_load()
+        # 2.在群聊名称修改页面，不录入任何字符，右上角的保存按钮是否是置灰展示，不可点击
+        group_name.input_group_name("")
+        flag = group_name.save_btn_is_enabled()
+        self.assertFalse(flag)
+        # 回到群聊页面
+        group_name.click_back()
+        group_set.wait_for_page_load()
+        group_set.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0073(self):
+        """在聊天设置页面，修改群聊名称"""
+        # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_modify_group_name()
+        group_name = GroupNamePage()
+        group_name.wait_for_page_load()
+        # 2.在群聊名称修改页面，点击群名称右边的“X”符号，是否可以一次清除输入框中的群聊名称
+        group_name.click_delete_group_name()
+        # 3.群聊名称被清除后，右上角的保存按钮，是否会置灰展示不可点击
+        flag = group_name.save_btn_is_enabled()
+        self.assertFalse(flag)
+        # 回到群聊页面
+        group_name.click_back()
+        group_set.wait_for_page_load()
+        group_set.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0074(self):
+        """在聊天设置页面，修改群聊名称"""
+        # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_modify_group_name()
+        group_name = GroupNamePage()
+        group_name.wait_for_page_load()
+        # 2.在群聊名称修改页面，录入30个英文（大小写）字母字符，点击右上角的保存按钮，是否可以保存
+        old_name = Preconditions.get_group_chat_name()
+        new_name = "PreconditionsGetGroupChatNameX"
+        group_name.input_group_name(new_name)
+        group_name.click_save()
+        flag = group_name.is_toast_exist("修改成功")
+        self.assertTrue(flag)
+        group_set.wait_for_page_load()
+        # 改回之前的名字
+        group_set.click_modify_group_name()
+        group_name.input_group_name(old_name)
+        group_name.click_save()
+        group_set.wait_for_page_load()
+        group_set.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL', "还没有提示")
+    def test_msg_group_chat_0075(self):
+        """在聊天设置页面，修改群聊名称"""
+        # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_modify_group_name()
+        group_name = GroupNamePage()
+        group_name.wait_for_page_load()
+        # 2.在群聊名称修改页面，录入31个英文（大小写）字母字符，是否会提示当前群名称，最多只能输入30个字符
+        new_name = "PreconditionsGetGroupChatNameXx"
+        group_name.input_group_name(new_name)
+        flag = group_name.is_toast_exist("只能输入30个字符")
+        self.assertTrue(flag)
+        # 回到群聊页面
+        group_name.click_back()
         group_set.wait_for_page_load()
         group_set.click_back()
         gcp.wait_for_page_load()
