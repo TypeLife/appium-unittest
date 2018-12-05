@@ -3,13 +3,13 @@ from library.core.common.simcardtype import CardType
 from library.core.common.supportedmodel import SupportedModel
 
 AVAILABLE_DEVICES = {
-    'MI6': {
+    'MI5X': {
         "MODEL": SupportedModel.MI6,
-        "SERVER_URL": 'http://192.168.200.139:4723/wd/hub',
+        "SERVER_URL": 'http://192.168.200.113:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
-            "platformVersion": "8.0",
-            "deviceName": "bb5671d",
+            "platformVersion": "7.1",
+            "deviceName": "aa8dd3c60904",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
@@ -17,18 +17,14 @@ AVAILABLE_DEVICES = {
         },
         'CARDS': [
             {
-                'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '13510772034'
+                'TYPE': CardType.CHINA_UNION,
+                'CARD_NUMBER': '17611681917'
             },
-            {
-                'TYPE': CardType.CHINA_TELECOM,
-                'CARD_NUMBER': '13510772034'
-            }
         ]
     },
     'M960BDQN229CH': {
         "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
-        "SERVER_URL": 'http://192.168.100.153:4724/wd/hub',
+        "SERVER_URL": 'http://192.168.200.113:4724/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",
@@ -40,13 +36,9 @@ AVAILABLE_DEVICES = {
         },
         'CARDS': [
             {
-                'TYPE': CardType.CHINA_UNION,
-                'CARD_NUMBER': '17611681917'
-            },
-            {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '13537795364'
-            }
+                'CARD_NUMBER': '13510772034'
+            },
         ]
     },
     'single_mobile': {
