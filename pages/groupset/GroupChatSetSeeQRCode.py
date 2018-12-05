@@ -12,7 +12,7 @@ class GroupChatSetSeeQRCodePage(BasePage):
                   'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
                   'android:id/content': (MobileBy.ID, 'android:id/content'),
                   'com.chinasofti.rcs:id/id_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/id_toolbar'),
-                  'com.chinasofti.rcs:id/left_back': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
+                  '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
                   '群二维码': (MobileBy.ID, 'com.chinasofti.rcs:id/text_title'),
                   'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
                   'com.chinasofti.rcs:id/group_qr_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/group_qr_layout'),
@@ -44,6 +44,11 @@ class GroupChatSetSeeQRCodePage(BasePage):
                 message
             )
         return self
+
+    @TestLogger.log()
+    def click_back(self):
+        """点击返回"""
+        self.click_element(self.__class__.__locators["返回"])
 
     @TestLogger.log()
     def click_qecode_share_btn(self):

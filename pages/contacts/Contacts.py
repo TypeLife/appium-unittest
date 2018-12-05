@@ -110,7 +110,7 @@ class ContactsPage(FooterPage):
 
     def swipe_half_page_up(self):
         """向上滑动半页"""
-        self.swipe_by_percent_on_screen(50, 70, 50, 40, 800)
+        self.swipe_by_percent_on_screen(50, 70, 50, 40, 900)
 
     @TestLogger.log()
     def get_all_contacts_name(self):

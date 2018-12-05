@@ -29,7 +29,9 @@ class SelectContactsPage(BasePage):
         'com.chinasofti.rcs:id/arrow_right': (MobileBy.ID, 'com.chinasofti.rcs:id/arrow_right'),
         '选择和通讯录联系人': (MobileBy.XPATH, '//*[@text ="选择和通讯录联系人"]'),
         '本地联系人': (MobileBy.XPATH, '//*[@text ="本地联系人"]'),
-        '最近聊天': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint')
+        '最近聊天': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint'),
+        # 分享二维码的选择联系人页面
+        '选择本地联系人': (MobileBy.XPATH, '//*[@text ="选择本地联系人"]'),
     }
 
     @TestLogger.log()
@@ -64,3 +66,8 @@ class SelectContactsPage(BasePage):
     def click_local_contacts(self):
         """点击 本地联系人"""
         self.click_element(self.__class__.__locators["本地联系人"])
+
+    @TestLogger.log()
+    def select_local_contacts(self):
+        """选择本地联系人"""
+        self.click_element(self.__class__.__locators["选择本地联系人"])
