@@ -16,6 +16,7 @@ class GroupChatPage(BasePage):
                   'com.chinasofti.rcs:id/id_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/id_toolbar'),
                   'com.chinasofti.rcs:id/back': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
                   'com.chinasofti.rcs:id/back_arrow': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
+                  '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
                   '群聊001(2)': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
                   '多方通话': (MobileBy.ID, 'com.chinasofti.rcs:id/action_multicall'),
                   '设置': (MobileBy.ID, 'com.chinasofti.rcs:id/action_setting'),
@@ -137,3 +138,9 @@ class GroupChatPage(BasePage):
     def click_audio_btn(self):
         """点击语音按钮"""
         self.click_element(self.__class__.__locators["语音按钮"])
+
+    @TestLogger.log()
+    def click_back(self):
+        """点击返回按钮"""
+        self.click_element(self.__class__.__locators["返回"])
+

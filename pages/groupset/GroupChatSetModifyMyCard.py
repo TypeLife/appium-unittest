@@ -20,6 +20,22 @@ class GroupChatSetModifyMyCardPage(BasePage):
                   }
 
     @TestLogger.log()
+    def wait_for_page_load(self, timeout=3, auto_accept_alerts=True):
+        """等待修改群名片页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["修改群名片"])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
     def input_my_name(self, name):
         """"输入我的群名片"""
         self.input_text(self.__class__.__locators["我的群名片"], name)
@@ -35,7 +51,12 @@ class GroupChatSetModifyMyCardPage(BasePage):
         self.click_element(self.__class__.__locators["保存"])
 
     @TestLogger.log()
-    def click_delete_group_name(self):
+    def save_btn_is_enabled(self):
+        """保存按钮是否可点击"""
+        return self._is_enabled(self.__class__.__locators["保存"])
+
+    @TestLogger.log()
+    def click_delete_my_name(self):
         """点击删除我的群名片"""
         self.click_element(self.__class__.__locators["删除"])
 

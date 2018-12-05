@@ -109,6 +109,11 @@ class MessagePage(FooterPage):
         self.click_element(self.__locators['发起群聊'])
 
     @TestLogger.log()
+    def click_contacts(self):
+        """点击通讯录"""
+        self.click_element(self.__locators['通讯录'])
+
+    @TestLogger.log()
     def assert_group_chat_text_equal_to(self, expect):
         """检查发起群聊菜单文本"""
         actual = self.wait_until(
