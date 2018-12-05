@@ -58,6 +58,10 @@ class MessagePage(FooterPage):
         except TimeoutException:
             raise AssertionError('搜索框没有显示：{}'.format(self.__locators['搜索']))
 
+    @TestLogger.log('检查顶部搜索框是否显示')
+    def assert_search_box_text_is(self, text):
+        self.mobile.assert_element_text_should_be(self.__locators['搜索'], text, '搜索框文本与"{}"不匹配'.format(text))
+
     @TestLogger.log()
     def is_on_this_page(self):
         """当前页面是否在消息页"""
@@ -242,7 +246,15 @@ class MessagePage(FooterPage):
         message = self.get_element(locator)
         position_x, position_y = message.location.get('x'), message.location.get('y')
         self.mobile.tap([(position_x, position_y)], 1000)
-        self.click_text('置顶聊天')
+        if self.is_text_present('取消置顶'):
+            el = self.get_element([MobileBy.XPATH, '//*[@text="取消置顶"]'])
+            position_y, position_y = el.location.get('x'), el.location.get('y') - 100
+            self.mobile.tap([(position_x, position_y)])
+            return
+        if self.is_text_present('置顶聊天'):
+            self.click_text('置顶聊天')
+        else:
+            raise NoSuchElementException('没找到“置顶消息”菜单')
 
     @TestLogger.log("检查最新的一条消息的Title")
     def assert_the_first_message_is(self, title, max_wait_time=5):

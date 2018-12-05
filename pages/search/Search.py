@@ -2,6 +2,7 @@ import re
 from xml.sax import saxutils
 
 from appium.webdriver.common.mobileby import MobileBy
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as ec
 
@@ -280,3 +281,27 @@ class SearchPage(SearchBar, Keyboard, BasePage):
         contact_name = item.find_element(*[MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" or ' +
                                            '@resource-id="com.chinasofti.rcs:id/tv_conv_name"]']).text
         return contact_name
+
+    @TestLogger.log('检查分栏是否显示"查看更多"')
+    def assert_show_more_is_display(self, element):
+        assert isinstance(element, (list, tuple, WebElement))
+        if isinstance(element, (list, tuple)):
+            item = self.get_element(element)
+        else:
+            item = element
+        try:
+            self.wait_until(
+                condition=lambda d: item.find_element(MobileBy.XPATH, '//*[@text="查看更多"]')
+            )
+        except TimeoutException:
+            raise AssertionError('界面没有显示"查看更多"入口')
+
+    @TestLogger.log('检查分栏是否显示"查看更多"')
+    def click_show_more(self, element):
+        assert isinstance(element, (list, tuple, WebElement))
+        if isinstance(element, (list, tuple)):
+            item = self.get_element(element)
+        else:
+            item = element
+        entry = item.find_element(MobileBy.XPATH, '//*[@text="查看更多"]')
+        entry.click()
