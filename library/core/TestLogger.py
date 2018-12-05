@@ -35,20 +35,22 @@ class TestLogger(object):
                 finally:
                     if turn_on:
                         TestLogger._do_log = True
-                        from library.core.BasePage import BasePage
-                        from library.core.utils import applicationcache as ac
+                        # from library.core.BasePage import BasePage
+                        from library.core.utils import applicationcache as cache
+                        mobile = cache.current_mobile()
                         log_info = func.__doc__ if info is None else info
                         print(template % dict(time=datetime.datetime.now().__str__(),
                                               className=getattr(TestLogger.current_test.__class__, '__name__'),
                                               level=TestLogger.log_level,
                                               caseName=getattr(TestLogger.current_test, '_testMethodName', None),
                                               func=common.get_method_fullname(func),
-                                              mobile=ac.current_mobile().__str__(),
+                                              mobile=mobile.__str__(),
                                               description=log_info if log_info else "no description",
-                                              args='[Args: {} {}]'.format(
-                                                  args[1:] if bool(args[:1]) and isinstance(args[0],
-                                                                                            BasePage) else args,
-                                                  kw),
+                                              # args='[Args: {} {}]'.format(
+                                              #     args[1:] if bool(args[:1]) and isinstance(args[0],
+                                              #                                               BasePage) else args,
+                                              #     kw)
+                                              args='[Args: {} {}]'.format(args, kw),
                                               )
                               )
                         TestLogger.log_level = "INFO"

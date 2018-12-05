@@ -8,7 +8,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from library.core.TestLogger import TestLogger
-from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE, current_mobile
 
 
 class BasePage(object):
@@ -21,10 +20,12 @@ class BasePage(object):
 
     @property
     def driver(self):
+        from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE
         return MOBILE_DRIVER_CACHE.current.driver
 
     @property
     def mobile(self):
+        from library.core.utils.applicationcache import current_mobile
         return current_mobile()
 
     def background_app(self, seconds):

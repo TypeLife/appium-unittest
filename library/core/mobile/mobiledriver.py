@@ -151,7 +151,7 @@ class MobileDriver(ABC):
         """开启重置app（在获取session之前有效）"""
         self._desired_caps['noReset'] = False
 
-    @TestLogger.log('关闭重置APP选项（仅当手机未连接时有效）')
+    # @TestLogger.log('关闭重置APP选项（仅当手机未连接时有效）')
     def turn_off_reset(self):
         """关闭重置app（在获取session之前有效）"""
         self._desired_caps['noReset'] = True
