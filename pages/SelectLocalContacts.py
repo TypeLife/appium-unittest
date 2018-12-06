@@ -52,12 +52,25 @@ class SelectLocalContactsPage(BasePage):
                   '确定分享': (MobileBy.XPATH, '//*[@text="确定"]'),
                   '取消分享': (MobileBy.XPATH, '//*[@text="取消"]'),
                   '发送给:xxx': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_message'),
+                  # 群主转让
+                  '确定转让': (MobileBy.XPATH, '//*[@text="确定"]'),
+                  '取消转让': (MobileBy.XPATH, '//*[@text="取消"]'),
                   }
 
     @TestLogger.log()
     def click_sure_share(self):
         """点击确定分享"""
         self.click_element(self.__class__.__locators["确定分享"], auto_accept_permission_alert=False)
+
+    @TestLogger.log()
+    def click_sure_transfer(self):
+        """点击确定群主转让"""
+        self.click_element(self.__class__.__locators["确定转让"], auto_accept_permission_alert=False)
+
+    @TestLogger.log()
+    def click_cancel_transfer(self):
+        """点击取消转让群主"""
+        self.click_element(self.__class__.__locators["取消转让"], auto_accept_permission_alert=False)
 
     @TestLogger.log()
     def get_contacts_name(self):
@@ -107,7 +120,6 @@ class SelectLocalContactsPage(BasePage):
     def search_and_select_one_member_by_name(self, name):
         """搜索选择联系人"""
         self.input_text(self.__class__.__locators["搜索或输入手机号"], name)
-        time.sleep(0.6)
         self.click_element(self.__class__.__locators["联系人名"])
 
     @TestLogger.log()
