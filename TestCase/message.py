@@ -160,6 +160,35 @@ class MessageScanTest(TestCase):
     """消息 - 扫一扫"""
 
     @tags('ALL')
+    def test_msg_scan_0007(self):
+        """网络异常使用扫一扫"""
+        message_page = MessagePage()
+        message_page.click_add_icon()
+        message_page.click_take_a_scan()
+
+        scan_page = Scan1Page()
+        scan_page.wait_for_page_load()
+        scan_page.assert_network_disconnect_img_is_display()
+
+    @staticmethod
+    def setUp_test_msg_scan_0007():
+        """
+        1.网络异常
+        2.已登录客户端
+        3.当前在消息列表界面
+        4.使用扫一扫功能
+        """
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        current_mobile().set_network_status(0)
+
+    @staticmethod
+    def tearDown_test_msg_scan_0007():
+        current_mobile().set_network_status(6)
+        scan_page = Scan1Page()
+        scan_page.click_back()
+
+    @tags('ALL')
     def test_msg_scan_0015(self):
         """进入我的二维码页面"""
         message_page = MessagePage()
