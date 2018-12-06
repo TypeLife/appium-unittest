@@ -1,11 +1,12 @@
+import random
 import re
 import time
 import unittest
-import random
 import uuid
+
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
-from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
+from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
 
@@ -20,8 +21,9 @@ REQUIRED_MOBILES = {
     'Android-XX-XX': 'others_double',
 }
 
-from library.core.utils.testcasefilter import set_tags
-set_tags('DEBUG')
+
+# from library.core.utils.testcasefilter import set_tags
+# set_tags('DEBUG')
 
 class Preconditions(object):
     """前置条件"""
