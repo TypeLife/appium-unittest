@@ -156,6 +156,42 @@ class MessageTest(TestCase):
         print("Run test case setup.")
 
 
+class MessageScanTest(TestCase):
+    """消息 - 扫一扫"""
+
+    @tags('ALL')
+    def test_msg_scan_0015(self):
+        """进入我的二维码页面"""
+        message_page = MessagePage()
+        message_page.click_add_icon()
+        message_page.click_take_a_scan()
+
+        scan_page = ScanPage()
+        scan_page.wait_for_page_load()
+        scan_page.open_my_qr_code_page()
+
+        qr_code_page = MyQRCodePage()
+        qr_code_page.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_scan_0015():
+        """
+        1.网络正常
+        2.已登录客户端
+        3.当前在消息列表界面
+        4.使用扫一扫功能
+        """
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+
+    @staticmethod
+    def tearDown_test_msg_scan_0015():
+        qr_code_page = MyQRCodePage()
+        qr_code_page.click_back()
+        scan_page = ScanPage()
+        scan_page.click_back()
+
+
 class MessageSearchTest(TestCase):
     """消息-全局搜索"""
 
