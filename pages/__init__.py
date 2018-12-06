@@ -52,6 +52,9 @@ __all__ = [
     "ChatProfilePage",
     "ChatLocationPage",
     "BuildGroupChatPage",
+    "MyQRCodePage",
+    "ScanPage",
+    "Scan1Page",
     "SelectContactPage",
     'GlobalSearchContactPage',
     'GlobalSearchGroupPage',
@@ -113,6 +116,9 @@ from .message import EmailDetailPage
 from .message import EmailListPage
 from .message import MessagePage
 from .others import BuildGroupChatPage
+from .others import MyQRCodePage
+from .others import Scan1Page
+from .others import ScanPage
 from .others import SelectContactPage
 from .search import GlobalSearchContactPage
 from .search import GlobalSearchGroupPage

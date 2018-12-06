@@ -1,11 +1,12 @@
+import random
 import re
 import time
 import unittest
-import random
 import uuid
+
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
-from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
+from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
 

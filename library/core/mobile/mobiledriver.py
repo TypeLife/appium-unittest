@@ -711,7 +711,7 @@ class MobileDriver(ABC):
         """让 app 进入后台运行seconds 秒"""
         self.driver.background_app(seconds)
 
-    @TestLogger.log('获取网络状态')
+    @TestLogger.log('获取网络状态（不要用，不同机型返回结果不一样，不可控制）')
     def get_network_status(self):
         """获取网络链接状态"""
         return self.driver.network_connection
@@ -985,7 +985,7 @@ Value (Alias)      | Data | Wifi | Airplane Mode
                     auto_accept_permission_alert=False
                 )
             except TimeoutException:
-                raise RuntimeError('手机WIFI 已开启，但没能成功连接到热点')
+                raise RuntimeError('手机WIFI 已开启，但没有自动连接到 WIFI 热点')
             self.back()
             return True
         elif self.is_ios():
@@ -1026,7 +1026,7 @@ Value (Alias)      | Data | Wifi | Airplane Mode
         else:
             raise NotImplementedError('该API不支持android/ios以外的系统')
 
-    @TestLogger.log('开启WIFI')
+    @TestLogger.log('开启飞行模式')
     def turn_on_airplane_mode(self):
         """
         Android系统：
@@ -1059,7 +1059,7 @@ Value (Alias)      | Data | Wifi | Airplane Mode
         else:
             raise NotImplementedError('该API不支持android/ios以外的系统')
 
-    @TestLogger.log('关闭WIFI')
+    @TestLogger.log('关闭飞行模式')
     def turn_off_airplane_mode(self):
         """
         由于appium set_network_connection接口不靠谱，所有有关网络状态的设置需要在UI层面操作

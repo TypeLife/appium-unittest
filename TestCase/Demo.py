@@ -175,6 +175,7 @@ class Preconditions(object):
         Preconditions.diff_card_make_already_in_sms_login_page()
 
 
+@unittest.skip('这是一个用例DEMO')
 class Demo(TestCase):
     """多手机协同DEMO"""
 
