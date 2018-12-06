@@ -711,7 +711,7 @@ class MobileDriver(ABC):
         """让 app 进入后台运行seconds 秒"""
         self.driver.background_app(seconds)
 
-    @TestLogger.log('获取网络状态')
+    @TestLogger.log('获取网络状态（不要用，不同机型返回结果不一样，不可控制）')
     def get_network_status(self):
         """获取网络链接状态"""
         return self.driver.network_connection

@@ -134,7 +134,8 @@ class Preconditions(object):
                 pass
         Preconditions.reset_and_relaunch_app()
         Preconditions.make_already_in_one_key_login_page()
-        Preconditions.login_by_one_key_login()
+        login_num = Preconditions.login_by_one_key_login()
+        return login_num
 
 
 @unittest.skip
@@ -1008,7 +1009,7 @@ class MessageSearchTest(TestCase):
     @staticmethod
     def tearDown_test_msg_search_0013():
         search_page = SearchPage()
-        search_page.click_back_button() @ tags('ALL', 'SMOKE')
+        search_page.click_back_button()
 
     @tags('ALL', 'SMOKE')
     def test_msg_search_0014(self):
@@ -2028,5 +2029,106 @@ class MessageSearchTest(TestCase):
     @staticmethod
     def tearDown_test_msg_search_0026():
         current_mobile().set_network_status(6)
+        search_page = SearchPage()
+        search_page.click_back_button()
+
+    @tags('ALL', 'SMOKE')
+    def test_msg_search_0027(self):
+        """搜索关键字"""
+        key_message = '1'
+        # 消息页
+        message_page = MessagePage()
+        message_page.open_message_page()
+        message_page.click_search()
+
+        # 全局搜索页
+        search_page = SearchPage()
+        if search_page.mobile.is_keyboard_shown():
+            search_page.hide_keyboard()
+
+        # 用消息内容作为关键字搜索
+        search_key = key_message
+        search_page.input_search_keyword(search_key)
+        search_page.hide_keyboard_if_display()
+        # 正确的顺序
+        expected_order = ['搜索和通讯录联系人', '联系人', '群聊', '功能', '聊天记录', '公众号']
+        # 实际顺序
+        actual_order = []
+        for result in search_page.search_list_iterator():
+            category = search_page.determine_list_item_type(result)
+            if category != 0:
+                if category == 1:
+                    category = '搜索和通讯录联系人'
+                actual_order.append(category)
+        self.assertEqual(
+            expected_order,
+            actual_order,
+            "检查点：排序规则为：搜索和通讯录联系人>本地联系人>群聊>功能>聊天记录>公众号"
+        )
+
+    @staticmethod
+    def setUp_test_msg_search_0027():
+        """
+        1、联网正常
+        2、已登录客户端
+        3、当前全局搜索页面
+
+        测试方案：
+            1.号码有1的联系人：不用在这里创建，前面的用例已经导入包含“1”的号码
+            2.名称有1的群聊：使用“群聊1”
+            3.内容有1的聊天记录：群聊1中发送消息“1”
+            4.名字包含“1”的功能：发送邮件到登录号码的139邮箱触发“139邮箱助手”
+            5.名字包含“1”的公众号：不需要制造，中国移动10886
+        """
+        Preconditions.connect_mobile('Android-移动')
+        login_num = Preconditions.make_already_in_message_page(reset_required=True)
+
+        # 先发邮件，否则无法搜索到功能“139邮箱”
+        from library.core.utils.email_helper import send_email
+        send_email(login_num + '@139.com', '工作日报终稿', '更新内容！')
+        # 关键字交集使用“1”
+        key_message = '1'
+        # 消息页
+        message_page = MessagePage()
+        message_page.find_message('139邮箱助手', 40)
+        # 创建名称为"助手"的群
+        message_page.open_contacts_page()
+        contacts_page = ContactsPage()
+        contacts_page.open_group_chat_list()
+        group_list = GroupListPage()
+        # 群聊名测试数据使用“群聊1”
+        for group_name in ['群聊' + key_message]:
+            group_list.wait_for_page_load()
+            group_list.click_search_input()
+            group_search = GroupListSearchPage()
+            group_search.input_search_keyword(group_name)
+            if group_search.is_group_in_list(group_name):
+                group_search.click_group(group_name)
+                chat = ChatWindowPage()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                # 制造包含关键字的聊天记录
+                chat.send_message(key_message)
+                chat.click_back()
+                group_search.wait_for_page_load()
+                group_search.click_back()
+            else:
+                group_search.click_back()
+                group_list.click_create_group()
+                select_page = SelectContactPage()
+                select_page.search_and_select_contact('13922996261', '13922996262')
+                build_page = BuildGroupChatPage()
+                build_page.create_group_chat(group_name)
+                chat = ChatWindowPage()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                # 制造包含关键字的聊天记录
+                chat.send_message(key_message)
+                chat.click_back()
+
+        group_list.click_back()
+
+    @staticmethod
+    def tearDown_test_msg_search_0027():
         search_page = SearchPage()
         search_page.click_back_button()
