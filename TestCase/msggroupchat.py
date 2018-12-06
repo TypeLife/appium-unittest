@@ -20,9 +20,6 @@ REQUIRED_MOBILES = {
     'Android-XX-XX': 'others_double',
 }
 
-from library.core.utils.testcasefilter import set_tags
-set_tags('DEBUG')
-
 class Preconditions(object):
     """前置条件"""
 
@@ -1399,6 +1396,125 @@ class MsgGroupChatTest(TestCase):
         self.assertTrue(flag)
         # 回到群聊页面
         group_name.click_back()
+        group_set.wait_for_page_load()
+        group_set.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0076(self):
+        """在聊天设置页面，修改群聊名称"""
+        # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_modify_group_name()
+        group_name = GroupNamePage()
+        group_name.wait_for_page_load()
+        # 2.在群聊名称修改页面，录入10个汉字，点击右上角的保存按钮，是否可以保存
+        old_name = Preconditions.get_group_chat_name()
+        new_name = "汉字群聊名称修改页面"
+        group_name.input_group_name(new_name)
+        group_name.click_save()
+        flag = group_name.is_toast_exist("修改成功")
+        self.assertTrue(flag)
+        group_set.wait_for_page_load()
+        # 改回之前的名字
+        group_set.click_modify_group_name()
+        group_name.input_group_name(old_name)
+        group_name.click_save()
+        group_set.wait_for_page_load()
+        group_set.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL', "还没有提示")
+    def test_msg_group_chat_0077(self):
+        """在聊天设置页面，修改群聊名称"""
+        # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_modify_group_name()
+        group_name = GroupNamePage()
+        group_name.wait_for_page_load()
+        # 2.在群聊名称修改页面，录入11个汉字，是否会提示只能输入10个汉字
+        new_name = "汉字群聊名称修改页面字"
+        group_name.input_group_name(new_name)
+        flag = group_name.is_toast_exist("只能输入10个汉字")
+        self.assertTrue(flag)
+        # 回到群聊页面
+        group_name.click_back()
+        group_set.wait_for_page_load()
+        group_set.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0078(self):
+        """在聊天设置页面，分享群二维码"""
+        # 1、在聊天设置页面，点击群二维码，是否会跳转到群聊二维码展示页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_QRCode()
+        code_page = GroupChatSetSeeQRCodePage()
+        code_page.wait_for_page_load()
+        # 2、在当前群聊展示页面，点击左下角的分享按钮，是否会跳转到联系人选择器页面
+        code_page.click_qecode_share_btn()
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 3、在联系人选择器页面，选择一个群聊或者联系人，是否会弹出确认分享弹窗
+        scp.select_local_contacts()
+        local_contacts = SelectLocalContactsPage()
+        names = local_contacts.get_contacts_name()
+        local_contacts.select_one_member_by_name(names[0])
+        # 4、点击确定是否可以分享成功
+        local_contacts.click_sure_share()
+        flag = code_page.is_toast_exist("已转发")
+        self.assertTrue(flag)
+        code_page.click_back()
+        group_set.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0079(self):
+        """在聊天设置页面，分享群二维码"""
+        # 1、在聊天设置页面，点击群二维码，是否会跳转到群聊二维码展示页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_QRCode()
+        code_page = GroupChatSetSeeQRCodePage()
+        code_page.wait_for_page_load()
+        # 2、在当前群聊展示页面，点击右下角的下载按钮，是否会提示下载成功
+        code_page.click_qecode_save_btn()
+        flag = code_page.is_toast_exist("已保存")
+        self.assertTrue(flag)
+        # 3、点击左上角的“<”返回按钮，是否可以返回到聊天设置页面
+        code_page.click_back()
+        group_set.wait_for_page_load()
+        group_set.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0080(self):
+        """在聊天设置页面，修改我在本群的昵称"""
+        # 1、在聊天设置页面，点击我在本群的昵称，是否会跳转到修改群名片页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_my_card()
+        mycard = GroupChatSetModifyMyCardPage()
+        mycard.wait_for_page_load()
+        # 2、在修改群名片页面，输入新的名称，点击右上角的保存按钮，是否可以保存
+        name = "w" + str(int(time.time()))
+        mycard.input_my_name(name)
+        mycard.click_save()
+        flag = group_set.is_toast_exist("修改成功")
+        self.assertTrue(flag)
         group_set.wait_for_page_load()
         group_set.click_back()
         gcp.wait_for_page_load()
