@@ -45,7 +45,9 @@ class MessagePage(FooterPage):
         '通话': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCall'),
         '工作台': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCircle'),
         '通讯录': (MobileBy.ID, 'com.chinasofti.rcs:id/tvContact'),
-        '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe')
+        '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe'),
+        '消息免打扰': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text="%s"]/../following-sibling::*[@resource-id="com.chinasofti.rcs:id/iv_conv_slient"]'),
+        '置顶群': (MobileBy.XPATH, '//android.support.v7.widget.RecyclerView/android.widget.RelativeLayout[1]//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name"]'),
     }
 
     @TestLogger.log('检查顶部搜索框是否显示')
@@ -342,3 +344,16 @@ class MessagePage(FooterPage):
     def _is_on_the_start_of_list_view(self):
         """判断是否列表开头"""
         return self._is_element_present(self.__locators['搜索'])
+
+    @TestLogger.log()
+    def is_exist_undisturb(self, group_name):
+        """某群是否存在消息免打扰标志"""
+        path = self.__class__.__locators["消息免打扰"][1]
+        self.__class__.__locators["xpath"] = (self.__class__.__locators["消息免打扰"][0], path % group_name)
+        return self._is_element_present(self.__class__.__locators["xpath"])
+
+    @TestLogger.log()
+    def get_top_news_name(self):
+        """获取置顶群的名字"""
+        return self.get_element(self.__class__.__locators['置顶群']).text
+

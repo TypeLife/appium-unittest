@@ -56,6 +56,27 @@ class ContactsPage(FooterPage):
         '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe')
     }
 
+    @TestLogger.log()
+    def get_contacts_name(self):
+        """获取所有联系人名"""
+        els = self.get_elements(self.__class__.__locators["联系人名"])
+        contacts_name = []
+        if els:
+            for el in els:
+                contacts_name.append(el.text)
+        else:
+            raise AssertionError("No contacts, please add contacts in address book.")
+        if "和通讯录" in contacts_name:
+            contacts_name.remove("和通讯录")
+        if "和飞信电话" in contacts_name:
+            contacts_name.remove("和飞信电话")
+        return contacts_name
+
+    @TestLogger.log()
+    def select_people_by_name(self, name):
+        """通过人名选择一个联系人"""
+        self.click_element((MobileBy.XPATH, '//*[@text ="%s"]' % name))
+
     @TestLogger.log('点击+号')
     def click_add(self):
         self.click_element(self.__locators['+号'])
