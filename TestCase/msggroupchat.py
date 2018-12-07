@@ -21,6 +21,7 @@ REQUIRED_MOBILES = {
     'Android-XX-XX': 'others_double',
 }
 
+
 class Preconditions(object):
     """前置条件"""
 
@@ -1518,4 +1519,151 @@ class MsgGroupChatTest(TestCase):
         self.assertTrue(flag)
         group_set.wait_for_page_load()
         group_set.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0081(self):
+        """在聊天设置页面，修改我在本群的昵称"""
+        # 1.在聊天设置页面，点击我在本群的昵称，会跳转到修改群名片页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_my_card()
+        mycard = GroupChatSetModifyMyCardPage()
+        mycard.wait_for_page_load()
+        # 2.在修改群名片页面，点击输入框右边的“x”按钮，是否可以一次清除已存在的昵称
+        mycard.click_delete_my_name()
+        mycard.page_should_contain_text("设置你在群内显示的昵称")
+        # 3.输入框中不存在内容后，右上角的保存按钮是否会置灰展示
+        flag = mycard.save_btn_is_enabled()
+        self.assertFalse(flag)
+        # 4.输入框录入内容后，右上角的保存按钮，是否会高亮展示
+        name = "w" + str(int(time.time()))
+        mycard.input_my_name(name)
+        flag = mycard.save_btn_is_enabled()
+        self.assertTrue(flag)
+        # 5.点击高亮展示的保存按钮，是否可以保存
+        mycard.click_save()
+        flag = group_set.is_toast_exist("修改成功")
+        self.assertTrue(flag)
+        group_set.wait_for_page_load()
+        group_set.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0820(self):
+        """在聊天设置—群管理页面，转让群主或者解散群"""
+        # 1.点击群管理，是否可以跳转到群管理页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_group_manage()
+        # 2.点击解散群，是否会弹窗提示解散群聊确认操作
+        manage_page = GroupChatSetManagerPage()
+        manage_page.click_group_disband()
+        manage_page.click_confirm()
+        # 3.点击确定，是否可以解散群聊
+        flag = manage_page.is_toast_exist("该群已解散")
+        self.assertTrue(flag)
+
+    @tags('ALL',)
+    def test_msg_group_chat_0083(self):
+        """在聊天设置—群管理页面，转让群主或者解散群"""
+        # 1.点击群管理，跳转到群管理页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.wait_for_page_load()
+        nums = group_set.get_group_total_member()
+        if nums != 1:
+            print("当前群不能有群成员,请预置条件")
+            group_set.click_back()
+            gcp.wait_for_page_load()
+            return
+        group_set.click_group_manage()
+        # 2.点击群主管理权转让，是否会弹出提示：暂无群成员
+        manage_page = GroupChatSetManagerPage()
+        manage_page.click_group_transfer()
+        flag = manage_page.is_toast_exist("暂无群成员")
+        self.assertTrue(flag)
+        manage_page.click_back()
+        group_set.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL',)
+    def test_msg_group_chat_1084(self):
+        """在聊天设置—群管理页面，转让群主或者解散群"""
+        # 1、点击群管理，跳转到群管理页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.wait_for_page_load()
+        nums = group_set.get_group_total_member()
+        if nums == 1:
+            print("当前群只有群主,请添加成员")
+            group_set.click_back()
+            gcp.wait_for_page_load()
+            return
+        group_set.click_group_manage()
+        # 2、点击群主管理权转让，是否会跳转到“新群主选择”页面
+        manage_page = GroupChatSetManagerPage()
+        manage_page.click_group_transfer()
+        # 3、点击选择一个群成员，是否会弹出提示：是否确定XXX为新群主的确认提示
+        contacts = SelectLocalContactsPage()
+        contacts.wait_for_page_load()
+        names = contacts.get_contacts_name()
+        contacts.select_one_member_by_name(names[0])
+        contacts.page_should_contain_text("确定选择" + names[0] + "为新群主")
+        # 4、点击取消，返回到上一级操作
+        contacts.click_cancel_transfer()
+        # 5、点击确定，群主转让成功同时在群聊天会话页面展示XXX已成为新群主
+        contacts.select_one_member_by_name(names[0])
+        contacts.page_should_contain_text("确定选择" + names[0] + "为新群主")
+        contacts.click_sure_transfer()
+        flag = group_set.is_toast_exist("已转让")
+        self.assertTrue(flag)
+        group_set.click_back()
+        gcp.wait_for_page_load()
+        gcp.page_should_contain_text(names[0] + " 已成为新群主")
+
+    @tags('ALL',)
+    def test_msg_group_chat_0085(self):
+        """在聊天设置—设置免打扰"""
+        # 1、点击消息免打扰的开关，是否可以打开消息免打扰开关
+        gcp = GroupChatPage()
+        # 点击前先发送一条消息
+        info = "Hello everyone!"
+        gcp.input_message(info)
+        gcp.send_message()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        switch_status = group_set.get_switch_undisturb_status()
+        if not switch_status:
+            group_set.click_switch_undisturb()
+            time.sleep(2)
+        # 2、返回到聊天会话页面，页面上方是否会展示免打扰标志
+        group_set.click_back()
+        flag = gcp.is_exist_undisturb()
+        self.assertTrue(flag)
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        scp = SelectContactsPage()
+        scp.click_back()
+        # 3、返回到消息列表，开启免打扰的聊天窗口上是否会展示免打扰标志
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        group_name = Preconditions.get_group_chat_name()
+        flag = mess.is_exist_undisturb(group_name)
+        self.assertTrue(flag)
+        # 回到群聊会话页面
+        mess.click_add_icon()
+        mess.click_group_chat()
+        scp.click_select_one_group()
+        sogp.select_one_group_by_name(group_name)
         gcp.wait_for_page_load()
