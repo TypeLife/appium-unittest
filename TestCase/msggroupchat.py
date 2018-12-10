@@ -1667,3 +1667,182 @@ class MsgGroupChatTest(TestCase):
         scp.click_select_one_group()
         sogp.select_one_group_by_name(group_name)
         gcp.wait_for_page_load()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0086(self):
+        """在聊天设置—设置免打扰"""
+        # 1.点击消息免打扰开关，是否可以关闭免打扰
+        gcp = GroupChatPage()
+        # 先发送一条消息
+        info = "Hello"
+        gcp.input_message(info)
+        gcp.send_message()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        switch_status = group_set.get_switch_undisturb_status()
+        # 如果开关打开则关闭
+        if switch_status:
+            group_set.click_switch_undisturb()
+            time.sleep(2)
+        # 2.返回到聊天会话页面，页面上方是否会隐藏免打扰标志
+        group_set.click_back()
+        flag = gcp.is_exist_undisturb()
+        self.assertFalse(flag)
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        scp = SelectContactsPage()
+        scp.click_back()
+        # 3.返回到消息列表，关闭免打扰的聊天窗口上是否会隐藏免打扰标志
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        group_name = Preconditions.get_group_chat_name()
+        flag = mess.is_exist_undisturb(group_name)
+        self.assertFalse(flag)
+        # 回到群聊会话页面
+        mess.click_add_icon()
+        mess.click_group_chat()
+        scp.click_select_one_group()
+        sogp.select_one_group_by_name(group_name)
+        gcp.wait_for_page_load()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0087(self):
+        """在聊天设置—设置置顶聊天 """
+        # 1.点击置顶聊天的开关，是否可以开启置顶聊天开关
+        gcp = GroupChatPage()
+        # 先发送一条消息
+        info = "hehe"
+        gcp.input_message(info)
+        gcp.send_message()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        top_switch = group_set.get_chat_set_to_top_switch_status()
+        if not top_switch:
+            group_set.click_chat_set_to_top_switch()
+            time.sleep(1)
+        # 2.返回到消息列表，当前打开置顶聊天功能的群聊是否成功置顶
+        group_set.click_back()
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        scp = SelectContactsPage()
+        scp.click_back()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 给其他联系人发送一条消息，看群聊是否设置成功置顶
+        mess.click_contacts()
+        contacts = ContactsPage()
+        contacts.wait_for_page_load()
+        names = contacts.get_contacts_name()
+        contacts.select_people_by_name(names[0])
+        contact_detail = ContactDetailsPage()
+        contact_detail.click_message_icon()
+        chat = GroupChatPage()
+        # 如果弹框用户须知则点击处理
+        flag = chat.is_exist_dialog()
+        if flag:
+            chat.click_i_have_read()
+        info = "您好"
+        chat.input_message(info)
+        chat.send_message()
+        chat.click_back()
+        contact_detail.click_back_icon()
+        contacts.open_message_page()
+        # 获取群名字
+        group_name = Preconditions.get_group_chat_name()
+        # 顶部消息群名
+        top_name = mess.get_top_news_name()
+        # 名字一致，则置顶成功
+        self.assertEqual(group_name, top_name)
+        # 回到群聊会话页面
+        mess.click_add_icon()
+        mess.click_group_chat()
+        scp.click_select_one_group()
+        sogp.select_one_group_by_name(group_name)
+        gcp.wait_for_page_load()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0088(self):
+        """在聊天设置—设置置顶聊天 """
+        # 1.点击置顶聊天的开关，是否可以关闭置顶聊天开关
+        gcp = GroupChatPage()
+        # 先发送一条消息
+        info = "hehe"
+        gcp.input_message(info)
+        gcp.send_message()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        top_switch = group_set.get_chat_set_to_top_switch_status()
+        if top_switch:
+            group_set.click_chat_set_to_top_switch()
+            time.sleep(1)
+        # 2.返回到消息列表，当前关闭置顶聊天功能的群聊，是否成功取消置顶
+        group_set.click_back()
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        scp = SelectContactsPage()
+        scp.click_back()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 给其他联系人发送一条消息，看群聊是否成功取消置顶
+        mess.click_contacts()
+        contacts = ContactsPage()
+        contacts.wait_for_page_load()
+        names = contacts.get_contacts_name()
+        contacts.select_people_by_name(names[0])
+        contact_detail = ContactDetailsPage()
+        contact_detail.click_message_icon()
+        chat = GroupChatPage()
+        # 如果弹框用户须知则点击处理
+        flag = chat.is_exist_dialog()
+        if flag:
+            chat.click_i_have_read()
+        info = "您好"
+        chat.input_message(info)
+        chat.send_message()
+        chat.click_back()
+        contact_detail.click_back_icon()
+        contacts.open_message_page()
+        # 获取群名字
+        group_name = Preconditions.get_group_chat_name()
+        # 顶部消息群名
+        top_name = mess.get_top_news_name()
+        # 名字不一致，则取消置顶成功
+        self.assertNotEqual(group_name, top_name)
+        # 回到群聊会话页面
+        mess.click_add_icon()
+        mess.click_group_chat()
+        scp.click_select_one_group()
+        sogp.select_one_group_by_name(group_name)
+        gcp.wait_for_page_load()
+
+    @tags('ALL',)
+    def test_msg_group_chat_0089(self):
+        """在聊天设置—查找聊天内容 """
+        # 1.点击查找聊天内容，是否可以跳转到聊天内容搜索展示页面
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.scroll_to_bottom()
+        group_set.click_find_chat_record()
+        search_page = GroupChatSetFindChatContentPage()
+        search_page.wait_for_page_load()
+        # 2.在页面顶部搜索框中，输入搜索条件，无搜索结果，页面是否会展示文案：“无搜索结果”
+        info = str(uuid.uuid1())
+        search_page.search(info)
+        search_page.page_should_contain_text("无搜索结果")
+        # 3.搜索框中存在内容时，右边是否会展示一键清除输入框中内容按钮“X”
+        # 4.点击“X”按钮是否可以清除输入框中内容并展示初始化页面
+        search_page.click_x_icon()
+        search_page.page_should_contain_text("分类索引")
+        search_page.page_should_contain_text("图片与视频")
+        search_page.page_should_contain_text("文件")
+        search_page.click_back()
+        group_set.click_back()
+        gcp.wait_for_page_load()
