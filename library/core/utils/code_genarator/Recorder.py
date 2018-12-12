@@ -32,6 +32,7 @@ def build_page_object(page_name=None, page_description=None, activity=None, loca
     try_times = 0
     while not page_name:
         sys.stdout.write('请输入页面类名：')
+        sys.stdout.flush()
         page_name = sys.stdin.readline().strip()
         file_path = os.path.join(DISTINCT_PATH, page_name + '.py')
         source_path = os.path.join(DISTINCT_PATH, page_name + '.xml')
@@ -42,6 +43,7 @@ def build_page_object(page_name=None, page_description=None, activity=None, loca
             raise Exception('尝试超过3次，请确认页面名不会重复再执行该任务!')
     if not page_description:
         sys.stdout.write('请输入页面描述：')
+        sys.stdout.flush()
         page_description = sys.stdin.readline().strip()
 
     # output = temp % {
@@ -58,10 +60,12 @@ def build_page_object(page_name=None, page_description=None, activity=None, loca
     with open(file_path, 'w+', encoding='UTF-8') as f:
         f.write(out)
         sys.stdout.write('Page object created on: ' + file_path + '\n')
+        sys.stdout.flush()
 
     with open(source_path, 'w+', encoding='UTF-8') as f:
         f.write(current_driver().page_source)
         sys.stdout.write('Page source created on: ' + source_path + '\n')
+        sys.stdout.flush()
 
 
 def generate_page_object():
@@ -69,6 +73,7 @@ def generate_page_object():
     do = True
     while do:
         sys.stdout.write('按回车键开始录制：')
+        sys.stdout.flush()
         sys.stdin.readline().strip().upper()
         activity = driver.current_activity
         page_source = driver.page_source
@@ -87,6 +92,7 @@ def generate_page_object():
         locators = re.sub(r"(\('id')", r'(MobileBy.ID', locators)
         build_page_object(activity=activity, locator=locators)
         sys.stdout.write('\n结束录制?(Y/N)：')
+        sys.stdout.flush()
         feedback = sys.stdin.readline().strip().upper()
         if feedback == 'Y':
             do = False
@@ -98,16 +104,21 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     sys.stdout.write("当前使用的手机为：" + MOBILE_DRIVER_CACHE.current.alis + '\n')
+    sys.stdout.flush()
     devices = '\n\t'.join(AVAILABLE_DEVICES.keys())
     sys.stdout.write("可用手机：\n\t" + devices + '\n')
+    sys.stdout.flush()
     sys.stdout.write('是否切换手机(Y/N):')
+    sys.stdout.flush()
     resp = sys.stdin.readline().strip().upper()
     if resp == 'Y':
         sys.stdout.write('输入要切换的手机:')
+        sys.stdout.flush()
         target = sys.stdin.readline().strip()
         MOBILE_DRIVER_CACHE.switch(target)
     time.sleep(.5)
     sys.stdout.write('开始连接手机并启动应用....\n')
+    sys.stdout.flush()
     MOBILE_DRIVER_CACHE.current._desired_caps['newCommandTimeout'] = 600
     if args.reset:
         MOBILE_DRIVER_CACHE.current.turn_on_reset()

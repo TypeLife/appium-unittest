@@ -10,5 +10,6 @@ if __name__ == '__main__':
     # RunTest
     suite = unittest.defaultTestLoader.discover(case_path, '*.py')
     with common.open_or_create(report_path, 'wb') as output:
-        runner = HTMLTestRunner(stream=output, title='Test Report', verbosity=2)
+        runner = HTMLTestRunner(
+            stream=output, title='Test Report', verbosity=2)
         runner.run(suite)
