@@ -61,6 +61,7 @@ __all__ = [
     'GlobalSearchMessagePage',
     'MessageSearchPage',
     'SearchPage',
+    'GroupChatSetFindChatContentPage',
 ]
 
 from .CreateGroupName import CreateGroupNamePage
@@ -91,6 +92,7 @@ from .groupset import GroupChatSetPage
 from .groupset import GroupChatSetSeeMembersPage
 from .groupset import GroupChatSetSeeQRCodePage
 from .groupset import GroupNamePage
+from .groupset import GroupChatSetFindChatContentPage
 from .guide import GuidePage
 from .guide import PermissionListPage
 from .login import AgreementDetailPage

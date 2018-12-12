@@ -18,6 +18,7 @@ class GroupChatPage(BasePage):
                   'com.chinasofti.rcs:id/back_arrow': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
                   '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
                   '群聊001(2)': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
+                  '消息免打扰': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_slient'),
                   '多方通话': (MobileBy.ID, 'com.chinasofti.rcs:id/action_multicall'),
                   '设置': (MobileBy.ID, 'com.chinasofti.rcs:id/action_setting'),
                   'com.chinasofti.rcs:id/view_line': (MobileBy.ID, 'com.chinasofti.rcs:id/view_line'),
@@ -50,7 +51,11 @@ class GroupChatPage(BasePage):
                   'com.chinasofti.rcs:id/ib_expression': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression'),
                   '语音按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_audio'),
                   '发送按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_send'),
-                  'com.chinasofti.rcs:id/ib_record_red_dot': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_record_red_dot')
+                  'com.chinasofti.rcs:id/ib_record_red_dot': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_record_red_dot'),
+                  # 用户须知
+                  '用户须知': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title'),
+                  '我已阅读': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_check'),
+                  '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_btn_ok'),
                   }
 
     @TestLogger.log()
@@ -58,6 +63,24 @@ class GroupChatPage(BasePage):
         """点击设置"""
         self.click_element(self.__class__.__locators["设置"])
 
+    @TestLogger.log()
+    def is_exist_dialog(self, timeout=3, auto_accept_alerts=False):
+        """是否存在 用户须知 弹框"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["用户须知"])
+            )
+            return True
+        except:
+            return False
+
+    @TestLogger.log()
+    def click_i_have_read(self):
+        """点击我已阅读"""
+        self.click_element(self.__class__.__locators["我已阅读"])
+        self.click_element(self.__class__.__locators["确定"])
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=10, auto_accept_alerts=True):
@@ -143,4 +166,9 @@ class GroupChatPage(BasePage):
     def click_back(self):
         """点击返回按钮"""
         self.click_element(self.__class__.__locators["返回"])
+
+    @TestLogger.log()
+    def is_exist_undisturb(self):
+        """是否存在消息免打扰标志"""
+        return self._is_element_present(self.__class__.__locators["消息免打扰"])
 

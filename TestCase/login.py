@@ -493,12 +493,13 @@ class LoginTest(TestCase):
             # 同意协议
             agreement = AgreementDetailPage()
             agreement.click_agree_button()
+            time.sleep(0.5)
         if sms.is_text_present("我知道了"):
             # 点击‘我知道了’
             sms.click_i_know()
         # 网络异常提示
-        code_info = sms.get_error_code_info_by_adb("com.chinasofti.rcs.*102101", timeout=30)
-        self.assertIn("102101", code_info)
+        flag = sms.is_toast_exist("当前网络不可用(102101)")
+        self.assertTrue(flag)
 
     @staticmethod
     def tearDown_test_login_0022():
@@ -568,12 +569,13 @@ class LoginTest(TestCase):
             # 同意协议
             agreement = AgreementDetailPage()
             agreement.click_agree_button()
+            time.sleep(0.5)
         if sl.is_text_present("我知道了"):
             # 点击‘我知道了’
             sl.click_i_know()
         # 网络异常提示
-        code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*102101", timeout=30)
-        self.assertIn("102101", code_info)
+        flag = sl.is_toast_exist("当前网络不可用(102101)")
+        self.assertTrue(flag)
 
     @staticmethod
     def tearDown_test_login_0026():
@@ -610,12 +612,13 @@ class LoginTest(TestCase):
             # 同意协议
             agreement = AgreementDetailPage()
             agreement.click_agree_button()
+            time.sleep(0.5)
         if sl.is_text_present("我知道了"):
             # 点击‘我知道了’
             sl.click_i_know()
         # 获取异常提示
-        code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*103108", timeout=40)
-        self.assertIn("103108", code_info)
+        flag = sl.is_toast_exist("验证码有误，请重新输入(103108)")
+        self.assertTrue(flag)
 
     @staticmethod
     def setUp_test_login_0029():
@@ -648,12 +651,13 @@ class LoginTest(TestCase):
             # 同意协议
             agreement = AgreementDetailPage()
             agreement.click_agree_button()
+            time.sleep(0.5)
         if sl.is_text_present("我知道了"):
             # 点击‘我知道了’
             sl.click_i_know()
         # 获取异常提示
-        code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*103108", timeout=40)
-        self.assertIn("103108", code_info)
+        flag = sl.is_toast_exist("验证码有误，请重新输入(103108)")
+        self.assertTrue(flag)
 
     @staticmethod
     def setUp_test_login_0036():
@@ -686,12 +690,13 @@ class LoginTest(TestCase):
             # 同意协议
             agreement = AgreementDetailPage()
             agreement.click_agree_button()
+            time.sleep(0.5)
         if sl.is_text_present("我知道了"):
             # 点击‘我知道了’
             sl.click_i_know()
         # 获取异常提示
-        code_info = sl.get_error_code_info_by_adb("com.chinasofti.rcs.*103108", timeout=40)
-        self.assertIn("103108", code_info)
+        flag = sl.is_toast_exist("验证码有误，请重新输入(103108)")
+        self.assertTrue(flag)
 
     @staticmethod
     def setUp_test_login_0047():
