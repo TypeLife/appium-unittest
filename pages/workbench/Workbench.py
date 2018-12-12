@@ -101,7 +101,7 @@ class WorkbenchPage(FooterPage):
             els = self.get_elements(location)
             if len(els) > 0:
                 return els
-            # 滑动到顶部部还未找到元素则终止滑动
+            # 滑动到顶部还未找到元素则终止滑动
             els = self.get_elements(self.__class__.__locators['广告banner'])
             if len(els) > 0:
                 break
@@ -277,3 +277,18 @@ class WorkbenchPage(FooterPage):
             els[0].click()
         else:
             raise AssertionError("该页面没有定位到 创建团队 控件")
+
+    @TestLogger.log()
+    def click_rights(self):
+        """点击权益"""
+        els = self.find_els(self.__class__.__locators['权益'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 权益 控件")
+
+    @TestLogger.log()
+    def click_enterprise_name(self):
+        """点击左上角的企业名称的倒三角"""
+        name = self.get_element(self.__class__.__locators['当前团队名称:myteam02']).text
+        self.click_element((MobileBy.XPATH, '//*[@text="%s"]' % name))
