@@ -11,5 +11,5 @@ def parse_and_store_command_line_params():
     parser.add_argument('--melp', '-m')
     args = parser.parse_args()
     if args.include:
-        include = json.dumps(args.include)
+        include = json.dumps(args.include, ensure_ascii=False)
         os.environ[TEST_CASE_TAG_ENVIRON] = include
