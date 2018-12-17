@@ -74,3 +74,221 @@ class WorkbenchPage(FooterPage):
                   '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe')
                   }
 
+    def swipe_half_page_up(self):
+        """向上滑动半页"""
+        self.swipe_by_percent_on_screen(50, 80, 50, 30, 800)
+
+    def swipe_half_page_down(self):
+        """向下滑动半页"""
+        self.swipe_by_percent_on_screen(50, 30, 50, 80, 800)
+
+    def find_els(self, location):
+        """查找元素"""
+        els = self.get_elements(location)
+        if len(els) > 0:
+            return els
+        while True:
+            self.swipe_half_page_up()
+            els = self.get_elements(location)
+            if len(els) > 0:
+                return els
+            # 滑动到底部还未找到元素则终止滑动
+            els = self.get_elements(self.__class__.__locators['创建团队'])
+            if len(els) > 0:
+                break
+        while True:
+            self.swipe_half_page_down()
+            els = self.get_elements(location)
+            if len(els) > 0:
+                return els
+            # 滑动到顶部还未找到元素则终止滑动
+            els = self.get_elements(self.__class__.__locators['广告banner'])
+            if len(els) > 0:
+                break
+        return False
+
+    @TestLogger.log()
+    def click_organization(self):
+        """点击组织架构"""
+        els = self.find_els(self.__class__.__locators['组织架构'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 组织架构 控件")
+
+    @TestLogger.log()
+    def click_workbench_manage(self):
+        """点击工作台管理"""
+        els = self.find_els(self.__class__.__locators['工作台管理'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 工作台管理 控件")
+
+    @TestLogger.log()
+    def click_invite_member(self):
+        """点击邀请成员"""
+        els = self.find_els(self.__class__.__locators['邀请成员'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 邀请成员 控件")
+
+    @TestLogger.log()
+    def click_manager_guide(self):
+        """点击管理员指引"""
+        els = self.find_els(self.__class__.__locators['管理员指引'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 管理员指引 控件")
+
+    @TestLogger.log()
+    def click_notice_info(self):
+        """点击公告信息"""
+        els = self.find_els(self.__class__.__locators['公告信息'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 公告信息 控件")
+
+    @TestLogger.log()
+    def click_company_news(self):
+        """点击企业新闻"""
+        els = self.find_els(self.__class__.__locators['企业新闻'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 企业新闻 控件")
+
+    @TestLogger.log()
+    def click_company_contacts(self):
+        """点击企业通讯录"""
+        els = self.find_els(self.__class__.__locators['企业通讯录'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 企业通讯录 控件")
+
+    @TestLogger.log()
+    def click_super_meeting(self):
+        """点击超级会议"""
+        els = self.find_els(self.__class__.__locators['超级会议'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 超级会议 控件")
+
+    @TestLogger.log()
+    def click_group_messenger(self):
+        """点击群发信使"""
+        els = self.find_els(self.__class__.__locators['群发信使'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 群发信使 控件")
+
+    @TestLogger.log()
+    def click_voice_notice(self):
+        """点击语音通知"""
+        els = self.find_els(self.__class__.__locators['语音通知'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 语音通知 控件")
+
+    @TestLogger.log()
+    def click_139email(self):
+        """点击139邮箱"""
+        els = self.find_els(self.__class__.__locators['139邮箱'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 139邮箱 控件")
+
+    @TestLogger.log()
+    def click_attendance_card(self):
+        """点击考勤打卡"""
+        els = self.find_els(self.__class__.__locators['考勤打卡'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 考勤打卡 控件")
+
+    @TestLogger.log()
+    def click_approve(self):
+        """点击审批"""
+        els = self.find_els(self.__class__.__locators['审批'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 审批 控件")
+
+    @TestLogger.log()
+    def click_journal(self):
+        """点击日志"""
+        els = self.find_els(self.__class__.__locators['日志'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 日志 控件")
+
+    @TestLogger.log()
+    def click_important_items(self):
+        """点击重要事项"""
+        els = self.find_els(self.__class__.__locators['重要事项'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 重要事项 控件")
+
+    @TestLogger.log()
+    def click_app_store(self):
+        """点击应用商城"""
+        els = self.find_els(self.__class__.__locators['应用商城'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 应用商城 控件")
+
+    @TestLogger.log()
+    def click_app_manage(self):
+        """点击应用管理"""
+        els = self.find_els(self.__class__.__locators['应用管理'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 应用管理 控件")
+
+    @TestLogger.log()
+    def click_custom_service(self):
+        """点击咨询客服"""
+        els = self.find_els(self.__class__.__locators['咨询客服'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 咨询客服 控件")
+
+    @TestLogger.log()
+    def click_create_team(self):
+        """点击创建团队"""
+        els = self.find_els(self.__class__.__locators['创建团队'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 创建团队 控件")
+
+    @TestLogger.log()
+    def click_rights(self):
+        """点击权益"""
+        els = self.find_els(self.__class__.__locators['权益'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 权益 控件")
+
+    @TestLogger.log()
+    def click_enterprise_name(self):
+        """点击左上角的企业名称的倒三角"""
+        name = self.get_element(self.__class__.__locators['当前团队名称:myteam02']).text
+        self.click_element((MobileBy.XPATH, '//*[@text="%s"]' % name))
