@@ -94,6 +94,17 @@ class ChatProfilePage(BasePage):
         """向上滑动一页"""
         self.swipe_by_direction(self.__class__.__locators['容器列表'], 'up')
 
+    def get_first_page_contacts_name(self):
+        """获取联系人名"""
+        els = self.get_elements(self.__class__.__locators["联系人名"])
+        contacts_name = []
+        if els:
+            for el in els:
+                contacts_name.append(el.text)
+            return contacts_name
+        else:
+            raise AssertionError("No contacts, please add contacts in address book.")
+
     @TestLogger.log()
     def get_contacts_name(self):
         """获取联系人名"""

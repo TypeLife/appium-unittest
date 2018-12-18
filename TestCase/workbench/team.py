@@ -1,5 +1,6 @@
 import unittest
 from library.core.TestCase import TestCase
+from library.core.utils.testcasefilter import tags
 
 
 class TeamTest(TestCase):
@@ -11,6 +12,7 @@ class TeamTest(TestCase):
     def default_tearDown(self):
         pass
 
+    @tags('ALL', 'SMOKE')
     def test_something(self):
         """description"""
         self.assertEqual(True, True)
