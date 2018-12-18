@@ -177,10 +177,10 @@ class Preconditions(object):
 class MsgGroupChatTest(TestCase):
     """消息->群聊 模块"""
 
-    # @classmethod
-    # def setUpClass(cls):
-    #     """进入群聊聊天会话页面"""
-    #     Preconditions.enter_group_chat_page()
+    @classmethod
+    def setUpClass(cls):
+        """进入群聊聊天会话页面"""
+        Preconditions.enter_group_chat_page()
 
     def default_setUp(self):
         """确保每个用例运行前在群聊聊天会话页面"""
@@ -195,7 +195,7 @@ class MsgGroupChatTest(TestCase):
         pass
         # current_mobile().disconnect_mobile()
 
-    @tags('ALL', '群聊1')
+    @tags('ALL', '群聊')
     def test_msg_group_chat_0001(self):
         """在群聊聊天会话页面，发送一段字符数等于“0”的文本字符"""
         # 1.在当前聊天会话页面，在输入框中不输入任何内容，输入框右边展示的按钮是否是语音按钮
@@ -203,7 +203,7 @@ class MsgGroupChatTest(TestCase):
         # 语音按钮检查
         gcp.page_should_contain_audio_btn()
 
-    @tags('ALL', '群聊1')
+    @tags('ALL', '群聊')
     def test_msg_group_chat_0002(self):
         """在群聊聊天会话页面，发送一段字符数大于“0”的文本字符"""
         # 1.在当前聊天会话页面，在输入框中输入一段文本，字符数大于0
