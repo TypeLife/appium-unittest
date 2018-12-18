@@ -177,10 +177,10 @@ class Preconditions(object):
 class MsgGroupChatTest(TestCase):
     """消息->群聊 模块"""
 
-    @classmethod
-    def setUpClass(cls):
-        """进入群聊聊天会话页面"""
-        Preconditions.enter_group_chat_page()
+    # @classmethod
+    # def setUpClass(cls):
+    #     """进入群聊聊天会话页面"""
+    #     Preconditions.enter_group_chat_page()
 
     def default_setUp(self):
         """确保每个用例运行前在群聊聊天会话页面"""

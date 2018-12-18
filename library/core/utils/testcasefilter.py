@@ -1,8 +1,7 @@
-import functools
 import json
 import os
-from json import JSONDecodeError
 import unittest
+from json import JSONDecodeError
 
 TEST_CASE_TAG_ENVIRON = 'RUN_TAG'
 
@@ -16,7 +15,7 @@ def set_tags(*args):
     tag_types = set()
     for arg in args:
         tag_types.add(str(arg))
-    env_value = json.dumps(list(tag_types))
+    env_value = json.dumps(list(tag_types), ensure_ascii=False).upper()
     os.environ[TEST_CASE_TAG_ENVIRON] = env_value
 
 
