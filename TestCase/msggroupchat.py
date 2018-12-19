@@ -286,6 +286,7 @@ class MsgGroupChatTest(TestCase):
         self.assertIsNotNone(re.match(r'预览\(\d+/\d+\)', preview_info))
         cppp.click_back()
         cpg.click_back()
+        gcp.wait_for_page_load()
 
     @tags('ALL', '群聊')
     def test_msg_group_chat_0012(self):
@@ -532,6 +533,10 @@ class MsgGroupChatTest(TestCase):
         cpp.wait_for_page_load()
         # names = cpp.get_contacts_name()
         names = cpp.get_first_page_contacts_name()
+        if "和通讯录" in names:
+            names.remove("和通讯录")
+        if "和飞信电话" in names:
+            names.remove("和飞信电话")
         # 随机选择一个联系人，进行搜索发送
         cpp.search(random.choice(names))
         cpp.select_card()
@@ -788,7 +793,8 @@ class MsgGroupChatTest(TestCase):
         # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
         gcp = GroupChatPage()
         gcp.wait_for_page_load()
-        gcp.click_more()
+        if not gcp.page_should_contain_text("位置"):
+            gcp.click_more()
         # 2.点击展示的隐藏功能图标，位置功能图标，进入到位置详情展示页面
         more_page = ChatMorePage()
         more_page.click_location()
@@ -854,7 +860,7 @@ class MsgGroupChatTest(TestCase):
         flag = audio.wait_for_audio_allow_page_load()
         self.assertTrue(flag)
         audio.click_allow()
-        audio.page_should_contain_text("退出")
+        audio.wait_until(condition=lambda d: audio.is_text_present("退出"))
         audio.click_exit()
         gcp.wait_for_page_load()
 
@@ -1174,7 +1180,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', '群聊4人')
+    @tags('ALL', '群聊5人')
     def test_msg_group_chat_0066(self):
         """在群聊聊天设置页面，删除群成员"""
         # 1.在聊天设置页面，点击群成员右下角展示-号，移除群成员按钮，是否可以跳转到群成员移除列表展示页面
@@ -1207,7 +1213,7 @@ class MsgGroupChatTest(TestCase):
         gcp.wait_for_page_load()
         gcp.page_should_contain_text("移出群")
 
-    @tags('ALL', '群聊4人')
+    @tags('ALL', '群聊5人')
     def test_msg_group_chat_0067(self):
         """在群聊聊天设置页面，删除群成员"""
         # 1.在聊天设置页面，点击群成员右下角展示-号，移除群成员按钮，是否可以跳转到群成员移除列表展示页面
@@ -1672,6 +1678,7 @@ class MsgGroupChatTest(TestCase):
             time.sleep(2)
         # 2、返回到聊天会话页面，页面上方是否会展示免打扰标志
         group_set.click_back()
+        gcp.wait_for_page_load()
         flag = gcp.is_exist_undisturb()
         self.assertTrue(flag)
         gcp.click_back()
@@ -1864,6 +1871,7 @@ class MsgGroupChatTest(TestCase):
         # 3.搜索框中存在内容时，右边是否会展示一键清除输入框中内容按钮“X”
         # 4.点击“X”按钮是否可以清除输入框中内容并展示初始化页面
         search_page.click_x_icon()
+        search_page.wait_for_page_load()
         search_page.page_should_contain_text("分类索引")
         search_page.page_should_contain_text("图片与视频")
         search_page.page_should_contain_text("文件")
