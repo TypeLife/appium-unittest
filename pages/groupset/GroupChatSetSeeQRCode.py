@@ -30,7 +30,7 @@ class GroupChatSetSeeQRCodePage(BasePage):
                   }
 
     @TestLogger.log()
-    def wait_for_page_load(self, timeout=10, auto_accept_alerts=True):
+    def wait_for_page_load(self, timeout=30, auto_accept_alerts=True):
         """等待群二维码页面页面加载"""
         try:
             self.wait_until(
