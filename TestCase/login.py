@@ -528,7 +528,7 @@ class LoginTest(TestCase):
     @staticmethod
     def setUp_test_login_0025():
         """异网账号进入登录页面"""
-        Preconditions.select_mobile('Android-电信')
+        Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
     @tags('ALL', "联通")
@@ -626,7 +626,7 @@ class LoginTest(TestCase):
         Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL', "联通")
+    @tags('ALL', "联通0029")
     def test_login_0029(self):
         """输入验证码验证-（异网）正确失效的6位验证码"""
         sl = SmsLoginPage()
@@ -799,6 +799,11 @@ class LoginTest(TestCase):
         oklp.wait_until(
             condition=lambda d: oklp.is_text_present('一鍵登入')
         )
+        # 为不影响其他用例，切换回简体中文
+        oklp.click_language()
+        sml.select_simplified_chinese()
+        sml.click_finish()
+        oklp.wait_for_page_load()
 
 
 # from library.core.utils.testcasefilter import set_tags
