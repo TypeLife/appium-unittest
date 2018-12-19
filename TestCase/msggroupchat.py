@@ -106,14 +106,14 @@ class Preconditions(object):
         mess.click_group_chat()
         # 选择联系人界面，选择一个群
         sc = SelectContactsPage()
-        times = 10
+        times = 15
         n = 0
         # 重置应用时需要再次点击才会出现选择一个群
         while n < times:
             flag = sc.wait_for_page_load()
             if not flag:
                 sc.click_back()
-                time.sleep(1)
+                time.sleep(2)
                 mess.click_add_icon()
                 mess.click_group_chat()
                 sc = SelectContactsPage()
@@ -977,6 +977,7 @@ class MsgGroupChatTest(TestCase):
         group_member.click_group_member()
         group_member.wait_for_profile_page_load()
         group_member.profile_back()
+        group_member.wait_for_page_load()
         # 5.在群成员列表上方的搜索框，通过英文（大、小写）、中文、等搜索条件，搜索出符合条件的结果
         names = group_member.get_all_group_member_names()
         group_member.search(names[0])

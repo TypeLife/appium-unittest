@@ -64,7 +64,7 @@ class ChatSelectLocalFilePage(BasePage):
     @TestLogger.log("下一页")
     def page_up(self):
         """向上滑动一页"""
-        self.swipe_by_direction(self.__locators['列表容器'], 'up')
+        self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
 
     @TestLogger.log()
     def find_element_by_swipe(self, locator, times=10):
@@ -80,11 +80,20 @@ class ChatSelectLocalFilePage(BasePage):
                 c += 1
             return None
 
+    def swipe_page_up(self):
+        """向上滑动20%"""
+        self.swipe_by_percent_on_screen(50, 70, 50, 50, 800)
+
     @TestLogger.log()
     def get_file_size(self):
         """获取选择的文件大小"""
-        size_el = self.get_element(self.__class__.__locators['选择文件大小'])
-        return size_el.text
+        try:
+            file_size = self.get_element(self.__class__.__locators['选择文件大小']).text
+        except:
+            # 获取不到大小向上滑动一点
+            self.swipe_page_up()
+            file_size = self.get_element(self.__class__.__locators['选择文件大小']).text
+        return file_size
 
     @TestLogger.log()
     def get_selected_file_size(self):

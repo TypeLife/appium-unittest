@@ -92,7 +92,7 @@ class OneKeyLoginPage(BasePage):
         return number
 
     @TestLogger.log()
-    def wait_for_tell_number_load(self, timeout=10, auto_accept_alerts=True):
+    def wait_for_tell_number_load(self, timeout=60, auto_accept_alerts=True):
         """等待一键登录页面的‘将以本机号码登录’变成 手机号码 """
         try:
             self.wait_until(
