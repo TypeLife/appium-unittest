@@ -11,7 +11,8 @@ from library.core.utils.testcasefilter import tags
 from pages import *
 
 REQUIRED_MOBILES = {
-    'Android-移动': 'single_mobile',
+    # 'Android-移动': 'single_mobile',
+    'Android-移动': 'M960BDQN229CH',
     'IOS-移动': '',
     'Android-电信': 'single_telecom',
     'Android-联通': 'single_union',
@@ -1181,7 +1182,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', '群聊5人')
+    @tags('ALL', '群聊6人')
     def test_msg_group_chat_0066(self):
         """在群聊聊天设置页面，删除群成员"""
         # 1.在聊天设置页面，点击群成员右下角展示-号，移除群成员按钮，是否可以跳转到群成员移除列表展示页面
@@ -1214,7 +1215,7 @@ class MsgGroupChatTest(TestCase):
         gcp.wait_for_page_load()
         gcp.page_should_contain_text("移出群")
 
-    @tags('ALL', '群聊5人')
+    @tags('ALL', '群聊6人')
     def test_msg_group_chat_0067(self):
         """在群聊聊天设置页面，删除群成员"""
         # 1.在聊天设置页面，点击群成员右下角展示-号，移除群成员按钮，是否可以跳转到群成员移除列表展示页面
@@ -1248,7 +1249,7 @@ class MsgGroupChatTest(TestCase):
         gcp.wait_for_page_load()
         gcp.page_should_contain_text("移出群")
 
-    @tags('ALL', '群聊3人')
+    @tags('ALL', '群聊6人')
     def test_msg_group_chat_0068(self):
         """在群聊聊天设置页面，删除群成员"""
         # 1.在聊天设置页面，点击群成员右下角展示-号，移除群成员按钮，是否可以跳转到群成员移除列表展示页面
