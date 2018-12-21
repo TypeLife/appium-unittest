@@ -24,7 +24,8 @@ AVAILABLE_DEVICES = {
     },
     'M960BDQN229CH': {
         "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
-        "SERVER_URL": 'http://127.0.0.1:4728/wd/hub',
+
+        "SERVER_URL": 'http://192.168.200.177:4724/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",
@@ -37,7 +38,7 @@ AVAILABLE_DEVICES = {
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '13510772034'
+                'CARD_NUMBER': '19876283465'
             },
         ]
     },

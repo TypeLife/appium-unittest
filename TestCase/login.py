@@ -10,7 +10,7 @@ from pages import *
 from pages.login import Agreement
 
 REQUIRED_MOBILES = {
-    'Android-移动': 'single_mobile',
+    'Android-移动': 'M960BDQN229CH',
     'IOS-移动': '',
     'Android-电信': 'single_telecom',
     'Android-联通': 'single_union',
@@ -626,7 +626,7 @@ class LoginTest(TestCase):
         Preconditions.select_mobile('Android-联通')
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL', "联通0029")
+    @tags('ALL', "联通")
     def test_login_0029(self):
         """输入验证码验证-（异网）正确失效的6位验证码"""
         sl = SmsLoginPage()
