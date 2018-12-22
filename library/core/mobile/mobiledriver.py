@@ -978,14 +978,14 @@ Value (Alias)      | Data | Wifi | Airplane Mode
             except TimeoutException:
                 print(self.get_element_attribute(switch_locator, 'checked'))
                 raise RuntimeError('开关的checked属性没有置为"true"')
-            try:
-                self.wait_until(
-                    condition=lambda d: self.is_text_present('已连接'),
-                    timeout=30,
-                    auto_accept_permission_alert=False
-                )
-            except TimeoutException:
-                raise RuntimeError('手机WIFI 已开启，但没有自动连接到 WIFI 热点')
+            # try:
+            #     self.wait_until(
+            #         condition=lambda d: self.is_text_present('已连接'),
+            #         timeout=30,
+            #         auto_accept_permission_alert=False
+            #     )
+            # except TimeoutException:
+            #     raise RuntimeError('手机WIFI 已开启，但没有自动连接到 WIFI 热点')
             self.back()
             return True
         elif self.is_ios():
