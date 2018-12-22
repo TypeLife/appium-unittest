@@ -11,6 +11,7 @@ from library.core.utils.testcasefilter import tags
 from pages import *
 
 REQUIRED_MOBILES = {
+    # 'Android-移动': 'M960BDQN229CH',
     'Android-移动': 'single_mobile',
     'IOS-移动': '',
     'Android-电信': 'single_telecom',
