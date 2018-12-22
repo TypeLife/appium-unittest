@@ -773,7 +773,7 @@ Value (Alias)      | Data | Wifi | Airplane Mode
             )
 
     @TestLogger.log('推送文件到手机内存')
-    def push_file(self, to_path, file_path):
+    def push_file(self, file_path, to_path):
         """推送apk到手机"""
         with open(file_path, 'rb') as f:
             content = f.read()
