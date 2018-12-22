@@ -5,7 +5,7 @@ from library.core.common.supportedmodel import SupportedModel
 AVAILABLE_DEVICES = {
     'MI5X': {
         "MODEL": SupportedModel.MI6,
-        "SERVER_URL": 'http://192.168.200.113:4723/wd/hub',
+        "SERVER_URL": 'http://192.168.200.177:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "7.1",
@@ -24,6 +24,7 @@ AVAILABLE_DEVICES = {
     },
     'M960BDQN229CH': {
         "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
+
         "SERVER_URL": 'http://192.168.200.177:4724/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
@@ -43,7 +44,7 @@ AVAILABLE_DEVICES = {
     },
     'single_mobile': {
         "MODEL": SupportedModel.RED_MI_NOTE_4X,
-        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
+        "SERVER_URL": 'http://192.168.200.112:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",
@@ -63,7 +64,7 @@ AVAILABLE_DEVICES = {
     },
     'single_telecom': {
         "MODEL": SupportedModel.RED_MI_NOTE_4X,
-        "SERVER_URL": 'http://192.168.200.103:4723/wd/hub',
+        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",
@@ -83,7 +84,7 @@ AVAILABLE_DEVICES = {
     },
     'single_union': {
         "MODEL": SupportedModel.RED_MI_NOTE_4X,
-        "SERVER_URL": 'http://192.168.200.103:4723/wd/hub',
+        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",
@@ -103,7 +104,7 @@ AVAILABLE_DEVICES = {
     },
     'double_mobile': {
         "MODEL": SupportedModel.RED_MI_NOTE_4X,
-        "SERVER_URL": 'http://192.168.200.103:4723/wd/hub',
+        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",
@@ -126,7 +127,7 @@ AVAILABLE_DEVICES = {
     },
     'mobile_and_union': {
         "MODEL": SupportedModel.RED_MI_NOTE_4X,
-        "SERVER_URL": 'http://192.168.200.103:4723/wd/hub',
+        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",
@@ -149,7 +150,7 @@ AVAILABLE_DEVICES = {
     },
     'others_double': {
         "MODEL": SupportedModel.RED_MI_NOTE_4X,
-        "SERVER_URL": 'http://192.168.200.103:4723/wd/hub',
+        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",

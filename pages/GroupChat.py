@@ -83,7 +83,7 @@ class GroupChatPage(BasePage):
         self.click_element(self.__class__.__locators["确定"])
 
     @TestLogger.log()
-    def wait_for_page_load(self, timeout=10, auto_accept_alerts=True):
+    def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
         """等待群聊页面加载"""
         try:
             self.wait_until(
@@ -140,6 +140,12 @@ class GroupChatPage(BasePage):
         except:
             pass
         return self
+
+    @TestLogger.log()
+    def get_input_message(self):
+        """获取输入框的信息"""
+        el = self.get_element(self.__class__.__locators["说点什么..."])
+        return el.text
 
     @TestLogger.log()
     def send_message(self):

@@ -27,6 +27,12 @@ class GroupNamePage(BasePage):
         return self
 
     @TestLogger.log()
+    def get_input_group_name(self):
+        """获取输入的群聊名称"""
+        el = self.get_element(self.__class__.__locators["群聊名称编辑框"])
+        return el.text
+
+    @TestLogger.log()
     def click_save(self):
         """点击保存"""
         self.click_element(self.__class__.__locators["保存"])
