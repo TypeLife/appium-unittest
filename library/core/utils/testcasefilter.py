@@ -30,7 +30,7 @@ def tags(*args):
         case_tags = json.loads(os.environ[TEST_CASE_TAG_ENVIRON])
         if not isinstance(case_tags, list):
             return unittest.skipIf(not FilterResult.RUN, '')
-        if flags.issubset(set(case_tags)):
+        if flags.issuperset(set(case_tags)):
             return unittest.skipIf(not FilterResult.RUN, '')
         else:
             return unittest.skip("用例类型:{}; ".format(flags) + '当前执行:{}.'.format(case_tags))
