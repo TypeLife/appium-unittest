@@ -159,7 +159,7 @@ class MessageTest(TestCase):
 class MessageScanTest(TestCase):
     """消息 - 扫一扫"""
 
-    @tags('ALL', 'SMOKE', '移动')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_scan_0007(self):
         """网络异常使用扫一扫"""
         message_page = MessagePage()
@@ -188,7 +188,7 @@ class MessageScanTest(TestCase):
         scan_page = Scan1Page()
         scan_page.click_back()
 
-    @tags('ALL', 'SMOKE', '移动')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_scan_0015(self):
         """进入我的二维码页面"""
         message_page = MessagePage()
@@ -224,7 +224,7 @@ class MessageScanTest(TestCase):
 class MessageSearchTest(TestCase):
     """消息-全局搜索"""
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0001(self):
         """消息-消息列表界面搜索框显示"""
         message = MessagePage()
@@ -240,7 +240,7 @@ class MessageSearchTest(TestCase):
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0002(self):
         """搜索框正常弹起和收起"""
         message_page = MessagePage()
@@ -267,7 +267,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0003(self):
         """搜索关键字"""
         message_page = MessagePage()
@@ -319,7 +319,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0004(self):
         """搜索关键字"""
         message_page = MessagePage()
@@ -392,7 +392,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0005(self):
         """会话窗口点击后退"""
 
@@ -467,7 +467,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0006(self):
         """搜索关键字-精准搜索"""
 
@@ -539,7 +539,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0007(self):
         """搜索关键字-中文模糊搜索"""
 
@@ -611,7 +611,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0008(self):
         """搜索关键字-英文模糊搜索"""
 
@@ -684,7 +684,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0009(self):
         """搜索关键字-数字模糊搜索"""
 
@@ -757,7 +757,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0010(self):
         """搜索关键字-特殊字符模糊搜索"""
 
@@ -830,7 +830,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0011(self):
         """搜索不存在的关键字"""
 
@@ -870,7 +870,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0012(self):
         """搜索聊天记录版块不存在的关键字"""
         key_message = '给个红包'
@@ -970,7 +970,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0013(self):
         """搜索群聊版块不存在的关键字"""
         key_message = '大佬'
@@ -1077,7 +1077,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0014(self):
         """搜索联系人排序"""
         key_message = '大佬'
@@ -1166,7 +1166,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0015(self):
         """搜索群聊排序"""
         key_message = '大佬'
@@ -1249,7 +1249,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0016(self):
         """搜索聊天记录排序"""
         key_message = '新消息'
@@ -1332,7 +1332,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0017(self):
         """查看更多联系人"""
         key_message = '给个红包'
@@ -1402,7 +1402,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0018(self):
         """清空搜索条件"""
         message_page = MessagePage()
@@ -1427,7 +1427,7 @@ class MessageSearchTest(TestCase):
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0019(self):
         """更改搜索关键字"""
         # 消息页
@@ -1471,7 +1471,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0020(self):
         """查看更多群聊"""
         key_message = '给个红包'
@@ -1542,7 +1542,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0021(self):
         """查看更多群聊"""
         key_message = '给个红包'
@@ -1618,7 +1618,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0022(self):
         """查看更多聊天记录"""
         key_message = '聊'
@@ -1725,7 +1725,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0023(self):
         """查看更多聊天记录"""
         key_message = '聊'
@@ -1837,7 +1837,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0024(self):
         """查看更多聊天记录"""
         key_message = '测试相同聊天记录大于一条'
@@ -1929,7 +1929,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0025(self):
         """查看更多聊天记录"""
         key_message = '测试相同聊天记录大于一条'
@@ -2025,7 +2025,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0026(self):
         """网络异常全局搜索"""
         message_page = MessagePage()
@@ -2098,7 +2098,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "移动")
+    @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0027(self):
         """搜索关键字"""
         key_message = '1'
