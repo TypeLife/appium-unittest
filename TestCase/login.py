@@ -233,7 +233,7 @@ class LoginTest(TestCase):
         Preconditions.login_by_one_key_login()
         Preconditions.take_logout_operation_if_already_login()
 
-    @tags('ALL', '移动DEBUG')
+    @tags('ALL', 'CMCC')
     def test_login_0001(self, login_time=60):
         """ 本网非首次登录已设置头像-一键登录页面元素检查"""
         oklp = OneKeyLoginPage()
@@ -263,7 +263,7 @@ class LoginTest(TestCase):
         # 3、退出后台
         current_mobile().press_home_key()
 
-    @tags('ALL', '移动')
+    @tags('ALL', 'CMCC')
     def test_login_0002(self):
         """已登录状态后，退出后台"""
         current_mobile().activate_app('com.chinasofti.rcs')
@@ -323,7 +323,7 @@ class LoginTest(TestCase):
         current_mobile().reset_app()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL', '移动')
+    @tags('ALL', 'CMCC')
     def test_login_0006(self):
         """服务条款检查"""
         oklp = OneKeyLoginPage()
@@ -339,7 +339,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL', '移动')
+    @tags('ALL', 'CMCC')
     def test_login_0007(self):
         """服务条款检查"""
         oklp = OneKeyLoginPage()
@@ -405,7 +405,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL', '移动')
+    @tags('ALL', 'CMCC')
     def test_login_0009(self):
         """登录页面检查"""
         oklp = OneKeyLoginPage()
@@ -783,7 +783,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL', '移动')
+    @tags('ALL', 'CMCC')
     def test_login_0052(self):
         """ 界面点击“语言”按钮"""
         oklp = OneKeyLoginPage()
