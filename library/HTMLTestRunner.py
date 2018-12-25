@@ -427,6 +427,8 @@ tr.errorClass > td  { background-color: #ea7e7b; }
 
 # -------------------- The end of the Template class -------------------
 
+real_stdout = sys.stdout
+real_stderr = sys.stderr
 
 TestResult = unittest.TestResult
 
@@ -494,11 +496,12 @@ class _TestResult(TestResult):
         output = self.complete_output()
         self.result.append((0, test, output, ''))
         if self.verbosity > 1:
-            sys.stderr.write('ok ')
-            sys.stderr.write(str(test))
-            sys.stderr.write('\n')
+            real_stdout.write('ok ')
+            real_stdout.write(str(test))
+            real_stdout.write('\n')
         else:
-            sys.stderr.write('.')
+            real_stdout.write('.')
+            real_stdout.flush()
 
     def addError(self, test, err):
         from library.core.TestLogger import TestLogger
@@ -509,11 +512,13 @@ class _TestResult(TestResult):
         output = self.complete_output()
         self.result.append((2, test, output, _exc_str))
         if self.verbosity > 1:
-            sys.stderr.write('E  ')
-            sys.stderr.write(str(test))
-            sys.stderr.write('\n')
+            real_stdout.write('E  ')
+            real_stdout.write(str(test))
+            real_stdout.write('\n')
+            real_stdout.flush()
         else:
-            sys.stderr.write('E')
+            real_stdout.write('E')
+            real_stdout.flush()
 
     def addFailure(self, test, err):
         from library.core.TestLogger import TestLogger
@@ -524,11 +529,13 @@ class _TestResult(TestResult):
         output = self.complete_output()
         self.result.append((1, test, output, _exc_str))
         if self.verbosity > 1:
-            sys.stderr.write('F  ')
-            sys.stderr.write(str(test))
-            sys.stderr.write('\n')
+            real_stdout.write('F  ')
+            real_stdout.write(str(test))
+            real_stdout.write('\n')
+            real_stdout.flush()
         else:
-            sys.stderr.write('F')
+            real_stdout.write('F')
+            real_stdout.flush()
 
 
 class HTMLTestRunner(Template_mixin):
