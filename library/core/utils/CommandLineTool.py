@@ -14,4 +14,4 @@ def parse_and_store_command_line_params():
     if args.include:
         include = json.dumps(args.include, ensure_ascii=False).upper()
         os.environ[TEST_CASE_TAG_ENVIRON] = include
-    return parser
+    return args

@@ -11,7 +11,13 @@ if __name__ == '__main__':
     if cli_commands.suite:
         suite = None
         for p in cli_commands.suite:
-            s = unittest.defaultTestLoader.discover(os.path.abspath(p), '*.py')
+            if os.path.isdir(p):
+                s = unittest.defaultTestLoader.discover(os.path.abspath(p), '*.py')
+            elif os.path.isfile(p):
+                path, file = os.path.split(os.path.abspath(p))
+                s = unittest.defaultTestLoader.discover(path, file)
+            else:
+                raise ValueError('Path "{}" is not an valid file path!'.format(p))
             if suite is None:
                 suite = s
             else:
