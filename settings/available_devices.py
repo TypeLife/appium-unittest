@@ -10,6 +10,7 @@ AVAILABLE_DEVICES = {
             "platformName": "Android",
             "platformVersion": "7.1",
             "deviceName": "aa8dd3c60904",
+            "udid": "aa8dd3c60904",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
@@ -29,6 +30,7 @@ AVAILABLE_DEVICES = {
             "platformName": "Android",
             "platformVersion": "6.0",
             "deviceName": "M960BDQN229CH",
+            "udid": "M960BDQN229CH",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
@@ -48,6 +50,7 @@ AVAILABLE_DEVICES = {
             "platformName": "Android",
             "platformVersion": "6.0",
             "deviceName": "VCO7IFTKKZZ5FI9T",
+            "udid": "VCO7IFTKKZZ5FI9T",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
@@ -58,7 +61,6 @@ AVAILABLE_DEVICES = {
                 'TYPE': CardType.CHINA_MOBILE,
                 'CARD_NUMBER': '14775290489'
             },
-            None
         ]
     },
     'single_mobile': {
@@ -68,6 +70,7 @@ AVAILABLE_DEVICES = {
             "platformName": "Android",
             "platformVersion": "6.0",
             "deviceName": "VCO7IFTKKZZ5FI9T",
+            "udid": "VCO7IFTKKZZ5FI9T",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
@@ -78,7 +81,6 @@ AVAILABLE_DEVICES = {
                 'TYPE': CardType.CHINA_MOBILE,
                 'CARD_NUMBER': '14775290489'
             },
-            None
         ]
     },
     'single_telecom': {
@@ -88,6 +90,7 @@ AVAILABLE_DEVICES = {
             "platformName": "Android",
             "platformVersion": "6.0",
             "deviceName": "VCO7IFTKKZZ5FI9T",
+            "udid": "VCO7IFTKKZZ5FI9T",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
@@ -98,7 +101,6 @@ AVAILABLE_DEVICES = {
                 'TYPE': CardType.CHINA_TELECOM,
                 'CARD_NUMBER': '15338821645'
             },
-            None
         ]
     },
     'single_union': {
@@ -108,6 +110,7 @@ AVAILABLE_DEVICES = {
             "platformName": "Android",
             "platformVersion": "6.0",
             "deviceName": "VCO7IFTKKZZ5FI9T",
+            "udid": "VCO7IFTKKZZ5FI9T",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
@@ -118,7 +121,6 @@ AVAILABLE_DEVICES = {
                 'TYPE': CardType.CHINA_UNION,
                 'CARD_NUMBER': '18681151872'
             },
-            None
         ]
     },
     'double_mobile': {
@@ -128,6 +130,7 @@ AVAILABLE_DEVICES = {
             "platformName": "Android",
             "platformVersion": "6.0",
             "deviceName": "VCO7IFTKKZZ5FI9T",
+            "udid": "VCO7IFTKKZZ5FI9T",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
@@ -151,6 +154,7 @@ AVAILABLE_DEVICES = {
             "platformName": "Android",
             "platformVersion": "6.0",
             "deviceName": "VCO7IFTKKZZ5FI9T",
+            "udid": "VCO7IFTKKZZ5FI9T",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
@@ -174,6 +178,7 @@ AVAILABLE_DEVICES = {
             "platformName": "Android",
             "platformVersion": "6.0",
             "deviceName": "VCO7IFTKKZZ5FI9T",
+            "udid": "VCO7IFTKKZZ5FI9T",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
