@@ -2098,7 +2098,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "CMCC")
+    @tags('ALL', 'SMOKE', "CMCC-EMAIL")
     def test_msg_search_0027(self):
         """搜索关键字"""
         key_message = '1'

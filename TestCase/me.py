@@ -156,7 +156,7 @@ class MeMsgSettingTest(TestCase):
         setting_page = SettingPage()
         setting_page.click_menu("消息通知")
 
-    @tags("ALL", "SMOKE", "CMCC")
+    @tags("ALL", "SMOKE", "CMCC-EMAIL")
     def test_me_msg_setting_0002(self):
         """开启接收139邮箱助手信息"""
         msg_setting = MessageNoticeSettingPage()
@@ -194,7 +194,7 @@ class MeMsgSettingTest(TestCase):
         setting_page = SettingPage()
         setting_page.click_menu("消息通知")
 
-    @tags("ALL", "SMOKE", "CMCC")
+    @tags("ALL", "SMOKE", "CMCC-EMAIL")
     def test_me_msg_setting_0003(self):
         """关闭接收139邮箱助手信息"""
         msg_setting = MessageNoticeSettingPage()
