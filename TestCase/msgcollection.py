@@ -1,11 +1,6 @@
-import random
-import re
-import time
 import unittest
-import uuid
 
 from library.core.TestCase import TestCase
-from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
@@ -90,7 +85,8 @@ class Preconditions(object):
         #  从一键登录页面登录
         Preconditions.login_by_one_key_login()
 
-unittest.skip("还未实现")
+
+@unittest.skip("还未实现")
 class MsgCollectionTest(TestCase):
     """消息->收藏 模块"""
 
@@ -112,4 +108,3 @@ class MsgCollectionTest(TestCase):
         # 点击“我”
         mess.open_me_page()
         # 点击收藏
-
