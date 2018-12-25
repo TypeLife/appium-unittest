@@ -11,8 +11,8 @@ from library.core.utils.testcasefilter import tags
 from pages import *
 
 REQUIRED_MOBILES = {
-    # 'Android-移动': 'M960BDQN229CH',
-    'Android-移动': 'single_mobile',
+    'Android-移动': 'M960BDQN229CH',
+    # 'Android-移动': 'single_mobile',
     'IOS-移动': '',
     'Android-电信': 'single_telecom',
     'Android-联通': 'single_union',
@@ -196,7 +196,7 @@ class MsgGroupChatTest(TestCase):
         pass
         # current_mobile().disconnect_mobile()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0001(self):
         """在群聊聊天会话页面，发送一段字符数等于“0”的文本字符"""
         # 1.在当前聊天会话页面，在输入框中不输入任何内容，输入框右边展示的按钮是否是语音按钮
@@ -204,7 +204,7 @@ class MsgGroupChatTest(TestCase):
         # 语音按钮检查
         gcp.page_should_contain_audio_btn()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0002(self):
         """在群聊聊天会话页面，发送一段字符数大于“0”的文本字符"""
         # 1.在当前聊天会话页面，在输入框中输入一段文本，字符数大于0
@@ -216,7 +216,7 @@ class MsgGroupChatTest(TestCase):
         gcp.send_message()
         gcp.page_should_contain_text(info)
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0003(self):
         """在群聊聊天会话页面，发送一段字符数小于等于“5000”的文本字符"""
         # 1.在当前聊天会话页面，在输入框中输入一段文本，字符数小于5000
@@ -228,7 +228,7 @@ class MsgGroupChatTest(TestCase):
         gcp.send_message()
         gcp.page_should_contain_text(info)
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0004(self):
         """在群聊聊天会话页面，发送一段字符数等于“5000”的文本字符"""
         # 1.在当前聊天会话页面，在输入框中输入一段文本，字符数等于5000
@@ -239,7 +239,7 @@ class MsgGroupChatTest(TestCase):
         gcp.page_should_contain_send_btn()
         gcp.send_message()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0005(self):
         """在群聊聊天会话页面，发送一段字符数大于“5000”的文本字符"""
         # 1.在当前聊天会话页面，在输入框中输入一段文本，字符数等于5000
@@ -252,7 +252,7 @@ class MsgGroupChatTest(TestCase):
         self.assertEqual(len(info), 5000)
         gcp.send_message()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0006(self):
         """在群聊聊天会话页面，发送相册内的图片"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -268,7 +268,7 @@ class MsgGroupChatTest(TestCase):
         cpg.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0007(self):
         """在群聊聊天会话页面，发送相册内的图片"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -283,7 +283,7 @@ class MsgGroupChatTest(TestCase):
         self.assertTrue(cpg.send_btn_is_enabled())
         cpg.click_send()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0011(self):
         """在群聊聊天会话页面，发送相册内的图片"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -302,7 +302,7 @@ class MsgGroupChatTest(TestCase):
         cpg.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0012(self):
         """在群聊聊天会话页面，发送相册内的图片"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -321,7 +321,7 @@ class MsgGroupChatTest(TestCase):
         # 4、点击发送按钮，能否进行发送
         pic_preview.click_send()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0013(self):
         """在群聊聊天会话页面，发送相册内的图片"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -337,7 +337,7 @@ class MsgGroupChatTest(TestCase):
         # 3.点击相册详情右下角的发送按钮，能否进行发送
         cpp.click_send(times=5)
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0014(self):
         """在群聊聊天会话页面，发送相册内的图片"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -352,7 +352,7 @@ class MsgGroupChatTest(TestCase):
         cpp.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0015(self):
         """在群聊聊天会话页面，发送相册内的图片"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -368,7 +368,7 @@ class MsgGroupChatTest(TestCase):
         cpp.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0016(self):
         """在群聊聊天会话页面，发送相册内的视频"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -382,7 +382,7 @@ class MsgGroupChatTest(TestCase):
         cpp.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0017(self):
         """在群聊聊天会话页面，发送相册内的视频"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -397,7 +397,7 @@ class MsgGroupChatTest(TestCase):
         cpp.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE','CMCC', 'group_chat')
     def test_msg_group_chat_0018(self):
         """在群聊聊天会话页面，发送相册内的视频"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -419,7 +419,7 @@ class MsgGroupChatTest(TestCase):
         cpp.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0019(self):
         """在群聊聊天会话页面，发送相册内的视频"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -435,7 +435,7 @@ class MsgGroupChatTest(TestCase):
         cpp.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0020(self):
         """在群聊聊天会话页面，发送相册内的视频"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -448,7 +448,7 @@ class MsgGroupChatTest(TestCase):
         cpp.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0022(self):
         """在群聊聊天会话页面，拍照发送照片"""
         # 1、在当前聊天会话页面，点击输入框上方的相机图标，进入到相机拍摄页面
@@ -479,7 +479,7 @@ class MsgGroupChatTest(TestCase):
         self.assertTrue(flag)
         video.click_back()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0024(self):
         """在群聊聊天会话页面，拍照发送照片"""
         # 1、在当前聊天会话页面，点击输入框上方的相机图标，进入到相机拍摄页面
@@ -496,7 +496,7 @@ class MsgGroupChatTest(TestCase):
         video.take_photo_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0025(self):
         """在群聊聊天会话页面，拍照发送照片"""
         # 1、在当前聊天会话页面，点击输入框上方的相机图标，进入到相机拍摄页面
@@ -511,7 +511,7 @@ class MsgGroupChatTest(TestCase):
         # 4.在录像展示页面，点击右边的√按钮，是否可以发送本次录像
         video.send_video()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0027(self):
         """在群聊聊天会话页面，拍照发送照片/录像"""
         # 1、在当前聊天会话页面，点击输入框上方的相机图标，进入到相机拍摄页面
@@ -523,7 +523,7 @@ class MsgGroupChatTest(TestCase):
         video.take_photo_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0028(self):
         """在群聊聊天会话页面，发送名片消息"""
         # 1.在当前聊天会话页面，点击输入框上方的名片图标，进入到名片详情页面
@@ -536,7 +536,7 @@ class MsgGroupChatTest(TestCase):
         cpp.wait_for_card_page_load()
         cpp.send_card()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0029(self):
         """在群聊聊天会话页面，发送名片消息"""
         # 1.在当前聊天会话页面，点击输入框上方的名片图标，进入到名片详情页面
@@ -557,7 +557,7 @@ class MsgGroupChatTest(TestCase):
         cpp.wait_for_card_page_load()
         cpp.send_card()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0030(self):
         """在群聊聊天会话页面，发送名片消息"""
         # 1.在当前聊天会话页面，点击输入框上方的名片图标，可进入到名片详情页面
@@ -581,7 +581,7 @@ class MsgGroupChatTest(TestCase):
         cpp.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0033(self):
         """在群聊聊天会话页面，发送名片消息"""
         # 1.在当前聊天会话页面，点击输入框上方的名片图标，进入到名片详情页面
@@ -599,7 +599,7 @@ class MsgGroupChatTest(TestCase):
         cpp.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0034(self):
         """在群聊聊天会话页面，发送GIF图片消息"""
         # 1.在当前聊天会话页面，点击输入框上方的GIF图标，进入到GIF图片展示页面
@@ -616,7 +616,7 @@ class MsgGroupChatTest(TestCase):
         gif.close_gif()
         gcp.page_should_not_contain_text("趣图搜搜")
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0035(self):
         """在群聊聊天会话页面，发送GIF图片消息"""
         # 1.在当前聊天会话页面，点击输入框上方的GIF图标，进入到GIF图片展示页面
@@ -638,7 +638,7 @@ class MsgGroupChatTest(TestCase):
             gif.input_message("")
             gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0036(self):
         """在群聊聊天会话页面，发送GIF图片消息"""
         # 1.在当前聊天会话页面，点击输入框上方的GIF图标，进入到GIF图片展示页面
@@ -655,7 +655,7 @@ class MsgGroupChatTest(TestCase):
         audio.click_exit()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0037(self):
         """在群聊聊天会话页面，点击输入框右上角的+号，展示隐藏图标按钮"""
         # 1.在当前聊天会话页面，点击输入框右上方的+号，是否会展示隐藏功能图标
@@ -668,7 +668,7 @@ class MsgGroupChatTest(TestCase):
         gcp.click_more()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0038(self):
         """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，文件功能图标"""
         files = ['txt文件', 'pdf文件', 'docx文件', 'jpg文件', 'xlsx文件', 'BPG文件', 'mp4文件', 'avi文件']
@@ -699,7 +699,7 @@ class MsgGroupChatTest(TestCase):
                 csf.click_back()
                 gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0039(self):
         """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，文件功能图标"""
         # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
@@ -726,7 +726,7 @@ class MsgGroupChatTest(TestCase):
             gcp.wait_for_page_load()
             raise AssertionError("There is no video")
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0040(self):
         """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，文件功能图标"""
         # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
@@ -753,7 +753,7 @@ class MsgGroupChatTest(TestCase):
             gcp.wait_for_page_load()
             raise AssertionError("There is no picture")
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0041(self):
         """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，文件功能图标"""
         # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
@@ -780,7 +780,7 @@ class MsgGroupChatTest(TestCase):
             gcp.wait_for_page_load()
             raise AssertionError("There is no music")
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0043(self):
         """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，位置功能图标"""
         # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
@@ -801,7 +801,7 @@ class MsgGroupChatTest(TestCase):
         gcp.wait_for_page_load()
         # gcp.wait_until(condition=lambda d: gcp.is_text_present(addr))
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE','CMCC', 'group_chat')
     def test_msg_group_chat_0044(self):
         """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，位置功能图标"""
         # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
@@ -834,7 +834,7 @@ class MsgGroupChatTest(TestCase):
             current_mobile().disconnect_mobile()
             Preconditions.enter_group_chat_page(reset=True)
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0420(self):
         """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，位置功能图标"""
         # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
@@ -861,7 +861,7 @@ class MsgGroupChatTest(TestCase):
             current_mobile().disconnect_mobile()
             Preconditions.enter_group_chat_page(reset=True)
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0470(self):
         """在群聊聊天会话页面，点击输入框右边的语音按钮"""
         # 1.在当前聊天会话页面，点击输入框右边的语音按钮，在未获取录音权限时，是否会弹出权限申请允许弹窗
@@ -890,7 +890,7 @@ class MsgGroupChatTest(TestCase):
             current_mobile().disconnect_mobile()
             Preconditions.enter_group_chat_page(reset=True)
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0480(self):
         """首次使用语音功能"""
         # 1、点击输入框右边的语音按钮，跳转到的页面是否是语音模式设置页面
@@ -919,7 +919,7 @@ class MsgGroupChatTest(TestCase):
             current_mobile().disconnect_mobile()
             Preconditions.enter_group_chat_page(reset=True)
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0520(self):
         """在群聊聊天会话页面，点击输入框右边的语音按钮"""
         # 1.在当前聊天会话页面，点击输入框右边的语音按钮，进入到语音录制页面
@@ -952,7 +952,7 @@ class MsgGroupChatTest(TestCase):
             current_mobile().disconnect_mobile()
             Preconditions.enter_group_chat_page(reset=True)
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0530(self):
         """在群聊聊天会话页面，点击输入框右边的语音按钮"""
         # 1.在当前聊天会话页面，点击输入框右边的语音按钮，进入到语音录制页面
@@ -968,7 +968,7 @@ class MsgGroupChatTest(TestCase):
         audio.click_exit()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0058(self):
         """在群聊聊天设置页面"""
         # 1.在聊天设置页面，点击群成员展示的右边“>”三角形符号，是否可以展示群成员列表
@@ -1009,7 +1009,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0060(self):
         """在群聊聊天设置页面"""
         # 1.在聊天设置页面，点击群成员右下角展示+号，添加成员按钮，是否会跳转到联系人选择器页面
@@ -1037,7 +1037,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0061(self):
         """在群聊聊天设置页面"""
         # 1.在聊天设置页面，点击群成员右下角展示+号，添加成员按钮，是否会跳转到联系人选择器页面
@@ -1062,7 +1062,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0062(self):
         """在群聊聊天设置页面"""
         # 1.在聊天设置页面，点击群成员右下角展示+号，添加成员按钮，跳转到联系人选择器页面
@@ -1083,7 +1083,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0063(self):
         """在群聊聊天设置页面"""
         # 1.在聊天设置页面，点击群成员右下角展示+号，添加成员按钮，跳转到联系人选择器页面
@@ -1156,7 +1156,7 @@ class MsgGroupChatTest(TestCase):
         gcp.click_setting()
         return names
 
-    @tags('ALL', 'SMOKE', ' 群聊0064')
+    @tags('ALL', 'SMOKE', 'group_chat0064')
     def test_msg_group_chat_0064(self):
         """在群聊聊天设置页面，添加群成员"""
         names = self.msg_group_chat_0064_pre_condition()
@@ -1176,7 +1176,7 @@ class MsgGroupChatTest(TestCase):
         gcp = GroupChatPage()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '群聊只有群主')
+    @tags('ALL', 'SMOKE', 'only_group_owner')
     def test_msg_group_chat_0065(self):
         """在群聊聊天设置页面，删除群成员"""
         # 1.在聊天设置页面，点击群成员右下角展示-号，移除群成员按钮，是否会跳转到群成员移除列表展示页面
@@ -1195,7 +1195,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '群聊6人')
+    @tags('ALL', 'SMOKE', 'group_chat_6_members')
     def test_msg_group_chat_0066(self):
         """在群聊聊天设置页面，删除群成员"""
         # 1.在聊天设置页面，点击群成员右下角展示-号，移除群成员按钮，是否可以跳转到群成员移除列表展示页面
@@ -1228,7 +1228,7 @@ class MsgGroupChatTest(TestCase):
         gcp.wait_for_page_load()
         gcp.page_should_contain_text("移出群")
 
-    @tags('ALL', 'SMOKE', '群聊6人')
+    @tags('ALL', 'SMOKE', 'group_chat_6_members')
     def test_msg_group_chat_0067(self):
         """在群聊聊天设置页面，删除群成员"""
         # 1.在聊天设置页面，点击群成员右下角展示-号，移除群成员按钮，是否可以跳转到群成员移除列表展示页面
@@ -1262,7 +1262,7 @@ class MsgGroupChatTest(TestCase):
         gcp.wait_for_page_load()
         gcp.page_should_contain_text("移出群")
 
-    @tags('ALL', 'SMOKE', '群聊6人')
+    @tags('ALL', 'SMOKE', 'group_chat_6_members')
     def test_msg_group_chat_0068(self):
         """在群聊聊天设置页面，删除群成员"""
         # 1.在聊天设置页面，点击群成员右下角展示-号，移除群成员按钮，是否可以跳转到群成员移除列表展示页面
@@ -1294,7 +1294,7 @@ class MsgGroupChatTest(TestCase):
         flag = contacts.is_toast_exist("该群已解散")
         self.assertTrue(flag)
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
     def test_msg_group_chat_0069(self):
         """在聊天设置页面，修改群聊名称"""
         # 1.在聊天设置页面，点击群聊名称，是否会跳转到群聊名称修改页面
@@ -1311,7 +1311,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
     def test_msg_group_chat_0070(self):
         """在聊天设置页面，修改群聊名称"""
         # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
@@ -1328,7 +1328,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
     def test_msg_group_chat_0071(self):
         """在聊天设置页面，修改群聊名称"""
         # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
@@ -1355,7 +1355,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
     def test_msg_group_chat_0072(self):
         """在聊天设置页面，修改群聊名称"""
         # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
@@ -1376,7 +1376,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
     def test_msg_group_chat_0073(self):
         """在聊天设置页面，修改群聊名称"""
         # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
@@ -1398,7 +1398,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
     def test_msg_group_chat_0074(self):
         """在聊天设置页面，修改群聊名称"""
         # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
@@ -1425,7 +1425,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
     def test_msg_group_chat_0075(self):
         """在聊天设置页面，修改群聊名称"""
         # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
@@ -1445,7 +1445,7 @@ class MsgGroupChatTest(TestCase):
         else:
             print("error")
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
     def test_msg_group_chat_0076(self):
         """在聊天设置页面，修改群聊名称"""
         # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
@@ -1472,7 +1472,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
     def test_msg_group_chat_0077(self):
         """在聊天设置页面，修改群聊名称"""
         # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
@@ -1492,7 +1492,7 @@ class MsgGroupChatTest(TestCase):
         else:
             print("error")
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
     def test_msg_group_chat_0078(self):
         """在聊天设置页面，分享群二维码"""
         # 1、在聊天设置页面，点击群二维码，是否会跳转到群聊二维码展示页面
@@ -1520,7 +1520,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
     def test_msg_group_chat_0079(self):
         """在聊天设置页面，分享群二维码"""
         # 1、在聊天设置页面，点击群二维码，是否会跳转到群聊二维码展示页面
@@ -1541,7 +1541,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
     def test_msg_group_chat_0080(self):
         """在聊天设置页面，修改我在本群的昵称"""
         # 1、在聊天设置页面，点击我在本群的昵称，是否会跳转到修改群名片页面
@@ -1562,7 +1562,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
     def test_msg_group_chat_0081(self):
         """在聊天设置页面，修改我在本群的昵称"""
         # 1.在聊天设置页面，点击我在本群的昵称，会跳转到修改群名片页面
@@ -1592,7 +1592,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
     def test_msg_group_chat_0820(self):
         """在聊天设置—群管理页面，转让群主或者解散群"""
         # 1.点击群管理，是否可以跳转到群管理页面
@@ -1609,7 +1609,7 @@ class MsgGroupChatTest(TestCase):
         flag = manage_page.is_toast_exist("该群已解散")
         self.assertTrue(flag)
 
-    @tags('ALL', 'SMOKE', '群聊只有群主')
+    @tags('ALL', 'SMOKE', 'only_group_owner')
     def test_msg_group_chat_0083(self):
         """在聊天设置—群管理页面，转让群主或者解散群"""
         # 1.点击群管理，跳转到群管理页面
@@ -1634,7 +1634,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '转让群主')
+    @tags('ALL', 'SMOKE', 'transfer_group_owner')
     def test_msg_group_chat_1084(self):
         """在聊天设置—群管理页面，转让群主或者解散群"""
         # 1、点击群管理，跳转到群管理页面
@@ -1671,7 +1671,7 @@ class MsgGroupChatTest(TestCase):
         gcp.wait_for_page_load()
         gcp.page_should_contain_text(names[0] + " 已成为新群主")
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0085(self):
         """在聊天设置—设置免打扰"""
         # 1、点击消息免打扰的开关，是否可以打开消息免打扰开关
@@ -1710,7 +1710,7 @@ class MsgGroupChatTest(TestCase):
         sogp.select_one_group_by_name(group_name)
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0086(self):
         """在聊天设置—设置免打扰"""
         # 1.点击消息免打扰开关，是否可以关闭免打扰
@@ -1749,7 +1749,7 @@ class MsgGroupChatTest(TestCase):
         sogp.select_one_group_by_name(group_name)
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0087(self):
         """在聊天设置—设置置顶聊天 """
         # 1.点击置顶聊天的开关，是否可以开启置顶聊天开关
@@ -1806,7 +1806,7 @@ class MsgGroupChatTest(TestCase):
         sogp.select_one_group_by_name(group_name)
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0088(self):
         """在聊天设置—设置置顶聊天 """
         # 1.点击置顶聊天的开关，是否可以关闭置顶聊天开关
@@ -1863,7 +1863,7 @@ class MsgGroupChatTest(TestCase):
         sogp.select_one_group_by_name(group_name)
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', '移动', '群聊')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0089(self):
         """在聊天设置—查找聊天内容 """
         # 1.点击查找聊天内容，是否可以跳转到聊天内容搜索展示页面
