@@ -671,7 +671,7 @@ class MsgGroupChatTest(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0038(self):
         """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，文件功能图标"""
-        files = ['txt文件', 'pdf文件', 'docx文件', 'jpg文件', 'xlsx文件', 'BPG文件', 'mp4文件', 'avi文件']
+        files = ['.txt', '.pdf', '.docx', '.jpg', '.xlsx', '.BPG', '.mp4', '.avi']
         for file_type in files:
             # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
             gcp = GroupChatPage()
