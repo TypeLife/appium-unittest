@@ -1,8 +1,10 @@
 import unittest
+
 from library.core.TestCase import TestCase
 from library.core.utils.testcasefilter import tags
 
 
+@unittest.skip
 class TeamTest(TestCase):
     """团队 模块"""
 
