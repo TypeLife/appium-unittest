@@ -12,6 +12,7 @@ __all__ = [
     'OneKeyLoginPage',
     'SmsLoginPage',
     'MePage',
+    'MeCollectionPage',
     'MeSetCallPage',
     'MeSetContactsManagerPage',
     'MeSetDialPage',
@@ -40,6 +41,7 @@ __all__ = [
     'SelectLocalContactsPage',
     'CreateGroupNamePage',
     'GroupChatPage',
+    'SingleChatPage',
     "ChatAudioPage",
     "ChatGIFPage",
     "ChatMorePage",
@@ -66,6 +68,7 @@ __all__ = [
 
 from .CreateGroupName import CreateGroupNamePage
 from .GroupChat import GroupChatPage
+from .SingleChat import SingleChatPage
 from .SelectContacts import SelectContactsPage
 from .SelectLocalContacts import SelectLocalContactsPage
 from .SelectOneGroup import SelectOneGroupPage
@@ -100,6 +103,7 @@ from .login import AgreementPage
 from .login import OneKeyLoginPage
 from .login import SmsLoginPage
 from .me import MePage
+from .me import MeCollectionPage
 from .me import MeSetCallPage
 from .me import MeSetContactsManagerPage
 from .me import MeSetDialPage

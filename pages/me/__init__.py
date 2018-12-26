@@ -12,7 +12,10 @@ __all__ = [
     'MeSetUpPage',
     'SmsSettingPage',
     'SettingPage',
+    'MeCollectionPage',
 ]
+
+from .MeCollection import MeCollectionPage
 from .Me import MePage
 from .MeSetCall import MeSetCallPage
 from .MeSetContactsManager import MeSetContactsManagerPage
