@@ -22,13 +22,14 @@ AVAILABLE_DEVICES = {
             },
         ]
     },
-    'M960BDQN229CH': {
+    'M960BDQN229CH-bak': {
         "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
-        "SERVER_URL": 'http://192.168.200.177:4724/wd/hub',
+        "SERVER_URL": 'http://192.168.200.112:4724/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",
             "deviceName": "M960BDQN229CH",
+            "udid": "M960BDQN229CH",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
@@ -41,13 +42,14 @@ AVAILABLE_DEVICES = {
             },
         ]
     },
-    'M960BDQN229CH-bak': {
+    'M960BDQN229CH': {
         "MODEL": SupportedModel.RED_MI_NOTE_4X,
-        "SERVER_URL": 'http://192.168.200.112:4723/wd/hub',
+        "SERVER_URL": 'http://192.168.200.112:4724/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",
             "deviceName": "VCO7IFTKKZZ5FI9T",
+            "udid": "VCO7IFTKKZZ5FI9T",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
@@ -63,7 +65,7 @@ AVAILABLE_DEVICES = {
     },
     'single_mobile': {
         "MODEL": SupportedModel.RED_MI_NOTE_4X,
-        "SERVER_URL": 'http://192.168.200.112:4723/wd/hub',
+        "SERVER_URL": 'http://192.168.200.112:4724/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",
