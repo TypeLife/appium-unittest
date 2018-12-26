@@ -56,6 +56,8 @@ class ChatSelectLocalFilePage(BasePage):
                   # 音乐选择页面
                   '音乐': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_file_name'),
                   }
+
+
     @TestLogger.log()
     def click_back(self):
         """点击返回"""
@@ -104,12 +106,22 @@ class ChatSelectLocalFilePage(BasePage):
     @TestLogger.log()
     def select_file(self, file_type):
         """选择文件"""
-        el = self.find_element_by_swipe(self.__class__.__locators[file_type])
+        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[contains(@text,"%s")]' % file_type))
         if el:
             el.click()
             return el
         else:
-            print("在SD卡根目录无%s类型的文件，请预置相应类型文件" % file_type)
+            print("在SD卡 无%s类型的文件，请预置相应类型文件" % file_type)
+
+    @TestLogger.log()
+    def click_preset_file_dir(self, file_dir="appium_test_file"):
+        """进入预置文件的目录"""
+        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[@text="%s"]' % file_dir))
+        if el:
+            el.click()
+            return el
+        else:
+            print("在SD卡根目录无%s 文件夹，请将预置文件放入此处" % file_dir)
 
     @TestLogger.log()
     def send_btn_is_enabled(self):
