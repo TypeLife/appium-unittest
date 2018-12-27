@@ -57,7 +57,6 @@ class ChatSelectLocalFilePage(BasePage):
                   '音乐': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_file_name'),
                   }
 
-
     @TestLogger.log()
     def click_back(self):
         """点击返回"""
@@ -86,6 +85,26 @@ class ChatSelectLocalFilePage(BasePage):
         """向上滑动20%"""
         self.swipe_by_percent_on_screen(50, 70, 50, 50, 800)
 
+    def find_file_by_type(self, locator, file_type, times=10):
+        """根据文件类型查找文件"""
+        if self._is_element_present(locator):
+            els = self.get_elements(locator)
+            if els:
+                for el in els:
+                    if el.text.endswith(file_type):
+                        return el
+        c = 0
+        while c < times:
+            self.page_up()
+            if self._is_element_present(locator):
+                els = self.get_elements(locator)
+                if els:
+                    for el in els:
+                        if el.text.endswith(file_type):
+                            return el
+            c += 1
+        return None
+
     @TestLogger.log()
     def get_file_size(self):
         """获取选择的文件大小"""
@@ -106,7 +125,7 @@ class ChatSelectLocalFilePage(BasePage):
     @TestLogger.log()
     def select_file(self, file_type):
         """选择文件"""
-        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[contains(@text,"%s")]' % file_type))
+        el = self.find_file_by_type((MobileBy.XPATH, '//*[contains(@text,"%s")]' % file_type), file_type)
         if el:
             el.click()
             return el

@@ -42,11 +42,11 @@ class MeCollectionPage(BasePage):
 
     def page_up(self):
         """向上滑动"""
-        self.swipe_by_percent_on_screen(50, 70, 50, 40, 900)
+        self.swipe_by_percent_on_screen(50, 80, 50, 30, 800)
 
     def page_down(self):
         """向下滑动"""
-        self.swipe_by_percent_on_screen(50, 40, 50, 70, 900)
+        self.swipe_by_percent_on_screen(50, 30, 50, 80, 800)
 
     def get_all_file_names(self):
         """获取所有收藏的文件名"""
@@ -84,39 +84,69 @@ class MeCollectionPage(BasePage):
                     file_types.append(type)
         return file_types
 
-    @TestLogger.log()
-    def _find_menu(self, file_type):
-        """查找文件"""
-        # 先向上滑动查找元素，没有再向下查找
-        if not self.is_text_present(file_type):
+    def find_file_by_type(self, locator, file_type, times=10):
+        """根据文件类型查找文件"""
+        if self._is_element_present(locator):
+            els = self.get_elements(locator)
+            if els:
+                for el in els:
+                    if el.text.endswith(file_type):
+                        return el
+        c = 0
+        while c < times:
             self.page_up()
-            if self.is_text_present(file_type):
-                return
-            max_try = 8
-            current = 0
-            while current < max_try:
-                current += 1
-                self.page_up()
-                if self.is_text_present(file_type):
-                    return
-        if not self.is_text_present(file_type):
+            if self._is_element_present(locator):
+                els = self.get_elements(locator)
+                if els:
+                    for el in els:
+                        if el.text.endswith(file_type):
+                            return el
+            c += 1
+        c = 0
+        while c < times:
             self.page_down()
-            if self.is_text_present(file_type):
-                return
-            max_try = 8
-            current = 0
-            while current < max_try:
-                current += 1
-                self.page_down()
-                if self.is_text_present(file_type):
-                    return
-            raise AssertionError('页面找不到 {} 文件'.format(file_type))
+            if self._is_element_present(locator):
+                els = self.get_elements(locator)
+                if els:
+                    for el in els:
+                        if el.text.endswith(file_type):
+                            return el
+            c += 1
+        return None
 
     @TestLogger.log()
     def open_file(self, file_type):
         """打开文件"""
-        self._find_menu(file_type)
-        self.click_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file_type))
+        el = self.find_file_by_type((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file_type), file_type)
+        if el:
+            el.click()
+        else:
+            raise AssertionError("无此 %s 类型文件" % file_type)
+
+    @TestLogger.log()
+    def open_location(self, location):
+        """打开位置"""
+        locator = (MobileBy.XPATH, "//*[contains(@text, '%s')]" % location)
+        if self._is_element_present(locator):
+            self.click_element(locator)
+        else:
+            max_try = 10
+            current = 0
+            while current < max_try:
+                current += 1
+                self.page_up()
+                if self._is_element_present(locator):
+                    self.click_element(locator)
+                    return
+            max_try = 10
+            current = 0
+            while current < max_try:
+                current += 1
+                self.page_down()
+                if self._is_element_present(locator):
+                    self.click_element(locator)
+                    return
+            raise AssertionError('没有收藏位置：{}'.format(location))
 
     @TestLogger.log()
     def click_back(self):
