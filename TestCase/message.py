@@ -395,31 +395,8 @@ class MessageSearchTest(TestCase):
     @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0005(self):
         """会话窗口点击后退"""
-
-        # 先创建一个名字唯一的联系人名并发一条内容唯一的消息文本
-        contacts_page = ContactsPage()
-        contacts_page.open_contacts_page()
-        contacts_page.click_add()
-
-        create_page = CreateContactPage()
-        uid = uuid.uuid4().__str__()
-        number = '17611681917'
-
-        create_page.hide_keyboard_if_display()
-        create_page.create_contact(uid, number)
-
         detail_page = ContactDetailsPage()
-        detail_page.click_message_icon()
-
         chat = ChatWindowPage()
-        if chat.is_tips_display():
-            chat.directly_close_tips_alert()
-        message_content = uuid.uuid4().__str__()
-        chat.send_message(message_content)
-
-        # 返回消息页并进入搜索页面
-        chat.click_back()
-        detail_page.click_back_icon()
         message_page = MessagePage()
         message_page.open_message_page()
         message_page.scroll_to_top()
@@ -429,7 +406,7 @@ class MessageSearchTest(TestCase):
             search_page.hide_keyboard()
 
         # 输入关键字进行搜索
-        search_key = uid
+        search_key = self.contact_name
         search_page.input_search_keyword(search_key)
         search_page.hide_keyboard_if_display()
 
@@ -445,15 +422,14 @@ class MessageSearchTest(TestCase):
         detail_page.click_message_icon()
         if chat.is_tips_display():
             chat.directly_close_tips_alert()
-        chat.assert_message_content_display(message_content)
+        chat.assert_message_content_display(self.message_content)
         chat.click_back()
         detail_page.click_back_icon()
         # 检查搜索关键字
         search_page.wait_for_page_load()
         search_page.assert_current_search_keyword_is(search_key)
 
-    @staticmethod
-    def setUp_test_msg_search_0005():
+    def setUp_test_msg_search_0005(self):
         """
         1、联网正常
         2、已登录客户端
@@ -461,6 +437,46 @@ class MessageSearchTest(TestCase):
         """
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page(reset_required=False)
+
+        contacts_page = ContactsPage()
+        detail_page = ContactDetailsPage()
+        chat = ChatWindowPage()
+
+        # 创建联系人
+        self.contact_name = '给个红包1'
+        self.number = '17611681917'
+        self.message_content = uuid.uuid4().__str__()
+        contacts_page.open_contacts_page()
+        names = [self.contact_name]
+        for uid in names:
+            contacts_page.click_search_box()
+            contact_search = ContactListSearchPage()
+            contact_search.wait_for_page_load()
+            contact_search.input_search_keyword(uid)
+            if contact_search.is_contact_in_list(uid):
+                contact_search.click_contact(uid)
+                detail_page.click_message_icon()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                chat.send_message(self.message_content)
+                chat.click_back()
+                detail_page.wait_for_page_load()
+                detail_page.click_back_icon()
+                contact_search.click_back()
+            else:
+                contact_search.click_back()
+                contacts_page.click_add()
+                create_page = CreateContactPage()
+                number = self.number
+                create_page.hide_keyboard_if_display()
+                create_page.create_contact(uid, number)
+                detail_page.click_message_icon()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                chat.send_message(self.message_content)
+                chat.click_back()
+                detail_page.wait_for_page_load()
+                detail_page.click_back_icon()
 
     @staticmethod
     def tearDown_test_msg_search_0005():
@@ -470,36 +486,6 @@ class MessageSearchTest(TestCase):
     @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0006(self):
         """搜索关键字-精准搜索"""
-
-        # 先创建一个名字唯一的联系人名并发一条内容唯一的消息文本
-
-        # 通讯录页
-        contacts_page = ContactsPage()
-        contacts_page.open_contacts_page()
-        contacts_page.click_add()
-
-        # 新建联系人页
-        create_page = CreateContactPage()
-        uid = uuid.uuid4().__str__()
-        number = '17611681917'
-        create_page.hide_keyboard_if_display()
-        create_page.create_contact(uid, number)
-
-        # 联系人详情页
-        detail_page = ContactDetailsPage()
-        detail_page.click_message_icon()
-
-        # 聊天页
-        chat = ChatWindowPage()
-        if chat.is_tips_display():
-            chat.directly_close_tips_alert()
-        message_content = '吃饭啊'
-        chat.send_message(message_content)
-
-        # 返回消息页并进入搜索页面
-        chat.click_back()
-        detail_page.click_back_icon()
-
         # 消息页
         message_page = MessagePage()
         message_page.open_message_page()
@@ -512,7 +498,7 @@ class MessageSearchTest(TestCase):
             search_page.hide_keyboard()
 
         # 用消息内容作为关键字搜索
-        search_key = message_content
+        search_key = self.message_content
         search_page.input_search_keyword(search_key)
         search_page.hide_keyboard_if_display()
         now_go_to = None
@@ -524,8 +510,7 @@ class MessageSearchTest(TestCase):
                 # 检查搜索结果是否完全匹配关键字
                 search_page.assert_search_result_full_match_keyword(result, search_key)
 
-    @staticmethod
-    def setUp_test_msg_search_0006():
+    def setUp_test_msg_search_0006(self):
         """
         1、联网正常
         2、已登录客户端
@@ -533,6 +518,46 @@ class MessageSearchTest(TestCase):
         """
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page(reset_required=False)
+
+        contacts_page = ContactsPage()
+        detail_page = ContactDetailsPage()
+        chat = ChatWindowPage()
+
+        # 创建联系人
+        self.contact_name = '给个红包1'
+        self.number = '17611681917'
+        self.message_content = '吃饭啊'
+        contacts_page.open_contacts_page()
+        names = [self.contact_name]
+        for uid in names:
+            contacts_page.click_search_box()
+            contact_search = ContactListSearchPage()
+            contact_search.wait_for_page_load()
+            contact_search.input_search_keyword(uid)
+            if contact_search.is_contact_in_list(uid):
+                contact_search.click_contact(uid)
+                detail_page.click_message_icon()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                chat.send_message(self.message_content)
+                chat.click_back()
+                detail_page.wait_for_page_load()
+                detail_page.click_back_icon()
+                contact_search.click_back()
+            else:
+                contact_search.click_back()
+                contacts_page.click_add()
+                create_page = CreateContactPage()
+                number = self.number
+                create_page.hide_keyboard_if_display()
+                create_page.create_contact(uid, number)
+                detail_page.click_message_icon()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                chat.send_message(self.message_content)
+                chat.click_back()
+                detail_page.wait_for_page_load()
+                detail_page.click_back_icon()
 
     @staticmethod
     def tearDown_test_msg_search_0006():
@@ -543,35 +568,6 @@ class MessageSearchTest(TestCase):
     def test_msg_search_0007(self):
         """搜索关键字-中文模糊搜索"""
 
-        # 先创建一个名字唯一的联系人名并发一条内容唯一的消息文本
-
-        # 通讯录页
-        contacts_page = ContactsPage()
-        contacts_page.open_contacts_page()
-        contacts_page.click_add()
-
-        # 新建联系人页
-        create_page = CreateContactPage()
-        uid = uuid.uuid4().__str__()
-        number = '17611681917'
-        create_page.hide_keyboard_if_display()
-        create_page.create_contact(uid, number)
-
-        # 联系人详情页
-        detail_page = ContactDetailsPage()
-        detail_page.click_message_icon()
-
-        # 聊天页
-        chat = ChatWindowPage()
-        if chat.is_tips_display():
-            chat.directly_close_tips_alert()
-        message_content = '吃饭啊'
-        chat.send_message(message_content)
-
-        # 返回消息页并进入搜索页面
-        chat.click_back()
-        detail_page.click_back_icon()
-
         # 消息页
         message_page = MessagePage()
         message_page.open_message_page()
@@ -584,7 +580,7 @@ class MessageSearchTest(TestCase):
             search_page.hide_keyboard()
 
         # 用消息内容作为关键字搜索
-        search_key = message_content[:-1]
+        search_key = self.message_content[:-1]
         search_page.input_search_keyword(search_key)
         search_page.hide_keyboard_if_display()
         now_go_to = None
@@ -596,8 +592,7 @@ class MessageSearchTest(TestCase):
                 # 检查搜索结果是否包含关键字
                 search_page.assert_search_result_match_keyword(result, search_key)
 
-    @staticmethod
-    def setUp_test_msg_search_0007():
+    def setUp_test_msg_search_0007(self):
         """
         1、联网正常
         2、已登录客户端
@@ -605,6 +600,46 @@ class MessageSearchTest(TestCase):
         """
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page(reset_required=False)
+
+        contacts_page = ContactsPage()
+        detail_page = ContactDetailsPage()
+        chat = ChatWindowPage()
+
+        # 创建联系人
+        self.contact_name = '给个红包1'
+        self.number = '17611681917'
+        self.message_content = '巴适得板'
+        contacts_page.open_contacts_page()
+        names = [self.contact_name]
+        for uid in names:
+            contacts_page.click_search_box()
+            contact_search = ContactListSearchPage()
+            contact_search.wait_for_page_load()
+            contact_search.input_search_keyword(uid)
+            if contact_search.is_contact_in_list(uid):
+                contact_search.click_contact(uid)
+                detail_page.click_message_icon()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                chat.send_message(self.message_content)
+                chat.click_back()
+                detail_page.wait_for_page_load()
+                detail_page.click_back_icon()
+                contact_search.click_back()
+            else:
+                contact_search.click_back()
+                contacts_page.click_add()
+                create_page = CreateContactPage()
+                number = self.number
+                create_page.hide_keyboard_if_display()
+                create_page.create_contact(uid, number)
+                detail_page.click_message_icon()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                chat.send_message(self.message_content)
+                chat.click_back()
+                detail_page.wait_for_page_load()
+                detail_page.click_back_icon()
 
     @staticmethod
     def tearDown_test_msg_search_0007():
@@ -615,36 +650,6 @@ class MessageSearchTest(TestCase):
     def test_msg_search_0008(self):
         """搜索关键字-英文模糊搜索"""
 
-        # 先创建一个名字唯一的联系人名并发一条内容唯一的消息文本
-
-        # 通讯录页
-        contacts_page = ContactsPage()
-        contacts_page.open_contacts_page()
-        contacts_page.click_add()
-
-        # 新建联系人页
-        create_page = CreateContactPage()
-        uid = uuid.uuid4().__str__()
-        number = '17611681917'
-        create_page.hide_keyboard_if_display()
-        create_page.create_contact(uid, number)
-
-        # 联系人详情页
-        detail_page = ContactDetailsPage()
-        detail_page.click_message_icon()
-
-        # 聊天页
-        chat = ChatWindowPage()
-        if chat.is_tips_display():
-            chat.directly_close_tips_alert()
-        a_to_z = 'abcDEFghijklmnopqrstuvwxyz'
-        message_content = '其他字符' + a_to_z + '其他字符'
-        chat.send_message(message_content)
-
-        # 返回消息页并进入搜索页面
-        chat.click_back()
-        detail_page.click_back_icon()
-
         # 消息页
         message_page = MessagePage()
         message_page.open_message_page()
@@ -657,7 +662,7 @@ class MessageSearchTest(TestCase):
             search_page.hide_keyboard()
 
         # 用消息内容作为关键字搜索
-        search_key = a_to_z.lower()
+        search_key = self.search_keyword.lower()
         search_page.input_search_keyword(search_key)
         search_page.hide_keyboard_if_display()
         now_go_to = None
@@ -669,8 +674,7 @@ class MessageSearchTest(TestCase):
                 # 检查搜索结果是否包含关键字
                 search_page.assert_search_result_match_keyword(result, search_key)
 
-    @staticmethod
-    def setUp_test_msg_search_0008():
+    def setUp_test_msg_search_0008(self):
         """
         1、联网正常
         2、已登录客户端
@@ -678,6 +682,47 @@ class MessageSearchTest(TestCase):
         """
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page(reset_required=False)
+
+        contacts_page = ContactsPage()
+        detail_page = ContactDetailsPage()
+        chat = ChatWindowPage()
+
+        # 创建联系人
+        self.contact_name = '给个红包1'
+        self.number = '17611681917'
+        self.search_keyword = 'abcDEFghijklmnopqrstuvwxyz'
+        self.message_content = '其他字符' + self.search_keyword + '其他字符'
+        contacts_page.open_contacts_page()
+        names = [self.contact_name]
+        for uid in names:
+            contacts_page.click_search_box()
+            contact_search = ContactListSearchPage()
+            contact_search.wait_for_page_load()
+            contact_search.input_search_keyword(uid)
+            if contact_search.is_contact_in_list(uid):
+                contact_search.click_contact(uid)
+                detail_page.click_message_icon()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                chat.send_message(self.message_content)
+                chat.click_back()
+                detail_page.wait_for_page_load()
+                detail_page.click_back_icon()
+                contact_search.click_back()
+            else:
+                contact_search.click_back()
+                contacts_page.click_add()
+                create_page = CreateContactPage()
+                number = self.number
+                create_page.hide_keyboard_if_display()
+                create_page.create_contact(uid, number)
+                detail_page.click_message_icon()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                chat.send_message(self.message_content)
+                chat.click_back()
+                detail_page.wait_for_page_load()
+                detail_page.click_back_icon()
 
     @staticmethod
     def tearDown_test_msg_search_0008():
@@ -688,36 +733,6 @@ class MessageSearchTest(TestCase):
     def test_msg_search_0009(self):
         """搜索关键字-数字模糊搜索"""
 
-        # 先创建一个名字唯一的联系人名并发一条内容唯一的消息文本
-
-        # 通讯录页
-        contacts_page = ContactsPage()
-        contacts_page.open_contacts_page()
-        contacts_page.click_add()
-
-        # 新建联系人页
-        create_page = CreateContactPage()
-        uid = uuid.uuid4().__str__()
-        number = '17611681917'
-        create_page.hide_keyboard_if_display()
-        create_page.create_contact(uid, number)
-
-        # 联系人详情页
-        detail_page = ContactDetailsPage()
-        detail_page.click_message_icon()
-
-        # 聊天页
-        chat = ChatWindowPage()
-        if chat.is_tips_display():
-            chat.directly_close_tips_alert()
-        one_to_ziro = '1234567890'
-        message_content = '其他字符' + one_to_ziro + '其他字符'
-        chat.send_message(message_content)
-
-        # 返回消息页并进入搜索页面
-        chat.click_back()
-        detail_page.click_back_icon()
-
         # 消息页
         message_page = MessagePage()
         message_page.open_message_page()
@@ -730,7 +745,7 @@ class MessageSearchTest(TestCase):
             search_page.hide_keyboard()
 
         # 用消息内容作为关键字搜索
-        search_key = one_to_ziro
+        search_key = self.search_keyword
         search_page.input_search_keyword(search_key)
         search_page.hide_keyboard_if_display()
         now_go_to = None
@@ -742,8 +757,7 @@ class MessageSearchTest(TestCase):
                 # 检查搜索结果是否包含关键字
                 search_page.assert_search_result_match_keyword(result, search_key)
 
-    @staticmethod
-    def setUp_test_msg_search_0009():
+    def setUp_test_msg_search_0009(self):
         """
         1、联网正常
         2、已登录客户端
@@ -751,6 +765,47 @@ class MessageSearchTest(TestCase):
         """
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page(reset_required=False)
+
+        contacts_page = ContactsPage()
+        detail_page = ContactDetailsPage()
+        chat = ChatWindowPage()
+
+        # 创建联系人
+        self.contact_name = '给个红包1'
+        self.number = '17611681917'
+        self.search_keyword = '1234567890'
+        self.message_content = '其他字符' + self.search_keyword + '其他字符'
+        contacts_page.open_contacts_page()
+        names = [self.contact_name]
+        for uid in names:
+            contacts_page.click_search_box()
+            contact_search = ContactListSearchPage()
+            contact_search.wait_for_page_load()
+            contact_search.input_search_keyword(uid)
+            if contact_search.is_contact_in_list(uid):
+                contact_search.click_contact(uid)
+                detail_page.click_message_icon()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                chat.send_message(self.message_content)
+                chat.click_back()
+                detail_page.wait_for_page_load()
+                detail_page.click_back_icon()
+                contact_search.click_back()
+            else:
+                contact_search.click_back()
+                contacts_page.click_add()
+                create_page = CreateContactPage()
+                number = self.number
+                create_page.hide_keyboard_if_display()
+                create_page.create_contact(uid, number)
+                detail_page.click_message_icon()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                chat.send_message(self.message_content)
+                chat.click_back()
+                detail_page.wait_for_page_load()
+                detail_page.click_back_icon()
 
     @staticmethod
     def tearDown_test_msg_search_0009():
@@ -761,36 +816,6 @@ class MessageSearchTest(TestCase):
     def test_msg_search_0010(self):
         """搜索关键字-特殊字符模糊搜索"""
 
-        # 先创建一个名字唯一的联系人名并发一条内容唯一的消息文本
-
-        # 通讯录页
-        contacts_page = ContactsPage()
-        contacts_page.open_contacts_page()
-        contacts_page.click_add()
-
-        # 新建联系人页
-        create_page = CreateContactPage()
-        uid = uuid.uuid4().__str__()
-        number = '17611681917'
-        create_page.hide_keyboard_if_display()
-        create_page.create_contact(uid, number)
-
-        # 联系人详情页
-        detail_page = ContactDetailsPage()
-        detail_page.click_message_icon()
-
-        # 聊天页
-        chat = ChatWindowPage()
-        if chat.is_tips_display():
-            chat.directly_close_tips_alert()
-        special_characters = '#@￥%'
-        message_content = '其他字符' + special_characters + '其他字符'
-        chat.send_message(message_content)
-
-        # 返回消息页并进入搜索页面
-        chat.click_back()
-        detail_page.click_back_icon()
-
         # 消息页
         message_page = MessagePage()
         message_page.open_message_page()
@@ -803,7 +828,7 @@ class MessageSearchTest(TestCase):
             search_page.hide_keyboard()
 
         # 用消息内容作为关键字搜索
-        search_key = special_characters
+        search_key = self.search_keyword
         search_page.input_search_keyword(search_key)
         search_page.hide_keyboard_if_display()
         now_go_to = None
@@ -815,8 +840,7 @@ class MessageSearchTest(TestCase):
                 # 检查搜索结果是否包含关键字
                 search_page.assert_search_result_match_keyword(result, search_key)
 
-    @staticmethod
-    def setUp_test_msg_search_0010():
+    def setUp_test_msg_search_0010(self):
         """
         1、联网正常
         2、已登录客户端
@@ -824,6 +848,47 @@ class MessageSearchTest(TestCase):
         """
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page(reset_required=False)
+
+        contacts_page = ContactsPage()
+        detail_page = ContactDetailsPage()
+        chat = ChatWindowPage()
+
+        # 创建联系人
+        self.contact_name = '给个红包1'
+        self.number = '17611681917'
+        self.search_keyword = '#@￥%'
+        self.message_content = '其他字符' + self.search_keyword + '其他字符'
+        contacts_page.open_contacts_page()
+        names = [self.contact_name]
+        for uid in names:
+            contacts_page.click_search_box()
+            contact_search = ContactListSearchPage()
+            contact_search.wait_for_page_load()
+            contact_search.input_search_keyword(uid)
+            if contact_search.is_contact_in_list(uid):
+                contact_search.click_contact(uid)
+                detail_page.click_message_icon()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                chat.send_message(self.message_content)
+                chat.click_back()
+                detail_page.wait_for_page_load()
+                detail_page.click_back_icon()
+                contact_search.click_back()
+            else:
+                contact_search.click_back()
+                contacts_page.click_add()
+                create_page = CreateContactPage()
+                number = self.number
+                create_page.hide_keyboard_if_display()
+                create_page.create_contact(uid, number)
+                detail_page.click_message_icon()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                chat.send_message(self.message_content)
+                chat.click_back()
+                detail_page.wait_for_page_load()
+                detail_page.click_back_icon()
 
     @staticmethod
     def tearDown_test_msg_search_0010():
@@ -1159,7 +1224,6 @@ class MessageSearchTest(TestCase):
                 chat.click_back()
                 detail_page.wait_for_page_load()
                 detail_page.click_back_icon()
-                # detail_page.click_back_icon()
 
     @staticmethod
     def tearDown_test_msg_search_0014():
