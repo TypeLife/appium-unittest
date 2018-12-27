@@ -289,7 +289,8 @@ class MobileDriver(ABC):
     def wait_condition_and_listen_unexpected(self, condition, timeout=8,
                                              auto_accept_permission_alert=True, unexpected=None, poll=0.2):
         this = self
-        unexpect = unexpected
+
+        # unexpect = unexpected
 
         def execute_condition(driver):
             """如果有弹窗，自动允许"""

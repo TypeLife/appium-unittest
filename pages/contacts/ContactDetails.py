@@ -9,17 +9,17 @@ class ContactDetailsPage(BasePage):
     ACTIVITY = 'com.cmicc.module_contact.activitys.ContactDetailActivity'
 
     __locators = {
-        '返回上一页': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_smart_call_detail_back'),
+        '返回上一页': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_back'),
         '名片标题': (MobileBy.ID, 'com.chinasofti.rcs:id/profile_name'),
         '星标': (MobileBy.ID, 'com.chinasofti.rcs:id/star'),
         '编辑': (MobileBy.ID, 'com.chinasofti.rcs:id/txt_call_detail_edit'),
         '好久不见~打个招呼吧': (MobileBy.ID, 'com.chinasofti.rcs:id/recent_contact_hint'),
         '名片号码': (MobileBy.ID, 'com.chinasofti.rcs:id/phone'),
         '名片首字母': (MobileBy.ID, 'com.chinasofti.rcs:id/profile_photo_tv'),
-        '消息': (MobileBy.ID, 'com.chinasofti.rcs:id/call_detail_normal_message_not'),
-        '电话': (MobileBy.ID, 'com.chinasofti.rcs:id/call_detail_normal_call_not'),
-        '语音通话': (MobileBy.ID, 'com.chinasofti.rcs:id/call_detail_voice_call_not'),
-        '视频通话': (MobileBy.ID, 'com.chinasofti.rcs:id/call_detail_video_call_not'),
+        '消息': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_normal_message'),
+        '电话': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_normal_call'),
+        '语音通话': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_voice_call'),
+        '视频通话': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_video_call'),
         '和飞信电话': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_dial_hefeixin'),
         '详细信息列表容器': (MobileBy.ID, 'com.chinasofti.rcs:id/sv_info'),
         '公司': (MobileBy.ID, 'com.chinasofti.rcs:id/property'),
