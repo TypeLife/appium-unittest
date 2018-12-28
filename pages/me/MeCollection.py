@@ -159,7 +159,7 @@ class MeCollectionPage(BasePage):
     def click_back(self):
         """点击返回"""
         try:
-            self.click_element((MobileBy.XPATH, "//*[@content-desc='返回']"))
+            self.click_element((MobileBy.ID, "com.chinasofti.rcs:id/back"))
         except:
             self.click_element(self.__class__.__locators['返回'])
 
@@ -184,7 +184,7 @@ class MeCollectionPage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_element_present((MobileBy.ID, 'com.chinasofti.rcs:id/toolbar'))
+                condition=lambda d: self._is_element_present((MobileBy.ID, 'com.chinasofti.rcs:id/menu'))
             )
         except:
             message = "页面在{}s内，没有加载成功".format(str(timeout))
