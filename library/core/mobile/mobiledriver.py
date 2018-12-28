@@ -2,6 +2,7 @@ import base64
 import contextlib
 import hashlib
 import json
+import os
 import re
 from abc import *
 from unicodedata import normalize
@@ -784,10 +785,56 @@ Value (Alias)      | Data | Wifi | Airplane Mode
         if self.is_android():
             # 安卓使用shell命令验证MD5
             mdb = self.execute_shell_command('md5sum', '-b', to_path).strip()
-            return mda == mdb
+            if mda == mdb:
+                print('Local file: {};\nPush to:{};\nSuccess!'.format(file_path, to_path))
+                return True
+            else:
+                print('推送的文件可能已经损坏：\nlocal file md5:{};\nremote file md5:{}.'.format(mda, mdb))
         else:
             # TODO IOS MD5验证待实现
             return True
+
+    @TestLogger.log('推送文件到手机内存')
+    def push_folder(self, folder_path, to_path, save_name=None, force_replace=False):
+        """推送apk到手机"""
+        folder_path = os.path.abspath(folder_path)
+        base_name = os.path.basename(folder_path)
+        if not save_name:
+            save_name = base_name
+        if not self._is_legal_file_name(save_name):
+            raise ValueError(r'文件名不能包含/\:*?<>|特殊字符')
+        if to_path[-1] == '/':
+            target_abspath = to_path + save_name
+        else:
+            target_abspath = to_path + '/' + save_name
+        if os.path.isfile(folder_path):
+            self.execute_shell_command('mkdir', '-p', os.path.dirname(target_abspath))
+            self.push_file(folder_path, target_abspath)
+            return True
+        elif os.path.isdir(folder_path):
+            # 检查目录是否存在，不存在则创建目录
+            to_path = to_path + '/' + save_name
+            self.execute_shell_command('mkdir', '-p', to_path)
+            files = os.listdir(folder_path)
+            for f in files:
+                child_path = os.path.join(folder_path, f)
+                self.push_folder(child_path, to_path, f, force_replace)
+            return True
+        else:
+            raise ValueError('找不到路径："{}"'.format(folder_path))
+
+    @staticmethod
+    def _is_legal_file_name(name):
+        if isinstance(name, str):
+            special_characters = r'/\:*?<>|'
+            chart_set = {i for i in name}
+            illegal_set = {i for i in special_characters}
+            if chart_set.intersection(illegal_set):
+                return False
+            else:
+                return True
+        else:
+            raise ValueError('{} is not a string!'.format(name))
 
     def is_keyboard_shown(self):
         return self.driver.is_keyboard_shown()
