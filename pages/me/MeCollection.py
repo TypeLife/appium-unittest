@@ -37,8 +37,15 @@ class MeCollectionPage(BasePage):
                   '20.0KB': (MobileBy.ID, 'com.chinasofti.rcs:id/file_size'),
                   '[位置]广东省深圳市龙岗区居里夫人大道与环城路交叉口': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_tv_content'),
                   '录制.txt': (MobileBy.ID, 'com.chinasofti.rcs:id/file_name'),
-                  '271.0B': (MobileBy.ID, 'com.chinasofti.rcs:id/file_size')
+                  '271.0B': (MobileBy.ID, 'com.chinasofti.rcs:id/file_size'),
+                  # 打开位置页面元素
+                  "导航按钮": (MobileBy.ID, 'com.chinasofti.rcs:id/location_nativ_btn'),
                   }
+
+    @TestLogger.log()
+    def click_nav_btn(self):
+        """点击位置页面右下角导航按钮"""
+        self.click_element(self.__class__.__locators['导航按钮'])
 
     def page_up(self):
         """向上滑动"""
@@ -152,7 +159,7 @@ class MeCollectionPage(BasePage):
     def click_back(self):
         """点击返回"""
         try:
-            self.click_element((MobileBy.XPATH, "//*[@content-desc='返回']"))
+            self.click_element((MobileBy.ID, "com.chinasofti.rcs:id/back"))
         except:
             self.click_element(self.__class__.__locators['返回'])
 
@@ -177,7 +184,7 @@ class MeCollectionPage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_element_present((MobileBy.ID, 'com.chinasofti.rcs:id/toolbar'))
+                condition=lambda d: self._is_element_present((MobileBy.ID, 'com.chinasofti.rcs:id/menu'))
             )
         except:
             message = "页面在{}s内，没有加载成功".format(str(timeout))

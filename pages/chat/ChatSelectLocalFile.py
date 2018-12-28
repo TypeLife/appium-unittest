@@ -133,6 +133,16 @@ class ChatSelectLocalFilePage(BasePage):
             print("在SD卡 无%s类型的文件，请预置相应类型文件" % file_type)
 
     @TestLogger.log()
+    def select_file2(self, file_type):
+        """选择文件"""
+        el = self.get_element(self.__class__.__locators[file_type])
+        if el:
+            el.click()
+            return el
+        else:
+            print("在SD卡 无%s类型的文件，请预置相应类型文件" % file_type)
+
+    @TestLogger.log()
     def click_preset_file_dir(self, file_dir="appium_test_file"):
         """进入预置文件的目录"""
         el = self.find_element_by_swipe((MobileBy.XPATH, '//*[@text="%s"]' % file_dir))

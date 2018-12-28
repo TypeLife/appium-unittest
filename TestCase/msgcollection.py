@@ -191,3 +191,86 @@ class MsgCollectionTest(TestCase):
         mcp.click_back()
         mcp.wait_for_page_load()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'collection')
+    def test_msg_collection_0003(self):
+        """点击格式为ppt的文件打开查阅"""
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        mcp.open_file(".ppt")
+        mcp.wait_for_open_file()
+        mcp.click_back()
+        mcp.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'collection')
+    def test_msg_collection_0004(self):
+        """点击格式为pptx的文件打开查阅"""
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        mcp.open_file(".pptx")
+        mcp.wait_for_open_file()
+        mcp.click_back()
+        mcp.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'collection')
+    def test_msg_collection_0005(self):
+        """点击格式为pdf的文件打开查阅"""
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        mcp.open_file(".pdf")
+        mcp.wait_for_open_file()
+        mcp.click_back()
+        mcp.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'collection')
+    def test_msg_collection_0006(self):
+        """点击格式为xls的文件打开查阅"""
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        mcp.open_file(".xls")
+        mcp.wait_for_open_file()
+        mcp.click_back()
+        mcp.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'collection')
+    def test_msg_collection_0007(self):
+        """点击格式为xlsx的文件打开查阅"""
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        mcp.open_file(".xlsx")
+        mcp.wait_for_open_file()
+        mcp.click_back()
+        mcp.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'collection')
+    def test_msg_collection_0008(self):
+        """点击格式为txt的文件打开查阅"""
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        mcp.open_file(".txt")
+        mcp.wait_for_open_file()
+        mcp.click_back()
+        mcp.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'collection')
+    def test_msg_collection_0009(self):
+        """点击位置，进入到位置界面"""
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        mcp.open_location("[位置]")
+        mcp.wait_for_location_page_load()
+        mcp.click_back()
+        mcp.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'collection')
+    def test_msg_collection_0010(self):
+        """点击位置，进入到位置界面"""
+        # 1、点击位置
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        mcp.open_location("[位置]")
+        mcp.wait_for_location_page_load()
+        # 2、点击右下角按钮
+        mcp.click_nav_btn()
+        toast_flag = mcp.is_toast_exist("未发现手机导航应用", timeout=3)
+        map_flag = mcp.is_text_present("地图")
+        self.assertTrue(toast_flag or map_flag)
