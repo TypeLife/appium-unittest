@@ -120,3 +120,15 @@ class BaseChatPage(BasePage):
         """是否存在消息免打扰标志"""
         return self._is_element_present(self.__class__.__locators["消息免打扰"])
 
+    @TestLogger.log()
+    def is_exist_dialog(self, timeout=3, auto_accept_alerts=False):
+        """是否存在 用户须知 弹框"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["用户须知"])
+            )
+            return True
+        except:
+            return False
