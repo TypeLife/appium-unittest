@@ -715,7 +715,7 @@ class MsgGroupChatTest(TestCase):
         local_file = ChatSelectLocalFilePage()
         self.assertFalse(local_file.send_btn_is_enabled())
         # 4.选择一个视频之后，左下角是否会展示当前选择视频的大小，右下角的发送按钮变成高亮展示
-        el = local_file.select_file("视频")
+        el = local_file.select_file2("视频")
         if el:
             self.assertTrue(local_file.send_btn_is_enabled())
             # 5.点击右下角高亮展示的发送按钮，是否可以发送
@@ -742,7 +742,7 @@ class MsgGroupChatTest(TestCase):
         local_file = ChatSelectLocalFilePage()
         self.assertFalse(local_file.send_btn_is_enabled())
         # 4、选择一张照片之后，左下角是否会展示当前选择照片的大小，右下角的发送按钮变成高亮展示
-        el = local_file.select_file("照片")
+        el = local_file.select_file2("照片")
         if el:
             self.assertTrue(local_file.send_btn_is_enabled())
             # 5.点击右下角高亮展示的发送按钮，是否可以发送
@@ -769,7 +769,7 @@ class MsgGroupChatTest(TestCase):
         local_file = ChatSelectLocalFilePage()
         self.assertFalse(local_file.send_btn_is_enabled())
         # 4.选择一个音乐文件之后，左下角是否会展示当前选择音乐文件的大小，右下角的发送按钮变成高亮展示
-        el = local_file.select_file("音乐")
+        el = local_file.select_file2("音乐")
         if el:
             self.assertTrue(local_file.send_btn_is_enabled())
             # 5.点击右下角高亮展示的发送按钮，是否可以发送

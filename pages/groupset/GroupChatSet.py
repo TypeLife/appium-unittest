@@ -71,8 +71,21 @@ class GroupChatSetPage(BasePage):
         return self
 
     @TestLogger.log()
+    def _find_menu(self, locator):
+        if not self._is_element_present(locator):
+            # 找不到就翻页找到菜单再点击，
+            self.swipe_by_direction(self.__locators['菜单区域'], 'up')
+            if self._is_element_present(locator):
+                return
+            self.swipe_by_direction(self.__locators['菜单区域'], 'down')
+            if self._is_element_present(locator):
+                return
+            raise AssertionError('页面找不到元素：{}'.format(locator))
+
+    @TestLogger.log()
     def get_group_total_member(self):
         """获取群成员总人数"""
+        self._find_menu(self.__class__.__locators['群成员(2人)'])
         el = self.get_element(self.__class__.__locators['群成员(2人)'])
         res = re.search(r"\d+", el.text)
         if res:
@@ -83,6 +96,7 @@ class GroupChatSetPage(BasePage):
     @TestLogger.log()
     def click_group_member_show(self):
         """点击群成员展示>"""
+        self._find_menu(self.__class__.__locators['群成员展开>'])
         self.click_element(self.__class__.__locators["群成员展开>"])
 
     @TestLogger.log()
@@ -93,16 +107,19 @@ class GroupChatSetPage(BasePage):
     @TestLogger.log()
     def click_add_member(self):
         """点击 '+ ': 添加成员"""
+        self._find_menu((MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/tv_name"]'))
         self.driver.find_elements(MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/tv_name"]')[-2].click()
 
     @TestLogger.log()
     def click_del_member(self):
         """点击 '-': 删除成员"""
+        self._find_menu((MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/tv_name"]'))
         self.driver.find_elements(MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/tv_name"]')[-1].click()
 
     @TestLogger.log()
     def click_modify_group_name(self):
         """点击 修改群聊名称"""
+        self._find_menu(self.__locators['修改群聊名称'])
         self.click_element(self.__locators['修改群聊名称'])
 
     @TestLogger.log()
@@ -113,48 +130,57 @@ class GroupChatSetPage(BasePage):
     @TestLogger.log()
     def click_my_card(self):
         """点击我在本群的昵称"""
+        self._find_menu(self.__locators['我在本群的昵称'])
         self.click_element(self.__locators['我在本群的昵称'])
 
     @TestLogger.log()
     def click_group_manage(self):
         """点击群管理"""
+        self._find_menu(self.__locators['群管理'])
         self.click_element(self.__locators['群管理'])
 
     @TestLogger.log()
     def click_switch_undisturb(self):
         """点击消息免打扰开关"""
+        self._find_menu(self.__locators['消息免打扰开关'])
         self.click_element(self.__locators['消息免打扰开关'])
 
     @TestLogger.log()
     def get_switch_undisturb_status(self):
         """获取消息免打扰开关状态"""
+        self._find_menu(self.__locators['消息免打扰开关'])
         el = self.get_element(self.__locators['消息免打扰开关'])
         return el.get_attribute("checked") == "true"
 
     @TestLogger.log()
     def get_chat_set_to_top_switch_status(self):
         """获取置顶聊天开关状态"""
+        self._find_menu(self.__locators['置顶聊天开关'])
         el = self.get_element(self.__locators['置顶聊天开关'])
         return el.get_attribute("checked") == "true"
 
     @TestLogger.log()
     def click_chat_set_to_top_switch(self):
         """点击置顶聊天开关"""
+        self._find_menu(self.__locators['置顶聊天开关'])
         self.click_element(self.__locators['置顶聊天开关'])
 
     @TestLogger.log()
     def click_find_chat_record(self):
         """点击查找聊天内容"""
+        self._find_menu(self.__locators['查找聊天内容'])
         self.click_element(self.__locators['查找聊天内容'])
 
     @TestLogger.log()
     def click_clear_chat_record(self):
         """点击清空聊天记录"""
+        self._find_menu(self.__locators['清空聊天记录'])
         self.click_element(self.__locators['清空聊天记录'])
 
     @TestLogger.log()
     def click_delete_and_exit(self):
         """点击删除并退出"""
+        self._find_menu(self.__locators['删除并退出'])
         self.click_element(self.__locators['删除并退出'])
 
     @TestLogger.log()
