@@ -35,6 +35,17 @@ class LabelGroupingPage(BasePage):
                   }
 
     @TestLogger.log()
+    def get_label_grouping_names(self):
+        """获取标签分组名字"""
+        els = self.get_elements(self.__class__.__locators["标签分组名字"])
+        names = []
+        for el in els:
+            names.append(el.text)
+        if "新建分组" in names:
+            names.remove("新建分组")
+        return names
+
+    @TestLogger.log()
     def click_new_create_group(self):
         """点击新建分组"""
         self.click_element(self.__class__.__locators["新建分组"])
@@ -42,7 +53,7 @@ class LabelGroupingPage(BasePage):
     @TestLogger.log()
     def select_group(self, name):
         """选择分组"""
-        self.click_element((MobileBy.XPATH, "//*[contains(@test, '%s')]" % name))
+        self.click_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % name))
 
     @TestLogger.log()
     def input_label_grouping_name(self, name):
