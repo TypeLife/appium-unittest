@@ -776,7 +776,7 @@ Value (Alias)      | Data | Wifi | Airplane Mode
 
     @TestLogger.log('推送文件到手机内存')
     def push_file(self, file_path, to_path):
-        """推送apk到手机"""
+        """推送文件到手机内存"""
         with open(file_path, 'rb') as f:
             content = f.read()
             mda = hashlib.md5(content).hexdigest()
@@ -794,9 +794,9 @@ Value (Alias)      | Data | Wifi | Airplane Mode
             # TODO IOS MD5验证待实现
             return True
 
-    @TestLogger.log('推送文件到手机内存')
+    @TestLogger.log('推送文件夹到手机内存')
     def push_folder(self, folder_path, to_path, save_name=None, force_replace=False):
-        """推送apk到手机"""
+        """推送文件夹到手机内存"""
         folder_path = os.path.abspath(folder_path)
         base_name = os.path.basename(folder_path)
         if not save_name:
