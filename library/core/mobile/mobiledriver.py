@@ -784,7 +784,7 @@ Value (Alias)      | Data | Wifi | Airplane Mode
         self.driver.push_file(to_path, b64)
         if self.is_android():
             # 安卓使用shell命令验证MD5
-            mdb = self.execute_shell_command('md5sum', '-b', to_path).strip()
+            mdb = self.execute_shell_command('md5sum', '-b', '"{}"'.format(to_path)).strip()
             if mda == mdb:
                 print('Local file: {};\nPush to:{};\nSuccess!'.format(file_path, to_path))
                 return True
