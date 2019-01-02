@@ -2,6 +2,8 @@ from appium.webdriver.common.mobileby import MobileBy
 import time
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
+import settings
+import os
 
 
 class ChatSelectLocalFilePage(BasePage):
@@ -82,8 +84,12 @@ class ChatSelectLocalFilePage(BasePage):
             return None
 
     def swipe_page_up(self):
-        """向上滑动20%"""
+        """向上滑动"""
         self.swipe_by_percent_on_screen(50, 70, 50, 50, 800)
+
+    def page_down(self):
+        """向下滑动"""
+        self.swipe_by_percent_on_screen(50, 30, 50, 70, 800)
 
     def find_file_by_type(self, locator, file_type, times=10):
         """根据文件类型查找文件"""
@@ -96,6 +102,16 @@ class ChatSelectLocalFilePage(BasePage):
         c = 0
         while c < times:
             self.page_up()
+            if self._is_element_present(locator):
+                els = self.get_elements(locator)
+                if els:
+                    for el in els:
+                        if el.text.endswith(file_type):
+                            return el
+            c += 1
+        c = 0
+        while c < times:
+            self.page_down()
             if self._is_element_present(locator):
                 els = self.get_elements(locator)
                 if els:
@@ -143,14 +159,26 @@ class ChatSelectLocalFilePage(BasePage):
             print("在SD卡 无%s类型的文件，请预置相应类型文件" % file_type)
 
     @TestLogger.log()
-    def click_preset_file_dir(self, file_dir="appium_test_file"):
+    def click_preset_file_dir(self):
         """进入预置文件的目录"""
-        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[@text="%s"]' % file_dir))
+        base_dir = os.path.basename(settings.RESOURCE_FILE_PATH)
+        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[@text="%s"]' % base_dir))
         if el:
             el.click()
             return el
         else:
-            print("在SD卡根目录无%s 文件夹，请将预置文件放入此处" % file_dir)
+            print("在SD卡根目录无%s 文件夹，请将预置文件放入此处" % base_dir)
+
+    @TestLogger.log()
+    def push_preset_file(self):
+        """如果没有预置文件，则上传"""
+        base_dir = os.path.basename(settings.RESOURCE_FILE_PATH)
+        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[@text="%s"]' % base_dir))
+        if el:
+            return False
+        else:
+            self.mobile.push_folder(settings.RESOURCE_FILE_PATH, "/sdcard")
+            return True
 
     @TestLogger.log()
     def send_btn_is_enabled(self):
