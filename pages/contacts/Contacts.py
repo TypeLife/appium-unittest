@@ -154,3 +154,8 @@ class ContactsPage(FooterPage):
                 else:
                     flag = False
         return contacts_name
+
+    @TestLogger.log()
+    def click_label_grouping(self):
+        """点击标签分组"""
+        self.click_element(self.__class__.__locators['标签分组'])
