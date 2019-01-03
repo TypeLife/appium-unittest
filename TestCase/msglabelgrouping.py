@@ -1,6 +1,7 @@
 import unittest
 
 from library.core.TestCase import TestCase
+from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
@@ -86,17 +87,252 @@ class Preconditions(object):
         #  从一键登录页面登录
         Preconditions.login_by_one_key_login()
 
+    @staticmethod
+    def enter_label_grouping_chat_page(reset=False):
+        """进入标签分组会话页面"""
+        # 登录进入消息页面
+        Preconditions.make_already_in_message_page(reset)
+        mess = MessagePage()
+        # 点击‘通讯录’
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        contacts.click_label_grouping()
+        label_grouping = LabelGroupingPage()
+        label_grouping.wait_for_page_load()
+        # 不存在标签分组则创建
+        group_name = Preconditions.get_label_grouping_name()
+        group_names = label_grouping.get_label_grouping_names()
+        if not group_names:
+            label_grouping.click_new_create_group()
+            label_grouping.wait_for_create_label_grouping_page_load()
+            label_grouping.input_label_grouping_name(group_name)
+            label_grouping.click_sure()
+            # 选择成员
+            slc = SelectLocalContactsPage()
+            names = slc.get_contacts_name()
+            if not names:
+                raise AssertionError("No contacts, please add contacts in address book.")
+            for name in names:
+                slc.select_one_member_by_name(name)
+            slc.click_sure()
+            label_grouping.wait_for_page_load()
+            label_grouping.select_group(group_name)
+        # 选择一个标签分组
+        label_grouping.select_group(group_names[0])
+        lgdp = LableGroupDetailPage()
+        # 点击群发信息
+        lgdp.click_send_group_info()
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
 
-@unittest.skip("还未实现")
+    @staticmethod
+    def get_label_grouping_name():
+        """获取群名"""
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        group_name = "alg" + phone_number[-4:]
+        return group_name
+
+
+@unittest.skip("编码中。。。")
 class MsgLabelGroupingTest(TestCase):
     """消息->标签分组 模块"""
 
     @classmethod
     def setUpClass(cls):
-        pass
+        # 登录进入消息页面
+        Preconditions.enter_label_grouping_chat_page()
 
     def default_setUp(self):
-        pass
+        """确保每个用例运行前在标签分组会话页面"""
+        chat = LabelGroupingChatPage()
+        if chat.is_on_this_page():
+            return
+        else:
+            current_mobile().disconnect_mobile()
+            Preconditions.enter_label_grouping_chat_page()
 
     def default_tearDown(self):
         pass
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0001(self):
+        """标签分组会话页面，不勾选本地文件内文件点击发送按钮"""
+        # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        # 2、点击本地文件
+        more_page = ChatMorePage()
+        more_page.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        # 3、不选择文件，直接点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        flag = local_file.send_btn_is_enabled()
+        self.assertFalse(flag)
+        # 返回聊天会话页面
+        local_file.click_back()
+        csf.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0002(self):
+        """标签分组会话页面，勾选本地文件内文件点击发送按钮"""
+        # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        # 2、点击本地文件
+        more_page = ChatMorePage()
+        more_page.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        # 3、选择任意文件，点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(".txt")
+        if file:
+            local_file.click_send()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0003(self):
+        """标签分组会话页面，不勾选本地视频文件内视频点击发送按钮"""
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        # 2、点击视频
+        more_page = ChatMorePage()
+        more_page.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_video()
+        # 3、不选择视频，直接点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        flag = local_file.send_btn_is_enabled()
+        self.assertFalse(flag)
+        # 返回聊天会话页面
+        local_file.click_back()
+        csf.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0004(self):
+        """标签分组会话页面，勾选本地视频文件内视频点击发送按钮"""
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        # 2、点击视频
+        more_page = ChatMorePage()
+        more_page.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_video()
+        # 3、选择视频，直接点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        el = local_file.select_file2("视频")
+        if el:
+            local_file.click_send()
+            chat.wait_for_page_load()
+        else:
+            local_file.click_back()
+            csf.click_back()
+            chat.wait_for_page_load()
+            raise AssertionError("There is no video")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0005(self):
+        """标签分组会话页面，不勾选本地照片文件内视频点击发送按钮"""
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        # 2、点击照片
+        more_page = ChatMorePage()
+        more_page.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_pic()
+        # 3、不选择照片，直接点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        flag = local_file.send_btn_is_enabled()
+        self.assertFalse(flag)
+        # 返回聊天会话页面
+        local_file.click_back()
+        csf.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0006(self):
+        """标签分组会话页面，勾选本地照片文件内视频点击发送按钮"""
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        # 2、点击照片
+        more_page = ChatMorePage()
+        more_page.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_video()
+        # 3、选择照片，直接点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        el = local_file.select_file2("照片")
+        if el:
+            local_file.click_send()
+            chat.wait_for_page_load()
+        else:
+            local_file.click_back()
+            csf.click_back()
+            chat.wait_for_page_load()
+            raise AssertionError("There is no pic")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0007(self):
+        """标签分组会话页面，不勾选本地音乐文件内视频点击发送按钮"""
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        # 2、点击音乐
+        more_page = ChatMorePage()
+        more_page.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_music()
+        # 3、不选择音乐，直接点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        flag = local_file.send_btn_is_enabled()
+        self.assertFalse(flag)
+        # 返回聊天会话页面
+        local_file.click_back()
+        csf.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0008(self):
+        """标签分组会话页面，勾选本地音乐文件内视频点击发送按钮"""
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        # 2、点击音乐
+        more_page = ChatMorePage()
+        more_page.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_video()
+        # 3、选择音乐，直接点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        el = local_file.select_file2("音乐")
+        if el:
+            local_file.click_send()
+            chat.wait_for_page_load()
+        else:
+            local_file.click_back()
+            csf.click_back()
+            chat.wait_for_page_load()
+            raise AssertionError("There is no music")

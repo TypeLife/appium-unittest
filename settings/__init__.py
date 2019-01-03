@@ -15,7 +15,8 @@ REPORT_HTML_PATH = os.path.join(REPORT_PATH, 'TestReport.html')
 SCREEN_SHOT_PATH = os.path.join(REPORT_PATH, 'screen-shot', NOW.date().__str__())
 # log文件存放目录
 LOG_FILE_PATH = os.path.join(REPORT_PATH, 'log')
-
+# 预置文件存放目录
+RESOURCE_FILE_PATH = os.path.join(PROJECT_PATH, 'resource')
 # 公共邮箱
 # 登录密码：hfx@2018
 EMAIL = dict(

@@ -1,7 +1,7 @@
 from appium.webdriver.common.mobileby import MobileBy
-from pages.components.BaseChat import BaseChatPage
-from library.core.BasePage import BasePage
+
 from library.core.TestLogger import TestLogger
+from pages.components.BaseChat import BaseChatPage
 
 
 class LabelGroupingChatPage(BaseChatPage):
@@ -18,7 +18,7 @@ class LabelGroupingChatPage(BaseChatPage):
                   'com.chinasofti.rcs:id/back_arrow': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
                   'com.chinasofti.rcs:id/chat_mode_content': (MobileBy.ID, 'com.chinasofti.rcs:id/chat_mode_content'),
                   'lab2': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
-                  'com.chinasofti.rcs:id/action_multicall': (MobileBy.ID, 'com.chinasofti.rcs:id/action_multicall'),
+                  '多方通话': (MobileBy.ID, 'com.chinasofti.rcs:id/action_multicall'),
                   'com.chinasofti.rcs:id/action_setting': (MobileBy.ID, 'com.chinasofti.rcs:id/action_setting'),
                   'com.chinasofti.rcs:id/view_line': (MobileBy.ID, 'com.chinasofti.rcs:id/view_line'),
                   'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
@@ -47,3 +47,27 @@ class LabelGroupingChatPage(BaseChatPage):
                   'com.chinasofti.rcs:id/ib_expression': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression'),
                   'com.chinasofti.rcs:id/ib_audio': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_audio')
                   }
+
+    @TestLogger.log()
+    def is_on_this_page(self):
+        """当前页面是否在群聊天页"""
+        el = self.get_elements(self.__locators['多方通话'])
+        if len(el) > 0:
+            return True
+        return False
+
+    @TestLogger.log()
+    def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
+        """等待标签分组会话页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["多方通话"])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self

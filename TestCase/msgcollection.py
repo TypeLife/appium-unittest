@@ -1,5 +1,3 @@
-import unittest
-
 from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.utils.testcasefilter import tags
@@ -87,7 +85,6 @@ class Preconditions(object):
         Preconditions.login_by_one_key_login()
 
 
-@unittest.skip("还未实现")
 class MsgCollectionTest(TestCase):
     """消息->收藏 模块"""
 
@@ -136,6 +133,11 @@ class MsgCollectionTest(TestCase):
             csf.wait_for_page_load()
             csf.click_local_file()
             local_file = ChatSelectLocalFilePage()
+            # 没有预置文件，则上传
+            flag = local_file.push_preset_file()
+            if flag:
+                local_file.click_back()
+                csf.click_local_file()
             # 进入预置文件目录，选择文件发送
             local_file.click_preset_file_dir()
             file = local_file.select_file(file_type)
