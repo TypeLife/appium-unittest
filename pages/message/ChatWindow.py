@@ -20,7 +20,7 @@ class ChatWindowPage(ChatNoticeDialog, BasePage):
         '返回箭头': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
         '13537795364': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
         'com.chinasofti.rcs:id/action_call': (MobileBy.ID, 'com.chinasofti.rcs:id/action_call'),
-        'com.chinasofti.rcs:id/action_setting': (MobileBy.ID, 'com.chinasofti.rcs:id/action_setting'),
+        '设置': (MobileBy.ID, 'com.chinasofti.rcs:id/action_setting'),
         'com.chinasofti.rcs:id/view_line': (MobileBy.ID, 'com.chinasofti.rcs:id/view_line'),
         'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
         'com.chinasofti.rcs:id/message_editor_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/message_editor_layout'),
@@ -54,6 +54,10 @@ class ChatWindowPage(ChatNoticeDialog, BasePage):
     @TestLogger.log('点击返回')
     def click_back(self):
         self.click_element(self.__locators['返回'])
+
+    @TestLogger.log('点击设置')
+    def click_setting(self):
+        self.click_element(self.__locators['设置'])
 
     @TestLogger.log('输入消息文本')
     def input_message_text(self, content):
