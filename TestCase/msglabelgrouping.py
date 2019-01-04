@@ -419,3 +419,297 @@ class MsgLabelGroupingTest(TestCase):
         """标签分组会话页面，点击格式为格式为txt的文件可以正常查阅"""
         # 1、在当前聊天会话页面点击格式为txt的文件
         self.public_open_file(".txt")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0017(self):
+        """标签分组会话页面，点击不能直接打开的文件调起系统应用打开查阅"""
+        # 1、在当前聊天会话页面点击不能直接打开的文件
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        # 进入到文件选择页面
+        chat.click_more()
+        more_page = ChatMorePage()
+        more_page.click_file()
+        # 点击本地文件，进入到本地文件中
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        flag = local_file.push_preset_file()
+        if flag:
+            local_file.click_back()
+            csf.click_local_file()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(".html")
+        if file:
+            local_file.click_send()
+            # 打开文件
+            chat.open_file_in_chat_page(".html")
+            chat.wait_for_call_sys_app_page()
+            chat.click_cancle()
+            chat.wait_for_page_load()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+            chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0018(self):
+        """标签分组天会话页面，长按文件转发到任意群"""
+        # 1、在当前群聊天会话页面长按任意文件
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        # 进入到文件选择页面
+        chat.click_more()
+        more_page = ChatMorePage()
+        more_page.click_file()
+        # 点击本地文件，进入到本地文件中
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        flag = local_file.push_preset_file()
+        if flag:
+            local_file.click_back()
+            csf.click_local_file()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(".txt")
+        if file:
+            local_file.click_send()
+            # 2、选择转发，选择一个群
+            chat.forward_file(".txt")
+            scp = SelectContactsPage()
+            scp.click_select_one_group()
+            sogp = SelectOneGroupPage()
+            sogp.wait_for_page_load()
+            names = sogp.get_group_name()
+            if names:
+                sogp.select_one_group_by_name(names[0])
+                # 3、点击确定
+                sogp.click_sure_forward()
+                flag = sogp.is_toast_exist("已转发")
+                self.assertTrue(flag)
+            else:
+                print("WARN: There is no group.")
+                sogp.click_back()
+                scp.click_back()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0019(self):
+        """标签分组天会话页面，长按文件取消转发到任意群"""
+        # 1、在当前群聊天会话页面长按任意文件
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        # 进入到文件选择页面
+        chat.click_more()
+        more_page = ChatMorePage()
+        more_page.click_file()
+        # 点击本地文件，进入到本地文件中
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        flag = local_file.push_preset_file()
+        if flag:
+            local_file.click_back()
+            csf.click_local_file()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(".txt")
+        if file:
+            local_file.click_send()
+            # 2、选择转发，选择一个群
+            chat.forward_file(".txt")
+            scp = SelectContactsPage()
+            scp.click_select_one_group()
+            sogp = SelectOneGroupPage()
+            sogp.wait_for_page_load()
+            names = sogp.get_group_name()
+            if names:
+                sogp.select_one_group_by_name(names[0])
+                # 3、点击取消
+                sogp.click_cancel_forward()
+            else:
+                print("WARN: There is no group.")
+            sogp.click_back()
+            scp.click_back()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0020(self):
+        """标签分组天会话页面，长按文件转发到任意和通讯录联系人"""
+        # 1、在当前群聊天会话页面长按任意文件
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        # 进入到文件选择页面
+        chat.click_more()
+        more_page = ChatMorePage()
+        more_page.click_file()
+        # 点击本地文件，进入到本地文件中
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        flag = local_file.push_preset_file()
+        if flag:
+            local_file.click_back()
+            csf.click_local_file()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(".txt")
+        if file:
+            local_file.click_send()
+            # 2、选择转发，选择一个和通讯录联系人
+            chat.forward_file(".txt")
+            scp = SelectContactsPage()
+            scp.click_he_contacts()
+            shcp = SelectHeContactsPage()
+            shcp.wait_for_page_load()
+            teams = shcp.get_team_names()
+            if teams:
+                shcp.select_one_team_by_name(teams[0])
+                detail_page = SelectHeContactsDetailPage()
+                detail_page.wait_for_page_load()
+                names = detail_page.get_contacts_names()
+                if not names:
+                    print("WARN: Please add contacts in %s." % teams[0])
+                for name in names:
+                    detail_page.select_one_linkman(name)
+                    flag = detail_page.is_toast_exist("该联系人不可选", timeout=3)
+                    if not flag:
+                        break
+                # 3、点击确定
+                detail_page.click_sure_forward()
+                flag2 = detail_page.is_toast_exist("已转发")
+                self.assertTrue(flag2)
+            else:
+                print("WARN: Please create a team and add contacts.")
+                shcp.click_back()
+                scp.click_back()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0021(self):
+        """标签分组天会话页面，长按文件取消转发到任意和通讯录联系人"""
+        # 1、在当前群聊天会话页面长按任意文件
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        # 进入到文件选择页面
+        chat.click_more()
+        more_page = ChatMorePage()
+        more_page.click_file()
+        # 点击本地文件，进入到本地文件中
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        flag = local_file.push_preset_file()
+        if flag:
+            local_file.click_back()
+            csf.click_local_file()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(".txt")
+        if file:
+            local_file.click_send()
+            # 2、选择转发，选择一个和通讯录联系人
+            chat.forward_file(".txt")
+            scp = SelectContactsPage()
+            scp.click_he_contacts()
+            shcp = SelectHeContactsPage()
+            shcp.wait_for_page_load()
+            teams = shcp.get_team_names()
+            if teams:
+                shcp.select_one_team_by_name(teams[0])
+                detail_page = SelectHeContactsDetailPage()
+                detail_page.wait_for_page_load()
+                names = detail_page.get_contacts_names()
+                if not names:
+                    print("WARN: Please add contacts in %s." % teams[0])
+                for name in names:
+                    detail_page.select_one_linkman(name)
+                    flag = detail_page.is_toast_exist("该联系人不可选", timeout=3)
+                    if not flag:
+                        break
+                # 3、点击取消
+                detail_page.click_cancel_forward()
+                detail_page.click_back()
+            else:
+                print("WARN: Please create a team and add contacts.")
+            shcp.click_back()
+            scp.click_back()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0022(self):
+        """标签分组天会话页面，长按文件转发到任意本地通讯录联系人"""
+        # 1、在当前群聊天会话页面长按任意文件
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        # 进入到文件选择页面
+        chat.click_more()
+        more_page = ChatMorePage()
+        more_page.click_file()
+        # 点击本地文件，进入到本地文件中
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        flag = local_file.push_preset_file()
+        if flag:
+            local_file.click_back()
+            csf.click_local_file()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(".txt")
+        if file:
+            local_file.click_send()
+            # 2、选择转发，选择一个本地通讯录联系人
+            chat.forward_file(".txt")
+            scp = SelectContactsPage()
+            scp.select_local_contacts()
+            slcp = SelectLocalContactsPage()
+            slcp.wait_for_page_load()
+            names = slcp.get_contacts_name()
+            if names:
+                slcp.select_one_member_by_name(names[0])
+                # 3、点击确定
+                slcp.click_sure_forward()
+                flag = slcp.is_toast_exist("已转发")
+                self.assertTrue(flag)
+            else:
+                print("WARN: There is no linkman.")
+                slcp.click_back()
+                scp.click_back()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+        chat.wait_for_page_load()
+
