@@ -56,7 +56,7 @@ class ContactsPage(FooterPage):
         '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe')
     }
 
-    @TestLogger.log()
+    @TestLogger.log("获取所有联系人名")
     def get_contacts_name(self):
         """获取所有联系人名"""
         els = self.get_elements(self.__class__.__locators["联系人名"])
@@ -72,7 +72,7 @@ class ContactsPage(FooterPage):
             contacts_name.remove("和飞信电话")
         return contacts_name
 
-    @TestLogger.log()
+    @TestLogger.log("通过人名选择一个联系人")
     def select_people_by_name(self, name):
         """通过人名选择一个联系人"""
         self.click_element((MobileBy.XPATH, '//*[@text ="%s"]' % name))
@@ -113,7 +113,7 @@ class ContactsPage(FooterPage):
                 return True
         return False
 
-    @TestLogger.log()
+    @TestLogger.log("获取电话号码")
     def get_phone_number(self):
         """获取电话号码"""
         els = self.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/contact_phone'))
@@ -159,3 +159,7 @@ class ContactsPage(FooterPage):
     def click_label_grouping(self):
         """点击标签分组"""
         self.click_element(self.__class__.__locators['标签分组'])
+
+    @TestLogger.log('点击公众号图标')
+    def click_official_account_icon(self):
+        self.click_element(self.__locators['公众号'])

@@ -1,6 +1,7 @@
 import unittest
-from library.core.common.simcardtype import CardType
+
 from library.core.TestCase import TestCase
+from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
@@ -418,4 +419,3 @@ class MsgLabelGroupingTest(TestCase):
         """标签分组会话页面，点击格式为格式为txt的文件可以正常查阅"""
         # 1、在当前聊天会话页面点击格式为txt的文件
         self.public_open_file(".txt")
-

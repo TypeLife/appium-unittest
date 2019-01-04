@@ -1,7 +1,7 @@
 from appium.webdriver.common.mobileby import MobileBy
-from pages.components.BaseChat import BaseChatPage
-from library.core.BasePage import BasePage
+
 from library.core.TestLogger import TestLogger
+from pages.components.BaseChat import BaseChatPage
 
 
 class LabelGroupingChatPage(BaseChatPage):

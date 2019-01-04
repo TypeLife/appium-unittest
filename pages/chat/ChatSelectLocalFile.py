@@ -1,9 +1,11 @@
-from appium.webdriver.common.mobileby import MobileBy
+import os
 import time
+
+from appium.webdriver.common.mobileby import MobileBy
+
+import settings
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
-import settings
-import os
 
 
 class ChatSelectLocalFilePage(BasePage):
