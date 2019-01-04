@@ -40,3 +40,18 @@ class ChatNoticeDialog(BasePage):
         position = (alert_box.location.get('x'), alert_box.location.get('y') - 100)
         print('tap position: {}'.format(position))
         self.mobile.tap([position])
+
+
+class DeleteConfirmDialog(BasePage):
+    __locators = {
+        '取消': (MobileBy.XPATH, '//*[@text="刪除"]'),
+        '删除': (MobileBy.XPATH, '//*[@text="刪除"]'),
+    }
+
+    @TestLogger.log('点击取消')
+    def click_cancel(self):
+        self.click_element(self.__locators['取消'])
+
+    @TestLogger.log('点击删除')
+    def click_delete(self):
+        self.click_element(self.__locators['删除'])

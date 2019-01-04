@@ -623,12 +623,12 @@ class MobileDriver(ABC):
     def assert_screen_contain_text(self, text):
         if not self.is_text_present(text):
             raise AssertionError("Page should have contained text '{}' "
-                                 "but did not" % text)
+                                 "but did not".format(text))
 
     @TestLogger.log('断言：检查页面是否不包含文本')
     def assert_screen_should_not_contain_text(self, text):
         if self.is_text_present(text):
-            raise AssertionError("Page should not have contained text '{}'" % text)
+            raise AssertionError("Page should not have contained text '{}'".format(text))
 
     @TestLogger.log('断言：检查页面是否包含元素')
     def assert_screen_should_contain_element(self, locator):

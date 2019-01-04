@@ -5,7 +5,7 @@ from library.core.common.supportedmodel import SupportedModel
 AVAILABLE_DEVICES = {
     'MI5X': {
         "MODEL": SupportedModel.MI6,
-        "SERVER_URL": 'http://192.168.200.177:4723/wd/hub',
+        "SERVER_URL": 'http://192.168.200.127:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "7.1",
@@ -143,7 +143,7 @@ AVAILABLE_DEVICES = {
             },
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '13510772034'
+                'CARD_NUMBER': '19876283465'
             }
         ]
     },
