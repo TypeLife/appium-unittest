@@ -184,6 +184,26 @@ class TagsGroupingTest(TestCase):
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
 
+    @tags('ALL', 'SMOKE', '移动')
+    def test_Conts_TagsGrouping_0003(self):
+        """用户新建了多个分组"""
+        groups = [
+            ['分组1', '给个红包1'],
+        ]
+        conts_page = ContactsPage()
+        conts_page.open_contacts_page()
+        conts_page.click_label_grouping()
+        lg = LabelGroupingPage()
+        lg.wait_for_page_load()
+        for g in groups:
+            lg.create_group(*g)
+        lg.wait_for_page_load()
+        lg.delete_all_label()
+
+    def setUp_test_Conts_TagsGrouping_0003(self):
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+
 
 if __name__ == '__main__':
     unittest.main()
