@@ -15,8 +15,9 @@ class LabelGroupingPage(ContactsSelector, BasePage):
         'com.chinasofti.rcs:id/label_group_toolbar': (
             MobileBy.ID, 'com.chinasofti.rcs:id/label_group_toolbar'),
         '返回': (MobileBy.XPATH, '//*[contains(@resource-id,"back")]'),
-        '标签分组': (MobileBy.ID, 'com.chinasofti.rcs:id/label_setting_toolbar_title'),
-        'com.chinasofti.rcs:id/group_list': (MobileBy.ID, 'com.chinasofti.rcs:id/group_list'),
+        '页面标题': (MobileBy.ID, 'com.chinasofti.rcs:id/label_setting_toolbar_title'),
+
+        '分组列表': (MobileBy.ID, 'com.chinasofti.rcs:id/group_list'),
         '分组根节点': (MobileBy.ID, 'com.chinasofti.rcs:id/group_list_item'),
         '分组图标': (MobileBy.ID, 'com.chinasofti.rcs:id/asp_group_icon'),
         '新建分组': (MobileBy.XPATH, '//*[@text="新建分组"]'),
@@ -32,8 +33,12 @@ class LabelGroupingPage(ContactsSelector, BasePage):
         '请输入标签分组名称': (MobileBy.ID, 'com.chinasofti.rcs:id/edit_group_name'),
     }
 
-    @TestLogger.log('删除全部标签')
+    @TestLogger.log('删除全部标签分组')
     def delete_all_label(self):
+        """
+        一键删除全部分组
+        :return:
+        """
         from pages import LableGroupDetailPage
         groups = self.get_elements(self.__locators['分组根节点'])[1:]
         while groups:
@@ -51,7 +56,50 @@ class LabelGroupingPage(ContactsSelector, BasePage):
             # 刷新group
             groups = self.get_elements(self.__locators['分组根节点'])[1:]
 
-    @TestLogger.log('检查默认文案')
+    @TestLogger.log('删除指定分组')
+    def delete_label_groups(self, *groups):
+        """
+        一键批量删除
+        :param groups: 要删除的分组名称数组
+        :return:
+        """
+        from pages import LableGroupDetailPage
+        for name in groups:
+            if self.click_label_group(name):
+                detail = LableGroupDetailPage()
+                try:
+                    self.click_element(['xpath', '//*[@text="我知道了"]'], 1)
+                except:
+                    pass
+                detail.open_setting_menu()
+                detail.click_delete_label_menu()
+                detail.click_delete()
+                self.wait_for_page_load()
+
+    @TestLogger.log('点击分组')
+    def click_label_group(self, name):
+        """
+        点击进入分组
+        :param name: 分组名字
+        :return:
+        """
+        import re
+        index = 0
+        for group in self.mobile.list_iterator(self.__locators['分组列表'], self.__locators['分组根节点']):
+            if index < 1:
+                index += 1
+                continue
+            else:
+                group_name = group.find_element(*self.__locators['标签分组名字']).text
+                result = re.findall(r'(.+)\((\d+)\)$', group_name)[0]
+                group_name, total = result
+                if group_name == name:
+                    group.click()
+                    return group_name, int(total)
+                index += 1
+        return
+
+    @TestLogger.log('检查空白分组列表默认文案')
     def assert_default_status_is_right(self):
         self.mobile.assert_screen_contain_text('暂无分组')
 
@@ -78,8 +126,16 @@ class LabelGroupingPage(ContactsSelector, BasePage):
 
     @TestLogger.log('输入标签分组名称')
     def input_label_grouping_name(self, name):
-        """输入标签分组名称"""
+        """
+        输入标签分组名称
+        业务规则：
+            1、名称长度不能大于30字节
+        :param name:传入的分组名
+        :return: 实际填入的分组名
+        """
         self.input_text(self.__class__.__locators["请输入标签分组名称"], name)
+        actual = self.get_text(self.__locators['请输入标签分组名称'])
+        return actual
 
     @TestLogger.log('点击确定')
     def click_sure(self):
@@ -93,7 +149,7 @@ class LabelGroupingPage(ContactsSelector, BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_element_present(self.__class__.__locators["标签分组"])
+                condition=lambda d: self._is_element_present(self.__class__.__locators["页面标题"])
             )
         except:
             message = "页面在{}s内，没有加载成功".format(str(timeout))
@@ -116,6 +172,12 @@ class LabelGroupingPage(ContactsSelector, BasePage):
 
     @TestLogger.log('创建分组')
     def create_group(self, group_name, *member_list):
+        """
+        一键创建分组
+        :param group_name: 分组名
+        :param member_list: 成员列表
+        :return:
+        """
         self.click_new_create_group()
         self.wait_for_create_label_grouping_page_load()
         self.input_label_grouping_name(group_name)

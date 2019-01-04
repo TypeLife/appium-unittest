@@ -1,4 +1,5 @@
 import unittest
+import uuid
 
 from selenium.common.exceptions import TimeoutException
 
@@ -8,7 +9,7 @@ from library.core.utils.testcasefilter import tags
 from pages import *
 
 REQUIRED_MOBILES = {
-    'Android-移动': 'M960BDQN229CH',
+    'Android-移动': 'MI5X',
 }
 
 
@@ -201,6 +202,35 @@ class TagsGroupingTest(TestCase):
         lg.delete_all_label()
 
     def setUp_test_Conts_TagsGrouping_0003(self):
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'SMOKE', '移动')
+    def test_Conts_TagsGrouping_0004(self):
+        """用户新建了多个分组"""
+        group_name = uuid.uuid4().__str__()
+
+        conts_page = ContactsPage()
+        conts_page.open_contacts_page()
+        conts_page.click_label_grouping()
+        lg = LabelGroupingPage()
+        lg.click_new_create_group()
+        lg.wait_for_create_label_grouping_page_load()
+        real_name = lg.input_label_grouping_name(group_name)
+        lg.click_sure()
+
+        lg.assert_contacts_selector_page_title_is_right()
+        lg.assert_contacts_selector_page_display_ok_button()
+        lg.assert_contacts_selector_search_box_place_holder_is_right()
+        lg.assert_contacts_selector_page_contains_text('选择和通讯录联系人')
+        lg.assert_contacts_selector_page_contains_alphabet_nav()
+
+        lg.click_back()
+        lg.click_back()
+        lg.wait_for_page_load()
+        lg.delete_label_groups(real_name)
+
+    def setUp_test_Conts_TagsGrouping_0004(self):
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
 
