@@ -37,7 +37,9 @@ class BaseChatPage(BasePage):
                   '用户须知': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title'),
                   '我已阅读': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_check'),
                   '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_btn_ok'),
-
+                  # 在聊天会话页面点击不可阅读文件时的弹窗
+                  '打开方式': (MobileBy.XPATH, "//*[contains(@text, '打开方式')]"),
+                  '取消': (MobileBy.ID, 'android:id/button2'),
                   }
 
     @TestLogger.log()
@@ -52,6 +54,13 @@ class BaseChatPage(BasePage):
         el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))
         self.press(el)
         self.click_element(self.__class__.__locators['收藏'])
+
+    @TestLogger.log()
+    def forward_file(self, file):
+        """转发文件"""
+        el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))
+        self.press(el)
+        self.click_element(self.__class__.__locators['转发'])
 
     @TestLogger.log()
     def click_pic(self):
@@ -132,3 +141,49 @@ class BaseChatPage(BasePage):
             return True
         except:
             return False
+
+    @TestLogger.log()
+    def open_file_in_chat_page(self, file):
+        """在聊天会话页面打开文件"""
+        self.click_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))
+
+    @TestLogger.log()
+    def wait_for_open_file(self, timeout=8, auto_accept_alerts=True):
+        """等待打开文件页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present((MobileBy.ID, 'com.chinasofti.rcs:id/menu'))
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(message)
+        return self
+
+    @TestLogger.log()
+    def click_back_in_open_file_page(self):
+        """在打开文件页面点击返回"""
+        try:
+            self.click_element((MobileBy.ID, "com.chinasofti.rcs:id/back"))
+        except:
+            self.click_element(self.__class__.__locators['返回'])
+
+    @TestLogger.log()
+    def wait_for_call_sys_app_page(self, timeout=8, auto_accept_alerts=True):
+        """等待调起系统应用页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators['打开方式'])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(message)
+        return self
+
+    @TestLogger.log()
+    def click_cancle(self):
+        """点击取消"""
+        self.click_element(self.__class__.__locators['取消'])

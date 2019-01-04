@@ -35,7 +35,21 @@ class SelectOneGroupPage(BasePage):
                   'A': (MobileBy.ID, ''),
                   'B': (MobileBy.ID, ''),
                   'C': (MobileBy.ID, ''),
+                  # 选择一个群转发消息时的弹框
+                  '发送给': (MobileBy.XPATH, "//*[contains(@text, '发送给')]"),
+                  '取消': (MobileBy.XPATH, "//*[contains(@text, '取消')]"),
+                  '确定': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
                   }
+
+    @TestLogger.log()
+    def click_sure_forward(self):
+        """点击确定转发"""
+        self.click_element(self.__class__.__locators['确定'])
+
+    @TestLogger.log()
+    def click_cancel_forward(self):
+        """点击取消转发"""
+        self.click_element(self.__class__.__locators['取消'])
 
     @TestLogger.log()
     def get_group_name(self):
