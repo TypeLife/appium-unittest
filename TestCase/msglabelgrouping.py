@@ -132,7 +132,7 @@ class Preconditions(object):
         return group_name
 
 
-@unittest.skip("编码中。。。")
+# @unittest.skip("编码中。。。")
 class MsgLabelGroupingTest(TestCase):
     """消息->标签分组 模块"""
 
@@ -278,7 +278,7 @@ class MsgLabelGroupingTest(TestCase):
         more_page.click_file()
         csf = ChatSelectFilePage()
         csf.wait_for_page_load()
-        csf.click_video()
+        csf.click_pic()
         # 3、选择照片，直接点击发送按钮
         local_file = ChatSelectLocalFilePage()
         el = local_file.select_file2("照片")
@@ -323,7 +323,7 @@ class MsgLabelGroupingTest(TestCase):
         more_page.click_file()
         csf = ChatSelectFilePage()
         csf.wait_for_page_load()
-        csf.click_video()
+        csf.click_music()
         # 3、选择音乐，直接点击发送按钮
         local_file = ChatSelectLocalFilePage()
         el = local_file.select_file2("音乐")
@@ -335,4 +335,87 @@ class MsgLabelGroupingTest(TestCase):
             csf.click_back()
             chat.wait_for_page_load()
             raise AssertionError("There is no music")
+
+    @staticmethod
+    def public_open_file(file_type):
+        """在聊天会话页面打开文件"""
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        # 进入到文件选择页面
+        chat.click_more()
+        more_page = ChatMorePage()
+        more_page.click_file()
+        # 点击本地文件，进入到本地文件中
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        flag = local_file.push_preset_file()
+        if flag:
+            local_file.click_back()
+            csf.click_local_file()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(file_type)
+        if file:
+            local_file.click_send()
+            # 打开文件
+            chat.open_file_in_chat_page(file_type)
+            chat.wait_for_open_file()
+            chat.click_back_in_open_file_page()
+            chat.wait_for_page_load()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+            chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0009(self):
+        """标签分组会话页面，点击格式为格式为doc的文件可以正常查阅"""
+        # 1、在当前聊天会话页面点击格式为doc的文件
+        self.public_open_file(".doc")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0010(self):
+        """标签分组会话页面，点击格式为格式为docx的文件可以正常查阅"""
+        # 1、在当前聊天会话页面点击格式为docx的文件
+        self.public_open_file(".docx")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0011(self):
+        """标签分组会话页面，点击格式为格式为ppt的文件可以正常查阅"""
+        # 1、在当前聊天会话页面点击格式为ppt的文件
+        self.public_open_file(".ppt")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0012(self):
+        """标签分组会话页面，点击格式为格式为pptx的文件可以正常查阅"""
+        # 1、在当前聊天会话页面点击格式为pptx的文件
+        self.public_open_file(".pptx")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0013(self):
+        """标签分组会话页面，点击格式为格式为pdf的文件可以正常查阅"""
+        # 1、在当前聊天会话页面点击格式为pdf的文件
+        self.public_open_file(".pdf")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0014(self):
+        """标签分组会话页面，点击格式为格式为xls的文件可以正常查阅"""
+        # 1、在当前聊天会话页面点击格式为xls的文件
+        self.public_open_file(".xls")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0015(self):
+        """标签分组会话页面，点击格式为格式为xlsx的文件可以正常查阅"""
+        # 1、在当前聊天会话页面点击格式为xlsx的文件
+        self.public_open_file(".xlsx")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0016(self):
+        """标签分组会话页面，点击格式为格式为txt的文件可以正常查阅"""
+        # 1、在当前聊天会话页面点击格式为txt的文件
+        self.public_open_file(".txt")
 
