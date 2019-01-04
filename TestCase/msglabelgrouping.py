@@ -712,4 +712,3 @@ class MsgLabelGroupingTest(TestCase):
             local_file.click_back()
             csf.click_back()
         chat.wait_for_page_load()
-
