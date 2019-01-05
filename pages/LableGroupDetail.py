@@ -55,6 +55,11 @@ class LableGroupDetailPage(LabelSettingMenu, BasePage):
         'F': (MobileBy.ID, ''),
     }
 
+    @TestLogger.log('获取分组名字')
+    def get_group_name(self):
+        name = self.get_text(self.__locators['标题'])
+        return name
+
     @TestLogger.log('点击返回')
     def click_back(self):
         self.click_element(self.__locators['返回'])

@@ -21,6 +21,10 @@ AVAILABLE_DEVICES = {
                 'TYPE': CardType.CHINA_UNION,
                 'CARD_NUMBER': '17611681917'
             },
+            {
+                'TYPE': CardType.CHINA_MOBILE,
+                'CARD_NUMBER': '19876283465'
+            },
         ]
     },
     'M960BDQN229CH-bak': {
