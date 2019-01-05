@@ -67,6 +67,8 @@ __all__ = [
     'LabelGroupingPage',
     'LableGroupDetailPage',
     'LabelGroupingChatPage',
+    'SelectHeContactsPage',
+    'SelectHeContactsDetailPage',
 ]
 
 from .CreateGroupName import CreateGroupNamePage
@@ -77,6 +79,8 @@ from .LableGroupDetail import LableGroupDetailPage
 from .SelectContacts import SelectContactsPage
 from .SelectLocalContacts import SelectLocalContactsPage
 from .SelectOneGroup import SelectOneGroupPage
+from .SelectHeContacts import SelectHeContactsPage
+from .SelectHeContactsDetail import SelectHeContactsDetailPage
 from .SingleChat import SingleChatPage
 from .chat import ChatAudioPage
 from .chat import ChatGIFPage

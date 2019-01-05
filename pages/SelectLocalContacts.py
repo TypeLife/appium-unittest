@@ -55,7 +55,21 @@ class SelectLocalContactsPage(BasePage):
                   # 群主转让
                   '确定转让': (MobileBy.XPATH, '//*[@text="确定"]'),
                   '取消转让': (MobileBy.XPATH, '//*[@text="取消"]'),
+                  # 选择一个本地联系人转发消息时的弹框
+                  '发送给': (MobileBy.XPATH, "//*[contains(@text, '发送给')]"),
+                  '取消转发': (MobileBy.XPATH, "//*[contains(@text, '取消')]"),
+                  '确定转发': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
                   }
+
+    @TestLogger.log()
+    def click_sure_forward(self):
+        """点击确定转发"""
+        self.click_element(self.__class__.__locators['确定转发'])
+
+    @TestLogger.log()
+    def click_cancel_forward(self):
+        """点击取消转发"""
+        self.click_element(self.__class__.__locators['取消转发'])
 
     @TestLogger.log()
     def click_sure_share(self):

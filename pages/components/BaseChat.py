@@ -33,6 +33,8 @@ class BaseChatPage(BasePage):
                   '转发': (MobileBy.XPATH, "//*[contains(@text, '转发')]"),
                   '撤回': (MobileBy.XPATH, "//*[contains(@text, '撤回')]"),
                   '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
+                  # 撤回消息时的弹窗
+                  '我知道了': (MobileBy.XPATH, "//*[contains(@text, '我知道了')]"),
                   # 用户须知
                   '用户须知': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title'),
                   '我已阅读': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_check'),
@@ -61,6 +63,31 @@ class BaseChatPage(BasePage):
         el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))
         self.press(el)
         self.click_element(self.__class__.__locators['转发'])
+
+    @TestLogger.log()
+    def delete_mess(self, mess):
+        """删除消息"""
+        el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % mess))
+        self.press(el)
+        self.click_element(self.__class__.__locators['删除'])
+
+    @TestLogger.log()
+    def recall_mess(self, mess):
+        """撤回消息"""
+        el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % mess))
+        self.press(el)
+        self.click_element(self.__class__.__locators['撤回'])
+
+    @TestLogger.log()
+    def click_i_know(self):
+        """撤回消息时，弹窗处理，点击 我知道了"""
+        self.click_element(self.__class__.__locators["我知道了"])
+
+    @TestLogger.log()
+    def press_mess(self, mess):
+        """长按消息"""
+        el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % mess))
+        self.press(el)
 
     @TestLogger.log()
     def click_pic(self):
