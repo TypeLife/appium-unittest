@@ -140,7 +140,7 @@ class Preconditions(object):
 class OfficialAccountTest(TestCase):
     """通讯录 - 公众号模块"""
 
-    @tags('ALL', 'SMOKE', '移动')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_OfficialAccount_0001(self):
         """公众号列表为空"""
         conts_page = ContactsPage()

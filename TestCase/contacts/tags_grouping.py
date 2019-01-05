@@ -140,7 +140,7 @@ class Preconditions(object):
 class TagsGroupingTest(TestCase):
     """通讯录 - 标签分组"""
 
-    @tags('ALL', 'SMOKE', '移动')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0001(self):
         """用户未添加任何分组"""
         conts_page = ContactsPage()
@@ -155,7 +155,7 @@ class TagsGroupingTest(TestCase):
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL', 'SMOKE', '移动')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0002(self):
         """用户新建了多个分组"""
         groups = [
@@ -185,7 +185,7 @@ class TagsGroupingTest(TestCase):
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL', 'SMOKE', '移动')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0003(self):
         """用户新建了多个分组"""
         groups = [
@@ -205,7 +205,7 @@ class TagsGroupingTest(TestCase):
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL', 'SMOKE', '移动')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0004(self):
         """用户新建了多个分组"""
         group_name = uuid.uuid4().__str__()
