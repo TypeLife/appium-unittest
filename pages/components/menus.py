@@ -48,3 +48,10 @@ class LabelSettingMenu(DeleteConfirmDialog, BasePage):
         self.click_label_name_menu()
         self.input_group_new_name(name)
         self.click_confirm_modify()
+
+    @TestLogger.log('移除成员')
+    def remove_members(self, *members):
+        from pages.components import ContactsSelector
+        self.click_remove_member_menu()
+        selector = ContactsSelector()
+        selector.select_local_contacts(*members)

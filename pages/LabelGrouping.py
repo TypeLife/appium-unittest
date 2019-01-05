@@ -125,9 +125,53 @@ class LabelGroupingPage(ContactsSelector, BasePage):
             self.wait_for_page_load()
             return actual
 
+    @TestLogger.log('移除成员')
+    def remove_group_members(self, group, *members):
+        from pages import LableGroupDetailPage
+
+        if self.click_label_group(group):
+            detail = LableGroupDetailPage()
+            try:
+                self.click_element(['xpath', '//*[@text="我知道了"]'], 1)
+            except:
+                pass
+            detail.open_setting_menu()
+            detail.remove_members(*members)
+
+            self.click_back()
+            detail.wait_for_page_load()
+            try:
+                self.click_element(['xpath', '//*[@text="我知道了"]'], 1)
+            except:
+                pass
+            self.click_back()
+            self.wait_for_page_load()
+
     @TestLogger.log('检查空白分组列表默认文案')
     def assert_default_status_is_right(self):
         self.mobile.assert_screen_contain_text('暂无分组')
+
+    @TestLogger.log('获取标签分组成员数量')
+    def get_group_member_count(self, name):
+        """
+        获取标签分组成员数量
+        :param name: 分组名字
+        :return:
+        """
+        import re
+        index = 0
+        for group in self.mobile.list_iterator(self.__locators['分组列表'], self.__locators['分组根节点']):
+            if index < 1:
+                index += 1
+                continue
+            else:
+                group_name = group.find_element(*self.__locators['标签分组名字']).text
+                result = re.findall(r'(.+)\((\d+)\)$', group_name)[0]
+                group_name, total = result
+                if group_name == name:
+                    return int(total)
+                index += 1
+        return
 
     @TestLogger.log('获取标签分组名字')
     def get_label_grouping_names(self):
