@@ -72,6 +72,11 @@ class BaseChatPage(BasePage):
         self.click_element(self.__class__.__locators['删除'])
 
     @TestLogger.log()
+    def click_delete(self):
+        """点击删除"""
+        self.click_element(self.__class__.__locators['删除'])
+
+    @TestLogger.log()
     def recall_mess(self, mess):
         """撤回消息"""
         el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % mess))
