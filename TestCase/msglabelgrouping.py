@@ -891,16 +891,88 @@ class MsgLabelGroupingTest(TestCase):
             for i in range(122):
                 time.sleep(2)
                 text = chat.driver.page_source
+                del text
                 time.sleep(3)
                 tmp = chat.driver.current_activity
+                del tmp
             chat.press_mess(".txt")
             flag = chat.is_text_present("撤回")
             self.assertFalse(flag)
             # 删除文件，关闭弹框菜单
-            chat.delete_mess(".txt")
+            chat.click_delete()
         else:
             local_file.click_back()
             local_file.click_back()
             csf.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0028(self):
+        """标签分组会话页面，点击位置，再返回到会话页面"""
+        # 1、在当前会话窗口点击位置
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        more_page = ChatMorePage()
+        more_page.click_location()
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        # 2、点击左上角的返回按钮
+        location_page.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0029(self):
+        """标签分组会话页面，点击位置，默认当前位置直接发送"""
+        # 1、在当前会话窗口点击位置
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        more_page = ChatMorePage()
+        more_page.click_location()
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        # 2、点击右上角的发送按钮
+        location_page.click_send()
+        chat.wait_for_page_load()
+        chat.click_more()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0030(self):
+        """标签分组会话页面，点击位置，选择500米内的其他位置发送"""
+        # 1、在当前会话窗口点击位置
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        more_page = ChatMorePage()
+        more_page.click_location()
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        # 2、滑动500米内的位置列表，选择其他位置
+        location_page.select_other_item()
+        # 3、点击右上角的发送按钮
+        location_page.click_send()
+        chat.wait_for_page_load()
+        chat.click_more()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0031(self):
+        """标签分组会话页面，点击位置，选择500米内的其他位置后返回到会话窗口"""
+        # 1、在当前会话窗口点击位置
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        more_page = ChatMorePage()
+        more_page.click_location()
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        # 2、滑动500米内的位置列表，选择其他位置
+        location_page.select_other_item()
+        # 3、点击左上角的返回按钮
+        location_page.click_back()
+        chat.wait_for_page_load()
+        chat.click_more()
         chat.wait_for_page_load()
 
