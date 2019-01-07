@@ -57,7 +57,7 @@ class LabelGroupingPage(ContactsSelector, BasePage):
             groups = self.get_elements(self.__locators['分组根节点'])[1:]
 
     @TestLogger.log('删除指定分组')
-    def delete_label_groups(self, *groups, cancel=False):
+    def delete_label_groups(self, *groups):
         """
         一键批量删除
         :param groups: 要删除的分组名称数组
@@ -73,16 +73,34 @@ class LabelGroupingPage(ContactsSelector, BasePage):
                     pass
                 detail.open_setting_menu()
                 detail.click_delete_label_menu()
-                if cancel:
-                    detail.click_cancel()
-                    self.click_back()
-                    try:
-                        self.click_element(['xpath', '//*[@text="我知道了"]'], 1)
-                    except:
-                        pass
-                    self.click_back()
-                else:
-                    detail.click_delete()
+
+                detail.click_delete()
+                self.wait_for_page_load()
+
+    @TestLogger.log('删除指定分组点击取消')
+    def cancel_delete_label_groups(self, *groups):
+        """
+        删除指定分组点击取消
+        :param groups: 要删除的分组名称数组
+        :return:
+        """
+        from pages import LableGroupDetailPage
+        for name in groups:
+            if self.click_label_group(name):
+                detail = LableGroupDetailPage()
+                try:
+                    self.click_element(['xpath', '//*[@text="我知道了"]'], 1)
+                except:
+                    pass
+                detail.open_setting_menu()
+                detail.click_delete_label_menu()
+                detail.click_cancel()
+                self.click_back()
+                try:
+                    self.click_element(['xpath', '//*[@text="我知道了"]'], 1)
+                except:
+                    pass
+                self.click_back()
                 self.wait_for_page_load()
 
     @TestLogger.log('点击分组')
@@ -212,7 +230,21 @@ class LabelGroupingPage(ContactsSelector, BasePage):
         :param name:传入的分组名
         :return: 实际填入的分组名
         """
-        self.input_text(self.__class__.__locators["请输入标签分组名称"], name)
+        byte_len = len(name.encode())
+        if byte_len > 30:
+            origin_len = len(name)
+            left = ''
+            right = ''
+            for i in range(origin_len):
+                if len(name[:i + 1].encode()) <= 30:
+                    left = name[:i + 1]
+                    right = name[i + 1:]
+                else:
+                    break
+            print('传入的分组名大于30字节，为防止崩溃，已经自动取小于30字节的部分（{}）输入，舍弃大于30字节部分（{}）'.format(left, right))
+            name = left
+
+        self.input_text(self.__locators["请输入标签分组名称"], name)
         actual = self.get_text(self.__locators['请输入标签分组名称'])
         return actual
 
