@@ -4,13 +4,13 @@ from library.core.common.supportedmodel import SupportedModel
 
 AVAILABLE_DEVICES = {
     'MI5X': {
-        "MODEL": SupportedModel.MI6,
+        "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
         "SERVER_URL": 'http://192.168.200.127:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
-            "platformVersion": "7.1",
-            "deviceName": "aa8dd3c60904",
-            "udid": "aa8dd3c60904",
+            "platformVersion": "6.0.1",
+            "deviceName": "M960BDQN229DK",
+            "udid": "M960BDQN229DK",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
@@ -18,12 +18,12 @@ AVAILABLE_DEVICES = {
         },
         'CARDS': [
             {
-                'TYPE': CardType.CHINA_UNION,
-                'CARD_NUMBER': '17611681917'
-            },
-            {
                 'TYPE': CardType.CHINA_MOBILE,
                 'CARD_NUMBER': '19876283465'
+            },
+            {
+                'TYPE': CardType.CHINA_UNION,
+                'CARD_NUMBER': '17611681917'
             },
         ]
     },

@@ -136,9 +136,50 @@ class Preconditions(object):
         login_num = Preconditions.login_by_one_key_login()
         return login_num
 
+    @staticmethod
+    def create_contacts_if_not_exits(name, number):
+        """
+        导入联系人数据
+        :param name:
+        :param number:
+        :return:
+        """
+        contacts_page = ContactsPage()
+        detail_page = ContactDetailsPage()
+        try:
+            contacts_page.wait_for_page_load()
+            contacts_page.open_contacts_page()
+        except:
+            Preconditions.make_already_in_message_page(reset_required=False)
+            contacts_page.open_contacts_page()
+        # 创建联系人
+        contacts_page.click_search_box()
+        contact_search = ContactListSearchPage()
+        contact_search.wait_for_page_load()
+        contact_search.input_search_keyword(name)
+        if contact_search.is_contact_in_list(name):
+            contact_search.click_back()
+        else:
+            contact_search.click_back()
+            contacts_page.click_add()
+            create_page = CreateContactPage()
+            create_page.hide_keyboard_if_display()
+            create_page.create_contact(name, number)
+            detail_page.wait_for_page_load()
+            detail_page.click_back_icon()
+
 
 class TagsGroupingTest(TestCase):
     """通讯录 - 标签分组"""
+
+    @classmethod
+    def setUpClass(cls):
+        required_contacts = [
+            ('给个红包1', '17611681917'),
+        ]
+        Preconditions.connect_mobile('Android-移动')
+        for name, number in required_contacts:
+            Preconditions.create_contacts_if_not_exits(name, number)
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0001(self):
@@ -150,6 +191,10 @@ class TagsGroupingTest(TestCase):
         lg.wait_for_page_load()
         lg.delete_all_label()
         lg.assert_default_status_is_right()
+
+        lg.wait_for_page_load()
+        lg.click_back()
+        conts_page.open_message_page()
 
     def setUp_test_Conts_TagsGrouping_0001(self):
         Preconditions.connect_mobile('Android-移动')
@@ -179,7 +224,11 @@ class TagsGroupingTest(TestCase):
         for g in groups:
             lg.create_group(*g)
         lg.wait_for_page_load()
-        lg.delete_all_label()
+        lg.delete_label_groups(*groups)
+
+        lg.wait_for_page_load()
+        lg.click_back()
+        conts_page.open_message_page()
 
     def setUp_test_Conts_TagsGrouping_0002(self):
         Preconditions.connect_mobile('Android-移动')
@@ -200,6 +249,10 @@ class TagsGroupingTest(TestCase):
             lg.create_group(*g)
         lg.wait_for_page_load()
         lg.delete_all_label()
+
+        lg.wait_for_page_load()
+        lg.click_back()
+        conts_page.open_message_page()
 
     def setUp_test_Conts_TagsGrouping_0003(self):
         Preconditions.connect_mobile('Android-移动')
@@ -230,6 +283,10 @@ class TagsGroupingTest(TestCase):
         lg.wait_for_page_load()
         lg.delete_label_groups(real_name)
 
+        lg.wait_for_page_load()
+        lg.click_back()
+        conts_page.open_message_page()
+
     def setUp_test_Conts_TagsGrouping_0004(self):
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
@@ -259,6 +316,10 @@ class TagsGroupingTest(TestCase):
         # 返回到标签分组页面并删除该用例创建的分组数据
         lg.wait_for_page_load()
         lg.delete_label_groups(actual)
+
+        lg.wait_for_page_load()
+        lg.click_back()
+        conts_page.open_message_page()
 
     def setUp_test_Conts_TagsGrouping_0006(self):
         Preconditions.connect_mobile('Android-移动')
@@ -291,6 +352,10 @@ class TagsGroupingTest(TestCase):
         lg.wait_for_page_load()
         lg.delete_label_groups(real_name)
 
+        lg.wait_for_page_load()
+        lg.click_back()
+        conts_page.open_message_page()
+
     def setUp_test_Conts_TagsGrouping_0007(self):
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
@@ -311,10 +376,14 @@ class TagsGroupingTest(TestCase):
 
         # 删除点取消
         lg.wait_for_page_load()
-        lg.delete_label_groups(real_name, cancel=True)
+        lg.cancel_delete_label_groups(real_name)
         # 删除点确定
         lg.wait_for_page_load()
-        lg.delete_label_groups(real_name, cancel=False)
+        lg.delete_label_groups(real_name)
+
+        lg.wait_for_page_load()
+        lg.click_back()
+        conts_page.open_message_page()
 
     def setUp_test_Conts_TagsGrouping_0008(self):
         Preconditions.connect_mobile('Android-移动')
