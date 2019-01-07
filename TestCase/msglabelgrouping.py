@@ -976,3 +976,125 @@ class MsgLabelGroupingTest(TestCase):
         chat.click_more()
         chat.wait_for_page_load()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0032(self):
+        """标签分组会话页面，长按位置消息体进行转发到本地通讯录联系人"""
+        # 1、长按位置消息体
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        info = "Hello"
+        chat.input_message(info)
+        chat.send_message()
+        # 2、选择转发，选择一个本地通讯录联系人
+        chat.forward_file(info)
+        scp = SelectContactsPage()
+        scp.select_local_contacts()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        names = slcp.get_contacts_name()
+        if names:
+            slcp.select_one_member_by_name(names[0])
+            # 3、点击确定
+            slcp.click_sure_forward()
+            flag = slcp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+        else:
+            print("WARN: There is no linkman.")
+            slcp.click_back()
+            scp.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0033(self):
+        """标签分组会话页面，长按位置消息体进行转发到和通讯录联系人"""
+        # 1、在当前群聊天会话页面长按长按位置消息体
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        info = "Hello"
+        chat.input_message(info)
+        chat.send_message()
+        # 2、选择一个和通讯录联系人转发
+        chat.forward_file(info)
+        scp = SelectContactsPage()
+        scp.click_he_contacts()
+        shcp = SelectHeContactsPage()
+        shcp.wait_for_page_load()
+        teams = shcp.get_team_names()
+        if teams:
+            shcp.select_one_team_by_name(teams[0])
+            detail_page = SelectHeContactsDetailPage()
+            detail_page.wait_for_page_load()
+            names = detail_page.get_contacts_names()
+            if not names:
+                print("WARN: Please add contacts in %s." % teams[0])
+            for name in names:
+                detail_page.select_one_linkman(name)
+                flag = detail_page.is_toast_exist("该联系人不可选", timeout=3)
+                if not flag:
+                    break
+            # 3、点击确定
+            detail_page.click_sure_forward()
+            flag2 = detail_page.is_toast_exist("已转发")
+            self.assertTrue(flag2)
+        else:
+            print("WARN: Please create a team and add contacts.")
+            shcp.click_back()
+            scp.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0034(self):
+        """标签分组会话页面，长按位置消息体进行转发到群"""
+        # 1、在当前群聊天会话页面长按位置消息体
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        info = "Hello"
+        chat.input_message(info)
+        chat.send_message()
+        # 2、选择一个群转发
+        chat.forward_file(info)
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        names = sogp.get_group_name()
+        if names:
+            sogp.select_one_group_by_name(names[0])
+            # 3、点击确定
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+        else:
+            print("WARN: There is no group.")
+            sogp.click_back()
+            scp.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_msg_label_grouping_0035(self):
+        """标签分组会话页面点击位置消息体，在位置界面点击右下角按钮进行导航"""
+        # 1、在当前页面点击位置消息体
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        # 点击更多
+        chat.click_more()
+        more_page = ChatMorePage()
+        # 点击位置
+        more_page.click_location()
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        # 点击发送
+        location_page.click_send()
+        chat.wait_for_page_load()
+        # 再一次点击，关闭更多
+        chat.click_more()
+        chat.wait_for_page_load()
+        # 点击位置消息体
+        chat.click_addr_info()
+        # 2、点击右下角按钮
+        chat.click_nav_btn()
+        toast_flag = chat.is_toast_exist("未发现手机导航应用", timeout=3)
+        map_flag = chat.is_text_present("地图")
+        self.assertTrue(toast_flag or map_flag)
+
+
