@@ -9,7 +9,7 @@ from library.core.utils.testcasefilter import tags
 from pages import *
 
 REQUIRED_MOBILES = {
-    'Android-移动': 'MI5X',
+    'Android-移动': 'M960BDQN229CH',
 }
 
 
@@ -142,7 +142,7 @@ class TagsGroupingTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0001(self):
-        """用户未添加任何分组"""
+        """无分组"""
         conts_page = ContactsPage()
         conts_page.open_contacts_page()
         conts_page.click_label_grouping()
@@ -157,7 +157,7 @@ class TagsGroupingTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0002(self):
-        """用户新建了多个分组"""
+        """多个分组"""
         groups = [
             ['分组1'],
             ['分组2'],
@@ -187,7 +187,7 @@ class TagsGroupingTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0003(self):
-        """用户新建了多个分组"""
+        """新建分组"""
         groups = [
             ['分组1', '给个红包1'],
         ]
@@ -207,7 +207,7 @@ class TagsGroupingTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0004(self):
-        """用户新建了多个分组"""
+        """联系人选择器页面"""
         group_name = uuid.uuid4().__str__()
 
         conts_page = ContactsPage()
@@ -231,6 +231,92 @@ class TagsGroupingTest(TestCase):
         lg.delete_label_groups(real_name)
 
     def setUp_test_Conts_TagsGrouping_0004(self):
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Conts_TagsGrouping_0006(self):
+        """修改标签名称"""
+        group_name = uuid.uuid4().__str__()
+
+        # 进入标签分组列表页面
+        conts_page = ContactsPage()
+        conts_page.open_contacts_page()
+        conts_page.click_label_grouping()
+
+        # 创建分组
+        lg = LabelGroupingPage()
+        old_group = lg.create_group(group_name)
+
+        # 修改名字
+        lg.wait_for_page_load()
+        new_name = 'TestData001'
+        actual = lg.rename_label_group(old_group, new_name)
+
+        # 验证检查点
+        self.assertEqual(new_name, actual, '检查点：标签名称修改成功')
+
+        # 返回到标签分组页面并删除该用例创建的分组数据
+        lg.wait_for_page_load()
+        lg.delete_label_groups(actual)
+
+    def setUp_test_Conts_TagsGrouping_0006(self):
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Conts_TagsGrouping_0007(self):
+        """移除成员"""
+        group_name = uuid.uuid4().__str__()
+        members = ['给个红包1']
+        # 进入标签分组列表页面
+        conts_page = ContactsPage()
+        conts_page.open_contacts_page()
+        conts_page.click_label_grouping()
+
+        # 创建分组
+        lg = LabelGroupingPage()
+        real_name = lg.create_group(group_name, *members)
+
+        # 修改名字
+        lg.wait_for_page_load()
+        lg.remove_group_members(real_name, *members)
+        lg.wait_for_page_load()
+        count = lg.get_group_member_count(real_name)
+
+        # 验证检查点
+        self.assertEqual(count, 0, '检查点：成员被移除')
+
+        # 返回到标签分组页面并删除该用例创建的分组数据
+        lg.wait_for_page_load()
+        lg.delete_label_groups(real_name)
+
+    def setUp_test_Conts_TagsGrouping_0007(self):
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Conts_TagsGrouping_0008(self):
+        """删除标签"""
+        group_name = uuid.uuid4().__str__()
+        members = ['给个红包1']
+        # 进入标签分组列表页面
+        conts_page = ContactsPage()
+        conts_page.open_contacts_page()
+        conts_page.click_label_grouping()
+
+        # 创建分组
+        lg = LabelGroupingPage()
+        real_name = lg.create_group(group_name, *members)
+
+        # 删除点取消
+        lg.wait_for_page_load()
+        lg.delete_label_groups(real_name, cancel=True)
+        # 删除点确定
+        lg.wait_for_page_load()
+        lg.delete_label_groups(real_name, cancel=False)
+
+    def setUp_test_Conts_TagsGrouping_0008(self):
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
 

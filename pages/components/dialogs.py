@@ -44,7 +44,7 @@ class ChatNoticeDialog(BasePage):
 
 class DeleteConfirmDialog(BasePage):
     __locators = {
-        '取消': (MobileBy.XPATH, '//*[@text="刪除"]'),
+        '取消': (MobileBy.XPATH, '//*[@text="取消"]'),
         '删除': (MobileBy.XPATH, '//*[@text="刪除"]'),
     }
 
