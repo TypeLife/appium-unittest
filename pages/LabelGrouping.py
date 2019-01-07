@@ -57,7 +57,7 @@ class LabelGroupingPage(ContactsSelector, BasePage):
             groups = self.get_elements(self.__locators['分组根节点'])[1:]
 
     @TestLogger.log('删除指定分组')
-    def delete_label_groups(self, *groups):
+    def delete_label_groups(self, *groups, cancel=False):
         """
         一键批量删除
         :param groups: 要删除的分组名称数组
@@ -73,7 +73,16 @@ class LabelGroupingPage(ContactsSelector, BasePage):
                     pass
                 detail.open_setting_menu()
                 detail.click_delete_label_menu()
-                detail.click_delete()
+                if cancel:
+                    detail.click_cancel()
+                    self.click_back()
+                    try:
+                        self.click_element(['xpath', '//*[@text="我知道了"]'], 1)
+                    except:
+                        pass
+                    self.click_back()
+                else:
+                    detail.click_delete()
                 self.wait_for_page_load()
 
     @TestLogger.log('点击分组')

@@ -9,7 +9,7 @@ from library.core.utils.testcasefilter import tags
 from pages import *
 
 REQUIRED_MOBILES = {
-    'Android-移动': 'MI5X',
+    'Android-移动': 'M960BDQN229CH',
 }
 
 
@@ -292,6 +292,31 @@ class TagsGroupingTest(TestCase):
         lg.delete_label_groups(real_name)
 
     def setUp_test_Conts_TagsGrouping_0007(self):
+        Preconditions.connect_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Conts_TagsGrouping_0008(self):
+        """删除标签"""
+        group_name = uuid.uuid4().__str__()
+        members = ['给个红包1']
+        # 进入标签分组列表页面
+        conts_page = ContactsPage()
+        conts_page.open_contacts_page()
+        conts_page.click_label_grouping()
+
+        # 创建分组
+        lg = LabelGroupingPage()
+        real_name = lg.create_group(group_name, *members)
+
+        # 删除点取消
+        lg.wait_for_page_load()
+        lg.delete_label_groups(real_name, cancel=True)
+        # 删除点确定
+        lg.wait_for_page_load()
+        lg.delete_label_groups(real_name, cancel=False)
+
+    def setUp_test_Conts_TagsGrouping_0008(self):
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
 
