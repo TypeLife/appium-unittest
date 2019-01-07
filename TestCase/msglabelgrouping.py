@@ -919,6 +919,7 @@ class MsgLabelGroupingTest(TestCase):
         location_page.wait_for_page_load()
         # 2、点击左上角的返回按钮
         location_page.click_back()
+        chat.click_more()
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
