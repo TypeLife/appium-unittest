@@ -70,12 +70,12 @@ __all__ = [
     'SelectHeContactsPage',
     'SelectHeContactsDetailPage',
     'ChatFilePage',
-    'SingleChatPage',
     'FindChatRecordPage',
+    'SingleChatSetPage',
 ]
 
 from .ChatFile import ChatFilePage
-from .SingleChat import SingleChatPage
+from .SingleChatSet import SingleChatSetPage
 from .FindChatRecord import FindChatRecordPage
 from .CreateGroupName import CreateGroupNamePage
 from .GroupChat import GroupChatPage
