@@ -66,3 +66,10 @@ class SingleChatPage(BaseChatPage):
         """点击选择短信"""
         self.click_element(self.__class__.__locators["选择名片"])
 
+    @TestLogger.log()
+    def is_on_this_page(self):
+        """当前页面是否在单聊会话页面"""
+        el = self.get_elements(self.__locators['打电话图标'])
+        if len(el) > 0:
+            return True
+        return False
