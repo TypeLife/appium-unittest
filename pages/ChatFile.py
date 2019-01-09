@@ -13,7 +13,7 @@ class ChatFilePage(BasePage):
                   'android:id/content': (MobileBy.ID, 'android:id/content'),
                   'com.chinasofti.rcs:id/toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/toolbar'),
                   'com.chinasofti.rcs:id/id_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/id_toolbar'),
-                  'com.chinasofti.rcs:id/back': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
+                  '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
                   '聊天文件': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
                   'com.chinasofti.rcs:id/chat_file_list': (MobileBy.ID, 'com.chinasofti.rcs:id/chat_file_list'),
                   '本月': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_date'),
