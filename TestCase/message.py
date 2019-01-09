@@ -224,6 +224,48 @@ class MessageScanTest(TestCase):
 class MessageSearchTest(TestCase):
     """消息-全局搜索"""
 
+    @classmethod
+    def setUpClass(cls):
+
+        # 创建联系人
+        required_contacts = [
+            ('给个红包1', '13800138000'),  # 假号码
+            ('给个红包2', '13800138001'),  # 假号码
+            ('给个红包3', '13800138002'),  # 假号码
+            ('给个红包4', '13800138003'),  # 假号码
+            ('给个红包5茻', '13800138004'),  # 假号码
+            ('大佬1', '13800138005'),  # 假号码
+            ('大佬2', '13800138006'),  # 假号码
+            ('大佬3', '13800138007'),  # 假号码
+            ('大佬4', '13800138008'),  # 假号码
+        ]
+        conts = ContactsPage()
+        Preconditions.connect_mobile('Android-移动')
+        for name, number in required_contacts:
+            Preconditions.make_already_in_message_page()
+            conts.open_contacts_page()
+            conts.create_contacts_if_not_exits(name, number)
+
+        # 创建群
+        required_group_chats = [
+            ('给个红包1', ['给个红包1', '给个红包2']),
+            ('给个红包2', ['给个红包1', '给个红包2']),
+            ('给个红包3', ['给个红包1', '给个红包2']),
+            ('给个红包4', ['给个红包1', '给个红包2']),
+            ('群聊1', ['给个红包1', '给个红包2']),
+            ('群聊2', ['给个红包1', '给个红包2']),
+            ('群聊3', ['给个红包1', '给个红包2']),
+            ('群聊4', ['给个红包1', '给个红包2']),
+        ]
+
+        conts.open_group_chat_list()
+        group_list = GroupListPage()
+        for group_name, members in required_group_chats:
+            group_list.wait_for_page_load()
+            group_list.create_group_chats_if_not_exits(group_name, members)
+        group_list.click_back()
+        conts.open_message_page()
+
     @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0001(self):
         """消息-消息列表界面搜索框显示"""
@@ -277,7 +319,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         if search_page.mobile.is_keyboard_shown():
             search_page.hide_keyboard()
-        search_key = '陈'
+        search_key = '茻'
         search_page.input_search_keyword(search_key)
         search_page.hide_keyboard_if_display()
         # 联系人数量
@@ -300,9 +342,9 @@ class MessageSearchTest(TestCase):
                     chat_count += 1
                 else:
                     pass
-        self.assertGreater(contact_count, 0, '匹配到有关“{}”的联系人信息'.format(search_key))
-        self.assertEqual(chat_count, 0, '聊天记录不为空')
-        self.assertEqual(group_chat_count, 0, '群聊记录群聊记录不为空')
+        self.assertGreater(contact_count, 0, '检查点：搜索匹配到的全部有关“{}”的联系'.format(search_key))
+        self.assertEqual(chat_count, 0, '检查点：聊天记录为空')
+        self.assertEqual(group_chat_count, 0, '检查点：群聊为空')
 
     @staticmethod
     def setUp_test_msg_search_0003():
@@ -369,9 +411,9 @@ class MessageSearchTest(TestCase):
                     chat_count += 1
                 else:
                     pass
-        self.assertLessEqual(contact_count, 3, '匹配到有关“{}”的联系人信息'.format(search_key))
-        self.assertLessEqual(chat_count, 3, '聊天记录不为空')
-        self.assertLessEqual(group_chat_count, 3, '群聊记录群聊记录不为空')
+        self.assertLessEqual(contact_count, 3, '检查点：联系人版块各显示不超过三条')
+        self.assertLessEqual(chat_count, 3, '检查点：聊天记录版块各显示不超过三条')
+        self.assertLessEqual(group_chat_count, 3, '检查点：群聊版块各显示不超过三条')
 
         sorted_order = list_order.copy()
         sorted_order.sort()
@@ -442,9 +484,8 @@ class MessageSearchTest(TestCase):
         detail_page = ContactDetailsPage()
         chat = ChatWindowPage()
 
-        # 创建联系人
+        # 发送消息
         self.contact_name = '给个红包1'
-        self.number = '17611681917'
         self.message_content = uuid.uuid4().__str__()
         contacts_page.open_contacts_page()
         names = [self.contact_name]
@@ -464,19 +505,7 @@ class MessageSearchTest(TestCase):
                 detail_page.click_back_icon()
                 contact_search.click_back()
             else:
-                contact_search.click_back()
-                contacts_page.click_add()
-                create_page = CreateContactPage()
-                number = self.number
-                create_page.hide_keyboard_if_display()
-                create_page.create_contact(uid, number)
-                detail_page.click_message_icon()
-                if chat.is_tips_display():
-                    chat.directly_close_tips_alert()
-                chat.send_message(self.message_content)
-                chat.click_back()
-                detail_page.wait_for_page_load()
-                detail_page.click_back_icon()
+                raise AssertionError('缺少预置测试数据：没找到联系人"{}"'.format(self.contact_name))
 
     @staticmethod
     def tearDown_test_msg_search_0005():
@@ -525,7 +554,6 @@ class MessageSearchTest(TestCase):
 
         # 创建联系人
         self.contact_name = '给个红包1'
-        self.number = '17611681917'
         self.message_content = '吃饭啊'
         contacts_page.open_contacts_page()
         names = [self.contact_name]
@@ -545,19 +573,7 @@ class MessageSearchTest(TestCase):
                 detail_page.click_back_icon()
                 contact_search.click_back()
             else:
-                contact_search.click_back()
-                contacts_page.click_add()
-                create_page = CreateContactPage()
-                number = self.number
-                create_page.hide_keyboard_if_display()
-                create_page.create_contact(uid, number)
-                detail_page.click_message_icon()
-                if chat.is_tips_display():
-                    chat.directly_close_tips_alert()
-                chat.send_message(self.message_content)
-                chat.click_back()
-                detail_page.wait_for_page_load()
-                detail_page.click_back_icon()
+                raise AssertionError('缺少预置测试数据：没找到联系人"{}"'.format(self.contact_name))
 
     @staticmethod
     def tearDown_test_msg_search_0006():
@@ -607,7 +623,6 @@ class MessageSearchTest(TestCase):
 
         # 创建联系人
         self.contact_name = '给个红包1'
-        self.number = '17611681917'
         self.message_content = '巴适得板'
         contacts_page.open_contacts_page()
         names = [self.contact_name]
@@ -627,19 +642,7 @@ class MessageSearchTest(TestCase):
                 detail_page.click_back_icon()
                 contact_search.click_back()
             else:
-                contact_search.click_back()
-                contacts_page.click_add()
-                create_page = CreateContactPage()
-                number = self.number
-                create_page.hide_keyboard_if_display()
-                create_page.create_contact(uid, number)
-                detail_page.click_message_icon()
-                if chat.is_tips_display():
-                    chat.directly_close_tips_alert()
-                chat.send_message(self.message_content)
-                chat.click_back()
-                detail_page.wait_for_page_load()
-                detail_page.click_back_icon()
+                raise AssertionError('缺少预置测试数据：没找到联系人"{}"'.format(self.contact_name))
 
     @staticmethod
     def tearDown_test_msg_search_0007():
@@ -689,7 +692,6 @@ class MessageSearchTest(TestCase):
 
         # 创建联系人
         self.contact_name = '给个红包1'
-        self.number = '17611681917'
         self.search_keyword = 'abcDEFghijklmnopqrstuvwxyz'
         self.message_content = '其他字符' + self.search_keyword + '其他字符'
         contacts_page.open_contacts_page()
@@ -710,19 +712,7 @@ class MessageSearchTest(TestCase):
                 detail_page.click_back_icon()
                 contact_search.click_back()
             else:
-                contact_search.click_back()
-                contacts_page.click_add()
-                create_page = CreateContactPage()
-                number = self.number
-                create_page.hide_keyboard_if_display()
-                create_page.create_contact(uid, number)
-                detail_page.click_message_icon()
-                if chat.is_tips_display():
-                    chat.directly_close_tips_alert()
-                chat.send_message(self.message_content)
-                chat.click_back()
-                detail_page.wait_for_page_load()
-                detail_page.click_back_icon()
+                raise AssertionError('缺少预置测试数据：没找到联系人"{}"'.format(self.contact_name))
 
     @staticmethod
     def tearDown_test_msg_search_0008():
@@ -772,7 +762,6 @@ class MessageSearchTest(TestCase):
 
         # 创建联系人
         self.contact_name = '给个红包1'
-        self.number = '17611681917'
         self.search_keyword = '1234567890'
         self.message_content = '其他字符' + self.search_keyword + '其他字符'
         contacts_page.open_contacts_page()
@@ -793,19 +782,7 @@ class MessageSearchTest(TestCase):
                 detail_page.click_back_icon()
                 contact_search.click_back()
             else:
-                contact_search.click_back()
-                contacts_page.click_add()
-                create_page = CreateContactPage()
-                number = self.number
-                create_page.hide_keyboard_if_display()
-                create_page.create_contact(uid, number)
-                detail_page.click_message_icon()
-                if chat.is_tips_display():
-                    chat.directly_close_tips_alert()
-                chat.send_message(self.message_content)
-                chat.click_back()
-                detail_page.wait_for_page_load()
-                detail_page.click_back_icon()
+                raise AssertionError('缺少预置测试数据：没找到联系人"{}"'.format(self.contact_name))
 
     @staticmethod
     def tearDown_test_msg_search_0009():
@@ -855,7 +832,6 @@ class MessageSearchTest(TestCase):
 
         # 创建联系人
         self.contact_name = '给个红包1'
-        self.number = '17611681917'
         self.search_keyword = '#@￥%'
         self.message_content = '其他字符' + self.search_keyword + '其他字符'
         contacts_page.open_contacts_page()
@@ -876,19 +852,7 @@ class MessageSearchTest(TestCase):
                 detail_page.click_back_icon()
                 contact_search.click_back()
             else:
-                contact_search.click_back()
-                contacts_page.click_add()
-                create_page = CreateContactPage()
-                number = self.number
-                create_page.hide_keyboard_if_display()
-                create_page.create_contact(uid, number)
-                detail_page.click_message_icon()
-                if chat.is_tips_display():
-                    chat.directly_close_tips_alert()
-                chat.send_message(self.message_content)
-                chat.click_back()
-                detail_page.wait_for_page_load()
-                detail_page.click_back_icon()
+                raise AssertionError('缺少预置测试数据：没找到联系人"{}"'.format(self.contact_name))
 
     @staticmethod
     def tearDown_test_msg_search_0010():
@@ -989,7 +953,8 @@ class MessageSearchTest(TestCase):
         contacts_page = ContactsPage()
         contacts_page.open_group_chat_list()
         group_list = GroupListPage()
-        for group_name in [key_message + '1', key_message + '2', key_message + '3', key_message + '4']:
+        groups = [key_message + '1', key_message + '2', key_message + '3', key_message + '4']
+        for group_name in groups:
             group_list.wait_for_page_load()
             group_list.click_search_input()
             group_search = GroupListSearchPage()
@@ -997,17 +962,7 @@ class MessageSearchTest(TestCase):
             if group_search.is_group_in_list(group_name):
                 group_search.click_back()
             else:
-                group_search.click_back()
-                group_list.click_create_group()
-                select_page = SelectContactPage()
-                select_page.search_and_select_contact('13922996261', '13922996262')
-                build_page = BuildGroupChatPage()
-                build_page.create_group_chat(group_name)
-                chat = ChatWindowPage()
-                if chat.is_tips_display():
-                    chat.directly_close_tips_alert()
-                chat.wait_for_page_load()
-                chat.click_back()
+                raise AssertionError('缺少预置测试数据：没找到群聊"{}"'.format(groups))
 
         group_list.click_back()
 
@@ -1021,14 +976,7 @@ class MessageSearchTest(TestCase):
             if contact_search.is_contact_in_list(uid):
                 contact_search.click_back()
             else:
-                contact_search.click_back()
-                contacts_page.click_add()
-                create_page = CreateContactPage()
-                number = '1380013800{}'.format(names.index(uid))
-                create_page.hide_keyboard_if_display()
-                create_page.create_contact(uid, number)
-                detail_page = ContactDetailsPage()
-                detail_page.click_back_icon()
+                raise AssertionError('缺少预置测试数据：没找到联系人"{}"'.format(names))
 
     @staticmethod
     def tearDown_test_msg_search_0012():
@@ -1089,7 +1037,8 @@ class MessageSearchTest(TestCase):
         contacts_page = ContactsPage()
         contacts_page.open_group_chat_list()
         group_list = GroupListPage()
-        for group_name in ['群聊1', '群聊2', '群聊3', '群聊4']:
+        groups = ['群聊1', '群聊2', '群聊3', '群聊4']
+        for group_name in groups:
             group_list.wait_for_page_load()
             group_list.click_search_input()
             group_search = GroupListSearchPage()
@@ -1104,17 +1053,7 @@ class MessageSearchTest(TestCase):
                 group_search.wait_for_page_load()
                 group_search.click_back()
             else:
-                group_search.click_back()
-                group_list.click_create_group()
-                select_page = SelectContactPage()
-                select_page.search_and_select_contact('13922996261', '13922996262')
-                build_page = BuildGroupChatPage()
-                build_page.create_group_chat(group_name)
-                chat = ChatWindowPage()
-                if chat.is_tips_display():
-                    chat.directly_close_tips_alert()
-                chat.send_message(key_message)
-                chat.click_back()
+                raise AssertionError('缺少预置测试数据：没找到群聊"{}"'.format(groups))
 
         group_list.click_back()
 
@@ -1128,14 +1067,7 @@ class MessageSearchTest(TestCase):
             if contact_search.is_contact_in_list(uid):
                 contact_search.click_back()
             else:
-                contact_search.click_back()
-                contacts_page.click_add()
-                create_page = CreateContactPage()
-                number = '1380013800{}'.format(names.index(uid))
-                create_page.hide_keyboard_if_display()
-                create_page.create_contact(uid, number)
-                detail_page = ContactDetailsPage()
-                detail_page.click_back_icon()
+                raise AssertionError('缺少预置测试数据：没找到联系人"{}"'.format(names))
 
     @staticmethod
     def tearDown_test_msg_search_0013():
@@ -1211,19 +1143,7 @@ class MessageSearchTest(TestCase):
                 detail_page.click_back_icon()
                 contact_search.click_back()
             else:
-                contact_search.click_back()
-                contacts_page.click_add()
-                create_page = CreateContactPage()
-                number = '1380013800{}'.format(names.index(uid))
-                create_page.hide_keyboard_if_display()
-                create_page.create_contact(uid, number)
-                detail_page.click_message_icon()
-                if chat.is_tips_display():
-                    chat.directly_close_tips_alert()
-                chat.send_message('新消息')
-                chat.click_back()
-                detail_page.wait_for_page_load()
-                detail_page.click_back_icon()
+                raise AssertionError('缺少预置测试数据：没找到联系人"{}"'.format(names))
 
     @staticmethod
     def tearDown_test_msg_search_0014():
@@ -1233,42 +1153,7 @@ class MessageSearchTest(TestCase):
     @tags('ALL', 'SMOKE', "CMCC")
     def test_msg_search_0015(self):
         """搜索群聊排序"""
-        key_message = '大佬'
-        # 消息页
-        message_page = MessagePage()
 
-        # 创建群
-        message_page.open_contacts_page()
-        contacts_page = ContactsPage()
-        contacts_page.open_group_chat_list()
-        group_list = GroupListPage()
-        for group_name in ['群聊1', '群聊2']:
-            group_list.wait_for_page_load()
-            group_list.click_search_input()
-            group_search = GroupListSearchPage()
-            group_search.input_search_keyword(group_name)
-            if group_search.is_group_in_list(group_name):
-                group_search.click_group(group_name)
-                chat = ChatWindowPage()
-                if chat.is_tips_display():
-                    chat.directly_close_tips_alert()
-                chat.send_message(key_message)
-                chat.click_back()
-                group_search.wait_for_page_load()
-                group_search.click_back()
-            else:
-                group_search.click_back()
-                group_list.click_create_group()
-                select_page = SelectContactPage()
-                select_page.search_and_select_contact('13922996261', '13922996262')
-                build_page = BuildGroupChatPage()
-                build_page.create_group_chat(group_name)
-                chat = ChatWindowPage()
-                if chat.is_tips_display():
-                    chat.directly_close_tips_alert()
-                chat.send_message(key_message)
-                chat.click_back()
-        group_list.click_back()
         # 消息页
         message_page = MessagePage()
         message_page.open_message_page()
@@ -1308,15 +1193,7 @@ class MessageSearchTest(TestCase):
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page(reset_required=False)
 
-    @staticmethod
-    def tearDown_test_msg_search_0015():
-        search_page = SearchPage()
-        search_page.click_back_button()
-
-    @tags('ALL', 'SMOKE', "CMCC")
-    def test_msg_search_0016(self):
-        """搜索聊天记录排序"""
-        key_message = '新消息'
+        key_message = '大佬'
         # 消息页
         message_page = MessagePage()
 
@@ -1325,7 +1202,8 @@ class MessageSearchTest(TestCase):
         contacts_page = ContactsPage()
         contacts_page.open_group_chat_list()
         group_list = GroupListPage()
-        for group_name in ['群聊1', '群聊2']:
+        groups = ['群聊1', '群聊2']
+        for group_name in groups:
             group_list.wait_for_page_load()
             group_list.click_search_input()
             group_search = GroupListSearchPage()
@@ -1340,18 +1218,18 @@ class MessageSearchTest(TestCase):
                 group_search.wait_for_page_load()
                 group_search.click_back()
             else:
-                group_search.click_back()
-                group_list.click_create_group()
-                select_page = SelectContactPage()
-                select_page.search_and_select_contact('13922996261', '13922996262')
-                build_page = BuildGroupChatPage()
-                build_page.create_group_chat(group_name)
-                chat = ChatWindowPage()
-                if chat.is_tips_display():
-                    chat.directly_close_tips_alert()
-                chat.send_message(key_message)
-                chat.click_back()
+                raise AssertionError('缺少预置测试数据：没找到群聊"{}"'.format(groups))
         group_list.click_back()
+
+    @staticmethod
+    def tearDown_test_msg_search_0015():
+        search_page = SearchPage()
+        search_page.click_back_button()
+
+    @tags('ALL', 'SMOKE', "CMCC")
+    def test_msg_search_0016(self):
+        """搜索聊天记录排序"""
+        key_message = '新消息'
         # 消息页
         message_page = MessagePage()
         message_page.open_message_page()
@@ -1390,6 +1268,34 @@ class MessageSearchTest(TestCase):
         """
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page(reset_required=False)
+
+        key_message = '新消息'
+        # 消息页
+        message_page = MessagePage()
+
+        # 创建群
+        message_page.open_contacts_page()
+        contacts_page = ContactsPage()
+        contacts_page.open_group_chat_list()
+        group_list = GroupListPage()
+        groups = ['群聊1', '群聊2']
+        for group_name in groups:
+            group_list.wait_for_page_load()
+            group_list.click_search_input()
+            group_search = GroupListSearchPage()
+            group_search.input_search_keyword(group_name)
+            if group_search.is_group_in_list(group_name):
+                group_search.click_group(group_name)
+                chat = ChatWindowPage()
+                if chat.is_tips_display():
+                    chat.directly_close_tips_alert()
+                chat.send_message(key_message)
+                chat.click_back()
+                group_search.wait_for_page_load()
+                group_search.click_back()
+            else:
+                raise AssertionError('缺少预置测试数据：没找到群聊"{}"'.format(groups))
+        group_list.click_back()
 
     @staticmethod
     def tearDown_test_msg_search_0016():
@@ -1768,18 +1674,7 @@ class MessageSearchTest(TestCase):
                 group_search.wait_for_page_load()
                 group_search.click_back()
             else:
-                group_search.click_back()
-                group_list.click_create_group()
-                select_page = SelectContactPage()
-                select_page.search_and_select_contact('13922996261', '13922996262')
-                build_page = BuildGroupChatPage()
-                build_page.create_group_chat(group_name)
-                chat = ChatWindowPage()
-                if chat.is_tips_display():
-                    chat.directly_close_tips_alert()
-                chat.send_message(chat_message)
-                chat.click_back()
-
+                raise AssertionError('缺少预置测试数据：没找到群聊"{}"'.format(group_names))
         group_list.click_back()
 
     @staticmethod
@@ -1880,17 +1775,7 @@ class MessageSearchTest(TestCase):
                 group_search.wait_for_page_load()
                 group_search.click_back()
             else:
-                group_search.click_back()
-                group_list.click_create_group()
-                select_page = SelectContactPage()
-                select_page.search_and_select_contact('13922996261', '13922996262')
-                build_page = BuildGroupChatPage()
-                build_page.create_group_chat(group_name)
-                chat = ChatWindowPage()
-                if chat.is_tips_display():
-                    chat.directly_close_tips_alert()
-                chat.send_message(chat_message)
-                chat.click_back()
+                raise AssertionError('缺少预置测试数据：没找到群聊"{}"'.format(group_names))
 
         group_list.click_back()
 
@@ -1971,20 +1856,7 @@ class MessageSearchTest(TestCase):
                 group_search.wait_for_page_load()
                 group_search.click_back()
             else:
-                group_search.click_back()
-                group_list.click_create_group()
-                select_page = SelectContactPage()
-                select_page.search_and_select_contact('13922996261', '13922996262')
-                build_page = BuildGroupChatPage()
-                build_page.create_group_chat(group_name)
-                chat = ChatWindowPage()
-                if chat.is_tips_display():
-                    chat.directly_close_tips_alert()
-                # 发第一次
-                chat.send_message(chat_message)
-                # 发第二次
-                chat.send_message(chat_message)
-                chat.click_back()
+                raise AssertionError('缺少预置测试数据：没找到群聊"{}"'.format(group_names))
 
         group_list.click_back()
 
@@ -2065,20 +1937,7 @@ class MessageSearchTest(TestCase):
                 group_search.wait_for_page_load()
                 group_search.click_back()
             else:
-                group_search.click_back()
-                group_list.click_create_group()
-                select_page = SelectContactPage()
-                select_page.search_and_select_contact('13922996261', '13922996262')
-                build_page = BuildGroupChatPage()
-                build_page.create_group_chat(group_name)
-                chat = ChatWindowPage()
-                if chat.is_tips_display():
-                    chat.directly_close_tips_alert()
-                # 发第一次
-                chat.send_message(chat_message)
-                # 发第二次
-                chat.send_message(chat_message)
-                chat.click_back()
+                raise AssertionError('缺少预置测试数据：没找到群聊"{}"'.format(group_names))
 
         group_list.click_back()
 
@@ -2227,7 +2086,8 @@ class MessageSearchTest(TestCase):
         contacts_page.open_group_chat_list()
         group_list = GroupListPage()
         # 群聊名测试数据使用“群聊1”
-        for group_name in ['群聊' + key_message]:
+        group_names = ['群聊' + key_message]
+        for group_name in group_names:
             group_list.wait_for_page_load()
             group_list.click_search_input()
             group_search = GroupListSearchPage()
@@ -2243,18 +2103,7 @@ class MessageSearchTest(TestCase):
                 group_search.wait_for_page_load()
                 group_search.click_back()
             else:
-                group_search.click_back()
-                group_list.click_create_group()
-                select_page = SelectContactPage()
-                select_page.search_and_select_contact('13922996261', '13922996262')
-                build_page = BuildGroupChatPage()
-                build_page.create_group_chat(group_name)
-                chat = ChatWindowPage()
-                if chat.is_tips_display():
-                    chat.directly_close_tips_alert()
-                # 制造包含关键字的聊天记录
-                chat.send_message(key_message)
-                chat.click_back()
+                raise AssertionError('缺少预置测试数据：没找到群聊"{}"'.format(group_names))
 
         group_list.click_back()
 

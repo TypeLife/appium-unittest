@@ -1140,6 +1140,19 @@ Value (Alias)      | Data | Wifi | Airplane Mode
         else:
             raise NotImplementedError('该API不支持android/ios以外的系统')
 
+    @TestLogger.log('获取app版本号')
+    def get_app_version_info(self, package=None):
+        if self.is_android():
+            if not package:
+                package = self._desired_caps['appPackage']
+            result = self.execute_shell_command('pm', 'dump', package, '|', 'grep', '"versionName"')
+            name, value = result.strip().split('=')
+            del name
+            return value
+        else:
+            # TODO IOS平台待实现
+            raise NotImplementedError('该接口目前只支持Android')
+
     def __str__(self):
         device_info = {
             "name": self.alis,

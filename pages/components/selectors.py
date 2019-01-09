@@ -1,4 +1,8 @@
+import hashlib
+
+from appium.webdriver import WebElement
 from appium.webdriver.common.mobileby import MobileBy
+from selenium.common.exceptions import NoSuchElementException
 
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
@@ -79,3 +83,123 @@ class ContactsSelector(BasePage):
     @TestLogger.log('检查点：右边显示字母导航')
     def assert_contacts_selector_page_contains_alphabet_nav(self):
         self.mobile.assert_screen_should_contain_element(self.__locators['字母导航栏'])
+
+
+class PictureSelector(BasePage):
+    """
+    照片：
+        标签分组-添加联系人
+    """
+    ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.GalleryActivity'
+
+    __locators = {
+        'Title': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/drop_down_image"]'),
+        '下拉菜单箭头': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/drop_down_image"]'),
+        '下拉菜单选项': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/albumTitle"]'),
+
+        '列表': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/recyclerView_gallery"]'),
+
+        '列表项': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/recyclerView_gallery"]/*['
+                                '@resource-id="com.chinasofti.rcs:id/rl_img"]'),
+        '选择': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iv_select"]'),
+        '缩略图': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iv_gallery"]'),
+        '视频图标': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/imageview_video_start"]'),
+        '视频时长': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_video_time"]'),
+
+        '预览': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_preview"]'),
+        '原图': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/cb_original_photo"]'),
+        '发送': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/button_send"]'),
+    }
+
+    @TestLogger.log('切换到指定文件夹')
+    def switch_to_given_folder(self, path):
+        import re
+        if not self.get_elements(self.__locators['下拉菜单选项']):
+            self.click_element(self.__locators['下拉菜单箭头'])
+        menus = self.get_elements(self.__locators['下拉菜单选项'])
+        for menu in menus:
+            menu_text = menu.text
+            assert re.match(r'.+\(\d+\)', menu_text), r'Assert menu text match Regex:."+\(\d+\)"'
+            display_name, total = re.findall(r'(.+)\((\d+)\)', menu_text)[0]
+            if len(display_name) > 3:
+                result = re.findall(r'(.+)([.]{3})$', display_name)
+                if result:
+                    if path.find(result[0][0]) == 0:
+                        menu.click()
+                        return result[0][0], int(total)
+                else:
+                    if path.find(display_name) == 0:
+                        menu.click()
+                        return display_name, int(total)
+            else:
+                if display_name == path:
+                    menu.click()
+                    return path, int(total)
+        raise NoSuchElementException('下拉菜单没有找到名称为"{}"的目录'.format(path))
+
+    @TestLogger.log('选择指定序号的图片（视频）')
+    def select_items_by_given_orders(self, *orders):
+        orders = sorted(list(set(orders)))
+        offset = 1
+        for i in self.mobile.list_iterator(self.__locators['列表'], self.__locators['列表项']):
+            if offset in orders:
+                if not self.is_list_item_selected(i):
+                    el = i.find_element(*self.__locators['选择'])
+                    el.click()
+                orders.remove(offset)
+            offset += 1
+            if not orders:
+                break
+
+    @TestLogger.log('选择指定序号的图片（视频）')
+    def unselect_items_by_given_orders(self, *orders):
+        orders = sorted(list(set(orders)))
+        offset = 1
+        for i in self.mobile.list_iterator(self.__locators['列表'], self.__locators['列表项']):
+            if offset in orders:
+                if self.is_list_item_selected(i):
+                    el = i.find_element(*self.__locators['选择'])
+                    el.click()
+                orders.remove(offset)
+            offset += 1
+            if not orders:
+                break
+
+    @TestLogger.log('获取列表数据的类型')
+    def get_list_item_type(self, item):
+        if isinstance(item, (list, tuple)):
+            item = self.get_element(item)
+        elif isinstance(item, WebElement):
+            pass
+        else:
+            raise ValueError('参数类型错误')
+        if item.find_elements(*self.__locators['视频图标']):
+            object_type = 'video'
+        else:
+            object_type = 'image'
+        return object_type
+
+    @TestLogger.log('获取列表项已选状态')
+    def is_list_item_selected(self, item):
+        status = {
+            # 所有列表下的图片
+            'e2054f7bf69e6d8402c6725b4708c046': True,  # 已选
+            '013b4c090138d3d1df62202bb010963c': False,  # 未选
+            # 视频
+            '5db9c7b6acd0ea2ec99a4b7193470b08': True,  # 已选
+            'f7d6355453e4076dbd27233ec9723bcb': False,  # 未选
+            # 图片
+            '74ea5f74b77f1a9f596c97e9c22311b7': True,  # 已选
+            '737ad0000ab5794972fd0cbcf17fdc71': False,  # 未选
+        }
+        if isinstance(item, (list, tuple)):
+            item = self.get_element(item)
+        elif isinstance(item, WebElement):
+            pass
+        else:
+            raise ValueError('参数类型错误')
+        selector = item.find_element(*self.__locators['选择'])
+        img_md5 = hashlib.md5(selector.screenshot_as_base64.encode()).hexdigest()
+        print(img_md5)
+        state = status[img_md5]
+        return state

@@ -2,9 +2,10 @@ from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
+from pages.components.keyboard import Keyboard
 
 
-class SelectContactPage(BasePage):
+class SelectContactPage(Keyboard, BasePage):
     """发起群聊-选择联系人"""
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.ContactsSelectActivity'
 
@@ -29,8 +30,8 @@ class SelectContactPage(BasePage):
         '底线': (MobileBy.ID, 'com.chinasofti.rcs:id/view_Line'),
 
         # 搜索结果
-        '搜索结果列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_search_list'),
-        '列表项根节点': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_search_list"]/*'),
+        '搜索结果列表': (MobileBy.XPATH, '//android.support.v7.widget.RecyclerView'),
+        '列表项根节点': (MobileBy.XPATH, '//android.support.v7.widget.RecyclerView/*'),
         '搜索和通讯录联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint'),
 
     }
@@ -59,5 +60,6 @@ class SelectContactPage(BasePage):
     def search_and_select_contact(self, *contacts):
         for contact in contacts:
             self.input_search_key(contact)
+            self.hide_keyboard_if_display()
             self.select_the_first_result()
         self.click_ok()

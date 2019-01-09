@@ -35,11 +35,11 @@ class ChatWindowPage(ChatNoticeDialog, BasePage):
         'com.chinasofti.rcs:id/ll_text_input': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_text_input'),
         'com.chinasofti.rcs:id/layout_for_message': (MobileBy.ID, 'com.chinasofti.rcs:id/layout_for_message'),
         'com.chinasofti.rcs:id/ll_rich_panel': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_rich_panel'),
-        'com.chinasofti.rcs:id/ib_pic': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic'),
-        'com.chinasofti.rcs:id/ib_take_photo': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_take_photo'),
-        'com.chinasofti.rcs:id/ib_profile': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
-        'com.chinasofti.rcs:id/ib_gif': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_gif'),
-        'com.chinasofti.rcs:id/ib_more': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
+        '照片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic'),
+        '拍照': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_take_photo'),
+        '名片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
+        'GIF': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_gif'),
+        '更多': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
         'com.chinasofti.rcs:id/input_divider_inside': (MobileBy.ID, 'com.chinasofti.rcs:id/input_divider_inside'),
         'com.chinasofti.rcs:id/input_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/input_layout'),
         'com.chinasofti.rcs:id/fl_edit_panel': (MobileBy.ID, 'com.chinasofti.rcs:id/fl_edit_panel'),
@@ -71,6 +71,11 @@ class ChatWindowPage(ChatNoticeDialog, BasePage):
     def send_message(self, content):
         self.input_message_text(content)
         self.click_send_button()
+
+    @TestLogger.log('发送图片')
+    def send_img_msgs(self, location, index=0):
+        self.click_element(self.__locators['照片'])
+
 
     @TestLogger.log('检查是否收到期望的消息内容')
     def assert_message_content_display(self, content, max_wait_time=5):

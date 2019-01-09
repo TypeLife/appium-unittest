@@ -364,7 +364,7 @@ class BasePage(object):
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
         """默认使用activity作为判断页面是否加载的条件，继承类应该重写该方法"""
         self.wait_until(
-            lambda d: self.driver.current_activity == self.__class__.ACTIVITY,
+            lambda d: self.driver.current_activity == self.ACTIVITY,
             timeout,
             auto_accept_alerts
         )

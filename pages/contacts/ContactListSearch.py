@@ -1,3 +1,5 @@
+import time
+
 from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
@@ -40,6 +42,7 @@ class ContactListSearchPage(BasePage):
 
     @TestLogger.log('查看是否显示XX联系人')
     def is_contact_in_list(self, name):
+        time.sleep(1)
         groups = self.mobile.list_iterator(self.__locators['搜索结果列表'], self.__locators['列表项'])
         for group in groups:
             if group.find_elements(MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and ' +

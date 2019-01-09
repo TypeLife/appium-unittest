@@ -36,7 +36,8 @@ class LableGroupDetailPage(LabelSettingMenu, BasePage):
         'com.chinasofti.rcs:id/layout_fourth_item': (MobileBy.ID, 'com.chinasofti.rcs:id/layout_fourth_item'),
         'com.chinasofti.rcs:id/image_fourth_colum': (MobileBy.ID, 'com.chinasofti.rcs:id/image_fourth_colum'),
         '多方视频': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_fourth_colum'),
-        'com.chinasofti.rcs:id/rl_group_list_item': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_group_list_item'),
+
+        '成员根节点': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_group_list_item'),
         'A': (MobileBy.ID, ''),
         'com.chinasofti.rcs:id/name_head_rl': (MobileBy.ID, 'com.chinasofti.rcs:id/name_head_rl'),
         'com.chinasofti.rcs:id/content_ll': (MobileBy.ID, 'com.chinasofti.rcs:id/content_ll'),
