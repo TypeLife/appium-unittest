@@ -2,6 +2,7 @@ from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
+import time
 
 REQUIRED_MOBILES = {
     # 'Android-移动': 'single_mobile',
@@ -75,6 +76,7 @@ class Preconditions(object):
     def make_already_in_message_page(reset=False):
         """确保应用在消息页面"""
         Preconditions.select_mobile('Android-移动', reset)
+        time.sleep(1)
         # 如果在消息页，不做任何操作
         mess = MessagePage()
         if mess.is_on_this_page():
