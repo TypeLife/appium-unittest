@@ -17,7 +17,7 @@ class SingleChatPage(BaseChatPage):
                   '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
                   'axzq': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
                   '打电话图标': (MobileBy.ID, 'com.chinasofti.rcs:id/action_call'),
-                  'com.chinasofti.rcs:id/action_setting': (MobileBy.ID, 'com.chinasofti.rcs:id/action_setting'),
+                  '设置': (MobileBy.ID, 'com.chinasofti.rcs:id/action_setting'),
                   'com.chinasofti.rcs:id/view_line': (MobileBy.ID, 'com.chinasofti.rcs:id/view_line'),
                   'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
                   'com.chinasofti.rcs:id/message_editor_layout': (
@@ -73,3 +73,8 @@ class SingleChatPage(BaseChatPage):
         if len(el) > 0:
             return True
         return False
+
+    @TestLogger.log()
+    def click_setting(self):
+        """点击 设置"""
+        self.click_element(self.__class__.__locators['设置'])
