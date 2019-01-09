@@ -42,7 +42,35 @@ class BaseChatPage(BasePage):
                   # 在聊天会话页面点击不可阅读文件时的弹窗
                   '打开方式': (MobileBy.XPATH, "//*[contains(@text, '打开方式')]"),
                   '取消': (MobileBy.ID, 'android:id/button2'),
+                  # 位置信息
+                  '深圳市龙岗区交叉口': (MobileBy.ID, 'com.chinasofti.rcs:id/lloc_famous_address_text'),
+                  # 打开位置页面元素
+                  "导航按钮": (MobileBy.ID, 'com.chinasofti.rcs:id/location_nativ_btn'),
                   }
+
+    @TestLogger.log()
+    def click_addr_info(self):
+        """点击位置信息"""
+        self.click_element(self.__class__.__locators["深圳市龙岗区交叉口"])
+
+    @TestLogger.log()
+    def wait_for_location_page_load(self, timeout=8, auto_accept_alerts=True):
+        """点击位置信息后，等待位置页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present((MobileBy.ID, 'com.chinasofti.rcs:id/location_title'))
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(message)
+        return self
+
+    @TestLogger.log()
+    def click_nav_btn(self):
+        """点击位置页面右下角导航按钮"""
+        self.click_element(self.__class__.__locators['导航按钮'])
 
     @TestLogger.log()
     def click_i_have_read(self):

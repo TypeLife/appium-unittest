@@ -339,7 +339,7 @@ tr.errorClass > td  { background-color: #ea7e7b; }
     REPORT_TMPL = """
 <p id='show_detail_line'>
 <a class="btn btn-primary" href='javascript:showCase(0)'>概要{ %(passrate)s }</a>
-<a class="btn btn-danger" href='javascript:showCase(1)'>失败{ %(fail)s }</a>
+<a class="btn btn-danger" href='javascript:showCase(1)'>失败{ %(total_fail)s }</a>
 <a class="btn btn-success" href='javascript:showCase(2)'>通过{ %(Pass)s }</a>
 <a class="btn btn-info" href='javascript:showCase(3)'>所有{ %(count)s }</a>
 </p>
@@ -693,6 +693,7 @@ class HTMLTestRunner(Template_mixin):
             count=str(result.success_count + result.failure_count + result.error_count),
             Pass=str(result.success_count),
             fail=str(result.failure_count),
+            total_fail=str(result.failure_count + result.error_count),
             error=str(result.error_count),
             passrate=self.passrate,
             HeaderStyle='AllPass' if not (result.error_count or result.failure_count) else 'NotAllPass'

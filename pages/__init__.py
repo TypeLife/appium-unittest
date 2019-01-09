@@ -69,8 +69,14 @@ __all__ = [
     'LabelGroupingChatPage',
     'SelectHeContactsPage',
     'SelectHeContactsDetailPage',
+    'ChatFilePage',
+    'FindChatRecordPage',
+    'SingleChatSetPage',
 ]
 
+from .ChatFile import ChatFilePage
+from .SingleChatSet import SingleChatSetPage
+from .FindChatRecord import FindChatRecordPage
 from .CreateGroupName import CreateGroupNamePage
 from .GroupChat import GroupChatPage
 from .LabelGrouping import LabelGroupingPage
