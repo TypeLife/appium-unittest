@@ -135,6 +135,36 @@ class MsgPrivateChatFileLocationTest(TestCase):
             current_mobile().disconnect_mobile()
             Preconditions.enter_private_chat_page()
 
+    @staticmethod
+    def public_send_file(file_type):
+        # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
+        chat = SingleChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        # 2、点击本地文件
+        more_page = ChatMorePage()
+        more_page.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        # 3、选择任意文件，点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        flag = local_file.push_preset_file()
+        if flag:
+            local_file.click_back()
+            csf.click_local_file()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(file_type)
+        if file:
+            local_file.click_send()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+        chat.wait_for_page_load()
+
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_private_chat_file_location_0001(self):
         """单聊会话页面，不勾选本地文件内文件点击发送按钮"""
@@ -160,33 +190,7 @@ class MsgPrivateChatFileLocationTest(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_private_chat_file_location_0002(self):
         """ 单聊会话页面，勾选本地文件内任意文件点击发送按钮"""
-        # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
-        chat = SingleChatPage()
-        chat.wait_for_page_load()
-        chat.click_more()
-        # 2、点击本地文件
-        more_page = ChatMorePage()
-        more_page.click_file()
-        csf = ChatSelectFilePage()
-        csf.wait_for_page_load()
-        csf.click_local_file()
-        # 3、选择任意文件，点击发送按钮
-        local_file = ChatSelectLocalFilePage()
-        # 没有预置文件，则上传
-        flag = local_file.push_preset_file()
-        if flag:
-            local_file.click_back()
-            csf.click_local_file()
-        # 进入预置文件目录，选择文件发送
-        local_file.click_preset_file_dir()
-        file = local_file.select_file(".txt")
-        if file:
-            local_file.click_send()
-        else:
-            local_file.click_back()
-            local_file.click_back()
-            csf.click_back()
-        chat.wait_for_page_load()
+        self.public_send_file('.txt')
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_private_chat_file_location_0003(self):
@@ -328,3 +332,139 @@ class MsgPrivateChatFileLocationTest(TestCase):
             csf.click_back()
             chat.wait_for_page_load()
             raise AssertionError("There is no music")
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0019(self):
+        """单聊设置-查找聊天内容-文件页面，长按文件进行删除"""
+        self.public_send_file('.xlsx')
+        chat = SingleChatPage()
+        # 点击设置
+        chat.click_setting()
+        set_page = SingleChatSetPage()
+        # 点击查找聊天内容
+        set_page.search_chat_record()
+        search = FindChatRecordPage()
+        # 点击文件
+        search.click_file()
+        chat_file = ChatFilePage()
+        chat_file.wait_for_page_load()
+        chat_file.delete_file(".xlsx")
+        # 返回聊天会话页面
+        chat_file.click_back()
+        search.click_back()
+        set_page.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0040(self):
+        """单聊天会话页面，长按文件进行删除"""
+        # 预置数据，发送文件
+        self.public_send_file('.xlsx')
+        chat = SingleChatPage()
+        # 长按文件删除
+        chat.delete_mess(".xlsx")
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0041(self):
+        """单聊天会话页面，长按自己发送的文件，十分钟内撤回"""
+        # 预置数据，发送文件
+        self.public_send_file('.xlsx')
+        chat = SingleChatPage()
+        # 长按文件撤回消息
+        chat.recall_mess(".xlsx")
+        if chat.is_text_present("我知道了"):
+            chat.click_i_know()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'SLOW')
+    def test_msg_private_chat_file_location_0042(self):
+        """单聊天会话页面，长按自己发送的文件，超过十分钟撤回"""
+        self.public_send_file('.xlsx')
+        chat = SingleChatPage()
+        # 超过十分钟,长按自己发送的文件撤回，没有撤回菜单按钮
+        for i in range(122):
+            time.sleep(2)
+            text = chat.driver.page_source
+            del text
+            time.sleep(3)
+            tmp = chat.driver.current_activity
+            del tmp
+            print(i)
+        chat.press_mess(".xlsx")
+        flag = chat.is_text_present("撤回")
+        self.assertFalse(flag)
+        # 删除文件，关闭弹框菜单
+        chat.click_delete()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0043(self):
+        """单聊天会话页面，点击位置，再返回到会话页面"""
+        # 1、在当前会话窗口点击位置
+        chat = SingleChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        more_page = ChatMorePage()
+        more_page.click_location()
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        # 2、点击左上角的返回按钮
+        location_page.click_back()
+        chat.click_more()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0044(self):
+        """单聊天会话页面，点击位置，默认当前位置直接发送"""
+        # 1、在当前会话窗口点击位置
+        chat = SingleChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        more_page = ChatMorePage()
+        more_page.click_location()
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        # 2、点击右上角的发送按钮
+        location_page.click_send()
+        chat.wait_for_page_load()
+        chat.click_more()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0045(self):
+        """单聊天会话页面，点击位置，选择500米内的其他位置发送"""
+        # 1、在当前会话窗口点击位置
+        chat = SingleChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        more_page = ChatMorePage()
+        more_page.click_location()
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        # 2、滑动500米内的位置列表，选择其他位置
+        location_page.select_other_item()
+        # 3、点击右上角的发送按钮
+        location_page.click_send()
+        chat.wait_for_page_load()
+        chat.click_more()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0046(self):
+        """单聊天会话页面，点击位置，选择500米内的其他位置后返回到会话窗口"""
+        # 1、在当前会话窗口点击位置
+        chat = SingleChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        more_page = ChatMorePage()
+        more_page.click_location()
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        # 2、滑动500米内的位置列表，选择其他位置
+        location_page.select_other_item()
+        # 3、点击左上角的返回按钮
+        location_page.click_back()
+        chat.wait_for_page_load()
+        chat.click_more()
+        chat.wait_for_page_load()
