@@ -1,5 +1,6 @@
 import os
 import unittest
+import traceback
 
 from library.HTMLTestRunner import HTMLTestRunner
 from library.core.utils import CommandLineTool, ConfigManager, common
@@ -43,5 +44,7 @@ if __name__ == '__main__':
             send_report.get_ui_automation_metric(count, pazz, total_fail, pazz_rate)
             if cli_commands.sendTo:
                 send_report.send_mail(*cli_commands.sendTo)
-        except Exception as error:
+        except:
+            msg = traceback.format_exc()
+            print(msg)
             print("报告Email发送失败")
