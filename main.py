@@ -37,8 +37,11 @@ if __name__ == '__main__':
             count = str(result.success_count + result.failure_count + result.error_count)  # 总计
             pazz = str(result.success_count)  # 成功
             total_fail = str(result.failure_count + result.error_count)  # 失败
-            rate = (result.success_count / (result.success_count + result.failure_count + result.error_count)) * 100
-            pazz_rate = "%.2f%%" % rate
+            if result.success_count + result.failure_count + result.error_count ==0:
+                pazz_rate ='00.00%'
+            else:
+                rate = (result.success_count / (result.success_count + result.failure_count + result.error_count)) * 100
+                pazz_rate = "%.2f%%" % rate
             from library.core.utils import send_report
 
             send_report.get_ui_automation_metric(count, pazz, total_fail, pazz_rate)
