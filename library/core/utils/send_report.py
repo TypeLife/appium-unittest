@@ -108,7 +108,7 @@ def get_current_version():
 
 
 def send_mail(*to):
-    # get_sonar_metric()
+    get_sonar_metric()
     get_current_version()
 
     mail = MIMEMultipart()
@@ -146,7 +146,7 @@ def send_mail(*to):
         try:
             smtp = smtplib.SMTP(host=HOST, port=PORT)
             smtp.login(user=FROM, password=PASSWORD)
-            smtp.sendmail(from_addr=FROM, to_addrs=TO, msg=mail.as_string())
+            smtp.sendmail(from_addr=FROM, to_addrs=to, msg=mail.as_string())
             print(u'发送邮件成功')
             break
         except:
