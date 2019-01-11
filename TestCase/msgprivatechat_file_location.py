@@ -121,10 +121,20 @@ class Preconditions(object):
 class MsgPrivateChatFileLocationTest(TestCase):
     """消息->单聊文件,位置 模块"""
 
-    # @classmethod
-    # def setUpClass(cls):
-    #     # 进入单聊会话页面
-    #     Preconditions.enter_private_chat_page()
+    @classmethod
+    def setUpClass(cls):
+        # 进入单聊会话页面
+        fail_time = 0
+
+        while fail_time < 3:
+            try:
+                Preconditions.enter_private_chat_page()
+                return
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
 
     def default_setUp(self):
         """确保每个用例运行前在单聊会话页面"""
