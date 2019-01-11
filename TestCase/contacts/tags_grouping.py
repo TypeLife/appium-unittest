@@ -174,12 +174,23 @@ class TagsGroupingTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        required_contacts = [
-            ('给个红包1', '17611681917'),
-        ]
-        Preconditions.connect_mobile('Android-移动')
-        for name, number in required_contacts:
-            Preconditions.create_contacts_if_not_exits(name, number)
+        # 创建联系人
+        fail_time = 0
+
+        while fail_time < 3:
+            try:
+                required_contacts = [
+                    ('给个红包1', '13800138000'),
+                ]
+                Preconditions.connect_mobile('Android-移动')
+                for name, number in required_contacts:
+                    Preconditions.create_contacts_if_not_exits(name, number)
+                return
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0001(self):
@@ -234,7 +245,7 @@ class TagsGroupingTest(TestCase):
         Preconditions.connect_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC','DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
     def test_Conts_TagsGrouping_0003(self):
         """新建分组"""
         groups = [

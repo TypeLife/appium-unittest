@@ -228,7 +228,8 @@ AVAILABLE_DEVICES = {
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",
-            "deviceName": "95AQACPMGJP5L",
+            "deviceName": "7dbecd98",
+            "udid": "7dbecd98",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
@@ -237,7 +238,7 @@ AVAILABLE_DEVICES = {
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '14775970982'
+                'CARD_NUMBER': '19802021369'
             },
             None
         ]

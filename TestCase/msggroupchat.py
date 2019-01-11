@@ -179,10 +179,21 @@ class Preconditions(object):
 class MsgGroupChatTest(TestCase):
     """消息->群聊 模块"""
 
-    @classmethod
-    def setUpClass(cls):
-        """进入群聊聊天会话页面"""
-        Preconditions.enter_group_chat_page()
+    # @classmethod
+    # def setUpClass(cls):
+    #     """进入群聊聊天会话页面"""
+    #
+    #     fail_time = 0
+    #
+    #     while fail_time < 3:
+    #         try:
+    #             Preconditions.enter_group_chat_page()
+    #             return
+    #         except:
+    #             fail_time += 1
+    #             import traceback
+    #             msg = traceback.format_exc()
+    #             print(msg)
 
     def default_setUp(self):
         """确保每个用例运行前在群聊聊天会话页面"""
@@ -398,7 +409,7 @@ class MsgGroupChatTest(TestCase):
         cpp.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE','CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0018(self):
         """在群聊聊天会话页面，发送相册内的视频"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标，进入到相册详情展示页面
@@ -802,7 +813,7 @@ class MsgGroupChatTest(TestCase):
         gcp.wait_for_page_load()
         # gcp.wait_until(condition=lambda d: gcp.is_text_present(addr))
 
-    @tags('ALL', 'SMOKE','CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0044(self):
         """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，位置功能图标"""
         # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
@@ -1295,7 +1306,7 @@ class MsgGroupChatTest(TestCase):
         flag = contacts.is_toast_exist("该群已解散")
         self.assertTrue(flag)
 
-    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0069(self):
         """在聊天设置页面，修改群聊名称"""
         # 1.在聊天设置页面，点击群聊名称，是否会跳转到群聊名称修改页面
@@ -1312,7 +1323,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0070(self):
         """在聊天设置页面，修改群聊名称"""
         # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
@@ -1329,7 +1340,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0071(self):
         """在聊天设置页面，修改群聊名称"""
         # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
@@ -1356,7 +1367,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0072(self):
         """在聊天设置页面，修改群聊名称"""
         # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
@@ -1377,7 +1388,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0073(self):
         """在聊天设置页面，修改群聊名称"""
         # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
@@ -1399,7 +1410,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0074(self):
         """在聊天设置页面，修改群聊名称"""
         # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
@@ -1426,7 +1437,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0075(self):
         """在聊天设置页面，修改群聊名称"""
         # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
@@ -1446,7 +1457,7 @@ class MsgGroupChatTest(TestCase):
         else:
             print("error")
 
-    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0076(self):
         """在聊天设置页面，修改群聊名称"""
         # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
@@ -1473,7 +1484,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0077(self):
         """在聊天设置页面，修改群聊名称"""
         # 1.在聊天设置页面，点击群聊名称，会跳转到群聊名称修改页面
@@ -1493,7 +1504,7 @@ class MsgGroupChatTest(TestCase):
         else:
             print("error")
 
-    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0078(self):
         """在聊天设置页面，分享群二维码"""
         # 1、在聊天设置页面，点击群二维码，是否会跳转到群聊二维码展示页面
@@ -1521,7 +1532,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0079(self):
         """在聊天设置页面，分享群二维码"""
         # 1、在聊天设置页面，点击群二维码，是否会跳转到群聊二维码展示页面
@@ -1542,7 +1553,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0080(self):
         """在聊天设置页面，修改我在本群的昵称"""
         # 1、在聊天设置页面，点击我在本群的昵称，是否会跳转到修改群名片页面
@@ -1563,7 +1574,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0081(self):
         """在聊天设置页面，修改我在本群的昵称"""
         # 1.在聊天设置页面，点击我在本群的昵称，会跳转到修改群名片页面
@@ -1593,7 +1604,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE',  'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0820(self):
         """在聊天设置—群管理页面，转让群主或者解散群"""
         # 1.点击群管理，是否可以跳转到群管理页面
