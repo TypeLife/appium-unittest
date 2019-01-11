@@ -2,7 +2,7 @@
 from library.core.common.simcardtype import CardType
 from library.core.common.supportedmodel import SupportedModel
 
-AVAILABLE_DEVICES = {
+AVAILABLE_DEVICES_DEV = {
     'MI5X': {
         "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
         "SERVER_URL": 'http://192.168.200.127:4723/wd/hub',
@@ -27,6 +27,26 @@ AVAILABLE_DEVICES = {
             # },
         ]
     },
+    'M960BDQN229CH': {
+        "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
+        "SERVER_URL": 'http://127.0.0.1:5000/wd/hub',
+        "DEFAULT_CAPABILITY": {
+            "platformName": "Android",
+            "platformVersion": "6.0",
+            "deviceName": "95AQACPMGJP5L",
+            "automationName": "UiAutomator2",
+            "newCommandTimeout": 600,
+            "appPackage": "com.chinasofti.rcs",
+            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+        },
+        'CARDS': [
+            {
+                'TYPE': CardType.CHINA_MOBILE,
+                'CARD_NUMBER': '14775970982'
+            },
+            None
+        ]
+    },
     'M960BDQN229CH-bak': {
         "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
         "SERVER_URL": 'http://192.168.200.112:4724/wd/hub',
@@ -47,9 +67,9 @@ AVAILABLE_DEVICES = {
             },
         ]
     },
-    'M960BDQN229CH': {
+    'M960BDQN229CH_me': {
         "MODEL": SupportedModel.RED_MI_NOTE_4X,
-        "SERVER_URL": 'http://192.168.200.112:4724/wd/hub',
+        "SERVER_URL": 'http://192.168.1.103:4724/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",
@@ -69,7 +89,7 @@ AVAILABLE_DEVICES = {
     },
     'single_mobile': {
         "MODEL": SupportedModel.RED_MI_NOTE_4X,
-        "SERVER_URL": 'http://192.168.200.112:4724/wd/hub',
+        "SERVER_URL": 'http://192.168.1.104:4724/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",
@@ -199,4 +219,27 @@ AVAILABLE_DEVICES = {
             }
         ]
     }
+}
+
+AVAILABLE_DEVICES = {
+    'M960BDQN229CH': {
+        "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
+        "SERVER_URL": 'http://221.176.34.113:5000/wd/hub',
+        "DEFAULT_CAPABILITY": {
+            "platformName": "Android",
+            "platformVersion": "6.0",
+            "deviceName": "95AQACPMGJP5L",
+            "automationName": "UiAutomator2",
+            "newCommandTimeout": 600,
+            "appPackage": "com.chinasofti.rcs",
+            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+        },
+        'CARDS': [
+            {
+                'TYPE': CardType.CHINA_MOBILE,
+                'CARD_NUMBER': '14775970982'
+            },
+            None
+        ]
+    },
 }

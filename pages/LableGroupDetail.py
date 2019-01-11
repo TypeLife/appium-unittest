@@ -26,7 +26,7 @@ class LableGroupDetailPage(LabelSettingMenu, BasePage):
         'com.chinasofti.rcs:id/rl_first_cloum': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_first_cloum'),
         'com.chinasofti.rcs:id/layout_first_item': (MobileBy.ID, 'com.chinasofti.rcs:id/layout_first_item'),
         'com.chinasofti.rcs:id/image_first_colum': (MobileBy.ID, 'com.chinasofti.rcs:id/image_first_colum'),
-        '添加成员': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_first_colum'),
+        '添加成员': (MobileBy.XPATH, '//*[@text="添加成员"]'),
         'com.chinasofti.rcs:id/layout_second_item': (MobileBy.ID, 'com.chinasofti.rcs:id/layout_second_item'),
         'com.chinasofti.rcs:id/image_second_colum': (MobileBy.ID, 'com.chinasofti.rcs:id/image_second_colum'),
         '群发信息': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_second_colum'),

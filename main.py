@@ -29,4 +29,19 @@ if __name__ == '__main__':
     with common.open_or_create(report_path, 'wb') as output:
         runner = HTMLTestRunner(
             stream=output, title='Test Report', verbosity=2)
-        runner.run(suite)
+        result = runner.run(suite)
+
+        # 成功、失败、错误、总计、通过率
+        try:
+            count = str(result.success_count + result.failure_count + result.error_count)  # 总计
+            pazz = str(result.success_count)  # 成功
+            total_fail = str(result.failure_count + result.error_count)  # 失败
+            rate = (result.success_count / (result.success_count + result.failure_count + result.error_count)) * 100
+            pazz_rate = "%.2f%%" % rate
+            from library.core.utils import send_report
+
+            send_report.get_ui_automation_metric(count, pazz, total_fail, pazz_rate)
+            if cli_commands.sendTo:
+                send_report.send_mail(*cli_commands.sendTo)
+        except Exception as error:
+            print("报告Email发送失败")

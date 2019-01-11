@@ -62,7 +62,7 @@ class Preconditions(object):
         """
         # 等待号码加载完成后，点击一键登录
         one_key = OneKeyLoginPage()
-        one_key.wait_for_tell_number_load(30)
+        one_key.wait_for_tell_number_load(60)
         one_key.click_one_key_login()
         one_key.click_read_agreement_detail()
 
@@ -121,6 +121,17 @@ class Preconditions(object):
         # 选择一个标签分组
         label_grouping.select_group(group_names[0])
         lgdp = LableGroupDetailPage()
+        time.sleep(1)
+        if lgdp.is_text_present("该标签分组内暂无成员"):
+            lgdp.click_add_members()
+            # 选择成员
+            slc = SelectLocalContactsPage()
+            names = slc.get_contacts_name()
+            if not names:
+                raise AssertionError("No contacts, please add contacts in address book.")
+            for name in names:
+                slc.select_one_member_by_name(name)
+            slc.click_sure()
         # 点击群发信息
         lgdp.click_send_group_info()
         chat = LabelGroupingChatPage()
@@ -134,7 +145,6 @@ class Preconditions(object):
         return group_name
 
 
-# @unittest.skip("编码中。。。")
 class MsgLabelGroupingTest(TestCase):
     """消息->标签分组 模块"""
 
@@ -455,7 +465,8 @@ class MsgLabelGroupingTest(TestCase):
             # 打开文件
             chat.open_file_in_chat_page(".html")
             chat.wait_for_call_sys_app_page()
-            chat.click_cancle()
+            # chat.click_cancle()
+            chat.driver.back()
             chat.wait_for_page_load()
         else:
             local_file.click_back()

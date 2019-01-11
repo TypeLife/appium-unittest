@@ -62,7 +62,7 @@ class Preconditions(object):
         """
         # 等待号码加载完成后，点击一键登录
         one_key = OneKeyLoginPage()
-        one_key.wait_for_tell_number_load(30)
+        one_key.wait_for_tell_number_load(60)
         login_number = one_key.get_login_number()
         one_key.click_one_key_login()
         one_key.click_read_agreement_detail()

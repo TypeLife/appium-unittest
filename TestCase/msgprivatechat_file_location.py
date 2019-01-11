@@ -6,8 +6,8 @@ from library.core.utils.testcasefilter import tags
 from pages import *
 
 REQUIRED_MOBILES = {
-    'Android-移动': 'single_mobile',
-    # 'Android-移动': 'M960BDQN229CH',
+    # 'Android-移动': 'single_mobile',
+    'Android-移动': 'M960BDQN229CH',
     'Android-移动-联通': 'mobile_and_union',
     'Android-移动-电信': '',
     'Android-移动-移动': 'double_mobile',
@@ -61,7 +61,7 @@ class Preconditions(object):
         """
         # 等待号码加载完成后，点击一键登录
         one_key = OneKeyLoginPage()
-        one_key.wait_for_tell_number_load(30)
+        one_key.wait_for_tell_number_load(60)
         one_key.click_one_key_login()
         one_key.click_read_agreement_detail()
 

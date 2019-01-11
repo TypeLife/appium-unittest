@@ -62,6 +62,9 @@ def capture_screen_shot(path):
         os.makedirs(dir_name)
     if not isinstance(ac.current_mobile(), NoConnection):
         capture = getattr(ac.current_driver(), 'get_screenshot_as_file', lambda p: None)
-        result = capture(path)
-        return result
+        try:
+            result = capture(path)
+            return result
+        except:
+            return
     return

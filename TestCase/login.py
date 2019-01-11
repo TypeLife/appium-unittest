@@ -2,6 +2,8 @@ import re
 import time
 import unittest
 
+from selenium.common.exceptions import TimeoutException
+
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
@@ -118,7 +120,7 @@ class Preconditions(object):
         """
         # 等待号码加载完成后，点击一键登录
         one_key = OneKeyLoginPage()
-        one_key.wait_for_tell_number_load(30)
+        one_key.wait_for_tell_number_load(60)
         one_key.click_one_key_login()
         one_key.click_read_agreement_detail()
 
@@ -796,9 +798,12 @@ class LoginTest(TestCase):
         # 点击完成
         sml.click_finish()
         # 检查繁体中文
-        oklp.wait_until(
-            condition=lambda d: oklp.is_text_present('一鍵登入')
-        )
+        try:
+            oklp.wait_until(
+                condition=lambda d: oklp.is_text_present('一鍵登入')
+            )
+        except TimeoutException:
+            raise AssertionError('没有找到繁体字文案：一键登录')
         # 为不影响其他用例，切换回简体中文
         oklp.click_language()
         sml.select_simplified_chinese()

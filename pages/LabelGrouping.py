@@ -144,7 +144,8 @@ class LabelGroupingPage(ContactsSelector, BasePage):
                 pass
             detail.open_setting_menu()
             detail.rename_group_name(new_name)
-
+            import time
+            time.sleep(2)
             self.click_back()
             detail.wait_for_page_load()
             actual = detail.get_group_name()

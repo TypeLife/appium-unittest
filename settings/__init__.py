@@ -17,6 +17,9 @@ SCREEN_SHOT_PATH = os.path.join(REPORT_PATH, 'screen-shot', NOW.date().__str__()
 LOG_FILE_PATH = os.path.join(REPORT_PATH, 'log')
 # 预置文件存放目录
 RESOURCE_FILE_PATH = os.path.join(PROJECT_PATH, 'resource')
+
+STATIC_FILE_PATH = os.path.join(PROJECT_PATH, 'Resources')
+EMAIL_REPORT_HTML_TPL = os.path.join(STATIC_FILE_PATH, 'email_report_tpl', 'ci_report.html')
 # 公共邮箱
 # 登录密码：hfx@2018
 EMAIL = dict(
