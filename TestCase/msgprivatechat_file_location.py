@@ -125,7 +125,6 @@ class MsgPrivateChatFileLocationTest(TestCase):
     def setUpClass(cls):
         # 进入单聊会话页面
         fail_time = 0
-
         while fail_time < 3:
             try:
                 Preconditions.enter_private_chat_page()
