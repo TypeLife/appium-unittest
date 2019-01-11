@@ -18,7 +18,6 @@ from library.core.TestLogger import TestLogger
 
 
 class MobileDriver(ABC):
-
     def __init__(self, alis_name, model_info, command_executor='http://127.0.0.1:4444/wd/hub',
                  desired_capabilities=None, browser_profile=None, proxy=None, keep_alive=False, card_slot=None):
         self._alis = alis_name
@@ -121,6 +120,7 @@ class MobileDriver(ABC):
         else:
             try:
                 t = self.driver.current_package
+                del t
                 return True
             except Exception:  # InvalidSessionIdException or WebDriverException:
                 return False
@@ -136,8 +136,19 @@ class MobileDriver(ABC):
                 raise RuntimeError('无法连接到 appium server: {}'.format(self._remote_url))
         elif not self.is_connection_created:
             try:
-                self.driver.start_session(self._desired_caps)
-            except Exception as e:
+                self.driver.quit()
+            except:
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
+            try:
+                self._driver = webdriver.Remote(self._remote_url, self._desired_caps, self._browser_profile,
+                                                self._proxy,
+                                                self._keep_alive)
+            except:
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
                 raise RuntimeError('无法连接到 appium server: {}'.format(self._remote_url))
         else:
             return
