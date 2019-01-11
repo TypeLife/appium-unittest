@@ -228,8 +228,8 @@ AVAILABLE_DEVICES = {
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",
-            "deviceName": "7dbecd98",
-            "udid": "7dbecd98",
+            "deviceName": "95AQACPMGJP5L",
+            "udid": "95AQACPMGJP5L",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
