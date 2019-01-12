@@ -145,6 +145,7 @@ class MeMsgSettingTest(TestCase):
     @staticmethod
     def setUp_test_me_msg_setting_0001():
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.reset_and_relaunch_app()
         Preconditions.make_already_in_one_key_login_page()
         Preconditions.login_by_one_key_login()
@@ -183,6 +184,7 @@ class MeMsgSettingTest(TestCase):
 
     def setUp_test_me_msg_setting_0002(self):
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.reset_and_relaunch_app()
         Preconditions.make_already_in_one_key_login_page()
         self.login_number = Preconditions.login_by_one_key_login()
@@ -212,6 +214,7 @@ class MeMsgSettingTest(TestCase):
 
     def setUp_test_me_msg_setting_0003(self):
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.reset_and_relaunch_app()
         Preconditions.make_already_in_one_key_login_page()
         self.login_number = Preconditions.login_by_one_key_login()
@@ -232,6 +235,7 @@ class MeMsgSettingTest(TestCase):
     @staticmethod
     def setUp_test_me_msg_setting_0004():
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.reset_and_relaunch_app()
         Preconditions.make_already_in_one_key_login_page()
         Preconditions.login_by_one_key_login()
@@ -253,6 +257,7 @@ class MeMsgSettingTest(TestCase):
     @staticmethod
     def setUp_test_me_msg_setting_0005():
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.reset_and_relaunch_app()
         Preconditions.make_already_in_one_key_login_page()
         Preconditions.login_by_one_key_login()
@@ -277,6 +282,7 @@ class MeMsgSettingTest(TestCase):
     @staticmethod
     def setUp_test_me_msg_setting_0006():
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.reset_and_relaunch_app()
         Preconditions.make_already_in_one_key_login_page()
         Preconditions.login_by_one_key_login()
@@ -304,6 +310,7 @@ class MeSmsSettingTest(TestCase):
     @staticmethod
     def setUp_test_me_sms_setting_0001():
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.reset_and_relaunch_app()
         Preconditions.make_already_in_one_key_login_page()
         Preconditions.login_by_one_key_login()
@@ -344,6 +351,7 @@ class MeSmsSettingTest(TestCase):
 
     def setUp_test_me_sms_setting_0002(self):
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.reset_and_relaunch_app()
         Preconditions.make_already_in_one_key_login_page()
         self.login_number = Preconditions.login_by_one_key_login()

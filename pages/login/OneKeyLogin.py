@@ -1,3 +1,5 @@
+import re
+
 from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
@@ -86,9 +88,13 @@ class OneKeyLoginPage(BasePage):
         return self
 
     @TestLogger.log()
-    def get_login_number(self):
+    def get_login_number(self, specify_card_slot=0):
         """获取一键登录界面的电话号码"""
         number = self.get_text(self.__locators['电话号码'])
+        if not re.match(r'^\d+$', number.strip()):
+            print('一键登录页面可能加载手机号失败（{}），改为从配置获取手机号'.format(number))
+            card_type, number = self.mobile.get_card(specify_card_slot)
+            del card_type
         return number
 
     @TestLogger.log()
@@ -102,9 +108,7 @@ class OneKeyLoginPage(BasePage):
             )
         except:
             message = "电话号码在{}s内，没有加载成功".format(timeout)
-            raise AssertionError(
-                message
-            )
+            print('Warn: ' + message)
         return self
 
     @TestLogger.log()

@@ -151,7 +151,27 @@ class MobileDriver(ABC):
                 print(msg)
                 raise RuntimeError('无法连接到 appium server: {}'.format(self._remote_url))
         else:
-            return
+            pass
+        if self.is_android:
+            app_version_info = self.get_app_version_info()
+            real_model = self.get_mobile_model_info()
+            network_state_info = self.get_mobile_network_connection_info()
+            print(
+                """
+已连接到手机：
+===================== Mobile Name =====================
+%(mobileName)s
+===================== APP Version =====================
+%(appVersion)s
+================= Network Status Info =================
+%(networkState)s
+=======================================================
+                """ % dict(
+                    mobileName=real_model,
+                    appVersion=app_version_info,
+                    networkState=network_state_info
+                )
+            )
 
     @TestLogger.log('断开手机连接')
     def disconnect_mobile(self):
@@ -855,6 +875,11 @@ Value (Alias)      | Data | Wifi | Airplane Mode
         """隐藏键盘"""
         self.driver.hide_keyboard(key_name, key, strategy)
 
+    @TestLogger.log('如果键盘弹出，就收回键盘')
+    def hide_keyboard_if_display(self):
+        if self.is_keyboard_shown():
+            self.hide_keyboard()
+
     @TestLogger.log('发送短信')
     def send_sms(self, to, content, card_index=0):
         """
@@ -1160,6 +1185,30 @@ Value (Alias)      | Data | Wifi | Airplane Mode
             name, value = result.strip().split('=')
             del name
             return value
+        else:
+            # TODO IOS平台待实现
+            raise NotImplementedError('该接口目前只支持Android')
+
+    @TestLogger.log('获取手机型号')
+    def get_mobile_model_info(self):
+        if self.is_android():
+            try:
+                result = self.execute_shell_command('getprop', 'ro.product.name')
+            except:
+                result = "暂无信息"
+            return result.strip()
+        else:
+            # TODO IOS平台待实现
+            raise NotImplementedError('该接口目前只支持Android')
+
+    @TestLogger.log('获取手机IP信息')
+    def get_mobile_network_connection_info(self):
+        if self.is_android():
+            try:
+                result = self.execute_shell_command('ip', '-f', 'inet', 'addr')
+            except:
+                result = "暂无信息"
+            return result
         else:
             # TODO IOS平台待实现
             raise NotImplementedError('该接口目前只支持Android')

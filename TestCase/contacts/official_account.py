@@ -153,6 +153,7 @@ class OfficialAccountTest(TestCase):
 
     def setUp_test_Conts_OfficialAccount_0001(self):
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
     @unittest.skip('脚本无法操作搜索公众号页面')
@@ -173,6 +174,7 @@ class OfficialAccountTest(TestCase):
 
     def setUp_test_Conts_OfficialAccount_0002(self):
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
 

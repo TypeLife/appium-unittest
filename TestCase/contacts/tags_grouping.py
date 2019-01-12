@@ -183,6 +183,7 @@ class TagsGroupingTest(TestCase):
                     ('给个红包1', '13800138000'),
                 ]
                 Preconditions.connect_mobile('Android-移动')
+                current_mobile().hide_keyboard_if_display()
                 for name, number in required_contacts:
                     Preconditions.create_contacts_if_not_exits(name, number)
                 return
@@ -209,6 +210,7 @@ class TagsGroupingTest(TestCase):
 
     def setUp_test_Conts_TagsGrouping_0001(self):
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
@@ -243,6 +245,7 @@ class TagsGroupingTest(TestCase):
 
     def setUp_test_Conts_TagsGrouping_0002(self):
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
@@ -267,6 +270,7 @@ class TagsGroupingTest(TestCase):
 
     def setUp_test_Conts_TagsGrouping_0003(self):
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
@@ -301,6 +305,7 @@ class TagsGroupingTest(TestCase):
 
     def setUp_test_Conts_TagsGrouping_0004(self):
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
@@ -335,6 +340,7 @@ class TagsGroupingTest(TestCase):
 
     def setUp_test_Conts_TagsGrouping_0006(self):
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
@@ -370,6 +376,7 @@ class TagsGroupingTest(TestCase):
 
     def setUp_test_Conts_TagsGrouping_0007(self):
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
@@ -399,6 +406,7 @@ class TagsGroupingTest(TestCase):
 
     def setUp_test_Conts_TagsGrouping_0008(self):
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
 

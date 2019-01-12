@@ -76,6 +76,7 @@ class Preconditions(object):
     def make_already_in_message_page(reset=False):
         """确保应用在消息页面"""
         Preconditions.select_mobile('Android-移动', reset)
+        current_mobile().hide_keyboard_if_display()
         time.sleep(1)
         # 如果在消息页，不做任何操作
         mess = MessagePage()

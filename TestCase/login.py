@@ -230,6 +230,7 @@ class LoginTest(TestCase):
     @staticmethod
     def setUp_test_login_0001():
         Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
         Preconditions.login_by_one_key_login()
@@ -256,6 +257,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0002():
         # 1、已登录
         Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
         Preconditions.login_by_one_key_login()
@@ -289,6 +291,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0004():
         """选择安卓移动卡手机进入一键登录页面"""
         Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         current_mobile().reset_app()
         Preconditions.make_already_in_one_key_login_page()
 
@@ -322,6 +325,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0006():
         """选择安卓移动卡手机进入一键登录页面"""
         Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         current_mobile().reset_app()
         Preconditions.make_already_in_one_key_login_page()
 
@@ -338,6 +342,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0007():
         """进入一键登录页"""
         Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
@@ -353,6 +358,7 @@ class LoginTest(TestCase):
         """测试机登录客户端、辅助机打开到验证码登录页"""
         # A手机已经登录
         Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         current_mobile().reset_app()
         Preconditions.make_already_in_one_key_login_page()
         one_key = OneKeyLoginPage().wait_for_tell_number_load(60)
@@ -361,6 +367,7 @@ class LoginTest(TestCase):
 
         # B手机进入短信登录界面
         Preconditions.select_mobile('Android-电信')
+        current_mobile().hide_keyboard_if_display()
         current_mobile().reset_app()
         Preconditions.make_already_in_sms_login_page()
 
@@ -404,6 +411,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0009():
         """进入一键登录页"""
         Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
@@ -420,6 +428,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0010():
         """进入一键登录页"""
         Preconditions.select_mobile('Android-移动-联通')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
@@ -440,6 +449,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0020():
         """进入一键登录页"""
         Preconditions.select_mobile('Android-移动-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', "移动-移动")
@@ -464,6 +474,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0022():
         """进入一键登录页"""
         Preconditions.select_mobile('Android-移动-联通')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
@@ -513,6 +524,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0023():
         """进入一键登录页"""
         Preconditions.select_mobile('Android-移动-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', "移动-移动")
@@ -531,6 +543,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0025():
         """异网账号进入登录页面"""
         Preconditions.select_mobile('Android-联通')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
     @tags('ALL', "联通")
@@ -545,6 +558,7 @@ class LoginTest(TestCase):
     @staticmethod
     def setUp_test_login_0026():
         Preconditions.select_mobile('Android-联通')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
     @tags('ALL', "联通")
@@ -589,6 +603,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0027():
         """异网账号进入登录页面"""
         Preconditions.select_mobile('Android-联通')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
     @tags('ALL', "联通")
@@ -626,6 +641,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0029():
         """异网账号进入登录页面"""
         Preconditions.select_mobile('Android-联通')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
     @tags('ALL', "联通")
@@ -665,6 +681,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0036():
         """异网账号进入登录页面"""
         Preconditions.select_mobile('Android-联通')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
     @tags('ALL', '联通')
@@ -703,6 +720,7 @@ class LoginTest(TestCase):
     @staticmethod
     def setUp_test_login_0047():
         Preconditions.select_mobile('Android-电信')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_sms_login_page()
 
@@ -719,6 +737,7 @@ class LoginTest(TestCase):
         1、异网账号首次进入登录页面
         """
         Preconditions.select_mobile('Android-电信')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.app_start_for_the_first_time()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
@@ -734,6 +753,7 @@ class LoginTest(TestCase):
         1、异网账号首次进入登录页面
         """
         Preconditions.select_mobile('Android-联通')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.app_start_for_the_first_time()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
@@ -749,6 +769,7 @@ class LoginTest(TestCase):
         1、异网账号(非首次登录)进入登录页面
         """
         Preconditions.select_mobile('Android-联通')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
     @tags('ALL', "联通")
@@ -768,6 +789,7 @@ class LoginTest(TestCase):
         1、异网账号进入登录页面
         """
         Preconditions.select_mobile('Android-联通')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
     @tags('ALL', "联通")
@@ -782,6 +804,7 @@ class LoginTest(TestCase):
     @staticmethod
     def setUp_test_login_0052():
         Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 

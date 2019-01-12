@@ -3,9 +3,9 @@ from library.core.common.simcardtype import CardType
 from library.core.common.supportedmodel import SupportedModel
 
 AVAILABLE_DEVICES_DEV = {
-    'MI5X': {
+    'M960BDQN229CH': {
         "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
-        "SERVER_URL": 'http://192.168.200.127:4723/wd/hub',
+        "SERVER_URL": 'http://192.168.12.129:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0.1",
@@ -21,13 +21,9 @@ AVAILABLE_DEVICES_DEV = {
                 'TYPE': CardType.CHINA_MOBILE,
                 'CARD_NUMBER': '19876283465'
             },
-            # {
-            #     'TYPE': CardType.CHINA_UNION,
-            #     'CARD_NUMBER': '17611681917'
-            # },
         ]
     },
-    'M960BDQN229CH': {
+    'M960BDQN229CH-BACK': {
         "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
         "SERVER_URL": 'http://127.0.0.1:5000/wd/hub',
         "DEFAULT_CAPABILITY": {
@@ -238,7 +234,7 @@ AVAILABLE_DEVICES = {
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '19802021369'
+                'CARD_NUMBER': '14775970982'
             },
             None
         ]

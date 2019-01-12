@@ -179,6 +179,7 @@ class MessageScanTest(TestCase):
         4.使用扫一扫功能
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
         current_mobile().set_network_status(0)
 
@@ -211,6 +212,7 @@ class MessageScanTest(TestCase):
         4.使用扫一扫功能
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
     @staticmethod
@@ -245,6 +247,7 @@ class MessageSearchTest(TestCase):
                 ]
                 conts = ContactsPage()
                 Preconditions.connect_mobile('Android-移动')
+                current_mobile().hide_keyboard_if_display()
                 for name, number in required_contacts:
                     Preconditions.make_already_in_message_page()
                     conts.open_contacts_page()
@@ -276,7 +279,7 @@ class MessageSearchTest(TestCase):
                 msg = traceback.format_exc()
                 print(msg)
 
-    @tags('ALL', 'SMOKE', "CMCC")
+    @tags('ALL', 'SMOKE', "CMCC1")
     def test_msg_search_0001(self):
         """消息-消息列表界面搜索框显示"""
         message = MessagePage()
@@ -290,6 +293,7 @@ class MessageSearchTest(TestCase):
         3、当前在消息页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'SMOKE', "CMCC")
@@ -312,6 +316,7 @@ class MessageSearchTest(TestCase):
         3、当前在消息页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
     @staticmethod
@@ -364,6 +369,7 @@ class MessageSearchTest(TestCase):
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=True)
 
     @staticmethod
@@ -437,6 +443,7 @@ class MessageSearchTest(TestCase):
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=False)
 
     @staticmethod
@@ -488,6 +495,7 @@ class MessageSearchTest(TestCase):
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=False)
 
         contacts_page = ContactsPage()
@@ -556,6 +564,7 @@ class MessageSearchTest(TestCase):
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=False)
 
         contacts_page = ContactsPage()
@@ -625,6 +634,7 @@ class MessageSearchTest(TestCase):
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=False)
 
         contacts_page = ContactsPage()
@@ -694,6 +704,7 @@ class MessageSearchTest(TestCase):
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=False)
 
         contacts_page = ContactsPage()
@@ -764,6 +775,7 @@ class MessageSearchTest(TestCase):
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=False)
 
         contacts_page = ContactsPage()
@@ -834,6 +846,7 @@ class MessageSearchTest(TestCase):
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=False)
 
         contacts_page = ContactsPage()
@@ -902,6 +915,7 @@ class MessageSearchTest(TestCase):
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=False)
 
     @staticmethod
@@ -953,6 +967,7 @@ class MessageSearchTest(TestCase):
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=False)
         key_message = '给个红包'
         # 消息页
@@ -1037,6 +1052,7 @@ class MessageSearchTest(TestCase):
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=False)
         key_message = '大佬'
         # 消息页
@@ -1125,6 +1141,7 @@ class MessageSearchTest(TestCase):
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=False)
         key_message = '大佬'
         # 消息页
@@ -1201,6 +1218,7 @@ class MessageSearchTest(TestCase):
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=False)
 
         key_message = '大佬'
@@ -1277,6 +1295,7 @@ class MessageSearchTest(TestCase):
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=False)
 
         key_message = '新消息'
@@ -1373,6 +1392,7 @@ class MessageSearchTest(TestCase):
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=False)
 
     @staticmethod
@@ -1405,6 +1425,7 @@ class MessageSearchTest(TestCase):
         3、当前联系人搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'SMOKE', "CMCC")
@@ -1444,6 +1465,7 @@ class MessageSearchTest(TestCase):
         3、当前联系人搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
     @staticmethod
@@ -1513,6 +1535,7 @@ class MessageSearchTest(TestCase):
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=False)
 
     @staticmethod
@@ -1589,6 +1612,7 @@ class MessageSearchTest(TestCase):
         3、当前群聊搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=False)
 
     @staticmethod
@@ -1657,6 +1681,7 @@ class MessageSearchTest(TestCase):
         3、当前群聊搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=True)
         group_name = '给个红包'
         # 消息页
@@ -1758,6 +1783,7 @@ class MessageSearchTest(TestCase):
         3、当前群聊搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=True)
         group_name = '给个红包'
         # 消息页
@@ -1836,6 +1862,7 @@ class MessageSearchTest(TestCase):
         4、同一个群或联系人有多条相同的聊天记录
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=True)
         group_name = '给个红包'
         # 消息页
@@ -1917,6 +1944,7 @@ class MessageSearchTest(TestCase):
         4、同一个群或联系人有多条相同的聊天记录
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=True)
         group_name = '给个红包'
         # 消息页
@@ -2022,6 +2050,7 @@ class MessageSearchTest(TestCase):
         3、当前全局搜索页面
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=False)
         current_mobile().set_network_status(0)
 
@@ -2080,6 +2109,7 @@ class MessageSearchTest(TestCase):
             5.名字包含“1”的公众号：不需要制造，中国移动10886
         """
         Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         login_num = Preconditions.make_already_in_message_page(reset_required=True)
 
         # 先发邮件，否则无法搜索到功能“139邮箱”

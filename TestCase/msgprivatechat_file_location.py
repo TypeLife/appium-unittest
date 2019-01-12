@@ -77,6 +77,7 @@ class Preconditions(object):
     def make_already_in_message_page(reset=False):
         """确保应用在消息页面"""
         Preconditions.select_mobile('Android-移动', reset)
+        current_mobile().hide_keyboard_if_display()
         # 如果在消息页，不做任何操作
         mess = MessagePage()
         if mess.is_on_this_page():
@@ -140,6 +141,7 @@ class MsgPrivateChatFileLocationTest(TestCase):
         """确保每个用例运行前在单聊会话页面"""
         chat = SingleChatPage()
         if chat.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
             return
         else:
             current_mobile().disconnect_mobile()
