@@ -236,7 +236,6 @@ AVAILABLE_DEVICES = {
                 'TYPE': CardType.CHINA_MOBILE,
                 'CARD_NUMBER': '14775970982'
             },
-            None
         ]
     },
 }

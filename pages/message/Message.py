@@ -46,8 +46,10 @@ class MessagePage(FooterPage):
         '工作台': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCircle'),
         '通讯录': (MobileBy.ID, 'com.chinasofti.rcs:id/tvContact'),
         '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe'),
-        '消息免打扰': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text="%s"]/../following-sibling::*[@resource-id="com.chinasofti.rcs:id/iv_conv_slient"]'),
-        '置顶群': (MobileBy.XPATH, '//android.support.v7.widget.RecyclerView/android.widget.RelativeLayout[1]//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name"]'),
+        '消息免打扰': (MobileBy.XPATH,
+                  '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text="%s"]/../following-sibling::*[@resource-id="com.chinasofti.rcs:id/iv_conv_slient"]'),
+        '置顶群': (MobileBy.XPATH,
+                '//android.support.v7.widget.RecyclerView/android.widget.RelativeLayout[1]//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name"]'),
     }
 
     @TestLogger.log('检查顶部搜索框是否显示')
@@ -176,14 +178,16 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def wait_login_success(self, timeout=8, auto_accept_alerts=True):
         """等待消息页面加载（自动允许权限）"""
+        self.__unexpected_info = None
 
         def unexpected():
-            result = self._is_element_present(
+            result = self.get_text(
                 [MobileBy.XPATH,
                  '//*[@text="当前网络不可用(102101)，请检查网络设置" or' +
                  ' @text="服务器繁忙或加载超时,请耐心等待" or' +
                  ' @text="网络连接超时(102102)，请使用短信验证码登录"' +
                  ']'])
+            self.__unexpected_info = result
             return result
 
         try:
@@ -198,6 +202,8 @@ class MessagePage(FooterPage):
             raise AssertionError(
                 message
             )
+        except AssertionError:
+            raise AssertionError("检查到页面报错：{}".format(self.__unexpected_info))
         return self
 
     @TestLogger.log('检查是否收到某个号码的短信')
@@ -356,4 +362,3 @@ class MessagePage(FooterPage):
     def get_top_news_name(self):
         """获取置顶群的名字"""
         return self.get_element(self.__class__.__locators['置顶群']).text
-
