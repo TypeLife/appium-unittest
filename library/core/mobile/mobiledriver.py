@@ -119,7 +119,7 @@ class MobileDriver(ABC):
             return False
         else:
             try:
-                t = self.driver.current_package
+                t = self.get_elements(['xpath', '//*'])
                 del t
                 return True
             except Exception:  # InvalidSessionIdException or WebDriverException:
@@ -142,6 +142,7 @@ class MobileDriver(ABC):
                 msg = traceback.format_exc()
                 print(msg)
             try:
+                del self._driver
                 self._driver = webdriver.Remote(self._remote_url, self._desired_caps, self._browser_profile,
                                                 self._proxy,
                                                 self._keep_alive)
@@ -175,8 +176,10 @@ class MobileDriver(ABC):
 
     @TestLogger.log('断开手机连接')
     def disconnect_mobile(self):
-        if self.is_connection_created:
+        try:
             self.driver.quit()
+        except:
+            pass
 
     @TestLogger.log('打开重置APP选项（仅当手机未连接时有效）')
     def turn_on_reset(self):
@@ -217,7 +220,9 @@ class MobileDriver(ABC):
         self.driver.background_app(seconds)
 
     @TestLogger.log('激活APP')
-    def activate_app(self, app_id):
+    def activate_app(self, app_id=None):
+        if not app_id:
+            app_id = self.driver.desired_capabilities['appPackage']
         self.driver.activate_app(app_id)
 
     @TestLogger.log('重置当前打开的APP')

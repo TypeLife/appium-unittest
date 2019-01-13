@@ -182,12 +182,15 @@ class MessageScanTest(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
         current_mobile().set_network_status(0)
+        current_mobile().activate_app()
+
 
     @staticmethod
     def tearDown_test_msg_scan_0007():
         current_mobile().set_network_status(6)
         scan_page = Scan1Page()
         scan_page.click_back()
+        current_mobile().activate_app()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_scan_0015(self):
@@ -2053,10 +2056,12 @@ class MessageSearchTest(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset_required=False)
         current_mobile().set_network_status(0)
+        current_mobile().activate_app()
 
     @staticmethod
     def tearDown_test_msg_search_0026():
         current_mobile().set_network_status(6)
+        current_mobile().activate_app()
         search_page = SearchPage()
         search_page.click_back_button()
 

@@ -182,7 +182,7 @@ class MsgCollectionTest(TestCase):
                 print(msg)
 
     def default_setUp(self):
-        pass
+        Preconditions.select_mobile('Android-移动')
 
     def default_tearDown(self):
         pass
