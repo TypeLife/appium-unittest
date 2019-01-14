@@ -264,7 +264,7 @@ class MsgLabelGroupingTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_msg_label_grouping_0005(self):
-        """标签分组会话页面，不勾选本地照片文件内视频点击发送按钮"""
+        """标签分组会话页面，不勾选本地照片文件内照片点击发送按钮"""
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
@@ -286,7 +286,7 @@ class MsgLabelGroupingTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_msg_label_grouping_0006(self):
-        """标签分组会话页面，勾选本地照片文件内视频点击发送按钮"""
+        """标签分组会话页面，勾选本地照片文件内照片点击发送按钮"""
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
@@ -311,7 +311,7 @@ class MsgLabelGroupingTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_msg_label_grouping_0007(self):
-        """标签分组会话页面，不勾选本地音乐文件内视频点击发送按钮"""
+        """标签分组会话页面，不勾选本地音乐文件内音乐点击发送按钮"""
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
@@ -333,7 +333,7 @@ class MsgLabelGroupingTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_msg_label_grouping_0008(self):
-        """标签分组会话页面，勾选本地音乐文件内视频点击发送按钮"""
+        """标签分组会话页面，勾选本地音乐文件内音乐点击发送按钮"""
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
