@@ -110,6 +110,7 @@ class Preconditions(object):
             label_grouping.click_sure()
             # 选择成员
             slc = SelectLocalContactsPage()
+            slc.wait_for_page_load()
             names = slc.get_contacts_name()
             if not names:
                 raise AssertionError("No contacts, please add contacts in address book.")
@@ -150,25 +151,26 @@ class MsgLabelGroupingTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        # 进入标签会话页面
-        fail_time = 0
-
-        while fail_time < 3:
-            try:
-                Preconditions.enter_label_grouping_chat_page()
-                return
-            except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
+        pass
+        # # 进入标签会话页面
+        # fail_time = 0
+        #
+        # while fail_time < 3:
+        #     try:
+        #         Preconditions.enter_label_grouping_chat_page()
+        #         return
+        #     except:
+        #         fail_time += 1
+        #         import traceback
+        #         msg = traceback.format_exc()
+        #         print(msg)
 
     def default_setUp(self):
         """确保每个用例运行前在标签分组会话页面"""
         Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         chat = LabelGroupingChatPage()
         if chat.is_on_this_page():
-            current_mobile().hide_keyboard_if_display()
             return
         else:
             current_mobile().disconnect_mobile()
@@ -1127,3 +1129,4 @@ class MsgLabelGroupingTest(TestCase):
         toast_flag = chat.is_toast_exist("未发现手机导航应用", timeout=3)
         map_flag = chat.is_text_present("地图")
         self.assertTrue(toast_flag or map_flag)
+        chat.driver.back()
