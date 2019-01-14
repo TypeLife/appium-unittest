@@ -181,6 +181,7 @@ class MsgCollectionTest(TestCase):
         Preconditions.select_mobile('Android-移动')
         mcp = MeCollectionPage()
         if mcp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
             return
         else:
             current_mobile().disconnect_mobile()
