@@ -73,7 +73,7 @@ class OneKeyLoginPage(BasePage):
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
-        """等待权限列表页面加载（自动允许权限）"""
+        """等待一键登录页面加载"""
         try:
             self.wait_until(
                 timeout=timeout,

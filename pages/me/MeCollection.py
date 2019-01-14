@@ -178,6 +178,14 @@ class MeCollectionPage(BasePage):
         return self
 
     @TestLogger.log()
+    def is_on_this_page(self):
+        """当前页面是否在收藏页面"""
+        el = self.get_elements(self.__class__.__locators["收藏"])
+        if len(el) > 0:
+            return True
+        return False
+
+    @TestLogger.log()
     def wait_for_open_file(self, timeout=8, auto_accept_alerts=True):
         """等待打开文件页面加载"""
         try:

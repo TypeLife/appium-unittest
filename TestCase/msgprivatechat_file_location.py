@@ -46,6 +46,7 @@ class Preconditions(object):
         guide_page.wait_for_page_load(30)
         guide_page.swipe_to_the_second_banner()
         guide_page.swipe_to_the_third_banner()
+        current_mobile().hide_keyboard_if_display()
         guide_page.click_start_the_experience()
 
         # 点击权限列表页面的确定按钮
@@ -61,7 +62,8 @@ class Preconditions(object):
         """
         # 等待号码加载完成后，点击一键登录
         one_key = OneKeyLoginPage()
-        one_key.wait_for_tell_number_load(60)
+        one_key.wait_for_page_load()
+        # one_key.wait_for_tell_number_load(60)
         one_key.click_one_key_login()
         one_key.click_read_agreement_detail()
 
@@ -124,18 +126,7 @@ class MsgPrivateChatFileLocationTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        # 进入单聊会话页面
-        fail_time = 0
-
-        while fail_time < 3:
-            try:
-                Preconditions.enter_private_chat_page()
-                return
-            except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
+        pass
 
     def default_setUp(self):
         """确保每个用例运行前在单聊会话页面"""
