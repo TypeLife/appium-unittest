@@ -152,18 +152,6 @@ class MsgLabelGroupingTest(TestCase):
     @classmethod
     def setUpClass(cls):
         pass
-        # # 进入标签会话页面
-        # fail_time = 0
-        #
-        # while fail_time < 3:
-        #     try:
-        #         Preconditions.enter_label_grouping_chat_page()
-        #         return
-        #     except:
-        #         fail_time += 1
-        #         import traceback
-        #         msg = traceback.format_exc()
-        #         print(msg)
 
     def default_setUp(self):
         """确保每个用例运行前在标签分组会话页面"""
