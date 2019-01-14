@@ -2,11 +2,16 @@ import os
 import unittest
 import traceback
 
-from library.HTMLTestRunner import HTMLTestRunner
-from library.core.utils import CommandLineTool, ConfigManager, common
-
 if __name__ == '__main__':
+
+    from library.core.utils import CommandLineTool
+
     cli_commands = CommandLineTool.parse_and_store_command_line_params()
+    if cli_commands.deviceConfig:
+        os.environ.setdefault('AVAILABLE_DEVICES_SETTING', cli_commands.deviceConfig)
+
+    from library.core.utils import ConfigManager, common
+
     report_path = ConfigManager.get_html_report_path()
     s = cli_commands.suite
     if cli_commands.suite:
@@ -27,6 +32,8 @@ if __name__ == '__main__':
         case_path = ConfigManager.get_test_case_root()
         suite = unittest.defaultTestLoader.discover(case_path, '*.py')
     # RunTest
+    from library.HTMLTestRunner import HTMLTestRunner
+
     with common.open_or_create(report_path, 'wb') as output:
         runner = HTMLTestRunner(
             stream=output, title='Test Report', verbosity=2)
@@ -37,8 +44,8 @@ if __name__ == '__main__':
             count = str(result.success_count + result.failure_count + result.error_count)  # 总计
             pazz = str(result.success_count)  # 成功
             total_fail = str(result.failure_count + result.error_count)  # 失败
-            if result.success_count + result.failure_count + result.error_count ==0:
-                pazz_rate ='00.00%'
+            if result.success_count + result.failure_count + result.error_count == 0:
+                pazz_rate = '00.00%'
             else:
                 rate = (result.success_count / (result.success_count + result.failure_count + result.error_count)) * 100
                 pazz_rate = "%.2f%%" % rate

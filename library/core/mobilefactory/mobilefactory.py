@@ -1,3 +1,5 @@
+import os
+
 from library.core.common.supportedmodel import SupportedModel
 from mobileimplements import *
 
@@ -14,11 +16,14 @@ class MobileFactory:
     @staticmethod
     def from_available_devices_setting(key):
 
-        try:
-            from settings.available_devices import AVAILABLE_DEVICES
-        except ImportError as e:
-            raise ImportError('setting/available_devices.py 中没有设置项：AVAILABLE_DEVICES')
-        mobile_config = AVAILABLE_DEVICES.get(key)
+        from settings import available_devices
+        devices_setting_value = os.environ.get('AVAILABLE_DEVICES_SETTING')
+        if devices_setting_value:
+            devices_setting_value = getattr(available_devices, devices_setting_value, None)
+        else:
+            devices_setting_value = available_devices.AVAILABLE_DEVICES
+
+        mobile_config = devices_setting_value.get(key)
         if mobile_config is None:
             raise Exception('AVAILABLE_DEVICES 找不到键位：{} '.format(key) + '的设置')
         params = dict(

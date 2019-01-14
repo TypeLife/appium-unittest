@@ -84,6 +84,13 @@ class ContactsSelector(BasePage):
     def assert_contacts_selector_page_contains_alphabet_nav(self):
         self.mobile.assert_screen_should_contain_element(self.__locators['字母导航栏'])
 
+    @TestLogger.log('等待选择联系人页面加载')
+    def wait_for_contacts_selector_page_load(self, default_wait_time=5):
+        self.wait_until(
+            condition=lambda d: self._is_element_present(self.__locators['搜索或输入手机号']),
+            timeout=default_wait_time
+        )
+
 
 class PictureSelector(BasePage):
     """
