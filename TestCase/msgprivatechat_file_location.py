@@ -418,22 +418,29 @@ class MsgPrivateChatFileLocationTest(TestCase):
         chat.click_more()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC')
-    def test_msg_private_chat_file_location_0044(self):
-        """单聊天会话页面，点击位置，默认当前位置直接发送"""
-        # 1、在当前会话窗口点击位置
+    @staticmethod
+    def public_send_location():
+        """ 在发送位置信息 """
         chat = SingleChatPage()
         chat.wait_for_page_load()
         chat.click_more()
         more_page = ChatMorePage()
+        # 1、在当前会话窗口点击位置
         more_page.click_location()
         location_page = ChatLocationPage()
         location_page.wait_for_page_load()
+        addr_info = location_page.get_location_info()
         # 2、点击右上角的发送按钮
         location_page.click_send()
         chat.wait_for_page_load()
         chat.click_more()
         chat.wait_for_page_load()
+        return addr_info
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0044(self):
+        """单聊天会话页面，点击位置，默认当前位置直接发送"""
+        self.public_send_location()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_private_chat_file_location_0045(self):
@@ -471,4 +478,108 @@ class MsgPrivateChatFileLocationTest(TestCase):
         location_page.click_back()
         chat.wait_for_page_load()
         chat.click_more()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0047(self):
+        """单聊天会话页面，长按位置消息体进行转发到本地通讯录联系人"""
+        # 1、长按位置消息体
+        addr_info = self.public_send_location()
+        chat = SingleChatPage()
+        # 2、选择转发，选择一个本地通讯录联系人
+        chat.forward_file(addr_info)
+        scp = SelectContactsPage()
+        scp.select_local_contacts()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        names = slcp.get_contacts_name()
+        if names:
+            slcp.select_one_member_by_name(names[0])
+            # 3、点击确定
+            slcp.click_sure_forward()
+            flag = slcp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+        else:
+            print("WARN: There is no linkman.")
+            slcp.click_back()
+            scp.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC1')
+    def test_msg_private_chat_file_location_0048(self):
+        """单聊天会话页面，长按位置消息体进行转发到和通讯录联系人"""
+        # 1、在当前群聊天会话页面长按长按位置消息体
+        addr_info = self.public_send_location()
+        chat = SingleChatPage()
+        # 2、选择一个和通讯录联系人转发
+        chat.forward_file(addr_info)
+        scp = SelectContactsPage()
+        scp.click_he_contacts()
+        shcp = SelectHeContactsPage()
+        shcp.wait_for_page_load()
+        teams = shcp.get_team_names()
+        if teams:
+            shcp.select_one_team_by_name(teams[0])
+            detail_page = SelectHeContactsDetailPage()
+            detail_page.wait_for_page_load()
+            names = detail_page.get_contacts_names()
+            if not names:
+                print("WARN: Please add contacts in %s." % teams[0])
+            for name in names:
+                detail_page.select_one_linkman(name)
+                flag = detail_page.is_toast_exist("该联系人不可选", timeout=3)
+                if not flag:
+                    break
+            # 3、点击确定
+            detail_page.click_sure_forward()
+            flag2 = detail_page.is_toast_exist("已转发")
+            self.assertTrue(flag2)
+        else:
+            print("WARN: Please create a team and add contacts.")
+            shcp.click_back()
+            scp.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC1')
+    def test_msg_private_chat_file_location_0049(self):
+        """单聊天会话页面，长按位置消息体进行转发到群"""
+        # 1、在当前群聊天会话页面长按位置消息体
+        addr_info = self.public_send_location()
+        chat = SingleChatPage()
+        # 2、选择一个群转发
+        chat.forward_file(addr_info)
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        names = sogp.get_group_name()
+        if names:
+            sogp.select_one_group_by_name(names[0])
+            # 3、点击确定
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+        else:
+            print("WARN: There is no group.")
+            sogp.click_back()
+            scp.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC1')
+    def test_msg_private_chat_file_location_0050(self):
+        """单聊天会话页面点击位置消息体，在位置界面点击右下角按钮进行导航"""
+        # 先发送位置信息
+        chat = SingleChatPage()
+        self.public_send_location()
+        # 1、在当前页面点击位置消息体
+        chat.click_addr_info()
+        chat.wait_for_location_page_load()
+        # 2、点击右下角按钮
+        chat.click_nav_btn()
+        location_page = ChatLocationPage()
+        toast_flag = location_page.is_toast_exist("未发现手机导航应用", timeout=3)
+        map_flag = location_page.is_text_present("地图")
+        self.assertTrue(toast_flag or map_flag)
+        location_page.driver.back()
+        location_page.driver.back()
         chat.wait_for_page_load()
