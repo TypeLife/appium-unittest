@@ -130,7 +130,7 @@ class Preconditions(object):
 
         # 等待消息页
         message_page = MessagePage()
-        message_page.wait_for_page_load(60)
+        message_page.wait_login_success(60)
 
     @staticmethod
     def take_logout_operation_if_already_login():
@@ -236,7 +236,7 @@ class LoginTest(TestCase):
         Preconditions.login_by_one_key_login()
         Preconditions.take_logout_operation_if_already_login()
 
-    @tags('ALL', 'CMCC1')
+    @tags('ALL', 'CMCC')
     def test_login_0001(self, login_time=60):
         """ 本网非首次登录已设置头像-一键登录页面元素检查"""
         oklp = OneKeyLoginPage()
@@ -251,7 +251,7 @@ class LoginTest(TestCase):
         # 登录
         # oklp.check_the_agreement()
         oklp.click_one_key_login()
-        MessagePage().wait_for_page_load(login_time)
+        MessagePage().wait_login_success(login_time)
 
     @staticmethod
     def setUp_test_login_0002():
