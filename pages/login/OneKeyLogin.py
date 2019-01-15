@@ -48,6 +48,19 @@ class OneKeyLoginPage(BasePage):
         self.click_element(self.__locators["一键登录"])
 
     @TestLogger.log()
+    def have_read_agreement_detail(self):
+        """是否弹出 查看详情"""
+        try:
+            self.wait_until(
+                timeout=3,
+                auto_accept_permission_alert=True,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["查看详情"])
+            )
+            return True
+        except:
+            return False
+
+    @TestLogger.log()
     def click_read_agreement_detail(self):
         """点击查看详情"""
         self.click_element(self.__locators['查看详情'])
@@ -73,7 +86,7 @@ class OneKeyLoginPage(BasePage):
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
-        """等待权限列表页面加载（自动允许权限）"""
+        """等待一键登录页面加载"""
         try:
             self.wait_until(
                 timeout=timeout,
@@ -91,11 +104,13 @@ class OneKeyLoginPage(BasePage):
     def get_login_number(self, specify_card_slot=0):
         """获取一键登录界面的电话号码"""
         number = self.get_text(self.__locators['电话号码'])
-        if not re.match(r'^\d+$', number.strip()):
+        if number and re.match(r'^\d+$', number.strip()):
+            return number
+        else:
             print('一键登录页面可能加载手机号失败（{}），改为从配置获取手机号'.format(number))
             card_type, number = self.mobile.get_card(specify_card_slot)
             del card_type
-        return number
+            return number
 
     @TestLogger.log()
     def wait_for_tell_number_load(self, timeout=60, auto_accept_alerts=True):

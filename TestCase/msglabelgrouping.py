@@ -62,13 +62,14 @@ class Preconditions(object):
         """
         # 等待号码加载完成后，点击一键登录
         one_key = OneKeyLoginPage()
-        one_key.wait_for_tell_number_load(60)
+        one_key.wait_for_page_load()
+        # one_key.wait_for_tell_number_load(60)
         one_key.click_one_key_login()
-        one_key.click_read_agreement_detail()
-
-        # 同意协议
-        agreement = AgreementDetailPage()
-        agreement.click_agree_button()
+        if one_key.have_read_agreement_detail():
+            one_key.click_read_agreement_detail()
+            # 同意协议
+            agreement = AgreementDetailPage()
+            agreement.click_agree_button()
 
         # 等待消息页
         message_page = MessagePage()
@@ -110,6 +111,7 @@ class Preconditions(object):
             label_grouping.click_sure()
             # 选择成员
             slc = SelectLocalContactsPage()
+            slc.wait_for_page_load()
             names = slc.get_contacts_name()
             if not names:
                 raise AssertionError("No contacts, please add contacts in address book.")
@@ -150,25 +152,14 @@ class MsgLabelGroupingTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        # 进入标签会话页面
-        fail_time = 0
-
-        while fail_time < 3:
-            try:
-                Preconditions.enter_label_grouping_chat_page()
-                return
-            except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
+        pass
 
     def default_setUp(self):
         """确保每个用例运行前在标签分组会话页面"""
         Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         chat = LabelGroupingChatPage()
         if chat.is_on_this_page():
-            current_mobile().hide_keyboard_if_display()
             return
         else:
             current_mobile().disconnect_mobile()
@@ -262,19 +253,25 @@ class MsgLabelGroupingTest(TestCase):
         csf.click_video()
         # 3、选择视频，直接点击发送按钮
         local_file = ChatSelectLocalFilePage()
-        el = local_file.select_file2("视频")
-        if el:
-            local_file.click_send()
-            chat.wait_for_page_load()
-        else:
-            local_file.click_back()
-            csf.click_back()
-            chat.wait_for_page_load()
-            raise AssertionError("There is no video")
+        # 页面没有加载出视频，则循环6次
+        for i in range(6):
+            el = local_file.select_file2("视频")
+            if el:
+                local_file.click_send()
+                chat.wait_for_page_load()
+                return
+            else:
+                local_file.click_back()
+                csf.click_video()
+            time.sleep(1)
+        local_file.click_back()
+        csf.click_back()
+        chat.wait_for_page_load()
+        raise AssertionError("There is no video")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_msg_label_grouping_0005(self):
-        """标签分组会话页面，不勾选本地照片文件内视频点击发送按钮"""
+        """标签分组会话页面，不勾选本地照片文件内照片点击发送按钮"""
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
@@ -296,7 +293,7 @@ class MsgLabelGroupingTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_msg_label_grouping_0006(self):
-        """标签分组会话页面，勾选本地照片文件内视频点击发送按钮"""
+        """标签分组会话页面，勾选本地照片文件内照片点击发送按钮"""
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
@@ -309,19 +306,25 @@ class MsgLabelGroupingTest(TestCase):
         csf.click_pic()
         # 3、选择照片，直接点击发送按钮
         local_file = ChatSelectLocalFilePage()
-        el = local_file.select_file2("照片")
-        if el:
-            local_file.click_send()
-            chat.wait_for_page_load()
-        else:
-            local_file.click_back()
-            csf.click_back()
-            chat.wait_for_page_load()
-            raise AssertionError("There is no pic")
+        # 页面没有加载出照片，则循环6次
+        for i in range(6):
+            el = local_file.select_file2("照片")
+            if el:
+                local_file.click_send()
+                chat.wait_for_page_load()
+                return
+            else:
+                local_file.click_back()
+                csf.click_pic()
+            time.sleep(1)
+        local_file.click_back()
+        csf.click_back()
+        chat.wait_for_page_load()
+        raise AssertionError("There is no pic")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_msg_label_grouping_0007(self):
-        """标签分组会话页面，不勾选本地音乐文件内视频点击发送按钮"""
+        """标签分组会话页面，不勾选本地音乐文件内音乐点击发送按钮"""
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
@@ -343,7 +346,7 @@ class MsgLabelGroupingTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_msg_label_grouping_0008(self):
-        """标签分组会话页面，勾选本地音乐文件内视频点击发送按钮"""
+        """标签分组会话页面，勾选本地音乐文件内音乐点击发送按钮"""
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
@@ -356,15 +359,21 @@ class MsgLabelGroupingTest(TestCase):
         csf.click_music()
         # 3、选择音乐，直接点击发送按钮
         local_file = ChatSelectLocalFilePage()
-        el = local_file.select_file2("音乐")
-        if el:
-            local_file.click_send()
-            chat.wait_for_page_load()
-        else:
-            local_file.click_back()
-            csf.click_back()
-            chat.wait_for_page_load()
-            raise AssertionError("There is no music")
+        # 页面没有加载出照片，则循环6次
+        for i in range(6):
+            el = local_file.select_file2("音乐")
+            if el:
+                local_file.click_send()
+                chat.wait_for_page_load()
+                return
+            else:
+                local_file.click_back()
+                csf.click_music()
+            time.sleep(1)
+        local_file.click_back()
+        csf.click_back()
+        chat.wait_for_page_load()
+        raise AssertionError("There is no music")
 
     @staticmethod
     def public_open_file(file_type):
@@ -1127,3 +1136,4 @@ class MsgLabelGroupingTest(TestCase):
         toast_flag = chat.is_toast_exist("未发现手机导航应用", timeout=3)
         map_flag = chat.is_text_present("地图")
         self.assertTrue(toast_flag or map_flag)
+        chat.driver.back()

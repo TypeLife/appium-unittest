@@ -54,6 +54,7 @@ class Preconditions(object):
         guide_page.wait_for_page_load(30)
         guide_page.swipe_to_the_second_banner()
         guide_page.swipe_to_the_third_banner()
+        current_mobile().hide_keyboard_if_display()
         guide_page.click_start_the_experience()
 
         # 点击权限列表页面的确定按钮
@@ -69,14 +70,14 @@ class Preconditions(object):
         """
         # 等待号码加载完成后，点击一键登录
         one_key = OneKeyLoginPage()
-        one_key.wait_for_tell_number_load(60)
+        one_key.wait_for_page_load()
+        # one_key.wait_for_tell_number_load(60)
         one_key.click_one_key_login()
-        one_key.click_read_agreement_detail()
-
-        # 同意协议
-        agreement = AgreementDetailPage()
-        agreement.click_agree_button()
-
+        if one_key.have_read_agreement_detail():
+            one_key.click_read_agreement_detail()
+            # 同意协议
+            agreement = AgreementDetailPage()
+            agreement.click_agree_button()
         # 等待消息页
         message_page = MessagePage()
         message_page.wait_for_page_load(60)
@@ -173,7 +174,7 @@ class Preconditions(object):
     def get_group_chat_name():
         """获取群名"""
         phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
-        group_name = "mygroup" + phone_number[-4:]
+        group_name = "agroup" + phone_number[-4:]
         return group_name
 
 
@@ -182,19 +183,7 @@ class MsgGroupChatTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        """进入群聊聊天会话页面"""
-
-        fail_time = 0
-
-        while fail_time < 3:
-            try:
-                Preconditions.enter_group_chat_page()
-                return
-            except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
+        pass
 
     def default_setUp(self):
         """确保每个用例运行前在群聊聊天会话页面"""
@@ -700,6 +689,13 @@ class MsgGroupChatTest(TestCase):
             csf.wait_for_page_load()
             csf.click_local_file()
             local_file = ChatSelectLocalFilePage()
+            # 没有预置文件，则上传
+            flag = local_file.push_preset_file()
+            if flag:
+                local_file.click_back()
+                csf.click_local_file()
+            # 进入预置文件目录，选择文件发送
+            local_file.click_preset_file_dir()
             file = local_file.select_file(file_type)
             if file:
                 self.assertTrue(local_file.send_btn_is_enabled())
@@ -710,6 +706,7 @@ class MsgGroupChatTest(TestCase):
                 # 5.右下角的发送按钮高亮展示后，点击发送按钮，是否可以进行发送
                 local_file.click_send()
             else:
+                local_file.click_back()
                 local_file.click_back()
                 csf.click_back()
                 gcp.wait_for_page_load()

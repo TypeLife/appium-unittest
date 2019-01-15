@@ -45,6 +45,7 @@ class Preconditions(object):
         guide_page.wait_for_page_load(30)
         guide_page.swipe_to_the_second_banner()
         guide_page.swipe_to_the_third_banner()
+        current_mobile().hide_keyboard_if_display()
         guide_page.click_start_the_experience()
 
         # 点击权限列表页面的确定按钮
@@ -60,13 +61,14 @@ class Preconditions(object):
         """
         # 等待号码加载完成后，点击一键登录
         one_key = OneKeyLoginPage()
-        one_key.wait_for_tell_number_load(60)
+        one_key.wait_for_page_load()
+        # one_key.wait_for_tell_number_load(60)
         one_key.click_one_key_login()
-        one_key.click_read_agreement_detail()
-
-        # 同意协议
-        agreement = AgreementDetailPage()
-        agreement.click_agree_button()
+        if one_key.have_read_agreement_detail():
+            one_key.click_read_agreement_detail()
+            # 同意协议
+            agreement = AgreementDetailPage()
+            agreement.click_agree_button()
 
         # 等待消息页
         message_page = MessagePage()
@@ -87,102 +89,103 @@ class Preconditions(object):
         #  从一键登录页面登录
         Preconditions.login_by_one_key_login()
 
+    @staticmethod
+    def init_and_enter_collection_page():
+        """预置收藏文件条件,进入收藏页面"""
+        # 登录进入消息页面
+        Preconditions.make_already_in_message_page()
+        file_types = [".doc", ".docx", ".ppt", ".pptx", ".pdf", ".xls", ".xlsx", ".txt"]
+        mess = MessagePage()
+        # 点击“我”
+        mess.open_me_page()
+        # 点击收藏
+        me = MePage()
+        me.click_menu("收藏")
+        mcp = MeCollectionPage()
+        # 添加未收藏类型的文件
+        diff_file_types = []
+        have_file_types = []
+        if not mcp.is_text_present("没有任何收藏"):
+            have_file_types = mcp.get_file_types()
+        for tmp in file_types:
+            if tmp not in have_file_types:
+                diff_file_types.append(tmp)
+        mcp.click_back()
+        # 切换到通讯录
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        contacts.wait_for_page_load()
+        names = contacts.get_contacts_name()
+        contacts.select_people_by_name(names[0])
+        contact_detail = ContactDetailsPage()
+        contact_detail.click_message_icon()
+        chat = SingleChatPage()
+        # 如果弹框用户须知则点击处理
+        flag = chat.is_exist_dialog()
+        if flag:
+            chat.click_i_have_read()
+        for file_type in diff_file_types:
+            # 进入到文件选择页面
+            chat.click_more()
+            more_page = ChatMorePage()
+            more_page.click_file()
+            # 点击本地文件，进入到本地文件中
+            csf = ChatSelectFilePage()
+            csf.wait_for_page_load()
+            csf.click_local_file()
+            local_file = ChatSelectLocalFilePage()
+            # 没有预置文件，则上传
+            flag = local_file.push_preset_file()
+            if flag:
+                local_file.click_back()
+                csf.click_local_file()
+            # 进入预置文件目录，选择文件发送
+            local_file.click_preset_file_dir()
+            file = local_file.select_file(file_type)
+            if file:
+                local_file.click_send()
+                chat.collection_file(file_type)
+            else:
+                local_file.click_back()
+                local_file.click_back()
+                csf.click_back()
+                chat.wait_for_page_load()
+        # 收藏位置
+        chat.click_more()
+        more_page = ChatMorePage()
+        more_page.click_location()
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        addr = location_page.get_location_info()
+        location_page.click_send()
+        chat.wait_for_page_load()
+        chat.collection_file(addr)
+        # 从聊天会话页面返回收藏页面
+        chat.click_back()
+        contact_detail.click_back_icon()
+        mess.open_me_page()
+        me = MePage()
+        me.click_menu("收藏")
+        mcp.wait_for_page_load()
+
 
 class MsgCollectionTest(TestCase):
     """消息->收藏 模块"""
 
     @classmethod
     def setUpClass(cls):
-        """预置收藏文件条件"""
-
-        fail_time = 0
-
-        while fail_time < 3:
-            try:
-                # 登录进入消息页面
-                Preconditions.make_already_in_message_page()
-                file_types = [".doc", ".docx", ".ppt", ".pptx", ".pdf", ".xls", ".xlsx", ".txt"]
-                mess = MessagePage()
-                # 点击“我”
-                mess.open_me_page()
-                # 点击收藏
-                me = MePage()
-                me.click_menu("收藏")
-                mcp = MeCollectionPage()
-                # 添加未收藏类型的文件
-                diff_file_types = []
-                have_file_types = []
-                if not mcp.is_text_present("没有任何收藏"):
-                    have_file_types = mcp.get_file_types()
-                for tmp in file_types:
-                    if tmp not in have_file_types:
-                        diff_file_types.append(tmp)
-                mcp.click_back()
-                # 切换到通讯录
-                mess.open_contacts_page()
-                contacts = ContactsPage()
-                contacts.wait_for_page_load()
-                names = contacts.get_contacts_name()
-                contacts.select_people_by_name(names[0])
-                contact_detail = ContactDetailsPage()
-                contact_detail.click_message_icon()
-                chat = SingleChatPage()
-                # 如果弹框用户须知则点击处理
-                flag = chat.is_exist_dialog()
-                if flag:
-                    chat.click_i_have_read()
-                for file_type in diff_file_types:
-                    # 进入到文件选择页面
-                    chat.click_more()
-                    more_page = ChatMorePage()
-                    more_page.click_file()
-                    # 点击本地文件，进入到本地文件中
-                    csf = ChatSelectFilePage()
-                    csf.wait_for_page_load()
-                    csf.click_local_file()
-                    local_file = ChatSelectLocalFilePage()
-                    # 没有预置文件，则上传
-                    flag = local_file.push_preset_file()
-                    if flag:
-                        local_file.click_back()
-                        csf.click_local_file()
-                    # 进入预置文件目录，选择文件发送
-                    local_file.click_preset_file_dir()
-                    file = local_file.select_file(file_type)
-                    if file:
-                        local_file.click_send()
-                        chat.collection_file(file_type)
-                    else:
-                        local_file.click_back()
-                        local_file.click_back()
-                        csf.click_back()
-                        chat.wait_for_page_load()
-                # 收藏位置
-                chat.click_more()
-                more_page = ChatMorePage()
-                more_page.click_location()
-                location_page = ChatLocationPage()
-                location_page.wait_for_page_load()
-                addr = location_page.get_location_info()
-                location_page.click_send()
-                chat.wait_for_page_load()
-                chat.collection_file(addr)
-                # 从聊天会话页面返回收藏页面
-                chat.click_back()
-                contact_detail.click_back_icon()
-                mess.open_me_page()
-                me = MePage()
-                me.click_menu("收藏")
-                mcp.wait_for_page_load()
-                return
-            except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
+        pass
 
     def default_setUp(self):
+        """确保每个用例运行前在收藏页面"""
         Preconditions.select_mobile('Android-移动')
+        mcp = MeCollectionPage()
+        if mcp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().disconnect_mobile()
+            Preconditions.init_and_enter_collection_page()
 
     def default_tearDown(self):
         pass

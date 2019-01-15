@@ -46,6 +46,7 @@ class Preconditions(object):
         guide_page.wait_for_page_load(30)
         guide_page.swipe_to_the_second_banner()
         guide_page.swipe_to_the_third_banner()
+        current_mobile().hide_keyboard_if_display()
         guide_page.click_start_the_experience()
 
         # 点击权限列表页面的确定按钮
@@ -61,13 +62,14 @@ class Preconditions(object):
         """
         # 等待号码加载完成后，点击一键登录
         one_key = OneKeyLoginPage()
-        one_key.wait_for_tell_number_load(60)
+        one_key.wait_for_page_load()
+        # one_key.wait_for_tell_number_load(60)
         one_key.click_one_key_login()
-        one_key.click_read_agreement_detail()
-
-        # 同意协议
-        agreement = AgreementDetailPage()
-        agreement.click_agree_button()
+        if one_key.have_read_agreement_detail():
+            one_key.click_read_agreement_detail()
+            # 同意协议
+            agreement = AgreementDetailPage()
+            agreement.click_agree_button()
 
         # 等待消息页
         message_page = MessagePage()
@@ -124,18 +126,7 @@ class MsgPrivateChatFileLocationTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        # 进入单聊会话页面
-        fail_time = 0
-
-        while fail_time < 3:
-            try:
-                Preconditions.enter_private_chat_page()
-                return
-            except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
+        pass
 
     def default_setUp(self):
         """确保每个用例运行前在单聊会话页面"""
@@ -242,15 +233,21 @@ class MsgPrivateChatFileLocationTest(TestCase):
         csf.click_video()
         # 3、选择视频，直接点击发送按钮
         local_file = ChatSelectLocalFilePage()
-        el = local_file.select_file2("视频")
-        if el:
-            local_file.click_send()
-            chat.wait_for_page_load()
-        else:
-            local_file.click_back()
-            csf.click_back()
-            chat.wait_for_page_load()
-            raise AssertionError("There is no video")
+        # 页面没有加载出视频，则循环6次
+        for i in range(6):
+            el = local_file.select_file2("视频")
+            if el:
+                local_file.click_send()
+                chat.wait_for_page_load()
+                return
+            else:
+                local_file.click_back()
+                csf.click_video()
+            time.sleep(1)
+        local_file.click_back()
+        csf.click_back()
+        chat.wait_for_page_load()
+        raise AssertionError("There is no video")
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_private_chat_file_location_0005(self):
@@ -289,15 +286,21 @@ class MsgPrivateChatFileLocationTest(TestCase):
         csf.click_pic()
         # 3、选择照片，直接点击发送按钮
         local_file = ChatSelectLocalFilePage()
-        el = local_file.select_file2("照片")
-        if el:
-            local_file.click_send()
-            chat.wait_for_page_load()
-        else:
-            local_file.click_back()
-            csf.click_back()
-            chat.wait_for_page_load()
-            raise AssertionError("There is no pic")
+        # 页面没有加载出照片，则循环6次
+        for i in range(6):
+            el = local_file.select_file2("照片")
+            if el:
+                local_file.click_send()
+                chat.wait_for_page_load()
+                return
+            else:
+                local_file.click_back()
+                csf.click_pic()
+            time.sleep(1)
+        local_file.click_back()
+        csf.click_back()
+        chat.wait_for_page_load()
+        raise AssertionError("There is no pic")
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_private_chat_file_location_0007(self):
@@ -336,15 +339,21 @@ class MsgPrivateChatFileLocationTest(TestCase):
         csf.click_music()
         # 3、选择音乐，直接点击发送按钮
         local_file = ChatSelectLocalFilePage()
-        el = local_file.select_file2("音乐")
-        if el:
-            local_file.click_send()
-            chat.wait_for_page_load()
-        else:
-            local_file.click_back()
-            csf.click_back()
-            chat.wait_for_page_load()
-            raise AssertionError("There is no music")
+        # 页面没有加载出音乐，则循环6次
+        for i in range(6):
+            el = local_file.select_file2("音乐")
+            if el:
+                local_file.click_send()
+                chat.wait_for_page_load()
+                return
+            else:
+                local_file.click_back()
+                csf.click_music()
+            time.sleep(1)
+        local_file.click_back()
+        csf.click_back()
+        chat.wait_for_page_load()
+        raise AssertionError("There is no music")
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_private_chat_file_location_0019(self):
@@ -427,22 +436,29 @@ class MsgPrivateChatFileLocationTest(TestCase):
         chat.click_more()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC')
-    def test_msg_private_chat_file_location_0044(self):
-        """单聊天会话页面，点击位置，默认当前位置直接发送"""
-        # 1、在当前会话窗口点击位置
+    @staticmethod
+    def public_send_location():
+        """ 在发送位置信息 """
         chat = SingleChatPage()
         chat.wait_for_page_load()
         chat.click_more()
         more_page = ChatMorePage()
+        # 1、在当前会话窗口点击位置
         more_page.click_location()
         location_page = ChatLocationPage()
         location_page.wait_for_page_load()
+        addr_info = location_page.get_location_info()
         # 2、点击右上角的发送按钮
         location_page.click_send()
         chat.wait_for_page_load()
         chat.click_more()
         chat.wait_for_page_load()
+        return addr_info
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0044(self):
+        """单聊天会话页面，点击位置，默认当前位置直接发送"""
+        self.public_send_location()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_private_chat_file_location_0045(self):
@@ -481,3 +497,182 @@ class MsgPrivateChatFileLocationTest(TestCase):
         chat.wait_for_page_load()
         chat.click_more()
         chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0047(self):
+        """单聊天会话页面，长按位置消息体进行转发到本地通讯录联系人"""
+        # 1、长按位置消息体
+        addr_info = self.public_send_location()
+        chat = SingleChatPage()
+        # 2、选择转发，选择一个本地通讯录联系人
+        chat.forward_file(addr_info)
+        scp = SelectContactsPage()
+        scp.select_local_contacts()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        names = slcp.get_contacts_name()
+        if names:
+            slcp.select_one_member_by_name(names[0])
+            # 3、点击确定
+            slcp.click_sure_forward()
+            flag = slcp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+        else:
+            print("WARN: There is no linkman.")
+            slcp.click_back()
+            scp.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0048(self):
+        """单聊天会话页面，长按位置消息体进行转发到和通讯录联系人"""
+        # 1、在当前群聊天会话页面长按长按位置消息体
+        addr_info = self.public_send_location()
+        chat = SingleChatPage()
+        # 2、选择一个和通讯录联系人转发
+        chat.forward_file(addr_info)
+        scp = SelectContactsPage()
+        scp.click_he_contacts()
+        shcp = SelectHeContactsPage()
+        shcp.wait_for_page_load()
+        teams = shcp.get_team_names()
+        if teams:
+            shcp.select_one_team_by_name(teams[0])
+            detail_page = SelectHeContactsDetailPage()
+            detail_page.wait_for_page_load()
+            names = detail_page.get_contacts_names()
+            if not names:
+                print("WARN: Please add contacts in %s." % teams[0])
+            for name in names:
+                detail_page.select_one_linkman(name)
+                flag = detail_page.is_toast_exist("该联系人不可选", timeout=3)
+                if not flag:
+                    break
+            # 3、点击确定
+            detail_page.click_sure_forward()
+            flag2 = detail_page.is_toast_exist("已转发")
+            self.assertTrue(flag2)
+        else:
+            print("WARN: Please create a team and add contacts.")
+            shcp.click_back()
+            scp.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0049(self):
+        """单聊天会话页面，长按位置消息体进行转发到群"""
+        # 1、在当前群聊天会话页面长按位置消息体
+        addr_info = self.public_send_location()
+        chat = SingleChatPage()
+        # 2、选择一个群转发
+        chat.forward_file(addr_info)
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        names = sogp.get_group_name()
+        if names:
+            sogp.select_one_group_by_name(names[0])
+            # 3、点击确定
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+        else:
+            print("WARN: There is no group.")
+            sogp.click_back()
+            scp.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0050(self):
+        """单聊天会话页面点击位置消息体，在位置界面点击右下角按钮进行导航"""
+        # 先发送位置信息
+        chat = SingleChatPage()
+        self.public_send_location()
+        # 1、在当前页面点击位置消息体
+        chat.click_addr_info()
+        chat.wait_for_location_page_load()
+        # 2、点击右下角按钮
+        chat.click_nav_btn()
+        location_page = ChatLocationPage()
+        toast_flag = location_page.is_toast_exist("未发现手机导航应用", timeout=3)
+        map_flag = location_page.is_text_present("地图")
+        self.assertTrue(toast_flag or map_flag)
+        location_page.driver.back()
+        location_page.driver.back()
+        chat.wait_for_page_load()
+
+    @staticmethod
+    def click_open_file(file_type):
+        """在聊天会话页面打开自己发送的文件"""
+        chat = SingleChatPage()
+        chat.wait_for_page_load()
+        # 进入到文件选择页面
+        chat.click_more()
+        more_page = ChatMorePage()
+        more_page.click_file()
+        # 点击本地文件，进入到本地文件中
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        flag = local_file.push_preset_file()
+        if flag:
+            local_file.click_back()
+            csf.click_local_file()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(file_type)
+        if file:
+            local_file.click_send()
+            # 打开文件
+            chat.open_file_in_chat_page(file_type)
+            chat.wait_for_open_file()
+            chat.click_back_in_open_file_page()
+            chat.wait_for_page_load()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+            chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0051(self):
+        """单聊天会话页面，点击自己发送格式为doc的文件"""
+        self.click_open_file(".doc")
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0052(self):
+        """单聊天会话页面，点击自己发送格式为docx的文件"""
+        self.click_open_file(".docx")
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0053(self):
+        """单聊天会话页面，点击自己发送格式为ppt的文件"""
+        self.click_open_file(".ppt")
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0054(self):
+        """单聊天会话页面，点击自己发送格式为pptx的文件"""
+        self.click_open_file(".pptx")
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0055(self):
+        """单聊天会话页面，点击自己发送格式为pdf的文件"""
+        self.click_open_file(".pdf")
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0056(self):
+        """单聊天会话页面，点击自己发送格式为xls的文件"""
+        self.click_open_file(".xls")
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0057(self):
+        """单聊天会话页面，点击自己发送格式为xlsx的文件"""
+        self.click_open_file(".xlsx")
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0058(self):
+        """单聊天会话页面，点击自己发送格式为txt的文件"""
+        self.click_open_file(".txt")
