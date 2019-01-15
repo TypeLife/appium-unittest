@@ -153,12 +153,12 @@ class ChatSelectLocalFilePage(BasePage):
     @TestLogger.log()
     def select_file2(self, file_type):
         """选择文件"""
-        el = self.get_element(self.__class__.__locators[file_type])
-        if el:
-            el.click()
-            return el
+        els = self.get_elements(self.__class__.__locators[file_type])
+        if els:
+            els[0].click()
+            return els[0]
         else:
-            print("在SD卡 无%s类型的文件，请预置相应类型文件" % file_type)
+            print("在SD卡 无%s类型的文件 或者 页面未加载出来。" % file_type)
 
     @TestLogger.log()
     def click_preset_file_dir(self):
