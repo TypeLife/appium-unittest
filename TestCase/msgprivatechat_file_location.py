@@ -505,7 +505,7 @@ class MsgPrivateChatFileLocationTest(TestCase):
             scp.click_back()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC1')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_private_chat_file_location_0048(self):
         """单聊天会话页面，长按位置消息体进行转发到和通讯录联系人"""
         # 1、在当前群聊天会话页面长按长按位置消息体
@@ -540,7 +540,7 @@ class MsgPrivateChatFileLocationTest(TestCase):
             scp.click_back()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC1')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_private_chat_file_location_0049(self):
         """单聊天会话页面，长按位置消息体进行转发到群"""
         # 1、在当前群聊天会话页面长按位置消息体
@@ -565,7 +565,7 @@ class MsgPrivateChatFileLocationTest(TestCase):
             scp.click_back()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC1')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_private_chat_file_location_0050(self):
         """单聊天会话页面点击位置消息体，在位置界面点击右下角按钮进行导航"""
         # 先发送位置信息
@@ -583,3 +583,78 @@ class MsgPrivateChatFileLocationTest(TestCase):
         location_page.driver.back()
         location_page.driver.back()
         chat.wait_for_page_load()
+
+    @staticmethod
+    def click_open_file(file_type):
+        """在聊天会话页面打开自己发送的文件"""
+        chat = SingleChatPage()
+        chat.wait_for_page_load()
+        # 进入到文件选择页面
+        chat.click_more()
+        more_page = ChatMorePage()
+        more_page.click_file()
+        # 点击本地文件，进入到本地文件中
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        flag = local_file.push_preset_file()
+        if flag:
+            local_file.click_back()
+            csf.click_local_file()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(file_type)
+        if file:
+            local_file.click_send()
+            # 打开文件
+            chat.open_file_in_chat_page(file_type)
+            chat.wait_for_open_file()
+            chat.click_back_in_open_file_page()
+            chat.wait_for_page_load()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+            chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0051(self):
+        """单聊天会话页面，点击自己发送格式为doc的文件"""
+        self.click_open_file(".doc")
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0052(self):
+        """单聊天会话页面，点击自己发送格式为docx的文件"""
+        self.click_open_file(".docx")
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0053(self):
+        """单聊天会话页面，点击自己发送格式为ppt的文件"""
+        self.click_open_file(".ppt")
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0054(self):
+        """单聊天会话页面，点击自己发送格式为pptx的文件"""
+        self.click_open_file(".pptx")
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0055(self):
+        """单聊天会话页面，点击自己发送格式为pdf的文件"""
+        self.click_open_file(".pdf")
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0056(self):
+        """单聊天会话页面，点击自己发送格式为xls的文件"""
+        self.click_open_file(".xls")
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0057(self):
+        """单聊天会话页面，点击自己发送格式为xlsx的文件"""
+        self.click_open_file(".xlsx")
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_private_chat_file_location_0058(self):
+        """单聊天会话页面，点击自己发送格式为txt的文件"""
+        self.click_open_file(".txt")
