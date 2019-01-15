@@ -233,15 +233,21 @@ class MsgPrivateChatFileLocationTest(TestCase):
         csf.click_video()
         # 3、选择视频，直接点击发送按钮
         local_file = ChatSelectLocalFilePage()
-        el = local_file.select_file2("视频")
-        if el:
-            local_file.click_send()
-            chat.wait_for_page_load()
-        else:
-            local_file.click_back()
-            csf.click_back()
-            chat.wait_for_page_load()
-            raise AssertionError("There is no video")
+        # 页面没有加载出视频，则循环6次
+        for i in range(6):
+            el = local_file.select_file2("视频")
+            if el:
+                local_file.click_send()
+                chat.wait_for_page_load()
+                return
+            else:
+                local_file.click_back()
+                csf.click_video()
+            time.sleep(1)
+        local_file.click_back()
+        csf.click_back()
+        chat.wait_for_page_load()
+        raise AssertionError("There is no video")
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_private_chat_file_location_0005(self):
@@ -280,15 +286,21 @@ class MsgPrivateChatFileLocationTest(TestCase):
         csf.click_pic()
         # 3、选择照片，直接点击发送按钮
         local_file = ChatSelectLocalFilePage()
-        el = local_file.select_file2("照片")
-        if el:
-            local_file.click_send()
-            chat.wait_for_page_load()
-        else:
-            local_file.click_back()
-            csf.click_back()
-            chat.wait_for_page_load()
-            raise AssertionError("There is no pic")
+        # 页面没有加载出照片，则循环6次
+        for i in range(6):
+            el = local_file.select_file2("照片")
+            if el:
+                local_file.click_send()
+                chat.wait_for_page_load()
+                return
+            else:
+                local_file.click_back()
+                csf.click_pic()
+            time.sleep(1)
+        local_file.click_back()
+        csf.click_back()
+        chat.wait_for_page_load()
+        raise AssertionError("There is no pic")
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_private_chat_file_location_0007(self):
@@ -327,15 +339,21 @@ class MsgPrivateChatFileLocationTest(TestCase):
         csf.click_music()
         # 3、选择音乐，直接点击发送按钮
         local_file = ChatSelectLocalFilePage()
-        el = local_file.select_file2("音乐")
-        if el:
-            local_file.click_send()
-            chat.wait_for_page_load()
-        else:
-            local_file.click_back()
-            csf.click_back()
-            chat.wait_for_page_load()
-            raise AssertionError("There is no music")
+        # 页面没有加载出音乐，则循环6次
+        for i in range(6):
+            el = local_file.select_file2("音乐")
+            if el:
+                local_file.click_send()
+                chat.wait_for_page_load()
+                return
+            else:
+                local_file.click_back()
+                csf.click_music()
+            time.sleep(1)
+        local_file.click_back()
+        csf.click_back()
+        chat.wait_for_page_load()
+        raise AssertionError("There is no music")
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_private_chat_file_location_0019(self):
