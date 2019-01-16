@@ -110,7 +110,7 @@ class Preconditions(object):
         mess.click_group_chat()
         # 选择联系人界面，选择一个群
         sc = SelectContactsPage()
-        times = 15
+        times = 30
         n = 0
         # 重置应用时需要再次点击才会出现选择一个群
         while n < times:
@@ -124,6 +124,8 @@ class Preconditions(object):
             else:
                 break
             n = n + 1
+        if n == times:
+            raise AssertionError("选择联系人页面在%ss内，没有加载出选项" % (times*2))
         sc.click_select_one_group()
         # 群名
         group_name = Preconditions.get_group_chat_name()

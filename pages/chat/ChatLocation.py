@@ -68,8 +68,6 @@ class ChatLocationPage(BasePage):
         addr_info = el.parent.find_element(*self.__class__.__locators["地址详细信息"]).text
         return addr_info
 
-
-
     @TestLogger.log()
     def click_allow(self):
         """点击允许"""
