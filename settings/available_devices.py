@@ -239,3 +239,26 @@ AVAILABLE_DEVICES = {
         ]
     },
 }
+
+DEVICES_CONFIG_YYX = {
+    'M960BDQN229CH': {
+        "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
+        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
+        "DEFAULT_CAPABILITY": {
+            "platformName": "Android",
+            "platformVersion": "8.1.0",
+            "deviceName": "JUBNU18816112025",
+            "udid": "JUBNU18816112025",
+            "automationName": "UiAutomator2",
+            "newCommandTimeout": 600,
+            "appPackage": "com.chinasofti.rcs",
+            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+        },
+        'CARDS': [
+            {
+                'TYPE': CardType.CHINA_MOBILE,
+                'CARD_NUMBER': '13800138000'
+            },
+        ]
+    },
+}
