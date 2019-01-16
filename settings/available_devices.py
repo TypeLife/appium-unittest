@@ -2,10 +2,35 @@
 from library.core.common.simcardtype import CardType
 from library.core.common.supportedmodel import SupportedModel
 
+# ======================= 移动CI环境手机配置 =======================
+AVAILABLE_DEVICES = {
+    'M960BDQN229CH': {
+        "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
+        "SERVER_URL": 'http://221.176.34.113:5000/wd/hub',
+        "DEFAULT_CAPABILITY": {
+            "platformName": "Android",
+            "platformVersion": "6.0",
+            "deviceName": "95AQACPMGJP5L",
+            "udid": "95AQACPMGJP5L",
+            "automationName": "UiAutomator2",
+            "newCommandTimeout": 600,
+            "appPackage": "com.chinasofti.rcs",
+            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+        },
+        'CARDS': [
+            {
+                'TYPE': CardType.CHINA_MOBILE,
+                'CARD_NUMBER': '14775970982'
+            },
+        ]
+    },
+}
+
+# ======================= 本地CI环境手机配置 =======================
 AVAILABLE_DEVICES_DEV = {
     'M960BDQN229CH': {
         "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
-        "SERVER_URL": 'http://192.168.12.129:4723/wd/hub',
+        "SERVER_URL": 'http://192.168.200.127:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0.1",
@@ -217,15 +242,16 @@ AVAILABLE_DEVICES_DEV = {
     }
 }
 
-AVAILABLE_DEVICES = {
+# ======================= 个人本机执行环境手机配置 =======================
+DEVICES_CONFIG_XIN = {
     'M960BDQN229CH': {
         "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
-        "SERVER_URL": 'http://221.176.34.113:5000/wd/hub',
+        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
-            "platformVersion": "6.0",
-            "deviceName": "95AQACPMGJP5L",
-            "udid": "95AQACPMGJP5L",
+            "platformVersion": "6.0.1",
+            "deviceName": "M960BDQN229DK",
+            "udid": "M960BDQN229DK",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
@@ -234,10 +260,10 @@ AVAILABLE_DEVICES = {
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '14775970982'
+                'CARD_NUMBER': '19876283465'
             },
         ]
-    },
+    }
 }
 
 DEVICES_CONFIG_YYX = {

@@ -48,6 +48,19 @@ class OneKeyLoginPage(BasePage):
         self.click_element(self.__locators["一键登录"])
 
     @TestLogger.log()
+    def have_read_agreement_detail(self):
+        """是否弹出 查看详情"""
+        try:
+            self.wait_until(
+                timeout=3,
+                auto_accept_permission_alert=True,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["查看详情"])
+            )
+            return True
+        except:
+            return False
+
+    @TestLogger.log()
     def click_read_agreement_detail(self):
         """点击查看详情"""
         self.click_element(self.__locators['查看详情'])

@@ -639,7 +639,7 @@ class MobileDriver(ABC):
                 self.driver.swipe(x_start, y_start, x_offset, y_offset, duration)
 
     @TestLogger.log('按百分比在屏幕上滑动')
-    def swipe_by_percent_on_screen(self, start_x, start_y, end_x, end_y, duration):
+    def swipe_by_percent_on_screen(self, start_x, start_y, end_x, end_y, duration=None):
         width = self.driver.get_window_size()["width"]
         height = self.driver.get_window_size()["height"]
         x_start = float(start_x) / 100 * width

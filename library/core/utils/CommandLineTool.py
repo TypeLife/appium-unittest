@@ -8,9 +8,9 @@ from library.core.utils.testcasefilter import TEST_CASE_TAG_ENVIRON
 def parse_and_store_command_line_params():
     parser = argparse.ArgumentParser()
     parser.add_argument('--suite', '-s', action='append', help='测试套件路径')
-    parser.add_argument('--include', '-i', action='append', help='匹配的用例标签')
+    parser.add_argument('--include', '-i', nargs='+', help='匹配的用例标签')
     parser.add_argument('--sendTo', nargs='+', help='匹配的用例标签')
-    parser.add_argument('--deviceConfig', help='手机配置引用路径')
+    parser.add_argument('--deviceConfig', '-d', help='手机配置名称')
     args = parser.parse_args()
     if args.include:
         include = json.dumps(args.include, ensure_ascii=False).upper()

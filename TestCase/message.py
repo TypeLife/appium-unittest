@@ -184,9 +184,9 @@ class MessageScanTest(TestCase):
         current_mobile().set_network_status(0)
         current_mobile().activate_app()
 
-
     @staticmethod
     def tearDown_test_msg_scan_0007():
+        Preconditions.connect_mobile('Android-移动')
         current_mobile().set_network_status(6)
         scan_page = Scan1Page()
         scan_page.click_back()

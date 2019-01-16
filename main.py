@@ -1,14 +1,14 @@
 import os
-import unittest
 import traceback
+import unittest
 
 if __name__ == '__main__':
-
+    os.environ.setdefault('AVAILABLE_DEVICES_SETTING', 'AVAILABLE_DEVICES')
     from library.core.utils import CommandLineTool
 
     cli_commands = CommandLineTool.parse_and_store_command_line_params()
     if cli_commands.deviceConfig:
-        os.environ.setdefault('AVAILABLE_DEVICES_SETTING', cli_commands.deviceConfig)
+        os.environ['AVAILABLE_DEVICES_SETTING'] = cli_commands.deviceConfig
 
     from library.core.utils import ConfigManager, common
 
