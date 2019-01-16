@@ -128,6 +128,7 @@ class Preconditions(object):
             lgdp.click_add_members()
             # 选择成员
             slc = SelectLocalContactsPage()
+            slc.wait_for_page_load()
             names = slc.get_contacts_name()
             if not names:
                 raise AssertionError("No contacts, please add contacts in address book.")
