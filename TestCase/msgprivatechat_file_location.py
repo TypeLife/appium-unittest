@@ -583,7 +583,7 @@ class MsgPrivateChatFileLocationTest(TestCase):
             scp.click_back()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC')
+    @tags('ALL', 'SMOKE', 'CMCC1')
     def test_msg_private_chat_file_location_0050(self):
         """单聊天会话页面点击位置消息体，在位置界面点击右下角按钮进行导航"""
         # 先发送位置信息
@@ -599,7 +599,9 @@ class MsgPrivateChatFileLocationTest(TestCase):
         map_flag = location_page.is_text_present("地图")
         self.assertTrue(toast_flag or map_flag)
         location_page.driver.back()
-        location_page.driver.back()
+        time.sleep(0.3)
+        if not chat.is_on_this_page():
+            location_page.click_back()
         chat.wait_for_page_load()
 
     @staticmethod
