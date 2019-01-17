@@ -1216,6 +1216,44 @@ Value (Alias)      | Data | Wifi | Airplane Mode
             # TODO IOS平台待实现
             raise NotImplementedError('该接口目前只支持Android')
 
+    @TestLogger.log('安装APP')
+    def install_app(self,
+                    app_path,
+                    replace=True,
+                    timeout=60000,
+                    allowTestPackages=True,
+                    useSdcard=False,
+                    grantPermissions=True
+                    ):
+        """
+        安装app 魅族
+        常见报错原因：
+            1、Failure [INSTALL_FAILED_VERSION_DOWNGRADE]（降版本覆盖安装异常）
+        :param app_path: 要安装的应用程序的本地或远程路径
+        :param replace:  如果应用已存在于被测试的设备上, 是否重新安装/升级包。默认为 True
+        :param timeout: 等待安装完成的时间。默认情况下为60000毫秒。
+        :param allowTestPackages: 是否允许安装在清单中标记为测试的包。默认为 True
+        :param useSdcard: 是否使用 sd 卡安装应用程序. 默认为 False
+        :param grantPermissions: 是否在安装完成后自动授权 android 6 +。默认为 True
+        :return:
+        """
+        try:
+            self.driver.install_app(
+                app_path=app_path,
+                replace=replace,
+                timeout=timeout,
+                allowTestPackages=allowTestPackages,
+                useSdcard=useSdcard,
+                grantPermissions=grantPermissions
+            )
+        except:
+            tips = '''
+Tips:
+如果是魅族手机，请确保 手机管家->权限管理->USB安装权限->USB安装管理开关已关闭, 以防止安装权限弹窗阻塞脚本；
+            '''
+            print(tips)
+            raise
+
     def __str__(self):
         device_info = {
             "name": self.alis,

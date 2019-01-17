@@ -159,6 +159,10 @@ class MsgLabelGroupingTest(TestCase):
         """确保每个用例运行前在标签分组会话页面"""
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_label_grouping_chat_page()
+            return
         chat = LabelGroupingChatPage()
         if chat.is_on_this_page():
             return
