@@ -124,9 +124,10 @@ class Preconditions(object):
             else:
                 break
             n = n + 1
-        if n == times:
+        try:
+            sc.click_select_one_group()
+        except:
             raise AssertionError("选择联系人页面在%ss内，没有加载出选项" % (times*2))
-        sc.click_select_one_group()
         # 群名
         group_name = Preconditions.get_group_chat_name()
         # 获取已有群名
@@ -140,6 +141,7 @@ class Preconditions(object):
         # 从本地联系人中选择成员创建群
         sc.click_local_contacts()
         slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
         names = slc.get_contacts_name()
         if not names:
             raise AssertionError("No contacts, please add contacts in address book.")
