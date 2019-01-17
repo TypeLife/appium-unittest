@@ -131,6 +131,10 @@ class MsgPrivateChatVideoPicTest(TestCase):
     def default_setUp(self):
         """确保每个用例运行前在单聊会话页面"""
         Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_private_chat_page()
+            return
         chat = SingleChatPage()
         if chat.is_on_this_page():
             current_mobile().hide_keyboard_if_display()
