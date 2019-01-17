@@ -1,5 +1,6 @@
 import random
 import time
+import re
 from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.utils.testcasefilter import tags
@@ -232,3 +233,128 @@ class MsgPrivateChatVideoPicTest(TestCase):
         cpp.click_back()
         chat.wait_for_page_load()
 
+    @staticmethod
+    def public_edit_pic():
+        """图片编辑操作"""
+        # 1.在当前聊天会话页面，点击输入框左上方的相册图标
+        chat = SingleChatPage()
+        # 点击图片按钮
+        chat.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        # 2.选择一张照片，点击右上角编辑按钮，进行涂鸦、马赛克、文本编辑
+        cpg.select_pic()
+        cpg.click_preview()
+        cppp = ChatPicPreviewPage()
+        cppp.wait_for_page_load()
+        cppp.click_edit()
+        pic = ChatPicEditPage()
+        # 涂鸦
+        pic.click_doodle()
+        pic.do_doodle()
+        # 马赛克
+        pic.click_mosaic()
+        pic.do_mosaic()
+        # 文本编辑
+        pic.click_text_edit_btn()
+        pic.input_pic_text()
+        # 完成
+        pic.click_save()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0006(self):
+        """单聊会话页面，编辑图片发送"""
+        self.public_edit_pic()
+        chat = SingleChatPage()
+        pic = ChatPicEditPage()
+        # 3.点击保存按钮
+        pic.click_save()
+        # 4.点击发送
+        pic.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0007(self):
+        """单聊会话页面，编辑图片不保存发送"""
+        self.public_edit_pic()
+        chat = SingleChatPage()
+        pic = ChatPicEditPage()
+        # 4.点击发送按钮
+        pic.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0008(self):
+        """单聊会话页面，编辑图片中途直接发送"""
+        self.public_edit_pic()
+        chat = SingleChatPage()
+        pic = ChatPicEditPage()
+        # 3.点击发送
+        pic.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0009(self):
+        """单聊会话页面，编辑图片保存"""
+        self.public_edit_pic()
+        chat = SingleChatPage()
+        pic = ChatPicEditPage()
+        # 3.点击保存
+        pic.click_save()
+        flag = pic.is_toast_exist("保存成功")
+        if not flag:
+            raise AssertionError("保存编辑图片时没有弹出“保存成功”提示")
+        # 返回单聊会话页面
+        pic.click_cancle()
+        cppp = ChatPicPreviewPage()
+        cppp.click_back()
+        cpg = ChatPicPage()
+        cpg.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0010(self):
+        """单聊会话页面，取消编辑图片"""
+        self.public_edit_pic()
+        chat = SingleChatPage()
+        pic = ChatPicEditPage()
+        # 3.点击取消按钮
+        pic.click_cancle()
+        # 返回单聊会话页面
+        cppp = ChatPicPreviewPage()
+        cppp.click_back()
+        cpg = ChatPicPage()
+        cpg.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0011(self):
+        """单聊会话页面，取消编辑图片，点击发送按钮"""
+        self.public_edit_pic()
+        chat = SingleChatPage()
+        pic = ChatPicEditPage()
+        # 3.点击取消按钮
+        pic.click_cancle()
+        # 4.点击发送按钮
+        pic.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC2')
+    def test_Msg_PrivateChat_VideoPic_0012(self):
+        """单聊会话页面，发送相册内的图片 """
+        # 1.在当前聊天会话页面，点击输入框左上方的相册图标
+        chat = SingleChatPage()
+        # 点击图片按钮
+        chat.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        # 2.选择一张照片，直接点击当前选中的图片，放大展示当前图片
+        cpg.select_pic()
+        cpg.click_preview()
+        cppp = ChatPicPreviewPage()
+        cppp.wait_for_page_load()
+        preview_info = cppp.get_pic_preview_info()
+        self.assertIsNotNone(re.match(r'预览\(\d+/\d+\)', preview_info))
+        cppp.click_back()
+        cpg.click_back()
+        chat.wait_for_page_load()
