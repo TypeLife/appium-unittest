@@ -131,6 +131,10 @@ class MsgPrivateChatFileLocationTest(TestCase):
     def default_setUp(self):
         """确保每个用例运行前在单聊会话页面"""
         Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_private_chat_page()
+            return
         chat = SingleChatPage()
         if chat.is_on_this_page():
             current_mobile().hide_keyboard_if_display()
@@ -583,7 +587,7 @@ class MsgPrivateChatFileLocationTest(TestCase):
             scp.click_back()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC1')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_private_chat_file_location_0050(self):
         """单聊天会话页面点击位置消息体，在位置界面点击右下角按钮进行导航"""
         # 先发送位置信息
