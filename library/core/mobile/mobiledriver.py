@@ -142,7 +142,6 @@ class MobileDriver(ABC):
                 msg = traceback.format_exc()
                 print(msg)
             try:
-                # del self._driver
                 self._driver = webdriver.Remote(self._remote_url, self._desired_caps, self._browser_profile,
                                                 self._proxy,
                                                 self._keep_alive)
@@ -1208,13 +1207,17 @@ Value (Alias)      | Data | Wifi | Airplane Mode
     def get_mobile_network_connection_info(self):
         if self.is_android():
             try:
-                result = self.execute_shell_command('ip', '-f', 'inet', 'addr')
+                result = self.execute_shell_command('ifconfig')
             except:
                 result = "暂无信息"
             return result
         else:
             # TODO IOS平台待实现
             raise NotImplementedError('该接口目前只支持Android')
+
+    @TestLogger.log("卸载APP")
+    def remove_app(self, package, **options):
+        self.driver.remove_app(package, **options)
 
     @TestLogger.log('安装APP')
     def install_app(self,

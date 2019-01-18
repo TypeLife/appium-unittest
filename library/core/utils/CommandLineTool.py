@@ -11,8 +11,11 @@ def parse_and_store_command_line_params():
     parser.add_argument('--include', '-i', nargs='+', help='匹配的用例标签')
     parser.add_argument('--sendTo', nargs='+', help='匹配的用例标签')
     parser.add_argument('--deviceConfig', '-d', help='手机配置名称')
+    parser.add_argument('--appUrl', help='测试APP下载路径')
     args = parser.parse_args()
     if args.include:
         include = json.dumps(args.include, ensure_ascii=False).upper()
         os.environ[TEST_CASE_TAG_ENVIRON] = include
+    if args.appUrl:
+        os.environ['APP_DOWNLOAD_URL'] = args.appUrl
     return args

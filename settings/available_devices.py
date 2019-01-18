@@ -2,6 +2,14 @@
 from library.core.common.simcardtype import CardType
 from library.core.common.supportedmodel import SupportedModel
 
+# 测试APP信息
+TARGET_APP = dict(
+    # DOWNLOAD_URL="https://www.pgyer.com/apiv2/app/install?_api_key=298b363e3288c07f2683b96ca9bc5ab6&appKey=andfetiondev&buildPassword=qwer!234",
+    DOWNLOAD_URL="http://dlrcs.fetion-portal.com/mobile/RCS_V6.2.6.1205_20181205.apk",
+    APP_PACKAGE="com.chinasofti.rcs",
+    APP_ACTIVITY="com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+)
+
 # ======================= 移动CI环境手机配置 =======================
 AVAILABLE_DEVICES = {
     'M960BDQN229CH': {
@@ -264,24 +272,25 @@ DEVICES_CONFIG_XIN = {
             },
         ]
     },
-    '红米Note4X': {
-        "MODEL": SupportedModel.RED_MI_NOTE_4X,
-        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
-        "DEFAULT_CAPABILITY": {
-            "platformName": "Android",
-            "platformVersion": "6.0",
-            "deviceName": "VCO7IFTKKZZ5FI9T",
-            "udid": "VCO7IFTKKZZ5FI9T",
-            "automationName": "UiAutomator2",
-            "newCommandTimeout": 600,
-            "appPackage": "com.chinasofti.rcs",
-            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
-        },
-        'CARDS': [
-            {
-                'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '14775290489'
-            },
-        ]
-    }
+    # '红米Note4X': {
+    #     "MODEL": SupportedModel.RED_MI_NOTE_4X,
+    #     "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
+    #     "DEFAULT_CAPABILITY": {
+    #         "platformName": "Android",
+    #         "platformVersion": "6.0",
+    #         "deviceName": "VCO7IFTKKZZ5FI9T",
+    #         "udid": "VCO7IFTKKZZ5FI9T",
+    #         "automationName": "UiAutomator2",
+    #         "newCommandTimeout": 600,
+    #
+    #         "appPackage": "com.chinasofti.rcs",
+    #         "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+    #     },
+    #     'CARDS': [
+    #         {
+    #             'TYPE': CardType.CHINA_MOBILE,
+    #             'CARD_NUMBER': '14775290489'
+    #         },
+    #     ]
+    # }
 }
