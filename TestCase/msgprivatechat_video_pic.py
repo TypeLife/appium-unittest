@@ -339,7 +339,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         pic.click_send()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC2')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_VideoPic_0012(self):
         """单聊会话页面，发送相册内的图片 """
         # 1.在当前聊天会话页面，点击输入框左上方的相册图标
@@ -357,4 +357,84 @@ class MsgPrivateChatVideoPicTest(TestCase):
         self.assertIsNotNone(re.match(r'预览\(\d+/\d+\)', preview_info))
         cppp.click_back()
         cpg.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0013(self):
+        """单聊会话页面，预览已选中的图片，隐藏编辑按钮 """
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标
+        chat = SingleChatPage()
+        chat.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        # 2、选择2张照片后，点击左下角的预览按钮
+        cpg.select_pic(n=2)
+        cpg.click_preview()
+        cppp = ChatPicPreviewPage()
+        cppp.wait_for_page_load()
+        cppp.click_edit()
+        flag = cppp.is_toast_exist("仅支持勾选单张图片时进行编辑")
+        if not flag:
+            raise AssertionError("勾选多张图片时编辑按钮没有隐藏")
+        cppp.click_back()
+        cpg.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0014(self):
+        """单聊会话页面，勾选9张相册内图片发送"""
+        # 1.在当前聊天会话页面，点击输入框左上方的相册图标
+        chat = SingleChatPage()
+        chat.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        # 2.选择9张图片，点击发送
+        cpg.select_pic(n=9)
+        cpg.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0015(self):
+        """单聊会话页面，勾选超9张相册内图片发送"""
+        # 1.在当前聊天会话页面，点击输入框左上方的相册图标
+        chat = SingleChatPage()
+        chat.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2.选择超9张图片
+        cpp.select_pic(n=10)
+        flag = cpp.is_toast_exist("最多只能选择9张照片")
+        if not flag:
+            raise AssertionError("选择超过9张图片时无‘最多只能选择9张照片’提示")
+        cpp.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0016(self):
+        """单聊会话页面，同时发送相册中的图片和视屏"""
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标
+        chat = SingleChatPage()
+        chat.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2、在当前页面选择图片和视频
+        cpp.select_pic()
+        cpp.select_video()
+        flag = cpp.is_toast_exist("不能同时选择照片和视频")
+        if not flag:
+            raise AssertionError("同时选择照片和视频时无‘不能同时选择照片和视频’提示")
+        cpp.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0017(self):
+        """单聊会话页面，使用拍照功能并发送照片"""
+        # 1、在当前聊天会话页面，点击富媒体行拍照图标
+        chat = SingleChatPage()
+        chat.click_take_photo()
+        # 2、拍摄照片，点击“√”
+        cpp = ChatPhotoPage()
+        cpp.wait_for_page_load()
+        cpp.take_photo()
+        cpp.send_photo()
         chat.wait_for_page_load()
