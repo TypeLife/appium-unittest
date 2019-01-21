@@ -254,7 +254,7 @@ AVAILABLE_DEVICES_DEV = {
 DEVICES_CONFIG_XIN = {
     'M960BDQN229CH': {
         "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
-        "SERVER_URL": 'http://192.168.200.108:4723/wd/hub',
+        "SERVER_URL": 'http://192.168.200.110:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0.1",
