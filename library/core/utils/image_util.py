@@ -67,3 +67,25 @@ def get_similar_degree(fp1, fp2):
     img2 = Image.open(fp2)
     result = classfiy_histogram_with_split(img1, img2)
     return result
+
+
+def get_pixel_point_color(fp, x, y, by_percent=False, mode='RGBA'):
+    """
+    获取图片某一像素点的颜色
+    :param mode: RGB \ RGBA
+    :param by_percent: 是否使用百分比
+    :param fp: 图片文件路径
+    :param x: X轴坐标
+    :param y: Y轴坐标
+    :return: RGBA
+    """
+    from PIL import Image
+
+    img = Image.open(fp)
+    img_src = img.convert(mode)
+    pixel_data = img_src.load()
+    if by_percent:
+        x = img.width * (x / 100)
+        y = img.height * (y / 100)
+    data = pixel_data[x, y]
+    return data

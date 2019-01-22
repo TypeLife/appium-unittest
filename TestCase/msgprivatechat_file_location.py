@@ -587,7 +587,7 @@ class MsgPrivateChatFileLocationTest(TestCase):
             scp.click_back()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC1')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_msg_private_chat_file_location_0050(self):
         """单聊天会话页面点击位置消息体，在位置界面点击右下角按钮进行导航"""
         # 先发送位置信息

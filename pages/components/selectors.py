@@ -1,5 +1,3 @@
-import hashlib
-
 from appium.webdriver import WebElement
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.common.exceptions import NoSuchElementException
@@ -188,25 +186,24 @@ class PictureSelector(BasePage):
 
     @TestLogger.log('获取列表项已选状态')
     def is_list_item_selected(self, item):
-        status = {
-            # 所有列表下的图片
-            'e2054f7bf69e6d8402c6725b4708c046': True,  # 已选
-            '013b4c090138d3d1df62202bb010963c': False,  # 未选
-            # 视频
-            '5db9c7b6acd0ea2ec99a4b7193470b08': True,  # 已选
-            'f7d6355453e4076dbd27233ec9723bcb': False,  # 未选
-            # 图片
-            '74ea5f74b77f1a9f596c97e9c22311b7': True,  # 已选
-            '737ad0000ab5794972fd0cbcf17fdc71': False,  # 未选
-        }
         if isinstance(item, (list, tuple)):
             item = self.get_element(item)
         elif isinstance(item, WebElement):
             pass
         else:
             raise ValueError('参数类型错误')
+
         selector = item.find_element(*self.__locators['选择'])
-        img_md5 = hashlib.md5(selector.screenshot_as_base64.encode()).hexdigest()
-        print(img_md5)
-        state = status[img_md5]
-        return state
+        import io
+        fp = io.BytesIO(selector.screenshot_as_png)
+        from library.core.utils import image_util
+        # 获取圆环位置的颜色
+        color = image_util.get_pixel_point_color(fp, 5, 50, True)
+        if color == (255, 255, 255, 255):
+            # 未选择状态为不透明白色
+            return False
+        elif color == (21, 124, 248, 255):
+            # 已选状态为不透明蓝色
+            return True
+        else:
+            raise RuntimeError('RGBA颜色{}无法识别勾选状态'.format(color))
