@@ -20,11 +20,20 @@ RESOURCE_FILE_PATH = os.path.join(PROJECT_PATH, 'resource')
 
 STATIC_FILE_PATH = os.path.join(PROJECT_PATH, 'Resources')
 EMAIL_REPORT_HTML_TPL = os.path.join(STATIC_FILE_PATH, 'email_report_tpl', 'ci_report.html')
-# 公共邮箱
-# 登录密码：hfx@2018
+
+# 139公共邮箱
 EMAIL = dict(
-    SMTP_SERVER='smtp.163.com',
+    SMTP_SERVER='smtp.139.com',
     SSL_PORT='465',
-    USERNAME='cmcchefeixin@163.com',
-    SMTP_PASSWORD='cmcc2018'
+    USERNAME='19876283465@139.com',
+    SMTP_PASSWORD='cmcc2018@'
 )
+
+# 163公共邮箱
+# 登录密码：hfx@2018
+# EMAIL = dict(
+#     SMTP_SERVER='smtp.163.com',
+#     SSL_PORT='465',
+#     USERNAME='cmcchefeixin@163.com',
+#     SMTP_PASSWORD='cmcc2018'
+# )

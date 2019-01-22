@@ -34,22 +34,23 @@ class MessageNoticeSettingPage(BasePage):
         :param item: 设置项在界面上的名称
         :return:
         """
-        switch_locator = [
-            MobileBy.XPATH,
-            '//android.widget.Switch[../android.widget.TextView[@text="{}"]]'.format(item)
-        ]
-
-        self._find_item(switch_locator)
-
-        open_states = ['开启']
-        close_states = ['关闭']
-        current_status = self.get_text(switch_locator)
-        if current_status in open_states:
-            return
-        elif current_status in close_states:
-            self.click_element(switch_locator)
-        else:
-            raise Exception("{} not in {} and {}".format(current_status, open_states, close_states))
+        self.turn_on_menu(item)
+        # switch_locator = [
+        #     MobileBy.XPATH,
+        #     '//android.widget.Switch[../android.widget.TextView[@text="{}"]]'.format(item)
+        # ]
+        #
+        # self._find_item(switch_locator)
+        #
+        # open_states = ['开启']
+        # close_states = ['关闭']
+        # current_status = self.get_text(switch_locator)
+        # if current_status in open_states:
+        #     return
+        # elif current_status in close_states:
+        #     self.click_element(switch_locator)
+        # else:
+        #     raise Exception("{} not in {} and {}".format(current_status, open_states, close_states))
 
     @TestLogger.log("关闭设置项")
     def turn_off(self, item):
@@ -58,22 +59,23 @@ class MessageNoticeSettingPage(BasePage):
         :param item: 设置项在界面上的名称
         :return:
         """
-        switch_locator = [
-            MobileBy.XPATH,
-            '//android.widget.Switch[../android.widget.TextView[@text="{}"]]'.format(item)
-        ]
-
-        self._find_item(switch_locator)
-
-        open_states = ['开启']
-        close_states = ['关闭']
-        current_status = self.get_text(switch_locator)
-        if current_status in open_states:
-            self.click_element(switch_locator)
-        elif current_status in close_states:
-            return
-        else:
-            raise Exception("{} not in {} and {}".format(current_status, open_states, close_states))
+        self.turn_off_menu(item)
+        # switch_locator = [
+        #     MobileBy.XPATH,
+        #     '//android.widget.Switch[../android.widget.TextView[@text="{}"]]'.format(item)
+        # ]
+        #
+        # self._find_item(switch_locator)
+        #
+        # open_states = ['开启']
+        # close_states = ['关闭']
+        # current_status = self.get_text(switch_locator)
+        # if current_status in open_states:
+        #     self.click_element(switch_locator)
+        # elif current_status in close_states:
+        #     return
+        # else:
+        #     raise Exception("{} not in {} and {}".format(current_status, open_states, close_states))
 
     @TestLogger.log("检查设置项是否打开")
     def assert_menu_item_has_been_turn_on(self, item):
@@ -178,3 +180,53 @@ class MessageNoticeSettingPage(BasePage):
     def _is_on_the_end_of_menu_view(self):
         """判断是否在菜单末尾"""
         return self._is_element_present(self.__locators['接收139邮箱助手消息'])
+
+    @TestLogger.log('开启菜单')
+    def turn_on_menu(self, menu):
+        list_locator = ['xpath', '//android.widget.ScrollView/android.widget.LinearLayout']
+        item_locator = ['xpath', '//android.widget.ScrollView/android.widget.LinearLayout/*']
+        for i in self.mobile.list_iterator(list_locator, item_locator):
+            if i.find_elements('xpath',
+                               '//android.widget.TextView[@text="{}"]'.format(menu)):
+                if not self.is_menu_turned_on(i):
+                    i.find_element('xpath', '//android.widget.Switch').click()
+                assert self.is_menu_turned_on(i), "开关“{}”没有成功开启".format(menu)
+                return
+        raise NoSuchElementException('找不到开关“{}”'.format(menu))
+
+    @TestLogger.log('关闭菜单')
+    def turn_off_menu(self, menu):
+        list_locator = ['xpath', '//android.widget.ScrollView/android.widget.LinearLayout']
+        item_locator = ['xpath', '//android.widget.ScrollView/android.widget.LinearLayout/*']
+        for i in self.mobile.list_iterator(list_locator, item_locator):
+            if i.find_elements('xpath',
+                               '//android.widget.TextView[@text="{}"]'.format(menu)):
+                if self.is_menu_turned_on(i):
+                    i.find_element('xpath', '//android.widget.Switch').click()
+                assert not self.is_menu_turned_on(i), "开关“{}”没有成功关闭".format(menu)
+                return
+        raise NoSuchElementException('找不到开关“{}”'.format(menu))
+
+    @staticmethod
+    def is_menu_turned_on(item):
+        assert (len(item.find_elements('xpath', '//android.widget.TextView[../android.widget.Switch]')) == 1) \
+               and (len(item.find_elements('xpath', '//android.widget.Switch')) == 1), \
+            '请确认传入的元素是包含checkbox的菜单'
+        open_states = ['开启']
+        close_states = ['关闭']
+        current = item.find_element('xpath', '//android.widget.Switch').text
+        if current in open_states:
+            return True
+        elif current in close_states:
+            return False
+        else:
+            raise ValueError('{} 既不属于{}也不属于{}'.format(current, open_states, close_states))
+
+    @TestLogger.log('等待消息通知页面加载')
+    def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
+        self.wait_until(
+            condition=lambda d: self._is_element_present(
+                ('xpath', '//*[@resource-id="com.chinasofti.rcs:id/title" and @text="消息通知"]')),
+            timeout=timeout,
+            auto_accept_permission_alert=auto_accept_alerts
+        )
