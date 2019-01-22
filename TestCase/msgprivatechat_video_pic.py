@@ -438,3 +438,103 @@ class MsgPrivateChatVideoPicTest(TestCase):
         cpp.take_photo()
         cpp.send_photo()
         chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0018(self):
+        """单聊会话页面，使用拍照功能拍照编辑后发送照片"""
+        # 1、在当前聊天会话页面，点击富媒体行拍照图标
+        chat = SingleChatPage()
+        chat.click_take_photo()
+        # 2、拍摄照片，点击编辑图标，编辑该图片
+        cpp = ChatPhotoPage()
+        cpp.wait_for_page_load()
+        cpp.take_photo()
+        cpp.click_edit_pic()
+        pic = ChatPicEditPage()
+        pic.click_doodle()
+        pic.do_doodle()
+        # 3.点击"发送"
+        pic.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0019(self):
+        """单聊会话页面，使用拍照功能拍照之后编辑并保存"""
+        # 1、在当前聊天会话页面，点击富媒体行拍照图标
+        chat = SingleChatPage()
+        chat.click_take_photo()
+        # 2、拍摄照片，点击编辑图标，编辑该图片
+        cpp = ChatPhotoPage()
+        cpp.wait_for_page_load()
+        cpp.take_photo()
+        cpp.click_edit_pic()
+        pic = ChatPicEditPage()
+        pic.click_text_edit_btn()
+        pic.input_pic_text(text="VideoPic_0019")
+        # 点击完成
+        pic.click_save()
+        # 3.点击"保存"
+        pic.click_save()
+        # 4.点击"发送"
+        pic.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0020(self):
+        """单聊会话页面，使用拍照功能拍照编辑图片，再取消编辑并发送"""
+        # 1、在当前聊天会话页面，点击富媒体行拍照图标
+        chat = SingleChatPage()
+        chat.click_take_photo()
+        # 2、拍摄照片，点击编辑图标，编辑该图片
+        cpp = ChatPhotoPage()
+        cpp.wait_for_page_load()
+        cpp.take_photo()
+        cpp.click_edit_pic()
+        pic = ChatPicEditPage()
+        pic.click_doodle()
+        pic.do_doodle()
+        # 3.点击"取消"
+        pic.click_cancle()
+        # 4.点击“发送”
+        cpp.send_photo()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0021(self):
+        """单聊会话页面，打开拍照，立刻返回会话窗口"""
+        # 1、在当前聊天会话页面，点击富媒体行拍照图标
+        chat = SingleChatPage()
+        chat.click_take_photo()
+        cpp = ChatPhotoPage()
+        cpp.wait_for_page_load()
+        cpp.take_photo()
+        # 2、打开照相机，点击“∨”
+        cpp.send_photo()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0022(self):
+        """单聊会话页面，打开拍照，拍照之后返回会话窗口"""
+        # 1、在当前聊天会话页面，点击富媒体行拍照图标
+        chat = SingleChatPage()
+        chat.click_take_photo()
+        cpp = ChatPhotoPage()
+        cpp.wait_for_page_load()
+        cpp.take_photo()
+        # 2、打开照相机，点击“返回图标”
+        cpp.click_back()
+        cpp.take_photo_back()
+        chat.wait_for_page_load()
+
+    @staticmethod
+    def public_send_pic():
+        """在聊天会话页面发送一张图片"""
+        chat = SingleChatPage()
+        # 点击图片按钮
+        chat.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 选择一张照片发送
+        cpp.select_pic()
+        cpp.click_send()
+        chat.wait_for_page_load()
