@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hierarchy rotation="0">
+    <android.widget.FrameLayout index="0" text="" class="android.widget.FrameLayout" package="com.chinasofti.rcs"
+                                content-desc="" checkable="false" checked="false" clickable="false" enabled="true"
+                                focusable="false" focused="false" scrollable="false" long-clickable="false"
+                                password="false" selected="false" bounds="[0,0][1080,1920]" resource-id=""
+                                instance="0"/>
+</hierarchy>

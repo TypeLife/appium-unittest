@@ -50,7 +50,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 # URL: http://tungwaiyip.info/software/HTMLTestRunner.html
-from library.core.TestLogger import TestLogger
 from library.core.utils import common
 
 __author__ = "Wai Yip Tung,  Findyou"
@@ -340,7 +339,7 @@ tr.errorClass > td  { background-color: #ea7e7b; }
     REPORT_TMPL = """
 <p id='show_detail_line'>
 <a class="btn btn-primary" href='javascript:showCase(0)'>概要{ %(passrate)s }</a>
-<a class="btn btn-danger" href='javascript:showCase(1)'>失败{ %(fail)s }</a>
+<a class="btn btn-danger" href='javascript:showCase(1)'>失败{ %(total_fail)s }</a>
 <a class="btn btn-success" href='javascript:showCase(2)'>通过{ %(Pass)s }</a>
 <a class="btn btn-info" href='javascript:showCase(3)'>所有{ %(count)s }</a>
 </p>
@@ -389,12 +388,12 @@ tr.errorClass > td  { background-color: #ea7e7b; }
 <tr id='%(tid)s' class='%(Class)s'>
     <td class='%(style)s'><div class='testcase'>%(desc)s</div></td>
     <td colspan='5' align='center'>
-    <!--默认收起错误信息 -Findyou
-    <button id='btn_%(tid)s' type="button"  class="btn btn-danger btn-xs collapsed" data-toggle="collapse" data-target='#div_%(tid)s'>%(status)s</button>
-    <div id='div_%(tid)s' class="collapse" align='left'>  -->
-    <!-- 默认展开错误信息 -Findyou -->
+    <!--默认收起错误信息 -Findyou   -->
+    <button id='btn_%(tid)s' type="button"  class="btn %(ButtonStyle)s btn-xs collapsed" data-toggle="collapse" data-target='#div_%(tid)s'>%(status)s</button>
+    <div id='div_%(tid)s' class="collapse" align='left'>
+    <!-- 默认展开错误信息 -Findyou 
     <button id='btn_%(tid)s' type="button"  class="btn %(ButtonStyle)s btn-xs" data-toggle="collapse" data-target='#div_%(tid)s'>%(status)s</button>
-    <div id='div_%(tid)s' class="collapse in" align='left'>
+    <div id='div_%(tid)s' class="collapse in" align='left'> -->
     <pre>
     %(script)s
     </pre>
@@ -428,6 +427,8 @@ tr.errorClass > td  { background-color: #ea7e7b; }
 
 # -------------------- The end of the Template class -------------------
 
+real_stdout = sys.stdout
+real_stderr = sys.stderr
 
 TestResult = unittest.TestResult
 
@@ -466,6 +467,7 @@ class _TestResult(TestResult):
         self.stderr0 = sys.stderr
         sys.stdout = stdout_redirector
         sys.stderr = stderr_redirector
+        from library.core.TestLogger import TestLogger
         TestLogger.start_test(test)
 
     def complete_output(self):
@@ -487,19 +489,22 @@ class _TestResult(TestResult):
         self.complete_output()
 
     def addSuccess(self, test):
+        from library.core.TestLogger import TestLogger
         TestLogger.test_success(test)
         self.success_count += 1
         super(_TestResult, self).addSuccess(test)
         output = self.complete_output()
         self.result.append((0, test, output, ''))
         if self.verbosity > 1:
-            sys.stderr.write('ok ')
-            sys.stderr.write(str(test))
-            sys.stderr.write('\n')
+            real_stdout.write('ok ')
+            real_stdout.write(str(test))
+            real_stdout.write('\n')
         else:
-            sys.stderr.write('.')
+            real_stdout.write('.')
+            real_stdout.flush()
 
     def addError(self, test, err):
+        from library.core.TestLogger import TestLogger
         TestLogger.test_error(test)
         self.error_count += 1
         super(_TestResult, self).addError(test, err)
@@ -507,13 +512,16 @@ class _TestResult(TestResult):
         output = self.complete_output()
         self.result.append((2, test, output, _exc_str))
         if self.verbosity > 1:
-            sys.stderr.write('E  ')
-            sys.stderr.write(str(test))
-            sys.stderr.write('\n')
+            real_stdout.write('E  ')
+            real_stdout.write(str(test))
+            real_stdout.write('\n')
+            real_stdout.flush()
         else:
-            sys.stderr.write('E')
+            real_stdout.write('E')
+            real_stdout.flush()
 
     def addFailure(self, test, err):
+        from library.core.TestLogger import TestLogger
         TestLogger.test_fail(test)
         self.failure_count += 1
         super(_TestResult, self).addFailure(test, err)
@@ -521,11 +529,13 @@ class _TestResult(TestResult):
         output = self.complete_output()
         self.result.append((1, test, output, _exc_str))
         if self.verbosity > 1:
-            sys.stderr.write('F  ')
-            sys.stderr.write(str(test))
-            sys.stderr.write('\n')
+            real_stdout.write('F  ')
+            real_stdout.write(str(test))
+            real_stdout.write('\n')
+            real_stdout.flush()
         else:
-            sys.stderr.write('F')
+            real_stdout.write('F')
+            real_stdout.flush()
 
 
 class HTMLTestRunner(Template_mixin):
@@ -683,6 +693,7 @@ class HTMLTestRunner(Template_mixin):
             count=str(result.success_count + result.failure_count + result.error_count),
             Pass=str(result.success_count),
             fail=str(result.failure_count),
+            total_fail=str(result.failure_count + result.error_count),
             error=str(result.error_count),
             passrate=self.passrate,
             HeaderStyle='AllPass' if not (result.error_count or result.failure_count) else 'NotAllPass'

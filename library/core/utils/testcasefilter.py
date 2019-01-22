@@ -1,8 +1,7 @@
-import functools
 import json
 import os
-from json import JSONDecodeError
 import unittest
+from json import JSONDecodeError
 
 TEST_CASE_TAG_ENVIRON = 'RUN_TAG'
 
@@ -16,7 +15,7 @@ def set_tags(*args):
     tag_types = set()
     for arg in args:
         tag_types.add(str(arg))
-    env_value = json.dumps(list(tag_types))
+    env_value = json.dumps(list(tag_types), ensure_ascii=False).upper()
     os.environ[TEST_CASE_TAG_ENVIRON] = env_value
 
 
@@ -31,7 +30,7 @@ def tags(*args):
         case_tags = json.loads(os.environ[TEST_CASE_TAG_ENVIRON])
         if not isinstance(case_tags, list):
             return unittest.skipIf(not FilterResult.RUN, '')
-        if flags.intersection(set(case_tags)):
+        if flags.issuperset(set(case_tags)):
             return unittest.skipIf(not FilterResult.RUN, '')
         else:
             return unittest.skip("用例类型:{}; ".format(flags) + '当前执行:{}.'.format(case_tags))

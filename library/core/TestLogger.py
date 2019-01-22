@@ -3,15 +3,14 @@ import functools
 import os
 import re
 
-from library.core.BasePage import BasePage
 from library.core.utils import ConfigManager, common
-from library.core.utils.applicationcache import current_mobile
 from library.core.utils.common import capture_screen_shot
 
 
 class TestLogger(object):
     current_test = None
     log_level = 'INFO'
+    _do_log = True
 
     @staticmethod
     def log(info=None):
@@ -22,7 +21,11 @@ class TestLogger(object):
                 template = '%(time)s - %(className)s - %(level)s - %(caseName)s - %(func)s ' \
                            + '- [%(mobile)s]%(description)s - %(args)s'
                 TestLogger.log_level = "INFO"
+                turn_on = False
                 try:
+                    if TestLogger._do_log:
+                        turn_on = True
+                        TestLogger._do_log = False
                     result = func(*args, **kw)
                     return result
                 except Exception as error:
@@ -30,20 +33,28 @@ class TestLogger(object):
                     raise error
 
                 finally:
-                    log_info = func.__doc__ if info is None else info
-                    print(template % dict(time=datetime.datetime.now().__str__(),
-                                          className=getattr(TestLogger.current_test.__class__, '__name__'),
-                                          level=TestLogger.log_level,
-                                          caseName=getattr(TestLogger.current_test, '_testMethodName', None),
-                                          func=common.get_method_fullname(func),
-                                          mobile=current_mobile().__str__(),
-                                          description=log_info if log_info else "no description",
-                                          args='[Args: {} {}]'.format(
-                                              args[1:] if bool(args[:1]) and isinstance(args[0], BasePage) else args,
-                                              kw),
-                                          )
-                          )
-                    TestLogger.log_level = "INFO"
+                    if turn_on:
+                        TestLogger._do_log = True
+                        # from library.core.BasePage import BasePage
+                        from library.core.utils import applicationcache as cache
+                        current_mobile = getattr(cache, 'current_mobile', lambda: None)
+                        mobile = current_mobile()
+                        log_info = func.__doc__ if info is None else info
+                        print(template % dict(time=datetime.datetime.now().__str__(),
+                                              className=getattr(TestLogger.current_test.__class__, '__name__'),
+                                              level=TestLogger.log_level,
+                                              caseName=getattr(TestLogger.current_test, '_testMethodName', None),
+                                              func=common.get_method_fullname(func),
+                                              mobile=mobile.__str__(),
+                                              description=log_info if log_info else "no description",
+                                              # args='[Args: {} {}]'.format(
+                                              #     args[1:] if bool(args[:1]) and isinstance(args[0],
+                                              #                                               BasePage) else args,
+                                              #     kw)
+                                              args='[Args: {} {}]'.format(args, kw),
+                                              )
+                              )
+                        TestLogger.log_level = "INFO"
 
             return wrapper
 

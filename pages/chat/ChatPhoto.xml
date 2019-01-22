@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hierarchy rotation="0">
+    <android.widget.FrameLayout index="0" text="" class="android.widget.FrameLayout" package="com.chinasofti.rcs"
+                                content-desc="" checkable="false" checked="false" clickable="false" enabled="true"
+                                focusable="false" focused="false" scrollable="false" long-clickable="false"
+                                password="false" selected="false" bounds="[0,0][1080,1920]" resource-id="" instance="0">
+        <android.widget.LinearLayout index="0" text="" class="android.widget.LinearLayout" package="com.chinasofti.rcs"
+                                     content-desc="" checkable="false" checked="false" clickable="false" enabled="true"
+                                     focusable="false" focused="false" scrollable="false" long-clickable="false"
+                                     password="false" selected="false" bounds="[0,0][1080,1920]" resource-id=""
+                                     instance="0">
+            <android.widget.FrameLayout index="0" text="" class="android.widget.FrameLayout"
+                                        package="com.chinasofti.rcs" content-desc="" checkable="false" checked="false"
+                                        clickable="false" enabled="true" focusable="false" focused="false"
+                                        scrollable="false" long-clickable="false" password="false" selected="false"
+                                        bounds="[0,0][1080,1920]" resource-id="" instance="1">
+                <android.widget.LinearLayout index="0" text="" class="android.widget.LinearLayout"
+                                             package="com.chinasofti.rcs" content-desc="" checkable="false"
+                                             checked="false" clickable="false" enabled="true" focusable="false"
+                                             focused="false" scrollable="false" long-clickable="false" password="false"
+                                             selected="false" bounds="[0,0][1080,1920]"
+                                             resource-id="com.chinasofti.rcs:id/action_bar_root" instance="1">
+                    <android.widget.FrameLayout index="0" text="" class="android.widget.FrameLayout"
+                                                package="com.chinasofti.rcs" content-desc="" checkable="false"
+                                                checked="false" clickable="false" enabled="true" focusable="false"
+                                                focused="false" scrollable="false" long-clickable="false"
+                                                password="false" selected="false" bounds="[0,0][1080,1920]"
+                                                resource-id="android:id/content" instance="2">
+                        <android.widget.FrameLayout index="0" text="" class="android.widget.FrameLayout"
+                                                    package="com.chinasofti.rcs" content-desc="" checkable="false"
+                                                    checked="false" clickable="false" enabled="true" focusable="false"
+                                                    focused="false" scrollable="false" long-clickable="false"
+                                                    password="false" selected="false" bounds="[0,0][1080,1920]"
+                                                    resource-id="com.chinasofti.rcs:id/fl_content" instance="3">
+                            <android.view.View index="0" text="" class="android.view.View" package="com.chinasofti.rcs"
+                                               content-desc="" checkable="false" checked="false" clickable="false"
+                                               enabled="true" focusable="false" focused="false" scrollable="false"
+                                               long-clickable="false" password="false" selected="false"
+                                               bounds="[0,0][1080,1920]"
+                                               resource-id="com.chinasofti.rcs:id/recordSurfaceView" instance="0"/>
+                            <android.widget.RelativeLayout index="1" text="" class="android.widget.RelativeLayout"
+                                                           package="com.chinasofti.rcs" content-desc=""
+                                                           checkable="false" checked="false" clickable="false"
+                                                           enabled="true" focusable="false" focused="false"
+                                                           scrollable="false" long-clickable="false" password="false"
+                                                           selected="false" bounds="[0,1320][1080,1920]"
+                                                           resource-id="com.chinasofti.rcs:id/bottomLayout"
+                                                           instance="0">
+                                <android.widget.RelativeLayout index="0" text="" class="android.widget.RelativeLayout"
+                                                               package="com.chinasofti.rcs" content-desc=""
+                                                               checkable="false" checked="false" clickable="false"
+                                                               enabled="true" focusable="false" focused="false"
+                                                               scrollable="false" long-clickable="false"
+                                                               password="false" selected="false"
+                                                               bounds="[0,1320][1080,1920]"
+                                                               resource-id="com.chinasofti.rcs:id/record_parent"
+                                                               instance="1">
+                                    <android.widget.TextView index="0" text="轻触拍照,长按录像" class="android.widget.TextView"
+                                                             package="com.chinasofti.rcs" content-desc=""
+                                                             checkable="false" checked="false" clickable="false"
+                                                             enabled="true" focusable="false" focused="false"
+                                                             scrollable="false" long-clickable="false" password="false"
+                                                             selected="false" bounds="[343,1444][736,1509]"
+                                                             resource-id="com.chinasofti.rcs:id/action_bar_duration_recording_tv"
+                                                             instance="0"/>
+                                    <android.widget.RelativeLayout NAF="true" index="1" text=""
+                                                                   class="android.widget.RelativeLayout"
+                                                                   package="com.chinasofti.rcs" content-desc=""
+                                                                   checkable="false" checked="false" clickable="true"
+                                                                   enabled="true" focusable="false" focused="false"
+                                                                   scrollable="false" long-clickable="false"
+                                                                   password="false" selected="false"
+                                                                   bounds="[138,1644][228,1734]"
+                                                                   resource-id="com.chinasofti.rcs:id/rl_back"
+                                                                   instance="2">
+                                        <android.widget.ImageView NAF="true" index="0" text=""
+                                                                  class="android.widget.ImageView"
+                                                                  package="com.chinasofti.rcs" content-desc=""
+                                                                  checkable="false" checked="false" clickable="true"
+                                                                  enabled="true" focusable="false" focused="false"
+                                                                  scrollable="false" long-clickable="false"
+                                                                  password="false" selected="false"
+                                                                  bounds="[150,1671][216,1707]"
+                                                                  resource-id="com.chinasofti.rcs:id/action_bar_back"
+                                                                  instance="0"/>
+                                    </android.widget.RelativeLayout>
+                                    <android.widget.Button NAF="true" index="2" text="" class="android.widget.Button"
+                                                           package="com.chinasofti.rcs" content-desc=""
+                                                           checkable="false" checked="false" clickable="true"
+                                                           enabled="true" focusable="true" focused="false"
+                                                           scrollable="false" long-clickable="false" password="false"
+                                                           selected="false" bounds="[420,1545][660,1785]"
+                                                           resource-id="com.chinasofti.rcs:id/record" instance="0"/>
+                                    <android.widget.RelativeLayout index="3" text=""
+                                                                   class="android.widget.RelativeLayout"
+                                                                   package="com.chinasofti.rcs" content-desc=""
+                                                                   checkable="false" checked="false" clickable="false"
+                                                                   enabled="true" focusable="false" focused="false"
+                                                                   scrollable="false" long-clickable="false"
+                                                                   password="false" selected="false"
+                                                                   bounds="[855,1644][945,1734]" resource-id=""
+                                                                   instance="3">
+                                        <android.widget.ImageView NAF="true" index="0" text=""
+                                                                  class="android.widget.ImageView"
+                                                                  package="com.chinasofti.rcs" content-desc=""
+                                                                  checkable="false" checked="false" clickable="true"
+                                                                  enabled="true" focusable="false" focused="false"
+                                                                  scrollable="false" long-clickable="false"
+                                                                  password="false" selected="false"
+                                                                  bounds="[861,1656][939,1722]"
+                                                                  resource-id="com.chinasofti.rcs:id/action_bar_change_camera_bt"
+                                                                  instance="1"/>
+                                    </android.widget.RelativeLayout>
+                                </android.widget.RelativeLayout>
+                            </android.widget.RelativeLayout>
+                        </android.widget.FrameLayout>
+                    </android.widget.FrameLayout>
+                </android.widget.LinearLayout>
+            </android.widget.FrameLayout>
+        </android.widget.LinearLayout>
+    </android.widget.FrameLayout>
+</hierarchy>

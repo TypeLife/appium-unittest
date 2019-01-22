@@ -1,12 +1,13 @@
 import os
 import re
 import time
-from unicodedata import normalize
 
 from appium.webdriver.common.mobileby import MobileBy
-from selenium.webdriver.support.wait import WebDriverWait
+from appium.webdriver.common.touch_action import TouchAction
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
-from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE
+from library.core.TestLogger import TestLogger
 
 
 class BasePage(object):
@@ -19,7 +20,13 @@ class BasePage(object):
 
     @property
     def driver(self):
+        from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE
         return MOBILE_DRIVER_CACHE.current.driver
+
+    @property
+    def mobile(self):
+        from library.core.utils.applicationcache import current_mobile
+        return current_mobile()
 
     def background_app(self, seconds):
         self.driver.background_app(seconds)
@@ -51,16 +58,19 @@ class BasePage(object):
     def get_elements(self, locator):
         return self.driver.find_elements(*locator)
 
-    def _get_text(self, locator):
+    def get_text(self, locator):
         elements = self.get_elements(locator)
         if len(elements) > 0:
             return elements[0].text
         return None
 
-    def _is_text_present(self, text):
-        text_norm = normalize('NFD', text)
-        source_norm = normalize('NFD', self.get_source())
-        return text_norm in source_norm
+    @TestLogger.log("获取控件属性")
+    def get_element_attribute(self, locator, attr, wait_time=0):
+        return self.mobile.get_element_attribute(locator, attr, wait_time)
+
+    def is_text_present(self, text):
+        """检查屏幕是否包含文本"""
+        return self.mobile.is_text_present(text)
 
     def _is_element_present(self, locator):
         elements = self.get_elements(locator)
@@ -126,12 +136,8 @@ class BasePage(object):
     def get_source(self):
         return self.driver.page_source
 
-    def click_element(self, locator, default_timeout=5):
-        self.wait_until(
-            condition=lambda d: self.get_element(locator),
-            timeout=default_timeout
-        ).click()
-        # self.get_element(locator).click()
+    def click_element(self, locator, default_timeout=5, auto_accept_permission_alert=True):
+        self.mobile.click_element(locator, default_timeout, auto_accept_permission_alert)
 
     def is_current_activity_match_this_page(self):
         return self.driver == self.__class__.ACTIVITY
@@ -151,7 +157,7 @@ class BasePage(object):
             self.get_element((MobileBy.XPATH, _xpath)).click()
 
     def input_text(self, locator, text):
-        self.get_element(locator).send_keys(text)
+        self.mobile.input_text(locator, text)
 
     def select_checkbox(self, locator):
         """勾选复选框"""
@@ -185,6 +191,13 @@ class BasePage(object):
         return True
 
     def swipe_by_direction(self, locator, direction, duration=None):
+        """
+        在元素内滑动
+        :param locator: 定位器
+        :param direction: 方向（left,right,up,down）
+        :param duration: 持续时间ms
+        :return:
+        """
         element = self.get_element(locator)
         rect = element.rect
         left, right = int(rect['x']) + 1, int(rect['x'] + rect['width']) - 1
@@ -259,13 +272,13 @@ class BasePage(object):
             self.driver.swipe(x_start, y_start, x_offset, y_offset, duration)
 
     def page_should_contain_text(self, text):
-        if not self._is_text_present(text):
+        if not self.is_text_present(text):
             raise AssertionError("Page should have contained text '{}' "
                                  "but did not" % text)
         return True
 
     def page_should_not_contain_text(self, text):
-        if self._is_text_present(text):
+        if self.is_text_present(text):
             raise AssertionError("Page should not have contained text '{}'" % text)
         return True
 
@@ -299,7 +312,7 @@ class BasePage(object):
         return True
 
     def element_should_contain_text(self, locator, expected, message=''):
-        actual = self._get_text(locator)
+        actual = self.get_text(locator)
         if expected not in actual:
             if not message:
                 message = "Element '{}' should have contained text '{}' but " \
@@ -308,7 +321,7 @@ class BasePage(object):
         return True
 
     def element_should_not_contain_text(self, locator, expected, message=''):
-        actual = self._get_text(locator)
+        actual = self.get_text(locator)
         if expected in actual:
             if not message:
                 message = "Element {} should not contain text '{}' but " \
@@ -328,64 +341,30 @@ class BasePage(object):
 
     def element_text_should_match(self, locator, pattern, full_match=True, regex=False):
         """断言元素内文本，支持正则表达式"""
-        element = self.get_element(locator)
-        actual = element.text
-        if regex:
-            if full_match:
-                pt = re.compile(pattern)
-                result = pt.fullmatch(actual)
-            else:
-                pt = re.compile(pattern)
-                result = pt.search(actual)
-        else:
-            if full_match:
-                result = pattern == actual
-            else:
-                result = pattern in actual
-        if not result:
-            raise AssertionError(
-                "Expect is" + " match regex pattern" if regex else "" + ": " + pattern + "\n"
-                                                                   + "Actual is: " + actual + '\n')
-        return True
+        return self.mobile.assert_element_text_should_match(locator, pattern, full_match, regex)
 
     def wait_until(self, condition, timeout=8, auto_accept_permission_alert=True):
-        def execute_condition(driver):
-            """如果有弹窗，自动允许"""
+        return self.mobile.wait_until(condition, timeout=timeout,
+                                      auto_accept_permission_alert=auto_accept_permission_alert)
 
-            def get_accept_permission_handler(d):
-                """获取允许权限弹窗的方法句柄"""
-                try:
-                    alert = d.switch_to.alert
-                    return alert.accept
-                except:
-                    alert = self.get_elements((MobileBy.XPATH, '//*[@text="始终允许"]')) \
-                            or self.get_elements((MobileBy.XPATH, '//*[@text="允许"]'))
-                    if not alert:
-                        return False
-                    return alert[0].click
-
-            if auto_accept_permission_alert:
-                if self.driver.current_activity in [
-                    'com.android.packageinstaller.permission.ui.GrantPermissionsActivity',
-                    '.permission.ui.GrantPermissionsActivity'
-                ]:
-                    need = True
-                    while need:
-                        try:
-                            WebDriverWait(self.driver, 1).until(
-                                get_accept_permission_handler
-                            )()
-                        except:
-                            need = False
-            return condition(driver)
-
-        wait = WebDriverWait(self.driver, timeout)
-        return wait.until(execute_condition)
+    def wait_condition_and_listen_unexpected(
+            self,
+            condition,
+            timeout=8,
+            auto_accept_permission_alert=True,
+            unexpected=None
+    ):
+        return self.mobile.wait_condition_and_listen_unexpected(
+            condition,
+            timeout=timeout,
+            auto_accept_permission_alert=auto_accept_permission_alert,
+            unexpected=unexpected
+        )
 
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
         """默认使用activity作为判断页面是否加载的条件，继承类应该重写该方法"""
         self.wait_until(
-            lambda d: self.driver.current_activity == self.__class__.ACTIVITY,
+            lambda d: self.driver.current_activity == self.ACTIVITY,
             timeout,
             auto_accept_alerts
         )
@@ -417,17 +396,21 @@ class BasePage(object):
     def get_error_code_info_by_adb(self, pattern, timeout=5):
         """通过adb log 获取错误码信息"""
         os.system("adb logcat -c")
-        cmd = ' adb logcat -d |findstr %s' % pattern
+        cmd = ' adb logcat -d |findstr %s > tmp.txt' % pattern
         n = 0
         code_info = None
         while n < timeout:
-            code_info = os.popen(cmd).read()
-            if code_info:
-                break
-            else:
-                time.sleep(1)
-                n += 1
-                continue
+            os.system(cmd)
+            with open("tmp.txt", 'r', encoding="utf-8") as f:
+                code_info = f.read()
+                if code_info:
+                    break
+                else:
+                    time.sleep(1)
+                    n += 1
+                    continue
+        if os.path.exists("tmp.txt"):
+            os.remove("tmp.txt")
         return code_info
 
     def get_network_status(self):
@@ -455,3 +438,28 @@ class BasePage(object):
 
         """
         self.driver.set_network_connection(status)
+
+    def is_toast_exist(self, text, timeout=30, poll_frequency=0.5):
+        """is toast exist, return True or False
+        :Args:
+         - text   - toast文本内容
+         - timeout - 最大超时时间，默认30s
+         - poll_frequency  - 间隔查询时间，默认0.5s查询一次
+        :Usage:
+         is_toast_exist("toast的内容")
+        """
+        try:
+            toast_loc = ("xpath", ".//*[contains(@text,'%s')]" % text)
+            WebDriverWait(self.driver, timeout, poll_frequency).until(EC.presence_of_element_located(toast_loc))
+            return True
+        except:
+            return False
+
+    @TestLogger.log('隐藏键盘')
+    def hide_keyboard(self, key_name=None, key=None, strategy=None):
+        """隐藏键盘"""
+        self.mobile.hide_keyboard(key_name, key, strategy)
+
+    def press(self, el, times=3000):
+        """按压操作"""
+        TouchAction(self.driver).long_press(el, duration=times).wait(1).perform()
