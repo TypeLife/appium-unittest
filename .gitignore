@@ -4,3 +4,4 @@ venv/
 report/
 report.html
 *.pyc
+__pycache__/
