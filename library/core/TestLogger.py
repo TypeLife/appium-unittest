@@ -37,7 +37,8 @@ class TestLogger(object):
                         TestLogger._do_log = True
                         # from library.core.BasePage import BasePage
                         from library.core.utils import applicationcache as cache
-                        mobile = cache.current_mobile()
+                        current_mobile = getattr(cache, 'current_mobile', lambda: None)
+                        mobile = current_mobile()
                         log_info = func.__doc__ if info is None else info
                         print(template % dict(time=datetime.datetime.now().__str__(),
                                               className=getattr(TestLogger.current_test.__class__, '__name__'),

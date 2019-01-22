@@ -35,18 +35,15 @@ class MXPro6Plus(MobileDriver):
                     return alert[0].click
 
             if auto_accept_permission_alert:
-                # if this.driver.current_activity in [
-                #     'com.android.packageinstaller.permission.ui.GrantPermissionsActivity',
-                #     '.permission.ui.GrantPermissionsActivity'
-                # ]:
-                need = True
-                while need:
-                    try:
-                        WebDriverWait(this.driver, 1).until(
-                            get_accept_permission_handler
-                        )()
-                    except:
-                        need = False
+                if this.get_elements(('xpath', '//*[@text="允许" or @text="拒绝"]')).__len__() >= 2:
+                    need = True
+                    while need:
+                        try:
+                            WebDriverWait(this.driver, 1).until(
+                                get_accept_permission_handler
+                            )()
+                        except:
+                            need = False
             return condition(driver)
 
         wait = WebDriverWait(self.driver, timeout)
