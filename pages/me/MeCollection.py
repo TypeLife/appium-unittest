@@ -44,7 +44,7 @@ class MeCollectionPage(BasePage):
                   }
 
     @TestLogger.log()
-    def have_collection_file(self):
+    def have_collection_pic(self):
         """是否有收藏图片"""
         els = self.get_elements(self.__class__.__locators['收藏的图片'])
         if els:
