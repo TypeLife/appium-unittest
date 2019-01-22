@@ -38,9 +38,19 @@ class MeCollectionPage(BasePage):
                   '[位置]广东省深圳市龙岗区居里夫人大道与环城路交叉口': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_tv_content'),
                   '录制.txt': (MobileBy.ID, 'com.chinasofti.rcs:id/file_name'),
                   '271.0B': (MobileBy.ID, 'com.chinasofti.rcs:id/file_size'),
+                  '收藏的图片': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_image'),
                   # 打开位置页面元素
                   "导航按钮": (MobileBy.ID, 'com.chinasofti.rcs:id/location_nativ_btn'),
                   }
+
+    @TestLogger.log()
+    def have_collection_file(self):
+        """是否有收藏图片"""
+        els = self.get_elements(self.__class__.__locators['收藏的图片'])
+        if els:
+            return True
+        else:
+            return False
 
     @TestLogger.log()
     def click_nav_btn(self):
