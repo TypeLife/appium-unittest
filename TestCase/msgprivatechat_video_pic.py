@@ -538,3 +538,154 @@ class MsgPrivateChatVideoPicTest(TestCase):
         cpp.select_pic()
         cpp.click_send()
         chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0026(self):
+        """单聊会话页面，转发自己发送的图片给本地联系人"""
+        self.public_send_pic()
+        # 1、在当前聊天会话页面，长按自己发送的图片
+        chat = SingleChatPage()
+        chat.press_pic()
+        # 2、点击转发
+        chat.click_forward()
+        # 3、选择任意本地联系人
+        scp = SelectContactsPage()
+        scp.select_local_contacts()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        names = slcp.get_contacts_name()
+        if names:
+            slcp.select_one_member_by_name(names[0])
+            # 3、点击确定
+            slcp.click_sure_forward()
+            flag = slcp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+        else:
+            print("WARN: There is no linkman.")
+            slcp.click_back()
+            scp.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0027(self):
+        """单聊会话页面，转发自己发送的图片给和通讯录联系人"""
+        self.public_send_pic()
+        # 1、在当前聊天会话页面，长按自己发送的图片
+        chat = SingleChatPage()
+        chat.press_pic()
+        # 2、点击转发
+        chat.click_forward()
+        # 3、选择任意和通讯录联系人
+        scp = SelectContactsPage()
+        scp.click_he_contacts()
+        shcp = SelectHeContactsPage()
+        shcp.wait_for_page_load()
+        teams = shcp.get_team_names()
+        if teams:
+            shcp.select_one_team_by_name(teams[0])
+            detail_page = SelectHeContactsDetailPage()
+            detail_page.wait_for_page_load()
+            names = detail_page.get_contacts_names()
+            if not names:
+                print("WARN: Please add contacts in %s." % teams[0])
+            for name in names:
+                detail_page.select_one_linkman(name)
+                flag = detail_page.is_toast_exist("该联系人不可选", timeout=3)
+                if not flag:
+                    break
+            # 3、点击确定
+            detail_page.click_sure_forward()
+            flag2 = detail_page.is_toast_exist("已转发")
+            self.assertTrue(flag2)
+        else:
+            print("WARN: Please create a team and add contacts.")
+            shcp.click_back()
+            scp.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0028(self):
+        """单聊会话页面，转发自己发送的图片给陌生人"""
+        self.public_send_pic()
+        # 1、在当前聊天会话页面，长按自己发送的图片
+        chat = SingleChatPage()
+        chat.press_pic()
+        # 2、点击转发
+        chat.click_forward()
+        # 3、选择任意陌生人
+        scp = SelectContactsPage()
+        times = 500
+        while times > 0:
+            tel = "147752" + str(random.randint(10000, 99999))
+            scp.search(tel)
+            # 构造陌生号码发送
+            if scp.is_present_unknown_member():
+                scp.click_unknown_member()
+                scp.click_sure_forward()
+                chat.wait_for_page_load()
+                break
+            times = times - 1
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0030(self):
+        """单聊会话页面，删除自己发送的图片"""
+        self.public_send_pic()
+        # 1、在当前聊天会话页面，长按自己发送的图片
+        chat = SingleChatPage()
+        chat.press_pic()
+        # 2、点击 删除
+        chat.click_delete()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0032(self):
+        """单聊会话页面，收藏自己发送的照片"""
+        # 1、在当前聊天会话页面，长按自己发送的图片
+        self.public_send_pic()
+        chat = SingleChatPage()
+        chat.press_pic()
+        # 2.收藏该图片
+        chat.click_collection()
+        flag = chat.is_toast_exist("已收藏")
+        if not flag:
+            raise AssertionError("收藏图片没有‘已收藏’提示")
+        chat.wait_for_page_load()
+        # 3.在我模块中的收藏是否可见
+        chat.click_back()
+        cdp = ContactDetailsPage()
+        cdp.click_back_icon()
+        mess = MessagePage()
+        mess.open_me_page()
+        me = MePage()
+        me.click_menu("收藏")
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        flag = mcp.have_collection_pic()
+        if not flag:
+            raise AssertionError("收藏图片后，在我的收藏中不可见")
+        # 回到聊天页面
+        mcp.click_back()
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        contacts.wait_for_page_load()
+        names = contacts.get_contacts_name()
+        contacts.select_people_by_name(names[0])
+        cdp.wait_for_page_load()
+        # 点击消息进入单聊会话页面
+        cdp.click_message_icon()
+        # 如果弹框用户须知则点击处理
+        flag = chat.is_exist_dialog()
+        if flag:
+            chat.click_i_have_read()
+        chat.wait_for_page_load()
+
+    @staticmethod
+    def public_send_video():
+        """在聊天会话页面发送一个视频"""
+        chat = SingleChatPage()
+        # 点击图片按钮
+        chat.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 选择一个视频发送
+        cpp.select_video()
+        cpp.click_send()
+        chat.wait_for_page_load()

@@ -1,5 +1,6 @@
 from appium.webdriver.common.mobileby import MobileBy
 import time
+import re
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
@@ -18,7 +19,8 @@ class ChatPicPage(BasePage):
                   MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn'),
                   '所有照片': (MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_title_text'),
                   'com.chinasofti.rcs:id/select_rl': (MobileBy.ID, 'com.chinasofti.rcs:id/select_rl'),
-                  'com.chinasofti.rcs:id/drop_down_image': (MobileBy.ID, 'com.chinasofti.rcs:id/drop_down_image'),
+                  '切换按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/drop_down_image'),
+                  '照片分类选项': (MobileBy.ID, 'com.chinasofti.rcs:id/albumTitle'),
                   'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
                   '列表容器': (MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView_gallery'),
                   'com.chinasofti.rcs:id/rl_img': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_img'),
@@ -67,6 +69,10 @@ class ChatPicPage(BasePage):
         """选择视频
          :Args: - n  - 第n个视频
         """
+        # 切换 视频 选项
+        self.click_element(self.__class__.__locators['切换按钮'])
+        self.click_element((MobileBy.XPATH, "//*[contains(@text, '视频')]"))
+        time.sleep(1)
         videos = self.get_elements(self.__class__.__locators["所有视频"])
         if videos:
             try:
@@ -79,6 +85,10 @@ class ChatPicPage(BasePage):
     @TestLogger.log()
     def get_video_times(self):
         """获取视频时长"""
+        # 切换 视频 选项
+        self.click_element(self.__class__.__locators['切换按钮'])
+        self.click_element((MobileBy.XPATH, "//*[contains(@text, '视频')]"))
+        time.sleep(1)
         videos = self.get_elements(self.__class__.__locators["视频时长"])
         times = []
         if videos:
@@ -91,6 +101,31 @@ class ChatPicPage(BasePage):
     @TestLogger.log()
     def select_pic(self, n=1):
         """选择n个图片"""
+        # 切换 选项
+        self.click_element(self.__class__.__locators['切换按钮'])
+        time.sleep(1.8)
+        items = self.get_elements(self.__class__.__locators['照片分类选项'])
+        items_names = []
+        if items:
+            for item in items:
+                items_names.append(item.text)
+        tmp_list = []
+        for tmp in items_names:
+            if "视频" in tmp:
+                tmp_list.append(tmp)
+            if "所有照片" in tmp:
+                tmp_list.append(tmp)
+        items_names = [i for i in items_names if i not in tmp_list]
+        # 选择一个选项发送图片
+        send_items = "pic"
+        for item in items_names:
+            num = re.match(r'.*\((\d+)\)$', item).group(1)
+            num = int(num)
+            if num > 9:
+                send_items = item
+                break
+        self.click_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % send_items))
+        time.sleep(1.8)
         pics = self.get_elements(self.__class__.__locators["所有图片"])
         if n > len(pics):
             raise AssertionError("在所有照片首页没有 %s 张图片，请上传图片." % n)
