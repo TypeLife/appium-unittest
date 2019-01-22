@@ -140,6 +140,7 @@ class MeMsgSettingTest(TestCase):
     def test_me_msg_setting_0001(self):
         """接收139邮箱助手信息默认开启"""
         msg_setting = MessageNoticeSettingPage()
+        msg_setting.wait_for_page_load()
         msg_setting.assert_menu_item_has_been_turn_on('接收139邮箱助手消息')
 
     @staticmethod
@@ -157,10 +158,11 @@ class MeMsgSettingTest(TestCase):
         setting_page = SettingPage()
         setting_page.click_menu("消息通知")
 
-    @tags("ALL", "SMOKE", "CMCC-EMAIL")
+    @tags("ALL", "SMOKE", "CMCC")
     def test_me_msg_setting_0002(self):
         """开启接收139邮箱助手信息"""
         msg_setting = MessageNoticeSettingPage()
+        msg_setting.wait_for_page_load()
         msg_setting.turn_on('接收139邮箱助手消息')
         msg_setting.assert_menu_item_has_been_turn_on('接收139邮箱助手消息')
         msg_setting.click_back()
@@ -172,12 +174,12 @@ class MeMsgSettingTest(TestCase):
         msg_page = MessagePage()
         to_address = self.login_number + '@139.com'
         email_subject, body = email_helper.send_email(to_address, '工作日报终稿', '更新内容！')
-        msg_page.assert_first_message_title_in_list_is('139邮箱助手', 30)
+        msg_page.assert_first_message_title_in_list_is('139邮箱助手', 60)
         msg_page.click_message('139邮箱助手')
 
         assistant_page = EmailAssistantPage()
-        assistant_page.assert_the_first_message_is('cmcchefeixin', 30)
-        assistant_page.click_message('cmcchefeixin')
+        assistant_page.assert_the_first_message_is('19876283465', 30)
+        assistant_page.click_message('19876283465')
 
         email_list = EmailListPage()
         email_list.assert_the_newest_email_is(email_subject, 30)
@@ -196,10 +198,11 @@ class MeMsgSettingTest(TestCase):
         setting_page = SettingPage()
         setting_page.click_menu("消息通知")
 
-    @tags("ALL", "SMOKE", "CMCC-EMAIL")
+    @tags("ALL", "SMOKE", "CMCC")
     def test_me_msg_setting_0003(self):
         """关闭接收139邮箱助手信息"""
         msg_setting = MessageNoticeSettingPage()
+        msg_setting.wait_for_page_load()
         msg_setting.turn_off('接收139邮箱助手消息')
         msg_setting.assert_menu_item_has_been_turn_off('接收139邮箱助手消息')
         msg_setting.click_back()
@@ -230,6 +233,7 @@ class MeMsgSettingTest(TestCase):
     def test_me_msg_setting_0004(self):
         """接收OA消息默认开启"""
         msg_setting = MessageNoticeSettingPage()
+        msg_setting.wait_for_page_load()
         msg_setting.assert_menu_item_has_been_turn_on('接收OA消息')
 
     @staticmethod
@@ -269,6 +273,7 @@ class MeMsgSettingTest(TestCase):
         setting_page = SettingPage()
         setting_page.click_menu("消息通知")
         msg_setting = MessageNoticeSettingPage()
+        msg_setting.wait_for_page_load()
         msg_setting.turn_off('接收OA消息')
         msg_setting.assert_menu_item_has_been_turn_off('接收OA消息')
 
@@ -294,6 +299,7 @@ class MeMsgSettingTest(TestCase):
         setting_page = SettingPage()
         setting_page.click_menu("消息通知")
         msg_setting = MessageNoticeSettingPage()
+        msg_setting.wait_for_page_load()
         msg_setting.turn_on('接收OA消息')
         msg_setting.assert_menu_item_has_been_turn_on('接收OA消息')
 
