@@ -8,6 +8,7 @@ TARGET_APP = dict(
     DOWNLOAD_URL="http://dlrcs.fetion-portal.com/mobile/RCS_V6.2.6.1205_20181205.apk",
     APP_PACKAGE="com.chinasofti.rcs",
     APP_ACTIVITY="com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+    INSTALL_BEFORE_RUN=False
 )
 
 # ======================= 移动CI环境手机配置 =======================
