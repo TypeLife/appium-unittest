@@ -44,6 +44,10 @@ class BaseChatPage(BasePage):
                   '取消': (MobileBy.ID, 'android:id/button2'),
                   # 位置信息
                   '深圳市龙岗区交叉口': (MobileBy.ID, 'com.chinasofti.rcs:id/lloc_famous_address_text'),
+                  # 消息图片
+                  '消息图片': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_image'),
+                  # 消息视频
+                  '消息视频': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_video_start'),
                   # 打开位置页面元素
                   "导航按钮": (MobileBy.ID, 'com.chinasofti.rcs:id/location_nativ_btn'),
                   }
@@ -93,6 +97,20 @@ class BaseChatPage(BasePage):
         self.click_element(self.__class__.__locators['转发'])
 
     @TestLogger.log()
+    def forward_pic(self):
+        """转发图片消息"""
+        el = self.get_element(self.__class__.__locators['消息图片'])
+        self.press(el)
+        self.click_element(self.__class__.__locators['转发'])
+
+    @TestLogger.log()
+    def forward_video(self):
+        """转发视频消息"""
+        el = self.get_element(self.__class__.__locators['消息视频'])
+        self.press(el)
+        self.click_element(self.__class__.__locators['转发'])
+
+    @TestLogger.log()
     def delete_mess(self, mess):
         """删除消息"""
         el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % mess))
@@ -103,6 +121,21 @@ class BaseChatPage(BasePage):
     def click_delete(self):
         """点击删除"""
         self.click_element(self.__class__.__locators['删除'])
+
+    @TestLogger.log()
+    def click_forward(self):
+        """点击转发"""
+        self.click_element(self.__class__.__locators['转发'])
+
+    @TestLogger.log()
+    def click_collection(self):
+        """点击收藏"""
+        self.click_element(self.__class__.__locators['收藏'])
+
+    @TestLogger.log()
+    def click_recall(self):
+        """点击撤回"""
+        self.click_element(self.__class__.__locators['撤回'])
 
     @TestLogger.log()
     def recall_mess(self, mess):
@@ -120,6 +153,18 @@ class BaseChatPage(BasePage):
     def press_mess(self, mess):
         """长按消息"""
         el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % mess))
+        self.press(el)
+
+    @TestLogger.log()
+    def press_pic(self):
+        """长按图片"""
+        el = self.get_element(self.__class__.__locators['消息图片'])
+        self.press(el)
+
+    @TestLogger.log()
+    def press_video(self):
+        """长按视频"""
+        el = self.get_element(self.__class__.__locators['消息视频'])
         self.press(el)
 
     @TestLogger.log()

@@ -32,7 +32,43 @@ class SelectContactsPage(BasePage):
         '最近聊天': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint'),
         # 分享二维码的选择联系人页面
         '选择本地联系人': (MobileBy.XPATH, '//*[@text ="选择本地联系人"]'),
+        # 未知号码
+        '未知号码': (MobileBy.XPATH, '//*[contains(@text,"未知号码")]'),
+        # 选择一个联系人转发消息时的弹框
+        '发送给': (MobileBy.XPATH, "//*[contains(@text, '发送给')]"),
+        '取消转发': (MobileBy.XPATH, "//*[contains(@text, '取消')]"),
+        '确定转发': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
     }
+
+    @TestLogger.log()
+    def search(self, text):
+        """搜索联系人"""
+        self.input_text(self.__class__.__locators["搜索或输入手机号"], text)
+        if self.driver.is_keyboard_shown():
+            self.driver.hide_keyboard()
+
+    @TestLogger.log()
+    def is_present_unknown_member(self, timeout=3, auto_accept_alerts=True):
+        """是否是未知号码（陌生号码）"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["未知号码"])
+            )
+            return True
+        except:
+            return False
+
+    @TestLogger.log()
+    def click_unknown_member(self):
+        """点击 未知号码（陌生号码）"""
+        self.click_element(self.__class__.__locators["未知号码"])
+
+    @TestLogger.log()
+    def click_sure_forward(self):
+        """点击确定转发"""
+        self.click_element(self.__class__.__locators['确定转发'])
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=3, auto_accept_alerts=True):
