@@ -22,7 +22,7 @@ PASSWORD = 'yu123456'
 # TO = ['13802883079@139.com', '13802887425@139.com']
 # UI_REPORT = os.path.abspath(os.path.abspath(__file__) + '/../../report/ui_automation_report.xlsx')
 # 报告路径
-UI_REPORT = settings.REPORT_PATH
+UI_REPORT = settings.REPORT_HTML_PATH
 
 FILES = [UI_REPORT]
 SONAR_URL = """
