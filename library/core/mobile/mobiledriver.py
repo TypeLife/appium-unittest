@@ -172,6 +172,7 @@ class MobileDriver(ABC):
                     networkState=network_state_info
                 )
             )
+        self.model_info["ReadableName"] = self.get_mobile_model_info()
 
     @TestLogger.log('断开手机连接')
     def disconnect_mobile(self):
@@ -1269,14 +1270,8 @@ Tips:
             raise
 
     def __str__(self):
-
-        if self.is_connection_created:
-            module_info = self.get_mobile_model_info()
-        else:
-            module_info = self.model_info["ReadableName"]
-
         device_info = {
             "name": self.alis,
-            "model": module_info,
+            "model": self.model_info["ReadableName"]
         }
         return json.dumps(device_info, ensure_ascii=False)
