@@ -33,6 +33,7 @@ class GroupChatPage(BaseChatPage):
                   'mobile0489': (MobileBy.ID, 'com.chinasofti.rcs:id/text_name'),
                   'APP test': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'),
                   '选择名片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
+                  '更多': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
                   }
 
     @TestLogger.log()
@@ -78,4 +79,9 @@ class GroupChatPage(BaseChatPage):
     def is_exist_undisturb(self):
         """是否存在消息免打扰标志"""
         return self._is_element_present(self.__class__.__locators["消息免打扰"])
+
+    @TestLogger.log()
+    def click_more(self):
+        """点击更多富媒体按钮"""
+        self.click_element(self.__class__.__locators["更多"])
 

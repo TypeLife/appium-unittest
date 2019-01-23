@@ -32,6 +32,7 @@ class SelectContactsPage(BasePage):
         '最近聊天': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint'),
         # 分享二维码的选择联系人页面
         '选择本地联系人': (MobileBy.XPATH, '//*[@text ="选择本地联系人"]'),
+        'local联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
     }
 
     @TestLogger.log()
@@ -71,3 +72,15 @@ class SelectContactsPage(BasePage):
     def select_local_contacts(self):
         """选择本地联系人"""
         self.click_element(self.__class__.__locators["选择本地联系人"])
+
+    @TestLogger.log()
+    def click_one_local_contacts(self):
+        """点击一个本地联系人"""
+        els=self.get_elements(self.__class__.__locators["local联系人"])
+        if els:
+            self.click_element(els[0])
+        else:
+            raise AssertionError("没有本地联系人可转发")
+
+
+

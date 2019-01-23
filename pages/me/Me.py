@@ -179,3 +179,11 @@ class MePage(FooterPage):
     def _is_on_the_end_of_menu_view(self):
         """判断是否在菜单开头"""
         return self._is_element_present(self.__locators['设置'])
+
+    @TestLogger.log()
+    def click_help_menu(self):
+        """点击帮助与反馈菜单"""
+        self.scroll_to_bottom()
+        self.wait_until(
+            condition=lambda d: self.get_element(self.__locators['帮助与反馈'])
+        ).click()

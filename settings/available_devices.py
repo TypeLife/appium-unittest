@@ -283,7 +283,7 @@ DEVICES_CONFIG_YYX = {
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '13800138000'
+                'CARD_NUMBER': '13537795364'
             },
         ]
     },
