@@ -642,7 +642,7 @@ class MsgGroupChatTest(TestCase):
         try:
             for info in infos:
                 gif.input_message(info)
-                toast_flag = gif.is_toast_exist("无搜索结果，换个热词试试", timeout=3)
+                toast_flag = gif.is_toast_exist("无搜索结果，换个热词试试", timeout=4)
                 gif_flag = gif.is_gif_exist()
                 self.assertTrue(toast_flag or gif_flag)
         finally:
