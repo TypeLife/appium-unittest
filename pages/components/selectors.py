@@ -121,25 +121,30 @@ class PictureSelector(BasePage):
         import re
         if not self.get_elements(self.__locators['下拉菜单选项']):
             self.click_element(self.__locators['下拉菜单箭头'])
-        menus = self.get_elements(self.__locators['下拉菜单选项'])
-        for menu in menus:
-            menu_text = menu.text
-            assert re.match(r'.+\(\d+\)', menu_text), r'Assert menu text match Regex:."+\(\d+\)"'
-            display_name, total = re.findall(r'(.+)\((\d+)\)', menu_text)[0]
-            if len(display_name) > 3:
-                result = re.findall(r'(.+)([.]{3})$', display_name)
-                if result:
-                    if path.find(result[0][0]) == 0:
-                        menu.click()
-                        return result[0][0], int(total)
+        menu_list = ['xpath', '//*[@resource-id="com.chinasofti.rcs:id/list_select"]']
+        self.swipe_by_direction(menu_list, 'down', 600)
+        menu_item = ['xpath', '//*[@resource-id="com.chinasofti.rcs:id/list_select"]/*']
+        for i in self.mobile.list_iterator(menu_list, menu_item):
+            del i
+            menus = self.get_elements(self.__locators['下拉菜单选项'])
+            for menu in menus:
+                menu_text = menu.text
+                assert re.match(r'.+\(\d+\)', menu_text), r'Assert menu text match Regex:."+\(\d+\)"'
+                display_name, total = re.findall(r'(.+)\((\d+)\)', menu_text)[0]
+                if len(display_name) > 3:
+                    result = re.findall(r'(.+)([.]{3})$', display_name)
+                    if result:
+                        if path.find(result[0][0]) == 0:
+                            menu.click()
+                            return result[0][0], int(total)
+                    else:
+                        if path.find(display_name) == 0:
+                            menu.click()
+                            return display_name, int(total)
                 else:
-                    if path.find(display_name) == 0:
+                    if display_name == path:
                         menu.click()
-                        return display_name, int(total)
-            else:
-                if display_name == path:
-                    menu.click()
-                    return path, int(total)
+                        return path, int(total)
         raise NoSuchElementException('下拉菜单没有找到名称为"{}"的目录'.format(path))
 
     @TestLogger.log('选择指定序号的图片（视频）')
@@ -194,15 +199,13 @@ class PictureSelector(BasePage):
             raise ValueError('参数类型错误')
 
         selector = item.find_element(*self.__locators['选择'])
-        import io
-        fp = io.BytesIO(selector.screenshot_as_png)
-        from library.core.utils import image_util
-        # 获取圆环位置的颜色
-        color = image_util.get_pixel_point_color(fp, 5, 50, True)
-        if color == (255, 255, 255, 255):
+        color = self.get_coordinate_color_of_element(selector, 5, 50, True)
+        white = (255, 255, 255, 255)
+        blue = (21, 124, 248, 255)
+        if color == white:
             # 未选择状态为不透明白色
             return False
-        elif color == (21, 124, 248, 255):
+        elif color == blue:
             # 已选状态为不透明蓝色
             return True
         else:

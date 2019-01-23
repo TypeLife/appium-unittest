@@ -1269,6 +1269,28 @@ Tips:
             print(tips)
             raise
 
+    @TestLogger.log('获取元素指定坐标颜色')
+    def get_coordinate_color_of_element(self, element, x, y, by_percent=False, mode='RGBA') -> tuple:
+        """
+        以元素左上角为坐标原点, 获取元素相对坐标颜色
+        :param element: 定位器、元素
+        :param x: x 轴坐标/百分比
+        :param y: y 轴坐标/百分比
+        :param by_percent: 是否切换成百分比模式定位
+        :param mode: 颜色模式（RGBA、RGB、CMYK..)
+        :return:
+        :rtype: tuple
+        """
+        if isinstance(element, WebElement):
+            el = element
+        else:
+            el = self.get_element(element)
+        import io
+        with io.BytesIO(el.screenshot_as_png) as fp:
+            from library.core.utils import image_util
+            color = image_util.get_pixel_point_color(fp, x, y, by_percent, mode)
+            return color
+
     def __str__(self):
         device_info = {
             "name": self.alis,
