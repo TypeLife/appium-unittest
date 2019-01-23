@@ -131,6 +131,10 @@ class MsgPrivateChatFileLocationTest(TestCase):
     def default_setUp(self):
         """确保每个用例运行前在单聊会话页面"""
         Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_private_chat_page()
+            return
         chat = SingleChatPage()
         if chat.is_on_this_page():
             current_mobile().hide_keyboard_if_display()
@@ -599,7 +603,9 @@ class MsgPrivateChatFileLocationTest(TestCase):
         map_flag = location_page.is_text_present("地图")
         self.assertTrue(toast_flag or map_flag)
         location_page.driver.back()
-        location_page.driver.back()
+        time.sleep(0.3)
+        if not chat.is_on_this_page():
+            location_page.click_back()
         chat.wait_for_page_load()
 
     @staticmethod

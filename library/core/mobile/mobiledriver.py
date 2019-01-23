@@ -142,7 +142,6 @@ class MobileDriver(ABC):
                 msg = traceback.format_exc()
                 print(msg)
             try:
-                # del self._driver
                 self._driver = webdriver.Remote(self._remote_url, self._desired_caps, self._browser_profile,
                                                 self._proxy,
                                                 self._keep_alive)
@@ -1208,13 +1207,55 @@ Value (Alias)      | Data | Wifi | Airplane Mode
     def get_mobile_network_connection_info(self):
         if self.is_android():
             try:
-                result = self.execute_shell_command('ip', '-f', 'inet', 'addr')
+                result = self.execute_shell_command('ifconfig')
             except:
                 result = "暂无信息"
             return result
         else:
             # TODO IOS平台待实现
             raise NotImplementedError('该接口目前只支持Android')
+
+    @TestLogger.log("卸载APP")
+    def remove_app(self, package, **options):
+        self.driver.remove_app(package, **options)
+
+    @TestLogger.log('安装APP')
+    def install_app(self,
+                    app_path,
+                    replace=True,
+                    timeout=60000,
+                    allowTestPackages=True,
+                    useSdcard=False,
+                    grantPermissions=True
+                    ):
+        """
+        安装app 魅族
+        常见报错原因：
+            1、Failure [INSTALL_FAILED_VERSION_DOWNGRADE]（降版本覆盖安装异常）
+        :param app_path: 要安装的应用程序的本地或远程路径
+        :param replace:  如果应用已存在于被测试的设备上, 是否重新安装/升级包。默认为 True
+        :param timeout: 等待安装完成的时间。默认情况下为60000毫秒。
+        :param allowTestPackages: 是否允许安装在清单中标记为测试的包。默认为 True
+        :param useSdcard: 是否使用 sd 卡安装应用程序. 默认为 False
+        :param grantPermissions: 是否在安装完成后自动授权 android 6 +。默认为 True
+        :return:
+        """
+        try:
+            self.driver.install_app(
+                app_path=app_path,
+                replace=replace,
+                timeout=timeout,
+                allowTestPackages=allowTestPackages,
+                useSdcard=useSdcard,
+                grantPermissions=grantPermissions
+            )
+        except:
+            tips = '''
+Tips:
+如果是魅族手机，请确保 手机管家->权限管理->USB安装权限->USB安装管理开关已关闭, 以防止安装权限弹窗阻塞脚本；
+            '''
+            print(tips)
+            raise
 
     def __str__(self):
         device_info = {

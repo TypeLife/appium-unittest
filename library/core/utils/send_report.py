@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from email.mime.application import MIMEApplication
-from email.header import Header
-import smtplib
-import traceback
-import requests
 import json
 import os
+import smtplib
 import time
+import traceback
+from email.mime.application import MIMEApplication
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+import requests
+
 import settings
 
 SUBJECT = u'【持续集成】和飞信[%s]集成报告'
@@ -69,21 +70,25 @@ API_AUTOMATION = {
 
 def get_sonar_metric():
     """获取静态代码扫描结果"""
-    response = requests.get(SONAR_URL)
-    result = json.loads(response.text)
-    measures = result['component']['measures']
-    global CODE_CHECK
-    for measure in measures:
-        if measure['metric'] == 'ncloc':
-            CODE_CHECK['LINE'] = measure['value']
-        elif measure['metric'] == 'bugs':
-            CODE_CHECK['BUG'] = measure['value']
-        elif measure['metric'] == 'vulnerabilities':
-            CODE_CHECK['VUL'] = measure['value']
-        elif measure['metric'] == 'code_smells':
-            CODE_CHECK['SMELL'] = measure['value']
-        elif measure['metric'] == 'duplicated_lines_density':
-            CODE_CHECK['DUP'] = measure['value'] + '%'
+    try:
+        response = requests.get(SONAR_URL)
+        result = json.loads(response.text)
+        measures = result['component']['measures']
+        global CODE_CHECK
+        for measure in measures:
+            if measure['metric'] == 'ncloc':
+                CODE_CHECK['LINE'] = measure['value']
+            elif measure['metric'] == 'bugs':
+                CODE_CHECK['BUG'] = measure['value']
+            elif measure['metric'] == 'vulnerabilities':
+                CODE_CHECK['VUL'] = measure['value']
+            elif measure['metric'] == 'code_smells':
+                CODE_CHECK['SMELL'] = measure['value']
+            elif measure['metric'] == 'duplicated_lines_density':
+                CODE_CHECK['DUP'] = measure['value'] + '%'
+    except:
+        print("获取SONAR数据失败")
+        traceback.print_exc()
 
 
 def get_ui_automation_metric(total, sucess, fail, rate):
@@ -104,7 +109,14 @@ def get_current_version():
         result = json.loads(response.text)
         CURRENT_VERSION = 'V' + result['data']['list'][0]['buildVersion']
     except:
+        print("获取APP当前版本号失败")
         traceback.print_exc()
+
+
+def zip_dir(path, zip_handle):
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            zip_handle.write(os.path.join(root, file))
 
 
 def send_mail(*to):
@@ -134,9 +146,21 @@ def send_mail(*to):
     mail.attach(MIMEText(content, 'html', 'utf-8'))
 
     for FILE in FILES:
-        attachment = MIMEApplication(open(FILE, 'rb').read())
-        attachment.add_header('Content-Disposition', 'attachment', filename=os.path.basename(FILE))
-        mail.attach(attachment)
+        if os.path.isfile(os.path.abspath(FILE)):
+            attachment = MIMEApplication(open(FILE, 'rb').read())
+            attachment.add_header('Content-Disposition', 'attachment', filename=os.path.basename(FILE))
+            mail.attach(attachment)
+        elif os.path.isdir(os.path.abspath(FILE)):
+            import zipfile, tempfile
+            tf = tempfile.mktemp()
+            with zipfile.ZipFile(tf, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                zip_dir(os.path.relpath(FILE), zipf)
+                zipf.close()
+            with open(tf, 'rb') as f:
+                result = f.read()
+                attachment = MIMEApplication(result)
+                attachment.add_header('Content-Disposition', 'attachment', filename=os.path.basename(FILE) + '.zip')
+                mail.attach(attachment)
 
     retry = 3
     while True:

@@ -185,6 +185,8 @@ class MessagePage(FooterPage):
                 [MobileBy.XPATH,
                  '//*[@text="当前网络不可用(102101)，请检查网络设置" or' +
                  ' @text="服务器繁忙或加载超时,请耐心等待" or' +
+                 ' contains(@text,"一键登录暂时无法使用") or' +
+                 ' contains(@text,"登录失败") or' +
                  ' @text="网络连接超时(102102)，请使用短信验证码登录"' +
                  ']'])
             self.__unexpected_info = result

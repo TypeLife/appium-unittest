@@ -68,8 +68,6 @@ class ChatLocationPage(BasePage):
         addr_info = el.parent.find_element(*self.__class__.__locators["地址详细信息"]).text
         return addr_info
 
-
-
     @TestLogger.log()
     def click_allow(self):
         """点击允许"""
@@ -92,7 +90,7 @@ class ChatLocationPage(BasePage):
         return self._is_enabled(self.__class__.__locators["发送"])
 
     @TestLogger.log()
-    def wait_for_page_load(self, timeout=10, auto_accept_alerts=True):
+    def wait_for_page_load(self, timeout=60, auto_accept_alerts=True):
         """等待位置页面加载"""
         try:
             self.wait_until(

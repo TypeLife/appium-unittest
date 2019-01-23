@@ -47,7 +47,7 @@ class ChatPhotoPage(BasePage):
 
     @TestLogger.log()
     def wait_for_record_video_after_page_load(self, timeout=10, auto_accept_alerts=True):
-        """等待聊天拍照页面加载"""
+        """等待聊天拍照之后的页面加载"""
         try:
             self.wait_until(
                 timeout=timeout,
@@ -71,6 +71,11 @@ class ChatPhotoPage(BasePage):
     def take_photo_back(self):
         """拍照返回"""
         self.click_element(self.__class__.__locators["取消拍照"])
+
+    @TestLogger.log()
+    def click_edit_pic(self):
+        """点击编辑拍摄的照片"""
+        self.click_element(self.__class__.__locators["编辑"])
 
     @TestLogger.log()
     def send_photo(self, times=5):
