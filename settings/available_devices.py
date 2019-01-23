@@ -276,18 +276,27 @@ DEVICES_CONFIG_XIN = {
         ]
     },
     # 'M960BDQN229CH': {
-    #         "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
-    #         "SERVER_URL": 'http://221.176.34.113:5000/wd/hub',
-    #         "DEFAULT_CAPABILITY": {
-    #             "platformName": "Android",
-    #             "platformVersion": "6.0",
-    #             "deviceName": "95AQACPMGJP5L",
-    #             "udid": "95AQACPMGJP5L",
-    #             "automationName": "UiAutomator2",
-    #             "newCommandTimeout": 600,
-    #             "appPackage": "com.meizu.flyme.launcher",
-    #             "appActivity": ".Launcher",
+    #     "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
+    #     "SERVER_URL": 'http://221.176.34.113:5000/wd/hub',
+    #     "DEFAULT_CAPABILITY": {
+    #         "platformName": "Android",
+    #         "platformVersion": "6.0",
+    #         "deviceName": "95AQACPMGJP5L",
+    #         "udid": "95AQACPMGJP5L",
+    #         "automationName": "UiAutomator2",
+    #         "newCommandTimeout": 600,
+    #         "appPackage": "com.chinasofti.rcs",
+    #         "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+    #         # "appPackage": "com.meizu.flyme.launcher",
+    #         # "appActivity": ".Launcher",
+    #     },
+    #     'CARDS': [
+    #         {
+    #             'TYPE': CardType.CHINA_MOBILE,
+    #             'CARD_NUMBER': '14775970982'
     #         },
+    #     ]
+    # },
     # '红米Note4X': {
     #     "MODEL": SupportedModel.RED_MI_NOTE_4X,
     #     "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
