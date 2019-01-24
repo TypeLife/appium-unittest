@@ -776,41 +776,66 @@ class MobileDriver(ABC):
             DATA_ONLY = 4
             ALL_NETWORK_ON = 6
         """
-        if status == 0:
-            self.turn_off_airplane_mode()
-            self.turn_off_mobile_data()
-            self.turn_off_wifi()
-            return 0
-        elif status == 1:
-            self.turn_on_airplane_mode()
-            return 1
-        elif status == 2:
-            self.turn_off_airplane_mode()
-            self.turn_off_mobile_data()
-            self.turn_on_wifi()
-            return 2
-        elif status == 4:
-            self.turn_off_airplane_mode()
-            self.turn_on_mobile_data()
-            self.turn_off_wifi()
-            return 4
-        elif status == 6:
-            self.turn_off_airplane_mode()
-            self.turn_on_wifi()
-            self.turn_on_mobile_data()
-            return 6
-        else:
-            raise ValueError(
-                """
-Value (Alias)      | Data | Wifi | Airplane Mode
--------------------------------------------------
-0 (None)           | 0    | 0    | 0
-1 (Airplane Mode)  | 0    | 0    | 1
-2 (Wifi only)      | 0    | 1    | 0
-4 (Data only)      | 1    | 0    | 0
-6 (All network on) | 1    | 1    | 0
-                """
-            )
+        retry = 3
+        while True:
+            try:
+                if status == 0:
+                    self.turn_off_airplane_mode()
+                    self.turn_off_mobile_data()
+                    self.turn_off_wifi()
+                    return 0
+                elif status == 1:
+                    self.turn_on_airplane_mode()
+                    return 1
+                elif status == 2:
+                    self.turn_off_airplane_mode()
+                    self.turn_off_mobile_data()
+                    self.turn_on_wifi()
+                    return 2
+                elif status == 4:
+                    self.turn_off_airplane_mode()
+                    self.turn_on_mobile_data()
+                    self.turn_off_wifi()
+                    return 4
+                elif status == 6:
+                    self.turn_off_airplane_mode()
+                    self.turn_on_wifi()
+                    self.turn_on_mobile_data()
+                    return 6
+                else:
+                    raise ValueError(
+                        """
+        Value (Alias)      | Data | Wifi | Airplane Mode
+        -------------------------------------------------
+        0 (None)           | 0    | 0    | 0
+        1 (Airplane Mode)  | 0    | 0    | 1
+        2 (Wifi only)      | 0    | 1    | 0
+        4 (Data only)      | 1    | 0    | 0
+        6 (All network on) | 1    | 1    | 0
+                        """
+                    )
+            except Exception as err:
+                if isinstance(err, ValueError):
+                    raise
+                else:
+                    # 如果发生异常，恢复网络状态为 6 (All network on) | 1    | 1    | 0
+                    # 尝试3次
+                    self._reset_network(3)
+                    raise err
+
+    @TestLogger.log('恢复网络')
+    def _reset_network(self, try_time=3):
+        if try_time < 1:
+            try_time = 1
+        while try_time:
+            try:
+                self.connect_mobile()
+                self.turn_off_airplane_mode()
+                self.turn_on_wifi()
+                self.turn_on_mobile_data()
+                return
+            except:
+                try_time -= 1
 
     @TestLogger.log('推送文件到手机内存')
     def push_file(self, file_path, to_path):

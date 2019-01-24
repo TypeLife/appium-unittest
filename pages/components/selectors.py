@@ -210,3 +210,25 @@ class PictureSelector(BasePage):
             return True
         else:
             raise RuntimeError('RGBA颜色{}无法识别勾选状态'.format(color))
+
+    @TestLogger.log('点击发送')
+    def click_send_of_img_selector(self):
+        self.click_element(self.__locators['发送'])
+
+    @TestLogger.log('选择并发送')
+    def select_and_send_in_img_selector(self, mapper):
+        """
+        选择文件进行发送
+            mapper格式：
+                {
+                    # 文件夹名  # 文件位置序号
+                    '文件夹1': (1, 2, 3, 4, 5)
+                    '文件夹2': (2, 3, 4, 5, 8)
+                }
+        :param mapper: 文件位置字典
+        :return:
+        """
+        for folder_name, orders in mapper.items():
+            self.switch_to_given_folder(folder_name)
+            self.select_items_by_given_orders(*orders)
+        self.click_send_of_img_selector()
