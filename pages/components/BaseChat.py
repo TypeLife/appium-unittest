@@ -47,7 +47,9 @@ class BaseChatPage(BasePage):
                   # 消息图片
                   '消息图片': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_image'),
                   # 消息视频
-                  '消息视频': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_video_start'),
+                  '消息视频': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_video_time'),
+                  '视频播放按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_video_start'),
+                  '视频关闭按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_close'),
                   # 打开位置页面元素
                   "导航按钮": (MobileBy.ID, 'com.chinasofti.rcs:id/location_nativ_btn'),
                   }
@@ -292,3 +294,27 @@ class BaseChatPage(BasePage):
     def click_cancle(self):
         """点击取消"""
         self.click_element(self.__class__.__locators['取消'])
+
+    @TestLogger.log()
+    def play_video(self):
+        """在聊天会话页面点击视频播放"""
+        self.click_element(self.__class__.__locators['视频播放按钮'], default_timeout=30)
+
+    @TestLogger.log()
+    def close_video(self):
+        """关闭视频播放"""
+        self.click_element(self.__class__.__locators['视频关闭按钮'])
+
+    @TestLogger.log()
+    def wait_for_play_video_page_load(self, timeout=8, auto_accept_alerts=True):
+        """等待视频播放页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators['视频关闭按钮'])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(message)
+        return self
