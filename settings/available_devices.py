@@ -322,7 +322,7 @@ DEVICES_CONFIG_XIN = {
 
 DEVICES_CONFIG_YYX = {
     'M960BDQN229CH': {
-        "MODEL": SupportedModel.HUAWEI_P20,
+        "MODEL": SupportedModel.MI6,
         "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
