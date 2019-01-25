@@ -81,11 +81,11 @@ def get_pixel_point_color(fp, x, y, by_percent=False, mode='RGBA'):
     """
     from PIL import Image
 
-    img = Image.open(fp)
-    img_src = img.convert(mode)
-    pixel_data = img_src.load()
-    if by_percent:
-        x = img.width * (x / 100)
-        y = img.height * (y / 100)
-    data = pixel_data[x, y]
-    return data
+    with Image.open(fp) as img:
+        img_src = img.convert(mode)
+        pixel_data = img_src.load()
+        if by_percent:
+            x = img.width * (x / 100)
+            y = img.height * (y / 100)
+        data = pixel_data[x, y]
+        return data

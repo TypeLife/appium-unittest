@@ -4,9 +4,10 @@ from selenium.common.exceptions import TimeoutException
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 from pages.components import ChatNoticeDialog
+from pages.components.selectors import PictureSelector
 
 
-class ChatWindowPage(ChatNoticeDialog, BasePage):
+class ChatWindowPage(ChatNoticeDialog, PictureSelector, BasePage):
     """聊天窗口"""
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.MessageDetailActivity'
 
@@ -73,9 +74,13 @@ class ChatWindowPage(ChatNoticeDialog, BasePage):
         self.click_send_button()
 
     @TestLogger.log('发送图片')
-    def send_img_msgs(self, location, index=0):
+    def send_img_msgs(self, name_order_mapper):
+        """
+        发送图片、视频消息
+        :return:
+        """
         self.click_element(self.__locators['照片'])
-
+        self.select_and_send_in_img_selector(name_order_mapper)
 
     @TestLogger.log('检查是否收到期望的消息内容')
     def assert_message_content_display(self, content, max_wait_time=5):

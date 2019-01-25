@@ -172,6 +172,7 @@ class MobileDriver(ABC):
                     networkState=network_state_info
                 )
             )
+        self.model_info["ReadableName"] = self.get_mobile_model_info()
 
     @TestLogger.log('断开手机连接')
     def disconnect_mobile(self):
@@ -233,8 +234,12 @@ class MobileDriver(ABC):
         """模拟手机HOME键"""
         if self.is_android():
             self.execute_shell_command('input', 'keyevent', 3)
-        else:
+            return
+        elif self.is_ios():
+            # TODO
             raise NotImplementedError('IOS 点击HOME键未实现')
+        else:
+            raise NotImplementedError('该API不支持android/ios以外的系统')
 
     @TestLogger.log('执行ADB shell命令')
     def execute_shell_command(self, command, *args):
@@ -771,41 +776,66 @@ class MobileDriver(ABC):
             DATA_ONLY = 4
             ALL_NETWORK_ON = 6
         """
-        if status == 0:
-            self.turn_off_airplane_mode()
-            self.turn_off_mobile_data()
-            self.turn_off_wifi()
-            return 0
-        elif status == 1:
-            self.turn_on_airplane_mode()
-            return 1
-        elif status == 2:
-            self.turn_off_airplane_mode()
-            self.turn_off_mobile_data()
-            self.turn_on_wifi()
-            return 2
-        elif status == 4:
-            self.turn_off_airplane_mode()
-            self.turn_on_mobile_data()
-            self.turn_off_wifi()
-            return 4
-        elif status == 6:
-            self.turn_off_airplane_mode()
-            self.turn_on_wifi()
-            self.turn_on_mobile_data()
-            return 6
-        else:
-            raise ValueError(
-                """
-Value (Alias)      | Data | Wifi | Airplane Mode
--------------------------------------------------
-0 (None)           | 0    | 0    | 0
-1 (Airplane Mode)  | 0    | 0    | 1
-2 (Wifi only)      | 0    | 1    | 0
-4 (Data only)      | 1    | 0    | 0
-6 (All network on) | 1    | 1    | 0
-                """
-            )
+        retry = 3
+        while True:
+            try:
+                if status == 0:
+                    self.turn_off_airplane_mode()
+                    self.turn_off_mobile_data()
+                    self.turn_off_wifi()
+                    return 0
+                elif status == 1:
+                    self.turn_on_airplane_mode()
+                    return 1
+                elif status == 2:
+                    self.turn_off_airplane_mode()
+                    self.turn_off_mobile_data()
+                    self.turn_on_wifi()
+                    return 2
+                elif status == 4:
+                    self.turn_off_airplane_mode()
+                    self.turn_on_mobile_data()
+                    self.turn_off_wifi()
+                    return 4
+                elif status == 6:
+                    self.turn_off_airplane_mode()
+                    self.turn_on_wifi()
+                    self.turn_on_mobile_data()
+                    return 6
+                else:
+                    raise ValueError(
+                        """
+        Value (Alias)      | Data | Wifi | Airplane Mode
+        -------------------------------------------------
+        0 (None)           | 0    | 0    | 0
+        1 (Airplane Mode)  | 0    | 0    | 1
+        2 (Wifi only)      | 0    | 1    | 0
+        4 (Data only)      | 1    | 0    | 0
+        6 (All network on) | 1    | 1    | 0
+                        """
+                    )
+            except Exception as err:
+                if isinstance(err, ValueError):
+                    raise
+                else:
+                    # 如果发生异常，恢复网络状态为 6 (All network on) | 1    | 1    | 0
+                    # 尝试3次
+                    self._reset_network(3)
+                    raise err
+
+    @TestLogger.log('恢复网络')
+    def _reset_network(self, try_time=3):
+        if try_time < 1:
+            try_time = 1
+        while try_time:
+            try:
+                self.connect_mobile()
+                self.turn_off_airplane_mode()
+                self.turn_on_wifi()
+                self.turn_on_mobile_data()
+                return
+            except:
+                try_time -= 1
 
     @TestLogger.log('推送文件到手机内存')
     def push_file(self, file_path, to_path):
@@ -894,7 +924,7 @@ Value (Alias)      | Data | Wifi | Airplane Mode
         if self.is_android():
             self.terminate_app('com.android.mms')
             self.execute_shell_command('am', 'start', '-a', 'android.intent.action.SENDTO', '-d', 'sms:', '-e',
-                                       'sms_body', content, '--ez', 'exit_on_sent', 'true')
+                                       'sms_body', '"{}"'.format(content), '--ez', 'exit_on_sent', 'true')
             self.execute_shell_command('input', 'text', to)
             self.click_element([MobileBy.XPATH, '//*[@content-desc="发送"]'])
             if len(self.get_cards()) > 1:
@@ -919,7 +949,14 @@ Value (Alias)      | Data | Wifi | Airplane Mode
     @TestLogger.log("粘贴")
     def paste(self):
         # TODO
-        raise NotImplementedError('该方法未实现')
+        if self.is_android():
+            self.execute_shell_command('input', 'keyevent', 279)
+            return
+        elif self.is_ios():
+            # TODO
+            raise NotImplementedError('IOS 点击HOME键未实现')
+        else:
+            raise NotImplementedError('该API不支持android/ios以外的系统')
 
     def list_iterator(self, scroll_view_locator, item_locator):
         """
@@ -1256,6 +1293,28 @@ Tips:
             '''
             print(tips)
             raise
+
+    @TestLogger.log('获取元素指定坐标颜色')
+    def get_coordinate_color_of_element(self, element, x, y, by_percent=False, mode='RGBA') -> tuple:
+        """
+        以元素左上角为坐标原点, 获取元素相对坐标颜色
+        :param element: 定位器、元素
+        :param x: x 轴坐标/百分比
+        :param y: y 轴坐标/百分比
+        :param by_percent: 是否切换成百分比模式定位
+        :param mode: 颜色模式（RGBA、RGB、CMYK..)
+        :return:
+        :rtype: tuple
+        """
+        if isinstance(element, WebElement):
+            el = element
+        else:
+            el = self.get_element(element)
+        import io
+        with io.BytesIO(el.screenshot_as_png) as fp:
+            from library.core.utils import image_util
+            color = image_util.get_pixel_point_color(fp, x, y, by_percent, mode)
+            return color
 
     def __str__(self):
         device_info = {
