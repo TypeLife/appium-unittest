@@ -141,7 +141,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
             current_mobile().hide_keyboard_if_display()
             return
         else:
-            current_mobile().disconnect_mobile()
+            current_mobile().reset_app()
             Preconditions.enter_private_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
