@@ -34,6 +34,7 @@ class GroupChatPage(BaseChatPage):
                   'APP test': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'),
                   '选择名片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
                   '更多': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
+                  '文件发送成功标志':(MobileBy.ID,'com.chinasofti.rcs:id/img_message_down_file')
                   }
 
     @TestLogger.log()

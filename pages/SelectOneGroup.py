@@ -108,3 +108,7 @@ class SelectOneGroupPage(BasePage):
                                             '@text="{}"]'.format(name)):
                 return True
         return False
+
+    @TestLogger.log()
+    def catch_message_in_page(self, text):
+        return self.is_toast_exist(text)

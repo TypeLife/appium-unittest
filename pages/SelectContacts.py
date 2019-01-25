@@ -72,6 +72,11 @@ class SelectContactsPage(BasePage):
         self.click_element(self.__class__.__locators['确定转发'])
 
     @TestLogger.log()
+    def click_cancel_forward(self):
+        """点击取消转发"""
+        self.click_element(self.__class__.__locators['取消转发'])
+
+    @TestLogger.log()
     def wait_for_page_load(self, timeout=3, auto_accept_alerts=True):
         """等待选择联系人页面加载"""
         try:
@@ -113,10 +118,38 @@ class SelectContactsPage(BasePage):
     def click_one_local_contacts(self):
         """点击一个本地联系人"""
         els=self.get_elements(self.__class__.__locators["local联系人"])
+        contactnames=[]
         if els:
-            self.click_element(els[0])
+            for el in els:
+                contactnames.append(el.text)
+            self.select_one_contact_by_name(contactnames[0])
         else:
             raise AssertionError("没有本地联系人可转发")
 
+    @TestLogger.log()
+    def select_one_contact_by_name(self, name):
+        """通过名称选择一个联系人"""
+        self.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text ="%s"]' % name))
+
+    @TestLogger.log()
+    def wait_for_page_local_contact_load(self, timeout=8, auto_accept_alerts=True):
+        """等待选择联系人页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["选择联系人"])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def catch_message_in_page(self,text):
+        return self.is_toast_exist(text)
 
 

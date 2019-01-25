@@ -463,6 +463,8 @@ class MsgGroupChatFileLocationTest(TestCase):
         if group_names:
             sog.select_one_group_by_name(group_names[0])
             sog.click_sure_forward()
+            if not sog.catch_message_in_page("已转发"):
+                raise AssertionError("转发失败")
         else:
             raise AssertionError("没有群可转发，请创建群")
 
@@ -510,7 +512,7 @@ class MsgGroupChatFileLocationTest(TestCase):
             2、选择转发，选择一个本地通讯录联系人
             3、点击确定"""
         # 先发送一个指定类型的文件
-        #Preconditions.public_send_file(".html")
+        Preconditions.public_send_file(".html")
         gcp = GroupChatPage()
         # 点击设置
         gcp.click_setting()
@@ -530,7 +532,47 @@ class MsgGroupChatFileLocationTest(TestCase):
         sc = SelectContactsPage()
         sc.wait_for_page_load()
         sc.select_local_contacts()
+        time.sleep(2)
+        #选择一个联系人
         sc.click_one_local_contacts()
+        #点击确认转发
+        sc.click_sure_forward()
+        #验证转发成功
+        if not sc.catch_message_in_page("已转发"):
+            raise AssertionError("转发失败")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0014(self):
+        """1、在当前文件列表页面长按任意文件
+            2、选择转发，选择一个本地通讯录联系人
+            3、点击取消按钮"""
+        # 先发送一个指定类型的文件
+        Preconditions.public_send_file(".html")
+        gcp = GroupChatPage()
+        # 点击设置
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        # 等待进入页面
+        gcsp.wait_for_page_load()
+        # 点击查看聊天内容
+        gcsp.click_search_chat_record()
+        search = FindChatRecordPage()
+        # 点击文件
+        search.click_file()
+        chat_file = ChatFilePage()
+        chat_file.wait_for_page_load()
+        # 长按转发
+        chat_file.forward_file(".html")
+        # 选择联系人界面，选择一个本地联系人
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.select_local_contacts()
+        time.sleep(2)
+        sc.click_one_local_contacts()
+        #点击取消按钮
+        sc.click_cancel_forward()
+        #确保选择联系人页面加载
+        sc.wait_for_page_local_contact_load()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0019(self):
