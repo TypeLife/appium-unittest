@@ -141,8 +141,8 @@ class Preconditions(object):
 
         me = MePage()
         me.scroll_to_bottom()
-        me.scroll_to_bottom()
-        me.scroll_to_bottom()
+        # me.scroll_to_bottom()
+        # me.scroll_to_bottom()
         me.click_setting_menu()
 
         setting = SettingPage()

@@ -23,6 +23,7 @@ class GuidePage(BasePage):
     def swipe_to_the_second_banner(self):
         """从引导页第一屏左滑到第二屏"""
         try:
+
             self.wait_until(
                 timeout=5,
                 auto_accept_permission_alert=True,

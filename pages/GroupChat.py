@@ -35,7 +35,14 @@ class GroupChatPage(BaseChatPage):
                   '选择名片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
                   '更多': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
                   '文件发送成功标志':(MobileBy.ID,'com.chinasofti.rcs:id/img_message_down_file')
+                  '选择照片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic'),
                   }
+
+    @TestLogger.log()
+    def click_picture(self):
+        """点击选择照片"""
+        self.click_element(self.__class__.__locators["选择照片"])
+
 
     @TestLogger.log()
     def click_setting(self):

@@ -33,6 +33,18 @@ class ChatPicPreviewPage(BasePage):
                   '视频页面': (MobileBy.ID, 'com.chinasofti.rcs:id/vp_preview'),
                   }
 
+
+
+    @TestLogger.log()
+    def edit_btn_is_toast(self):
+        """获取编辑按钮状态是可点击是否有提示框"""
+        return  self.is_toast_exist("当前版本仅支持勾选单张图片时进行编辑",3)
+
+    @TestLogger.log()
+    def click_edit(self):
+        """点击编辑"""
+        self.click_element(self.__class__.__locators["编辑"])
+
     @TestLogger.log()
     def wait_for_page_load(self, timeout=10, auto_accept_alerts=True):
         """等待照片预览页面加载"""

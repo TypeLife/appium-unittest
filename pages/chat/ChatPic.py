@@ -43,6 +43,24 @@ class ChatPicPage(BasePage):
                   '发送': (MobileBy.ID, 'com.chinasofti.rcs:id/button_send')
                   }
 
+    @TestLogger.log("校验提示照片和视频不能同时发送")
+    def is_toast_exist_pv(self):
+        """校验提示照片和视频不能同时发送"""
+        return self.is_toast_exist("不能同时选择照片和视频",3)
+
+    @TestLogger.log()
+    def get_pic_send_nums(self):
+        """获取图片发送数量"""
+        el = self.get_element(self.__class__.__locators["发送"])
+        info = el.text
+        num = info[-2]
+        return num
+
+    @TestLogger.log("判断是否有提示：最多只能勾选9张照片")
+    def is_toast_exist_maxp(self,text,):
+        """提示最多只能勾选9张照片"""
+        return self.is_toast_exist("最多只能选择9张照片",3)
+
     @TestLogger.log()
     def wait_for_page_load(self, timeout=10, auto_accept_alerts=True):
         """等待选择照片页面加载"""
@@ -127,10 +145,18 @@ class ChatPicPage(BasePage):
         self.click_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % send_items))
         time.sleep(1.8)
         pics = self.get_elements(self.__class__.__locators["所有图片"])
-        if n > len(pics):
-            raise AssertionError("在所有照片首页没有 %s 张图片，请上传图片." % n)
-        for i in range(n):
-            pics[i].click()
+        if n<=9:
+            if n > len(pics):
+                raise AssertionError("在所有照片首页没有 %s 张图片，请上传图片." % n)
+            for i in range(n):
+                pics[i].click()
+        else:
+            if n > len(pics):
+                raise AssertionError("在所有照片首页没有 %s 张图片，请上传图片." % n)
+            for i in range(10):
+                pics[i].click()
+            return self.is_toast_exist("最多只能选择9张照片", 3)
+
 
     @TestLogger.log()
     def click_pic_preview(self):
@@ -156,6 +182,7 @@ class ChatPicPage(BasePage):
     def click_preview(self):
         """点击预览"""
         self.click_element(self.__class__.__locators["预览"])
+
 
     @TestLogger.log()
     def send_btn_is_enabled(self):

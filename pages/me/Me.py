@@ -72,8 +72,11 @@ class MePage(FooterPage):
         '帮助与反馈': (MobileBy.ID, 'com.chinasofti.rcs:id/feedback_text'),
         'com.chinasofti.rcs:id/setting': (MobileBy.ID, 'com.chinasofti.rcs:id/setting'),
         '设置': (MobileBy.ID, 'com.chinasofti.rcs:id/setting_app_text'),
-
+        '移动营业厅': (MobileBy.ID, 'com.chinasofti.rcs:id/onlinehall_text'),
     }
+    @TestLogger.log('点击移动营业厅')
+    def click_mobile_hall_butten(self):
+        self.click_element(self.__locators['移动营业厅'])
 
     @TestLogger.log("点击菜单项")
     def click_menu(self, menu):
