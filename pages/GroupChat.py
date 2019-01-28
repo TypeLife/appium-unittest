@@ -37,6 +37,12 @@ class GroupChatPage(BaseChatPage):
                   '文件发送成功标志':(MobileBy.ID,'com.chinasofti.rcs:id/img_message_down_file'),
                   '选择照片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic'),
                   '发送失败标识': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
+                  '收藏': (MobileBy.XPATH, "//*[contains(@text, '收藏')]"),
+                  '转发': (MobileBy.XPATH, "//*[contains(@text, '转发')]"),
+                  '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
+                  '撤回': (MobileBy.XPATH, "//*[contains(@text, '撤回')]"),
+                  '多选': (MobileBy.XPATH, "//*[contains(@text, '多选')]"),
+                  '我知道了': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_btn_ok'),
                   }
 
     @TestLogger.log()
@@ -106,3 +112,15 @@ class GroupChatPage(BaseChatPage):
         """点击更多富媒体按钮"""
         self.click_element(self.__class__.__locators["更多"])
 
+    @TestLogger.log()
+    def press_file_to_do(self, file,text):
+        """长按指定文件进行操作"""
+        el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))
+        self.press(el)
+        self.click_element(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def press_file(self,file):
+        """长按指定文件"""
+        el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))
+        self.press(el)

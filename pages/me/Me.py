@@ -190,3 +190,8 @@ class MePage(FooterPage):
         self.wait_until(
             condition=lambda d: self.get_element(self.__locators['帮助与反馈'])
         ).click()
+
+    @TestLogger.log()
+    def click_collection(self):
+        """点击收藏按钮"""
+        self.click_element(self.__locators['收藏'])
