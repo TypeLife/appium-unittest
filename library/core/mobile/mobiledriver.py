@@ -483,12 +483,14 @@ class MobileDriver(ABC):
 
     @TestLogger.log('点击元素（默认等待5秒，且等待期间自动允许弹出权限）')
     def click_element(self, locator, default_timeout=5, auto_accept_permission_alert=True):
-        self.wait_until(
-            condition=lambda d: self.get_element(locator),
-            timeout=default_timeout,
-            auto_accept_permission_alert=auto_accept_permission_alert
-        ).click()
-        # self.get_element(locator).click()
+        try:
+            self.wait_until(
+                condition=lambda d: self.get_element(locator),
+                timeout=default_timeout,
+                auto_accept_permission_alert=auto_accept_permission_alert
+            ).click()
+        except TimeoutException:
+            raise NoSuchElementException('找不到元素 {}'.format(locator))
 
     @TestLogger.log('点击文本（支持完全匹配和模糊匹配）')
     def click_text(self, text, exact_match=False):

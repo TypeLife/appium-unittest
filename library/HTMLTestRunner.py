@@ -50,7 +50,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 # URL: http://tungwaiyip.info/software/HTMLTestRunner.html
-from library.core.utils import common
+import re
+
+
 
 __author__ = "Wai Yip Tung,  Findyou"
 __version__ = "0.8.2.2"
@@ -107,11 +109,13 @@ class OutputRedirector(object):
         self.fp = fp
 
     def write(self, s):
+        from library.core.utils import common
         self.fp.write(s)
         if self.mirror_log_output:
             common.write_str_to_log_file(s)
 
     def writelines(self, lines):
+        from library.core.utils import common
         self.fp.writelines(lines)
         if self.mirror_log_output:
             common.write_lines_to_log_file(lines)
@@ -487,25 +491,27 @@ class _TestResult(TestResult):
         # But there are some path in unittest that would bypass this.
         # We must disconnect stdout in stopTest(), which is guaranteed to be called.
         self.complete_output()
+        from library.core.TestLogger import TestLogger
+        TestLogger.test_success(test)
 
     def addSuccess(self, test):
         from library.core.TestLogger import TestLogger
+        from library.core.utils import common
         TestLogger.test_success(test)
         self.success_count += 1
         super(_TestResult, self).addSuccess(test)
         output = self.complete_output()
         self.result.append((0, test, output, ''))
         if self.verbosity > 1:
-            real_stdout.write('ok ')
-            real_stdout.write(str(test))
-            real_stdout.write('\n')
+            real_stdout.write('PASS  {}\n'.format(common.get_test_id(test)))
             real_stdout.flush()
         else:
-            real_stdout.write('.')
+            real_stdout.write('PASS\n')
             real_stdout.flush()
 
     def addError(self, test, err):
         from library.core.TestLogger import TestLogger
+        from library.core.utils import common
         TestLogger.test_error(test)
         self.error_count += 1
         super(_TestResult, self).addError(test, err)
@@ -513,16 +519,15 @@ class _TestResult(TestResult):
         output = self.complete_output()
         self.result.append((2, test, output, _exc_str))
         if self.verbosity > 1:
-            real_stdout.write('E  ')
-            real_stdout.write(str(test))
-            real_stdout.write('\n')
+            real_stdout.write('ERROR {}\n'.format(common.get_test_id(test)))
             real_stdout.flush()
         else:
-            real_stdout.write('E')
+            real_stdout.write('ERROR')
             real_stdout.flush()
 
     def addFailure(self, test, err):
         from library.core.TestLogger import TestLogger
+        from library.core.utils import common
         TestLogger.test_fail(test)
         self.failure_count += 1
         super(_TestResult, self).addFailure(test, err)
@@ -530,12 +535,10 @@ class _TestResult(TestResult):
         output = self.complete_output()
         self.result.append((1, test, output, _exc_str))
         if self.verbosity > 1:
-            real_stdout.write('F  ')
-            real_stdout.write(str(test))
-            real_stdout.write('\n')
+            real_stdout.write('FAIL  {}\n'.format(common.get_test_id(test)))
             real_stdout.flush()
         else:
-            real_stdout.write('F')
+            real_stdout.write('FAIL')
             real_stdout.flush()
 
 
@@ -628,7 +631,7 @@ class HTMLTestRunner(Template_mixin):
             report=report,
             ending=ending,
             ReportBackgroundStyle="TestSuitePass" if not (
-                    result.failure_count or result.error_count) else "TestSuiteFail"
+                result.failure_count or result.error_count) else "TestSuiteFail"
         )
         self.stream.write(output.encode('utf8'))
 
