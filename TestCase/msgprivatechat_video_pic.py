@@ -74,7 +74,7 @@ class Preconditions(object):
 
         # 等待消息页
         message_page = MessagePage()
-        message_page.wait_for_page_load(60)
+        message_page.wait_login_success(60)
 
     @staticmethod
     def make_already_in_message_page(reset=False):

@@ -221,7 +221,7 @@ class Preconditions(object):
         if sl.is_text_present("我知道了"):
             # 点击‘我知道了’
             sl.click_i_know()
-        MessagePage().wait_for_page_load(login_time)
+        MessagePage().wait_login_success(login_time)
 
 
 class LoginTest(TestCase):

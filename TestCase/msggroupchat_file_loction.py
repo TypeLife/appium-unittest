@@ -184,7 +184,7 @@ class Preconditions(object):
             agreement.click_agree_button()
         # 等待消息页
         message_page = MessagePage()
-        message_page.wait_for_page_load(60)
+        message_page.wait_login_success(60)
 
     @staticmethod
     def public_send_file(file_type):
