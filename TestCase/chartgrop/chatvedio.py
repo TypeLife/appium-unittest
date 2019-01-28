@@ -80,7 +80,7 @@ class Preconditions(object):
 
         # 等待消息页
         message_page = MessagePage()
-        message_page.wait_for_page_load(60)
+        message_page.wait_login_success(60)
 
     @staticmethod
     def make_already_in_message_page(reset=False):
@@ -211,17 +211,17 @@ class MsgGroupChatvedioTest(TestCase):
             return
         else:
             try:
+                Preconditions.select_mobile('Android-移动')
+                Preconditions.enter_group_chat_page(reset=True)
                 # current_mobile().terminate_app('com.chinasofti.rcs')
                 # Preconditions.enter_group_chat_page()
-                current_mobile().disconnect_mobile()
-                Preconditions.enter_group_chat_page()
             except Exception:
                 try:
-                   current_mobile().terminate_app('com.chinasofti.rcs')
-                   Preconditions.enter_group_chat_page()
+                    Preconditions.select_mobile('Android-移动')
+                    Preconditions.enter_group_chat_page(reset=True)
                 except Exception:
-                    current_mobile().terminate_app('com.chinasofti.rcs')
-                    Preconditions.enter_group_chat_page()
+                    Preconditions.select_mobile('Android-移动')
+                    Preconditions.enter_group_chat_page(reset=True)
 
     def default_tearDown(self):
         pass

@@ -13,6 +13,8 @@ from pages import CreateGroupNamePage
 from pages import FindChatRecordPage
 from pages import GroupChatPage
 from pages import GuidePage
+from pages import MeCollectionPage
+from pages import MePage
 from pages import MessagePage
 from pages import OneKeyLoginPage
 from pages import PermissionListPage
@@ -184,7 +186,7 @@ class Preconditions(object):
             agreement.click_agree_button()
         # 等待消息页
         message_page = MessagePage()
-        message_page.wait_for_page_load(60)
+        message_page.wait_login_success(60)
 
     @staticmethod
     def public_send_file(file_type):
@@ -230,13 +232,13 @@ class MsgGroupChatFileLocationTest(TestCase):
     def default_setUp(self):
         """确保每个用例运行前在群聊聊天会话页面"""
         Preconditions.select_mobile('Android-移动')
-        scp = GroupChatPage()
-        if scp.is_on_this_page():
-            current_mobile().hide_keyboard_if_display()
-            return
-        else:
-            current_mobile().reset_app()
-            Preconditions.enter_group_chat_page()
+        # scp = GroupChatPage()
+        # if scp.is_on_this_page():
+        #     current_mobile().hide_keyboard_if_display()
+        #     return
+        # else:
+        current_mobile().reset_app()
+        Preconditions.enter_group_chat_page()
 
     def default_tearDown(self):
         pass
@@ -575,6 +577,75 @@ class MsgGroupChatFileLocationTest(TestCase):
         sc.wait_for_page_local_contact_load()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0017(self):
+        """1、在当前文件列表页面长按任意未下载文件
+            2、点击收藏按钮"""
+        # 先发送一个指定类型的文件
+        Preconditions.public_send_file(".html")
+        gcp = GroupChatPage()
+        # 点击设置
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        # 等待进入页面
+        gcsp.wait_for_page_load()
+        # 点击查看聊天内容
+        gcsp.click_search_chat_record()
+        search = FindChatRecordPage()
+        # 点击文件
+        search.click_file()
+        chat_file = ChatFilePage()
+        chat_file.wait_for_page_load()
+        # 长按收藏指定类型的文件
+        chat_file.collection_file(".html")
+        if not chat_file.is_toast_exist("已收藏"):
+            raise AssertionError("收藏验证失败")
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0018(self):
+        """1、在当前文件列表页面长按任意未下载文件
+            2、点击收藏按钮
+            3、查看我-收藏列表"""
+        # 先发送一个指定类型的文件
+        Preconditions.public_send_file(".html")
+        gcp = GroupChatPage()
+        # 点击设置
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        # 等待进入页面
+        gcsp.wait_for_page_load()
+        # 点击查看聊天内容
+        gcsp.click_search_chat_record()
+        search = FindChatRecordPage()
+        # 点击文件
+        search.click_file()
+        chat_file = ChatFilePage()
+        chat_file.wait_for_page_load()
+        # 长按收藏指定类型的文件
+        chat_file.collection_file(".html")
+        chat_file.is_toast_exist("已收藏")
+        #返回到消息页面
+        time.sleep(2)
+        chat_file.click_back()
+        search.click_back()
+        gcsp.click_back()
+        gcp.click_back()
+        sog = SelectOneGroupPage()
+        sog.click_back()
+        sc = SelectContactsPage()
+        sc.click_back()
+        #跳转到我页面
+        me=MePage()
+        me.open_me_page()
+        #查看收藏页面
+        me.click_collection()
+        mcp=MeCollectionPage()
+        #检查刚刚收藏的文件是否存在
+        mcp.is_toast_exist(".html")
+
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0019(self):
         """1、在当前文件列表页面长按任意文件
             2、点击删除按钮"""
@@ -600,12 +671,55 @@ class MsgGroupChatFileLocationTest(TestCase):
         gcsp.click_back()
         gcp.wait_for_page_load()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0040(self):
+        """1、在当前群聊天会话页面长按任意文件
+            2、点击删除按钮"""
+        # 先发送一个指定类型的文件
+        Preconditions.public_send_file(".html")
+        gcp = GroupChatPage()
+        #长按刚刚发送的文件删除
+        gcp.press_file_to_do(".html","删除")
+        #验证删除成功
+        time.sleep(2)
+        if gcp.is_text_present(".html"):
+            raise AssertionError("删除失败")
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0041(self):
+        """1、在当前群聊天会话页面长按自己十分钟内发送的文件
+            2、点击撤回按钮"""
+        # 先发送一个指定类型的文件
+        Preconditions.public_send_file(".html")
+        gcp = GroupChatPage()
+        # 长按刚刚发送的文件撤回
+        gcp.press_file_to_do(".html","撤回")
+        gcp.click_i_know()
+        #验证撤回成功
+        time.sleep(1)
+        if not gcp.is_text_present("你撤回了一条信息"):
+            raise AssertionError("撤回失败")
 
-
-
-
-
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0042(self):
+        """1、在当前群聊天会话页面长按自己超过十分钟发送的文件
+            2、点查看功能菜单"""
+        # 先发送一个指定类型的文件
+        Preconditions.public_send_file(".html")
+        #等待10分钟
+        gcp = GroupChatPage()
+        # 超过十分钟,长按自己发送的文件撤回，没有撤回菜单按钮
+        for i in range(122):
+            time.sleep(2)
+            text = gcp.driver.page_source
+            del text
+            time.sleep(3)
+            tmp = gcp.driver.current_activity
+            del tmp
+            print(i)
+        gcp.press_file(".html")
+        if gcp.is_text_present("撤回"):
+            raise AssertionError("超过十分钟可以撤回")
 
 
 

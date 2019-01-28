@@ -1,10 +1,13 @@
-import datetime
 import functools
 import os
 import re
+import time
 
-from library.core.utils import ConfigManager, common
 from library.core.utils.common import capture_screen_shot
+
+_time = time.time
+_localtime = time.localtime
+_strftime = time.strftime
 
 
 class TestLogger(object):
@@ -18,7 +21,7 @@ class TestLogger(object):
             @functools.wraps(func)
             def wrapper(*args, **kw):
                 # info = description if description else func.__doc__
-                template = '%(time)s - %(className)s - %(level)s - %(caseName)s - %(func)s ' \
+                template = '%(time)s - %(level)s - %(caseName)s - %(func)s ' \
                            + '- [%(mobile)s]%(description)s - %(args)s'
                 TestLogger.log_level = "INFO"
                 turn_on = False
@@ -36,14 +39,23 @@ class TestLogger(object):
                     if turn_on:
                         TestLogger._do_log = True
                         # from library.core.BasePage import BasePage
-                        from library.core.utils import applicationcache as cache
-                        current_mobile = getattr(cache, 'current_mobile', lambda: None)
+                        from library.core.utils import applicationcache
+                        from library.core.utils import common
+                        current_mobile = getattr(applicationcache, 'current_mobile', lambda: None)
                         mobile = current_mobile()
                         log_info = func.__doc__ if info is None else info
-                        print(template % dict(time=datetime.datetime.now().__str__(),
-                                              className=getattr(TestLogger.current_test.__class__, '__name__'),
+
+                        current_time = _time()
+                        (current_time_int, current_time_fraction) = divmod(current_time, 1)
+                        current_time_struct = _localtime(current_time_int)
+
+                        timestamp = _strftime("%Y-%m-%dT%H:%M:%S.", current_time_struct) + "%03d" % (
+                            int(current_time_fraction * 1000))
+
+                        print(template % dict(time=timestamp,
                                               level=TestLogger.log_level,
-                                              caseName=getattr(TestLogger.current_test, '_testMethodName', None),
+                                              # caseName=getattr(TestLogger.current_test, '_testMethodName', None),
+                                              caseName=common.get_test_id(TestLogger.current_test),
                                               func=common.get_method_fullname(func),
                                               mobile=mobile.__str__(),
                                               description=log_info if log_info else "no description",
@@ -70,42 +82,45 @@ class TestLogger(object):
 
     @staticmethod
     def start_test(test):
+        from library.core.utils import common
         TestLogger.current_test = test
+        current_time = _time()
+        (current_time_int, current_time_fraction) = divmod(current_time, 1)
+        current_time_struct = _localtime(current_time_int)
+
+        timestamp = _strftime("%Y-%m-%dT%H:%M:%S.", current_time_struct) + "%03d" % (
+            int(current_time_fraction * 1000))
         if getattr(TestLogger.current_test, '_testMethodName', None):
             print(' - '.join(
                 [
-                    '\n' + datetime.datetime.now().__str__(),
-                    getattr(TestLogger.current_test.__class__, '__name__'),
+                    '\n' + timestamp,
+                    # getattr(TestLogger.current_test.__class__, '__name__'),
                     TestLogger.log_level,
-                    getattr(TestLogger.current_test, '_testMethodName', None),
+                    common.get_test_id(test),
                     '********** TEST START **********'
                 ]
             ))
 
     @staticmethod
     def stop_test(test):
-        if getattr(TestLogger.current_test, '_testMethodName', None):
-            print(' - '.join(
-                [
-                    datetime.datetime.now().__str__(),
-                    getattr(test.__class__, '__name__'),
-                    TestLogger.log_level,
-                    getattr(test, '_testMethodName', None),
-                    '********** TEST FINISHED **********'
-                ]
-            ))
         TestLogger.current_test = None
 
     @staticmethod
     def test_fail(test):
+        from library.core.utils import common
+        current_time = _time()
+        (current_time_int, current_time_fraction) = divmod(current_time, 1)
+        current_time_struct = _localtime(current_time_int)
+
+        timestamp = _strftime("%Y-%m-%dT%H:%M:%S.", current_time_struct) + "%03d" % (
+            int(current_time_fraction * 1000))
         TestLogger.take_screen_shot()
         if getattr(test, '_testMethodName', None):
             print(' - '.join(
                 [
-                    datetime.datetime.now().__str__(),
-                    getattr(test.__class__, '__name__'),
+                    timestamp,
                     TestLogger.log_level,
-                    getattr(test, '_testMethodName', None),
+                    common.get_test_id(test),
                     '********** TEST FAIL **********'
                 ]
             ))
@@ -113,14 +128,20 @@ class TestLogger(object):
 
     @staticmethod
     def test_error(test):
+        from library.core.utils import common
+        current_time = _time()
+        (current_time_int, current_time_fraction) = divmod(current_time, 1)
+        current_time_struct = _localtime(current_time_int)
+
+        timestamp = _strftime("%Y-%m-%dT%H:%M:%S.", current_time_struct) + "%03d" % (
+            int(current_time_fraction * 1000))
         TestLogger.take_screen_shot()
         if getattr(test, '_testMethodName', None):
             print(' - '.join(
                 [
-                    datetime.datetime.now().__str__(),
-                    getattr(test.__class__, '__name__'),
+                    timestamp,
                     TestLogger.log_level,
-                    getattr(test, '_testMethodName', None),
+                    common.get_test_id(test),
                     '********** TEST ERROR **********'
                 ]
             ))
@@ -128,13 +149,19 @@ class TestLogger(object):
 
     @staticmethod
     def test_success(test):
+        from library.core.utils import common
+        current_time = _time()
+        (current_time_int, current_time_fraction) = divmod(current_time, 1)
+        current_time_struct = _localtime(current_time_int)
+
+        timestamp = _strftime("%Y-%m-%dT%H:%M:%S.", current_time_struct) + "%03d" % (
+            int(current_time_fraction * 1000))
         if getattr(test, '_testMethodName', None):
             print(' - '.join(
                 [
-                    datetime.datetime.now().__str__(),
-                    getattr(test.__class__, '__name__'),
+                    timestamp,
                     TestLogger.log_level,
-                    getattr(test, '_testMethodName', None),
+                    common.get_test_id(test),
                     '********** TEST SUCCESS **********'
                 ]
             ))
@@ -142,12 +169,19 @@ class TestLogger(object):
 
     @staticmethod
     def take_screen_shot():
+        current_time = _time()
+        (current_time_int, current_time_fraction) = divmod(current_time, 1)
+        current_time_struct = _localtime(current_time_int)
+
+        timestamp = _strftime("%Y-%m-%dT%H:%M:%S.", current_time_struct) + "%03d" % (
+            int(current_time_fraction * 1000))
         method_name = getattr(TestLogger.current_test, '_testMethodName', '')
-        exception_time = re.sub(r'[:.]', '-', datetime.datetime.now().__str__())
+        exception_time = re.sub(r'[:.]', '-', timestamp)
         file_name = "%(method)s - %(time)s.png" % {'method': method_name, 'time': exception_time}
+        from library.core.utils import ConfigManager
         path = os.path.join(ConfigManager.get_screen_shot_path(), file_name)
         if capture_screen_shot(path):
-            print(datetime.datetime.now().__str__() + ' - INFO - ' + "截图路径：" + path)
+            print(timestamp + ' - INFO - ' + "截图路径：" + path)
 
 # def capture_screen_shot(path):
 #     if os.path.isfile(path):
