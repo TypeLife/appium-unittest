@@ -70,8 +70,9 @@ def get_class_fullname(something):
 def get_test_id(test):
     if isinstance(test, str):
         return test
-    from library.core.utils import common
-    test_class_fullname = common.get_class_fullname(test)
+    elif test is None:
+        return "No_Test"
+    test_class_fullname = get_class_fullname(test)
     test_id = test.id()
 
     if test_class_fullname in _ERROR_HOLDERS_FQN:
