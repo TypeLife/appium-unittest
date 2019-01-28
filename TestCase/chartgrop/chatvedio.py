@@ -177,6 +177,24 @@ class Preconditions(object):
         group_name = "chargourp" + phone_number[-4:]
         return group_name
 
+    @staticmethod
+    def make_already_have_my_picture():
+        """确保当前群聊页面已有图片"""
+        # 1.点击输入框左上方的相册图标
+        gcp = GroupChatPage()
+        cpg = ChatPicPage()
+        gcp.is_on_this_page()
+        if gcp.is_exist_msg_image():
+            return
+        else:
+            # 2.进入相片页面,选择一张片相发送
+            gcp.click_picture()
+            cpg.wait_for_page_load()
+            cpg.select_pic_fk(1)
+            cpg.click_send()
+            time.sleep(5)
+
+
 class MsgGroupChatvedioTest(TestCase):
     """消息->群聊>图片&视频 模块"""
     """前置条件需要修改创建一个群找不到"""
@@ -193,10 +211,10 @@ class MsgGroupChatvedioTest(TestCase):
             return
         else:
             try:
-                current_mobile().terminate_app('com.chinasofti.rcs')
-                Preconditions.enter_group_chat_page()
-                # current_mobile().disconnect_mobile()
+                # current_mobile().terminate_app('com.chinasofti.rcs')
                 # Preconditions.enter_group_chat_page()
+                current_mobile().disconnect_mobile()
+                Preconditions.enter_group_chat_page()
             except Exception:
                 try:
                    current_mobile().terminate_app('com.chinasofti.rcs')
@@ -627,7 +645,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpg.wait_for_page_load()
         cpg.select_pic_fk(n=1)
         cpg.select_video_fk(n=1)
-        flag=cpg.is_toast_exist_pv()
+        flag = cpg.is_toast_exist_pv()
         self.assertEqual(flag,True)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
@@ -725,18 +743,62 @@ class MsgGroupChatvedioTest(TestCase):
         # 4.校验是否已经返回到聊天页面
         gcp.is_on_this_page()
 
-    # @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
-    # def test_msg_group_chat_video_0023(self):
-    #     """群聊会话页面，转发他人发送的图片给本地联系人"""
-    #     # 1.检验是否当前聊天会话页面
-    #     gcp = GroupChatPage()
-    #     gcp.is_on_this_page()
-    #     # 2.长按他人所发的图片
-    #     gcp.press_pic()
-    #     gcp.click_forward()
-    #     scg = SelectContactsPage()
-    #     scg.wait_for_page_load()
-    #     scg.select_local_contacts()
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_video_0026(self):
+        """群聊会话页面，转发他人发送的图片给本地联系人"""
+        # 1.检验是否当前聊天会话页面且有图片
+        Preconditions.make_already_have_my_picture()
+        gcp = GroupChatPage()
+        gcp.is_on_this_page()
+        # 2.长按他人所发的图片
+        gcp.forward_pic()
+        # 3.选择任意本地联系人
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        # 4.选择第一个本地联系人发送
+        slc.swipe_select_one_member_by_name("给个红包2")
+        slc.click_sure_forward()
+        # 5.校验是否在消息聊天页面，是否提示已转发
+        gcp.is_on_this_page()
+        self.assertEquals(gcp.is_exist_forward(),True)
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_video_0028(self):
+        """群聊会话页面，转发他人发送的图片给陌生人"""
+        # 1.检验是否当前聊天会话页面且有图片
+        Preconditions.make_already_have_my_picture()
+        gcp = GroupChatPage()
+        gcp.is_on_this_page()
+        # 2.长按他人所发的图片转发
+        gcp.forward_pic()
+        # 3.选择搜索给陌生人
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        scp.search("15915915911")
+        # 4.校验是否是陌生人号码
+        self.assertEquals(scp.is_present_unknown_member(),True)
+        # 5.点击发送
+        scp.click_unknown_member()
+        scp.click_sure_forward()
+        # 6.校验是否在消息聊天页面，是否提示已转发
+        gcp.is_on_this_page()
+        self.assertEquals(gcp.is_exist_forward(),True)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_video_0030(self):
+        """群聊会话页面，删除自己发送的图片"""
+        # 1.检验是否当前聊天会话页面且有图片
+        Preconditions.make_already_have_my_picture()
+        gcp = GroupChatPage()
+        gcp.is_on_this_page()
+        # 2.长按他人所发的图片转发
+        gcp.press_pic()
+        gcp.click_delete()
+        # 3.校验是否在消息聊天页面，是否提示已删除成功
+        gcp.is_on_this_page()
+        self.assertEquals(gcp.is_exist_msg_image(),False)
 
 

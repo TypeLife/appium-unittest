@@ -84,6 +84,7 @@ class Preconditions(object):
         #  从一键登录页面登录
         Preconditions.login_by_one_key_login()
 
+
 class MeMobilehall(TestCase):
     """我的 - 移动厅模块"""
 

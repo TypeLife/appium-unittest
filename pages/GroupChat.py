@@ -37,7 +37,18 @@ class GroupChatPage(BaseChatPage):
                   '文件发送成功标志':(MobileBy.ID,'com.chinasofti.rcs:id/img_message_down_file'),
                   '选择照片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic'),
                   '发送失败标识': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
+                  '消息图片': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_image'),
                   }
+
+    def is_exist_msg_image(self):
+        """当前页面是否有发图片消息"""
+        el = self.get_elements(self.__locators['消息图片'])
+        return len(el) > 0
+
+    @TestLogger.log()
+    def is_exist_forward(self):
+        """是否存在消息已转发"""
+        return self.is_toast_exist("已转发")
 
     @TestLogger.log()
     def click_take_picture(self):
