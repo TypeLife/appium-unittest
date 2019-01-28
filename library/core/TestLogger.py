@@ -103,23 +103,6 @@ class TestLogger(object):
 
     @staticmethod
     def stop_test(test):
-        from library.core.utils import common
-        current_time = _time()
-        (current_time_int, current_time_fraction) = divmod(current_time, 1)
-        current_time_struct = _localtime(current_time_int)
-
-        timestamp = _strftime("%Y-%m-%dT%H:%M:%S.", current_time_struct) + "%03d" % (
-            int(current_time_fraction * 1000))
-        if getattr(TestLogger.current_test, '_testMethodName', None):
-            print(' - '.join(
-                [
-                    timestamp,
-                    TestLogger.log_level,
-                    # getattr(test, '_testMethodName', None),
-                    common.get_test_id(test),
-                    '********** TEST FINISHED **********'
-                ]
-            ))
         TestLogger.current_test = None
 
     @staticmethod

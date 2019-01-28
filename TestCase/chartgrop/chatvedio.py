@@ -207,7 +207,7 @@ class MsgGroupChatvedioTest(TestCase):
         pass
         # current_mobile().disconnect_mobile()
 
-    @tags('ALL', 'SMOKE', 'CMCC1', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0001(self):
         """群聊会话页面，不勾选相册内图片点击发送按钮"""
         # 1.检验是否当前聊天会话页面，

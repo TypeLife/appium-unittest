@@ -491,6 +491,8 @@ class _TestResult(TestResult):
         # But there are some path in unittest that would bypass this.
         # We must disconnect stdout in stopTest(), which is guaranteed to be called.
         self.complete_output()
+        from library.core.TestLogger import TestLogger
+        TestLogger.test_success(test)
 
     def addSuccess(self, test):
         from library.core.TestLogger import TestLogger
