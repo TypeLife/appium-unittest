@@ -193,26 +193,21 @@ class MsgGroupChatvedioTest(TestCase):
             return
         else:
             try:
-                current_mobile().terminate_app('com.chinasofti.rcs')
-                current_mobile().launch_app()
-                Preconditions.enter_group_chat_page()
-                # current_mobile().disconnect_mobile()
-                # Preconditions.enter_group_chat_page()
+                Preconditions.select_mobile('Android-移动')
+                Preconditions.enter_group_chat_page(reset=True)
             except Exception:
                 try:
-                   current_mobile().terminate_app('com.chinasofti.rcs')
-                   current_mobile().launch_app()
-                   Preconditions.enter_group_chat_page()
+                    Preconditions.select_mobile('Android-移动')
+                    Preconditions.enter_group_chat_page(reset=True)
                 except Exception:
-                    current_mobile().terminate_app('com.chinasofti.rcs')
-                    current_mobile().launch_app()
-                    Preconditions.enter_group_chat_page()
+                    Preconditions.select_mobile('Android-移动')
+                    Preconditions.enter_group_chat_page(reset=True)
 
     def default_tearDown(self):
         pass
         # current_mobile().disconnect_mobile()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC1', 'group_chat')
     def test_msg_group_chat_video_0001(self):
         """群聊会话页面，不勾选相册内图片点击发送按钮"""
         # 1.检验是否当前聊天会话页面，
