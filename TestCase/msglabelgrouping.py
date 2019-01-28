@@ -167,7 +167,7 @@ class MsgLabelGroupingTest(TestCase):
         if chat.is_on_this_page():
             return
         else:
-            current_mobile().disconnect_mobile()
+            current_mobile().reset_app()
             Preconditions.enter_label_grouping_chat_page()
 
     def default_tearDown(self):

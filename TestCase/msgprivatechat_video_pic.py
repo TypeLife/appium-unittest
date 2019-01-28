@@ -141,7 +141,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
             current_mobile().hide_keyboard_if_display()
             return
         else:
-            current_mobile().disconnect_mobile()
+            current_mobile().reset_app()
             Preconditions.enter_private_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
@@ -693,7 +693,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_VideoPic_0036(self):
         """单聊会话页面，转发自己发送的视频给本地联系人"""
-        # self.public_send_video()
+        self.public_send_video()
         # 1、在当前聊天会话页面，长按自己发送的视频
         chat = SingleChatPage()
         chat.press_video()
@@ -828,4 +828,96 @@ class MsgPrivateChatVideoPicTest(TestCase):
         flag = chat.is_exist_dialog()
         if flag:
             chat.click_i_have_read()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0043(self):
+        """单聊会话页面，发送相册内的视频"""
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标
+        chat = SingleChatPage()
+        chat.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2、选择一个视屏
+        cpp.select_video()
+        flag = cpp.send_btn_is_enabled()
+        if not flag:
+            raise AssertionError("选择视频，发送按钮不可点击")
+        times = cpp.get_video_times()
+        res = re.match(r'\d+:\d+', times[0])
+        if not res:
+            raise AssertionError("视频显示时长格式错误，不是‘00:00’类型")
+        cpp.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0044(self):
+        """在单聊聊天会话页面，发送相册内一个视频"""
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标
+        chat = SingleChatPage()
+        chat.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2、选中一个视屏，点击发送
+        cpp.select_video()
+        cpp.click_send()
+        chat.wait_for_page_load()
+        # 3、发送成功，会话窗口可见可播放
+        chat.play_video()
+        chat.wait_for_play_video_page_load()
+        chat.close_video()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0045(self):
+        """在单聊聊天会话页面，发送相册内多个视频"""
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标
+        chat = SingleChatPage()
+        chat.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2、选中多个视屏
+        cpp.select_video(n=0)
+        cpp.select_video(n=1)
+        # toast提示“最多只能选择一个视频”
+        flag = cpp.is_toast_exist("最多只能选择1个视频")
+        if not flag:
+            raise AssertionError("选择多个视频时无‘最多只能选择1个视频’提示")
+        cpp.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0046(self):
+        """在单聊聊天会话页面，同时发送相册内视频和图片"""
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标
+        chat = SingleChatPage()
+        chat.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2、选中一个视频和一个图片
+        cpp.select_video()
+        cpp.select_pic()
+        # toast提示“不能同时选择照片和视频”
+        flag = cpp.is_toast_exist("不能同时选择照片和视频",5)
+        if not flag:
+            raise AssertionError("选中一个视频和一个图片时无‘不能同时选择照片和视频’提示")
+        cpp.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0047(self):
+        """在单聊聊天会话页面，发送视频时预览视频"""
+        # 1、在当前聊天会话页面，点击输入框左上方的相册图标
+        chat = SingleChatPage()
+        chat.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2、选中一个视频点击预览
+        cpp.select_video()
+        cpp.click_preview()
+        # 3、可正常预览
+        preview = ChatPicPreviewPage()
+        preview.wait_for_video_preview_load()
+        preview.click_back()
+        cpp.click_back()
         chat.wait_for_page_load()
