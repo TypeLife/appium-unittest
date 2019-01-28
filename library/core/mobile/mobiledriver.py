@@ -138,9 +138,7 @@ class MobileDriver(ABC):
             try:
                 self.driver.quit()
             except:
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
+                pass
             try:
                 self._driver = webdriver.Remote(self._remote_url, self._desired_caps, self._browser_profile,
                                                 self._proxy,
