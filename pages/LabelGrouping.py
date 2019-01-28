@@ -294,10 +294,14 @@ class LabelGroupingPage(ContactsSelector, BasePage):
         self.wait_for_create_label_grouping_page_load()
         actual = self.input_label_grouping_name(group_name)
         self.click_sure()
+
         if self.is_group_exist_tips_popup():
             print('群组："{}" 已存在'.format(group_name))
             self.click_back()
             return
+
+        # 增加等待步骤，防止点击确定后，系统权限弹窗阻塞下一步操作
+        self.wait_for_contacts_selector_page_load()
         if not member_list:
             self.click_back()
             self.click_back()
