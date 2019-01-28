@@ -1,5 +1,6 @@
 from appium.webdriver.common.mobileby import MobileBy
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.webdriver.remote.webelement import WebElement
 
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
@@ -25,7 +26,8 @@ class ChatWindowPage(ChatNoticeDialog, PictureSelector, BasePage):
         'com.chinasofti.rcs:id/view_line': (MobileBy.ID, 'com.chinasofti.rcs:id/view_line'),
         'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
         'com.chinasofti.rcs:id/message_editor_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/message_editor_layout'),
-        'com.chinasofti.rcs:id/rv_message_chat': (MobileBy.ID, 'com.chinasofti.rcs:id/rv_message_chat'),
+        '消息列表': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/rv_message_chat"]'),
+        '消息根节点': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/rv_message_chat"]/*'),
         '星期三 20:50': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_time'),
         '11': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'),
         'com.chinasofti.rcs:id/svd_head': (MobileBy.ID, 'com.chinasofti.rcs:id/svd_head'),
@@ -91,3 +93,37 @@ class ChatWindowPage(ChatNoticeDialog, PictureSelector, BasePage):
             )
         except TimeoutException:
             raise AssertionError('聊天界面没有收到消息：{}'.format(content))
+
+    @TestLogger.log('获取消息发送状态')
+    def get_msg_status(self, msg, most_recent_index=1):
+        """
+        获取消息的发送状态，如：
+            1、加载中
+            2、已发送
+            3、发送失败
+        如果传入的是定位器，默认寻找最新一条消息，没有则抛出 NoSuchElementException 异常
+        :param msg: 消息（必须传入消息根节点元素或者元素的定位器）
+        :param most_recent_index: 消息在列表中的序号，从消息列表底部往上数，从1开始计数
+        :return:
+        """
+        if not isinstance(msg, WebElement):
+            msgs = self.get_elements(msg)
+            if msgs:
+                msg = msgs[-most_recent_index]
+            else:
+                raise NoSuchElementException('找不到元素：{}'.format(msg))
+        # 找加载中
+        if msg.find_elements('xpath', '//*[@resource-id="com.chinasofti.rcs:id/progress_send_small"]'):
+            return '加载中'
+        elif msg.find_elements('xpath', '//*[@resource-id="com.chinasofti.rcs:id/imageview_msg_send_failed"]'):
+            return '发送失败'
+        else:
+            return '发送成功'
+
+    @TestLogger.log('等待消息在指定时间内状态变为“加载中”、“发送失败”、“发送成功”中的一种')
+    def wait_for_msg_send_status_become_to(self, expected, max_wait_time=3, most_recent_index=1):
+        self.wait_until(
+            condition=lambda d: self.get_msg_status(msg=self.__locators['消息根节点'],
+                                                    most_recent_index=most_recent_index) == expected,
+            timeout=max_wait_time
+        )
