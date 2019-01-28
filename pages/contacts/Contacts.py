@@ -157,8 +157,9 @@ class ContactsPage(FooterPage):
 
     @TestLogger.log()
     def click_label_grouping(self):
-        """点击标签分组"""
+        """点击标签分组1"""
         self.click_element(self.__class__.__locators['标签分组'])
+
 
     @TestLogger.log('点击公众号图标')
     def click_official_account_icon(self):

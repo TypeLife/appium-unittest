@@ -499,6 +499,7 @@ class _TestResult(TestResult):
             real_stdout.write('ok ')
             real_stdout.write(str(test))
             real_stdout.write('\n')
+            real_stdout.flush()
         else:
             real_stdout.write('.')
             real_stdout.flush()

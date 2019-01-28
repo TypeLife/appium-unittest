@@ -73,7 +73,7 @@ class Preconditions(object):
 
         # 等待消息页
         message_page = MessagePage()
-        message_page.wait_for_page_load(60)
+        message_page.wait_login_success(60)
 
     @staticmethod
     def make_already_in_message_page(reset=False):
@@ -167,7 +167,7 @@ class MsgLabelGroupingTest(TestCase):
         if chat.is_on_this_page():
             return
         else:
-            current_mobile().disconnect_mobile()
+            current_mobile().reset_app()
             Preconditions.enter_label_grouping_chat_page()
 
     def default_tearDown(self):

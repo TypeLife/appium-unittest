@@ -141,8 +141,8 @@ class Preconditions(object):
 
         me = MePage()
         me.scroll_to_bottom()
-        me.scroll_to_bottom()
-        me.scroll_to_bottom()
+        # me.scroll_to_bottom()
+        # me.scroll_to_bottom()
         me.click_setting_menu()
 
         setting = SettingPage()
@@ -221,7 +221,7 @@ class Preconditions(object):
         if sl.is_text_present("我知道了"):
             # 点击‘我知道了’
             sl.click_i_know()
-        MessagePage().wait_for_page_load(login_time)
+        MessagePage().wait_login_success(login_time)
 
 
 class LoginTest(TestCase):
@@ -832,6 +832,19 @@ class LoginTest(TestCase):
         sml.select_simplified_chinese()
         sml.click_finish()
         oklp.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_login_yyx():
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.make_already_in_one_key_login_page()
+
+    @tags('All','CMCC')
+    def test_login_yyx(self):
+        one_key = OneKeyLoginPage()
+        one_key.click_license_agreement()
+        AgreementPage().wait_for_license_agreement_load()
 
 
 # from library.core.utils.testcasefilter import set_tags
