@@ -345,7 +345,7 @@ DEVICES_CONFIG_YYX = {
 
 DEVICES_P20 = {
     'M960BDQN229CH': {
-        "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
+        "MODEL": SupportedModel.HUAWEI_P20,
         "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",

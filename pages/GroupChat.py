@@ -34,15 +34,28 @@ class GroupChatPage(BaseChatPage):
                   'APP test': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'),
                   '选择名片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
                   '更多': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
-                  '文件发送成功标志':(MobileBy.ID,'com.chinasofti.rcs:id/img_message_down_file')
+                  '文件发送成功标志':(MobileBy.ID,'com.chinasofti.rcs:id/img_message_down_file'),
                   '选择照片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic'),
+                  '发送失败标识': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
                   }
+
+    @TestLogger.log()
+    def click_take_picture(self):
+        """点击选择富媒体拍照"""
+        self.click_element(self.__class__.__locators["富媒体拍照"])
+
+    @TestLogger.log()
+    def is_send_sucess(self):
+        """当前页面是否有发送失败标识"""
+        el = self.get_elements(self.__locators['发送失败标识'])
+        if len(el) > 0:
+            return False
+        return True
 
     @TestLogger.log()
     def click_picture(self):
         """点击选择照片"""
         self.click_element(self.__class__.__locators["选择照片"])
-
 
     @TestLogger.log()
     def click_setting(self):

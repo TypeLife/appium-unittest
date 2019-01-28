@@ -57,7 +57,7 @@ class ChatPicPage(BasePage):
         return num
 
     @TestLogger.log("判断是否有提示：最多只能勾选9张照片")
-    def is_toast_exist_maxp(self,text,):
+    def is_toast_exist_maxp(self):
         """提示最多只能勾选9张照片"""
         return self.is_toast_exist("最多只能选择9张照片",3)
 
@@ -145,18 +145,36 @@ class ChatPicPage(BasePage):
         self.click_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % send_items))
         time.sleep(1.8)
         pics = self.get_elements(self.__class__.__locators["所有图片"])
-        if n<=9:
-            if n > len(pics):
-                raise AssertionError("在所有照片首页没有 %s 张图片，请上传图片." % n)
-            for i in range(n):
-                pics[i].click()
-        else:
-            if n > len(pics):
-                raise AssertionError("在所有照片首页没有 %s 张图片，请上传图片." % n)
-            for i in range(10):
-                pics[i].click()
-            return self.is_toast_exist("最多只能选择9张照片", 3)
+        if n > len(pics):
+            raise AssertionError("在所有照片首页没有 %s 张图片，请上传图片." % n)
+        for i in range(n):
+            pics[i].click()
 
+
+    @TestLogger.log()
+    def select_pic_fk(self, n=1):
+        """选择n个图片"""
+        # 切换 选项
+        time.sleep(3)
+        pics = self.get_elements(self.__class__.__locators['所有图片'])
+        if n > len(pics):
+            raise AssertionError("在所有照片首页没有 %s 张图片，请上传图片." % n)
+        for i in range(n):
+            pics[i].click()
+
+    @TestLogger.log()
+    def select_video_fk(self, n=1):
+        """选择n个视频"""
+        # 切换 选项
+        self.click_element(self.__class__.__locators['切换按钮'])
+        time.sleep(1.8)
+        items = self.get_elements(self.__class__.__locators['照片分类选项'])
+        items[1].click()
+        videos = self.get_elements(self.__class__.__locators['所有视频'])
+        if n > len(videos):
+            raise AssertionError("在所有照片首页没有 %s 张视频，请上传视频." % n)
+        for i in range(n):
+            videos[i].click()
 
     @TestLogger.log()
     def click_pic_preview(self):
