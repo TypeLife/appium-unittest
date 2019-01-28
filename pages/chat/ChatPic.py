@@ -43,6 +43,24 @@ class ChatPicPage(BasePage):
                   '发送': (MobileBy.ID, 'com.chinasofti.rcs:id/button_send')
                   }
 
+    @TestLogger.log("校验提示照片和视频不能同时发送")
+    def is_toast_exist_pv(self):
+        """校验提示照片和视频不能同时发送"""
+        return self.is_toast_exist("不能同时选择照片和视频",3)
+
+    @TestLogger.log()
+    def get_pic_send_nums(self):
+        """获取图片发送数量"""
+        el = self.get_element(self.__class__.__locators["发送"])
+        info = el.text
+        num = info[-2]
+        return num
+
+    @TestLogger.log("判断是否有提示：最多只能勾选9张照片")
+    def is_toast_exist_maxp(self):
+        """提示最多只能勾选9张照片"""
+        return self.is_toast_exist("最多只能选择9张照片",3)
+
     @TestLogger.log()
     def wait_for_page_load(self, timeout=10, auto_accept_alerts=True):
         """等待选择照片页面加载"""
@@ -132,6 +150,32 @@ class ChatPicPage(BasePage):
         for i in range(n):
             pics[i].click()
 
+
+    @TestLogger.log()
+    def select_pic_fk(self, n=1):
+        """选择n个图片"""
+        # 切换 选项
+        time.sleep(3)
+        pics = self.get_elements(self.__class__.__locators['所有图片'])
+        if n > len(pics):
+            raise AssertionError("在所有照片首页没有 %s 张图片，请上传图片." % n)
+        for i in range(n):
+            pics[i].click()
+
+    @TestLogger.log()
+    def select_video_fk(self, n=1):
+        """选择n个视频"""
+        # 切换 选项
+        self.click_element(self.__class__.__locators['切换按钮'])
+        time.sleep(1.8)
+        items = self.get_elements(self.__class__.__locators['照片分类选项'])
+        items[1].click()
+        videos = self.get_elements(self.__class__.__locators['所有视频'])
+        if n > len(videos):
+            raise AssertionError("在所有照片首页没有 %s 张视频，请上传视频." % n)
+        for i in range(n):
+            videos[i].click()
+
     @TestLogger.log()
     def click_pic_preview(self):
         """点击图片阅览"""
@@ -156,6 +200,7 @@ class ChatPicPage(BasePage):
     def click_preview(self):
         """点击预览"""
         self.click_element(self.__class__.__locators["预览"])
+
 
     @TestLogger.log()
     def send_btn_is_enabled(self):
