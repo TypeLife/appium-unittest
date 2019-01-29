@@ -6,6 +6,7 @@ from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import AgreementDetailPage
 from pages import ChatFilePage
+from pages import ChatLocationPage
 from pages import ChatMorePage
 from pages import ChatSelectFilePage
 from pages import ChatSelectLocalFilePage
@@ -721,6 +722,167 @@ class MsgGroupChatFileLocationTest(TestCase):
         if gcp.is_text_present("撤回"):
             raise AssertionError("超过十分钟可以撤回")
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0043(self):
+        """1、在当前会话窗口点击位置
+            2、点击左上角的返回按钮"""
+        gcp = GroupChatPage()
+        gcp.click_more()
+        more_page = ChatMorePage()
+        more_page.click_location()
+        #等待位置页面加载
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        time.sleep(1)
+        #返回会话窗口
+        location_page.click_back()
+        gcp.wait_for_page_load()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0044(self):
+        """1、在当前会话窗口点击位置
+            2、点击右上角的发送按钮"""
+        gcp = GroupChatPage()
+        gcp.click_more()
+        more_page = ChatMorePage()
+        more_page.click_location()
+        # 等待位置页面加载
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        time.sleep(1)
+        #点击发送按钮
+        if not location_page.send_btn_is_enabled():
+            raise AssertionError("位置页面发送按钮不可点击")
+        location_page.click_send()
+        gcp.wait_for_page_load()
+        if not gcp.is_address_text_present():
+            raise AssertionError("位置信息发送不成功")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0045(self):
+        """1、在当前会话窗口点击位置
+            2、滑动500米内的位置列表，选择其他位置
+            3、点击右上角的发送按钮"""
+        gcp = GroupChatPage()
+        gcp.click_more()
+        more_page = ChatMorePage()
+        more_page.click_location()
+        # 等待位置页面加载
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        time.sleep(1)
+        #选择其他位置
+        location_page.select_other_item()
+        # 点击发送按钮
+        if not location_page.send_btn_is_enabled():
+            raise AssertionError("位置页面发送按钮不可点击")
+        location_page.click_send()
+        gcp.wait_for_page_load()
+        if not gcp.is_address_text_present():
+            raise AssertionError("位置信息发送不成功")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0046(self):
+        """1、在当前会话窗口点击位置
+            2、滑动500米内的位置列表，选择其他位置
+            3、点击左上角的返回按钮"""
+        gcp = GroupChatPage()
+        gcp.click_more()
+        more_page = ChatMorePage()
+        more_page.click_location()
+        # 等待位置页面加载
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        time.sleep(1)
+        # 选择其他位置
+        location_page.select_other_item()
+        #点击返回
+        location_page.click_back()
+        gcp.wait_for_page_load()
+
+    @staticmethod
+    def public_send_location():
+        """发送位置信息"""
+        gcp = GroupChatPage()
+        gcp.click_more()
+        more_page = ChatMorePage()
+        more_page.click_location()
+        # 等待位置页面加载
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        time.sleep(1)
+        # 点击发送按钮
+        if not location_page.send_btn_is_enabled():
+            raise AssertionError("位置页面发送按钮不可点击")
+        location_page.click_send()
+        gcp.wait_for_page_load()
+        if not gcp.is_address_text_present():
+            raise AssertionError("位置信息发送不成功")
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0047(self):
+        """1、长按位置消息体
+            2、点击转发按钮
+            3、选择任意本地通讯录联系人进行转发"""
+        self.public_send_location()
+        # 长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.select_local_contacts()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        names = slcp.get_contacts_name()
+        if names:
+            slcp.select_one_member_by_name(names[0])
+            # 3、点击确定
+            slcp.click_sure_forward()
+            flag = slcp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+        else:
+            raise AssertionError("WARN: There is no linkman.")
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0049(self):
+        """1、长按位置消息体
+            2、点击转发按钮
+            3、选择任意群转发"""
+        self.public_send_location()
+        # 长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        names = sogp.get_group_name()
+        if names:
+            sogp.select_one_group_by_name(names[0])
+            # 3、点击确定
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+        else:
+            raise AssertionError("WARN: There is no group.")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0050(self):
+        """1、在当前页面点击位置消息体
+            2、点击右下角按钮"""
+        self.public_send_location()
+        time.sleep(2)
+        #点击位置消息体
+        gcp = GroupChatPage()
+        gcp.click_addr_info()
+        #等待页面加载
+        gcp.wait_for_location_page_load()
+        #点击右下角按钮
+        gcp.click_nav_btn()
+        if gcp.is_toast_exist("未发现手机导航应用", timeout=3):
+            raise  AssertionError("未发现手机导航应用")
+        map_flag = gcp.is_text_present("地图")
+        self.assertTrue(map_flag)
 
 
