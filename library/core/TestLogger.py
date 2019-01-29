@@ -21,8 +21,8 @@ class TestLogger(object):
             @functools.wraps(func)
             def wrapper(*args, **kw):
                 # info = description if description else func.__doc__
-                template = '%(time)s - %(level)s - %(caseName)s - %(func)s ' \
-                           + '- [%(mobile)s]%(description)s - %(args)s'
+                template = '%(time)s - %(level)s - %(caseName)s - %(func)s%(args)s ' \
+                           + '- %(description)s - %(mobile)s'
                 TestLogger.log_level = "INFO"
                 turn_on = False
                 try:
@@ -51,7 +51,10 @@ class TestLogger(object):
 
                         timestamp = _strftime("%Y-%m-%dT%H:%M:%S.", current_time_struct) + "%03d" % (
                             int(current_time_fraction * 1000))
-
+                        import inspect
+                        received_args = inspect.getcallargs(func,*args,**kw)
+                        if 'self' in received_args:
+                            received_args.pop('self')
                         print(template % dict(time=timestamp,
                                               level=TestLogger.log_level,
                                               # caseName=getattr(TestLogger.current_test, '_testMethodName', None),
@@ -63,7 +66,7 @@ class TestLogger(object):
                                               #     args[1:] if bool(args[:1]) and isinstance(args[0],
                                               #                                               BasePage) else args,
                                               #     kw)
-                                              args='[Args: {} {}]'.format(args, kw),
+                                              args='{}'.format(received_args),
                                               )
                               )
                         TestLogger.log_level = "INFO"

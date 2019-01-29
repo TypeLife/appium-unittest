@@ -27,6 +27,13 @@ class Preconditions(object):
     """前置条件"""
 
     @staticmethod
+    def connect_mobile(category):
+        """选择手机手机"""
+        client = switch_to_mobile(REQUIRED_MOBILES[category])
+        client.connect_mobile()
+        return client
+
+    @staticmethod
     def select_mobile(category, reset=False):
         """选择手机"""
         client = switch_to_mobile(REQUIRED_MOBILES[category])
@@ -215,9 +222,59 @@ class Preconditions(object):
 class MsgGroupChatvedioTest(TestCase):
     """消息->群聊>图片&视频 模块"""
     """前置条件需要修改创建一个群找不到"""
+
     @classmethod
     def setUpClass(cls):
-        pass
+
+        # 创建联系人
+        fail_time = 0
+
+        while fail_time < 3:
+            try:
+                required_contacts = [
+                    ('给个红包1', '13800138000'),  # 假号码
+                    ('给个红包2', '13800138001'),  # 假号码
+                    ('给个红包3', '13800138002'),  # 假号码
+                    ('给个红包4', '13800138003'),  # 假号码
+                    ('给个红包5茻', '13800138004'),  # 假号码
+                    ('大佬1', '13800138005'),  # 假号码
+                    ('大佬2', '13800138006'),  # 假号码
+                    ('大佬3', '13800138007'),  # 假号码
+                    ('大佬4', '13800138008'),  # 假号码
+                ]
+                conts = ContactsPage()
+                Preconditions.connect_mobile('Android-移动')
+                current_mobile().hide_keyboard_if_display()
+                for name, number in required_contacts:
+                    Preconditions.make_already_in_message_page()
+                    conts.open_contacts_page()
+                    conts.create_contacts_if_not_exits(name, number)
+
+                # 创建群
+                required_group_chats = [
+                    ('给个红包1', ['给个红包1', '给个红包2']),
+                    ('给个红包2', ['给个红包1', '给个红包2']),
+                    ('给个红包3', ['给个红包1', '给个红包2']),
+                    ('给个红包4', ['给个红包1', '给个红包2']),
+                    ('群聊1', ['给个红包1', '给个红包2']),
+                    ('群聊2', ['给个红包1', '给个红包2']),
+                    ('群聊3', ['给个红包1', '给个红包2']),
+                    ('群聊4', ['给个红包1', '给个红包2']),
+                ]
+
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
+                return
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
 
     def default_setUp(self):
         """确保每个用例运行前在群聊聊天会话页面"""
@@ -256,7 +313,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpg = ChatPicPage()
         cpg.wait_for_page_load()
         # 4.判断发送按钮是否能点击
-        flg=cpg.send_btn_is_enabled()
+        flg = cpg.send_btn_is_enabled()
         self.assertEquals(flg, False)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
@@ -274,7 +331,7 @@ class MsgGroupChatvedioTest(TestCase):
         # 4.点击发送返回到群聊页面,校验是否发送成功
         cpg.click_send()
         gcp.is_on_this_page()
-        self.assertEqual(gcp.is_send_sucess(),True)
+        self.assertEqual(gcp.is_send_sucess(), True)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0003(self):
@@ -332,8 +389,8 @@ class MsgGroupChatvedioTest(TestCase):
         cpg.click_preview()
         cpp = ChatPicPreviewPage()
         cpp.wait_for_page_load()
-        ppi=cpp.get_pic_preview_num()
-        ppn=cpp.get_pic_send_num()
+        ppi = cpp.get_pic_preview_num()
+        ppn = cpp.get_pic_send_num()
         self.assertEquals(ppi, ppn)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
@@ -577,22 +634,22 @@ class MsgGroupChatvedioTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0012(self):
-         """群聊会话页面，发送相册内的图片，校验预览格式"""
-         # 1.检验是否当前聊天会话页面，
-         gcp = GroupChatPage()
-         gcp.is_on_this_page()
-         # 2.点击输入框左上方的相册图标
-         gcp.click_picture()
-         # 3.进入相片页面,选择一张相片
-         cpg = ChatPicPage()
-         cpg.wait_for_page_load()
-         cpg.select_pic_fk()
-         # 4.点击点击打开,校验格式
-         cpg.click_pic_preview()
-         cpp = ChatPicPreviewPage()
-         cpp.wait_for_page_load()
-         flag=cpp.get_pic_preview_info()
-         self.assertIsNotNone(re.match(r'预览\(\d+/\d+\)', flag))
+        """群聊会话页面，发送相册内的图片，校验预览格式"""
+        # 1.检验是否当前聊天会话页面，
+        gcp = GroupChatPage()
+        gcp.is_on_this_page()
+        # 2.点击输入框左上方的相册图标
+        gcp.click_picture()
+        # 3.进入相片页面,选择一张相片
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_pic_fk()
+        # 4.点击点击打开,校验格式
+        cpg.click_pic_preview()
+        cpp = ChatPicPreviewPage()
+        cpp.wait_for_page_load()
+        flag = cpp.get_pic_preview_info()
+        self.assertIsNotNone(re.match(r'预览\(\d+/\d+\)', flag))
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0013(self):
@@ -611,8 +668,8 @@ class MsgGroupChatvedioTest(TestCase):
         # 4.校验预览页面中隐藏"编辑"按钮的提示
         cpp.wait_for_page_load()
         cpp.click_edit()
-        fla=cpp.edit_btn_is_toast()
-        self.assertEqual(fla,True)
+        fla = cpp.edit_btn_is_toast()
+        self.assertEqual(fla, True)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0014(self):
@@ -626,7 +683,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpg = ChatPicPage()
         cpg.wait_for_page_load()
         cpg.select_pic_fk(n=9)
-        cpg.click_send ()
+        cpg.click_send()
         # 4.点击发送后，判断在群聊首页
         gcp.is_on_this_page()
         gcp.wait_for_page_load()
@@ -644,10 +701,10 @@ class MsgGroupChatvedioTest(TestCase):
         cpg = ChatPicPage()
         cpg.wait_for_page_load()
         cpg.select_pic_fk(10)
-        flg1=cpg.is_toast_exist_maxp()
-        self.assertEqual(flg1,True)
-        flg2=cpg.get_pic_send_nums()
-        self.assertEqual(flg2,'9')
+        flg1 = cpg.is_toast_exist_maxp()
+        self.assertEqual(flg1, True)
+        flg2 = cpg.get_pic_send_nums()
+        self.assertEqual(flg2, '9')
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0016(self):
@@ -663,7 +720,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpg.select_pic_fk(n=1)
         cpg.select_video_fk(n=1)
         flag = cpg.is_toast_exist_pv()
-        self.assertEqual(flag,True)
+        self.assertEqual(flag, True)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0017(self):
@@ -780,7 +837,7 @@ class MsgGroupChatvedioTest(TestCase):
         slc.click_sure_forward()
         # 5.校验是否在消息聊天页面，是否提示已转发
         gcp.is_on_this_page()
-        self.assertEquals(gcp.is_exist_forward(),True)
+        self.assertEquals(gcp.is_exist_forward(), True)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0028(self):
@@ -796,13 +853,13 @@ class MsgGroupChatvedioTest(TestCase):
         scp.wait_for_page_load()
         scp.search("15915915911")
         # 4.校验是否是陌生人号码
-        self.assertEquals(scp.is_present_unknown_member(),True)
+        self.assertEquals(scp.is_present_unknown_member(), True)
         # 5.点击发送
         scp.click_unknown_member()
         scp.click_sure_forward()
         # 6.校验是否在消息聊天页面，是否提示已转发
         gcp.is_on_this_page()
-        self.assertEquals(gcp.is_exist_forward(),True)
+        self.assertEquals(gcp.is_exist_forward(), True)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0030(self):
@@ -817,7 +874,7 @@ class MsgGroupChatvedioTest(TestCase):
         time.sleep(2)
         # 3.校验是否在消息聊天页面，是否提示已删除成功
         gcp.is_on_this_page()
-        self.assertEquals(gcp.is_exist_msg_image(),False)
+        self.assertEquals(gcp.is_exist_msg_image(), False)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0032(self):

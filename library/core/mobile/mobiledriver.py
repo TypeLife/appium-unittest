@@ -1318,7 +1318,7 @@ Tips:
 
     def __str__(self):
         device_info = {
-            "name": self.alis,
-            "model": self.model_info["ReadableName"]
+            # "name": self.alis,
+            "手机型号": self.model_info["ReadableName"]
         }
         return json.dumps(device_info, ensure_ascii=False)

@@ -145,3 +145,19 @@ class GroupChatPage(BaseChatPage):
         """长按指定文件"""
         el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))
         self.press(el)
+
+    @TestLogger.log()
+    def is_address_text_present(self):
+        """判断位置信息是否在群聊页面发送"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/lloc_famous_address_text'))
+        if el:
+            return True
+        else:
+            return False
+
+    @TestLogger.log()
+    def press_message_to_do(self,text):
+        """长按指定信息进行操作"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/lloc_famous_address_text'))
+        self.press(el)
+        self.click_element(self.__class__.__locators[text])
