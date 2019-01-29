@@ -19,8 +19,8 @@ AVAILABLE_DEVICES = {
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",
-            "deviceName": "CLB7N18904002073",
-            "udid": "CLB7N18904002073",
+            "deviceName": "8DF6R17526001515",
+            "udid": "8DF6R17526001515",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
