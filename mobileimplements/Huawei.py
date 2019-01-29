@@ -23,3 +23,39 @@ class HuaweiP20(MobileDriver):
         except:
             result = "暂无信息"
         return result.strip()
+
+    @TestLogger.log('开启飞行模式')
+    def turn_on_airplane_mode(self):
+        """
+        Android系统：
+            默认使用adb命令 adb shell am start -a android.settings.AIRPLANE_MODE_SETTINGS 打开WIFI设置页，
+            通过寻找第一个checkable="true"的控件当做数据开关进行开启、关闭操作
+        IOS系统：
+            未实现
+        如果该方法对正在使用的机型不适用，应该在具体的mobile实现类中重写该方法
+        :return:
+        """
+        params = 'settings put global airplane_mode_on 1'.split(' ')
+        params1 = 'am broadcast -a android.intent.action.AIRPLANE_MODE'.split(' ')
+        self.execute_shell_command(*params)
+        self.execute_shell_command(*params1)
+        return True
+
+    @TestLogger.log('关闭飞行模式')
+    def turn_off_airplane_mode(self):
+        """
+        由于appium set_network_connection接口不靠谱，所有有关网络状态的设置需要在UI层面操作
+        Android系统：
+            默认使用adb命令 adb shell am start -a android.settings.AIRPLANE_MODE_SETTINGS 打开WIFI设置页，
+            通过寻找第一个checkable="true"的控件当做数据开关进行开启、关闭操作
+        IOS系统：
+            未实现
+        如果该方法对正在使用的机型不适用，应该在具体的mobile实现类中重写该方法
+        :return:
+        """
+
+        params = 'settings put global airplane_mode_on 0'.split(' ')
+        params1 = 'am broadcast -a android.intent.action.AIRPLANE_MODE'.split(' ')
+        self.execute_shell_command(*params)
+        self.execute_shell_command(*params1)
+        return True
