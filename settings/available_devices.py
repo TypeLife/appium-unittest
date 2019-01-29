@@ -14,13 +14,13 @@ TARGET_APP = dict(
 # ======================= 移动CI环境手机配置 =======================
 AVAILABLE_DEVICES = {
     'M960BDQN229CH': {
-        "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
+        "MODEL": SupportedModel.HUAWEI_P20,
         "SERVER_URL": 'http://221.176.34.113:5000/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0",
-            "deviceName": "95AQACPMGJP5L",
-            "udid": "95AQACPMGJP5L",
+            "deviceName": "CLB7N18904002073",
+            "udid": "CLB7N18904002073",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
@@ -276,13 +276,15 @@ DEVICES_CONFIG_XIN = {
         ]
     },
     # 'M960BDQN229CH': {
-    #     "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
+    #     "MODEL": SupportedModel.HUAWEI_P20,
     #     "SERVER_URL": 'http://221.176.34.113:5000/wd/hub',
     #     "DEFAULT_CAPABILITY": {
     #         "platformName": "Android",
     #         "platformVersion": "6.0",
-    #         "deviceName": "95AQACPMGJP5L",
-    #         "udid": "95AQACPMGJP5L",
+    #         # "deviceName": "95AQACPMGJP5L",
+    #         "deviceName": "8DF6R17526001515",
+    #         # "udid": "95AQACPMGJP5L",
+    #         "udid": "8DF6R17526001515",
     #         "automationName": "UiAutomator2",
     #         "newCommandTimeout": 600,
     #         "appPackage": "com.chinasofti.rcs",
