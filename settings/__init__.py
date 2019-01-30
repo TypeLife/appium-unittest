@@ -12,9 +12,12 @@ REPORT_PATH = os.path.join(PROJECT_PATH, 'report')
 # 测试报告HTML文件
 REPORT_HTML_PATH = os.path.join(REPORT_PATH, 'TestReport.html')
 # 屏幕截图存储路径
-SCREEN_SHOT_PATH = os.path.join(REPORT_PATH, 'screen-shot', NOW.date().__str__(), NOW.time().strftime("T%H-%M-%S-%f"))
-# log文件存放目录
-LOG_FILE_PATH = os.path.join(REPORT_PATH, 'log')
+SCREEN_SHOT_PATH = os.path.join(REPORT_PATH, 'screen-shot', NOW.date().strftime('%Y-%m-%d'),
+                                NOW.time().strftime("T%H-%M-%S-%f"))
+# log文件存放路径
+# LOG_FILE_PATH = os.path.join(REPORT_PATH, 'log')
+LOG_FILE_PATH = os.path.join(REPORT_PATH, 'log', NOW.date().strftime('%Y-%m-%d'),
+                             NOW.strftime("%Y-%m-%dT%H-%M-%S-%f") + '.log')
 # 预置文件存放目录
 RESOURCE_FILE_PATH = os.path.join(PROJECT_PATH, 'resource')
 

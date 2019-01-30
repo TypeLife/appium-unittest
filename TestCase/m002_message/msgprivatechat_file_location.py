@@ -546,7 +546,7 @@ class MsgPrivateChatFileLocationTest(TestCase):
             detail_page.wait_for_page_load()
             names = detail_page.get_contacts_names()
             if not names:
-                print("WARN: Please add contacts in %s." % teams[0])
+                print("WARN: Please add m005_contacts in %s." % teams[0])
             for name in names:
                 detail_page.select_one_linkman(name)
                 flag = detail_page.is_toast_exist("该联系人不可选", timeout=3)
@@ -557,7 +557,7 @@ class MsgPrivateChatFileLocationTest(TestCase):
             flag2 = detail_page.is_toast_exist("已转发")
             self.assertTrue(flag2)
         else:
-            print("WARN: Please create a team and add contacts.")
+            print("WARN: Please create a team and add m005_contacts.")
             shcp.click_back()
             scp.click_back()
         chat.wait_for_page_load()

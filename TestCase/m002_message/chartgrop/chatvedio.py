@@ -147,7 +147,7 @@ class Preconditions(object):
         slc = SelectLocalContactsPage()
         names = slc.get_contacts_name()
         if not names:
-            raise AssertionError("No contacts, please add contacts in address book.")
+            raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
         # 选择成员
         for name in names:
             slc.select_one_member_by_name(name)

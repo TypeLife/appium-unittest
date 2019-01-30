@@ -1,11 +1,40 @@
 import inspect
 import os
 import re
+import sys
+import traceback
+from io import StringIO
 
 import settings
 from library.core.utils.connectioncache import NoConnection
 
 _ERROR_HOLDERS_FQN = ("unittest.suite._ErrorHolder", "unittest2.suite._ErrorHolder")
+_ENCODING = sys.stdin.encoding if sys.stdin.encoding else "UTF-8"
+
+
+class FlushingStringIO(StringIO, object):
+    encoding = _ENCODING  # stdout must have encoding
+
+    def __init__(self, flush_function):
+        super(FlushingStringIO, self).__init__()
+
+        self._flush_function = flush_function
+        self.encoding = _ENCODING
+
+    def _flush_to_flush_function(self):
+        self._flush_function(self.getvalue())
+        self.seek(0)
+        self.truncate()
+
+    def write(self, str):
+        super(FlushingStringIO, self).write(str)
+
+        if '\n' in str:
+            self._flush_to_flush_function()
+
+    def flush(self, *args, **kwargs):
+        self._flush_to_flush_function()
+        return super(FlushingStringIO, self).flush(*args, **kwargs)
 
 
 def open_or_create(path, mode='r'):
@@ -19,8 +48,7 @@ def open_or_create(path, mode='r'):
 
 
 def get_log_file():
-    log_date = re.sub(r'[:.]', '-', settings.NOW.__str__())
-    file_path = os.path.join(settings.LOG_FILE_PATH, settings.NOW.date().__str__(), log_date + '.log')
+    file_path = settings.LOG_FILE_PATH
     dir_name, file_name = os.path.split(file_path)
     if not os.path.isdir(dir_name):
         os.makedirs(dir_name)
@@ -86,6 +114,18 @@ def get_test_id(test):
             return "%s (%s)" % (test_id, desc.replace('.', '_'))
 
     return test_id
+
+
+def convert_error_to_string(err, frames_to_skip_from_tail=0):
+    try:
+        exctype, value, tb = err
+        trace = traceback.format_exception(exctype, value, tb)
+        if frames_to_skip_from_tail:
+            trace = trace[:-frames_to_skip_from_tail]
+        return ''.join(trace)
+    except Exception:
+        tb = traceback.format_exc()
+        return "*FAILED TO GET TRACEBACK*: " + tb
 
 
 def capture_screen_shot(path):

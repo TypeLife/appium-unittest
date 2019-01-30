@@ -114,7 +114,7 @@ class Preconditions(object):
             slc.wait_for_page_load()
             names = slc.get_contacts_name()
             if not names:
-                raise AssertionError("No contacts, please add contacts in address book.")
+                raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
             for name in names:
                 slc.select_one_member_by_name(name)
             slc.click_sure()
@@ -131,7 +131,7 @@ class Preconditions(object):
             slc.wait_for_page_load()
             names = slc.get_contacts_name()
             if not names:
-                raise AssertionError("No contacts, please add contacts in address book.")
+                raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
             for name in names:
                 slc.select_one_member_by_name(name)
             slc.click_sure()
@@ -632,7 +632,7 @@ class MsgLabelGroupingTest(TestCase):
                 detail_page.wait_for_page_load()
                 names = detail_page.get_contacts_names()
                 if not names:
-                    print("WARN: Please add contacts in %s." % teams[0])
+                    print("WARN: Please add m005_contacts in %s." % teams[0])
                 for name in names:
                     detail_page.select_one_linkman(name)
                     flag = detail_page.is_toast_exist("该联系人不可选", timeout=3)
@@ -643,7 +643,7 @@ class MsgLabelGroupingTest(TestCase):
                 flag2 = detail_page.is_toast_exist("已转发")
                 self.assertTrue(flag2)
             else:
-                print("WARN: Please create a team and add contacts.")
+                print("WARN: Please create a team and add m005_contacts.")
                 shcp.click_back()
                 scp.click_back()
         else:
@@ -690,7 +690,7 @@ class MsgLabelGroupingTest(TestCase):
                 detail_page.wait_for_page_load()
                 names = detail_page.get_contacts_names()
                 if not names:
-                    print("WARN: Please add contacts in %s." % teams[0])
+                    print("WARN: Please add m005_contacts in %s." % teams[0])
                 for name in names:
                     detail_page.select_one_linkman(name)
                     flag = detail_page.is_toast_exist("该联系人不可选", timeout=3)
@@ -700,7 +700,7 @@ class MsgLabelGroupingTest(TestCase):
                 detail_page.click_cancel_forward()
                 detail_page.click_back()
             else:
-                print("WARN: Please create a team and add contacts.")
+                print("WARN: Please create a team and add m005_contacts.")
             shcp.click_back()
             scp.click_back()
         else:
@@ -1071,7 +1071,7 @@ class MsgLabelGroupingTest(TestCase):
             detail_page.wait_for_page_load()
             names = detail_page.get_contacts_names()
             if not names:
-                print("WARN: Please add contacts in %s." % teams[0])
+                print("WARN: Please add m005_contacts in %s." % teams[0])
             for name in names:
                 detail_page.select_one_linkman(name)
                 flag = detail_page.is_toast_exist("该联系人不可选", timeout=3)
@@ -1082,7 +1082,7 @@ class MsgLabelGroupingTest(TestCase):
             flag2 = detail_page.is_toast_exist("已转发")
             self.assertTrue(flag2)
         else:
-            print("WARN: Please create a team and add contacts.")
+            print("WARN: Please create a team and add m005_contacts.")
             shcp.click_back()
             scp.click_back()
         chat.wait_for_page_load()
