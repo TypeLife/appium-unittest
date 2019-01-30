@@ -892,5 +892,43 @@ class MsgGroupChatFileLocationTest(TestCase):
         Preconditions.public_send_file(".doc")
         #点击发送的文件
         gcp = GroupChatPage()
+        gcp.wait_for_message_down_file()
         gcp.open_file_in_chat_page(".doc")
+        #等待文件页面进行加载
+        gcp.wait_for_open_file()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0052(self):
+        """1、在当前会话窗口点击自己发送格式为docx的文件"""
+        # 先发送一个指定类型的文件
+        Preconditions.public_send_file(".docx")
+        # 点击发送的文件
+        gcp = GroupChatPage()
+        gcp.wait_for_message_down_file()
+        gcp.open_file_in_chat_page(".docx")
+        # 等待文件页面进行加载
+        gcp.wait_for_open_file()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0053(self):
+        """1、在当前会话窗口点击自己发送格式为ppt的文件"""
+        # 先发送一个指定类型的文件
+        Preconditions.public_send_file(".ppt")
+        # 点击发送的文件
+        gcp = GroupChatPage()
+        gcp.wait_for_message_down_file()
+        gcp.open_file_in_chat_page(".ppt")
+        # 等待文件页面进行加载
+        gcp.wait_for_open_file()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0054(self):
+        """1、在当前会话窗口点击自己发送格式为pptx的文件"""
+        # 先发送一个指定类型的文件
+        Preconditions.public_send_file(".pptx")
+        # 点击发送的文件
+        gcp = GroupChatPage()
+        gcp.wait_for_message_down_file()
+        gcp.open_file_in_chat_page(".pptx")
+        # 等待文件页面进行加载
+        gcp.wait_for_open_file()
