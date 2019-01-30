@@ -201,6 +201,23 @@ class Preconditions(object):
             cpg.click_send()
             time.sleep(5)
 
+    @staticmethod
+    def make_already_have_my_videos():
+        """确保当前群聊页面已有视频"""
+        # 1.点击输入框左上方的相册图标
+        gcp = GroupChatPage()
+        cpg = ChatPicPage()
+        gcp.wait_for_page_load()
+        if gcp.is_exist_msg_videos():
+            return
+        else:
+            # 2.进入相片页面,选择一张片相发送
+            gcp.click_picture()
+            cpg.wait_for_page_load()
+            cpg.select_video_fk(1)
+            cpg.click_send()
+            time.sleep(5)
+
 
 class MsgGroupChatvedioTest(TestCase):
     """消息->群聊>图片&视频 模块"""
@@ -854,6 +871,138 @@ class MsgGroupChatvedioTest(TestCase):
         # 2.长按他人所发的图片转发
         gcp.press_pic()
         gcp.click_delete()
+        time.sleep(2)
         # 3.校验是否在消息聊天页面，是否提示已删除成功
         gcp.is_on_this_page()
         self.assertEquals(gcp.is_exist_msg_image(), False)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_video_0032(self):
+        """群聊会话页面，收藏自己发送的照片"""
+        # 1.检验是否当前聊天会话页面且有图片
+        Preconditions.make_already_have_my_picture()
+        gcp = GroupChatPage()
+        gcp.is_on_this_page()
+        # 2.长按他人所发的图片收藏该图
+        gcp.press_pic()
+        gcp.click_collection()
+        # 3.校验提示已收藏消息，
+        gcp.is_on_this_page()
+        self.assertEquals(gcp.is_exist_collection(),True)
+        # 4.返回到消息主页
+        gcp.click_back()
+        SelectOneGroupPage().click_back()
+        SelectContactsPage().click_back()
+        from pages.components.Footer import FooterPage
+        # 5.进入我的-收藏页面
+        fp = FooterPage()
+        fp.open_me_page()
+        me = MePage()
+        me.click_collection()
+        # 6.校验我的模块中是否有已收藏的图片
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        self.assertEquals(mcp.have_collection_pic(),True)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_video_0036(self):
+        """群聊会话页面，转发自己发送的视频给本地联系人"""
+        # 1.检验是否当前聊天会话页面且有视频
+        Preconditions.make_already_have_my_videos()
+        gcp = GroupChatPage()
+        gcp.is_on_this_page()
+        # 2.长按他人所发的视频
+        gcp.forward_video()
+        # 3.选择任意本地联系人
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        # 4.选择第一个本地联系人发送
+        slc.swipe_select_one_member_by_name("给个红包2")
+        slc.click_sure_forward()
+        # 5.校验是否在消息聊天页面，是否提示已转发
+        gcp.is_on_this_page()
+        self.assertEquals(gcp.is_exist_forward(),True)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_video_0038(self):
+        """群聊会话页面，转发他人发送的视频给陌生人"""
+        # 1.检验是否当前聊天会话页面且有视频
+        Preconditions.make_already_have_my_videos()
+        gcp = GroupChatPage()
+        gcp.is_on_this_page()
+        # 2.长按他人所发的视频转发
+        gcp.forward_video()
+        # 3.选择搜索给陌生人
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        scp.search("15912312311")
+        # 4.校验是否是陌生人号码
+        self.assertEquals(scp.is_present_unknown_member(), True)
+        # 5.点击发送
+        scp.click_unknown_member()
+        scp.click_sure_forward()
+        # 6.校验是否在消息聊天页面，是否提示已转发
+        gcp.is_on_this_page()
+        self.assertEquals(gcp.is_exist_forward(), True)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_video_0040(self):
+        """群聊会话页面，删除自己发送的视频"""
+        # 1.检验是否当前聊天会话页面且有视频
+        Preconditions.make_already_have_my_videos()
+        gcp = GroupChatPage()
+        gcp.is_on_this_page()
+        # 2.长按自己所发的视频转的删除
+        gcp.press_video()
+        gcp.click_delete()
+        # 3.校验是否在消息聊天页面，是否提示已删除成功
+        gcp.is_on_this_page()
+        self.assertEquals(gcp.is_exist_msg_image(),False)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_video_0042(self):
+        """群聊会话页面，收藏自己发送的视频"""
+        # 1.检验是否当前聊天会话页面且有视频
+        Preconditions.make_already_have_my_videos()
+        gcp = GroupChatPage()
+        gcp.is_on_this_page()
+        # 2.长按他人所发的视频收藏该视频
+        gcp.press_video()
+        gcp.click_collection()
+        # 3.校验提示已收藏消息，
+        gcp.is_on_this_page()
+        self.assertEquals(gcp.is_exist_collection(),True)
+        # 4.返回到消息主页
+        gcp.click_back()
+        SelectOneGroupPage().click_back()
+        SelectContactsPage().click_back()
+        from pages.components.Footer import FooterPage
+        # 5.进入我的-收藏页面
+        fp = FooterPage()
+        fp.open_me_page()
+        me = MePage()
+        me.click_collection()
+        # 6.校验我的模块中是否有已收藏的视频
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        self.assertEquals(mcp.have_collection_video(),True)
+
+    # @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    # def test_msg_group_chat_video_0043(self):
+    #     """群聊会话页面，发送相册内的视频"""
+    #     # 1.检验是否在当前聊天会话页
+    #     gcp = GroupChatPage()
+    #     gcp.is_on_this_page()
+    #     # 2.选择视频发送
+    #     gcp.click_picture()
+    #     cpg = ChatPicPage()
+    #     cpg.wait_for_page_load()
+    #     cpg.select_video_fk(1)
+    #     # 3.校验发送按钮是高亮可点击
+    #     self.assertEquals(cpg.send_btn_is_enabled(),True)
+    #     self.assertIsNotNone(cpg.get_video_times()[1])
+
+

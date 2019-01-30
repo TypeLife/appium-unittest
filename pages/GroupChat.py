@@ -38,6 +38,7 @@ class GroupChatPage(BaseChatPage):
                   '选择照片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic'),
                   '发送失败标识': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
                   '消息图片': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_image'),
+                  '消息视频': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_video_time'),
                   '收藏': (MobileBy.XPATH, "//*[contains(@text, '收藏')]"),
                   '转发': (MobileBy.XPATH, "//*[contains(@text, '转发')]"),
                   '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
@@ -45,11 +46,20 @@ class GroupChatPage(BaseChatPage):
                   '多选': (MobileBy.XPATH, "//*[contains(@text, '多选')]"),
                   '我知道了': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_btn_ok'),
                   }
+    def is_exist_msg_videos(self):
+        """当前页面是否有发视频消息"""
+        el = self.get_elements(self.__locators['消息视频'])
+        return len(el) > 0
 
     def is_exist_msg_image(self):
         """当前页面是否有发图片消息"""
         el = self.get_elements(self.__locators['消息图片'])
         return len(el) > 0
+
+    @TestLogger.log()
+    def is_exist_collection(self):
+        """是否存在消息已收藏"""
+        return self.is_toast_exist("已收藏")
 
     @TestLogger.log()
     def is_exist_forward(self):
@@ -135,3 +145,19 @@ class GroupChatPage(BaseChatPage):
         """长按指定文件"""
         el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))
         self.press(el)
+
+    @TestLogger.log()
+    def is_address_text_present(self):
+        """判断位置信息是否在群聊页面发送"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/lloc_famous_address_text'))
+        if el:
+            return True
+        else:
+            return False
+
+    @TestLogger.log()
+    def press_message_to_do(self,text):
+        """长按指定信息进行操作"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/lloc_famous_address_text'))
+        self.press(el)
+        self.click_element(self.__class__.__locators[text])
