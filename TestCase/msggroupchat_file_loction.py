@@ -885,4 +885,12 @@ class MsgGroupChatFileLocationTest(TestCase):
         map_flag = gcp.is_text_present("地图")
         self.assertTrue(map_flag)
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0051(self):
+        """1、在当前会话窗口点击自己发送格式为doc的文件"""
+        # 先发送一个指定类型的文件
+        Preconditions.public_send_file(".doc")
+        #点击发送的文件
+        gcp = GroupChatPage()
+        gcp.open_file_in_chat_page(".doc")
 
