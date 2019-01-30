@@ -35,22 +35,6 @@ class MessageNoticeSettingPage(BasePage):
         :return:
         """
         self.turn_on_menu(item)
-        # switch_locator = [
-        #     MobileBy.XPATH,
-        #     '//android.widget.Switch[../android.widget.TextView[@text="{}"]]'.format(item)
-        # ]
-        #
-        # self._find_item(switch_locator)
-        #
-        # open_states = ['开启']
-        # close_states = ['关闭']
-        # current_status = self.get_text(switch_locator)
-        # if current_status in open_states:
-        #     return
-        # elif current_status in close_states:
-        #     self.click_element(switch_locator)
-        # else:
-        #     raise Exception("{} not in {} and {}".format(current_status, open_states, close_states))
 
     @TestLogger.log("关闭设置项")
     def turn_off(self, item):
@@ -60,22 +44,6 @@ class MessageNoticeSettingPage(BasePage):
         :return:
         """
         self.turn_off_menu(item)
-        # switch_locator = [
-        #     MobileBy.XPATH,
-        #     '//android.widget.Switch[../android.widget.TextView[@text="{}"]]'.format(item)
-        # ]
-        #
-        # self._find_item(switch_locator)
-        #
-        # open_states = ['开启']
-        # close_states = ['关闭']
-        # current_status = self.get_text(switch_locator)
-        # if current_status in open_states:
-        #     self.click_element(switch_locator)
-        # elif current_status in close_states:
-        #     return
-        # else:
-        #     raise Exception("{} not in {} and {}".format(current_status, open_states, close_states))
 
     @TestLogger.log("检查设置项是否打开")
     def assert_menu_item_has_been_turn_on(self, item):
@@ -86,8 +54,8 @@ class MessageNoticeSettingPage(BasePage):
 
         self._find_item(switch_locator)
 
-        open_states = ['开启']
-        close_states = ['关闭']
+        open_states = ['开启', '打开', 'ON']
+        close_states = ['关闭', 'OFF']
         current_status = self.get_text(switch_locator)
         if current_status in open_states:
             return
@@ -105,8 +73,8 @@ class MessageNoticeSettingPage(BasePage):
 
         self._find_item(switch_locator)
 
-        open_states = ['开启']
-        close_states = ['关闭']
+        open_states = ['开启', '打开', 'ON']
+        close_states = ['关闭', 'OFF']
         current_status = self.get_text(switch_locator)
         if current_status in open_states:
             raise AssertionError('设置项"{}"没有关闭，当前状态为：{}'.format(item, current_status))
@@ -212,8 +180,8 @@ class MessageNoticeSettingPage(BasePage):
         assert (len(item.find_elements('xpath', '//android.widget.TextView[../android.widget.Switch]')) == 1) \
                and (len(item.find_elements('xpath', '//android.widget.Switch')) == 1), \
             '请确认传入的元素是包含checkbox的菜单'
-        open_states = ['开启']
-        close_states = ['关闭']
+        open_states = ['开启', '打开', 'ON']
+        close_states = ['关闭', 'OFF']
         current = item.find_element('xpath', '//android.widget.Switch').text
         if current in open_states:
             return True
