@@ -195,6 +195,7 @@ class Preconditions(object):
             return
         else:
             # 2.进入相片页面,选择一张片相发送
+            time.sleep(2)
             gcp.click_picture()
             cpg.wait_for_page_load()
             cpg.select_pic_fk(1)
