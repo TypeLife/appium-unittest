@@ -36,8 +36,10 @@ REQUIRED_MOBILES = {
     'Android-XX-XX': 'others_double',
 }
 
+
 class Preconditions(object):
     """前置条件"""
+
     @staticmethod
     def select_mobile(category, reset=False):
         """选择手机"""
@@ -221,8 +223,6 @@ class Preconditions(object):
         chat.wait_for_page_load()
 
 
-
-
 class MsgGroupChatFileLocationTest(TestCase):
     """消息->群聊文件,位置 模块"""
 
@@ -260,7 +260,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         csf = ChatSelectFilePage()
         csf.wait_for_page_load()
         csf.click_local_file()
-        #不选择文件，判断按钮是否可点击
+        # 不选择文件，判断按钮是否可点击
         local_file = ChatSelectLocalFilePage()
         flag = local_file.send_btn_is_enabled()
         self.assertFalse(flag)
@@ -274,7 +274,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         """1、在当前聊天会话页面，点击更多富媒体的文件按钮
         2、点击本地文件
         3、选择任意文件，点击发送按钮"""
-        #选择html文件发送
+        # 选择html文件发送
         Preconditions.public_send_file('.html')
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
@@ -345,7 +345,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 点击文件按钮
         more_page = ChatMorePage()
         more_page.click_file()
-        #点击照片选项
+        # 点击照片选项
         csf = ChatSelectFilePage()
         csf.wait_for_page_load()
         csf.click_pic()
@@ -373,10 +373,10 @@ class MsgGroupChatFileLocationTest(TestCase):
         csf = ChatSelectFilePage()
         csf.wait_for_page_load()
         csf.click_pic()
-        #选择一张照片发送
+        # 选择一张照片发送
         local_file = ChatSelectLocalFilePage()
         local_file.wait_for_page_load()
-        el=local_file.select_file2("照片")
+        el = local_file.select_file2("照片")
         if el:
             local_file.click_send()
             gcp.wait_for_page_load()
@@ -422,7 +422,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         csf = ChatSelectFilePage()
         csf.wait_for_page_load()
         csf.click_music()
-        #选择一个音乐文件发送
+        # 选择一个音乐文件发送
         local_file = ChatSelectLocalFilePage()
         local_file.wait_for_page_load()
         el = local_file.select_file2("音乐")
@@ -452,7 +452,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         search.click_file()
         chat_file = ChatFilePage()
         chat_file.wait_for_page_load()
-        #长按转发
+        # 长按转发
         chat_file.forward_file(".html")
         # 选择联系人界面，选择一个群
         sc = SelectContactsPage()
@@ -536,11 +536,11 @@ class MsgGroupChatFileLocationTest(TestCase):
         sc.wait_for_page_load()
         sc.select_local_contacts()
         time.sleep(2)
-        #选择一个联系人
+        # 选择一个联系人
         sc.click_one_local_contacts()
-        #点击确认转发
+        # 点击确认转发
         sc.click_sure_forward()
-        #验证转发成功
+        # 验证转发成功
         if not sc.catch_message_in_page("已转发"):
             raise AssertionError("转发失败")
 
@@ -572,9 +572,9 @@ class MsgGroupChatFileLocationTest(TestCase):
         sc.select_local_contacts()
         time.sleep(2)
         sc.click_one_local_contacts()
-        #点击取消按钮
+        # 点击取消按钮
         sc.click_cancel_forward()
-        #确保选择联系人页面加载
+        # 确保选择联系人页面加载
         sc.wait_for_page_local_contact_load()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
@@ -601,7 +601,6 @@ class MsgGroupChatFileLocationTest(TestCase):
         if not chat_file.is_toast_exist("已收藏"):
             raise AssertionError("收藏验证失败")
 
-
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0018(self):
         """1、在当前文件列表页面长按任意未下载文件
@@ -625,7 +624,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 长按收藏指定类型的文件
         chat_file.collection_file(".html")
         chat_file.is_toast_exist("已收藏")
-        #返回到消息页面
+        # 返回到消息页面
         time.sleep(2)
         chat_file.click_back()
         search.click_back()
@@ -635,30 +634,28 @@ class MsgGroupChatFileLocationTest(TestCase):
         sog.click_back()
         sc = SelectContactsPage()
         sc.click_back()
-        #跳转到我页面
-        me=MePage()
+        # 跳转到我页面
+        me = MePage()
         me.open_me_page()
-        #查看收藏页面
+        # 查看收藏页面
         me.click_collection()
-        mcp=MeCollectionPage()
-        #检查刚刚收藏的文件是否存在
+        mcp = MeCollectionPage()
+        # 检查刚刚收藏的文件是否存在
         mcp.is_toast_exist(".html")
-
-
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0019(self):
         """1、在当前文件列表页面长按任意文件
             2、点击删除按钮"""
-        #先发送一个指定类型的文件
+        # 先发送一个指定类型的文件
         Preconditions.public_send_file(".html")
         gcp = GroupChatPage()
-        #点击设置
+        # 点击设置
         gcp.click_setting()
-        gcsp=GroupChatSetPage()
-        #等待进入页面
+        gcsp = GroupChatSetPage()
+        # 等待进入页面
         gcsp.wait_for_page_load()
-        #点击查看聊天内容
+        # 点击查看聊天内容
         gcsp.click_search_chat_record()
         search = FindChatRecordPage()
         # 点击文件
@@ -666,7 +663,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         chat_file = ChatFilePage()
         chat_file.wait_for_page_load()
         chat_file.delete_file(".html")
-        #返回群聊天页面
+        # 返回群聊天页面
         chat_file.click_back()
         search.click_back()
         gcsp.click_back()
@@ -679,9 +676,9 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 先发送一个指定类型的文件
         Preconditions.public_send_file(".html")
         gcp = GroupChatPage()
-        #长按刚刚发送的文件删除
-        gcp.press_file_to_do(".html","删除")
-        #验证删除成功
+        # 长按刚刚发送的文件删除
+        gcp.press_file_to_do(".html", "删除")
+        # 验证删除成功
         time.sleep(2)
         if gcp.is_text_present(".html"):
             raise AssertionError("删除失败")
@@ -694,9 +691,9 @@ class MsgGroupChatFileLocationTest(TestCase):
         Preconditions.public_send_file(".html")
         gcp = GroupChatPage()
         # 长按刚刚发送的文件撤回
-        gcp.press_file_to_do(".html","撤回")
+        gcp.press_file_to_do(".html", "撤回")
         gcp.click_i_know()
-        #验证撤回成功
+        # 验证撤回成功
         time.sleep(1)
         if not gcp.is_text_present("你撤回了一条信息"):
             raise AssertionError("撤回失败")
@@ -707,7 +704,7 @@ class MsgGroupChatFileLocationTest(TestCase):
             2、点查看功能菜单"""
         # 先发送一个指定类型的文件
         Preconditions.public_send_file(".html")
-        #等待10分钟
+        # 等待10分钟
         gcp = GroupChatPage()
         # 超过十分钟,长按自己发送的文件撤回，没有撤回菜单按钮
         for i in range(122):
@@ -730,11 +727,11 @@ class MsgGroupChatFileLocationTest(TestCase):
         gcp.click_more()
         more_page = ChatMorePage()
         more_page.click_location()
-        #等待位置页面加载
+        # 等待位置页面加载
         location_page = ChatLocationPage()
         location_page.wait_for_page_load()
         time.sleep(1)
-        #返回会话窗口
+        # 返回会话窗口
         location_page.click_back()
         gcp.wait_for_page_load()
 
@@ -750,7 +747,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         location_page = ChatLocationPage()
         location_page.wait_for_page_load()
         time.sleep(1)
-        #点击发送按钮
+        # 点击发送按钮
         if not location_page.send_btn_is_enabled():
             raise AssertionError("位置页面发送按钮不可点击")
         location_page.click_send()
@@ -771,7 +768,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         location_page = ChatLocationPage()
         location_page.wait_for_page_load()
         time.sleep(1)
-        #选择其他位置
+        # 选择其他位置
         location_page.select_other_item()
         # 点击发送按钮
         if not location_page.send_btn_is_enabled():
@@ -796,7 +793,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         time.sleep(1)
         # 选择其他位置
         location_page.select_other_item()
-        #点击返回
+        # 点击返回
         location_page.click_back()
         gcp.wait_for_page_load()
 
@@ -818,7 +815,6 @@ class MsgGroupChatFileLocationTest(TestCase):
         gcp.wait_for_page_load()
         if not gcp.is_address_text_present():
             raise AssertionError("位置信息发送不成功")
-
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0047(self):
@@ -842,7 +838,6 @@ class MsgGroupChatFileLocationTest(TestCase):
             self.assertTrue(flag)
         else:
             raise AssertionError("WARN: There is no linkman.")
-
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0049(self):
@@ -873,16 +868,62 @@ class MsgGroupChatFileLocationTest(TestCase):
             2、点击右下角按钮"""
         self.public_send_location()
         time.sleep(2)
-        #点击位置消息体
+        # 点击位置消息体
         gcp = GroupChatPage()
         gcp.click_addr_info()
-        #等待页面加载
+        # 等待页面加载
         gcp.wait_for_location_page_load()
-        #点击右下角按钮
+        # 点击右下角按钮
         gcp.click_nav_btn()
         if gcp.is_toast_exist("未发现手机导航应用", timeout=3):
-            raise  AssertionError("未发现手机导航应用")
+            raise AssertionError("未发现手机导航应用")
         map_flag = gcp.is_text_present("地图")
         self.assertTrue(map_flag)
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0051(self):
+        """1、在当前会话窗口点击自己发送格式为doc的文件"""
+        # 先发送一个指定类型的文件
+        Preconditions.public_send_file(".doc")
+        # 点击发送的文件
+        gcp = GroupChatPage()
+        gcp.wait_for_message_down_file()
+        gcp.open_file_in_chat_page(".doc")
+        #等待文件页面进行加载
+        gcp.wait_for_open_file()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0052(self):
+        """1、在当前会话窗口点击自己发送格式为docx的文件"""
+        # 先发送一个指定类型的文件
+        Preconditions.public_send_file(".docx")
+        # 点击发送的文件
+        gcp = GroupChatPage()
+        gcp.wait_for_message_down_file()
+        gcp.open_file_in_chat_page(".docx")
+        # 等待文件页面进行加载
+        gcp.wait_for_open_file()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0053(self):
+        """1、在当前会话窗口点击自己发送格式为ppt的文件"""
+        # 先发送一个指定类型的文件
+        Preconditions.public_send_file(".ppt")
+        # 点击发送的文件
+        gcp = GroupChatPage()
+        gcp.wait_for_message_down_file()
+        gcp.open_file_in_chat_page(".ppt")
+        # 等待文件页面进行加载
+        gcp.wait_for_open_file()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0054(self):
+        """1、在当前会话窗口点击自己发送格式为pptx的文件"""
+        # 先发送一个指定类型的文件
+        Preconditions.public_send_file(".pptx")
+        # 点击发送的文件
+        gcp = GroupChatPage()
+        gcp.wait_for_message_down_file()
+        gcp.open_file_in_chat_page(".pptx")
+        # 等待文件页面进行加载
+        gcp.wait_for_open_file()

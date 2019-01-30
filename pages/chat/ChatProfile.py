@@ -67,7 +67,7 @@ class ChatProfilePage(BasePage):
         """获取左侧字母"""
         els = self.get_elements(self.__class__.__locators['左侧字母'])
         if not els:
-            raise AssertionError("No contacts, please add contacts in address book.")
+            raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
         letters = []
         for el in els:
             letters.append(el.text)
@@ -78,7 +78,7 @@ class ChatProfilePage(BasePage):
         container_el = self.get_element(self.__class__.__locators['索引字母容器'])
         letter_els = container_el.find_elements(MobileBy.XPATH, "//android.widget.TextView")
         if not letter_els:
-            raise AssertionError("No contacts, please add contacts in address book.")
+            raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
         letters = []
         for el in letter_els:
             letters.append(el.text)
@@ -103,7 +103,7 @@ class ChatProfilePage(BasePage):
                 contacts_name.append(el.text)
             return contacts_name
         else:
-            raise AssertionError("No contacts, please add contacts in address book.")
+            raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
 
     @TestLogger.log()
     def get_contacts_name(self):
@@ -114,7 +114,7 @@ class ChatProfilePage(BasePage):
             for el in els:
                 contacts_name.append(el.text)
         else:
-            raise AssertionError("No contacts, please add contacts in address book.")
+            raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
         flag = True
         while flag:
             self.page_up()

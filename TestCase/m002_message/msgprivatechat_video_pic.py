@@ -586,7 +586,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
             detail_page.wait_for_page_load()
             names = detail_page.get_contacts_names()
             if not names:
-                print("WARN: Please add contacts in %s." % teams[0])
+                print("WARN: Please add m005_contacts in %s." % teams[0])
             for name in names:
                 detail_page.select_one_linkman(name)
                 flag = detail_page.is_toast_exist("该联系人不可选", timeout=3)
@@ -597,7 +597,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
             flag2 = detail_page.is_toast_exist("已转发")
             self.assertTrue(flag2)
         else:
-            print("WARN: Please create a team and add contacts.")
+            print("WARN: Please create a team and add m005_contacts.")
             shcp.click_back()
             scp.click_back()
 
@@ -738,7 +738,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
             detail_page.wait_for_page_load()
             names = detail_page.get_contacts_names()
             if not names:
-                print("WARN: Please add contacts in %s." % teams[0])
+                print("WARN: Please add m005_contacts in %s." % teams[0])
             for name in names:
                 detail_page.select_one_linkman(name)
                 flag = detail_page.is_toast_exist("该联系人不可选", timeout=3)
@@ -750,7 +750,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
             if not flag2:
                 raise AssertionError("转发消息无‘已转发’提示")
         else:
-            print("WARN: Please create a team and add contacts.")
+            print("WARN: Please create a team and add m005_contacts.")
             shcp.click_back()
             scp.click_back()
 
@@ -898,7 +898,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         cpp.select_video()
         cpp.select_pic()
         # toast提示“不能同时选择照片和视频”
-        flag = cpp.is_toast_exist("不能同时选择照片和视频",5)
+        flag = cpp.is_toast_exist("不能同时选择照片和视频", 5)
         if not flag:
             raise AssertionError("选中一个视频和一个图片时无‘不能同时选择照片和视频’提示")
         cpp.click_back()

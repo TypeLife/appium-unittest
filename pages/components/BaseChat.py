@@ -318,3 +318,17 @@ class BaseChatPage(BasePage):
             message = "页面在{}s内，没有加载成功".format(str(timeout))
             raise AssertionError(message)
         return self
+
+    @TestLogger.log()
+    def wait_for_play_video_button_load(self, timeout=8, auto_accept_alerts=True):
+        """等待视频播放页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators['视频播放按钮'])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(message)
+        return self

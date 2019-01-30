@@ -147,7 +147,7 @@ class Preconditions(object):
         slc = SelectLocalContactsPage()
         names = slc.get_contacts_name()
         if not names:
-            raise AssertionError("No contacts, please add contacts in address book.")
+            raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
         # 选择成员
         for name in names:
             slc.select_one_member_by_name(name)
@@ -195,6 +195,7 @@ class Preconditions(object):
             return
         else:
             # 2.进入相片页面,选择一张片相发送
+            time.sleep(2)
             gcp.click_picture()
             cpg.wait_for_page_load()
             cpg.select_pic_fk(1)
@@ -990,19 +991,52 @@ class MsgGroupChatvedioTest(TestCase):
         mcp.wait_for_page_load()
         self.assertEquals(mcp.have_collection_video(),True)
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_video_0043(self):
+        """群聊会话页面，发送相册内的视频"""
+        # 1.检验是否在当前聊天会话页
+        gcp = GroupChatPage()
+        gcp.is_on_this_page()
+        # 2.选择勾选视频不发送
+        gcp.click_picture()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_video_fk(1)
+        # 3.校验发送按钮是高亮可点击
+        self.assertEquals(cpg.send_btn_is_enabled(),True)
+        self.assertIsNotNone(cpg.get_video_times()[1])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_video_0044(self):
+        """群聊会话页面，发送相册内一个视频"""
+        # 1.检验是否在当前聊天会话页
+        gcp = GroupChatPage()
+        gcp.is_on_this_page()
+        # 2.选择视频发送
+        gcp.click_picture()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_video_fk(1)
+        cpg.click_send()
+        time.sleep(5)
+        # 3.校验发送成功，会话窗口可见可播放
+        gcp.is_on_this_page()
+        flg = gcp.wait_for_play_video_button_load()
+        self.assertIsNotNone(flg)
+
     # @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
-    # def test_msg_group_chat_video_0043(self):
-    #     """群聊会话页面，发送相册内的视频"""
-    #     # 1.检验是否在当前聊天会话页
-    #     gcp = GroupChatPage()
-    #     gcp.is_on_this_page()
-    #     # 2.选择视频发送
-    #     gcp.click_picture()
-    #     cpg = ChatPicPage()
-    #     cpg.wait_for_page_load()
-    #     cpg.select_video_fk(1)
-    #     # 3.校验发送按钮是高亮可点击
-    #     self.assertEquals(cpg.send_btn_is_enabled(),True)
-    #     self.assertIsNotNone(cpg.get_video_times()[1])
+    @unittest.skip('未完成')
+    def test_msg_group_chat_video_0045(self):
+        """群聊会话页面，发送相册内多个视频"""
+        # 1.检验是否在当前聊天会话页
+        gcp = GroupChatPage()
+        gcp.is_on_this_page()
+        # 2.选择视频发送
+        gcp.click_picture()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_video_fk(2)
+        # 3.检验选择多个视频提示
+        cpg.is_toast_exist_more_video()
 
 

@@ -45,6 +45,7 @@ class GroupChatPage(BaseChatPage):
                   '撤回': (MobileBy.XPATH, "//*[contains(@text, '撤回')]"),
                   '多选': (MobileBy.XPATH, "//*[contains(@text, '多选')]"),
                   '我知道了': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_btn_ok'),
+                  '勾': (MobileBy.ID, 'com.chinasofti.rcs:id/img_message_down_file'),
                   }
     def is_exist_msg_videos(self):
         """当前页面是否有发视频消息"""
@@ -161,3 +162,19 @@ class GroupChatPage(BaseChatPage):
         el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/lloc_famous_address_text'))
         self.press(el)
         self.click_element(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def wait_for_message_down_file(self, timeout=20, auto_accept_alerts=True):
+        """等待消息发送成功"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["勾"])
+            )
+        except:
+            message = "消息在{}s内，没有发送成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self

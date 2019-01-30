@@ -18,13 +18,11 @@ HOST = 'smtp.139.com'
 PORT = 25
 FROM = 'rcsqa@139.com'
 PASSWORD = 'yu123456'
-# TO = ['13802889470@139.com', '13802883351@139.com', '13802887745@139.com', 'cclu@appstest.cn']
-# TO = ['13802883079@139.com', '13802887425@139.com']
-# UI_REPORT = os.path.abspath(os.path.abspath(__file__) + '/../../report/ui_automation_report.xlsx')
+
 # 报告路径
 UI_REPORT = settings.REPORT_HTML_PATH
 
-FILES = [UI_REPORT]
+FILES = [UI_REPORT, settings.LOG_FILE_PATH]
 SONAR_URL = """
 http://10.1.0.101:9000/api/measures/component?\
 additionalFields=metrics,periods&componentKey=andfetion_android&\

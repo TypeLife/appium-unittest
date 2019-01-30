@@ -21,8 +21,8 @@ class TestLogger(object):
             @functools.wraps(func)
             def wrapper(*args, **kw):
                 # info = description if description else func.__doc__
-                template = '%(time)s - %(level)s - %(caseName)s - %(func)s%(args)s ' \
-                           + '- %(description)s - %(mobile)s'
+                template = '%(time)s - %(mobile)s - %(level)s - %(caseName)s - %(func)s%(args)s ' \
+                           + '- %(description)s'
                 TestLogger.log_level = "INFO"
                 turn_on = False
                 try:
@@ -52,7 +52,7 @@ class TestLogger(object):
                         timestamp = _strftime("%Y-%m-%dT%H:%M:%S.", current_time_struct) + "%03d" % (
                             int(current_time_fraction * 1000))
                         import inspect
-                        received_args = inspect.getcallargs(func,*args,**kw)
+                        received_args = inspect.getcallargs(func, *args, **kw)
                         if 'self' in received_args:
                             received_args.pop('self')
                         print(template % dict(time=timestamp,
@@ -109,7 +109,7 @@ class TestLogger(object):
         TestLogger.current_test = None
 
     @staticmethod
-    def test_fail(test):
+    def test_fail(test, err):
         from library.core.utils import common
         current_time = _time()
         (current_time_int, current_time_fraction) = divmod(current_time, 1)
@@ -117,7 +117,10 @@ class TestLogger(object):
 
         timestamp = _strftime("%Y-%m-%dT%H:%M:%S.", current_time_struct) + "%03d" % (
             int(current_time_fraction * 1000))
+        import sys
+        sys.excepthook(*err)
         TestLogger.take_screen_shot()
+        # print(common.convert_error_to_string(err))
         if getattr(test, '_testMethodName', None):
             print(' - '.join(
                 [
@@ -130,7 +133,7 @@ class TestLogger(object):
         TestLogger.current_test = None
 
     @staticmethod
-    def test_error(test):
+    def test_error(test, err):
         from library.core.utils import common
         current_time = _time()
         (current_time_int, current_time_fraction) = divmod(current_time, 1)
@@ -138,7 +141,10 @@ class TestLogger(object):
 
         timestamp = _strftime("%Y-%m-%dT%H:%M:%S.", current_time_struct) + "%03d" % (
             int(current_time_fraction * 1000))
+        import sys
+        sys.excepthook(*err)
         TestLogger.take_screen_shot()
+        # print(common.convert_error_to_string(err))
         if getattr(test, '_testMethodName', None):
             print(' - '.join(
                 [
@@ -171,6 +177,26 @@ class TestLogger(object):
         TestLogger.current_test = None
 
     @staticmethod
+    def test_skip(test, reason):
+        from library.core.utils import common
+        current_time = _time()
+        (current_time_int, current_time_fraction) = divmod(current_time, 1)
+        current_time_struct = _localtime(current_time_int)
+
+        timestamp = _strftime("%Y-%m-%dT%H:%M:%S.", current_time_struct) + "%03d" % (
+            int(current_time_fraction * 1000))
+        if getattr(test, '_testMethodName', None):
+            print(' - '.join(
+                [
+                    timestamp,
+                    TestLogger.log_level,
+                    common.get_test_id(test),
+                    '********** TEST SKIP ********** (原因：{})'.format(reason)
+                ]
+            ))
+        TestLogger.current_test = None
+
+    @staticmethod
     def take_screen_shot():
         current_time = _time()
         (current_time_int, current_time_fraction) = divmod(current_time, 1)
@@ -185,13 +211,3 @@ class TestLogger(object):
         path = os.path.join(ConfigManager.get_screen_shot_path(), file_name)
         if capture_screen_shot(path):
             print(timestamp + ' - INFO - ' + "截图路径：" + path)
-
-# def capture_screen_shot(path):
-#     if os.path.isfile(path):
-#         os.remove(path)
-#     dir_name, file_name = os.path.split(path)
-#     if not os.path.isdir(dir_name):
-#         os.makedirs(dir_name)
-#     capture = getattr(DriverCache.current_driver, 'get_screenshot_as_file', lambda p: None)
-#     result = capture(path)
-#     return result

@@ -17,6 +17,7 @@ REQUIRED_MOBILES = {
     'Android-XX-XX': 'others_double',
 }
 
+
 class Preconditions(object):
     """前置条件"""
 
@@ -99,21 +100,17 @@ class Preconditions(object):
         me.click_help_menu()
 
 
-
-
-
-
 class HelpFeedbackTest(TestCase):
     """帮助与反馈 模块"""
 
     @staticmethod
     def setUp_test_help_feedback_001():
         """前提条件是要进入到‘帮助与反馈’页面"""
-        #选择手机连接
+        # 选择手机连接
         Preconditions.select_mobile('Android-移动')
-        #收起键盘
+        # 收起键盘
         current_mobile().hide_keyboard_if_display()
-        #重启
+        # 重启
         Preconditions.app_start_for_the_first_time()
 
         Preconditions.make_already_in_one_key_login_page()
@@ -123,14 +120,10 @@ class HelpFeedbackTest(TestCase):
 
     @tags('ALL', 'CMCC')
     def test_help_feedback_001(self):
-        haf=HelpAndFeedBackPage()
+        haf = HelpAndFeedBackPage()
         haf.wait_for_page_load()
         haf.click_question_one()
         haf.click_back()
         haf.click_question_two()
         haf.click_back()
         haf.clicl_question_three()
-
-
-
-

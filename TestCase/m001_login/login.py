@@ -840,15 +840,8 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('All','CMCC')
+    @tags('All', 'CMCC')
     def test_login_yyx(self):
         one_key = OneKeyLoginPage()
         one_key.click_license_agreement()
         AgreementPage().wait_for_license_agreement_load()
-
-
-# from library.core.utils.testcasefilter import set_tags
-#
-# set_tags('DEBUG')
-if __name__ == '__main__':
-    pass

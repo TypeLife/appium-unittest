@@ -138,24 +138,6 @@ class Preconditions(object):
         return login_num
 
 
-@unittest.skip
-class MessageTest(TestCase):
-    """Message 模块"""
-
-    def default_setUp(self):
-        pass
-
-    def default_tearDown(self):
-        pass
-
-    def test_something(self):
-        """description"""
-        self.assertEqual(True, False)
-
-    def setUp_test_something(self):
-        print("Run test case setup.")
-
-
 class MessageScanTest(TestCase):
     """消息 - 扫一扫"""
 

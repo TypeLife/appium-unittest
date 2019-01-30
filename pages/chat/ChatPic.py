@@ -43,6 +43,11 @@ class ChatPicPage(BasePage):
                   '发送': (MobileBy.ID, 'com.chinasofti.rcs:id/button_send')
                   }
 
+    @TestLogger.log("校验提示最多只能选择一个视频")
+    def is_toast_exist_more_video(self):
+        """校验提示最多只能选择一个视频"""
+        return self.is_toast_exist("最多只能选择一个视频",3)
+
     @TestLogger.log("校验提示照片和视频不能同时发送")
     def is_toast_exist_pv(self):
         """校验提示照片和视频不能同时发送"""

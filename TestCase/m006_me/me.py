@@ -115,24 +115,6 @@ class Preconditions(object):
         current_mobile().press_home_key()
 
 
-@unittest.skip("模板")
-class MeTest(TestCase):
-    """Me 模块"""
-
-    def default_setUp(self):
-        pass
-
-    def default_tearDown(self):
-        pass
-
-    def test_something(self):
-        """description"""
-        self.assertEqual(True, False)
-
-    def setUp_test_something(self):
-        print("Run test case setup.")
-
-
 class MeMsgSettingTest(TestCase):
     """我-消息设置"""
 
