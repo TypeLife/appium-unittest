@@ -467,3 +467,24 @@ class BasePage(object):
     @TestLogger.log('获取元素指定坐标颜色')
     def get_coordinate_color_of_element(self, element, x, y, by_percent=False, mode='RGBA') -> tuple:
         return self.mobile.get_coordinate_color_of_element(element, x, y, by_percent, mode)
+
+    @TestLogger.log("按住并向下滑动")
+    def press_and_move_to_down(self, locator):
+        """按住并滑动"""
+        element = self.get_element(locator)
+        rect = element.rect
+        pointX = int(rect["x"]) + int(rect["width"])/2
+        pointY = int(rect["y"]) + int(rect["height"]) * 1
+        TouchAction(self.driver).long_press(element, duration=3000).move_to(element, pointX,
+                                                                                    pointY).wait(1).release().perform()
+
+    @TestLogger.log("按住并向上滑动")
+    def press_and_move_to_up(self, locator):
+        """按住并滑动"""
+        element = self.get_element(locator)
+        rect = element.rect
+        pointX = int(rect["x"]) + int(rect["width"])/2
+        pointY = -(int(rect["y"]) - 20)
+        # pointY=0
+        TouchAction(self.driver).long_press(element, duration=3000).move_to(element, pointX,
+                                                                                    pointY).wait(3).release().perform()

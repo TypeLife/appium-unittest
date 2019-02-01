@@ -360,3 +360,14 @@ class BaseChatPage(BasePage):
         """检验会话窗口是否有gif图片"""
         return self.page_should_contain_element(self.__class__.__locators["gif群聊会话中的元素"])
 
+    @TestLogger.log()
+    def press_and_move_down(self, element):
+        """按住并向下滑动"""
+        # b=self.get_element_attribute(self.__class__.__locators[element],"bounds")
+        self.press_and_move_to_down(self.__class__.__locators[element])
+
+    @TestLogger.log()
+    def press_and_move_up(self, element):
+        """按住并向上滑动"""
+        # b=self.get_element_attribute(self.__class__.__locators[element],"bounds")
+        self.press_and_move_to_up(self.__class__.__locators[element])

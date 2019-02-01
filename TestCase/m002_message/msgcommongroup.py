@@ -303,4 +303,24 @@ class MsgCommonGroupTest(TestCase):
         if len(info2)==5000:
             return True
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_common_group_0005(self):
+        """1.在当前聊天会话页面，在输入框中输入一段文本，字符数等于5000
+            2、然后按住发送按钮，向上滑动，放大发送此段文本，文本是否可以放大发送成功"""
+        gcp = GroupChatPage()
+        # 输入信息
+        info = "哈" * 5000
+        gcp.input_message(info)
+        #长按发送按钮并滑动
+        gcp.press_and_move_up("发送按钮")
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_common_group_0006(self):
+        """1.在当前聊天会话页面，在输入框中输入一段文本，字符数等于5000
+            2、然后按住发送按钮，向下滑动，缩小发送此段文本，文本是否可以缩小发送成功"""
+        gcp = GroupChatPage()
+        # 输入信息
+        info = "哈" * 5000
+        gcp.input_message(info)
+        # 长按发送按钮并滑动
+        gcp.press_and_move_down("发送按钮")
