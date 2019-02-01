@@ -20,19 +20,31 @@ class BasePage(object):
 
     @property
     def driver(self):
-        from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE
-        return MOBILE_DRIVER_CACHE.current.driver
+        return self.mobile.driver
 
     @property
     def mobile(self):
         from library.core.utils.applicationcache import current_mobile
         return current_mobile()
 
+    @TestLogger.log('后台运行APP')
     def background_app(self, seconds):
-        self.driver.background_app(seconds)
+        """
+        APP 切换到后台运行一段时间，时间结束自动返回前台运行
+        :param seconds: 后台运行的时间（单位S）
+        :return:
+        """
+        self.mobile.background_app(seconds)
 
+    @TestLogger.log('强制结束APP进程')
     def terminate_app(self, app_id, **options):
-        self.terminate_app(app_id, **options)
+        """
+        结束APP进程
+        :param app_id: APP包名
+        :param options:
+        :return:
+        """
+        return self.mobile.terminate_app(app_id, **options)
 
     def _get_platform(self):
         try:
@@ -52,17 +64,17 @@ class BasePage(object):
         else:
             return 'other'
 
+    @TestLogger.log('查找元素')
     def get_element(self, locator):
-        return self.driver.find_element(*locator)
+        return self.mobile.get_element(locator)
 
+    @TestLogger.log('查找所有元素')
     def get_elements(self, locator):
-        return self.driver.find_elements(*locator)
+        return self.mobile.get_elements(locator)
 
+    @TestLogger.log('获取元素文本内容')
     def get_text(self, locator):
-        elements = self.get_elements(locator)
-        if len(elements) > 0:
-            return elements[0].text
-        return None
+        return self.mobile.get_text(locator)
 
     @TestLogger.log("获取控件属性")
     def get_element_attribute(self, locator, attr, wait_time=0):
@@ -351,14 +363,20 @@ class BasePage(object):
             self,
             condition,
             timeout=8,
+            poll=0.2,
             auto_accept_permission_alert=True,
-            unexpected=None
+            unexpected=None,
+            *args,
+            **kwargs
     ):
         return self.mobile.wait_condition_and_listen_unexpected(
-            condition,
+            condition=condition,
             timeout=timeout,
+            poll=poll,
             auto_accept_permission_alert=auto_accept_permission_alert,
-            unexpected=unexpected
+            unexpected=unexpected,
+            args=args,
+            kwargs=kwargs
         )
 
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
@@ -415,7 +433,7 @@ class BasePage(object):
 
     def get_network_status(self):
         """获取网络链接状态"""
-        return self.driver.network_connection
+        return self.mobile.get_network_status()
 
     def set_network_status(self, status):
         """设置网络
@@ -437,7 +455,7 @@ class BasePage(object):
             ALL_NETWORK_ON = 6
 
         """
-        self.driver.set_network_connection(status)
+        return self.mobile.set_network_status(status)
 
     def is_toast_exist(self, text, timeout=30, poll_frequency=0.5):
         """is toast exist, return True or False

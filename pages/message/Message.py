@@ -196,7 +196,7 @@ class MessagePage(FooterPage):
             self.wait_condition_and_listen_unexpected(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_element_present(self.__class__.__locators["+号"]),
+                condition=lambda d: self._is_element_present(self.__locators["+号"]),
                 unexpected=unexpected
             )
         except TimeoutException:
