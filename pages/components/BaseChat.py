@@ -52,6 +52,9 @@ class BaseChatPage(BasePage):
                   '视频关闭按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_close'),
                   # 打开位置页面元素
                   "导航按钮": (MobileBy.ID, 'com.chinasofti.rcs:id/location_nativ_btn'),
+                  # 打开gif图片后元素
+                  "gif图片元素列表": (MobileBy.ID, 'com.chinasofti.rcs:id/stickers_container'),
+                  "gif群聊会话中的元素": (MobileBy.ID, 'com.chinasofti.rcs:id/layout_loading'),
                   }
 
     @TestLogger.log()
@@ -332,3 +335,28 @@ class BaseChatPage(BasePage):
             message = "页面在{}s内，没有加载成功".format(str(timeout))
             raise AssertionError(message)
         return self
+
+    @TestLogger.log()
+    def wait_for_gif_ele_load(self, timeout=8, auto_accept_alerts=True):
+        """等待视频播放页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators['gif图片元素列表'])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(message)
+
+    @TestLogger.log()
+    def send_gif(self):
+        """点击选择发送gif图片"""
+        self.click_element(self.__class__.__locators['gif图片元素列表'])
+        time.sleep(2)
+
+    @TestLogger.log()
+    def is_send_gif(self):
+        """检验会话窗口是否有gif图片"""
+        return self.page_should_contain_element(self.__class__.__locators["gif群聊会话中的元素"])
+

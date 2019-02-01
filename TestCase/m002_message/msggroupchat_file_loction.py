@@ -889,7 +889,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         gcp = GroupChatPage()
         gcp.wait_for_message_down_file()
         gcp.open_file_in_chat_page(".doc")
-        #等待文件页面进行加载
+        # 等待文件页面进行加载
         gcp.wait_for_open_file()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
@@ -925,5 +925,53 @@ class MsgGroupChatFileLocationTest(TestCase):
         gcp = GroupChatPage()
         gcp.wait_for_message_down_file()
         gcp.open_file_in_chat_page(".pptx")
+        # 等待文件页面进行加载
+        gcp.wait_for_open_file()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0055(self):
+        """1、在当前会话窗口点击自己发送格式为pdf的文件"""
+        # 先发送一个指定类型的文件
+        Preconditions.public_send_file(".pdf")
+        # 点击发送的文件
+        gcp = GroupChatPage()
+        gcp.wait_for_message_down_file()
+        gcp.open_file_in_chat_page(".pdf")
+        # 等待文件页面进行加载
+        gcp.wait_for_open_file()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0056(self):
+        """1、在当前会话窗口点击自己发送格式为xls的文件"""
+        # 先发送一个指定类型的文件
+        Preconditions.public_send_file(".xls")
+        # 点击发送的文件
+        gcp = GroupChatPage()
+        gcp.wait_for_message_down_file()
+        gcp.open_file_in_chat_page(".xls")
+        # 等待文件页面进行加载
+        gcp.wait_for_open_file()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0057(self):
+        """1、在当前会话窗口点击自己发送格式为xlsx的文件"""
+        # 先发送一个指定类型的文件
+        Preconditions.public_send_file(".xlsx")
+        # 点击发送的文件
+        gcp = GroupChatPage()
+        gcp.wait_for_message_down_file()
+        gcp.open_file_in_chat_page(".xlsx")
+        # 等待文件页面进行加载
+        gcp.wait_for_open_file()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_file_location_0058(self):
+        """1、在当前会话窗口点击自己发送格式为txt的文件"""
+        # 先发送一个指定类型的文件
+        Preconditions.public_send_file(".txt")
+        # 点击发送的文件
+        gcp = GroupChatPage()
+        gcp.wait_for_message_down_file()
+        gcp.open_file_in_chat_page(".txt")
         # 等待文件页面进行加载
         gcp.wait_for_open_file()

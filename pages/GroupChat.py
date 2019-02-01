@@ -11,7 +11,7 @@ class GroupChatPage(BaseChatPage):
                   'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
                   'android:id/content': (MobileBy.ID, 'android:id/content'),
                   'com.chinasofti.rcs:id/pop_10g_window_drop_view': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/pop_10g_window_drop_view'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/pop_10g_window_drop_view'),
                   'com.chinasofti.rcs:id/id_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/id_toolbar'),
                   'com.chinasofti.rcs:id/back': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
                   'com.chinasofti.rcs:id/back_arrow': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
@@ -23,7 +23,7 @@ class GroupChatPage(BaseChatPage):
                   'com.chinasofti.rcs:id/view_line': (MobileBy.ID, 'com.chinasofti.rcs:id/view_line'),
                   'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
                   'com.chinasofti.rcs:id/message_editor_layout': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/message_editor_layout'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/message_editor_layout'),
                   'com.chinasofti.rcs:id/rv_message_chat': (MobileBy.ID, 'com.chinasofti.rcs:id/rv_message_chat'),
                   '14:58': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_time'),
                   'frank': (MobileBy.ID, 'com.chinasofti.rcs:id/text_name'),
@@ -34,7 +34,7 @@ class GroupChatPage(BaseChatPage):
                   'APP test': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'),
                   '选择名片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
                   '更多': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
-                  '文件发送成功标志':(MobileBy.ID,'com.chinasofti.rcs:id/img_message_down_file'),
+                  '文件发送成功标志': (MobileBy.ID, 'com.chinasofti.rcs:id/img_message_down_file'),
                   '选择照片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic'),
                   '发送失败标识': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
                   '消息图片': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_image'),
@@ -47,6 +47,7 @@ class GroupChatPage(BaseChatPage):
                   '我知道了': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_btn_ok'),
                   '勾': (MobileBy.ID, 'com.chinasofti.rcs:id/img_message_down_file'),
                   }
+
     def is_exist_msg_videos(self):
         """当前页面是否有发视频消息"""
         el = self.get_elements(self.__locators['消息视频'])
@@ -135,14 +136,14 @@ class GroupChatPage(BaseChatPage):
         self.click_element(self.__class__.__locators["更多"])
 
     @TestLogger.log()
-    def press_file_to_do(self, file,text):
+    def press_file_to_do(self, file, text):
         """长按指定文件进行操作"""
         el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))
         self.press(el)
         self.click_element(self.__class__.__locators[text])
 
     @TestLogger.log()
-    def press_file(self,file):
+    def press_file(self, file):
         """长按指定文件"""
         el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))
         self.press(el)
@@ -157,7 +158,7 @@ class GroupChatPage(BaseChatPage):
             return False
 
     @TestLogger.log()
-    def press_message_to_do(self,text):
+    def press_message_to_do(self, text):
         """长按指定信息进行操作"""
         el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/lloc_famous_address_text'))
         self.press(el)
@@ -178,3 +179,8 @@ class GroupChatPage(BaseChatPage):
                 message
             )
         return self
+
+    @TestLogger.log()
+    def is_exist_network(self):
+        """是否存网络不可用"""
+        return self.is_toast_exist("网络不可用，请检查网络设置")

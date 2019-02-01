@@ -13,10 +13,9 @@ class ChatPicPage(BasePage):
                   'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
                   'android:id/content': (MobileBy.ID, 'android:id/content'),
                   'com.chinasofti.rcs:id/select_picture_custom_toolbar': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar'),
                   '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
-                  'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn'),
+                  '返回到群聊页面': (MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn'),
                   '所有照片': (MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_title_text'),
                   'com.chinasofti.rcs:id/select_rl': (MobileBy.ID, 'com.chinasofti.rcs:id/select_rl'),
                   '切换按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/drop_down_image'),
@@ -24,11 +23,11 @@ class ChatPicPage(BasePage):
                   'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
                   '列表容器': (MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView_gallery'),
                   'com.chinasofti.rcs:id/rl_img': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_img'),
-                  'com.chinasofti.rcs:id/iv_video_icon': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_video_icon'),
+                  '预览播放视频按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_video_icon'),
                   'com.chinasofti.rcs:id/imageview_video_start_background': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/imageview_video_start_background'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/imageview_video_start_background'),
                   'com.chinasofti.rcs:id/imageview_video_start': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/imageview_video_start'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/imageview_video_start'),
                   '00:02': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_video_time'),
                   'com.chinasofti.rcs:id/iv_gallery': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_gallery'),
                   'com.chinasofti.rcs:id/rliv_select': (MobileBy.ID, 'com.chinasofti.rcs:id/rliv_select'),
@@ -36,8 +35,10 @@ class ChatPicPage(BasePage):
                   '00:03': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_video_time'),
                   '视频时长': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_video_time'),
                   'com.chinasofti.rcs:id/rl_panel': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_panel'),
-                  '所有视频': (MobileBy.XPATH, "//*[@resource-id='com.chinasofti.rcs:id/iv_video_icon']/../android.widget.RelativeLayout[@resource-id='com.chinasofti.rcs:id/rliv_select']"),
-                  '所有图片': (MobileBy.XPATH, "//android.widget.RelativeLayout[@resource-id='com.chinasofti.rcs:id/rl_img']/android.widget.RelativeLayout[1][not(contains(@resource-id,'com.chinasofti.rcs:id/iv_video_icon'))]"),
+                  '所有视频': (MobileBy.XPATH,
+                           "//*[@resource-id='com.chinasofti.rcs:id/iv_video_icon']/../android.widget.RelativeLayout[@resource-id='com.chinasofti.rcs:id/rliv_select']"),
+                  '所有图片': (MobileBy.XPATH,
+                           "//android.widget.RelativeLayout[@resource-id='com.chinasofti.rcs:id/rl_img']/android.widget.RelativeLayout[1][not(contains(@resource-id,'com.chinasofti.rcs:id/iv_video_icon'))]"),
                   '预览': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_preview'),
                   '原图': (MobileBy.ID, 'com.chinasofti.rcs:id/cb_original_photo'),
                   '发送': (MobileBy.ID, 'com.chinasofti.rcs:id/button_send')
@@ -46,12 +47,12 @@ class ChatPicPage(BasePage):
     @TestLogger.log("校验提示最多只能选择一个视频")
     def is_toast_exist_more_video(self):
         """校验提示最多只能选择一个视频"""
-        return self.is_toast_exist("最多只能选择一个视频",3)
+        return self.is_toast_exist("最多只能选择一个视频", 3)
 
     @TestLogger.log("校验提示照片和视频不能同时发送")
     def is_toast_exist_pv(self):
         """校验提示照片和视频不能同时发送"""
-        return self.is_toast_exist("不能同时选择照片和视频",3)
+        return self.is_toast_exist("不能同时选择照片和视频", 3)
 
     @TestLogger.log()
     def get_pic_send_nums(self):
@@ -64,7 +65,7 @@ class ChatPicPage(BasePage):
     @TestLogger.log("判断是否有提示：最多只能勾选9张照片")
     def is_toast_exist_maxp(self):
         """提示最多只能勾选9张照片"""
-        return self.is_toast_exist("最多只能选择9张照片",3)
+        return self.is_toast_exist("最多只能选择9张照片", 3)
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=10, auto_accept_alerts=True):
@@ -101,7 +102,7 @@ class ChatPicPage(BasePage):
             try:
                 videos[n].click()
             except:
-                raise AssertionError("在所有照片首页没有 %s 个视频，请上传视频." % (n+1))
+                raise AssertionError("在所有照片首页没有 %s 个视频，请上传视频." % (n + 1))
         else:
             raise AssertionError("在所有照片首页没有视频")
 
@@ -155,7 +156,6 @@ class ChatPicPage(BasePage):
         for i in range(n):
             pics[i].click()
 
-
     @TestLogger.log()
     def select_pic_fk(self, n=1):
         """选择n个图片"""
@@ -206,7 +206,6 @@ class ChatPicPage(BasePage):
         """点击预览"""
         self.click_element(self.__class__.__locators["预览"])
 
-
     @TestLogger.log()
     def send_btn_is_enabled(self):
         """获取发送按钮状态是否可点击"""
@@ -224,3 +223,14 @@ class ChatPicPage(BasePage):
         info = el.text
         num = info[-2]
         return num
+
+    @TestLogger.log()
+    def pre_video_btn_is_enabled(self):
+        """获取预览播放视频按钮按钮状态是否可点击"""
+        return self._is_enabled(self.__class__.__locators["预览播放视频按钮"])
+
+    @TestLogger.log()
+    def click_back_back(self):
+        """点击返回到群聊页面"""
+        self.click_element(self.__class__.__locators["返回到群聊页面"])
+
