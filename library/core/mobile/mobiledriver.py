@@ -304,12 +304,20 @@ class MobileDriver(ABC):
         return wait.until(condition)
 
     @staticmethod
-    def _error_listener(error_determine_func, *arguments, **keywordargs):
+    def _error_listener(error_determine_func, *arguments, **keyword_args):
+        """
+        错误监听装饰器，用于等待的期间抓取可能出现的异常
+        :param error_determine_func: 抓取异常的方法
+        :param arguments: 抓取异常的方法的参数
+        :param keyword_args: 抓取异常的方法的参数
+        :return:
+        """
+
         def decorator(func):
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
                 try:
-                    listener_feedback = error_determine_func(*arguments, **keywordargs)
+                    listener_feedback = error_determine_func(*arguments, **keyword_args)
                 except:
                     listener_feedback = None
                 if listener_feedback:
@@ -321,6 +329,11 @@ class MobileDriver(ABC):
         return decorator
 
     def _auto_click_permission_alert_wrapper(self, func):
+        """
+        权限自动点击装饰器（如果手机无法自动点击权限，可以在实现类里面重写该方法）
+        :param func:
+        :return:
+        """
         this = self
 
         @functools.wraps(func)
