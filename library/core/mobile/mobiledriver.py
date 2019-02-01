@@ -7,6 +7,7 @@ import re
 from abc import *
 from unicodedata import normalize
 
+import functools
 from appium import webdriver
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.common.exceptions import TimeoutException, \
@@ -211,7 +212,7 @@ class MobileDriver(ABC):
 
     @TestLogger.log('强制结束APP进程')
     def terminate_app(self, app_id, **options):
-        self.driver.terminate_app(app_id, **options)
+        return self.driver.terminate_app(app_id, **options)
 
     @TestLogger.log('将当前打开的APP后台运行指定时间(S)')
     def background_app(self, seconds):
@@ -289,81 +290,90 @@ class MobileDriver(ABC):
             return result[0]
         raise Exception("手机收不到验证码")
 
-    def wait_until(self, condition, timeout=8, auto_accept_permission_alert=True):
+    def wait_until(
+            self,
+            condition,
+            timeout=8,
+            auto_accept_permission_alert=True
+    ):
+        wait = WebDriverWait(self.driver, timeout)
+        if auto_accept_permission_alert:
+            condition = self._auto_click_permission_alert_wrapper(condition)
+        # if callable(unexpected):
+        #     condition = self._error_listener(unexpected, *args, **kwargs)(condition)
+        return wait.until(condition)
+
+    @staticmethod
+    def _error_listener(error_determine_func, *arguments, **keywordargs):
+        def decorator(func):
+            @functools.wraps(func)
+            def wrapper(*args, **kwargs):
+                try:
+                    listener_feedback = error_determine_func(*arguments, **keywordargs)
+                except:
+                    listener_feedback = None
+                if listener_feedback:
+                    raise AssertionError(listener_feedback)
+                return func(*args, **kwargs)
+
+            return wrapper
+
+        return decorator
+
+    def _auto_click_permission_alert_wrapper(self, func):
         this = self
 
-        def execute_condition(driver):
-            """如果有弹窗，自动允许"""
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            possible_activity = [
+                'com.android.packageinstaller.permission.ui.GrantPermissionsActivity',
+                '.permission.ui.GrantPermissionsActivity'
+            ]
+            if this.driver.current_activity in possible_activity:
+                need = True
+                while need:
+                    try:
+                        alert = this.driver.switch_to.alert
+                        alert.accept()
+                        continue
+                    except:
+                        alert = this.get_elements(
+                            [MobileBy.XPATH, '//android.widget.Button[@text="始终允许" or @text="允许"]'])
+                        if alert:
+                            alert[0].click()
+                            continue
+                    break
+            return func(*args, **kwargs)
 
-            def get_accept_permission_handler(d):
-                """获取允许权限弹窗的方法句柄"""
-                try:
-                    alert = d.switch_to.alert
-                    return alert.accept
-                except:
-                    alert = this.get_elements((MobileBy.XPATH, '//android.widget.Button[@text="始终允许" or @text="允许"]'))
-                    if not alert:
-                        return False
-                    return alert[0].click
-
-            if auto_accept_permission_alert:
-                if this.driver.current_activity in [
-                    'com.android.packageinstaller.permission.ui.GrantPermissionsActivity',
-                    '.permission.ui.GrantPermissionsActivity'
-                ]:
-                    need = True
-                    while need:
-                        try:
-                            WebDriverWait(this.driver, 1).until(
-                                get_accept_permission_handler
-                            )()
-                        except:
-                            need = False
-            return condition(driver)
-
-        wait = WebDriverWait(self.driver, timeout)
-        return wait.until(execute_condition)
+        return wrapper
 
     @TestLogger.log('等待条件成功，并监听异常条件')
-    def wait_condition_and_listen_unexpected(self, condition, timeout=8,
-                                             auto_accept_permission_alert=True, unexpected=None, poll=0.2):
-        this = self
-
-        def execute_condition(driver):
-            """如果有弹窗，自动允许"""
-
-            def get_accept_permission_handler(d):
-                """获取允许权限弹窗的方法句柄"""
-                try:
-                    alert = d.switch_to.alert
-                    return alert.accept
-                except:
-                    alert = this.get_elements((MobileBy.XPATH, '//android.widget.Button[@text="始终允许" or @text="允许"]'))
-                    if not alert:
-                        return False
-                    return alert[0].click
-
-            if auto_accept_permission_alert:
-                if this.driver.current_activity in [
-                    'com.android.packageinstaller.permission.ui.GrantPermissionsActivity',
-                    '.permission.ui.GrantPermissionsActivity'
-                ]:
-                    need = True
-                    while need:
-                        try:
-                            WebDriverWait(this.driver, 1).until(
-                                get_accept_permission_handler
-                            )()
-                        except:
-                            need = False
-
-            if unexpected:
-                if unexpected():
-                    raise AssertionError("检查到页面报错")
-            return condition(driver)
-
+    def wait_condition_and_listen_unexpected(
+            self,
+            condition,
+            timeout=8,
+            poll=0.2,
+            auto_accept_permission_alert=True,
+            unexpected=None,
+            *args,
+            **kwargs):
+        """
+        等待方法返回不是 False 的值
+        :param condition: 等待的方法
+        :param timeout: 超时时间
+        :param poll: 等待频率
+        :param auto_accept_permission_alert: 如果界面弹出系统权限对话框，是否点击允许，默认为True
+        :param unexpected: 等待期间监听的错误，当该方法返回值不是 False 或空值，抛出超时异常
+        :param args: unexpected 方法的参数
+        :param kwargs: unexpected 方法的参数
+        :return: 
+        """""
         wait = WebDriverWait(self.driver, timeout, poll)
-        return wait.until(execute_condition)
+        if auto_accept_permission_alert:
+            condition = self._auto_click_permission_alert_wrapper(condition)
+        if callable(unexpected):
+            condition = self._error_listener(unexpected, *args, **kwargs)(condition)
+        return wait.until(condition)
 
     @TestLogger.log('获取OS平台名')
     def get_platform(self):
