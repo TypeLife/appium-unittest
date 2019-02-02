@@ -971,7 +971,6 @@ class MobileDriver(ABC):
 
     @TestLogger.log("粘贴")
     def paste(self):
-        # TODO
         if self.is_android():
             self.execute_shell_command('input', 'keyevent', 279)
             return
