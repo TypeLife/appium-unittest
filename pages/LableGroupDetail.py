@@ -69,20 +69,20 @@ class LableGroupDetailPage(LabelSettingMenu, BasePage):
     def open_setting_menu(self):
         self.click_element(self.__locators['设置'])
 
-    @TestLogger.log()
+    @TestLogger.log('点击群发信息')
     def click_send_group_info(self):
         """点击群发信息"""
-        self.click_element(self.__class__.__locators['群发信息'])
+        self.click_element(self.__locators['群发信息'])
 
-    @TestLogger.log()
+    @TestLogger.log('点击添加成员')
     def click_add_members(self):
         """点击添加成员"""
-        self.click_element(self.__class__.__locators['添加成员'])
+        self.click_element(self.__locators['添加成员'])
 
-    @TestLogger.log()
+    @TestLogger.log('点击多方通话')
     def click_multi_tel(self):
         """点击多方通话"""
-        self.click_element(self.__class__.__locators['多方电话'])
+        self.click_element(self.__locators['多方电话'])
 
     @TestLogger.log('检查点：当前页面为标签详情页')
     def assert_this_page_is_opened(self):
