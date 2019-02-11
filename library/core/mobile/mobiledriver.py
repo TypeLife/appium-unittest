@@ -1048,7 +1048,7 @@ class MobileDriver(ABC):
             params = 'am start -a android.settings.DATA_ROAMING_SETTINGS'.split(' ')
             self.execute_shell_command(*params)
             switch_locator = [MobileBy.XPATH, '//*[@checkable="true"]']
-            if self.get_element_attribute(switch_locator, 'checked') == 'false':
+            if self.get_element_attribute(switch_locator, 'checked', 2) == 'false':
                 self.click_element(switch_locator, auto_accept_permission_alert=False)
             try:
                 self.wait_until(
@@ -1081,7 +1081,7 @@ class MobileDriver(ABC):
             params = 'am start -a android.settings.DATA_ROAMING_SETTINGS'.split(' ')
             self.execute_shell_command(*params)
             switch_locator = [MobileBy.XPATH, '//*[@checkable="true"]']
-            if self.get_element_attribute(switch_locator, 'checked') == 'true':
+            if self.get_element_attribute(switch_locator, 'checked', 2) == 'true':
                 self.click_element(switch_locator, auto_accept_permission_alert=False)
             try:
                 self.wait_until(
