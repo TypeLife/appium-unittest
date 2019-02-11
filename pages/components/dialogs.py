@@ -55,3 +55,31 @@ class DeleteConfirmDialog(BasePage):
     @TestLogger.log('点击删除')
     def click_delete(self):
         self.click_element(self.__locators['删除'])
+
+
+class SuspendedTips(BasePage):
+    """悬浮窗权限授权提示"""
+    ACTIVITY = 'com.cmicc.module_call.ui.multipartycall.MultipartyCallActivity'
+
+    __locators = {
+        'android:id/content': (MobileBy.ID, 'android:id/content'),
+        'android:id/parentPanel': (MobileBy.ID, 'android:id/parentPanel'),
+        'android:id/contentPanel': (MobileBy.ID, 'android:id/contentPanel'),
+        'android:id/scrollView': (MobileBy.ID, 'android:id/scrollView'),
+        'android:id/textSpacerNoTitle': (MobileBy.ID, 'android:id/textSpacerNoTitle'),
+        '您的手机没有授予悬浮窗权限，请开启后再试': (MobileBy.ID, 'android:id/message'),
+        'android:id/buttonPanel': (MobileBy.ID, 'android:id/buttonPanel'),
+        '暂不开启': (MobileBy.ID, 'android:id/button2'),
+        '现在去开启': (MobileBy.ID, 'android:id/button1')
+    }
+
+    @TestLogger.log('暂不开启')
+    def click_not_open_now(self):
+        self.click_element(self.__locators['暂不开启'])
+
+    @TestLogger.log('如果弹出“您的手机没有授予悬浮窗权限”提示框，点击暂不开启')
+    def ignore_tips_if_tips_display(self):
+        try:
+            self.click_not_open_now()
+        except:
+            pass

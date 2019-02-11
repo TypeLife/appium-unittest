@@ -84,13 +84,13 @@ def generate_page_object():
             for e in node.iter():
                 resource_id = e.get('resource-id')
                 xpath = node.getroottree().getpath(e)
-                text = e.get('text') if e.get('text') else resource_id
-                if text:
+                text = e.get('text').replace('\n', '')
+                key = text if text else resource_id
+                if key:
                     if resource_id:
-                        elements.append((text, (MobileBy.ID, resource_id)))
+                        elements.append((key, (MobileBy.ID, resource_id)))
                     else:
-                        elements.append((text, (MobileBy.XPATH, xpath)))
-                # parse(e)
+                        elements.append((key, (MobileBy.XPATH, xpath)))
 
         parse(tree)
         locators = re.sub(r"('[^)]+\),?)", r'\1\n', dict(OrderedDict(elements)).__repr__())

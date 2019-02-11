@@ -1,5 +1,6 @@
 import base64
 import contextlib
+import functools
 import hashlib
 import json
 import os
@@ -7,7 +8,6 @@ import re
 from abc import *
 from unicodedata import normalize
 
-import functools
 from appium import webdriver
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.common.exceptions import TimeoutException, \
@@ -60,6 +60,14 @@ class MobileDriver(ABC):
     @property
     def driver(self):
         return self._driver
+
+    @property
+    def current_activity(self):
+        return self.driver.current_activity
+
+    @property
+    def current_package(self):
+        return self.driver.current_package
 
     @abstractmethod
     def total_card_slot(self):
@@ -1337,6 +1345,24 @@ Tips:
             from library.core.utils import image_util
             color = image_util.get_pixel_point_color(fp, x, y, by_percent, mode)
             return color
+
+    @TestLogger.log('判断是否在通话界面')
+    def is_phone_in_calling_state(self):
+        return self.current_activity == '.InCallActivity'
+
+    @TestLogger.log('接听电话')
+    def pick_up_the_call(self):
+        """接听电话"""
+        command = 'input keyevent KEYCODE_CALL'
+        if self.is_phone_in_calling_state():
+            self.execute_shell_command(command)
+
+    @TestLogger.log('挂断电话')
+    def hang_up_the_call(self):
+        """挂断电话"""
+        command = 'input keyevent KEYCODE_ENDCALL'
+        if self.is_phone_in_calling_state():
+            return self.execute_shell_command(command)
 
     def __str__(self):
         device_info = {

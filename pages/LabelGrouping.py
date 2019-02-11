@@ -26,6 +26,7 @@ class LabelGroupingPage(ContactsSelector, BasePage):
         'biao': (MobileBy.ID, 'com.chinasofti.rcs:id/group_name'),
         'mylab(5)': (MobileBy.ID, 'com.chinasofti.rcs:id/group_name'),
         '标签分组名字': (MobileBy.ID, 'com.chinasofti.rcs:id/group_name'),
+        '标签分组成员数量': (MobileBy.ID, 'com.chinasofti.rcs:id/group_member_num'),
         # 新建分组页面
         '新建分组页面': (MobileBy.ID, 'com.chinasofti.rcs:id/label_toolbar_title'),
         '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_sure'),
@@ -118,8 +119,13 @@ class LabelGroupingPage(ContactsSelector, BasePage):
                 continue
             else:
                 group_name = group.find_element(*self.__locators['标签分组名字']).text
-                result = re.findall(r'(.+)\((\d+)\)$', group_name)[0]
-                group_name, total = result
+
+                # 页面改动，分组名和成员数量已经不是在一个元素的文本里面了
+                # result = re.findall(r'(.+)\((\d+)\)$', group_name)[0]
+                total_text = group.find_element(*self.__locators['标签分组成员数量']).text
+                total = re.findall(r'\d+', total_text)[0]
+                # group_name, total = result
+
                 if group_name == name:
                     group.click()
                     return group_name, int(total)
