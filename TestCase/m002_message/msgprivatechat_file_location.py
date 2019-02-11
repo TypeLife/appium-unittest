@@ -399,6 +399,14 @@ class MsgPrivateChatFileLocationTest(TestCase):
         chat = SingleChatPage()
         # 长按文件撤回消息
         chat.recall_mess(".xlsx")
+        try:
+            chat.wait_until(
+                timeout=3,
+                auto_accept_permission_alert=True,
+                condition=lambda d: chat.is_text_present("我知道了")
+            )
+        except:
+            pass
         if chat.is_text_present("我知道了"):
             chat.click_i_know()
         chat.wait_for_page_load()
