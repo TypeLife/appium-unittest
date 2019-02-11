@@ -7,6 +7,7 @@ from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import AgreementDetailPage
+from pages import ChatAudioPage
 from pages import ChatFilePage
 from pages import ChatLocationPage
 from pages import ChatMorePage
@@ -241,6 +242,7 @@ class MsgCommonGroupTest(TestCase):
         #     return
         # else:
         current_mobile().reset_app()
+        # current_mobile().connect_mobile()
         Preconditions.enter_group_chat_page()
 
     def default_tearDown(self):
@@ -303,4 +305,95 @@ class MsgCommonGroupTest(TestCase):
         if len(info2)==5000:
             return True
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_common_group_0005(self):
+        """1.在当前聊天会话页面，在输入框中输入一段文本，字符数等于5000
+            2、然后按住发送按钮，向上滑动，放大发送此段文本，文本是否可以放大发送成功"""
+        gcp = GroupChatPage()
+        # 输入信息
+        info = "哈" * 5000
+        gcp.input_message(info)
+        #长按发送按钮并滑动
+        gcp.press_and_move_up("发送按钮")
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_common_group_0006(self):
+        """1.在当前聊天会话页面，在输入框中输入一段文本，字符数等于5000
+            2、然后按住发送按钮，向下滑动，缩小发送此段文本，文本是否可以缩小发送成功"""
+        gcp = GroupChatPage()
+        # 输入信息
+        info = "哈" * 5000
+        gcp.input_message(info)
+        # 长按发送按钮并滑动
+        gcp.press_and_move_down("发送按钮")
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_common_group_0007(self):
+        """1、长按文本消息，是否会弹窗展示：功能菜单栏。
+            2、点击选择复制功能，复制成功后，是否会弹出toast提示：已复制
+            3、长按输入框，是否会弹出粘贴内容到输入框中的提示"""
+        gcp = GroupChatPage()
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        #长按信息并点击复制
+        gcp.press_file_to_do("哈哈","复制")
+        flag=gcp.is_toast_exist("已复制")
+        self.assertTrue(flag)
+        #长按输入框
+        gcp.press_file("说点什么...")
+        time.sleep(2)
+        flag2 = gcp.is_toast_exist("粘贴")
+        # self.assertTrue(flag2)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_common_group_0019(self):
+        """1.点击输入框右边的语音按钮，在未获取录音权限时，是否会弹出权限申请允许弹窗"""
+        gcp = GroupChatPage()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        flag = audio.wait_for_audio_allow_page_load()
+        self.assertTrue(flag)
+        audio.click_allow()
+        audio.wait_until(condition=lambda d: audio.is_text_present("退出"))
+        audio.click_exit()
+        gcp.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_common_group_0020(self):
+        """1、点击输入框右边的语音按钮，跳转到的页面是否是语音模式设置页面
+            2、默认展示的选择项是否是，语音+文字模式"""
+        gcp = GroupChatPage()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        flag = audio.wait_for_audio_type_select_page_load()
+        self.assertTrue(flag)
+        # 2、默认展示的选择项是否是，语音+文字模式
+        info = audio.get_selected_item()
+        self.assertIn("语音+文字", info)
+        audio.click_sure()
+        audio.wait_for_page_load()
+        audio.click_exit()
+        gcp.wait_for_page_load()

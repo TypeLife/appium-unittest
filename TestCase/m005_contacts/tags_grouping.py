@@ -7,6 +7,7 @@ from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
+from pages.components import ContactsSelector
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -176,14 +177,17 @@ class TagsGroupingTest(TestCase):
     def setUpClass(cls):
         # 创建联系人
         fail_time = 0
+        import dataproviders
 
         while fail_time < 3:
             try:
-                required_contacts = [
-                    ('给个红包1', '13800138000'),
-                ]
+                # 获取需要导入的联系人数据
+                required_contacts = dataproviders.get_preset_contacts()
+
+                # 连接手机
                 Preconditions.connect_mobile('Android-移动')
                 current_mobile().hide_keyboard_if_display()
+                # 导入数据
                 for name, number in required_contacts:
                     Preconditions.create_contacts_if_not_exits(name, number)
                 return
@@ -444,6 +448,47 @@ class TagsGroupingTest(TestCase):
             raise AssertionError('消息在 {}s 内没有发送成功'.format(max_wait_time))
 
     def setUp_test_Conts_TagsGrouping_0009(self):
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Conts_TagsGrouping_0010(self):
+        """群发信息"""
+        group_name = uuid.uuid4().__str__()
+        members = [
+            '给个红包1',
+            '给个红包2',
+        ]
+        # 进入标签分组列表页面
+        conts_page = ContactsPage()
+        conts_page.open_contacts_page()
+        conts_page.click_label_grouping()
+
+        # 创建分组
+        lg = LabelGroupingPage()
+        real_name = lg.create_group(group_name, *members)
+
+        # 删除点取消
+        lg.wait_for_page_load()
+        lg.click_label_group(real_name)
+
+        detail = LableGroupDetailPage()
+        detail.click_multi_tel()
+
+        contacts_selector = ContactsSelector()
+        contacts_selector.select_local_contacts(*members)
+        chat = ChatWindowPage()
+        if chat.is_tips_display():
+            chat.directly_close_tips_alert()
+        chat.send_img_msgs({'pic': (1,)})
+        max_wait_time = 5  # in seconds
+        try:
+            chat.wait_for_msg_send_status_become_to('发送成功', max_wait_time)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(max_wait_time))
+
+    def setUp_test_Conts_TagsGrouping_0010(self):
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()

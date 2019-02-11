@@ -64,9 +64,9 @@ class ChatAudioPage(BasePage):
                   '未选项': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/select_send_audio_type_root_view"]/android.widget.LinearLayout/android.widget.ImageView[@selected="false"]/../android.widget.TextView'),
                   # 弹窗权限页面
                   '不再询问': (MobileBy.ID, 'com.lbe.security.miui:id/do_not_ask_checkbox'),
-                  '要允许 和飞信 录制音频吗？': (MobileBy.ID, 'com.lbe.security.miui:id/permission_message'),
+                  '要允许 和飞信 录制音频吗？': (MobileBy.ID, 'com.android.packageinstaller:id/permission_message'),
                   '拒绝': (MobileBy.ID, 'android:id/button2'),
-                  '允许': (MobileBy.XPATH, '//android.widget.Button[@text="允许"]'),
+                  '允许': (MobileBy.ID, 'com.android.packageinstaller:id/permission_allow_button'),
 
                   }
 

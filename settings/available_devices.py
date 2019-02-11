@@ -5,7 +5,7 @@ from library.core.common.supportedmodel import SupportedModel
 # 测试APP信息
 TARGET_APP = dict(
     # DOWNLOAD_URL="https://www.pgyer.com/apiv2/app/install?_api_key=298b363e3288c07f2683b96ca9bc5ab6&appKey=andfetiondev&buildPassword=qwer!234",
-    DOWNLOAD_URL="http://dlrcs.fetion-portal.com/mobile/RCS_V6.2.6.1205_20181205.apk",
+    DOWNLOAD_URL="http://dlrcs.fetion-portal.com/mobile/RCS_V6.2.8.0129_20190130.apk",
     APP_PACKAGE="com.chinasofti.rcs",
     APP_ACTIVITY="com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
     INSTALL_BEFORE_RUN=False
@@ -254,13 +254,13 @@ AVAILABLE_DEVICES_DEV = {
 # ======================= 个人本机执行环境手机配置 =======================
 DEVICES_CONFIG_XIN = {
     'M960BDQN229CH': {
-        "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
+        "MODEL": SupportedModel.HUAWEI_P20,
         "SERVER_URL": 'http://192.168.200.110:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
-            "platformVersion": "6.0.1",
-            "deviceName": "M960BDQN229DK",
-            "udid": "M960BDQN229DK",
+            "platformVersion": "8.0.0",
+            "deviceName": "LKX0218814000312",
+            "udid": "LKX0218814000312",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
@@ -281,16 +281,14 @@ DEVICES_CONFIG_XIN = {
     #     "DEFAULT_CAPABILITY": {
     #         "platformName": "Android",
     #         "platformVersion": "6.0",
-    #         # "deviceName": "95AQACPMGJP5L",
     #         "deviceName": "8DF6R17526001515",
-    #         # "udid": "95AQACPMGJP5L",
     #         "udid": "8DF6R17526001515",
     #         "automationName": "UiAutomator2",
     #         "newCommandTimeout": 600,
     #         "appPackage": "com.chinasofti.rcs",
+    #         # "appPackage": "com.huawei.android.launcher",
     #         "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
-    #         # "appPackage": "com.meizu.flyme.launcher",
-    #         # "appActivity": ".Launcher",
+    #         # "appActivity": ".unihome.UniHomeLauncher",
     #     },
     #     'CARDS': [
     #         {

@@ -44,6 +44,7 @@ class GroupChatPage(BaseChatPage):
                   '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
                   '撤回': (MobileBy.XPATH, "//*[contains(@text, '撤回')]"),
                   '多选': (MobileBy.XPATH, "//*[contains(@text, '多选')]"),
+                  '复制': (MobileBy.XPATH, "//*[contains(@text, '复制')]"),
                   '我知道了': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_btn_ok'),
                   '勾': (MobileBy.ID, 'com.chinasofti.rcs:id/img_message_down_file'),
                   }
