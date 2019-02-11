@@ -229,20 +229,10 @@ class MsgGroupChatvedioTest(TestCase):
 
         # 创建联系人
         fail_time = 0
-
+        import dataproviders
         while fail_time < 3:
             try:
-                required_contacts = [
-                    ('给个红包1', '13800138000'),  # 假号码
-                    ('给个红包2', '13800138001'),  # 假号码
-                    ('给个红包3', '13800138002'),  # 假号码
-                    ('给个红包4', '13800138003'),  # 假号码
-                    ('给个红包5茻', '13800138004'),  # 假号码
-                    ('大佬1', '13800138005'),  # 假号码
-                    ('大佬2', '13800138006'),  # 假号码
-                    ('大佬3', '13800138007'),  # 假号码
-                    ('大佬4', '13800138008'),  # 假号码
-                ]
+                required_contacts = dataproviders.get_preset_contacts()
                 conts = ContactsPage()
                 Preconditions.connect_mobile('Android-移动')
                 current_mobile().hide_keyboard_if_display()
@@ -252,16 +242,7 @@ class MsgGroupChatvedioTest(TestCase):
                     conts.create_contacts_if_not_exits(name, number)
 
                 # 创建群
-                required_group_chats = [
-                    ('给个红包1', ['给个红包1', '给个红包2']),
-                    ('给个红包2', ['给个红包1', '给个红包2']),
-                    ('给个红包3', ['给个红包1', '给个红包2']),
-                    ('给个红包4', ['给个红包1', '给个红包2']),
-                    ('群聊1', ['给个红包1', '给个红包2']),
-                    ('群聊2', ['给个红包1', '给个红包2']),
-                    ('群聊3', ['给个红包1', '给个红包2']),
-                    ('群聊4', ['给个红包1', '给个红包2']),
-                ]
+                required_group_chats = dataproviders.get_preset_group_chats()
 
                 conts.open_group_chat_list()
                 group_list = GroupListPage()

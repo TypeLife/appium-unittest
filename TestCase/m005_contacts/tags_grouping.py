@@ -177,15 +177,17 @@ class TagsGroupingTest(TestCase):
     def setUpClass(cls):
         # 创建联系人
         fail_time = 0
+        import dataproviders
 
         while fail_time < 3:
             try:
-                required_contacts = [
-                    ('给个红包1', '13800138000'),
-                    ('给个红包2', '13800138001'),
-                ]
+                # 获取需要导入的联系人数据
+                required_contacts = dataproviders.get_preset_contacts()
+
+                # 连接手机
                 Preconditions.connect_mobile('Android-移动')
                 current_mobile().hide_keyboard_if_display()
+                # 导入数据
                 for name, number in required_contacts:
                     Preconditions.create_contacts_if_not_exits(name, number)
                 return
