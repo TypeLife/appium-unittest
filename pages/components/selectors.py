@@ -68,7 +68,7 @@ class ContactsSelector(BasePage):
 
     @TestLogger.log('检查点：页面标题="选择联系人"')
     def assert_contacts_selector_page_title_is_right(self):
-        self.mobile.assert_element_text_should_be(self.__locators['选择联系人'], '选择联系人')
+        self.mobile.assert_element_text_should_be(self.__locators['选择联系人'], '添加群成员')
 
     @TestLogger.log('检查点：右上角显示确定按钮')
     def assert_contacts_selector_page_display_ok_button(self):

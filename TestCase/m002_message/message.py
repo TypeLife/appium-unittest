@@ -124,6 +124,14 @@ class Preconditions(object):
         """
         if not reset_required:
             message_page = MessagePage()
+            if message_page.is_on_this_page():
+                return
+            else:
+                try:
+                    current_mobile().terminate_app('com.chinasofti.rcs', timeout=2000)
+                except:
+                    pass
+                current_mobile().launch_app()
             try:
                 message_page.wait_until(
                     condition=lambda d: message_page.is_on_this_page(),

@@ -6,7 +6,7 @@ from library.core.TestLogger import TestLogger
 
 
 class ChatNoticeDialog(BasePage):
-    """用户须知提示框"""
+    """消息 - 聊天 - 用户须知提示框"""
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.MessageDetailActivity'
 
     __locators = {
@@ -55,3 +55,108 @@ class DeleteConfirmDialog(BasePage):
     @TestLogger.log('点击删除')
     def click_delete(self):
         self.click_element(self.__locators['删除'])
+
+
+class SuspendedTips(BasePage):
+    """通讯录 - 标签分组 - 多方通话 - 悬浮窗权限授权提示"""
+    ACTIVITY = 'com.cmicc.module_call.ui.multipartycall.MultipartyCallActivity'
+
+    __locators = {
+        'android:id/content': (MobileBy.ID, 'android:id/content'),
+        'android:id/parentPanel': (MobileBy.ID, 'android:id/parentPanel'),
+        'android:id/contentPanel': (MobileBy.ID, 'android:id/contentPanel'),
+        'android:id/scrollView': (MobileBy.ID, 'android:id/scrollView'),
+        'android:id/textSpacerNoTitle': (MobileBy.ID, 'android:id/textSpacerNoTitle'),
+        '您的手机没有授予悬浮窗权限，请开启后再试': (MobileBy.ID, 'android:id/message'),
+        'android:id/buttonPanel': (MobileBy.ID, 'android:id/buttonPanel'),
+        '暂不开启': (MobileBy.ID, 'android:id/button2'),
+        '现在去开启': (MobileBy.ID, 'android:id/button1')
+    }
+
+    @TestLogger.log('暂不开启')
+    def click_not_open_now(self):
+        self.click_element(self.__locators['暂不开启'])
+
+    @TestLogger.log('如果弹出“您的手机没有授予悬浮窗权限”提示框，点击暂不开启')
+    def ignore_tips_if_tips_display(self):
+        try:
+            self.click_not_open_now()
+        except:
+            print('没有提示框弹出或没找到提示框')
+
+
+class MutiVideoTipsPage(BasePage):
+    """多方视频 - 多方视频提示"""
+    ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.ContactSelectorActivity'
+
+    __locators = {
+        'com.chinasofti.rcs:id/pop_window_for_10g_root_view': (
+            MobileBy.ID, 'com.chinasofti.rcs:id/pop_window_for_10g_root_view'),
+        'com.chinasofti.rcs:id/pop_window_for_10g_main_view': (
+            MobileBy.ID, 'com.chinasofti.rcs:id/pop_window_for_10g_main_view'),
+        '每月10G免流特权': (MobileBy.ID, 'com.chinasofti.rcs:id/pop_window_title'),
+        '多方视频通话每分钟消耗约8MB流量，订购[每月10G]畅聊语音/视频通话': (MobileBy.ID, 'com.chinasofti.rcs:id/pop_window_content'),
+        '继续拨打': (MobileBy.ID, 'com.chinasofti.rcs:id/continue_call'),
+        '订购免流特权': (MobileBy.ID, 'com.chinasofti.rcs:id/get_mian_liu_permission'),
+        'com.chinasofti.rcs:id/pop_window_not_pop_btn_image': (
+            MobileBy.ID, 'com.chinasofti.rcs:id/pop_window_not_pop_btn_image'),
+        '以后不再提示': (MobileBy.ID, 'com.chinasofti.rcs:id/pop_window_not_pop_btn')
+    }
+
+    @TestLogger.log('继续拨打')
+    def click_go_on(self):
+        self.click_element(self.__locators['继续拨打'])
+
+    @TestLogger.log('以后不再提示')
+    def check_no_more_prompts(self):
+        checked_color = (0, 0, 255, 255)
+        uncheck_color = (255, 255, 255, 255)
+        rgba_before_click = self.mobile.get_coordinate_color_of_element(
+            self.__locators['com.chinasofti.rcs:id/pop_window_not_pop_btn_image'], x=50, y=50, by_percent=True)
+        print(rgba_before_click)
+        if rgba_before_click == uncheck_color:
+            self.click_element(self.__locators['以后不再提示'])
+        rgba_after_click = self.mobile.get_coordinate_color_of_element(
+            self.__locators['com.chinasofti.rcs:id/pop_window_not_pop_btn_image'], x=50, y=50, by_percent=True)
+        return rgba_after_click
+
+    @TestLogger.log('勾选“以后不再提示”')
+    def check_no_more_prompts(self):
+        # checked_color = (0, 0, 255, 255)
+        uncheck_color = (255, 255, 255, 255)
+        rgba_before_click = self.mobile.get_coordinate_color_of_element(
+            self.__locators['com.chinasofti.rcs:id/pop_window_not_pop_btn_image'], x=50, y=50, by_percent=True)
+        print(rgba_before_click)
+        if rgba_before_click == uncheck_color:
+            self.click_element(self.__locators['以后不再提示'])
+        rgba_after_click = self.mobile.get_coordinate_color_of_element(
+            self.__locators['com.chinasofti.rcs:id/pop_window_not_pop_btn_image'], x=50, y=50, by_percent=True)
+        return rgba_after_click
+
+    @TestLogger.log('去勾选“以后不再提示”')
+    def check_no_more_prompts(self):
+        # checked_color = (0, 0, 255, 255)
+        uncheck_color = (255, 255, 255, 255)
+        rgba_before_click = self.mobile.get_coordinate_color_of_element(
+            self.__locators['com.chinasofti.rcs:id/pop_window_not_pop_btn_image'], x=50, y=50, by_percent=True)
+        print(rgba_before_click)
+        if rgba_before_click != uncheck_color:
+            self.click_element(self.__locators['以后不再提示'])
+        rgba_after_click = self.mobile.get_coordinate_color_of_element(
+            self.__locators['com.chinasofti.rcs:id/pop_window_not_pop_btn_image'], x=50, y=50, by_percent=True)
+        return rgba_after_click
+
+    @TestLogger.log('点击“订购免流特权”')
+    def ordering_free_flow_privileges(self):
+        self.click_element(self.__locators['订购免流特权'])
+
+    @TestLogger.log('点击“订购免流特权”')
+    def ordering_free_flow_privileges(self):
+        self.click_element(self.__locators['订购免流特权'])
+
+    @TestLogger.log('如果弹出提示对话框，点击继续')
+    def go_on_if_tips_pop_out(self):
+        try:
+            self.click_go_on()
+        except:
+            print('没有提示框，或者没找到提示框')
