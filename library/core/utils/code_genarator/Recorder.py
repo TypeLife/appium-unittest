@@ -84,7 +84,9 @@ def generate_page_object():
             for e in node.iter():
                 resource_id = e.get('resource-id')
                 xpath = node.getroottree().getpath(e)
-                text = e.get('text').replace('\n', '')
+                text = e.get('text')
+                if isinstance(text, str):
+                    text = text.replace('\n', '')
                 key = text if text else resource_id
                 if key:
                     if resource_id:

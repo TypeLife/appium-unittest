@@ -47,7 +47,7 @@ class LabelGroupingPage(ContactsSelector, BasePage):
             # 删除标签
             detail = LableGroupDetailPage()
             try:
-                self.click_element(['xpath', '//*[@text="我知道了"]'], 1)
+                self.click_element(['xpath', '//*[@text="知道了"]'], 1)
             except:
                 pass
             detail.open_setting_menu()
@@ -66,15 +66,16 @@ class LabelGroupingPage(ContactsSelector, BasePage):
         """
         from pages import LableGroupDetailPage
         for name in groups:
+            if isinstance(name,(list,tuple)) and len(name) >0:
+                name = name[0]
             if self.click_label_group(name):
                 detail = LableGroupDetailPage()
                 try:
-                    self.click_element(['xpath', '//*[@text="我知道了"]'], 1)
+                    self.click_element(['xpath', '//*[@text="知道了"]'], 1)
                 except:
                     pass
                 detail.open_setting_menu()
                 detail.click_delete_label_menu()
-
                 detail.click_delete()
                 self.wait_for_page_load()
 
@@ -87,10 +88,12 @@ class LabelGroupingPage(ContactsSelector, BasePage):
         """
         from pages import LableGroupDetailPage
         for name in groups:
+            if isinstance(name,(list,tuple)) and len(name) >0:
+                name = name[0]
             if self.click_label_group(name):
                 detail = LableGroupDetailPage()
                 try:
-                    self.click_element(['xpath', '//*[@text="我知道了"]'], 1)
+                    self.click_element(['xpath', '//*[@text="知道了"]'], 1)
                 except:
                     pass
                 detail.open_setting_menu()
@@ -98,7 +101,7 @@ class LabelGroupingPage(ContactsSelector, BasePage):
                 detail.click_cancel()
                 self.click_back()
                 try:
-                    self.click_element(['xpath', '//*[@text="我知道了"]'], 1)
+                    self.click_element(['xpath', '//*[@text="知道了"]'], 1)
                 except:
                     pass
                 self.click_back()
@@ -145,7 +148,7 @@ class LabelGroupingPage(ContactsSelector, BasePage):
         if self.click_label_group(old_name):
             detail = LableGroupDetailPage()
             try:
-                self.click_element(['xpath', '//*[@text="我知道了"]'], 1)
+                self.click_element(['xpath', '//*[@text="知道了"]'], 1)
             except:
                 pass
             detail.open_setting_menu()
@@ -165,17 +168,25 @@ class LabelGroupingPage(ContactsSelector, BasePage):
 
         if self.click_label_group(group):
             detail = LableGroupDetailPage()
+
             try:
-                self.click_element(['xpath', '//*[@text="我知道了"]'], 1)
+                self.click_element(['xpath', '//*[@text="知道了"]'], 1)
             except:
                 pass
+
             detail.open_setting_menu()
             detail.remove_members(*members)
 
             self.click_back()
+
+            try:
+                self.click_element(['xpath', '//*[@text="知道了"]'], 1)
+            except:
+                pass
+
             detail.wait_for_page_load()
             try:
-                self.click_element(['xpath', '//*[@text="我知道了"]'], 1)
+                self.click_element(['xpath', '//*[@text="知道了"]'], 1)
             except:
                 pass
             self.click_back()
@@ -200,8 +211,13 @@ class LabelGroupingPage(ContactsSelector, BasePage):
                 continue
             else:
                 group_name = group.find_element(*self.__locators['标签分组名字']).text
-                result = re.findall(r'(.+)\((\d+)\)$', group_name)[0]
-                group_name, total = result
+
+                # 页面改动，分组名和成员数量已经不是在一个元素的文本里面了
+                # result = re.findall(r'(.+)\((\d+)\)$', group_name)[0]
+                total_text = group.find_element(*self.__locators['标签分组成员数量']).text
+                total = re.findall(r'\d+', total_text)[0]
+                # group_name, total = result
+
                 if group_name == name:
                     return int(total)
                 index += 1
@@ -258,7 +274,7 @@ class LabelGroupingPage(ContactsSelector, BasePage):
     @TestLogger.log('点击确定')
     def click_sure(self):
         """点击确定"""
-        self.click_element(self.__class__.__locators['确定'])
+        self.mobile.click_element(self.__locators['确定'])
 
     @TestLogger.log('等待标签分组页面加载')
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):

@@ -36,3 +36,9 @@ def get_preset_group_chats():
     需要预先导入的群聊数据
     """
     return PRESET_GROUP_CHATS
+
+
+def push_resource_dir_to_mobile_sdcard(dist_mobile):
+    from settings import RESOURCE_FILE_PATH
+    push_to = '/sdcard'
+    dist_mobile.push_folder(RESOURCE_FILE_PATH, push_to)

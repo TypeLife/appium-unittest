@@ -8,8 +8,9 @@ from library.core.utils.applicationcache import current_mobile, current_driver, 
 from library.core.utils.testcasefilter import tags
 from pages import *
 from pages.call.multipartycall import MultipartyCallPage
+from pages.call.mutivideo import MutiVideoPage
 from pages.components import ContactsSelector
-from pages.components.dialogs import SuspendedTips
+from pages.components.dialogs import SuspendedTips, MutiVideoTipsPage
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -129,7 +130,10 @@ class Preconditions(object):
             if message_page.is_on_this_page():
                 return
             else:
-                current_mobile().terminate_app('com.chinasofti.rcs')
+                try:
+                    current_mobile().terminate_app('com.chinasofti.rcs', timeout=2000)
+                except:
+                    pass
                 current_mobile().launch_app()
             try:
                 message_page.wait_until(
@@ -197,6 +201,9 @@ class TagsGroupingTest(TestCase):
                 # 导入数据
                 for name, number in required_contacts:
                     Preconditions.create_contacts_if_not_exits(name, number)
+
+                # 推送resource文件到手机
+                dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
                 return
             except:
                 fail_time += 1
@@ -259,11 +266,12 @@ class TagsGroupingTest(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0003(self):
         """新建分组"""
+        group_name = uuid.uuid4().__str__()
         groups = [
-            ['分组1', '给个红包1'],
+            [group_name, '给个红包1'],
         ]
         conts_page = ContactsPage()
         conts_page.open_contacts_page()
@@ -297,8 +305,7 @@ class TagsGroupingTest(TestCase):
         lg.wait_for_create_label_grouping_page_load()
         real_name = lg.input_label_grouping_name(group_name)
         lg.click_sure()
-        import time
-        time.sleep(1)
+        lg.wait_for_contacts_selector_page_load()
         lg.assert_contacts_selector_page_title_is_right()
         lg.assert_contacts_selector_page_display_ok_button()
         lg.assert_contacts_selector_search_box_place_holder_is_right()
@@ -499,11 +506,73 @@ class TagsGroupingTest(TestCase):
         # 挂断电话
         current_mobile().hang_up_the_call()
 
-
     def setUp_test_Conts_TagsGrouping_0010(self):
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Conts_TagsGrouping_0011(self):
+        """多方视频"""
+        group_name = uuid.uuid4().__str__()
+        members = [
+            '给个红包1',
+            '给个红包2',
+        ]
+        # 进入标签分组列表页面
+        conts_page = ContactsPage()
+        conts_page.open_contacts_page()
+        conts_page.click_label_grouping()
+
+        # 创建分组
+        lg = LabelGroupingPage()
+        real_name = lg.create_group(group_name, *members)
+
+        # 进入分组
+        lg.wait_for_page_load()
+        lg.click_label_group(real_name)
+
+        # 点击多方视频
+        detail = LableGroupDetailPage()
+        detail.click_multiparty_videos()
+
+        # 选择联系人
+        contacts_selector = ContactsSelector()
+        current_mobile().wait_until(
+            condition=lambda d: current_mobile().is_text_present('多方视频'),
+            timeout=3,
+        )
+        contacts_selector.select_local_contacts(*members)
+
+        tips = MutiVideoTipsPage()
+        tips.go_on_if_tips_pop_out()
+
+        tips1 = SuspendedTips()
+        tips1.ignore_tips_if_tips_display()
+
+        mtv = MutiVideoPage()
+        mtv.wait_for_page_load()
+
+    def setUp_test_Conts_TagsGrouping_0011(self):
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @classmethod
+    def tearDownClass(cls):
+        try:
+            Preconditions.connect_mobile('Android-移动')
+            current_mobile().hide_keyboard_if_display()
+            Preconditions.make_already_in_message_page()
+            conts_page = ContactsPage()
+            conts_page.open_contacts_page()
+            conts_page.click_label_grouping()
+            lg = LabelGroupingPage()
+            lg.wait_for_page_load()
+            lg.delete_all_label()
+        except:
+            import traceback
+            traceback.print_exc()
 
 
 if __name__ == '__main__':

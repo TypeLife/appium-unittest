@@ -85,6 +85,11 @@ class LableGroupDetailPage(LabelSettingMenu, BasePage):
         """点击多方通话"""
         self.click_element(self.__locators['多方电话'])
 
+    @TestLogger.log('点击多方视频')
+    def click_multiparty_videos(self):
+        """点击多方通话"""
+        self.click_element(self.__locators['多方视频'])
+
     @TestLogger.log('检查点：当前页面为标签详情页')
     def assert_this_page_is_opened(self):
         try:
