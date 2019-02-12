@@ -31,7 +31,7 @@ class ChatProfilePage(BasePage):
                   'com.chinasofti.rcs:id/asp_selecttion_contact_content': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/asp_selecttion_contact_content'),
                   'D': (MobileBy.ID, ''),
-                  '左侧字母': (MobileBy.ID, 'com.chinasofti.rcs:id/alphabetIndexText'),
+                  '左侧字母': (MobileBy.ID, 'com.chinasofti.rcs:id/index_text'),
                   'dx1645': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
                   '15338821645': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),
                   'F': (MobileBy.ID, ''),

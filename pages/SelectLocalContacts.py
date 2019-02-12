@@ -154,7 +154,7 @@ class SelectLocalContactsPage(BasePage):
     @TestLogger.log()
     def contacts_is_selected(self, name):
         """获取联系人的选择状态"""
-        selected_els = self.get_elements((MobileBy.XPATH, '//*[@text ="%s"]/../../android.widget.RelativeLayout/android.widget.ImageView[@resource-id="com.chinasofti.rcs:id/select_icon"]' % name))
+        selected_els = self.get_elements((MobileBy.XPATH, '//*[@text ="%s"]/../android.widget.ImageView[@resource-id="com.chinasofti.rcs:id/contact_icon"]' % name))
         if selected_els:
             return True
         else:
