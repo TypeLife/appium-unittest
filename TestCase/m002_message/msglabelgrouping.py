@@ -124,7 +124,9 @@ class Preconditions(object):
         label_grouping.select_group(group_names[0])
         lgdp = LableGroupDetailPage()
         time.sleep(1)
-        if lgdp.is_text_present("该标签分组内暂无成员"):
+        # 标签分组成员小于2人，需要添加成员
+        members_name = lgdp.get_members_names()
+        if lgdp.is_text_present("该标签分组内暂无成员") or len(members_name) < 2:
             lgdp.click_add_members()
             # 选择成员
             slc = SelectLocalContactsPage()

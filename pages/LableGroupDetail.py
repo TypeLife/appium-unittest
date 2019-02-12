@@ -49,6 +49,7 @@ class LableGroupDetailPage(LabelSettingMenu, BasePage):
         '大佬1': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         '大佬2': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         '大佬3': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
+        '成员名字': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         'com.chinasofti.rcs:id/contact_index_bar_view': (
             MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_view'),
         'com.chinasofti.rcs:id/contact_index_bar_container': (
@@ -84,6 +85,11 @@ class LableGroupDetailPage(LabelSettingMenu, BasePage):
         """点击多方通话"""
         self.click_element(self.__locators['多方电话'])
 
+    @TestLogger.log('点击多方视频')
+    def click_multiparty_videos(self):
+        """点击多方通话"""
+        self.click_element(self.__locators['多方视频'])
+
     @TestLogger.log('检查点：当前页面为标签详情页')
     def assert_this_page_is_opened(self):
         try:
@@ -92,3 +98,13 @@ class LableGroupDetailPage(LabelSettingMenu, BasePage):
             )
         except TimeoutException:
             raise AssertionError('当前页面不是标签组详情页')
+
+    @TestLogger.log("获取标签分组成员人名")
+    def get_members_names(self):
+        """获取标签分组成员人名"""
+        els = self.get_elements(self.__class__.__locators['成员名字'])
+        names = []
+        if els:
+            for el in els:
+                names.append(el.text)
+        return names

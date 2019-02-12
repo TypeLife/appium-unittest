@@ -48,7 +48,7 @@ class BaseChatPage(BasePage):
                   '消息图片': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_image'),
                   # 消息视频
                   '消息视频': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_video_time'),
-                  '视频播放按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_video_start'),
+                  '视频播放按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/video_play'),
                   '视频关闭按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_close'),
                   # 打开位置页面元素
                   "导航按钮": (MobileBy.ID, 'com.chinasofti.rcs:id/location_nativ_btn'),
