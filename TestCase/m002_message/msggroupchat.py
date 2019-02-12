@@ -99,7 +99,7 @@ class Preconditions(object):
 
     @staticmethod
     def make_already_have_my_group(reset=False):
-        """确保有群，没有群则创建群名为mygroup+电话号码后4位的群"""
+        """确保有群，没有群则创建群名为agroup+电话号码后4位的群"""
         # 消息页面
         Preconditions.make_already_in_message_page(reset)
         mess = MessagePage()
