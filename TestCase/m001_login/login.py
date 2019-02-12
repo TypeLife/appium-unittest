@@ -121,6 +121,7 @@ class Preconditions(object):
         # 等待号码加载完成后，点击一键登录
         one_key = OneKeyLoginPage()
         one_key.wait_for_tell_number_load(60)
+        login_number = one_key.get_login_number()
         one_key.click_one_key_login()
         one_key.click_read_agreement_detail()
 
@@ -131,6 +132,7 @@ class Preconditions(object):
         # 等待消息页
         message_page = MessagePage()
         message_page.wait_login_success(60)
+        return login_number
 
     @staticmethod
     def take_logout_operation_if_already_login():
@@ -223,6 +225,43 @@ class Preconditions(object):
             sl.click_i_know()
         MessagePage().wait_login_success(login_time)
 
+    @staticmethod
+    def reset_and_relaunch_app():
+        """首次启动APP（使用重置APP代替）"""
+        app_package = 'com.chinasofti.rcs'
+        current_driver().activate_app(app_package)
+        current_mobile().reset_app()
+
+    @staticmethod
+    def make_already_in_message_page(reset_required=False):
+        """
+        前置条件：
+        1.已登录客户端
+        2.当前在消息页面
+        """
+        if not reset_required:
+            message_page = MessagePage()
+            if message_page.is_on_this_page():
+                return
+            else:
+                try:
+                    current_mobile().terminate_app('com.chinasofti.rcs', timeout=2000)
+                except:
+                    pass
+                current_mobile().launch_app()
+            try:
+                message_page.wait_until(
+                    condition=lambda d: message_page.is_on_this_page(),
+                    timeout=3
+                )
+                return
+            except TimeoutException:
+                pass
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_one_key_login_page()
+        login_num = Preconditions.login_by_one_key_login()
+        return login_num
+
 
 class LoginTest(TestCase):
     """Login 模块"""
@@ -236,7 +275,7 @@ class LoginTest(TestCase):
         Preconditions.login_by_one_key_login()
         Preconditions.take_logout_operation_if_already_login()
 
-    @tags('ALL', 'CMCC')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_login_0001(self, login_time=60):
         """ 本网非首次登录已设置头像-一键登录页面元素检查"""
         oklp = OneKeyLoginPage()
@@ -267,7 +306,7 @@ class LoginTest(TestCase):
         # 3、退出后台
         current_mobile().press_home_key()
 
-    @tags('ALL', 'CMCC')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_login_0002(self):
         """已登录状态后，退出后台"""
         current_mobile().activate_app('com.chinasofti.rcs')
@@ -329,7 +368,7 @@ class LoginTest(TestCase):
         current_mobile().reset_app()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL', 'CMCC')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_login_0006(self):
         """服务条款检查"""
         oklp = OneKeyLoginPage()
@@ -346,7 +385,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL', 'CMCC')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_login_0007(self):
         """服务条款检查"""
         oklp = OneKeyLoginPage()
@@ -371,7 +410,7 @@ class LoginTest(TestCase):
         current_mobile().reset_app()
         Preconditions.make_already_in_sms_login_page()
 
-    @tags('ALL', '移动-电信')
+    @tags('ALL', 'SMOKE', '移动-电信')
     def test_login_0008(self):
         """下线提醒"""
         # 切换到辅助机2，并用测试机的号码登录
@@ -415,7 +454,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL', 'CMCC')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_login_0009(self):
         """登录页面检查"""
         oklp = OneKeyLoginPage()
@@ -432,7 +471,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL', '移动-联通')
+    @tags('ALL', 'SMOKE', '移动-联通')
     def test_login_0010(self):
         """一移动一异网卡登录"""
         oklp = OneKeyLoginPage()
@@ -452,7 +491,7 @@ class LoginTest(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL', "移动-移动")
+    @tags('ALL', 'SMOKE', "移动-移动")
     def test_login_0020(self):
         """双移动卡登录"""
         oklp = OneKeyLoginPage()
@@ -478,7 +517,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL', "移动-联通")
+    @tags('ALL', 'SMOKE', "移动-联通")
     def test_login_0022(self):
         """一移动一异网卡登录"""
         oklp = OneKeyLoginPage()
@@ -527,7 +566,7 @@ class LoginTest(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL', "移动-移动")
+    @tags('ALL', 'SMOKE', "移动-移动")
     def test_login_0023(self):
         """双移动卡登录"""
         oklp = OneKeyLoginPage()
@@ -546,7 +585,7 @@ class LoginTest(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL', "联通")
+    @tags('ALL', 'SMOKE', "联通")
     def test_login_0025(self):
         """非首次已设置头像昵称登录短信登录页元素显示(异网单卡)"""
         sl = SmsLoginPage()
@@ -561,7 +600,7 @@ class LoginTest(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL', "联通")
+    @tags('ALL', 'SMOKE', "联通")
     def test_login_0026(self):
         """输入验证码验证-异网用户，正确有效的6位（断网)"""
         sl = SmsLoginPage()
@@ -606,7 +645,7 @@ class LoginTest(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL', "联通")
+    @tags('ALL', 'SMOKE', "联通")
     def test_login_0027(self):
         """输入验证码验证-错误的6位（异网用户）"""
         sl = SmsLoginPage()
@@ -644,7 +683,7 @@ class LoginTest(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL', "联通")
+    @tags('ALL', 'SMOKE', "联通")
     def test_login_0029(self):
         """输入验证码验证-（异网）正确失效的6位验证码"""
         sl = SmsLoginPage()
@@ -684,7 +723,7 @@ class LoginTest(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL', '联通')
+    @tags('ALL', 'SMOKE', '联通')
     def test_login_0036(self):
         """验证码重新获取后-（异网用户）输入之前的验证码提示"""
         sl = SmsLoginPage()
@@ -741,7 +780,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL', "电信")
+    @tags('ALL', 'SMOKE', "电信")
     def test_login_0048(self):
         """短信验证码登录-（电信）异网用户首次登录"""
         Preconditions.diff_card_login_by_sms(CardType.CHINA_TELECOM)
@@ -757,7 +796,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL', "联通")
+    @tags('ALL', 'SMOKE', "联通")
     def test_login_0049(self):
         """短信验证码登录-（联通）异网用户首次登录"""
         Preconditions.diff_card_login_by_sms(CardType.CHINA_UNION)
@@ -772,7 +811,7 @@ class LoginTest(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL', "联通")
+    @tags('ALL', 'SMOKE', "联通")
     def test_login_0050(self):
         """短信验证码登录-异网用户登录（非首次)"""
         # 登录
@@ -792,7 +831,7 @@ class LoginTest(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.diff_card_make_already_in_sms_login_page()
 
-    @tags('ALL', "联通")
+    @tags('ALL', 'SMOKE', "联通")
     def test_login_0051(self):
         """短信验证码登录-异网不显示一键登录入口"""
         sl = SmsLoginPage()
@@ -808,7 +847,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL', 'CMCC')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_login_0052(self):
         """ 界面点击“语言”按钮"""
         oklp = OneKeyLoginPage()
@@ -833,3 +872,79 @@ class LoginTest(TestCase):
         sml.click_finish()
         oklp.wait_for_page_load()
 
+    @staticmethod
+    def setUp_test_login_0056():
+        from settings.available_devices import TARGET_APP
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        if not current_mobile().is_app_installed(TARGET_APP.get('APP_PACKAGE')):
+            current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                         replace=True)
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_login_0056(self):
+        """ 先卸载后安装"""
+        # 卸载和飞信
+        from settings.available_devices import TARGET_APP
+        current_mobile().remove_app(TARGET_APP.get('APP_PACKAGE'))
+        current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                     replace=True)
+        Preconditions.make_already_in_message_page()
+
+    def tearDown_test_login_0056(self):
+        from settings.available_devices import TARGET_APP
+        Preconditions.select_mobile('Android-移动')
+        if current_mobile().is_app_installed(TARGET_APP.get('APP_PACKAGE')):
+            return
+
+        # 预防安装应用的时候发生异常，尝试恢复安装，（还不知道好不好使）
+        reinstall_try_time = 3
+        while reinstall_try_time > 0:
+            try:
+                current_mobile().remove_app(TARGET_APP.get('APP_PACKAGE'))
+                current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                             replace=True)
+                break
+            except:
+                reinstall_try_time -= 1
+                if reinstall_try_time == 0:
+                    import traceback
+                    traceback.print_exc()
+
+    @staticmethod
+    def setUp_test_login_0057():
+        from settings.available_devices import TARGET_APP
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        if not current_mobile().is_app_installed(TARGET_APP.get('APP_PACKAGE')):
+            current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                         replace=True)
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_login_0057(self):
+        """ 覆盖安装"""
+        # 卸载和飞信
+        from settings.available_devices import TARGET_APP
+        current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                     replace=True)
+        Preconditions.make_already_in_message_page()
+
+    def tearDown_test_login_0057(self):
+        from settings.available_devices import TARGET_APP
+        Preconditions.select_mobile('Android-移动')
+        if current_mobile().is_app_installed(TARGET_APP.get('APP_PACKAGE')):
+            return
+
+        # 预防安装应用的时候发生异常，尝试恢复安装，（还不知道好不好使）
+        reinstall_try_time = 3
+        while reinstall_try_time > 0:
+            try:
+                current_mobile().remove_app(TARGET_APP.get('APP_PACKAGE'))
+                current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                             replace=True)
+                break
+            except:
+                reinstall_try_time -= 1
+                if reinstall_try_time == 0:
+                    import traceback
+                    traceback.print_exc()

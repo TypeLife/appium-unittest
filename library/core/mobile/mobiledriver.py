@@ -1282,9 +1282,18 @@ class MobileDriver(ABC):
             # TODO IOS平台待实现
             raise NotImplementedError('该接口目前只支持Android')
 
+    @TestLogger.log('应用是否已安装')
+    def is_app_installed(self, bundle_id):
+        """
+        app是否已安装
+        :param bundle_id: apk包名
+        :return:
+        """
+        return self.driver.is_app_installed(bundle_id)
+
     @TestLogger.log("卸载APP")
     def remove_app(self, package, **options):
-        self.driver.remove_app(package, **options)
+        return self.driver.remove_app(package, **options)
 
     @TestLogger.log('安装APP')
     def install_app(self,
