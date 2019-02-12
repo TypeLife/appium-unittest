@@ -425,8 +425,9 @@ class MsgGroupChatTest(TestCase):
         self.assertTrue(video_preview.play_video_btn_is_enabled())
         # 4、预览播放视频中途，点击左上角的返回按钮，是否可以返回到上一级页面
         video_preview.play_video()
-        video_preview.click_back()
+        video_preview.close_video()
         cpp.wait_for_page_load()
+        cpp.click_back()
         cpp.click_back()
         gcp.wait_for_page_load()
 
@@ -606,7 +607,8 @@ class MsgGroupChatTest(TestCase):
         letter = random.choice(letters)
         cpp.click_letter_index(letter)
         left_lets = cpp.get_left_letters()
-        self.assertIn(letter, left_lets)
+        if letter not in left_lets:
+            raise AssertionError("在名片详情页面，点击右侧的索引字母，索引字母定位搜索异常")
         cpp.click_back()
         gcp.wait_for_page_load()
 
@@ -1008,9 +1010,10 @@ class MsgGroupChatTest(TestCase):
             group_member.wait_for_page_load()
         # 4.点击群成员列表中的成员，是否可以跳转到个人profile页
         group_member.click_group_member()
-        group_member.wait_for_profile_page_load()
-        group_member.profile_back()
-        group_member.wait_for_page_load()
+        if not group_member.is_toast_exist("该联系人不可选择", 3):
+            group_member.wait_for_profile_page_load()
+            group_member.profile_back()
+            group_member.wait_for_page_load()
         # 5.在群成员列表上方的搜索框，通过英文（大、小写）、中文、等搜索条件，搜索出符合条件的结果
         names = group_member.get_all_group_member_names()
         group_member.search(names[0])
@@ -1071,12 +1074,14 @@ class MsgGroupChatTest(TestCase):
         names = contacts_page.get_contacts_name()
         contacts_page.select_one_member_by_name(names[0])
         flag = contacts_page.contacts_is_selected(names[0])
-        self.assertTrue(flag)
+        if not flag:
+            raise AssertionError("在联系人选择器页面，单击不可以选择联系人")
         # 3.在联系人选择器页面，点击是否可以取消联系人的选择状态
         contacts_page.select_one_member_by_name(names[0])
         time.sleep(1)
         flag2 = contacts_page.contacts_is_selected(names[0])
-        self.assertFalse(flag2)
+        if flag2:
+            raise AssertionError("在联系人选择器页面，单击不可以取消联系人的选择状态")
         contacts_page.click_back()
         group_set.click_back()
         gcp.wait_for_page_load()
@@ -1462,7 +1467,7 @@ class MsgGroupChatTest(TestCase):
         except:
             print("ok")
         else:
-            print("error")
+            raise AssertionError("修改群名片录入31个英文字符，代码可以实现，请确认是否可以手动录入31个英文字符！")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0076(self):
@@ -1509,7 +1514,7 @@ class MsgGroupChatTest(TestCase):
         except:
             print("ok")
         else:
-            print("error")
+            raise AssertionError("修改群名片录入11个汉字，代码可以实现，请确认是否可以手动录入11个汉字！")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0078(self):
@@ -1710,7 +1715,8 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
         flag = gcp.is_exist_undisturb()
-        self.assertTrue(flag)
+        if not flag:
+            raise AssertionError("在聊天会话页面，页面上方没有展示免打扰标志")
         gcp.click_back()
         sogp = SelectOneGroupPage()
         sogp.click_back()
@@ -1720,8 +1726,9 @@ class MsgGroupChatTest(TestCase):
         mess = MessagePage()
         mess.wait_for_page_load()
         group_name = Preconditions.get_group_chat_name()
-        flag = mess.is_exist_undisturb(group_name)
-        self.assertTrue(flag)
+        flag2 = mess.is_exist_undisturb(group_name)
+        if not flag2:
+            raise AssertionError("在消息列表，开启免打扰的聊天窗口上没有展示免打扰标志")
         # 回到群聊会话页面
         mess.click_add_icon()
         mess.click_group_chat()
