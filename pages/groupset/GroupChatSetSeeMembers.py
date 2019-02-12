@@ -98,7 +98,7 @@ class GroupChatSetSeeMembersPage(BasePage):
         return self
 
     @TestLogger.log()
-    def wait_for_invite_page_load(self, timeout=8, auto_accept_alerts=True):
+    def wait_for_invite_page_load(self, timeout=30, auto_accept_alerts=True):
         """等待邀请人员页面加载"""
         try:
             self.wait_until(
