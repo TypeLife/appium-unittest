@@ -363,3 +363,8 @@ class MessagePage(FooterPage):
     def get_top_news_name(self):
         """获取置顶群的名字"""
         return self.get_element(self.__class__.__locators['置顶群']).text
+
+    @TestLogger.log()
+    def click_element_by_text(self,text):
+        """点击指定元素"""
+        self.click_element((MobileBy.XPATH, '//*[@text="%s"]' % text))
