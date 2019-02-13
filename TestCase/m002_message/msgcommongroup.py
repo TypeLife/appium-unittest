@@ -26,7 +26,7 @@ from pages import PermissionListPage
 from pages import SelectContactsPage
 from pages import SelectLocalContactsPage
 from pages import SelectOneGroupPage
-from pages.GroupChatSet import GroupChatSetPage
+from pages import GroupChatSetPage
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -227,7 +227,12 @@ class Preconditions(object):
         chat.wait_for_page_load()
 
 class MsgCommonGroupTest(TestCase):
-    """消息->普通群 模块"""
+    """
+        模块：消息-普通群
+
+        文件位置：冒烟/冒烟测试用例-V20181225.01.xlsx
+        表格：消息-普通群
+    """
 
     @classmethod
     def setUpClass(cls):
@@ -236,18 +241,31 @@ class MsgCommonGroupTest(TestCase):
     def default_setUp(self):
         """确保每个用例运行前在群聊聊天会话页面"""
         Preconditions.select_mobile('Android-移动')
-        # scp = GroupChatPage()
-        # if scp.is_on_this_page():
-        #     current_mobile().hide_keyboard_if_display()
-        #     return
-        # else:
-        current_mobile().reset_app()
-        # current_mobile().connect_mobile()
-        Preconditions.enter_group_chat_page()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
 
     def default_tearDown(self):
         pass
         # current_mobile().disconnect_mobile()
+
+    @staticmethod
+    def setUp_test_msg_common_group_0001():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.enter_group_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0001(self):
@@ -272,6 +290,28 @@ class MsgCommonGroupTest(TestCase):
         except TimeoutException:
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
 
+    def tearDown_test_msg_common_group_0002(self):
+        #删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp=GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            #点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            #点击确认
+            gcsp.click_determine()
+            flag=gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            #点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            #判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+
+
+
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0003(self):
         """1.在输入框中输入一段文本，字符数小于5000
@@ -288,6 +328,26 @@ class MsgCommonGroupTest(TestCase):
             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
         except TimeoutException:
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+
+    def tearDown_test_msg_common_group_0003(self):
+        #删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp=GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            #点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            #点击确认
+            gcsp.click_determine()
+            flag=gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            #点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            #判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0004(self):
@@ -322,6 +382,26 @@ class MsgCommonGroupTest(TestCase):
         except TimeoutException:
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
 
+    def tearDown_test_msg_common_group_0005(self):
+        #删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp=GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            #点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            #点击确认
+            gcsp.click_determine()
+            flag=gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            #点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            #判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0006(self):
         """1.在当前聊天会话页面，在输入框中输入一段文本，字符数等于5000
@@ -338,6 +418,26 @@ class MsgCommonGroupTest(TestCase):
             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
         except TimeoutException:
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+
+    def tearDown_test_msg_common_group_0006(self):
+        #删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp=GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            #点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            #点击确认
+            gcsp.click_determine()
+            flag=gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            #点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            #判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0007(self):
@@ -364,6 +464,14 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(2)
         flag2 = gcp.is_toast_exist("粘贴")
         # self.assertTrue(flag2)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_common_group_0008(self):
+        """1、长按文本消息，是否会弹窗展示：功能菜单栏。
+        2、点击选择删除功能，删除成功后，聊天会话页面的消息是否会消失"""
+
+
+
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0019(self):
