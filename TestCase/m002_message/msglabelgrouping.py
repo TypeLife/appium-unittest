@@ -151,7 +151,11 @@ class Preconditions(object):
 
 
 class MsgLabelGroupingTest(TestCase):
-    """消息->标签分组 模块"""
+    """
+    模块：消息-标签分组
+    文件位置：冒烟/冒烟测试用例-V20181225.01.xlsx
+    表格：消息-标签分组文件、位置 + 消息-单聊视频_图片
+    """
 
     @classmethod
     def setUpClass(cls):

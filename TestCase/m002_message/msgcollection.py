@@ -170,7 +170,11 @@ class Preconditions(object):
 
 
 class MsgCollectionTest(TestCase):
-    """消息->收藏 模块"""
+    """
+    模块：消息-收藏
+    文件位置：冒烟/冒烟测试用例-V20181225.01.xlsx
+    表格：消息-收藏列表的文件、位置
+    """
 
     @classmethod
     def setUpClass(cls):

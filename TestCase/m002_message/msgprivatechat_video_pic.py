@@ -123,7 +123,11 @@ class Preconditions(object):
 
 
 class MsgPrivateChatVideoPicTest(TestCase):
-    """消息->单聊视频,图片 模块"""
+    """
+    模块：消息->单聊视频,图片
+    文件位置：冒烟/冒烟测试用例-V20181225.01.xlsx
+    表格：消息-单聊视频,图片
+    """
 
     @classmethod
     def setUpClass(cls):

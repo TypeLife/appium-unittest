@@ -183,7 +183,11 @@ class Preconditions(object):
 
 
 class MsgGroupChatTest(TestCase):
-    """消息->群聊 模块"""
+    """
+    模块：消息->群聊
+    文件位置：冒烟/冒烟测试用例-V20181225.01.xlsx
+    表格：消息-群聊
+    """
 
     @classmethod
     def setUpClass(cls):
