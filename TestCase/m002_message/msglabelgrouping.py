@@ -1071,3 +1071,88 @@ class MsgLabelGroupingTest(TestCase):
         map_flag = chat.is_text_present("地图")
         self.assertTrue(toast_flag or map_flag)
         chat.driver.back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0066(self):
+        """标签分组会话窗，不勾选相册内图片点击发送按钮"""
+        # 1、在标签分组会话窗，点击输入框左上方的相册图标
+        chat = LabelGroupingChatPage()
+        # 点击图片按钮
+        chat.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        # 2.不选择照片，直接点击发送按钮
+        flag = cpg.send_btn_is_enabled()
+        if flag:
+            raise AssertionError("未选择照片时，发送按钮可点击")
+        # 回到聊天回话页面
+        cpg.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0067(self):
+        """标签分组会话窗，勾选相册内一张图片发送"""
+        # 1、在标签分组会话窗，点击输入框左上方的相册图标
+        chat = LabelGroupingChatPage()
+        chat.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        # 2.选择一张照片，点击发送按钮
+        cpg.select_pic()
+        cpg.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0068(self):
+        """标签分组会话窗，预览相册内图片"""
+        # 1、在标签分组会话窗，点击输入框左上方的相册图标
+        chat = LabelGroupingChatPage()
+        chat.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        # 2.选择一张照片，点击左下角的预览按钮
+        cpg.select_pic()
+        cpg.click_preview()
+        cppp = ChatPicPreviewPage()
+        cppp.wait_for_page_load()
+        cppp.click_back()
+        cpg.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0069(self):
+        """标签分组会话窗，预览相册内图片，不勾选原图发送"""
+        # 1、在标签分组会话窗，点击输入框左上方的相册图标
+        chat = LabelGroupingChatPage()
+        chat.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        # 2.选择一张照片，点击左下角的预览按钮
+        cpg.select_pic()
+        cpg.click_preview()
+        cppp = ChatPicPreviewPage()
+        cppp.wait_for_page_load()
+        # 3.直接点击发送按钮
+        cppp.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0070(self):
+        """标签分组会话窗，预览相册数量与发送按钮数量一致"""
+        # 1、在标签分组会话窗，点击输入框左上方的相册图标
+        chat = LabelGroupingChatPage()
+        chat.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2.选择多张照片，点击左下角的预览按钮
+        cpp.select_pic(n=4)
+        cpp.click_preview()
+        pic_preview = ChatPicPreviewPage()
+        pic_preview.wait_for_page_load()
+        # 3.查看发送按钮数字
+        send_num = pic_preview.get_pic_send_num()
+        self.assertEqual(send_num, '4')
+        pic_preview.click_back()
+        cpp.click_back()
+        chat.wait_for_page_load()
+
