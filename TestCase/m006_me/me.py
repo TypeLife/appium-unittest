@@ -115,6 +115,25 @@ class Preconditions(object):
         current_mobile().press_home_key()
 
 
+class MeTest(TestCase):
+    """我"""
+
+    def setUp_test_me_0001(self):
+        """
+        1.网络正常
+        2.已登录客户端
+        3.当前在我页面
+        4.有群组
+        :return:
+        """
+        pass
+
+    @unittest.skip('TODO')
+    def test_me_0001(self):
+        """"""
+        self.assertEqual(1, 1)
+
+
 class MeMsgSettingTest(TestCase):
     """我-消息设置"""
 
