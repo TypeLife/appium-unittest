@@ -900,6 +900,7 @@ class MsgLabelGroupingTest(TestCase):
             local_file.click_send()
             # 2.撤回文件
             chat.recall_mess(".txt")
+            time.sleep(1)
             if chat.is_text_present("我知道了"):
                 chat.click_i_know()
         else:
