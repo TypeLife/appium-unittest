@@ -31,3 +31,11 @@ class MyQRCodePage(BasePage):
     @TestLogger.log('返回')
     def click_back(self):
         self.click_element(self.__locators['返回'])
+
+    @TestLogger.log('点击转发（分享）二维码')
+    def click_forward_qr_code(self):
+        self.click_element(self.__locators['com.chinasofti.rcs:id/qecode_share_btn'], default_timeout=15)
+
+    @TestLogger.log('点击下载（保存）二维码')
+    def click_save_qr_code(self):
+        self.click_element(self.__locators['com.chinasofti.rcs:id/qecode_save_btn'], default_timeout=15)

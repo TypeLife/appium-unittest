@@ -524,7 +524,7 @@ class MobileDriver(ABC):
             raise NoSuchElementException('找不到元素 {}'.format(locator))
 
     @TestLogger.log('点击文本（支持完全匹配和模糊匹配）')
-    def click_text(self, text, exact_match=False):
+    def click_text(self, text, exact_match=False, default_timeout=5, auto_accept_permission_alert=True):
         if self.get_platform() == 'ios':
             if exact_match:
                 _xpath = u'//*[@value="{}" or @label="{}"]'.format(text, text)
@@ -536,7 +536,7 @@ class MobileDriver(ABC):
                 _xpath = u'//*[@{}="{}"]'.format('text', text)
             else:
                 _xpath = u'//*[contains(@{},"{}")]'.format('text', text)
-            self.get_element((MobileBy.XPATH, _xpath)).click()
+            self.click_element((MobileBy.XPATH, _xpath), default_timeout, auto_accept_permission_alert)
 
     @TestLogger.log('输入文本')
     def input_text(self, locator, text, default_timeout=5):
