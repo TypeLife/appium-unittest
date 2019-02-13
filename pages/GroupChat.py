@@ -47,6 +47,7 @@ class GroupChatPage(BaseChatPage):
                   '复制': (MobileBy.XPATH, "//*[contains(@text, '复制')]"),
                   '我知道了': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_btn_ok'),
                   '勾': (MobileBy.ID, 'com.chinasofti.rcs:id/img_message_down_file'),
+                  '重发消息确定': (MobileBy.ID, '	com.chinasofti.rcs:id/btn_ok'),
                   }
 
     def is_exist_msg_videos(self):
@@ -185,3 +186,10 @@ class GroupChatPage(BaseChatPage):
     def is_exist_network(self):
         """是否存网络不可用"""
         return self.is_toast_exist("网络不可用，请检查网络设置")
+
+    @TestLogger.log()
+    def click_send_again(self):
+        """点击重新发送gif"""
+        self.click_element(self.__class__.__locators["发送失败标识"])
+        self.click_element(self.__class__.__locators["重发消息确定"])
+
