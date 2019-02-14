@@ -1056,6 +1056,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 返回会话窗口
         location_page.click_back()
         gcp.wait_for_page_load()
+        gcp.click_more()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0044(self):
@@ -1075,6 +1076,7 @@ class MsgGroupChatFileLocationTest(TestCase):
             raise AssertionError("位置页面发送按钮不可点击")
         location_page.click_send()
         gcp.wait_for_page_load()
+        gcp.click_more()
         if not gcp.is_address_text_present():
             raise AssertionError("位置信息发送不成功")
 
@@ -1098,10 +1100,11 @@ class MsgGroupChatFileLocationTest(TestCase):
             raise AssertionError("位置页面发送按钮不可点击")
         location_page.click_send()
         gcp.wait_for_page_load()
+        gcp.click_more()
         if not gcp.is_address_text_present():
             raise AssertionError("位置信息发送不成功")
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0046(self):
         """1、在当前会话窗口点击位置
             2、滑动500米内的位置列表，选择其他位置
@@ -1120,6 +1123,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 点击返回
         location_page.click_back()
         gcp.wait_for_page_load()
+        gcp.click_more()
 
     def tearDown_test_msg_group_chat_file_location_0046(self):
         # 删除聊天记录
@@ -1163,6 +1167,7 @@ class MsgGroupChatFileLocationTest(TestCase):
             raise AssertionError("位置页面发送按钮不可点击")
         location_page.click_send()
         gcp.wait_for_page_load()
+        gcp.click_more()
         if not gcp.is_address_text_present():
             raise AssertionError("位置信息发送不成功")
 

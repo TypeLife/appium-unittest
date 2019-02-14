@@ -12,7 +12,7 @@ class ChatMorePage(BasePage):
                   'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
                   'android:id/content': (MobileBy.ID, 'android:id/content'),
                   'com.chinasofti.rcs:id/pop_10g_window_drop_view': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/pop_10g_window_drop_view'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/pop_10g_window_drop_view'),
                   'com.chinasofti.rcs:id/id_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/id_toolbar'),
                   'com.chinasofti.rcs:id/back': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
                   'com.chinasofti.rcs:id/back_arrow': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
@@ -23,12 +23,12 @@ class ChatMorePage(BasePage):
                   'com.chinasofti.rcs:id/view_line': (MobileBy.ID, 'com.chinasofti.rcs:id/view_line'),
                   'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
                   'com.chinasofti.rcs:id/message_editor_layout': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/message_editor_layout'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/message_editor_layout'),
                   'com.chinasofti.rcs:id/rv_message_chat': (MobileBy.ID, 'com.chinasofti.rcs:id/rv_message_chat'),
                   'com.chinasofti.rcs:id/imgae_fl': (MobileBy.ID, 'com.chinasofti.rcs:id/imgae_fl'),
                   'com.chinasofti.rcs:id/layout_loading': (MobileBy.ID, 'com.chinasofti.rcs:id/layout_loading'),
                   'com.chinasofti.rcs:id/imageview_msg_image': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_image'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_image'),
                   'com.chinasofti.rcs:id/svd_head': (MobileBy.ID, 'com.chinasofti.rcs:id/svd_head'),
                   'com.chinasofti.rcs:id/iv_bkg': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_bkg'),
                   'com.chinasofti.rcs:id/input_and_menu': (MobileBy.ID, 'com.chinasofti.rcs:id/input_and_menu'),
@@ -47,7 +47,7 @@ class ChatMorePage(BasePage):
                   'com.chinasofti.rcs:id/ib_gif': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_gif'),
                   '关闭更多': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
                   'com.chinasofti.rcs:id/input_divider_inside': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/input_divider_inside'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/input_divider_inside'),
                   'com.chinasofti.rcs:id/input_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/input_layout'),
                   'com.chinasofti.rcs:id/fl_edit_panel': (MobileBy.ID, 'com.chinasofti.rcs:id/fl_edit_panel'),
                   '说点什么...': (MobileBy.ID, 'com.chinasofti.rcs:id/et_message'),
@@ -68,7 +68,7 @@ class ChatMorePage(BasePage):
     @TestLogger.log()
     def click_location(self):
         """点击位置"""
-        self.click_element(self.__class__.__locators["位置"])
+        self.click_element(self.__class__.__locators["位置"], default_timeout=8)
 
     @TestLogger.log()
     def click_red_packet(self):
@@ -79,4 +79,3 @@ class ChatMorePage(BasePage):
     def close_more(self):
         """关闭更多的隐藏图标（文件，群短信，位置，红包）"""
         self.click_element(self.__class__.__locators["关闭更多"])
-

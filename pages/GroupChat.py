@@ -135,7 +135,7 @@ class GroupChatPage(BaseChatPage):
     @TestLogger.log()
     def click_more(self):
         """点击更多富媒体按钮"""
-        self.click_element(self.__class__.__locators["更多"])
+        self.click_element(self.__class__.__locators["更多"], default_timeout=8)
 
     @TestLogger.log()
     def press_file_to_do(self, file, text):
@@ -192,4 +192,3 @@ class GroupChatPage(BaseChatPage):
         """点击重新发送gif"""
         self.click_element(self.__class__.__locators["发送失败标识"])
         self.click_element(self.__class__.__locators["重发消息确定"])
-
