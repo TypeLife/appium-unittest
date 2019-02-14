@@ -22,7 +22,7 @@ from pages import PermissionListPage
 from pages import SelectContactsPage
 from pages import SelectLocalContactsPage
 from pages import SelectOneGroupPage
-from pages.GroupChatSet import GroupChatSetPage
+from pages import GroupChatSetPage
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -238,17 +238,29 @@ class MsgGroupChatFileLocationTest(TestCase):
     def default_setUp(self):
         """确保每个用例运行前在群聊聊天会话页面"""
         Preconditions.select_mobile('Android-移动')
-        # scp = GroupChatPage()
-        # if scp.is_on_this_page():
-        #     current_mobile().hide_keyboard_if_display()
-        #     return
-        # else:
-        current_mobile().reset_app()
-        Preconditions.enter_group_chat_page()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
 
     def default_tearDown(self):
         pass
         # current_mobile().disconnect_mobile()
+
+    @staticmethod
+    def setUp_test_msg_group_chat_file_location_0001():
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.enter_group_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0001(self):
@@ -281,6 +293,31 @@ class MsgGroupChatFileLocationTest(TestCase):
         3、选择任意文件，点击发送按钮"""
         # 选择html文件发送
         Preconditions.public_send_file('.html')
+
+    def tearDown_test_msg_group_chat_file_location_0002(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0003(self):
@@ -339,6 +376,31 @@ class MsgGroupChatFileLocationTest(TestCase):
         gcp.wait_for_page_load()
         raise AssertionError("There is no video")
 
+    def tearDown_test_msg_group_chat_file_location_0004(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
+
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0005(self):
         """1、在当前聊天会话页面，点击更多富媒体的文件按钮
@@ -387,6 +449,31 @@ class MsgGroupChatFileLocationTest(TestCase):
             gcp.wait_for_page_load()
         else:
             raise AssertionError("There is no pic")
+
+    def tearDown_test_msg_group_chat_file_location_0006(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0007(self):
@@ -437,6 +524,31 @@ class MsgGroupChatFileLocationTest(TestCase):
         else:
             raise AssertionError("There is no music")
 
+    def tearDown_test_msg_group_chat_file_location_0008(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
+
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0009(self):
         """1、在当前文件列表页面长按任意文件
@@ -453,6 +565,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 点击查看聊天内容
         gcsp.click_search_chat_record()
         search = FindChatRecordPage()
+        search.wait_for_page_load()
         # 点击文件
         search.click_file()
         chat_file = ChatFilePage()
@@ -473,8 +586,37 @@ class MsgGroupChatFileLocationTest(TestCase):
             sog.click_sure_forward()
             if not sog.catch_message_in_page("已转发"):
                 raise AssertionError("转发失败")
+            chat_file.click_back()
+            search.click_back()
+            gcsp.click_back()
+            time.sleep(1)
         else:
             raise AssertionError("没有群可转发，请创建群")
+
+    def tearDown_test_msg_group_chat_file_location_0009(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0010(self):
@@ -511,8 +653,39 @@ class MsgGroupChatFileLocationTest(TestCase):
             sog.select_one_group_by_name(group_names[0])
             sog.click_cancel_forward()
             sog.wait_for_page_load()
+            sog.click_back()
+            sc.click_back()
+            chat_file.click_back()
+            search.click_back()
+            gcsp.click_back()
+            time.sleep(1)
         else:
             raise AssertionError("没有群可转发，请创建群")
+
+    def tearDown_test_msg_group_chat_file_location_0010(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0013(self):
@@ -542,12 +715,41 @@ class MsgGroupChatFileLocationTest(TestCase):
         sc.select_local_contacts()
         time.sleep(2)
         # 选择一个联系人
-        sc.click_one_local_contacts()
+        sc.click_one_contact("和飞信电话")
         # 点击确认转发
         sc.click_sure_forward()
         # 验证转发成功
         if not sc.catch_message_in_page("已转发"):
             raise AssertionError("转发失败")
+        chat_file.click_back()
+        search.click_back()
+        gcsp.click_back()
+        time.sleep(1)
+
+    def tearDown_test_msg_group_chat_file_location_0013(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0014(self):
@@ -581,6 +783,37 @@ class MsgGroupChatFileLocationTest(TestCase):
         sc.click_cancel_forward()
         # 确保选择联系人页面加载
         sc.wait_for_page_local_contact_load()
+        sc.click_back()
+        sc.click_back()
+        chat_file.click_back()
+        search.click_back()
+        gcsp.click_back()
+        time.sleep(1)
+
+    def tearDown_test_msg_group_chat_file_location_0014(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0017(self):
@@ -605,6 +838,43 @@ class MsgGroupChatFileLocationTest(TestCase):
         chat_file.collection_file(".html")
         if not chat_file.is_toast_exist("已收藏"):
             raise AssertionError("收藏验证失败")
+        chat_file.click_back()
+        search.click_back()
+        gcsp.click_back()
+        time.sleep(1)
+
+    def tearDown_test_msg_group_chat_file_location_0017(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
+
+    @staticmethod
+    def setUp_test_msg_group_chat_file_location_0018():
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.enter_group_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0018(self):
@@ -634,6 +904,28 @@ class MsgGroupChatFileLocationTest(TestCase):
         chat_file.click_back()
         search.click_back()
         gcsp.click_back()
+        # 返回消息页面过程中删除聊天记录
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(gcp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
+
         gcp.click_back()
         sog = SelectOneGroupPage()
         sog.click_back()
@@ -724,6 +1016,31 @@ class MsgGroupChatFileLocationTest(TestCase):
         if gcp.is_text_present("撤回"):
             raise AssertionError("超过十分钟可以撤回")
 
+    def tearDown_test_msg_group_chat_file_location_0042(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
+
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0043(self):
         """1、在当前会话窗口点击位置
@@ -746,6 +1063,7 @@ class MsgGroupChatFileLocationTest(TestCase):
             2、点击右上角的发送按钮"""
         gcp = GroupChatPage()
         gcp.click_more()
+        time.sleep(1)
         more_page = ChatMorePage()
         more_page.click_location()
         # 等待位置页面加载
@@ -783,13 +1101,14 @@ class MsgGroupChatFileLocationTest(TestCase):
         if not gcp.is_address_text_present():
             raise AssertionError("位置信息发送不成功")
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','DEBUG_YYX')
     def test_msg_group_chat_file_location_0046(self):
         """1、在当前会话窗口点击位置
             2、滑动500米内的位置列表，选择其他位置
             3、点击左上角的返回按钮"""
         gcp = GroupChatPage()
         gcp.click_more()
+        time.sleep(1)
         more_page = ChatMorePage()
         more_page.click_location()
         # 等待位置页面加载
@@ -802,11 +1121,37 @@ class MsgGroupChatFileLocationTest(TestCase):
         location_page.click_back()
         gcp.wait_for_page_load()
 
+    def tearDown_test_msg_group_chat_file_location_0046(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
+
     @staticmethod
     def public_send_location():
         """发送位置信息"""
         gcp = GroupChatPage()
         gcp.click_more()
+        time.sleep(1)
         more_page = ChatMorePage()
         more_page.click_location()
         # 等待位置页面加载
@@ -836,13 +1181,39 @@ class MsgGroupChatFileLocationTest(TestCase):
         slcp.wait_for_page_load()
         names = slcp.get_contacts_name()
         if names:
-            slcp.select_one_member_by_name(names[0])
+            # slcp.select_one_member_by_name(names[0])
+            scp.click_one_contact("和飞信电话")
             # 3、点击确定
             slcp.click_sure_forward()
             flag = slcp.is_toast_exist("已转发")
             self.assertTrue(flag)
         else:
             raise AssertionError("WARN: There is no linkman.")
+
+    def tearDown_test_msg_group_chat_file_location_0047(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0049(self):
@@ -867,6 +1238,31 @@ class MsgGroupChatFileLocationTest(TestCase):
         else:
             raise AssertionError("WARN: There is no group.")
 
+    def tearDown_test_msg_group_chat_file_location_0049(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
+
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0050(self):
         """1、在当前页面点击位置消息体
@@ -885,6 +1281,31 @@ class MsgGroupChatFileLocationTest(TestCase):
         map_flag = gcp.is_text_present("地图")
         self.assertTrue(map_flag)
 
+    def tearDown_test_msg_group_chat_file_location_0050(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
+
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0051(self):
         """1、在当前会话窗口点击自己发送格式为doc的文件"""
@@ -896,6 +1317,34 @@ class MsgGroupChatFileLocationTest(TestCase):
         gcp.open_file_in_chat_page(".doc")
         # 等待文件页面进行加载
         gcp.wait_for_open_file()
+        time.sleep(1)
+        gcp.click_back_in_open_file_page()
+        time.sleep(1)
+
+    def tearDown_test_msg_group_chat_file_location_0051(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0052(self):
@@ -908,6 +1357,34 @@ class MsgGroupChatFileLocationTest(TestCase):
         gcp.open_file_in_chat_page(".docx")
         # 等待文件页面进行加载
         gcp.wait_for_open_file()
+        time.sleep(1)
+        gcp.click_back_in_open_file_page()
+        time.sleep(1)
+
+    def tearDown_test_msg_group_chat_file_location_0052(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0053(self):
@@ -920,6 +1397,34 @@ class MsgGroupChatFileLocationTest(TestCase):
         gcp.open_file_in_chat_page(".ppt")
         # 等待文件页面进行加载
         gcp.wait_for_open_file()
+        time.sleep(1)
+        gcp.click_back_in_open_file_page()
+        time.sleep(1)
+
+    def tearDown_test_msg_group_chat_file_location_0053(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0054(self):
@@ -932,6 +1437,34 @@ class MsgGroupChatFileLocationTest(TestCase):
         gcp.open_file_in_chat_page(".pptx")
         # 等待文件页面进行加载
         gcp.wait_for_open_file()
+        time.sleep(1)
+        gcp.click_back_in_open_file_page()
+        time.sleep(1)
+
+    def tearDown_test_msg_group_chat_file_location_0054(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0055(self):
@@ -944,6 +1477,34 @@ class MsgGroupChatFileLocationTest(TestCase):
         gcp.open_file_in_chat_page(".pdf")
         # 等待文件页面进行加载
         gcp.wait_for_open_file()
+        time.sleep(1)
+        gcp.click_back_in_open_file_page()
+        time.sleep(1)
+
+    def tearDown_test_msg_group_chat_file_location_0055(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0056(self):
@@ -956,6 +1517,34 @@ class MsgGroupChatFileLocationTest(TestCase):
         gcp.open_file_in_chat_page(".xls")
         # 等待文件页面进行加载
         gcp.wait_for_open_file()
+        time.sleep(1)
+        gcp.click_back_in_open_file_page()
+        time.sleep(1)
+
+    def tearDown_test_msg_group_chat_file_location_0056(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0057(self):
@@ -968,6 +1557,34 @@ class MsgGroupChatFileLocationTest(TestCase):
         gcp.open_file_in_chat_page(".xlsx")
         # 等待文件页面进行加载
         gcp.wait_for_open_file()
+        time.sleep(1)
+        gcp.click_back_in_open_file_page()
+        time.sleep(1)
+
+    def tearDown_test_msg_group_chat_file_location_0057(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0058(self):
@@ -980,3 +1597,31 @@ class MsgGroupChatFileLocationTest(TestCase):
         gcp.open_file_in_chat_page(".txt")
         # 等待文件页面进行加载
         gcp.wait_for_open_file()
+        time.sleep(1)
+        gcp.click_back_in_open_file_page()
+        time.sleep(1)
+
+    def tearDown_test_msg_group_chat_file_location_0058(self):
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            flag = gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面,无法删除记录")
+            except AssertionError as e:
+                print(e)
