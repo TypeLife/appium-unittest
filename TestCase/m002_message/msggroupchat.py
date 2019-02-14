@@ -1113,10 +1113,9 @@ class MsgGroupChatTest(TestCase):
         contacts_page = SelectLocalContactsPage()
         contacts_page.wait_for_page_load()
         # 2.在联系人选择页面，勾选人数超出剩余可勾选人数，是否会提示
-        names = names[0:500]
         for name in names:
             contacts_page.search_and_select_one_member_by_name(name)
-        flag = contacts_page.is_toast_exist("最多只能选择500人")
+        flag = contacts_page.is_toast_exist("最多只能选择499人")
         self.assertTrue(flag)
         contacts_page.click_sure()
         gcp = GroupChatPage()
