@@ -310,6 +310,11 @@ class MsgCommonGroupTest(TestCase):
             time.sleep(2)
             #判断是否返回到群聊页面
             self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
 
 
 
@@ -349,6 +354,11 @@ class MsgCommonGroupTest(TestCase):
             time.sleep(2)
             #判断是否返回到群聊页面
             self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0004(self):
@@ -402,6 +412,11 @@ class MsgCommonGroupTest(TestCase):
             time.sleep(2)
             #判断是否返回到群聊页面
             self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0006(self):
@@ -439,6 +454,11 @@ class MsgCommonGroupTest(TestCase):
             time.sleep(2)
             #判断是否返回到群聊页面
             self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0007(self):
@@ -485,6 +505,11 @@ class MsgCommonGroupTest(TestCase):
             time.sleep(2)
             #判断是否返回到群聊页面
             self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0008(self):
