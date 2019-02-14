@@ -221,9 +221,15 @@ class Preconditions(object):
 
 
 class MsgGroupChatvedioTest(TestCase):
-    """消息->群聊>图片&视频 模块"""
-    """前置条件需要修改创建一个群找不到"""
+    """
+    模块：消息->群聊>图片&视频
 
+    文件位置：冒烟/冒烟测试用例-V20181225.01.xlsx
+    表格：消息-群聊图片&视频
+
+    """
+
+    """前置条件需要修改创建一个群找不到"""
     @classmethod
     def setUpClass(cls):
 
@@ -261,23 +267,17 @@ class MsgGroupChatvedioTest(TestCase):
     def default_setUp(self):
         """确保每个用例运行前在群聊聊天会话页面"""
         Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
         scp = GroupChatPage()
         if scp.is_on_this_page():
             current_mobile().hide_keyboard_if_display()
             return
         else:
-            try:
-                Preconditions.select_mobile('Android-移动')
-                Preconditions.enter_group_chat_page(reset=True)
-                # current_mobile().terminate_app('com.chinasofti.rcs')
-                # Preconditions.enter_group_chat_page()
-            except Exception:
-                try:
-                    Preconditions.select_mobile('Android-移动')
-                    Preconditions.enter_group_chat_page(reset=True)
-                except Exception:
-                    Preconditions.select_mobile('Android-移动')
-                    Preconditions.enter_group_chat_page(reset=True)
+            current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
 
     def default_tearDown(self):
         pass
@@ -297,6 +297,8 @@ class MsgGroupChatvedioTest(TestCase):
         # 4.判断发送按钮是否能点击
         flg = cpg.send_btn_is_enabled()
         self.assertEquals(flg, False)
+        # 5.点击返回
+        cpg.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0002(self):
@@ -333,6 +335,9 @@ class MsgGroupChatvedioTest(TestCase):
         cpp.wait_for_page_load()
         # 5. 校验照片是否可以预览
         self.assertIsNotNone(cpp.get_pic_preview_info())
+        # 6.点击返回
+        cpp.click_back()
+        cpg.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0004(self):
@@ -374,6 +379,8 @@ class MsgGroupChatvedioTest(TestCase):
         ppi = cpp.get_pic_preview_num()
         ppn = cpp.get_pic_send_num()
         self.assertEquals(ppi, ppn)
+        cpp.click_back()
+        cpg.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0006(self):
@@ -571,6 +578,9 @@ class MsgGroupChatvedioTest(TestCase):
         time.sleep(1)
         cpe.click_picture_cancel()
         cpe.click_picture_cancel()
+        # 6.点击返回
+        cpp.click_back()
+        cpg.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0011(self):
@@ -625,13 +635,16 @@ class MsgGroupChatvedioTest(TestCase):
         # 3.进入相片页面,选择一张相片
         cpg = ChatPicPage()
         cpg.wait_for_page_load()
-        cpg.select_pic_fk()
+        cpg.select_pic_fk(n=1)
         # 4.点击点击打开,校验格式
         cpg.click_pic_preview()
         cpp = ChatPicPreviewPage()
         cpp.wait_for_page_load()
         flag = cpp.get_pic_preview_info()
         self.assertIsNotNone(re.match(r'预览\(\d+/\d+\)', flag))
+        # 5.点击返回
+        cpp.click_back()
+        cpg.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0013(self):
@@ -652,6 +665,9 @@ class MsgGroupChatvedioTest(TestCase):
         cpp.click_edit()
         fla = cpp.edit_btn_is_toast()
         self.assertEqual(fla, True)
+        # 5.点击返回
+        cpp.click_back()
+        cpg.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0014(self):
@@ -660,6 +676,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcp = GroupChatPage()
         gcp.is_on_this_page()
         # 2.点击输入框左上方的相册图标
+        time.sleep(1)
         gcp.click_picture()
         # 3.进入相片页面,选择9张相片发送
         cpg = ChatPicPage()
@@ -687,6 +704,8 @@ class MsgGroupChatvedioTest(TestCase):
         self.assertEqual(flg1, True)
         flg2 = cpg.get_pic_send_nums()
         self.assertEqual(flg2, '9')
+        # 4.点击返回
+        cpg.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0016(self):
@@ -856,7 +875,6 @@ class MsgGroupChatvedioTest(TestCase):
         time.sleep(2)
         # 3.校验是否在消息聊天页面，是否提示已删除成功
         gcp.is_on_this_page()
-        self.assertEquals(gcp.is_exist_msg_image(), False)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0032(self):
@@ -1064,6 +1082,7 @@ class MsgGroupChatvedioTest(TestCase):
         # 3.校验是否有gif图片出现
         gcp.hide_keyboard()
         gcp.wait_for_gif_ele_load()
+        gcp.click_cancel_gif()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_video_0061(self):
@@ -1078,28 +1097,97 @@ class MsgGroupChatvedioTest(TestCase):
         gcp.wait_for_gif_ele_load()
         gcp.send_gif()
         self.assertEquals(gcp.is_send_gif(), True)
+        gcp.click_cancel_gif()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_video_0062(self):
+        """在群聊会话窗，断网情况下发送表情搜搜"""
+        # 1.检验是否在当前聊天会话页
+        gcp = GroupChatPage()
+        gcp.is_on_this_page()
+        # 2.设置手机网络断开
+        gcp.set_network_status(0)
+        # 3.点击gif图片
+        gcp.click_gif()
+        # 4.校验网络不可用
+        self.assertEquals(gcp.is_exist_network(), True)
+        # 5恢复网络
+        gcp.set_network_status(6)
+        gcp.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_video_0063(self):
+        """在群聊会话窗，搜索数字关键字选择发送趣图"""
+        # 1.检验是否在当前聊天会话页
+        gcp = GroupChatPage()
+        gcp.is_on_this_page()
+        # 2.点击gif图片
+        gcp.click_gif()
+        gcp.input_gif(2)
+        gcp.wait_for_gif_ele_load()
+        gcp.send_gif()
+        self.assertEquals(gcp.is_send_gif(), True)
+        gcp.click_cancel_gif()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_video_0064(self):
+        """在群聊会话窗，搜索特殊字符关键字选择发送趣图"""
+        # 1.检验是否在当前聊天会话页
+        gcp = GroupChatPage()
+        gcp.is_on_this_page()
+        # 2.点击gif图片
+        gcp.click_gif()
+        gcp.input_gif("?")
+        gcp.wait_for_gif_ele_load()
+        gcp.send_gif()
+        self.assertEquals(gcp.is_send_gif(), True)
+        gcp.click_cancel_gif()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_video_0065(self):
+        """在群聊会话窗，搜索无结果的趣图"""
+        # 1.检验是否在当前聊天会话页
+        gcp = GroupChatPage()
+        gcp.is_on_this_page()
+        # 2.点击gif图片
+        gcp.click_gif()
+        gcp.input_gif("3")
+        self.assertEquals(gcp.is_gif_exist_toast(), True)
+        gcp.click_cancel_gif()
+        gcp.edit_clear("3")
 
     # @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
-    # def test_msg_group_chat_video_0062(self):
-    #     """在群聊会话窗，断网情况下发送表情搜搜"""
+    # def test_msg_group_chat_video_0068(self):
+    #     """在群聊会话窗，趣图发送失败后出现重新发送按钮"""
     #     # 1.检验是否在当前聊天会话页
     #     gcp = GroupChatPage()
     #     gcp.is_on_this_page()
-    #     # 2.设置手机网络断开
+    #     # 2.点击gif图片,输入关键字搜索gif图片
+    #     gcp.click_gif()
+    #     gcp.input_gif("2")
+    #     gcp.wait_for_gif_ele_load()
+    #     # 3.断掉网络，点击发送
     #     gcp.set_network_status(0)
-    #     # 3.点击gif图片
-    #     gcp.click_gif()
-    #     # 4.校验网络不可用
-    #     self.assertEquals(gcp.is_exist_network(), True)
-    #     # 5恢复网络
+    #     gcp.send_gif()
+    #     # 4.检验发送失败的标示
+    #     self.assertEquals(gcp.is_send_sucess(), False)
+    #     # 5.重新连接网络，再发
     #     gcp.set_network_status(6)
-    #     gcp.wait_for_page_load()
+    #     gcp.click_send_again()
 
-    # @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
-    # def test_msg_group_chat_video_0063(self):
-    #     """在群聊会话窗，搜索数字关键字选择发送趣图"""
-    #     # 1.检验是否在当前聊天会话页
-    #     gcp = GroupChatPage()
-    #     gcp.is_on_this_page()
-    #     # 2.点击gif图片
-    #     gcp.click_gif()
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_video_0069(self):
+        """在群聊会话窗，关闭GIF搜索框"""
+        # 1.检验是否在当前聊天会话页
+        gcp = GroupChatPage()
+        gcp.is_on_this_page()
+        # 2.点击gif图片
+        gcp.click_gif()
+        gcp.wait_for_gif_ele_load()
+        # 3.关闭gif图片，校验是否已关闭
+        gcp.click_cancel_gif()
+        self.assertEquals(gcp.is_exist_gif_ele(), False)
+
+
+
+

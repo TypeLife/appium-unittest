@@ -24,6 +24,7 @@ class ChatPicPage(BasePage):
                   '列表容器': (MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView_gallery'),
                   'com.chinasofti.rcs:id/rl_img': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_img'),
                   '预览播放视频按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_video_icon'),
+                  '播放视频按钮预览': (MobileBy.ID, 'com.chinasofti.rcs:id/pv_item'),
                   'com.chinasofti.rcs:id/imageview_video_start_background': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/imageview_video_start_background'),
                   'com.chinasofti.rcs:id/imageview_video_start': (
@@ -227,7 +228,7 @@ class ChatPicPage(BasePage):
     @TestLogger.log()
     def pre_video_btn_is_enabled(self):
         """获取预览播放视频按钮按钮状态是否可点击"""
-        return self._is_enabled(self.__class__.__locators["预览播放视频按钮"])
+        return self._is_enabled(self.__class__.__locators["播放视频按钮预览"])
 
     @TestLogger.log()
     def click_back_back(self):

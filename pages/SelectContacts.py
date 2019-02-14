@@ -152,4 +152,33 @@ class SelectContactsPage(BasePage):
     def catch_message_in_page(self,text):
         return self.is_toast_exist(text)
 
+    @TestLogger.log()
+    def find_element_by_swipe(self, locator, times=10):
+        """找不到元素就滑动"""
+        if self._is_element_present(locator):
+            return self.get_element(locator)
+        else:
+            c = 0
+            while c < times:
+                self.page_up()
+                if self._is_element_present(locator):
+                    return self.get_element(locator)
+                c += 1
+            return None
+
+    @TestLogger.log("下一页")
+    def page_up(self):
+        """向上滑动一页"""
+        self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+
+    @TestLogger.log()
+    def click_one_contact(self,contactName):
+        """选择特定联系人"""
+        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[@text="%s"]' % contactName))
+        if el:
+            el.click()
+            return el
+        else:
+            print("本地联系人中无%s ，请添加此联系人再操作" % contactName)
+
 
