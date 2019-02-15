@@ -44,7 +44,7 @@ class GroupChatSetSeeMembersPage(BasePage):
                   '邀请人员名字': (MobileBy.ID,  'com.chinasofti.rcs:id/phone'),
                   # 成员简介页 'com.cmicc.module_aboutme.ui.activity.UserProfileShowActivity'
                   'profile返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
-                  'profile返回2': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_smart_call_detail_back'),
+                  'profile返回2': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_back'),
                   '个人名字': (MobileBy.ID, 'com.chinasofti.rcs:id/profile_name'),
                   '电话': (MobileBy.XPATH,  '//*[@text ="电话"]'),
                   '公司': (MobileBy.XPATH, '//*[@text ="公司"]'),

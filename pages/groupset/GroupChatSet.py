@@ -51,6 +51,7 @@ class GroupChatSetPage(BasePage):
                   '清空聊天记录': (MobileBy.ID, 'com.chinasofti.rcs:id/left_empty_chat_tv'),
                   '删除并退出': (MobileBy.ID, 'com.chinasofti.rcs:id/delete_and_exit'),
                   "确认": (MobileBy.XPATH, '//*[@text ="确认"]'),
+                  "确定": (MobileBy.XPATH, '//*[@text ="确定"]'),
                   "取消": (MobileBy.XPATH, '//*[@text ="取消"]')
                   }
 
@@ -232,3 +233,13 @@ class GroupChatSetPage(BasePage):
             condition=lambda d: self.get_element(self.__locators['群聊设置'])
         )
         self.swipe_by_direction(self.__locators['菜单区域'], 'up')
+
+    @TestLogger.log()
+    def click_determine(self):
+        """点击确定"""
+        self.click_element(self.__locators['确定'])
+
+    @TestLogger.log()
+    def click_search_chat_record(self):
+        """点击 查找聊天内容"""
+        self.click_element(self.__class__.__locators['查找聊天内容'])

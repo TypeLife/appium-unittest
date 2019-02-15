@@ -236,6 +236,16 @@ class MobileDriver(ABC):
     def reset_app(self):
         self.driver.reset()
 
+    @TestLogger.log('获取屏幕截图')
+    def get_screenshot_as_png(self):
+        """
+        Gets the screenshot of the current window as a binary data.
+
+        :Usage:
+            driver.get_screenshot_as_png()
+        """
+        return self.driver.get_screenshot_as_png()
+
     @TestLogger.log('点按手机Home键')
     def press_home_key(self):
         """模拟手机HOME键"""
@@ -298,6 +308,7 @@ class MobileDriver(ABC):
             return result[0]
         raise Exception("手机收不到验证码")
 
+    @TestLogger.log('等待')
     def wait_until(
             self,
             condition,
@@ -310,6 +321,20 @@ class MobileDriver(ABC):
         # if callable(unexpected):
         #     condition = self._error_listener(unexpected, *args, **kwargs)(condition)
         return wait.until(condition)
+
+    @TestLogger.log('等待')
+    def wait_until_not(
+            self,
+            condition,
+            timeout=8,
+            auto_accept_permission_alert=True
+    ):
+        wait = WebDriverWait(self.driver, timeout)
+        if auto_accept_permission_alert:
+            condition = self._auto_click_permission_alert_wrapper(condition)
+        # if callable(unexpected):
+        #     condition = self._error_listener(unexpected, *args, **kwargs)(condition)
+        return wait.until_not(condition)
 
     @staticmethod
     def _error_listener(error_determine_func, *arguments, **keyword_args):
@@ -524,7 +549,7 @@ class MobileDriver(ABC):
             raise NoSuchElementException('找不到元素 {}'.format(locator))
 
     @TestLogger.log('点击文本（支持完全匹配和模糊匹配）')
-    def click_text(self, text, exact_match=False):
+    def click_text(self, text, exact_match=False, default_timeout=5, auto_accept_permission_alert=True):
         if self.get_platform() == 'ios':
             if exact_match:
                 _xpath = u'//*[@value="{}" or @label="{}"]'.format(text, text)
@@ -536,7 +561,7 @@ class MobileDriver(ABC):
                 _xpath = u'//*[@{}="{}"]'.format('text', text)
             else:
                 _xpath = u'//*[contains(@{},"{}")]'.format('text', text)
-            self.get_element((MobileBy.XPATH, _xpath)).click()
+            self.click_element((MobileBy.XPATH, _xpath), default_timeout, auto_accept_permission_alert)
 
     @TestLogger.log('输入文本')
     def input_text(self, locator, text, default_timeout=5):
