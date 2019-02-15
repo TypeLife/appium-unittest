@@ -2,6 +2,7 @@ from appium.webdriver.common.mobileby import MobileBy
 import time
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
+import random
 
 
 class ChatPicEditPage(BasePage):
@@ -51,8 +52,10 @@ class ChatPicEditPage(BasePage):
     @TestLogger.log()
     def do_doodle(self):
         """涂鸦操作"""
-        self.swipe_by_percent_on_screen(40, 45, 60, 45, 800)
-        self.swipe_by_percent_on_screen(30, 55, 70, 55, 800)
+        a = random.randint(1, 20)
+        self.swipe_by_percent_on_screen(20 + a, 60 + a, 40 + a, 30 + a, 700)
+        self.swipe_by_percent_on_screen(60 + a, 60 + a, 40 + a, 30 + a, 700)
+        self.swipe_by_percent_on_screen(20 + a, 60 + a, 60 + a, 60 + a, 700)
 
     @TestLogger.log()
     def click_mosaic(self):
