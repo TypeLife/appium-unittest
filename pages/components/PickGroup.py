@@ -24,20 +24,15 @@ class PickGroupPage(BasePage):
         'A': ('xpath',
               '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[1]'),
         'com.chinasofti.rcs:id/contact_image': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_image'),
-        'agroup3465': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         'C': ('xpath',
               '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[2]'),
         'chargourp3465': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         'G': ('xpath',
               '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[3]'),
-        '给个红包1': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
+        '群名': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         'com.chinasofti.rcs:id/contact_index': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_index'),
-        '给个红包2': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
-        '给个红包3': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
-        '给个红包4': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         'Q': ('xpath',
               '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView[4]'),
-        '群聊1': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         'com.chinasofti.rcs:id/contact_index_bar_view': (
             MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_view'),
         'com.chinasofti.rcs:id/contact_index_bar_container': (
@@ -55,9 +50,13 @@ class PickGroupPage(BasePage):
     @TestLogger.log('选择群组')
     def select_group(self, name):
         group_generator = self.mobile.list_iterator(self.__locators['com.chinasofti.rcs:id/recyclerView'],
-                                                    self.__locators['给个红包1'])
+                                                    ['xpath',
+                                                     '//*[@resource-id="com.chinasofti.rcs:id/recyclerView"]/*'])
         for i in group_generator:
-            if i.text == name:
-                i.click()
-                return True
+            name_elements = i.find_elements(*self.__locators['群名'])
+            if name_elements:
+                real_name = name_elements[0].text
+                if real_name == name:
+                    i.click()
+                    return real_name
         raise NoSuchElementException('找不到名字等于“{}”的群聊'.format(name))

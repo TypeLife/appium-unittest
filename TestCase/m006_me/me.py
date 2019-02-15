@@ -7,6 +7,7 @@ from library.core.utils.applicationcache import current_mobile, current_driver, 
 from library.core.utils.testcasefilter import tags
 from pages import *
 import preconditions
+from pages.components import ContactsSelector
 from pages.components.PickGroup import PickGroupPage
 
 REQUIRED_MOBILES = {
@@ -17,13 +18,14 @@ REQUIRED_MOBILES = {
 
 class MeTest(TestCase):
     """
-    模块：我
+    模块：我 - 我的二维码
 
     文件位置：冒烟/冒烟测试用例-V20181225.01.xlsx
     表格：我
     """
 
-    def setUp_test_me_0001(self):
+    @staticmethod
+    def setUp_test_me_0001():
         """
         1.网络正常
         2.已登录客户端
@@ -37,15 +39,24 @@ class MeTest(TestCase):
         me_page = MePage()
         me_page.open_me_page()
 
-    @unittest.skip('该模块用例步骤描述有问题')
+    @tags("ALL", "SMOKE", "CMCC")
     def test_me_0001(self):
-        """"""
+        """我的二维码转发-选择一个群"""
         # 进入我的二维码页面
         me_page = MePage()
         me_page.click_qr_code_icon()
 
         # 点击转发
         qr_code = MyQRCodePage()
+        # 等待加载完成
+        qr_code.wait_for_loading_animation_end()
+        # 解析二维码
+        import time
+        time.sleep(2)
+
+        # 获取要转发的二维码（解析为链接）
+        my_link = qr_code.decode_qr_code()
+        print(my_link)
         qr_code.click_forward_qr_code()
         current_mobile().click_text("选择一个群", True)
 
@@ -53,6 +64,104 @@ class MeTest(TestCase):
         pg.wait_for_page_load()
         pg.select_group('群聊1')
         current_mobile().click_text("确定", True)
+
+        toast = current_mobile().wait_until(
+            condition=lambda d: current_mobile().get_element(['xpath', '//android.widget.Toast'])
+        )
+        self.assertEqual('已转发', toast.text)
+        qr_code.wait_for_page_load()
+        qr_code.click_back()
+
+        me_page.open_message_page()
+        current_mobile().click_text('群聊1')
+
+        chat = ChatWindowPage()
+        chat.wait_for_page_load()
+
+        # 获取截图
+        screen_shot = current_mobile().get_screenshot_as_png()
+        import io
+        from PIL import Image
+        from pyzbar import pyzbar
+
+        # 屏幕是否包含刚刚转发的二维码（解析为文本链接）
+        qrs = pyzbar.decode(Image.open(io.BytesIO(screen_shot)))
+        self.assertIsNotNone(qrs)
+        links = []
+        for qr in qrs:
+            links.append(qr.data.decode('utf-8'))
+        self.assertIn(my_link, links)
+
+    @staticmethod
+    def setUp_test_me_0002():
+        """
+        1.网络正常
+        2.已登录客户端
+        3.当前在我页面
+        4.有群组
+        :return:
+        """
+        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
+        current_mobile().hide_keyboard_if_display()
+        preconditions.make_already_in_message_page()
+        me_page = MePage()
+        me_page.open_me_page()
+
+    @tags("ALL", "SMOKE", "CMCC")
+    def test_me_0002(self):
+        """我的二维码转发-选择本地联系人"""
+        # 进入我的二维码页面
+        me_page = MePage()
+        me_page.click_qr_code_icon()
+
+        # 点击转发
+        qr_code = MyQRCodePage()
+        # 等待加载完成
+        qr_code.wait_for_loading_animation_end()
+        # 解析二维码
+        import time
+        time.sleep(2)
+
+        # 获取要转发的二维码（解析为链接）
+        my_link = qr_code.decode_qr_code()
+        print(my_link)
+        qr_code.click_forward_qr_code()
+        current_mobile().click_text("选择本地联系人", True)
+
+        pg = ContactsSelector()
+        pg.wait_for_page_load()
+        pg.click_local_contacts('大佬1')
+        current_mobile().click_text("确定", True)
+
+        toast = current_mobile().wait_until(
+            condition=lambda d: current_mobile().get_element(['xpath', '//android.widget.Toast'])
+        )
+        self.assertEqual('已转发', toast.text)
+        qr_code.wait_for_page_load()
+        qr_code.click_back()
+
+        me_page.open_message_page()
+        current_mobile().click_text('大佬1')
+
+        chat = ChatWindowPage()
+        chat.wait_for_page_load()
+        # 如果弹出提示框就点击空白
+        if chat.is_tips_display():
+            chat.directly_close_tips_alert()
+
+        # 获取截图
+        screen_shot = current_mobile().get_screenshot_as_png()
+        import io
+        from PIL import Image
+        from pyzbar import pyzbar
+
+        # 屏幕是否包含刚刚转发的二维码（解析为文本链接）
+        qrs = pyzbar.decode(Image.open(io.BytesIO(screen_shot)))
+        self.assertIsNotNone(qrs)
+        links = []
+        for qr in qrs:
+            links.append(qr.data.decode('utf-8'))
+        self.assertIn(my_link, links)
 
 
 class MeMsgSettingTest(TestCase):

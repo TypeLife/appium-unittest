@@ -236,6 +236,16 @@ class MobileDriver(ABC):
     def reset_app(self):
         self.driver.reset()
 
+    @TestLogger.log('获取屏幕截图')
+    def get_screenshot_as_png(self):
+        """
+        Gets the screenshot of the current window as a binary data.
+
+        :Usage:
+            driver.get_screenshot_as_png()
+        """
+        return self.driver.get_screenshot_as_png()
+
     @TestLogger.log('点按手机Home键')
     def press_home_key(self):
         """模拟手机HOME键"""
@@ -298,6 +308,7 @@ class MobileDriver(ABC):
             return result[0]
         raise Exception("手机收不到验证码")
 
+    @TestLogger.log('等待')
     def wait_until(
             self,
             condition,
@@ -310,6 +321,20 @@ class MobileDriver(ABC):
         # if callable(unexpected):
         #     condition = self._error_listener(unexpected, *args, **kwargs)(condition)
         return wait.until(condition)
+
+    @TestLogger.log('等待')
+    def wait_until_not(
+            self,
+            condition,
+            timeout=8,
+            auto_accept_permission_alert=True
+    ):
+        wait = WebDriverWait(self.driver, timeout)
+        if auto_accept_permission_alert:
+            condition = self._auto_click_permission_alert_wrapper(condition)
+        # if callable(unexpected):
+        #     condition = self._error_listener(unexpected, *args, **kwargs)(condition)
+        return wait.until_not(condition)
 
     @staticmethod
     def _error_listener(error_determine_func, *arguments, **keyword_args):
