@@ -27,6 +27,7 @@ from pages import SelectContactsPage
 from pages import SelectLocalContactsPage
 from pages import SelectOneGroupPage
 from pages import GroupChatSetPage
+from pages import SingleChatPage
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -309,6 +310,11 @@ class MsgCommonGroupTest(TestCase):
             time.sleep(2)
             #判断是否返回到群聊页面
             self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
 
 
 
@@ -348,6 +354,11 @@ class MsgCommonGroupTest(TestCase):
             time.sleep(2)
             #判断是否返回到群聊页面
             self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0004(self):
@@ -401,6 +412,11 @@ class MsgCommonGroupTest(TestCase):
             time.sleep(2)
             #判断是否返回到群聊页面
             self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0006(self):
@@ -438,6 +454,11 @@ class MsgCommonGroupTest(TestCase):
             time.sleep(2)
             #判断是否返回到群聊页面
             self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0007(self):
@@ -465,10 +486,108 @@ class MsgCommonGroupTest(TestCase):
         flag2 = gcp.is_toast_exist("粘贴")
         # self.assertTrue(flag2)
 
+    def tearDown_test_msg_common_group_0007(self):
+        #删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp=GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            #点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            #点击确认
+            gcsp.click_determine()
+            flag=gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            #点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            #判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
+
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0008(self):
         """1、长按文本消息，是否会弹窗展示：功能菜单栏。
         2、点击选择删除功能，删除成功后，聊天会话页面的消息是否会消失"""
+        gcp = GroupChatPage()
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 长按信息并点击删除
+        gcp.press_file_to_do("哈哈", "删除")
+        #验证消息会消失
+        flag=gcp.is_text_present("哈哈")
+        self.assertFalse(flag)
+
+    @staticmethod
+    def setUp_test_msg_common_group_0009():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_common_group_0009(self):
+        """1、长按文本消息，选择转发功能，是否可以跳转到联系人选择器页面
+            2、搜索选择转发对象，选择搜索结果，确认转发后，是否弹出toast提示：已转发
+            3、转发成功后，返回到消息列表，是否产生了一个新的会话窗口
+            4、进入到新会话窗口页面中，转发的消息，是否已发送成功"""
+        gcp = GroupChatPage()
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 长按信息并点击转发
+        gcp.press_file_to_do("哈哈", "转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_local_contact_load()
+        sc.select_local_contacts()
+        #选择“和飞信电话”联系人进行转发
+        sc.click_one_contact("和飞信电话")
+        sc.click_sure_forward()
+        flag=sc.is_toast_exist("已转发")
+        self.assertTrue(flag)
+        time.sleep(1)
+        #返回消息页面
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc.click_back()
+        time.sleep(1)
+        #判断消息页面有新的会话窗口
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            self.assertTrue(mess.is_text_present("和飞信电话"))
+            mess.click_element_by_text("和飞信电话")
+            chat = SingleChatPage()
+            chat.click_i_have_read()
+            chat.wait_for_page_load()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+
 
 
 
@@ -482,6 +601,7 @@ class MsgCommonGroupTest(TestCase):
         if audio.wait_for_audio_type_select_page_load():
             audio.click_sure()
         # 权限申请允许弹窗判断
+        time.sleep(1)
         flag = audio.wait_for_audio_allow_page_load()
         self.assertTrue(flag)
         audio.click_allow()

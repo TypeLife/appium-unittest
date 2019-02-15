@@ -34,7 +34,7 @@ class BaseChatPage(BasePage):
                   '撤回': (MobileBy.XPATH, "//*[contains(@text, '撤回')]"),
                   '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
                   # 撤回消息时的弹窗
-                  '我知道了': (MobileBy.XPATH, "//*[contains(@text, '我知道了')]"),
+                  '我知道了': (MobileBy.XPATH, "//*[contains(@text, '知道了')]"),
                   # 用户须知
                   '用户须知': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title'),
                   '我已阅读': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_check'),
@@ -55,6 +55,8 @@ class BaseChatPage(BasePage):
                   # 打开gif图片后元素
                   "gif图片元素列表": (MobileBy.ID, 'com.chinasofti.rcs:id/stickers_container'),
                   "gif群聊会话中的元素": (MobileBy.ID, 'com.chinasofti.rcs:id/layout_loading'),
+                  "gif趣图搜索框": (MobileBy.ID, 'com.chinasofti.rcs:id/et_message'),
+                  "关闭gif趣图聊天框": (MobileBy.ID, 'com.chinasofti.rcs:id/iv_cancel_gif'),
                   }
 
     @TestLogger.log()
@@ -338,7 +340,7 @@ class BaseChatPage(BasePage):
 
     @TestLogger.log()
     def wait_for_gif_ele_load(self, timeout=8, auto_accept_alerts=True):
-        """等待视频播放页面加载"""
+        """等待gif图片页面加载"""
         try:
             self.wait_until(
                 timeout=timeout,
@@ -353,7 +355,7 @@ class BaseChatPage(BasePage):
     def send_gif(self):
         """点击选择发送gif图片"""
         self.click_element(self.__class__.__locators['gif图片元素列表'])
-        time.sleep(2)
+        time.sleep(1)
 
     @TestLogger.log()
     def is_send_gif(self):
@@ -371,3 +373,33 @@ class BaseChatPage(BasePage):
         """按住并向上滑动"""
         # b=self.get_element_attribute(self.__class__.__locators[element],"bounds")
         self.press_and_move_to_up(self.__class__.__locators[element])
+
+    @TestLogger.log()
+    def input_gif(self, message):
+        """输入gif搜索框信息"""
+        self.input_text(self.__class__.__locators["gif趣图搜索框"], message)
+        self.driver.hide_keyboard()
+        return self
+
+    @TestLogger.log()
+    def is_gif_exist_toast(self):
+        """是否有趣图无搜索结果提示"""
+        return self.is_toast_exist("无搜索结果，换个热词试试")
+
+    @TestLogger.log()
+    def click_cancel_gif(self):
+        """点击关闭gif图片框"""
+        self.click_element((self.__class__.__locators['关闭gif趣图聊天框']))
+
+    @TestLogger.log()
+    def edit_clear(self, text):
+        """清楚输入框内容"""
+        self.driver.keyevent(123)
+        for i in range(0, len(text)):
+            self.driver.keyevent(67)
+
+    @TestLogger.log()
+    def is_exist_gif_ele(self):
+        """当前页面是否有gif框的消息"""
+        el = self.get_elements(self.__class__.__locators['gif图片元素列表'])
+        return len(el) > 0
