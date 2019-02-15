@@ -565,10 +565,14 @@ class MobileDriver(ABC):
 
     @TestLogger.log('输入文本')
     def input_text(self, locator, text, default_timeout=5):
-        self.wait_until(
-            condition=lambda d: self.get_element(locator),
-            timeout=default_timeout
-        ).send_keys(text)
+        try:
+            element = self.wait_until(
+                condition=lambda d: self.get_element(locator),
+                timeout=default_timeout
+            )
+            element.send_keys(text)
+        except TimeoutException:
+            raise NoSuchElementException('找不到元素：{}'.format(locator))
 
     @TestLogger.log('勾选可选控件')
     def select_checkbox(self, locator):

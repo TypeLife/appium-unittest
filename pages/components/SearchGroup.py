@@ -22,10 +22,7 @@ class SearchGroupPage(BasePage):
                '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.TextView'),
         'com.chinasofti.rcs:id/recyclerView': (MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView'),
         'com.chinasofti.rcs:id/contact_image': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_image'),
-        '群聊1': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
-        '群聊2': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
-        '群聊3': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
-        '群聊4': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name')
+        '群名': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
     }
 
     @TestLogger.log('搜索')
@@ -35,11 +32,15 @@ class SearchGroupPage(BasePage):
     @TestLogger.log('点击群')
     def click_group(self, name):
         group_generator = self.mobile.list_iterator(self.__locators['com.chinasofti.rcs:id/recyclerView'],
-                                                    self.__locators['群聊1'])
+                                                    ['xpath',
+                                                     '//*[@resource-id="com.chinasofti.rcs:id/recyclerView"]/*'])
         for i in group_generator:
-            if i.text == name:
-                i.click()
-                return True
+            name_elements = i.find_elements(*self.__locators['群名'])
+            if name_elements:
+                real_name = name_elements[0].text
+                if real_name == name:
+                    i.click()
+                    return real_name
         raise NoSuchElementException('找不到名字等于“{}”的群聊'.format(name))
 
     @TestLogger.log('返回')
