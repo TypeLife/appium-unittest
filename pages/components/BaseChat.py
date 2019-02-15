@@ -403,3 +403,5 @@ class BaseChatPage(BasePage):
         """当前页面是否有gif框的消息"""
         el = self.get_elements(self.__class__.__locators['gif图片元素列表'])
         return len(el) > 0
+
+
