@@ -58,3 +58,8 @@ class GroupChatSetFindChatContentPage(BasePage):
         """点击返回"""
         self.click_element(self.__class__.__locators["返回"])
 
+    @TestLogger.log()
+    def click_pic_video(self):
+        """点击图片与视频"""
+        self.click_element(self.__class__.__locators["图片与视频"])
+

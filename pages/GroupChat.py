@@ -193,3 +193,13 @@ class GroupChatPage(BaseChatPage):
         self.click_element(self.__class__.__locators["发送失败标识"])
         self.click_element(self.__class__.__locators["重发消息确定"])
 
+    @TestLogger.log()
+    def click_clean_video(self):
+        """点击删除消息视频"""
+        try:
+            el = self.get_element(self.__class__.__locators["消息视频"])
+            self.press(el)
+            self.click_element(self.__class__.__locators["删除"])
+        except:
+                pass
+        return self
