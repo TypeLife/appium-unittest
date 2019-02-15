@@ -310,6 +310,11 @@ class MsgCommonGroupTest(TestCase):
             time.sleep(2)
             #判断是否返回到群聊页面
             self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
 
 
 
@@ -349,6 +354,11 @@ class MsgCommonGroupTest(TestCase):
             time.sleep(2)
             #判断是否返回到群聊页面
             self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0004(self):
@@ -402,6 +412,11 @@ class MsgCommonGroupTest(TestCase):
             time.sleep(2)
             #判断是否返回到群聊页面
             self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0006(self):
@@ -439,6 +454,11 @@ class MsgCommonGroupTest(TestCase):
             time.sleep(2)
             #判断是否返回到群聊页面
             self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0007(self):
@@ -485,6 +505,11 @@ class MsgCommonGroupTest(TestCase):
             time.sleep(2)
             #判断是否返回到群聊页面
             self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                print(e)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0008(self):
@@ -507,15 +532,6 @@ class MsgCommonGroupTest(TestCase):
         flag=gcp.is_text_present("哈哈")
         self.assertFalse(flag)
 
-    @staticmethod
-    def setUp_test_msg_common_group_0009():
-
-        Preconditions.select_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        current_mobile().reset_app()
-        # current_mobile().connect_mobile()
-        Preconditions.enter_group_chat_page()
-
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0009(self):
         """1、长按文本消息，选择转发功能，是否可以跳转到联系人选择器页面
@@ -537,7 +553,8 @@ class MsgCommonGroupTest(TestCase):
         gcp.press_file_to_do("哈哈", "转发")
         sc = SelectContactsPage()
         sc.wait_for_page_local_contact_load()
-        sc.select_local_contacts()
+        #搜索联系人
+        sc.input_search_contact_message("和飞信")
         #选择“和飞信电话”联系人进行转发
         sc.click_one_contact("和飞信电话")
         sc.click_sure_forward()
@@ -563,9 +580,283 @@ class MsgCommonGroupTest(TestCase):
             except TimeoutException:
                 raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
 
+    @staticmethod
+    def setUp_test_msg_common_group_0010():
 
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.enter_group_chat_page()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_common_group_0010(self):
+        """
+        1、长按文本消息，选择转发功能，是否可以跳转到联系人选择器页面
+        2、搜索选择转发对象，选择搜索结果，确认转发后，是否弹出toast提示：已转发
+        3、转发成功后，返回到消息列表，是否产生了一个新的会话窗口并且在当前会话窗口上展示一个发送失败的标志：“！”
+        4、进入到新会话窗口页面中，转发的消息，是否会展示为发送失败的状态
+        """
+        gcp = GroupChatPage()
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        #断开网络
+        gcp.set_network_status(1)
+        # 长按信息并点击转发
+        gcp.press_file_to_do("哈哈", "转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_local_contact_load()
+        # 搜索联系人
+        sc.input_search_contact_message("和飞信")
+        # 选择“和飞信电话”联系人进行转发
+        sc.click_one_contact("和飞信电话")
+        sc.click_sure_forward()
+        flag = sc.is_toast_exist("已转发")
+        self.assertTrue(flag)
+        time.sleep(1)
+        # 返回消息页面
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc.click_back()
+        time.sleep(1)
+        # 判断消息页面有新的会话窗口
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            self.assertTrue(mess.is_text_present("和飞信电话"))
+            #判断是否有“！”
+            if  not mess.is_iv_fail_status_present():
+                try:
+                    raise AssertionError("没有消息发送失败“！”标致")
+                except AssertionError as e:
+                    print(e)
+            #进入新消息窗口判断消息是否发送失败
+            mess.click_element_by_text("和飞信电话")
+            chat = SingleChatPage()
+            chat.click_i_have_read()
+            chat.wait_for_page_load()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+            except TimeoutException:
+                raise AssertionError('断网情况下消息在 {}s 内发送成功'.format(10))
 
+    def tearDown_test_msg_common_group_0010(self):
+        #重新连接网络
+        scp = GroupChatPage()
+        scp.set_network_status(6)
+
+    @staticmethod
+    def setUp_test_msg_common_group_0011():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_common_group_0011(self):
+        """
+        1、长按文本消息，选择转发功能，是否可以跳转到联系人选择器页面
+        2、搜索选择转发对象，选择搜索结果，确认转发后，是否弹出toast提示：已转发
+        3、转发成功后，返回到消息列表，是否产生了一个新的会话窗口
+        """
+        gcp = GroupChatPage()
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 长按信息并点击转发
+        gcp.press_file_to_do("哈哈", "转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_local_contact_load()
+        # 搜索联系人
+        sc.input_search_contact_message("和飞信")
+        # 选择“和飞信电话”联系人进行转发
+        sc.click_one_contact("和飞信电话")
+        sc.click_sure_forward()
+        flag = sc.is_toast_exist("已转发")
+        self.assertTrue(flag)
+        time.sleep(1)
+        #删除群聊消息记录
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击删除聊天记录
+        gcsp.click_clear_chat_record()
+        gcsp.wait_clear_chat_record_confirmation_box_load()
+        # 点击确认
+        gcsp.click_determine()
+        flag = gcsp.is_toast_exist("聊天记录清除成功")
+        self.assertTrue(flag)
+        # 点击返回群聊页面
+        gcsp.click_back()
+        time.sleep(2)
+        # 判断是否返回到群聊页面
+        self.assertTrue(gcp.is_on_this_page())
+        # 返回消息页面
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc.click_back()
+        time.sleep(1)
+        # 判断消息页面有新的会话窗口
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            self.assertTrue(mess.is_text_present("和飞信电话"))
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_common_group_0012(self):
+        """1、点击发送失败消息体，左边的重发按钮，点击重发按钮，是否会弹出确认重新发送的弹窗
+            2、点击确认重新发送，是否可以重新发送成功此条消息"""
+        gcp = GroupChatPage()
+        #断开网络
+        gcp.set_network_status(1)
+        time.sleep(2)
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送失败
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        except TimeoutException:
+            raise AssertionError('断网情况下消息在 {}s 内发送成功'.format(10))
+        #重连网络
+        gcp.set_network_status(6)
+        #判断是否有重发按钮
+        if not gcp.is_exist_msg_send_failed_button():
+            try:
+                raise AssertionError("没有重发按钮")
+            except AssertionError as e:
+                print(e)
+        #点击重发按钮
+        gcp.click_msg_send_failed_button()
+        #点击确定重发
+        gcp.click_resend_confirm()
+        #判断信息发送状态
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息未在 {}s 内发送成功'.format(10))
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_common_group_0013(self):
+        """1、长按文本消息，选择转发功能，跳转到联系人选择器页面
+            2、选择一个群，进入到群聊列表展示页面，任意选中一个群聊，确认转发，是否会在消息列表，
+            重新产生一个新的会话窗口或者在已有窗口中增加一条记录
+        3、进入到聊天会话窗口页面，转发的消息，是否已发送成功并正常展示"""
+        gcp = GroupChatPage()
+        cwp = ChatWindowPage()
+        # 长按信息并点击转发
+        gcp.press_file_to_do("哈哈", "转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_local_contact_load()
+        sc.click_select_one_group()
+        # 选择一个群进行转发
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        group_names = sog.get_group_name()
+        if group_names:
+            sog.select_one_group_by_name(group_names[0])
+            sog.click_sure_forward()
+            if not sog.catch_message_in_page("已转发"):
+                try:
+                    raise AssertionError("转发失败")
+                except AssertionError as e:
+                    print(e)
+        else:
+            try:
+                raise AssertionError("没有群可转发，请创建群")
+            except AssertionError as e:
+                print(e)
+
+        time.sleep(1)
+        # 返回消息页面
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc.click_back()
+        time.sleep(1)
+        # 判断消息页面有新的会话窗口
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            self.assertTrue(mess.is_text_present(group_names[0]))
+            mess.click_element_by_text(group_names[0])
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+
+    @staticmethod
+    def setUp_test_msg_common_group_0015():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_common_group_0015(self):
+        """1、长按文本消息，选择转发功能，跳转到联系人选择器页面
+            2、选择本地联系人，确认转发，是否会在消息列表，重新产生一个新的会话窗口或者在已有窗口中增加一条记录
+            3、进入到聊天会话窗口页面，转发的消息，是否已发送成功并正常展示"""
+        gcp = GroupChatPage()
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 长按信息并点击转发
+        gcp.press_file_to_do("哈哈", "转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_local_contact_load()
+        sc.select_local_contacts()
+        # 选择“和飞信电话”联系人进行转发
+        sc.click_one_contact("和飞信电话")
+        sc.click_sure_forward()
+        flag = sc.is_toast_exist("已转发")
+        self.assertTrue(flag)
+        time.sleep(1)
+        # 返回消息页面
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc.click_back()
+        time.sleep(1)
+        # 判断消息页面有新的会话窗口
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            self.assertTrue(mess.is_text_present("和飞信电话"))
+            mess.click_element_by_text("和飞信电话")
+            chat = SingleChatPage()
+            chat.click_i_have_read()
+            chat.wait_for_page_load()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0019(self):

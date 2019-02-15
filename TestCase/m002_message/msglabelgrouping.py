@@ -1156,3 +1156,95 @@ class MsgLabelGroupingTest(TestCase):
         cpp.click_back()
         chat.wait_for_page_load()
 
+    @staticmethod
+    def public_edit_pic(edit_text="文本编辑"):
+        """图片编辑操作"""
+        # 1.在当前聊天会话页面，点击输入框左上方的相册图标
+        chat = LabelGroupingChatPage()
+        # 点击图片按钮
+        chat.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        # 2.选择一张照片，点击右上角编辑按钮，进行涂鸦、马赛克、文本编辑
+        cpg.select_pic()
+        cpg.click_preview()
+        cppp = ChatPicPreviewPage()
+        cppp.wait_for_page_load()
+        cppp.click_edit()
+        pic = ChatPicEditPage()
+        # 涂鸦
+        pic.click_doodle()
+        pic.do_doodle()
+        # 马赛克
+        pic.click_mosaic()
+        pic.do_mosaic()
+        # 文本编辑
+        pic.click_text_edit_btn()
+        pic.input_pic_text(edit_text)
+        # 完成
+        pic.click_save()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0071(self):
+        """标签分组会话窗，编辑图片发送"""
+        self.public_edit_pic("VideoPic_0071")
+        chat = LabelGroupingChatPage()
+        pic = ChatPicEditPage()
+        # 3.点击保存按钮
+        pic.click_save()
+        # 4.点击发送
+        pic.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0072(self):
+        """标签分组会话窗，编辑图片不保存发送"""
+        self.public_edit_pic("VideoPic_0072")
+        chat = LabelGroupingChatPage()
+        pic = ChatPicEditPage()
+        # 点击发送按钮
+        pic.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0073(self):
+        """标签分组会话窗，编辑图片中途直接发送"""
+        self.public_edit_pic("VideoPic_0073")
+        chat = LabelGroupingChatPage()
+        pic = ChatPicEditPage()
+        pic.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0074(self):
+        """标签分组会话窗，编辑图片保存"""
+        self.public_edit_pic("VideoPic_0074")
+        chat = LabelGroupingChatPage()
+        pic = ChatPicEditPage()
+        # 3.点击保存
+        pic.click_save()
+        flag = pic.is_toast_exist("保存成功")
+        if not flag:
+            raise AssertionError("保存编辑图片时没有弹出“保存成功”提示")
+        # 返回分组会话窗
+        pic.click_cancle()
+        cppp = ChatPicPreviewPage()
+        cppp.click_back()
+        cpg = ChatPicPage()
+        cpg.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0075(self):
+        """标签分组会话窗，取消编辑图片"""
+        self.public_edit_pic("VideoPic_0075")
+        chat = LabelGroupingChatPage()
+        pic = ChatPicEditPage()
+        # 3.点击取消按钮
+        pic.click_cancle()
+        # 返回分组会话窗
+        cppp = ChatPicPreviewPage()
+        cppp.click_back()
+        cpg = ChatPicPage()
+        cpg.click_back()
+        chat.wait_for_page_load()

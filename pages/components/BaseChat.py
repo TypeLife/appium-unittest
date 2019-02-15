@@ -34,7 +34,7 @@ class BaseChatPage(BasePage):
                   '撤回': (MobileBy.XPATH, "//*[contains(@text, '撤回')]"),
                   '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
                   # 撤回消息时的弹窗
-                  '我知道了': (MobileBy.XPATH, "//*[contains(@text, '我知道了')]"),
+                  '我知道了': (MobileBy.XPATH, "//*[contains(@text, '知道了')]"),
                   # 用户须知
                   '用户须知': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title'),
                   '我已阅读': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_check'),
@@ -403,3 +403,5 @@ class BaseChatPage(BasePage):
         """当前页面是否有gif框的消息"""
         el = self.get_elements(self.__class__.__locators['gif图片元素列表'])
         return len(el) > 0
+
+

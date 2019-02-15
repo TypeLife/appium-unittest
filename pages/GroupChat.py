@@ -47,7 +47,8 @@ class GroupChatPage(BaseChatPage):
                   '复制': (MobileBy.XPATH, "//*[contains(@text, '复制')]"),
                   '我知道了': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_btn_ok'),
                   '勾': (MobileBy.ID, 'com.chinasofti.rcs:id/img_message_down_file'),
-                  '重发消息确定': (MobileBy.ID, '	com.chinasofti.rcs:id/btn_ok'),
+                  '重发按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
+                  '重发消息确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
                   }
 
     def is_exist_msg_videos(self):
@@ -135,7 +136,7 @@ class GroupChatPage(BaseChatPage):
     @TestLogger.log()
     def click_more(self):
         """点击更多富媒体按钮"""
-        self.click_element(self.__class__.__locators["更多"])
+        self.click_element(self.__class__.__locators["更多"], default_timeout=8)
 
     @TestLogger.log()
     def press_file_to_do(self, file, text):
@@ -193,6 +194,21 @@ class GroupChatPage(BaseChatPage):
         self.click_element(self.__class__.__locators["发送失败标识"])
         self.click_element(self.__class__.__locators["重发消息确定"])
 
+    @TestLogger.log()
+    def is_exist_msg_send_failed_button(self):
+        """判断是否有重发按钮"""
+        el = self.get_elements(self.__locators['重发按钮'])
+        return len(el) > 0
+
+    @TestLogger.log()
+    def click_msg_send_failed_button(self):
+        """点击重发按钮"""
+        self.click_element(self.__class__.__locators["重发按钮"])
+
+    @TestLogger.log()
+    def click_resend_confirm(self):
+        """点击重发消息确定"""
+        self.click_element(self.__class__.__locators["重发消息确定"])
     @TestLogger.log()
     def click_clean_video(self):
         """点击删除消息视频"""

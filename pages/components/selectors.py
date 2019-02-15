@@ -23,7 +23,7 @@ class ContactsSelector(BasePage):
         '搜索或输入手机号': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_search_bar'),
         'com.chinasofti.rcs:id/contact_selection_list_view': (
             MobileBy.ID, 'com.chinasofti.rcs:id/contact_selection_list_view'),
-        '联系人列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list'),
+        '联系人列表': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_list" or android.support.v7.widget.RecyclerView]'),
         '联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
         '选择和通讯录联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/local_contacts'),
         'com.chinasofti.rcs:id/arrow_right': (MobileBy.ID, 'com.chinasofti.rcs:id/arrow_right'),
@@ -37,7 +37,30 @@ class ContactsSelector(BasePage):
         '字母导航栏': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_container')
     }
 
-    @TestLogger.log('选择本地联系人')
+    @TestLogger.log('搜索联系人')
+    def search(self, name):
+        self.mobile.input_text(self.__locators['搜索或输入手机号'], name)
+
+    @TestLogger.log('点击联系人')
+    def click_local_contacts(self, *name_list):
+        name_list = list(name_list)
+
+        self.wait_until(
+            condition=lambda d: self._is_element_present(self.__locators['搜索或输入手机号'])
+        )
+        for cont in self.mobile.list_iterator(self.__locators['联系人列表'], self.__locators['联系人']):
+            name = cont.find_element(*self.__locators['联系人名称']).text
+            if name in name_list:
+                cont.click()
+                name_list.remove(name)
+            if not name_list:
+                break
+        if name_list:
+            print('没有找到以下联系人：{}'.format(name_list))
+            return False
+        return True
+
+    @TestLogger.log('选择本地联系人并点击确定')
     def select_local_contacts(self, *name_list):
         name_list = list(name_list)
 

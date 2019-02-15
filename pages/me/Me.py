@@ -74,6 +74,11 @@ class MePage(FooterPage):
         '设置': (MobileBy.ID, 'com.chinasofti.rcs:id/setting_app_text'),
         '移动营业厅': (MobileBy.ID, 'com.chinasofti.rcs:id/onlinehall_text'),
     }
+
+    @TestLogger.log('点击二维码图标')
+    def click_qr_code_icon(self):
+        self.click_element(self.__locators['二维码入口'])
+
     @TestLogger.log('点击移动营业厅')
     def click_mobile_hall_butten(self):
         self.click_element(self.__locators['移动营业厅'])
@@ -84,7 +89,7 @@ class MePage(FooterPage):
         self._find_menu(locator)
         self.click_element(locator)
 
-    @TestLogger.log()
+    @TestLogger.log("回到列表顶部")
     def scroll_to_top(self):
         self.wait_until(
             condition=lambda d: self.get_element(self.__locators['菜单区域'])
@@ -120,7 +125,7 @@ class MePage(FooterPage):
                 break
         return True
 
-    @TestLogger.log()
+    @TestLogger.log("点击设置菜单")
     def click_setting_menu(self):
         """点击设置菜单"""
         self.scroll_to_bottom()

@@ -238,3 +238,8 @@ class GroupChatSetPage(BasePage):
     def click_determine(self):
         """点击确定"""
         self.click_element(self.__locators['确定'])
+
+    @TestLogger.log()
+    def click_search_chat_record(self):
+        """点击 查找聊天内容"""
+        self.click_element(self.__class__.__locators['查找聊天内容'])

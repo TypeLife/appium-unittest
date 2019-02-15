@@ -6,6 +6,10 @@ from library.core.utils import email_helper
 from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
+import preconditions
+from pages.components import ContactsSelector
+from pages.components.PickGroup import PickGroupPage
+from pages.components.SearchGroup import SearchGroupPage
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -13,112 +17,16 @@ REQUIRED_MOBILES = {
 }
 
 
-class Preconditions(object):
-    """
-    分解前置条件
-    """
-
-    @staticmethod
-    def connect_mobile(category):
-        """选择手机手机"""
-        client = switch_to_mobile(REQUIRED_MOBILES[category])
-        client.connect_mobile()
-        return client
-
-    @staticmethod
-    def make_already_in_one_key_login_page():
-        """
-        1、已经进入一键登录页
-        :return:
-        """
-        # 如果当前页面已经是一键登录页，不做任何操作
-        one_key = OneKeyLoginPage()
-        if one_key.is_on_this_page():
-            return
-
-        # 如果当前页不是引导页第一页，重新启动app
-        guide_page = GuidePage()
-        if not guide_page.is_on_the_first_guide_page():
-            current_mobile().launch_app()
-            guide_page.wait_for_page_load(20)
-
-        # 跳过引导页
-        guide_page.wait_for_page_load(30)
-        guide_page.swipe_to_the_second_banner()
-        guide_page.swipe_to_the_third_banner()
-        guide_page.click_start_the_experience()
-
-        # 点击权限列表页面的确定按钮
-        permission_list = PermissionListPage()
-        permission_list.click_submit_button()
-        one_key.wait_for_page_load(30)
-
-    @staticmethod
-    def login_by_one_key_login():
-        """
-        从一键登录页面登录
-        :return:
-        """
-        # 等待号码加载完成后，点击一键登录
-        one_key = OneKeyLoginPage()
-        one_key.wait_for_tell_number_load(60)
-        login_number = one_key.get_login_number()
-        one_key.click_one_key_login()
-        one_key.click_read_agreement_detail()
-
-        # 同意协议
-        agreement = AgreementDetailPage()
-        agreement.click_agree_button()
-
-        # 等待消息页
-        message_page = MessagePage()
-        message_page.wait_login_success(60)
-        return login_number
-
-    @staticmethod
-    def take_logout_operation_if_already_login():
-        """已登录状态，执行登出操作"""
-        message_page = MessagePage()
-        message_page.wait_for_page_load()
-        message_page.open_me_page()
-
-        me = MePage()
-        me.scroll_to_bottom()
-        me.scroll_to_bottom()
-        me.scroll_to_bottom()
-        me.click_setting_menu()
-
-        setting = SettingPage()
-        setting.scroll_to_bottom()
-        setting.click_logout()
-        setting.click_ok_of_alert()
-
-    @staticmethod
-    def reset_and_relaunch_app():
-        """首次启动APP（使用重置APP代替）"""
-        app_package = 'com.chinasofti.rcs'
-        current_driver().activate_app(app_package)
-        current_mobile().reset_app()
-
-    @staticmethod
-    def terminate_app():
-        """
-        强制关闭app,退出后台
-        :return:
-        """
-        app_id = current_driver().desired_capability['appPackage']
-        current_mobile().termiate_app(app_id)
-
-    @staticmethod
-    def background_app():
-        """后台运行"""
-        current_mobile().press_home_key()
-
-
 class MeTest(TestCase):
-    """我"""
+    """
+    模块：我 - 我的二维码
 
-    def setUp_test_me_0001(self):
+    文件位置：冒烟/冒烟测试用例-V20181225.01.xlsx
+    表格：我
+    """
+
+    @staticmethod
+    def setUp_test_me_0001():
         """
         1.网络正常
         2.已登录客户端
@@ -126,16 +34,362 @@ class MeTest(TestCase):
         4.有群组
         :return:
         """
-        pass
+        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
+        current_mobile().hide_keyboard_if_display()
+        preconditions.make_already_in_message_page()
+        me_page = MePage()
+        me_page.open_me_page()
 
-    @unittest.skip('TODO')
+    @tags("ALL", "SMOKE", "CMCC")
     def test_me_0001(self):
-        """"""
-        self.assertEqual(1, 1)
+        """我的二维码转发-选择一个群"""
+        # 进入我的二维码页面
+        me_page = MePage()
+        me_page.click_qr_code_icon()
 
+        # 点击转发
+        qr_code = MyQRCodePage()
+        # 等待加载完成
+        qr_code.wait_for_loading_animation_end()
+        # 解析二维码
+        import time
+        time.sleep(2)
+
+        # 获取要转发的二维码（解析为链接）
+        my_link = qr_code.decode_qr_code()
+        print(my_link)
+        qr_code.click_forward_qr_code()
+        current_mobile().click_text("选择一个群", True)
+
+        pg = PickGroupPage()
+        pg.wait_for_page_load()
+        pg.select_group('群聊1')
+        current_mobile().click_text("确定", True)
+
+        toast = current_mobile().wait_until(
+            condition=lambda d: current_mobile().get_element(['xpath', '//android.widget.Toast'])
+        )
+        self.assertEqual('已转发', toast.text)
+        qr_code.wait_for_page_load()
+        qr_code.click_back()
+
+        me_page.open_message_page()
+        current_mobile().click_text('群聊1')
+
+        chat = ChatWindowPage()
+        chat.wait_for_page_load()
+
+        # 获取截图
+        screen_shot = current_mobile().get_screenshot_as_png()
+        import io
+        from PIL import Image
+        from pyzbar import pyzbar
+
+        # 屏幕是否包含刚刚转发的二维码（解析为文本链接）
+        qrs = pyzbar.decode(Image.open(io.BytesIO(screen_shot)))
+        self.assertIsNotNone(qrs)
+        links = []
+        for qr in qrs:
+            links.append(qr.data.decode('utf-8'))
+        self.assertIn(my_link, links)
+
+    @staticmethod
+    def setUp_test_me_0002():
+        """
+        1.网络正常
+        2.已登录客户端
+        3.当前在我页面
+        4.有群组
+        :return:
+        """
+        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
+        current_mobile().hide_keyboard_if_display()
+        preconditions.make_already_in_message_page()
+        me_page = MePage()
+        me_page.open_me_page()
+
+    @tags("ALL", "SMOKE", "CMCC")
+    def test_me_0002(self):
+        """我的二维码转发-选择本地联系人"""
+        # 进入我的二维码页面
+        me_page = MePage()
+        me_page.click_qr_code_icon()
+
+        # 点击转发
+        qr_code = MyQRCodePage()
+        # 等待加载完成
+        qr_code.wait_for_loading_animation_end()
+        # 解析二维码
+        import time
+        time.sleep(2)
+
+        # 获取要转发的二维码（解析为链接）
+        my_link = qr_code.decode_qr_code()
+        print(my_link)
+        qr_code.click_forward_qr_code()
+        current_mobile().click_text("选择本地联系人", True)
+
+        pg = ContactsSelector()
+        pg.wait_for_page_load()
+        pg.click_local_contacts('大佬1')
+        current_mobile().click_text("确定", True)
+
+        toast = current_mobile().wait_until(
+            condition=lambda d: current_mobile().get_element(['xpath', '//android.widget.Toast'])
+        )
+        self.assertEqual('已转发', toast.text)
+        qr_code.wait_for_page_load()
+        qr_code.click_back()
+
+        me_page.open_message_page()
+        current_mobile().click_text('大佬1')
+
+        chat = ChatWindowPage()
+        chat.wait_for_page_load()
+        # 如果弹出提示框就点击空白
+        if chat.is_tips_display():
+            chat.directly_close_tips_alert()
+
+        # 获取截图
+        screen_shot = current_mobile().get_screenshot_as_png()
+        import io
+        from PIL import Image
+        from pyzbar import pyzbar
+
+        # 屏幕是否包含刚刚转发的二维码（解析为文本链接）
+        qrs = pyzbar.decode(Image.open(io.BytesIO(screen_shot)))
+        self.assertIsNotNone(qrs)
+        links = []
+        for qr in qrs:
+            links.append(qr.data.decode('utf-8'))
+        self.assertIn(my_link, links)
+
+    @staticmethod
+    def setUp_test_me_0005():
+        """
+        1.网络正常
+        2.已登录客户端
+        3.当前在我页面
+        4.有群组
+        :return:
+        """
+        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
+        current_mobile().hide_keyboard_if_display()
+        preconditions.make_already_in_message_page()
+        me_page = MePage()
+        me_page.open_me_page()
+
+    @tags("ALL", "SMOKE", "CMCC")
+    def test_me_0005(self):
+        """我的二维码转发-选择一个群-搜索群组"""
+        # 进入我的二维码页面
+        me_page = MePage()
+        me_page.click_qr_code_icon()
+
+        # 点击转发
+        qr_code = MyQRCodePage()
+        # 等待加载完成
+        qr_code.wait_for_loading_animation_end()
+        # 解析二维码
+        import time
+        time.sleep(2)
+
+        # 获取要转发的二维码（解析为链接）
+        my_link = qr_code.decode_qr_code()
+        print(my_link)
+        qr_code.click_forward_qr_code()
+        current_mobile().click_text("选择一个群", True)
+
+        # 点击搜索框进入搜索群组页面
+        pg = PickGroupPage()
+        pg.wait_for_page_load()
+        pg.search_group()
+
+        sp = SearchGroupPage()
+        sp.search('群聊1')
+        sp.click_group('群聊1')
+        current_mobile().click_text("确定", True)
+
+        toast = current_mobile().wait_until(
+            condition=lambda d: current_mobile().get_element(['xpath', '//android.widget.Toast'])
+        )
+        self.assertEqual('已转发', toast.text)
+        qr_code.wait_for_page_load()
+        qr_code.click_back()
+
+        me_page.open_message_page()
+        current_mobile().click_text('群聊1')
+
+        chat = ChatWindowPage()
+        chat.wait_for_page_load()
+
+        # 获取截图
+        screen_shot = current_mobile().get_screenshot_as_png()
+        import io
+        from PIL import Image
+        from pyzbar import pyzbar
+
+        # 屏幕是否包含刚刚转发的二维码（解析为文本链接）
+        qrs = pyzbar.decode(Image.open(io.BytesIO(screen_shot)))
+        self.assertIsNotNone(qrs)
+        links = []
+        for qr in qrs:
+            links.append(qr.data.decode('utf-8'))
+        self.assertIn(my_link, links)
+
+    @staticmethod
+    def setUp_test_me_0008():
+        """
+        1.网络正常
+        2.已登录客户端
+        3.当前在我页面
+        4.有群组
+        :return:
+        """
+        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
+        current_mobile().hide_keyboard_if_display()
+        preconditions.make_already_in_message_page()
+        me_page = MePage()
+        me_page.open_me_page()
+
+    @tags("ALL", "SMOKE", "CMCC")
+    def test_me_0008(self):
+        """我的二维码转发-选择本地通讯录联系人-搜索已保存到本地通讯录联系人的手机号"""
+        # 进入我的二维码页面
+        me_page = MePage()
+        me_page.click_qr_code_icon()
+
+        # 点击转发
+        qr_code = MyQRCodePage()
+        # 等待加载完成
+        qr_code.wait_for_loading_animation_end()
+        # 解析二维码
+        import time
+        time.sleep(2)
+
+        # 获取要转发的二维码（解析为链接）
+        my_link = qr_code.decode_qr_code()
+        print(my_link)
+        qr_code.click_forward_qr_code()
+        current_mobile().click_text("选择本地联系人", True)
+
+        pg = ContactsSelector()
+        pg.wait_for_page_load()
+        pg.search('大佬1')
+        time.sleep(1)
+        pg.click_local_contacts('大佬1')
+        current_mobile().click_text("确定", True)
+
+        toast = current_mobile().wait_until(
+            condition=lambda d: current_mobile().get_element(['xpath', '//android.widget.Toast'])
+        )
+        self.assertEqual('已转发', toast.text)
+        qr_code.wait_for_page_load()
+        qr_code.click_back()
+
+        me_page.open_message_page()
+        current_mobile().click_text('大佬1')
+
+        chat = ChatWindowPage()
+        chat.wait_for_page_load()
+        # 如果弹出提示框就点击空白
+        if chat.is_tips_display():
+            chat.directly_close_tips_alert()
+
+        # 获取截图
+        screen_shot = current_mobile().get_screenshot_as_png()
+        import io
+        from PIL import Image
+        from pyzbar import pyzbar
+
+        # 屏幕是否包含刚刚转发的二维码（解析为文本链接）
+        qrs = pyzbar.decode(Image.open(io.BytesIO(screen_shot)))
+        self.assertIsNotNone(qrs)
+        links = []
+        for qr in qrs:
+            links.append(qr.data.decode('utf-8'))
+        self.assertIn(my_link, links)
+
+    @staticmethod
+    def setUp_test_me_0009():
+        """
+        1.网络正常
+        2.已登录客户端
+        3.当前在我页面
+        4.有群组
+        :return:
+        """
+        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
+        current_mobile().hide_keyboard_if_display()
+        preconditions.make_already_in_message_page()
+        me_page = MePage()
+        me_page.open_me_page()
+
+    @tags("ALL", "SMOKE", "CMCC")
+    def test_me_0009(self):
+        """我的二维码转发-选择本地通讯录联系人-搜索未保存到本地通讯录联系人的手机号"""
+        # 进入我的二维码页面
+        me_page = MePage()
+        me_page.click_qr_code_icon()
+
+        # 点击转发
+        qr_code = MyQRCodePage()
+        # 等待加载完成
+        qr_code.wait_for_loading_animation_end()
+        # 解析二维码
+        import time
+        time.sleep(2)
+
+        # 获取要转发的二维码（解析为链接）
+        my_link = qr_code.decode_qr_code()
+        print(my_link)
+        qr_code.click_forward_qr_code()
+        # current_mobile().click_text("选择本地联系人", True)
+
+        pg = ContactsSelector()
+        pg.wait_for_page_load()
+        pg.search('13500000000')
+        time.sleep(1)
+        pg.click_local_contacts('13500000000(未知号码)')
+        current_mobile().click_text("确定", True)
+
+        toast = current_mobile().wait_until(
+            condition=lambda d: current_mobile().get_element(['xpath', '//android.widget.Toast'])
+        )
+        self.assertEqual('已转发', toast.text)
+        qr_code.wait_for_page_load()
+        qr_code.click_back()
+
+        me_page.open_message_page()
+        current_mobile().click_text('13500000000')
+
+        chat = ChatWindowPage()
+        chat.wait_for_page_load()
+        # 如果弹出提示框就点击空白
+        if chat.is_tips_display():
+            chat.directly_close_tips_alert()
+
+        # 获取截图
+        screen_shot = current_mobile().get_screenshot_as_png()
+        import io
+        from PIL import Image
+        from pyzbar import pyzbar
+
+        # 屏幕是否包含刚刚转发的二维码（解析为文本链接）
+        qrs = pyzbar.decode(Image.open(io.BytesIO(screen_shot)))
+        self.assertIsNotNone(qrs)
+        links = []
+        for qr in qrs:
+            links.append(qr.data.decode('utf-8'))
+        self.assertIn(my_link, links)
 
 class MeMsgSettingTest(TestCase):
-    """我-消息设置"""
+    """
+    模块：我-消息设置
+
+    文件位置：冒烟/冒烟测试用例-V20181225.01.xlsx
+    表格：我-消息设置
+    """
 
     @tags("ALL", "SMOKE", "CMCC")
     def test_me_msg_setting_0001(self):
@@ -146,11 +400,11 @@ class MeMsgSettingTest(TestCase):
 
     @staticmethod
     def setUp_test_me_msg_setting_0001():
-        Preconditions.connect_mobile('Android-移动')
+        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
         current_mobile().hide_keyboard_if_display()
-        Preconditions.reset_and_relaunch_app()
-        Preconditions.make_already_in_one_key_login_page()
-        Preconditions.login_by_one_key_login()
+        preconditions.reset_and_relaunch_app()
+        preconditions.make_already_in_one_key_login_page()
+        preconditions.login_by_one_key_login()
 
         me_page = MePage()
         me_page.open_me_page()
@@ -186,11 +440,11 @@ class MeMsgSettingTest(TestCase):
         email_list.assert_the_newest_email_is(email_subject, 30)
 
     def setUp_test_me_msg_setting_0002(self):
-        Preconditions.connect_mobile('Android-移动')
+        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
         current_mobile().hide_keyboard_if_display()
-        Preconditions.reset_and_relaunch_app()
-        Preconditions.make_already_in_one_key_login_page()
-        self.login_number = Preconditions.login_by_one_key_login()
+        preconditions.reset_and_relaunch_app()
+        preconditions.make_already_in_one_key_login_page()
+        self.login_number = preconditions.login_by_one_key_login()
 
         me_page = MePage()
         me_page.open_me_page()
@@ -217,11 +471,11 @@ class MeMsgSettingTest(TestCase):
         msg_page.assert_139_message_not_appear(30)
 
     def setUp_test_me_msg_setting_0003(self):
-        Preconditions.connect_mobile('Android-移动')
+        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
         current_mobile().hide_keyboard_if_display()
-        Preconditions.reset_and_relaunch_app()
-        Preconditions.make_already_in_one_key_login_page()
-        self.login_number = Preconditions.login_by_one_key_login()
+        preconditions.reset_and_relaunch_app()
+        preconditions.make_already_in_one_key_login_page()
+        self.login_number = preconditions.login_by_one_key_login()
 
         me_page = MePage()
         me_page.open_me_page()
@@ -239,11 +493,11 @@ class MeMsgSettingTest(TestCase):
 
     @staticmethod
     def setUp_test_me_msg_setting_0004():
-        Preconditions.connect_mobile('Android-移动')
+        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
         current_mobile().hide_keyboard_if_display()
-        Preconditions.reset_and_relaunch_app()
-        Preconditions.make_already_in_one_key_login_page()
-        Preconditions.login_by_one_key_login()
+        preconditions.reset_and_relaunch_app()
+        preconditions.make_already_in_one_key_login_page()
+        preconditions.login_by_one_key_login()
 
         me_page = MePage()
         me_page.open_me_page()
@@ -261,11 +515,11 @@ class MeMsgSettingTest(TestCase):
 
     @staticmethod
     def setUp_test_me_msg_setting_0005():
-        Preconditions.connect_mobile('Android-移动')
+        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
         current_mobile().hide_keyboard_if_display()
-        Preconditions.reset_and_relaunch_app()
-        Preconditions.make_already_in_one_key_login_page()
-        Preconditions.login_by_one_key_login()
+        preconditions.reset_and_relaunch_app()
+        preconditions.make_already_in_one_key_login_page()
+        preconditions.login_by_one_key_login()
 
         me_page = MePage()
         me_page.open_me_page()
@@ -287,11 +541,11 @@ class MeMsgSettingTest(TestCase):
 
     @staticmethod
     def setUp_test_me_msg_setting_0006():
-        Preconditions.connect_mobile('Android-移动')
+        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
         current_mobile().hide_keyboard_if_display()
-        Preconditions.reset_and_relaunch_app()
-        Preconditions.make_already_in_one_key_login_page()
-        Preconditions.login_by_one_key_login()
+        preconditions.reset_and_relaunch_app()
+        preconditions.make_already_in_one_key_login_page()
+        preconditions.login_by_one_key_login()
 
         me_page = MePage()
         me_page.open_me_page()
@@ -306,7 +560,12 @@ class MeMsgSettingTest(TestCase):
 
 
 class MeSmsSettingTest(TestCase):
-    """我-短信设置"""
+    """
+    模块：我-短信设置
+
+    文件位置：冒烟/冒烟测试用例-V20181225.01.xlsx
+    表格：我-短信设置
+    """
 
     @tags("ALL", "SMOKE", "CMCC")
     def test_me_sms_setting_0001(self):
@@ -316,11 +575,11 @@ class MeSmsSettingTest(TestCase):
 
     @staticmethod
     def setUp_test_me_sms_setting_0001():
-        Preconditions.connect_mobile('Android-移动')
+        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
         current_mobile().hide_keyboard_if_display()
-        Preconditions.reset_and_relaunch_app()
-        Preconditions.make_already_in_one_key_login_page()
-        Preconditions.login_by_one_key_login()
+        preconditions.reset_and_relaunch_app()
+        preconditions.make_already_in_one_key_login_page()
+        preconditions.login_by_one_key_login()
 
         me_page = MePage()
         me_page.open_me_page()
@@ -342,12 +601,12 @@ class MeSmsSettingTest(TestCase):
         MePage().open_message_page()
 
         # 切到另一台手机发短信，一定要确保配置的卡顺序与实际手机卡槽位置一致
-        mobile2 = Preconditions.connect_mobile('Android-XX')
+        mobile2 = preconditions.connect_mobile(REQUIRED_MOBILES['Android-XX'])
         content = uuid.uuid4().__str__()
         send_number, card_type = mobile2.send_sms(self.login_number, content)
 
         # 切回来继续操作
-        Preconditions.connect_mobile('Android-移动')
+        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
         msg_page = MessagePage()
         msg_page.click_message(send_number, 15)
 
@@ -357,11 +616,11 @@ class MeSmsSettingTest(TestCase):
         chat_page.assert_message_content_display(content)
 
     def setUp_test_me_sms_setting_0002(self):
-        Preconditions.connect_mobile('Android-移动')
+        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
         current_mobile().hide_keyboard_if_display()
-        Preconditions.reset_and_relaunch_app()
-        Preconditions.make_already_in_one_key_login_page()
-        self.login_number = Preconditions.login_by_one_key_login()
+        preconditions.reset_and_relaunch_app()
+        preconditions.make_already_in_one_key_login_page()
+        self.login_number = preconditions.login_by_one_key_login()
 
         me_page = MePage()
         me_page.open_me_page()

@@ -49,6 +49,7 @@ class MessagePage(FooterPage):
         '消息免打扰': (MobileBy.XPATH,
                   '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text="%s"]/../../*[@resource-id="com.chinasofti.rcs:id/ll_unread"]'),
         '置顶群': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name"]'),
+        '消息发送失败感叹号': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_fail_status'),
     }
 
     @TestLogger.log('检查顶部搜索框是否显示')
@@ -368,3 +369,8 @@ class MessagePage(FooterPage):
     def click_element_by_text(self,text):
         """点击指定元素"""
         self.click_element((MobileBy.XPATH, '//*[@text="%s"]' % text))
+
+    @TestLogger.log()
+    def is_iv_fail_status_present(self):
+        """判断消息发送失败“！”标致是否存在"""
+        return self._is_element_present(self.__locators['消息发送失败感叹号'])
