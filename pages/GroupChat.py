@@ -49,6 +49,7 @@ class GroupChatPage(BaseChatPage):
                   '勾': (MobileBy.ID, 'com.chinasofti.rcs:id/img_message_down_file'),
                   '重发按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
                   '重发消息确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
+                  '语音消息体': (MobileBy.ID, 'com.chinasofti.rcs:id/img_audio_play_icon'),
                   }
 
     def is_exist_msg_videos(self):
@@ -219,3 +220,9 @@ class GroupChatPage(BaseChatPage):
         except:
                 pass
         return self
+
+    @TestLogger.log()
+    def press_voice_message_to_do(self,text):
+        """长按指定文件"""
+        self.press(self.__class__.__locators["语音消息体"])
+        self.click_element(self.__class__.__locators[text])

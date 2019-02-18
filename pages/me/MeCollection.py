@@ -42,6 +42,9 @@ class MeCollectionPage(BasePage):
                   '收藏的视频': (MobileBy.ID, 'com.chinasofti.rcs:id/fl_favorite_video'),
                   # 打开位置页面元素
                   "导航按钮": (MobileBy.ID, 'com.chinasofti.rcs:id/location_nativ_btn'),
+                  '消息体': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_tv'),
+                  "删除收藏":(MobileBy.ID, 'com.chinasofti.rcs:id/swipe_right'),
+                  '确定': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
                   }
 
     @TestLogger.log()
@@ -232,3 +235,25 @@ class MeCollectionPage(BasePage):
             message = "页面在{}s内，没有加载成功".format(str(timeout))
             raise AssertionError(message)
         return self
+
+    @TestLogger.log()
+    def press_and_move_left(self):
+        """元素内向左滑动"""
+        self.swipe_by_direction(self.__class__.__locators["消息体"],"left")
+
+    @TestLogger.log()
+    def is_delete_element_present(self):
+        """判断删除按钮是否存在"""
+        if not self._is_element_present(self.__class__.__locators["删除收藏"]):
+            raise AssertionError("删除收藏按钮不存在")
+        return True
+
+    @TestLogger.log()
+    def click_delete_collection(self):
+        """点击删除收藏"""
+        self.click_element(self.__class__.__locators["删除收藏"])
+
+    @TestLogger.log()
+    def click_sure_forward(self):
+        """点击确定"""
+        self.click_element(self.__class__.__locators["确定"])
