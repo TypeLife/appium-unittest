@@ -167,6 +167,7 @@ class ChatPicPage(BasePage):
             raise AssertionError("在所有照片首页没有 %s 张图片，请上传图片." % n)
         for i in range(n):
             pics[i].click()
+            time.sleep(0.5)
 
     @TestLogger.log()
     def select_video_fk(self, n=1):
