@@ -6,7 +6,8 @@ from library.core.utils.applicationcache import current_mobile
 from preconditions.BasePreconditions import LoginPreconditions
 from library.core.utils.testcasefilter import tags
 from pages import *
-
+import re
+import random
 
 class Preconditions(LoginPreconditions):
     """前置条件"""
@@ -1154,5 +1155,269 @@ class MsgLabelGroupingTest(TestCase):
         self.assertEqual(send_num, '4')
         pic_preview.click_back()
         cpp.click_back()
+        chat.wait_for_page_load()
+
+    @staticmethod
+    def public_edit_pic(edit_text="文本编辑"):
+        """图片编辑操作"""
+        # 1.在标签分组会话窗，点击输入框左上方的相册图标
+        chat = LabelGroupingChatPage()
+        # 点击图片按钮
+        chat.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        # 2.选择一张照片，点击右上角编辑按钮，进行涂鸦、马赛克、文本编辑
+        cpg.select_pic()
+        cpg.click_preview()
+        cppp = ChatPicPreviewPage()
+        cppp.wait_for_page_load()
+        cppp.click_edit()
+        pic = ChatPicEditPage()
+        # 涂鸦
+        pic.click_doodle()
+        pic.do_doodle()
+        # 马赛克
+        pic.click_mosaic()
+        pic.do_mosaic()
+        # 文本编辑
+        pic.click_text_edit_btn()
+        pic.input_pic_text(edit_text)
+        # 完成
+        pic.click_save()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0071(self):
+        """标签分组会话窗，编辑图片发送"""
+        self.public_edit_pic("VideoPic_0071")
+        chat = LabelGroupingChatPage()
+        pic = ChatPicEditPage()
+        # 3.点击保存按钮
+        pic.click_save()
+        # 4.点击发送
+        pic.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0072(self):
+        """标签分组会话窗，编辑图片不保存发送"""
+        self.public_edit_pic("VideoPic_0072")
+        chat = LabelGroupingChatPage()
+        pic = ChatPicEditPage()
+        # 点击发送按钮
+        pic.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0073(self):
+        """标签分组会话窗，编辑图片中途直接发送"""
+        self.public_edit_pic("VideoPic_0073")
+        chat = LabelGroupingChatPage()
+        pic = ChatPicEditPage()
+        pic.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0074(self):
+        """标签分组会话窗，编辑图片保存"""
+        self.public_edit_pic("VideoPic_0074")
+        chat = LabelGroupingChatPage()
+        pic = ChatPicEditPage()
+        # 3.点击保存
+        pic.click_save()
+        flag = pic.is_toast_exist("保存成功")
+        if not flag:
+            raise AssertionError("保存编辑图片时没有弹出“保存成功”提示")
+        # 返回分组会话窗
+        pic.click_cancle()
+        cppp = ChatPicPreviewPage()
+        cppp.click_back()
+        cpg = ChatPicPage()
+        cpg.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0075(self):
+        """标签分组会话窗，取消编辑图片"""
+        self.public_edit_pic("VideoPic_0075")
+        chat = LabelGroupingChatPage()
+        pic = ChatPicEditPage()
+        # 3.点击取消按钮
+        pic.click_cancle()
+        # 返回分组会话窗
+        cppp = ChatPicPreviewPage()
+        cppp.click_back()
+        cpg = ChatPicPage()
+        cpg.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0076(self):
+        """标签分组会话窗，取消编辑图片，点击发送按钮"""
+        self.public_edit_pic("VideoPic_0076")
+        chat = LabelGroupingChatPage()
+        pic = ChatPicEditPage()
+        # 3.点击取消按钮
+        pic.click_cancle()
+        # 4.点击发送按钮
+        pic.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0077(self):
+        """标签分组会话窗，发送相册内的图片"""
+        # 1.在标签分组会话窗，点击输入框左上方的相册图标
+        chat = LabelGroupingChatPage()
+        chat.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        # 2.选择一张照片，直接点击当前选中的图片，放大展示当前图片
+        cpg.select_pic()
+        cpg.click_preview()
+        cppp = ChatPicPreviewPage()
+        cppp.wait_for_page_load()
+        preview_info = cppp.get_pic_preview_info()
+        if not re.match(r'预览\(\d+/\d+\)', preview_info):
+            raise AssertionError("左上角展示的格式不是：预览(当前图片张数/当前相册的总张数)")
+        cppp.click_back()
+        cpg.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0078(self):
+        """标签分组会话窗，预览已选中的图片，隐藏编辑按钮"""
+        # 1、在标签分组会话窗，点击输入框左上方的相册图标
+        chat = LabelGroupingChatPage()
+        chat.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        # 2、选择2张照片后，点击左下角的预览按钮
+        cpg.select_pic(n=2)
+        cpg.click_preview()
+        cppp = ChatPicPreviewPage()
+        cppp.wait_for_page_load()
+        cppp.click_edit()
+        flag = cppp.is_toast_exist("仅支持勾选单张图片时进行编辑")
+        if not flag:
+            raise AssertionError("勾选多张图片时编辑按钮没有隐藏,点击‘编辑’按钮无‘仅支持勾选单张图片时进行编辑’提示")
+        cppp.click_back()
+        cpg.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0079(self):
+        """标签分组会话窗，勾选9张相册内图片发送"""
+        # 1.在标签分组会话窗，点击输入框左上方的相册图标
+        chat = LabelGroupingChatPage()
+        chat.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        # 2.选择9张图片，点击发送
+        cpg.select_pic(n=9)
+        cpg.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0080(self):
+        """标签分组会话窗，勾选超9张相册内图片发送"""
+        # 1.在标签分组会话窗，点击输入框左上方的相册图标
+        chat = LabelGroupingChatPage()
+        chat.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2.选择超9张图片
+        cpp.select_pic(n=10)
+        flag = cpp.is_toast_exist("最多只能选择9张照片")
+        if not flag:
+            raise AssertionError("选择超过9张图片时无‘最多只能选择9张照片’提示")
+        cpp.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0081(self):
+        """标签分组会话窗，同时发送相册中的图片和视屏"""
+        # 1、在标签分组会话窗，点击输入框左上方的相册图标
+        chat = LabelGroupingChatPage()
+        chat.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 2、在当前页面选择图片和视频
+        cpp.select_pic()
+        cpp.select_video()
+        flag = cpp.is_toast_exist("不能同时选择照片和视频")
+        if not flag:
+            raise AssertionError("同时选择照片和视频时无‘不能同时选择照片和视频’提示")
+        cpp.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping','DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0082(self):
+        """标签分组会话窗，使用拍照功能并发送照片"""
+        # 1、在标签分组会话窗，点击富媒体行拍照图标
+        chat = LabelGroupingChatPage()
+        chat.click_take_photo()
+        # 2、拍摄照片，点击“√”
+        cpp = ChatPhotoPage()
+        cpp.wait_for_page_load()
+        cpp.take_photo()
+        cpp.send_photo()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping','DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0083(self):
+        """标签分组会话窗，使用拍照功能并发送照片"""
+        # 1.在标签分组会话窗，点击富媒体行拍照图标
+        chat = LabelGroupingChatPage()
+        chat.click_take_photo()
+        # 2.拍摄照片，点击编辑图标，编辑该图片
+        cpp = ChatPhotoPage()
+        cpp.wait_for_page_load()
+        cpp.take_photo()
+        cpp.click_edit_pic()
+        pic = ChatPicEditPage()
+        pic.click_doodle()
+        pic.do_doodle()
+        # 3.点击"发送"
+        pic.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping','DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0084(self):
+        """标签分组会话窗，使用拍照功能拍照之后编辑并保存"""
+        # 1、在标签分组会话窗，点击富媒体行拍照图标
+        chat = LabelGroupingChatPage()
+        chat.click_take_photo()
+        # 2、拍摄照片，点击编辑图标，编辑该图片
+        cpp = ChatPhotoPage()
+        cpp.wait_for_page_load()
+        cpp.take_photo()
+        cpp.click_edit_pic()
+        pic = ChatPicEditPage()
+        pic.click_text_edit_btn()
+        pic.input_pic_text(text="VideoPic_0084")
+        pic.click_save()
+        # 3、点击“保存”
+        pic.click_save()
+        # 4、点击“发送”
+        pic.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0085(self):
+        """标签分组会话窗，使用拍照功能拍照编辑图片，再取消编辑并发送"""
+        # 1、在标签分组会话窗，点击富媒体行拍照图标
+        chat = LabelGroupingChatPage()
+        chat.click_take_photo()
+        # 2、拍摄照片，点击编辑图标，编辑该图片
+        cpp = ChatPhotoPage()
+        cpp.wait_for_page_load()
+        cpp.take_photo()
+        cpp.click_edit_pic()
+        pic = ChatPicEditPage()
+        pic.click_doodle()
+        pic.do_doodle()
+        # 3.点击"取消"
+        pic.click_cancle()
+        # 4.点击“发送”
+        cpp.send_photo()
         chat.wait_for_page_load()
 

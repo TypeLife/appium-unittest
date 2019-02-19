@@ -66,8 +66,8 @@ class ChatAudioPage(BasePage):
                   '不再询问': (MobileBy.ID, 'com.lbe.security.miui:id/do_not_ask_checkbox'),
                   '要允许 和飞信 录制音频吗？': (MobileBy.ID, 'com.lbe.security.miui:id/permission_message'),
                   '拒绝': (MobileBy.ID, 'android:id/button2'),
-                  '允许': (MobileBy.ID, 'android:id/button1'),
-
+                  '允许': (MobileBy.XPATH, "//*[contains(@text, '始终允许')]"),
+                  '发送': (MobileBy.ID, 'com.chinasofti.rcs:id/recodr_audio_finish'),
                   }
 
     @TestLogger.log()
@@ -143,3 +143,12 @@ class ChatAudioPage(BasePage):
         """点击允许"""
         self.click_element(self.__class__.__locators["允许"], auto_accept_permission_alert=False)
 
+    @TestLogger.log()
+    def click_only_voice(self):
+        """点击仅发送语音"""
+        self.click_element(self.__class__.__locators["仅发送语音"])
+
+    @TestLogger.log()
+    def click_send_bottom(self):
+        """点击发送"""
+        self.click_element(self.__class__.__locators["发送"])
