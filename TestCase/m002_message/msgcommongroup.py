@@ -839,6 +839,20 @@ class MsgCommonGroupTest(TestCase):
         flag = sc.is_toast_exist("已转发")
         self.assertTrue(flag)
         time.sleep(1)
+        # 删除群聊消息记录
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击删除聊天记录
+        gcsp.click_clear_chat_record()
+        gcsp.wait_clear_chat_record_confirmation_box_load()
+        # 点击确认
+        gcsp.click_determine()
+        flag = gcsp.is_toast_exist("聊天记录清除成功")
+        self.assertTrue(flag)
+        # 点击返回群聊页面
+        gcsp.click_back()
+        time.sleep(2)
         # 返回消息页面
         gcp.click_back()
         sogp = SelectOneGroupPage()
@@ -857,6 +871,205 @@ class MsgCommonGroupTest(TestCase):
                 cwp.wait_for_msg_send_status_become_to('发送成功', 10)
             except TimeoutException:
                 raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            time.sleep(2)
+            # 最后删除消息记录，返回消息页面结束用例
+            mess.press_file_to_do("哈哈","删除")
+            chat.click_back()
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_common_group_0016(self):
+        """1、长按文本消息，选择转发功能，跳转到联系人选择器页面
+            2、选择最近聊天，确认转发，是否会在消息列表，重新产生一个新的会话窗口或者在已有窗口中增加一条记录
+            3、进入到聊天会话窗口页面，转发的消息，是否已发送成功并正常展示"""
+        gcp = GroupChatPage()
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 长按信息并点击转发
+        gcp.press_file_to_do("哈哈", "转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_local_contact_load()
+        # 选择最近聊天中“和飞信电话”联系人进行转发
+        sc.click_one_contact("和飞信电话")
+        sc.click_sure_forward()
+        flag = sc.is_toast_exist("已转发")
+        self.assertTrue(flag)
+        time.sleep(1)
+        # 返回消息页面
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc.click_back()
+        time.sleep(1)
+        # 判断消息页面有新的会话窗口
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            self.assertTrue(mess.is_text_present("和飞信电话"))
+            mess.click_element_by_text("和飞信电话")
+            chat = SingleChatPage()
+            if chat.is_text_present("用户须知"):
+                chat.click_i_have_read()
+            chat.wait_for_page_load()
+            #判断是否新增一条消息记录
+            if not chat.is_text_present("哈哈"):
+                try:
+                    raise AssertionError("没有新增一条消息记录")
+                except AssertionError as e:
+                    print(e)
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            chat.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_common_group_0017(self):
+        """1、长按文本消息，选择收藏功能，收藏成功后，是否弹出toast提示：已收藏
+            2、在我的页面，点击收藏入口，检查刚收藏的消息内容，是否可以正常展示出来
+            3、点击收藏成功的消息体，是否可以进入到消息展示详情页面
+            4、左滑收藏消息体，是否会展示删除按钮
+            5、点击删除按钮，是否可以删除收藏的消息体"""
+        gcp = GroupChatPage()
+        # 长按信息并点击收藏
+        gcp.press_file_to_do("哈哈", "收藏")
+        flag = gcp.is_toast_exist("已收藏")
+        self.assertTrue(flag)
+        # 删除群聊消息记录
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击删除聊天记录
+        gcsp.click_clear_chat_record()
+        gcsp.wait_clear_chat_record_confirmation_box_load()
+        # 点击确认
+        gcsp.click_determine()
+        flag = gcsp.is_toast_exist("聊天记录清除成功")
+        self.assertTrue(flag)
+        # 点击返回群聊页面
+        gcsp.click_back()
+        time.sleep(2)
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc = SelectContactsPage()
+        sc.click_back()
+        #进入我页面
+        mess = MessagePage()
+        mess.open_me_page()
+        me=MePage()
+        me.click_collection()
+        time.sleep(1)
+        if not me.is_text_present("哈哈"):
+            raise AssertionError("收藏的消息内容不能正常展示出来")
+        mcp=MeCollectionPage()
+        mcp.click_text("哈哈")
+        time.sleep(1)
+        if not mcp.is_text_present("详情"):
+            raise AssertionError("不能进入到消息展示详情页面")
+        mcp.click_back()
+        time.sleep(2)
+        #左滑收藏消息体
+        mcp.press_and_move_left()
+        #判断是否有删除按钮
+        if mcp.is_delete_element_present():
+            mcp.click_delete_collection()
+            mcp.click_sure_forward()
+            if not mcp.is_text_present("没有任何收藏"):
+                raise AssertionError("不可以删除收藏的消息体")
+            time.sleep(1)
+            mcp.click_back()
+            mess.open_message_page()
+
+    @staticmethod
+    def setUp_test_msg_common_group_0018():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_common_group_0018(self):
+        """1、长按语音消息，选择收藏功能，收藏成功后，是否弹出toast提示：已收藏
+            2、在我的页面，点击收藏入口，检查刚收藏的语音消息体，是否可以正常展示出来
+            3、点击收藏成功的消息体，是否可以进入到消息展示详情页面
+            4、在收藏消息体详情页面，是否可以点击播放和暂停语音消息
+            5、左滑收藏消息体，是否会展示删除按钮
+            6、点击删除按钮，是否可以删除收藏的消息体"""
+        gcp = GroupChatPage()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            #点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        gcp.hide_keyboard()
+        time.sleep(1)
+        gcp.press_voice_message_to_do("收藏")
+        if not gcp.is_toast_exist("已收藏"):
+            raise AssertionError("收藏失败")
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc = SelectContactsPage()
+        sc.click_back()
+        # 进入我页面
+        mess = MessagePage()
+        mess.open_me_page()
+        me = MePage()
+        me.click_collection()
+        time.sleep(1)
+        if not me.is_text_present("秒"):
+            raise AssertionError("收藏的消息内容不能正常展示出来")
+        mcp=MeCollectionPage()
+        mcp.click_text("秒")
+        time.sleep(1)
+        if not mcp.is_text_present("详情"):
+            raise AssertionError("不能进入到消息展示详情页面")
+        #点击播放和暂停语音消息
+
+        mcp.click_back()
+        time.sleep(2)
+        # 左滑收藏消息体
+        mcp.press_and_move_left()
+        # 判断是否有删除按钮
+        if mcp.is_delete_element_present():
+            mcp.click_delete_collection()
+            mcp.click_sure_forward()
+            if not mcp.is_text_present("没有任何收藏"):
+                raise AssertionError("不可以删除收藏的消息体")
+
+
+
+    @staticmethod
+    def setUp_test_msg_common_group_0019():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.enter_group_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0019(self):
@@ -868,8 +1081,8 @@ class MsgCommonGroupTest(TestCase):
             audio.click_sure()
         # 权限申请允许弹窗判断
         time.sleep(1)
-        flag = audio.wait_for_audio_allow_page_load()
-        self.assertTrue(flag)
+        # flag = audio.wait_for_audio_allow_page_load()
+        # self.assertTrue(flag)
         audio.click_allow()
         audio.wait_until(condition=lambda d: audio.is_text_present("退出"))
         audio.click_exit()

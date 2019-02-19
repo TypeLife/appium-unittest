@@ -50,6 +50,7 @@ class MessagePage(FooterPage):
                   '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text="%s"]/../../*[@resource-id="com.chinasofti.rcs:id/ll_unread"]'),
         '置顶群': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name"]'),
         '消息发送失败感叹号': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_fail_status'),
+        '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
     }
 
     @TestLogger.log('检查顶部搜索框是否显示')
@@ -374,3 +375,10 @@ class MessagePage(FooterPage):
     def is_iv_fail_status_present(self):
         """判断消息发送失败“！”标致是否存在"""
         return self._is_element_present(self.__locators['消息发送失败感叹号'])
+
+    @TestLogger.log()
+    def press_file_to_do(self, file, text):
+        """长按指定文件进行操作"""
+        el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))
+        self.press(el)
+        self.click_element(self.__class__.__locators[text])
