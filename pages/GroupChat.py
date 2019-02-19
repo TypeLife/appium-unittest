@@ -223,6 +223,7 @@ class GroupChatPage(BaseChatPage):
 
     @TestLogger.log()
     def press_voice_message_to_do(self,text):
-        """长按指定文件"""
-        self.press(self.__class__.__locators["语音消息体"])
+        """长按语言消息体"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/linearlayout_msg_content'))
+        self.press(el)
         self.click_element(self.__class__.__locators[text])
