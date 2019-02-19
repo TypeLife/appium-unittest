@@ -15,7 +15,7 @@ class LabelGroupingChatPage(BaseChatPage):
                   MobileBy.ID, 'com.chinasofti.rcs:id/pop_10g_window_drop_view'),
                   'com.chinasofti.rcs:id/id_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/id_toolbar'),
                   'com.chinasofti.rcs:id/back': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
-                  'com.chinasofti.rcs:id/back_arrow': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
+                  '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
                   'com.chinasofti.rcs:id/chat_mode_content': (MobileBy.ID, 'com.chinasofti.rcs:id/chat_mode_content'),
                   'lab2': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
                   '多方通话': (MobileBy.ID, 'com.chinasofti.rcs:id/action_multicall'),
@@ -71,3 +71,8 @@ class LabelGroupingChatPage(BaseChatPage):
                 message
             )
         return self
+
+    @TestLogger.log()
+    def click_back(self):
+        """点击返回按钮"""
+        self.click_element(self.__class__.__locators["返回"])
