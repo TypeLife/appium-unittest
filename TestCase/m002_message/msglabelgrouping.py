@@ -9,6 +9,7 @@ from pages import *
 import re
 import random
 
+
 class Preconditions(LoginPreconditions):
     """前置条件"""
 
@@ -1001,7 +1002,7 @@ class MsgLabelGroupingTest(TestCase):
             detail_page.wait_for_page_load()
             names = detail_page.get_contacts_names()
             if not names:
-                print("WARN: Please add m005_contacts in %s." % teams[0])
+                raise AssertionError("Please add linkman in HeContacts %s." % teams[0])
             for name in names:
                 detail_page.select_one_linkman(name)
                 flag = detail_page.is_toast_exist("该联系人不可选", timeout=3)
@@ -1012,10 +1013,7 @@ class MsgLabelGroupingTest(TestCase):
             flag2 = detail_page.is_toast_exist("已转发")
             self.assertTrue(flag2)
         else:
-            print("WARN: Please create a team and add m005_contacts.")
-            shcp.click_back()
-            scp.click_back()
-        chat.wait_for_page_load()
+            raise AssertionError("WARN: Please create a team and add m005_contacts.")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_msg_label_grouping_0034(self):
@@ -1040,10 +1038,7 @@ class MsgLabelGroupingTest(TestCase):
             flag = sogp.is_toast_exist("已转发")
             self.assertTrue(flag)
         else:
-            print("WARN: There is no group.")
-            sogp.click_back()
-            scp.click_back()
-        chat.wait_for_page_load()
+            raise AssertionError("WARN: There is no group.")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_msg_label_grouping_0035(self):
@@ -1421,3 +1416,133 @@ class MsgLabelGroupingTest(TestCase):
         cpp.send_photo()
         chat.wait_for_page_load()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0086(self):
+        """标签分组会话窗，打开拍照，立刻返回会话窗口"""
+        # 1、在标签分组会话窗，点击富媒体行拍照图标
+        chat = LabelGroupingChatPage()
+        chat.click_take_photo()
+        cpp = ChatPhotoPage()
+        cpp.take_photo()
+        # 2、点击“∨”
+        cpp.send_photo()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0087(self):
+        """标签分组会话窗，打开拍照，拍照之后返回会话窗口"""
+        # 1、在标签分组会话窗，点击富媒体行拍照图标
+        chat = LabelGroupingChatPage()
+        chat.click_take_photo()
+        # 2、打开照相机，点击“返回图标”
+        cpp = ChatPhotoPage()
+        cpp.take_photo_back()
+        chat.wait_for_page_load()
+
+    @staticmethod
+    def public_send_pic():
+        """在标签分组会话页面发送一张图片"""
+        chat = LabelGroupingChatPage()
+        chat.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        cpp.select_pic()
+        cpp.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0088(self):
+        """标签分组会话窗，转发自己发送的图片给本地联系人"""
+        self.public_send_pic()
+        # 1、在标签分组会话窗，长按自己发送的图片
+        chat = LabelGroupingChatPage()
+        # 2、点击转发
+        chat.forward_pic()
+        # 3、选择任意本地联系人
+        scp = SelectContactsPage()
+        scp.select_local_contacts()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        names = slcp.get_contacts_name()
+        if names:
+            slcp.select_one_member_by_name(names[0])
+            # 3、点击确定
+            slcp.click_sure_forward()
+            flag = slcp.is_toast_exist("已转发")
+            if not flag:
+                raise AssertionError("在标签分组会话页面转发图片时，没有‘已转发’提示")
+        else:
+            print("WARN: There is no linkman.")
+            slcp.click_back()
+            scp.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0089(self):
+        """标签分组会话窗，转发自己发送的图片给和通讯录联系人"""
+        # 1、在标签分组会话窗，长按自己发送的图片
+        self.public_send_pic()
+        chat = LabelGroupingChatPage()
+        # 2、点击转发
+        chat.forward_pic()
+        # 3、选择任意和通讯录联系人
+        scp = SelectContactsPage()
+        scp.click_he_contacts()
+        shcp = SelectHeContactsPage()
+        shcp.wait_for_page_load()
+        teams = shcp.get_team_names()
+        if teams:
+            shcp.select_one_team_by_name(teams[0])
+            detail_page = SelectHeContactsDetailPage()
+            detail_page.wait_for_page_load()
+            names = detail_page.get_contacts_names()
+            if not names:
+                print("WARN: Please add m005_contacts in %s." % teams[0])
+            for name in names:
+                detail_page.select_one_linkman(name)
+                flag = detail_page.is_toast_exist("该联系人不可选", timeout=3)
+                if not flag:
+                    break
+            # 3、点击确定
+            detail_page.click_sure_forward()
+            flag2 = detail_page.is_toast_exist("已转发")
+            if not flag2:
+                raise AssertionError("标签分组会话窗，转发自己发送的图片给和通讯录联系人无‘已转发’提示")
+        else:
+            raise AssertionError("WARN: Please create a team and add m005_contacts.")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0090(self):
+        """标签分组会话窗，转发自己发送的图片给陌生人"""
+        # 1、在标签分组会话窗，长按自己发送的图片
+        self.public_send_pic()
+        chat = LabelGroupingChatPage()
+        chat.press_pic()
+        # 2、点击转发
+        chat.click_forward()
+        # 3、选择任意陌生人
+        scp = SelectContactsPage()
+        times = 600
+        while times > 0:
+            tel = "147752" + str(random.randint(10000, 99999))
+            scp.search(tel)
+            # 构造陌生号码发送
+            if scp.is_present_unknown_member():
+                scp.click_unknown_member()
+                scp.click_sure_forward()
+                flag = scp.is_toast_exist("已转发", timeout=5)
+                if not flag:
+                    raise AssertionError("标签分组会话窗，转发自己发送的图片给陌生人无‘已转发’提示")
+                chat.wait_for_page_load()
+                break
+            times = times - 1
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0091(self):
+        """标签分组会话窗，删除自己发送的图片"""
+        # 1、在标签分组会话窗，长按自己发送的图片
+        self.public_send_pic()
+        chat = LabelGroupingChatPage()
+        chat.press_pic()
+        # 2、点击删除
+        chat.click_delete()
+        chat.wait_for_page_load()
