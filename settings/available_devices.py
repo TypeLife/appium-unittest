@@ -383,7 +383,7 @@ DEVICES_CONFIG_YMS = {
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '13537795364'
+                'CARD_NUMBER': '19849476421'
             },
         ]
     },

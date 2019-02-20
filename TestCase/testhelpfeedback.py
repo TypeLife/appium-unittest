@@ -118,7 +118,7 @@ class HelpFeedbackTest(TestCase):
         Preconditions.take_in_me_page()
         Preconditions.take_in_help_page()
 
-    @tags('ALL', 'CMCC')
+    @tags('ALL', 'CMCC','YMSDEBUG')
     def test_help_feedback_001(self):
         haf = HelpAndFeedBackPage()
         haf.wait_for_page_load()
