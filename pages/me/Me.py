@@ -75,6 +75,10 @@ class MePage(FooterPage):
         '姓名': (MobileBy.ID, 'com.chinasofti.rcs:id/card_name'),
     }
 
+    @TestLogger.log('点击个人名片头像')
+    def click_head(self):
+        self.click_element(self.__locators['com.chinasofti.rcs:id/card_head_photo'])
+
     @TestLogger.log('点击二维码图标')
     def click_qr_code_icon(self):
         self.click_element(self.__locators['二维码入口'])

@@ -1058,6 +1058,7 @@ class MsgGroupChatTest(TestCase):
             sogp = SelectOneGroupPage()
             sogp.click_back()
             sc = SelectContactsPage()
+            sc.wait_for_page_load()
             sc.click_back()
         mess = MessagePage()
         mess.wait_for_page_load()
@@ -1115,8 +1116,17 @@ class MsgGroupChatTest(TestCase):
         # 2.在联系人选择页面，勾选人数超出剩余可勾选人数，是否会提示
         for name in names:
             contacts_page.search_and_select_one_member_by_name(name)
-        flag = contacts_page.is_toast_exist("最多只能选择499人")
-        self.assertTrue(flag)
+        selected_nums, threshold_nums = contacts_page.get_selected_and_threshold_nums()
+        if selected_nums > threshold_nums:
+            name_list = contacts_page.get_contacts_name()
+            if contacts_page.contacts_is_selected(name_list[0]):
+                contacts_page.select_one_member_by_name(name_list[0])
+            contacts_page.select_one_member_by_name(name_list[0])
+            flag = contacts_page.is_toast_exist("最多只能选择" + str(threshold_nums) + "人", timeout=6)
+            if not flag:
+                raise AssertionError("勾选人数超出剩余可勾选人数无‘最多只能选择" + str(threshold_nums) + "人' 提示")
+        else:
+            raise AssertionError("没有选择超出剩余可勾选人数，请确定")
         contacts_page.click_sure()
         gcp = GroupChatPage()
         gcp.wait_for_page_load()
@@ -1388,7 +1398,9 @@ class MsgGroupChatTest(TestCase):
         except:
             print("ok")
         else:
-            raise AssertionError("修改群名片录入31个英文字符，代码可以实现，请确认是否可以手动录入31个英文字符！")
+            name = group_name.get_input_group_name()
+            if len(name) != 30:
+                raise AssertionError("修改群名片录入31个英文字符，代码可以实现，请确认是否可以手动录入31个英文字符！")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0076(self):
@@ -1435,7 +1447,9 @@ class MsgGroupChatTest(TestCase):
         except:
             print("ok")
         else:
-            raise AssertionError("修改群名片录入11个汉字，代码可以实现，请确认是否可以手动录入11个汉字！")
+            name = group_name.get_input_group_name()
+            if len(name) != 10:
+                raise AssertionError("修改群名片录入11个汉字，代码可以实现，请确认是否可以手动录入11个汉字！")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0078(self):

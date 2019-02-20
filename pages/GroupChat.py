@@ -49,6 +49,7 @@ class GroupChatPage(BaseChatPage):
                   '勾': (MobileBy.ID, 'com.chinasofti.rcs:id/img_message_down_file'),
                   '重发按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
                   '重发消息确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
+                  '语音消息体': (MobileBy.ID, 'com.chinasofti.rcs:id/img_audio_play_icon'),
                   }
 
     def is_exist_msg_videos(self):
@@ -219,3 +220,31 @@ class GroupChatPage(BaseChatPage):
         except:
                 pass
         return self
+
+    @TestLogger.log()
+    def press_voice_message_to_do(self,text):
+        """长按语言消息体"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/linearlayout_msg_content'))
+        self.press(el)
+        self.click_element(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def get_width_of_msg_of_text(self):
+        """获取文本信息框的大小"""
+        el=self.get_element((MobileBy.ID,'com.chinasofti.rcs:id/tv_message'))
+        rect=el.rect
+        return rect["width"]
+
+    @TestLogger.log()
+    def is_call_page_load(self):
+        """判断是否可以发起呼叫"""
+        el = self.get_element((MobileBy.ID, 'com.android.incallui:id/endButton'))
+        if el:
+            return True
+        else:
+            return False
+
+    @TestLogger.log()
+    def click_end_call_button(self):
+        """点击结束呼叫按钮 """
+        self.click_element((MobileBy.ID, 'com.android.incallui:id/endButton'))

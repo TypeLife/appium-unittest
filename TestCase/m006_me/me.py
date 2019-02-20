@@ -1,15 +1,15 @@
-import unittest
 import uuid
 
+import preconditions
 from library.core.TestCase import TestCase
 from library.core.utils import email_helper
-from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
+from library.core.utils.applicationcache import current_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
-import preconditions
 from pages.components import ContactsSelector
 from pages.components.PickGroup import PickGroupPage
 from pages.components.SearchGroup import SearchGroupPage
+from pages.me.NameCard import NameCardPage
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -93,8 +93,7 @@ class MeTest(TestCase):
             links.append(qr.data.decode('utf-8'))
         self.assertIn(my_link, links)
 
-    @staticmethod
-    def setUp_test_me_0002():
+    def setUp_test_me_0002(self):
         """
         1.网络正常
         2.已登录客户端
@@ -102,11 +101,7 @@ class MeTest(TestCase):
         4.有群组
         :return:
         """
-        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
-        current_mobile().hide_keyboard_if_display()
-        preconditions.make_already_in_message_page()
-        me_page = MePage()
-        me_page.open_me_page()
+        self.setUp_test_me_0001()
 
     @tags("ALL", "SMOKE", "CMCC")
     def test_me_0002(self):
@@ -164,8 +159,7 @@ class MeTest(TestCase):
             links.append(qr.data.decode('utf-8'))
         self.assertIn(my_link, links)
 
-    @staticmethod
-    def setUp_test_me_0005():
+    def setUp_test_me_0005(self):
         """
         1.网络正常
         2.已登录客户端
@@ -173,11 +167,7 @@ class MeTest(TestCase):
         4.有群组
         :return:
         """
-        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
-        current_mobile().hide_keyboard_if_display()
-        preconditions.make_already_in_message_page()
-        me_page = MePage()
-        me_page.open_me_page()
+        self.setUp_test_me_0001()
 
     @tags("ALL", "SMOKE", "CMCC")
     def test_me_0005(self):
@@ -237,8 +227,7 @@ class MeTest(TestCase):
             links.append(qr.data.decode('utf-8'))
         self.assertIn(my_link, links)
 
-    @staticmethod
-    def setUp_test_me_0008():
+    def setUp_test_me_0008(self):
         """
         1.网络正常
         2.已登录客户端
@@ -246,11 +235,7 @@ class MeTest(TestCase):
         4.有群组
         :return:
         """
-        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
-        current_mobile().hide_keyboard_if_display()
-        preconditions.make_already_in_message_page()
-        me_page = MePage()
-        me_page.open_me_page()
+        self.setUp_test_me_0001()
 
     @tags("ALL", "SMOKE", "CMCC")
     def test_me_0008(self):
@@ -310,8 +295,7 @@ class MeTest(TestCase):
             links.append(qr.data.decode('utf-8'))
         self.assertIn(my_link, links)
 
-    @staticmethod
-    def setUp_test_me_0009():
+    def setUp_test_me_0009(self):
         """
         1.网络正常
         2.已登录客户端
@@ -319,11 +303,7 @@ class MeTest(TestCase):
         4.有群组
         :return:
         """
-        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
-        current_mobile().hide_keyboard_if_display()
-        preconditions.make_already_in_message_page()
-        me_page = MePage()
-        me_page.open_me_page()
+        self.setUp_test_me_0001()
 
     @tags("ALL", "SMOKE", "CMCC")
     def test_me_0009(self):
@@ -382,6 +362,82 @@ class MeTest(TestCase):
         for qr in qrs:
             links.append(qr.data.decode('utf-8'))
         self.assertIn(my_link, links)
+
+    def setUp_test_me_0010(self):
+        """
+        1.网络正常
+        2.已登录客户端
+        3.当前在我页面
+        4.有群组
+        :return:
+        """
+        self.setUp_test_me_0001()
+
+    @tags("ALL", "SMOKE", "CMCC")
+    def test_me_0010(self):
+        """我的二维码下载"""
+        # 进入我的二维码页面
+        me_page = MePage()
+        me_page.click_qr_code_icon()
+
+        # 点击转发
+        qr_code = MyQRCodePage()
+        # 等待加载完成
+        qr_code.wait_for_loading_animation_end()
+        # 解析二维码
+        import time
+        time.sleep(2)
+
+        # 获取要转发的二维码（解析为链接）
+        my_link = qr_code.decode_qr_code()
+        print(my_link)
+        qr_code.click_save_qr_code()
+
+        toast = current_mobile().wait_until(
+            condition=lambda d: current_mobile().get_element(['xpath', '//android.widget.Toast'])
+        )
+        self.assertEqual('已保存', toast.text)
+        qr_code.click_back()
+        me_page.wait_for_page_load()
+        me_page.open_message_page()
+
+    def setUp_test_me_0011(self):
+        """
+        1.网络正常
+        2.已登录客户端
+        3.当前在我页面
+        4.有群组
+        :return:
+        """
+        self.setUp_test_me_0001()
+
+    @tags("ALL", "SMOKE", "CMCC")
+    def test_me_0011(self):
+        """个人资料-分享名片到群"""
+        # 点击头像进入名片
+        me_page = MePage()
+        me_page.click_head()
+
+        # 点击分享名片
+        card = NameCardPage()
+        card.wait_for_page_load()
+        info = card.get_name_card_info()
+        print(info)
+        card.click_share_btn()
+
+        # 分享到一个群
+        current_mobile().click_text("选择一个群", True)
+
+        pg = PickGroupPage()
+        pg.wait_for_page_load()
+        pg.select_group('群聊1')
+        current_mobile().click_text("发送名片", True)
+
+        toast = current_mobile().wait_until(
+            condition=lambda d: current_mobile().get_element(['xpath', '//android.widget.Toast'])
+        )
+        self.assertEqual('已发送', toast.text)
+
 
 class MeMsgSettingTest(TestCase):
     """

@@ -128,7 +128,7 @@ class MobileDriver(ABC):
             return False
         else:
             try:
-                t = self.get_elements(['xpath', '//*'])
+                t = self.driver.find_elements('xpath', '//*')
                 del t
                 return True
             except Exception:  # InvalidSessionIdException or WebDriverException:
@@ -1401,6 +1401,42 @@ Tips:
         command = 'input keyevent KEYCODE_ENDCALL'
         if self.is_phone_in_calling_state():
             return self.execute_shell_command(command)
+
+    @TestLogger.log('点击元素的外面')
+    def click_out_side_of_element(self, locator, duration=None, default_timeout=3, auto_accept_permission_alert=True):
+        try:
+            if isinstance(locator, (tuple, list)):
+                box = self.wait_until(
+                    condition=lambda d: self.get_element(locator),
+                    timeout=default_timeout,
+                    auto_accept_permission_alert=auto_accept_permission_alert
+                )
+            else:
+                box = locator
+        except TimeoutException:
+            raise NoSuchElementException('找不到元素：{}'.format(locator))
+
+        viewport_rect = self.driver.capabilities.get('viewportRect')
+        horizontal_center = (viewport_rect.get('left') + viewport_rect.get('width')) // 2
+        vertical_center = (viewport_rect.get('top') + viewport_rect.get('height')) // 2
+
+        top_margin = abs(viewport_rect.get('top') - box.location.get('y'))
+        left_margin = abs(viewport_rect.get('left') - box.location.get('y'))
+        right_margin = abs(viewport_rect.get('left') + viewport_rect.get('width') - box.location.get('y'))
+        bottom_margin = abs(viewport_rect.get('top') + viewport_rect.get('height') - box.location.get('y'))
+        if top_margin:
+            position = (horizontal_center, viewport_rect.get('top') + top_margin // 2)
+        elif left_margin:
+            position = (viewport_rect.get('left') + left_margin // 2, vertical_center)
+        elif right_margin:
+            position = (viewport_rect.get('left') + viewport_rect.get('width') - top_margin // 2, vertical_center)
+        elif bottom_margin:
+            position = (horizontal_center, viewport_rect.get('top') + viewport_rect.get('height') - bottom_margin // 2)
+        else:
+            print('元素外面没有空白位置')
+            return
+        print('tap position: {}'.format(position))
+        self.tap([position], duration)
 
     def __str__(self):
         device_info = {

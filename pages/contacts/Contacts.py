@@ -53,7 +53,10 @@ class ContactsPage(FooterPage):
         '消息': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMessage'),
         '通话': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCall'),
         '工作台': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCircle'),
-        '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe')
+        '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe'),
+        '弹出框点击允许': (MobileBy.ID, 'com.android.packageinstaller:id/permission_allow_button'),
+        '弹出框点击禁止': (MobileBy.ID, 'com.android.packageinstaller:id/permission_deny_button'),
+
     }
 
     @TestLogger.log("获取所有联系人名")
@@ -79,10 +82,12 @@ class ContactsPage(FooterPage):
 
     @TestLogger.log('点击+号')
     def click_add(self):
+        """点击+号"""
         self.click_element(self.__locators['+号'])
 
     @TestLogger.log('点击搜索框')
     def click_search_box(self):
+        """点击搜索框"""
         self.click_element(self.__locators['搜索'])
 
     @TestLogger.log('打开群聊列表')
@@ -131,7 +136,7 @@ class ContactsPage(FooterPage):
 
     def swipe_half_page_up(self):
         """向上滑动半页"""
-        self.swipe_by_percent_on_screen(50, 70, 50, 40, 900)
+        self.swipe_by_percent_on_screen(50, 72, 50, 36, 800)
 
     @TestLogger.log()
     def get_all_contacts_name(self):
@@ -159,6 +164,11 @@ class ContactsPage(FooterPage):
     def click_label_grouping(self):
         """点击标签分组1"""
         self.click_element(self.__class__.__locators['标签分组'])
+
+    @TestLogger.log()
+    def click_and_address(self):
+        """点击和通讯录"""
+        self.click_element(self.__class__.__locators['和通讯录'])
 
 
     @TestLogger.log('点击公众号图标')
@@ -195,3 +205,18 @@ class ContactsPage(FooterPage):
             create_page.create_contact(name, number)
             detail_page.wait_for_page_load()
             detail_page.click_back_icon()
+
+    @TestLogger.log()
+    def click_and_address(self):
+        """点击和通讯录"""
+        self.click_element(self.__class__.__locators['和通讯录'])
+
+    @TestLogger.log()
+    def click_always_allowed(self):
+        """获取通讯录权限点击始终允许"""
+        self.click_element(self.__class__.__locators['弹出框点击允许'])
+
+    @TestLogger.log()
+    def click_forbidden(self):
+        """点击禁止"""
+        self.click_element(self.__class__.__locators['弹出框点击禁止'])
