@@ -5,7 +5,7 @@ import sys
 import time
 from collections import OrderedDict
 from lxml import etree
-
+import uuid
 from appium.webdriver.common.mobileby import MobileBy
 
 import settings
@@ -88,6 +88,8 @@ def generate_page_object():
                 if isinstance(text, str):
                     text = text.replace('\n', '')
                 key = text if text else resource_id
+                if key in dict(elements):
+                    key = key + uuid.uuid4().__str__()
                 if key:
                     if resource_id:
                         elements.append((key, (MobileBy.ID, resource_id)))
