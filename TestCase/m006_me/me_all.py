@@ -594,7 +594,7 @@ class MeAll(TestCase):
         self.assertEquals(mep1.is_element_exist("点击拍照"), True)
         # 3.点击选择图片
         mep1.click_select_pics()
-        time.sleep(1)
+        time.sleep(2)
         self.assertEquals(mep1.is_element_exist("照片框"), True)
         # 4.点击返回
         mep1.click_back()
