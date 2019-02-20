@@ -28,6 +28,7 @@ class Preconditions(LoginPreconditions):
         # 不存在标签分组则创建
         group_name = Preconditions.get_label_grouping_name()
         group_names = label_grouping.get_label_grouping_names()
+        time.sleep(1)
         if not group_names:
             label_grouping.click_new_create_group()
             label_grouping.wait_for_create_label_grouping_page_load()
@@ -829,7 +830,7 @@ class MsgLabelGroupingTest(TestCase):
             # 2.撤回文件
             chat.recall_mess(".txt")
             time.sleep(1)
-            if chat.is_text_present("我知道了"):
+            if chat.is_text_present("知道了"):
                 chat.click_i_know()
         else:
             local_file.click_back()
@@ -1327,7 +1328,7 @@ class MsgLabelGroupingTest(TestCase):
         cpp.click_back()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_Msg_PrivateChat_VideoPic_0081(self):
         """标签分组会话窗，同时发送相册中的图片和视屏"""
         # 1、在标签分组会话窗，点击输入框左上方的相册图标
@@ -1344,7 +1345,7 @@ class MsgLabelGroupingTest(TestCase):
         cpp.click_back()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping','DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_Msg_PrivateChat_VideoPic_0082(self):
         """标签分组会话窗，使用拍照功能并发送照片"""
         # 1、在标签分组会话窗，点击富媒体行拍照图标
@@ -1357,7 +1358,7 @@ class MsgLabelGroupingTest(TestCase):
         cpp.send_photo()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping','DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_Msg_PrivateChat_VideoPic_0083(self):
         """标签分组会话窗，使用拍照功能并发送照片"""
         # 1.在标签分组会话窗，点击富媒体行拍照图标
@@ -1375,7 +1376,7 @@ class MsgLabelGroupingTest(TestCase):
         pic.click_send()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping','DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_Msg_PrivateChat_VideoPic_0084(self):
         """标签分组会话窗，使用拍照功能拍照之后编辑并保存"""
         # 1、在标签分组会话窗，点击富媒体行拍照图标
@@ -1396,7 +1397,7 @@ class MsgLabelGroupingTest(TestCase):
         pic.click_send()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_Msg_PrivateChat_VideoPic_0085(self):
         """标签分组会话窗，使用拍照功能拍照编辑图片，再取消编辑并发送"""
         # 1、在标签分组会话窗，点击富媒体行拍照图标
@@ -1416,7 +1417,7 @@ class MsgLabelGroupingTest(TestCase):
         cpp.send_photo()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_Msg_PrivateChat_VideoPic_0086(self):
         """标签分组会话窗，打开拍照，立刻返回会话窗口"""
         # 1、在标签分组会话窗，点击富媒体行拍照图标
@@ -1428,7 +1429,7 @@ class MsgLabelGroupingTest(TestCase):
         cpp.send_photo()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_Msg_PrivateChat_VideoPic_0087(self):
         """标签分组会话窗，打开拍照，拍照之后返回会话窗口"""
         # 1、在标签分组会话窗，点击富媒体行拍照图标
@@ -1450,7 +1451,7 @@ class MsgLabelGroupingTest(TestCase):
         cpp.click_send()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_Msg_PrivateChat_VideoPic_0088(self):
         """标签分组会话窗，转发自己发送的图片给本地联系人"""
         self.public_send_pic()
@@ -1476,7 +1477,7 @@ class MsgLabelGroupingTest(TestCase):
             slcp.click_back()
             scp.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_Msg_PrivateChat_VideoPic_0089(self):
         """标签分组会话窗，转发自己发送的图片给和通讯录联系人"""
         # 1、在标签分组会话窗，长按自己发送的图片
@@ -1510,7 +1511,7 @@ class MsgLabelGroupingTest(TestCase):
         else:
             raise AssertionError("WARN: Please create a team and add m005_contacts.")
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_Msg_PrivateChat_VideoPic_0090(self):
         """标签分组会话窗，转发自己发送的图片给陌生人"""
         # 1、在标签分组会话窗，长按自己发送的图片
@@ -1536,7 +1537,7 @@ class MsgLabelGroupingTest(TestCase):
                 break
             times = times - 1
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_Msg_PrivateChat_VideoPic_0091(self):
         """标签分组会话窗，删除自己发送的图片"""
         # 1、在标签分组会话窗，长按自己发送的图片
