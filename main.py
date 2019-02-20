@@ -2,6 +2,11 @@ import os
 import traceback
 import unittest
 
+from pip._internal import main as install_requirements
+
+# 自动安装依赖
+install_requirements(['install', '-r', 'requirements.txt'])
+
 if __name__ == '__main__':
     os.environ.setdefault('AVAILABLE_DEVICES_SETTING', 'AVAILABLE_DEVICES')
     from library.core.utils import CommandLineTool
