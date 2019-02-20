@@ -41,7 +41,7 @@ class ChatLocationPage(BasePage):
         # 权限框
         '允许': (MobileBy.XPATH, '//android.widget.Button[@text="允许"]'),
         '拒绝': (MobileBy.XPATH, '//android.widget.Button[@text="拒绝"]'),
-        '要允许 和飞信 通过网络或者卫星对您的手机定位吗？': (MobileBy.ID, 'com.lbe.security.miui:id/permission_message'),
+        '要允许 和飞信 通过网络或者卫星对您的手机定位吗？': (MobileBy.XPATH, '//*[contains(@text,"定位")] | //*[contains(@text,"位置")]'),
     }
 
     @TestLogger.log()

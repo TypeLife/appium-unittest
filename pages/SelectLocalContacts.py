@@ -1,5 +1,5 @@
 from appium.webdriver.common.mobileby import MobileBy
-import time
+import re
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
@@ -222,3 +222,15 @@ class SelectLocalContactsPage(BasePage):
                 message
             )
         return self
+
+    @TestLogger.log()
+    def get_selected_and_threshold_nums(self):
+        """获取确定按钮上的选择人数与可选的总人数"""
+        # sure_info = "确定(3/499)"
+        sure_info = self.get_element(self.__class__.__locators['确定']).text
+        nums = re.findall(r'\d+', sure_info)
+        if len(nums) == 2:
+            return int(nums[0]), int(nums[1])
+        else:
+            if not sure_info == '确定':
+                raise AssertionError("确定按钮显示异常，不是‘确定’或者 ‘确定(3/499)’格式")

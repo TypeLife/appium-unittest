@@ -64,10 +64,12 @@ class ChatAudioPage(BasePage):
                   '未选项': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/select_send_audio_type_root_view"]/android.widget.LinearLayout/android.widget.ImageView[@selected="false"]/../android.widget.TextView'),
                   # 弹窗权限页面
                   '不再询问': (MobileBy.ID, 'com.lbe.security.miui:id/do_not_ask_checkbox'),
-                  '要允许 和飞信 录制音频吗？': (MobileBy.ID, 'com.lbe.security.miui:id/permission_message'),
+                  '要允许 和飞信 录制音频吗？': (MobileBy.ID, 'com.android.packageinstaller:id/permission_message'),
                   '拒绝': (MobileBy.ID, 'android:id/button2'),
-                  '允许': (MobileBy.ID, 'android:id/button1'),
-
+                  '允许': (MobileBy.XPATH, "//*[contains(@text, '始终允许')]"),
+                  '发送': (MobileBy.ID, 'com.chinasofti.rcs:id/recodr_audio_finish'),
+                  '语音+文字选项': (MobileBy.ID, 'com.chinasofti.rcs:id/select_send_audio_and_text_icon'),
+                  '我知道了': (MobileBy.XPATH, "//*[contains(@text, '我知道了')]"),
                   }
 
     @TestLogger.log()
@@ -143,3 +145,27 @@ class ChatAudioPage(BasePage):
         """点击允许"""
         self.click_element(self.__class__.__locators["允许"], auto_accept_permission_alert=False)
 
+    @TestLogger.log()
+    def click_only_voice(self):
+        """点击仅发送语音"""
+        self.click_element(self.__class__.__locators["仅发送语音"])
+
+    @TestLogger.log()
+    def click_send_bottom(self):
+        """点击发送"""
+        self.click_element(self.__class__.__locators["发送"])
+
+    @TestLogger.log()
+    def click_setting_bottom(self):
+        """点击设置"""
+        self.click_element(self.__class__.__locators["设置"])
+
+    @TestLogger.log()
+    def get_audio_and_text_icon_selected(self):
+        """获取语音+文字模式的选项selected状态"""
+        return self.get_element(self.__class__.__locators["语音+文字选项"]).get_attribute("selected")
+
+    @TestLogger.log()
+    def click_i_know(self):
+        """点击我知道了"""
+        self.click_element(self.__class__.__locators["我知道了"])

@@ -53,6 +53,7 @@ class ChatSelectLocalFilePage(BasePage):
                   'com.chinasofti.rcs:id/rl_panel': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_panel'),
                   '已选: 2.2M': (MobileBy.XPATH, '//*[contains(@text,"已选:")]'),
                   '发送': (MobileBy.ID, 'com.chinasofti.rcs:id/button_send'),
+                  '继续发送': (MobileBy.XPATH, '//*[@text="继续发送"]'),
                   # 视频选择页面
                   '视频': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_file_name'),
                   # 照片选择页面
@@ -191,5 +192,8 @@ class ChatSelectLocalFilePage(BasePage):
     def click_send(self, timeout=4):
         """点击发送"""
         self.click_element(self.__class__.__locators["发送"])
+        time.sleep(1)
+        if self._is_element_present(self.__class__.__locators['继续发送']):
+            self.click_element(self.__class__.__locators['继续发送'])
         time.sleep(timeout)
 
