@@ -40,7 +40,7 @@ class BaseChatPage(BasePage):
                   '我已阅读': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_check'),
                   '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_btn_ok'),
                   # 在聊天会话页面点击不可阅读文件时的弹窗
-                  '打开方式': (MobileBy.XPATH, "//*[contains(@text, '打开方式')]"),
+                  '打开方式': (MobileBy.XPATH, "//*[contains(@text,'方式')] | //*[contains(@text,'打开')]"),
                   '取消': (MobileBy.ID, 'android:id/button2'),
                   # 位置信息
                   '深圳市龙岗区交叉口': (MobileBy.ID, 'com.chinasofti.rcs:id/lloc_famous_address_text'),
@@ -404,4 +404,7 @@ class BaseChatPage(BasePage):
         el = self.get_elements(self.__class__.__locators['gif图片元素列表'])
         return len(el) > 0
 
-
+    @TestLogger.log()
+    def is_exist_video_msg(self):
+        """是否存在视频消息"""
+        return self._is_element_present(self.__class__.__locators['消息视频'])

@@ -328,11 +328,11 @@ class MsgPrivateChatFileLocationTest(TestCase):
             chat.wait_until(
                 timeout=3,
                 auto_accept_permission_alert=True,
-                condition=lambda d: chat.is_text_present("我知道了")
+                condition=lambda d: chat.is_text_present("知道了")
             )
         except:
             pass
-        if chat.is_text_present("我知道了"):
+        if chat.is_text_present("知道了"):
             chat.click_i_know()
         chat.wait_for_page_load()
 

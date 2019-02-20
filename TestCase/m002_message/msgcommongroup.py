@@ -988,15 +988,6 @@ class MsgCommonGroupTest(TestCase):
             mcp.click_back()
             mess.open_message_page()
 
-    @staticmethod
-    def setUp_test_msg_common_group_0018():
-
-        Preconditions.select_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        current_mobile().reset_app()
-        # current_mobile().connect_mobile()
-        Preconditions.enter_group_chat_page()
-
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0018(self):
         """1、长按语音消息，选择收藏功能，收藏成功后，是否弹出toast提示：已收藏
@@ -1047,8 +1038,11 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(1)
         if not mcp.is_text_present("详情"):
             raise AssertionError("不能进入到消息展示详情页面")
-        #点击播放和暂停语音消息
-
+        #播放语音消息
+        mcp.click_collection_voice_msg()
+        time.sleep(2)
+        #暂停语音消息
+        mcp.click_collection_voice_msg()
         mcp.click_back()
         time.sleep(2)
         # 左滑收藏消息体
@@ -1060,8 +1054,6 @@ class MsgCommonGroupTest(TestCase):
             if not mcp.is_text_present("没有任何收藏"):
                 raise AssertionError("不可以删除收藏的消息体")
 
-
-
     @staticmethod
     def setUp_test_msg_common_group_0019():
 
@@ -1071,7 +1063,7 @@ class MsgCommonGroupTest(TestCase):
         # current_mobile().connect_mobile()
         Preconditions.enter_group_chat_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
     def test_msg_common_group_0019(self):
         """1.点击输入框右边的语音按钮，在未获取录音权限时，是否会弹出权限申请允许弹窗"""
         gcp = GroupChatPage()
@@ -1081,26 +1073,139 @@ class MsgCommonGroupTest(TestCase):
             audio.click_sure()
         # 权限申请允许弹窗判断
         time.sleep(1)
-        # flag = audio.wait_for_audio_allow_page_load()
-        # self.assertTrue(flag)
+        flag = audio.wait_for_audio_allow_page_load()
+        self.assertTrue(flag)
         audio.click_allow()
         audio.wait_until(condition=lambda d: audio.is_text_present("退出"))
         audio.click_exit()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
     def test_msg_common_group_0020(self):
         """1、点击输入框右边的语音按钮，跳转到的页面是否是语音模式设置页面
             2、默认展示的选择项是否是，语音+文字模式"""
         gcp = GroupChatPage()
         gcp.click_audio_btn()
         audio = ChatAudioPage()
-        flag = audio.wait_for_audio_type_select_page_load()
-        self.assertTrue(flag)
+        audio.click_send_bottom()
+        time.sleep(1)
+        audio.click_setting_bottom()
+        # flag = audio.wait_for_audio_type_select_page_load()
+        # self.assertTrue(flag)
         # 2、默认展示的选择项是否是，语音+文字模式
-        info = audio.get_selected_item()
-        self.assertIn("语音+文字", info)
+        # info = audio.get_selected_item()
+        # self.assertIn("语音+文字", info)
+        flag=audio.get_audio_and_text_icon_selected()
+        self.assertTrue(flag)
         audio.click_sure()
         audio.wait_for_page_load()
         audio.click_exit()
         gcp.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    def test_msg_common_group_0021(self):
+        """1、点击输入框右边的语音按钮，设置语音模式为：语音+文字模式
+            2、3秒内未能识别出内容，是否会提示：无法识别，请重试"""
+        gcp = GroupChatPage()
+        gcp.click_audio_btn()
+        time.sleep(10)
+        audio = ChatAudioPage()
+        if not audio.is_text_present("无法识别，请重试"):
+            raise AssertionError("不会提示‘无法识别，请重试’")
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc = SelectContactsPage()
+        sc.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    def test_msg_common_group_0022(self):
+        """1、点击输入框右边的语音按钮，设置语音识别模式为：语音+文字模式
+            2、语音识别中途，网络异常，是否会展示提示：网络异常，请检查网络后重试"""
+        gcp = GroupChatPage()
+        gcp.click_audio_btn()
+        #断开网络
+        gcp.set_network_status(1)
+        time.sleep(5)
+        audio = ChatAudioPage()
+        if audio.is_text_present("我知道了"):
+            audio.click_i_know()
+        if not audio.is_text_present("网络不可用，请检查网络设置"):
+            raise AssertionError("不会提示‘网络不可用，请检查网络设置’")
+
+
+    def tearDown_test_msg_common_group_0022(self):
+        #重新连接网络
+        gcp = GroupChatPage()
+        gcp.set_network_status(6)
+        time.sleep(2)
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc = SelectContactsPage()
+        sc.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    def test_msg_common_group_0023(self):
+        """1、点击输入框右边的语音按钮，设置语音模式为：语音+文字模式
+            2、3秒内未检测到声音，是否会提示：无法识别，请重试"""
+        gcp = GroupChatPage()
+        gcp.click_audio_btn()
+        time.sleep(10)
+        audio = ChatAudioPage()
+        if not audio.is_text_present("无法识别，请重试"):
+            raise AssertionError("不会提示‘无法识别，请重试’")
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc = SelectContactsPage()
+        sc.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    def test_msg_common_group_0028(self):
+        """1、点击输入框右边的语音按钮，设置语音模式为：语音+文字模式
+        2、语音+文字模式识别中途，点击左下角的退出按钮，是否会退出语音识别模式"""
+        gcp = GroupChatPage()
+        gcp.click_audio_btn()
+        time.sleep(2)
+        audio = ChatAudioPage()
+        audio.click_exit()
+        if audio.is_text_present("智能识别中"):
+            raise AssertionError("不会退出语音识别模式")
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc = SelectContactsPage()
+        sc.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    def test_msg_common_group_0030(self):
+        """1、点击输入框右边的语音按钮，设置语音模式为：语音转文字模式
+            2、3秒内未检测到声音，是否会提示：无法识别，请重试"""
+        gcp = GroupChatPage()
+        gcp.click_audio_btn()
+        time.sleep(10)
+        audio = ChatAudioPage()
+        if not audio.is_text_present("无法识别，请重试"):
+            raise AssertionError("不会提示‘无法识别，请重试’")
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc = SelectContactsPage()
+        sc.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    def test_msg_common_group_0031(self):
+        """1、点击输入框右边的语音按钮，设置语音模式为：语音转文字模式
+            2、3秒内未能识别出内容，是否会提示：无法识别。请重试"""
+        gcp = GroupChatPage()
+        gcp.click_audio_btn()
+        time.sleep(10)
+        audio = ChatAudioPage()
+        if not audio.is_text_present("无法识别，请重试"):
+            raise AssertionError("不会提示‘无法识别，请重试’")
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc = SelectContactsPage()
+        sc.click_back()
