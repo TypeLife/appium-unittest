@@ -28,6 +28,7 @@ from pages import SelectLocalContactsPage
 from pages import SelectOneGroupPage
 from pages import GroupChatSetPage
 from pages import SingleChatPage
+from pages.chat.ChatGroupAddContacts import ChatGroupAddContactsPage
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -1063,7 +1064,7 @@ class MsgCommonGroupTest(TestCase):
         # current_mobile().connect_mobile()
         Preconditions.enter_group_chat_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0019(self):
         """1.点击输入框右边的语音按钮，在未获取录音权限时，是否会弹出权限申请允许弹窗"""
         gcp = GroupChatPage()
@@ -1080,7 +1081,7 @@ class MsgCommonGroupTest(TestCase):
         audio.click_exit()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0020(self):
         """1、点击输入框右边的语音按钮，跳转到的页面是否是语音模式设置页面
             2、默认展示的选择项是否是，语音+文字模式"""
@@ -1102,7 +1103,7 @@ class MsgCommonGroupTest(TestCase):
         audio.click_exit()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0021(self):
         """1、点击输入框右边的语音按钮，设置语音模式为：语音+文字模式
             2、3秒内未能识别出内容，是否会提示：无法识别，请重试"""
@@ -1119,7 +1120,7 @@ class MsgCommonGroupTest(TestCase):
         sc = SelectContactsPage()
         sc.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0022(self):
         """1、点击输入框右边的语音按钮，设置语音识别模式为：语音+文字模式
             2、语音识别中途，网络异常，是否会展示提示：网络异常，请检查网络后重试"""
@@ -1147,7 +1148,7 @@ class MsgCommonGroupTest(TestCase):
         sc = SelectContactsPage()
         sc.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0023(self):
         """1、点击输入框右边的语音按钮，设置语音模式为：语音+文字模式
             2、3秒内未检测到声音，是否会提示：无法识别，请重试"""
@@ -1164,7 +1165,7 @@ class MsgCommonGroupTest(TestCase):
         sc = SelectContactsPage()
         sc.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0028(self):
         """1、点击输入框右边的语音按钮，设置语音模式为：语音+文字模式
         2、语音+文字模式识别中途，点击左下角的退出按钮，是否会退出语音识别模式"""
@@ -1181,7 +1182,7 @@ class MsgCommonGroupTest(TestCase):
         sc = SelectContactsPage()
         sc.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0030(self):
         """1、点击输入框右边的语音按钮，设置语音模式为：语音转文字模式
             2、3秒内未检测到声音，是否会提示：无法识别，请重试"""
@@ -1198,7 +1199,7 @@ class MsgCommonGroupTest(TestCase):
         sc = SelectContactsPage()
         sc.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0031(self):
         """1、点击输入框右边的语音按钮，设置语音模式为：语音转文字模式
             2、3秒内未能识别出内容，是否会提示：无法识别。请重试"""
@@ -1215,7 +1216,7 @@ class MsgCommonGroupTest(TestCase):
         sc = SelectContactsPage()
         sc.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0036(self):
         """1、点击输入框右边的语音按钮，设置语音模式为：仅语音模式
             2、录制中途，点击左下角的退出按钮，是否可以退出语音录制模式并自动清除已录制的语音文件"""
@@ -1236,7 +1237,7 @@ class MsgCommonGroupTest(TestCase):
         if gcp.is_text_present("语音录制中"):
             raise AssertionError("退出语音录制模式失败")
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0039(self):
         """1、在输入框中录入内容
             2、长按输入框右边的发送按钮，向上滑动，然后松开手指
@@ -1282,7 +1283,7 @@ class MsgCommonGroupTest(TestCase):
             except AssertionError as e:
                 raise e
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0040(self):
         """1、在输入框中录入内容
             2、长按输入框右边的发送按钮，向下滑动，然后松开手指
@@ -1303,7 +1304,7 @@ class MsgCommonGroupTest(TestCase):
         if not gcp.get_width_of_msg_of_text() < 163:
             raise AssertionError("文本消息没有缩小展示")
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0041(self):
         """1、在输入框输入一串号码数字
             2、点击输入框右边的发送按钮，是否可以发送成功"""
@@ -1319,7 +1320,7 @@ class MsgCommonGroupTest(TestCase):
         except TimeoutException:
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0042(self):
         """
             1、点击聊天会话页面的号码，是否会弹出窗体，展示：呼叫、复制号码
@@ -1407,6 +1408,10 @@ class MsgCommonGroupTest(TestCase):
         if not gcp.is_text_present("呼叫"):
             raise AssertionError("123456不被识别为号码,点击没有弹窗")
         time.sleep(1)
+        gcp.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+        time.sleep(2)
+
+
 
 
 
@@ -1431,6 +1436,8 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(1)
         if not gcp.is_text_present("呼叫"):
             raise AssertionError("18431931414不被识别为号码,点击没有弹窗")
+        gcp.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+        time.sleep(2)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
     def test_msg_common_group_0046(self):
@@ -1452,6 +1459,8 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(1)
         if not gcp.is_text_present("呼叫"):
             raise AssertionError("+85267656003不被识别为号码,点击没有弹窗")
+        gcp.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+        time.sleep(2)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
     def test_msg_common_group_0047(self):
@@ -1473,6 +1482,8 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(1)
         if not gcp.is_text_present("呼叫"):
             raise AssertionError("67656003不被识别为号码,点击没有弹窗")
+        gcp.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+        time.sleep(2)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
     def test_msg_common_group_0048(self):
@@ -1494,6 +1505,8 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(1)
         if not gcp.is_text_present("呼叫"):
             raise AssertionError("95533不被识别为号码,点击没有弹窗")
+        gcp.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+        time.sleep(2)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
     def test_msg_common_group_0049(self):
@@ -1515,4 +1528,106 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(1)
         if gcp.is_text_present("呼叫"):
             raise AssertionError("36363被识别为号码,点击有弹窗")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    def test_msg_common_group_0050(self):
+        """1、在聊天会话页面，点击页面右上角的聊天设置按钮，是否可以正常进入到聊天设置页面"""
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    def test_msg_common_group_0051(self):
+        """1、在聊天设置页面，点击群成员下方的+号，跳转到联系人选择器页面
+            2、未选择联系人时，右上角的确定按钮是否置灰展示"""
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        #点击“+”按钮
+        gcsp.click_add_member()
+        contacts_page = SelectLocalContactsPage()
+        #未选择联系人时，右上角的确定按钮是否置灰展示
+        if contacts_page.is_text_present("确定(1/499)"):
+            raise AssertionError("未选择联系人时，右上角的确定按钮没有置灰展示")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    def test_msg_common_group_0052(self):
+        """1、在聊天设置页面，点击群成员下方的+号，跳转到联系人选择器页面
+            2、选择一个联系人后，右上角的确定按钮是否高亮展示
+            3.点击右上角的确定按钮，是否会向被邀请发送一条邀请信息并在聊天会话页面同步提示"""
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击“+”按钮
+        gcsp.click_add_member()
+        time.sleep(2)
+        cgacp=ChatGroupAddContactsPage()
+        contactNnames=cgacp.get_contacts_name()
+        if contactNnames:
+            #选择一个联系人
+            cgacp.select_one_member_by_name(contactNnames[0])
+        else:
+            raise AssertionError("通讯录没有联系人，请添加")
+        if not cgacp.sure_btn_is_enabled():
+            raise AssertionError("右上角的确定按钮不能高亮展示")
+        cgacp.click_sure()
+        time.sleep(2)
+        gcp.is_toast_exist("发出群邀请")
+
+    def tearDown_test_msg_common_group_0052(self):
+        #删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp=GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            #点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            #点击确认
+            gcsp.click_determine()
+            flag=gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            #点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            #判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                raise e
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    def test_msg_common_group_0053(self):
+        """1、在聊天设置页面，点击群成员下方的+号，跳转到联系人选择器页面
+        2.选择多个联系人，点击右上角的确定按钮，是否会向被邀请发送一条邀请信息并在聊天会话页面同步提示"""
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击“+”按钮
+        gcsp.click_add_member()
+        time.sleep(2)
+        cgacp = ChatGroupAddContactsPage()
+        contactNnames = cgacp.get_contacts_name()
+        if len(contactNnames)>1:
+            # 选择多个联系人
+            cgacp.select_one_member_by_name(contactNnames[0])
+            cgacp.select_one_member_by_name(contactNnames[1])
+        else:
+            raise AssertionError("通讯录联系人数量不足，请添加")
+        cgacp.click_sure()
+        time.sleep(2)
+        gcp.is_toast_exist("发出群邀请")
+
+
+
+
 
