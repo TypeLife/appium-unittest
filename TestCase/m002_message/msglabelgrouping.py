@@ -1790,3 +1790,52 @@ class MsgLabelGroupingTest(TestCase):
             raise AssertionError("选择多个视频时，无‘最多只能选择1个视频’提示")
         cpp.click_back()
         chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0101(self):
+        """标签分组会话窗，同时发送相册内视频和图片"""
+        # 1、在标签分组会话窗，点击输入框左上方的相册图标
+        chat = LabelGroupingChatPage()
+        chat.click_pic()
+        # 2、选中一个视频和一个图片
+        cpp = ChatPicPage()
+        cpp.select_video()
+        cpp.select_pic()
+        # toast提示“不能同时选择照片和视频”
+        if not cpp.is_toast_exist("不能同时选择照片和视频", timeout=5):
+            raise AssertionError("")
+        cpp.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0102(self):
+        """标签分组会话窗，发送视频时预览视频"""
+        # 1、在标签分组会话窗，点击输入框左上方的相册图标
+        chat = LabelGroupingChatPage()
+        chat.click_pic()
+        # 2、选中一个视频点击预览
+        cpp = ChatPicPage()
+        cpp.select_video()
+        cpp.click_preview()
+        # 可正常预览
+        preview = ChatPicPreviewPage()
+        preview.wait_for_page_load()
+        preview.click_back()
+        cpp.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0105(self):
+        """标签分组会话窗，验证点击趣图搜搜入口"""
+        # 1、进入标签分组会话窗
+        chat = LabelGroupingChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        # 2、点击GIF
+        chat.click_gif()
+        # 进入趣图选择页面
+        gif.wait_for_page_load(timeout=60)
+        gif.close_gif()
+        current_mobile().hide_keyboard_if_display()
+        chat.wait_for_page_load()
