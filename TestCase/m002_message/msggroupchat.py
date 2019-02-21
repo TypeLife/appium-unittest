@@ -1398,7 +1398,9 @@ class MsgGroupChatTest(TestCase):
         except:
             print("ok")
         else:
-            raise AssertionError("修改群名片录入31个英文字符，代码可以实现，请确认是否可以手动录入31个英文字符！")
+            name = group_name.get_input_group_name()
+            if len(name) != 30:
+                raise AssertionError("修改群名片录入31个英文字符，代码可以实现，请确认是否可以手动录入31个英文字符！")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0076(self):
@@ -1445,7 +1447,9 @@ class MsgGroupChatTest(TestCase):
         except:
             print("ok")
         else:
-            raise AssertionError("修改群名片录入11个汉字，代码可以实现，请确认是否可以手动录入11个汉字！")
+            name = group_name.get_input_group_name()
+            if len(name) != 10:
+                raise AssertionError("修改群名片录入11个汉字，代码可以实现，请确认是否可以手动录入11个汉字！")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0078(self):

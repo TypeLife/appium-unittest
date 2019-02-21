@@ -28,8 +28,7 @@ class MePage(FooterPage):
         '电话号码': (MobileBy.ID, 'com.chinasofti.rcs:id/card_photo_num'),
         '查看并编辑个人资料': (MobileBy.ID, 'com.chinasofti.rcs:id/check_user_profile'),
         'com.chinasofti.rcs:id/profile_photo_out': (MobileBy.ID, 'com.chinasofti.rcs:id/profile_photo_out'),
-        'com.chinasofti.rcs:id/avatar_bg_id': (MobileBy.ID, 'com.chinasofti.rcs:id/avatar_bg_id'),
-        'com.chinasofti.rcs:id/card_head_photo': (MobileBy.ID, 'com.chinasofti.rcs:id/card_head_photo'),
+        '个人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/card_head_photo'),
         'com.chinasofti.rcs:id/layout_for_mall': (MobileBy.ID, 'com.chinasofti.rcs:id/layout_for_mall'),
         'com.chinasofti.rcs:id/internet_mutil_call_layout_id': (
             MobileBy.ID, 'com.chinasofti.rcs:id/internet_mutil_call_layout_id'),
@@ -73,7 +72,12 @@ class MePage(FooterPage):
         'com.chinasofti.rcs:id/setting': (MobileBy.ID, 'com.chinasofti.rcs:id/setting'),
         '设置': (MobileBy.ID, 'com.chinasofti.rcs:id/setting_app_text'),
         '移动营业厅': (MobileBy.ID, 'com.chinasofti.rcs:id/onlinehall_text'),
+        '姓名': (MobileBy.ID, 'com.chinasofti.rcs:id/card_name'),
     }
+
+    @TestLogger.log('点击个人名片头像')
+    def click_head(self):
+        self.click_element(self.__locators['com.chinasofti.rcs:id/card_head_photo'])
 
     @TestLogger.log('点击二维码图标')
     def click_qr_code_icon(self):
@@ -200,3 +204,27 @@ class MePage(FooterPage):
     def click_collection(self):
         """点击收藏按钮"""
         self.click_element(self.__locators['收藏'])
+
+    @TestLogger.log()
+    def is_on_this_page(self):
+        """当前页面是否在我的页面"""
+        el = self.get_elements(self.__locators['查看并编辑个人资料'])
+        if len(el) > 0:
+            return True
+        return False
+
+    @TestLogger.log()
+    def is_element_exist(self, text):
+        """当前页面是否包含此元素"""
+        return self._is_element_present(self.__locators[text])
+
+    @TestLogger.log()
+    def is_text_exist(self, text):
+        """当前页面是否包含此元素"""
+        return self.is_text_present(text)
+
+    @TestLogger.log()
+    def click_view_edit(self):
+        """点击查看并编辑资料按钮"""
+        self.click_element(self.__locators['查看并编辑个人资料'])
+
