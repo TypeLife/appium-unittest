@@ -39,6 +39,8 @@ class SelectContactsPage(BasePage):
         '取消转发': (MobileBy.XPATH, "//*[contains(@text, '取消')]"),
         '确定转发': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
         'local联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
+        '分享名片': (MobileBy.ID, 'com.chinasofti.rcs:id/send_tv'),
+        '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
     }
 
     @TestLogger.log()
@@ -93,6 +95,29 @@ class SelectContactsPage(BasePage):
     def click_back(self):
         """点击 返回"""
         self.click_element(self.__class__.__locators["返回"])
+
+    @TestLogger.log('点击分享名片')
+    def click_share_card(self):
+        """点击分享名片"""
+        self.click_element(self.__locators['分享名片'])
+
+
+    @TestLogger.log('搜索或输入手机号')
+    def input_search_keyword(self, keyword):
+        """点击搜索或输入手机号"""
+        self.input_text(self.__locators['搜索或输入手机号'], keyword)
+
+
+    @TestLogger.log('点击联系人')
+    def click_contact(self, name):
+        """点击联系人"""
+        self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and ' +
+                            '@text="{}"]'.format(name)))
+
+    @TestLogger.log('点击联系人头像')
+    def click_cantact_avatar(self):
+        """点击联系人头像"""
+        self.click_element(self.__locators['联系人头像'])
 
     @TestLogger.log()
     def click_select_one_group(self):

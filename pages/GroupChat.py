@@ -227,3 +227,24 @@ class GroupChatPage(BaseChatPage):
         el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/linearlayout_msg_content'))
         self.press(el)
         self.click_element(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def get_width_of_msg_of_text(self):
+        """获取文本信息框的大小"""
+        el=self.get_element((MobileBy.ID,'com.chinasofti.rcs:id/tv_message'))
+        rect=el.rect
+        return rect["width"]
+
+    @TestLogger.log()
+    def is_call_page_load(self):
+        """判断是否可以发起呼叫"""
+        el = self.get_element((MobileBy.ID, 'com.android.incallui:id/endButton'))
+        if el:
+            return True
+        else:
+            return False
+
+    @TestLogger.log()
+    def click_end_call_button(self):
+        """点击结束呼叫按钮 """
+        self.click_element((MobileBy.ID, 'com.android.incallui:id/endButton'))

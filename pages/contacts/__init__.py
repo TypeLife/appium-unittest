@@ -8,6 +8,7 @@ __all__ = [
     'OfficialAccountPage',
     'OfficialAccountDetailPage',
     'SearchOfficialAccountPage',
+    'EditContactPage'
 ]
 from .ContactDetails import ContactDetailsPage
 from .ContactListSearch import ContactListSearchPage

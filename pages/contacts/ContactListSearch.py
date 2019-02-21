@@ -32,6 +32,10 @@ class ContactListSearchPage(BasePage):
     def click_back(self):
         self.click_element(self.__locators['返回'])
 
+    @TestLogger.log('点击分享名片')
+    def click_share_card(self):
+        self.click_element(self.__locators['分享名片'])
+
     @TestLogger.log('输入搜索关键字')
     def input_search_keyword(self, keyword):
         self.input_text(self.__locators['输入关键字搜索'], keyword)

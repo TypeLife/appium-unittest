@@ -231,6 +231,7 @@ class MsgGroupChatvedioTest(TestCase):
     """
 
     """前置条件需要修改创建一个群找不到"""
+
     @classmethod
     def setUpClass(cls):
 

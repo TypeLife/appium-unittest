@@ -51,7 +51,9 @@ class ChatWindowPage(ChatNoticeDialog, PictureSelector, BasePage):
         'com.chinasofti.rcs:id/ib_expression': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression'),
         'com.chinasofti.rcs:id/ib_audio': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_audio'),
         'com.chinasofti.rcs:id/ib_record_red_dot': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_record_red_dot'),
-        'android:id/statusBarBackground': (MobileBy.ID, 'android:id/statusBarBackground')
+        'android:id/statusBarBackground': (MobileBy.ID, 'android:id/statusBarBackground'),
+        '我已阅读': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_check'),
+        '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_btn_ok')
     }
 
     @TestLogger.log('点击返回')
@@ -61,6 +63,16 @@ class ChatWindowPage(ChatNoticeDialog, PictureSelector, BasePage):
     @TestLogger.log('点击设置')
     def click_setting(self):
         self.click_element(self.__locators['设置'])
+
+    @TestLogger.log('点击我已阅读')
+    def click_already_read(self):
+        """点击我已阅读"""
+        self.click_element(self.__locators['我已阅读'])
+
+    @TestLogger.log('点击确定')
+    def click_sure_icon(self):
+        """点击确定"""
+        self.click_element(self.__locators['确定'])
 
     @TestLogger.log('输入消息文本')
     def input_message_text(self, content):
