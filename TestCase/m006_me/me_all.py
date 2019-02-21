@@ -199,14 +199,14 @@ class MeAll(TestCase):
         pass
         # current_mobile().disconnect_mobile()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_001(self):
         """我页面跳转验证"""
         # 1.检验是否跳转到我页面
         mep = MePage()
         mep.is_on_this_page()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_002(self):
         """"我"模块页面信息显示验证"""
         # 1.检验是否跳转到我页面
@@ -230,7 +230,7 @@ class MeAll(TestCase):
         self.assertEquals(mep.is_text_exist("设置"), True)
         mep.page_up()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_005(self):
         """个人资料界面信息显示验证"""
         # 1.检验是否跳转到我页面
@@ -252,7 +252,7 @@ class MeAll(TestCase):
         # 4.点击返回到我的页面
         mup.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_006(self):
         """个人资料界面信息显示验证"""
         # 1.检验是否跳转到我页面
@@ -278,7 +278,7 @@ class MeAll(TestCase):
         mep.click_back()
         mup.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_008(self):
         """个人资料详情-部分完善资料"""
         Preconditions.make_already_in_me_save_part_page()
@@ -304,7 +304,7 @@ class MeAll(TestCase):
         self.assertEquals(mep1.is_toast_save_success(), True)
         mep1.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_009(self):
         """个人资料详情-全部完善资料"""
         Preconditions.make_already_in_me_save_all_page()
@@ -331,7 +331,7 @@ class MeAll(TestCase):
         self.assertEquals(mep1.is_toast_save_success(), True)
         mep1.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_010(self):
         """编辑个人资料-编辑状态"""
         Preconditions.make_already_in_me_save_all_page()
@@ -355,7 +355,7 @@ class MeAll(TestCase):
         mep1.click_save()
         mup.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_011(self):
         """进入“编辑资料”界面信息"""
         Preconditions.make_already_in_me_save_all_page()
@@ -389,7 +389,7 @@ class MeAll(TestCase):
         mep1.click_save()
         mup.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_012(self):
         """“编辑资料” 头像设置"""
         # 1.检验是否跳转到我页面
@@ -416,14 +416,14 @@ class MeAll(TestCase):
         mep1.click_save_pics()
         mep1.click_back()
         # c跳转到选择照片页面
-        mep1.click_select_pics()
+        mep1.click_select_pics(1)
         self.assertEquals(mep1.is_element_exist("照片框"), True)
         mep1.click_back()
         mep1.click_back()
         mep1.click_back()
         mup.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_013(self):
         """“编辑资料” 头像设置"""
         # 0-1.检验是否跳转到我页面
@@ -451,7 +451,7 @@ class MeAll(TestCase):
         mep1.click_back()
         mup.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_014(self):
         """“编辑资料” 头像设置"""
         # 0-1.检验是否跳转到我页面
@@ -483,7 +483,7 @@ class MeAll(TestCase):
         mep1.click_back()
         mup.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_015(self):
         """“编辑资料” 头像设置"""
         # 0-1.检验是否跳转到我页面
@@ -514,7 +514,7 @@ class MeAll(TestCase):
         mep1.click_back()
         mup.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_016(self):
         """“编辑资料” 头像设置"""
         # 0-1.检验是否跳转到我页面
@@ -543,7 +543,7 @@ class MeAll(TestCase):
         mep1.click_save_save_pics()
         mep1.wait_for_page_load()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_017(self):
         """“编辑资料” 头像设置"""
         # 0-1.检验是否跳转到我页面
@@ -575,7 +575,7 @@ class MeAll(TestCase):
         mep1.is_toast_save_success()
         mup.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_018(self):
         """“编辑资料” 头像设置"""
         # 0-1.检验是否跳转到我页面
@@ -593,11 +593,284 @@ class MeAll(TestCase):
         mep1.wait_for_select_pic_page_load()
         self.assertEquals(mep1.is_element_exist("点击拍照"), True)
         # 3.点击选择图片
-        mep1.click_select_pics()
+        mep1.click_select_pics(1)
         time.sleep(2)
         self.assertEquals(mep1.is_element_exist("照片框"), True)
         # 4.点击返回
         mep1.click_back()
         mep1.click_back()
         mep1.click_back()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_020(self):
+        """“编辑资料” 头像设置"""
+        # 0-1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 0-2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 1.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        # 2.点击进入照相
+        mep1.click_edit_pics()
+        mep1.wait_for_select_pic_page_load()
+        self.assertEquals(mep1.is_element_exist("点击拍照"), True)
+        # 3.点击选择图片，跳转到“头像截取”界面
+        mep1.click_select_pics(1)
+        time.sleep(2)
+        self.assertEquals(mep1.is_element_exist("照片框"), True)
+        # 4.选择使用照片，跳转到“头像截取”界面，点击保存
+        mep1.click_save_save_pics()
+        mep1.wait_for_page_load()
+        mep1.click_save()
+        mep1.is_toast_save_success()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_021(self):
+        """“编辑资料” 头像设置-多次选择图片"""
+        # 0-1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 0-2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 1.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        # 2.点击进入照相
+        mep1.click_edit_pics()
+        mep1.wait_for_select_pic_page_load()
+        self.assertEquals(mep1.is_element_exist("点击拍照"), True)
+        # 3.点击选择图片，跳转到“头像截取”界面
+        mep1.click_select_pics(0)
+        time.sleep(2)
+        self.assertEquals(mep1.is_element_exist("照片框"), True)
+        # 4.点击返回按钮，重新选取照片
+        mep1.click_back()
+        mep1.click_select_pics(8)
+        # 5.点击保存
+        mep1.click_save_save_pics()
+        mep1.wait_for_page_load()
+        mep1.click_save()
+        mep1.is_toast_save_success()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_024(self):
+        """“编辑资料” 头像设置"""
+        # 0-1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 0-2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 1.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        # 2.点击进入照相
+        mep1.click_edit_pics()
+        mep1.wait_for_select_pic_page_load()
+        self.assertEquals(mep1.is_element_exist("点击拍照"), True)
+        # 3.点击选择图片，跳转到“头像截取”界面
+        mep1.click_select_pics(1)
+        time.sleep(2)
+        self.assertEquals(mep1.is_element_exist("照片框"), True)
+        # 4.选择使用照片，跳转到“头像截取”界面，点击保存，上传头像
+        mep1.click_save_save_pics()
+        mep1.wait_for_page_load()
+        # 5.在编辑个人资料页面点击返回按钮，不保存
+        mep1.click_back()
+        time.sleep(1)
+        self.assertEquals(mep1.is_text_exist("当前资料已修改，是否保存"), True)
+        mep1.click_cancel_mod()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_025(self):
+        """“编辑资料” 所有输入栏 为空"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.所有输入栏信息为空
+        mep1.edit_clear("姓名")
+        mep1.edit_clear("公司")
+        mep1.edit_clear("职位")
+        mep1.edit_clear("邮箱")
+        mep1.click_save()
+        mep1.is_toast_save_null()
+        # 5.点击返回
+        mep1.click_back()
+        mep1.click_cancel_mod()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_026(self):
+        """“编辑资料” 除了姓名,其他为空"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.所有输入栏信息为空
+        mep1.input_name("姓名", "123")
+        mep1.edit_clear("公司")
+        mep1.edit_clear("职位")
+        mep1.edit_clear("邮箱")
+        mep1.click_save()
+        mep1.is_toast_save_success()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_027(self):
+        """“验证我-个人资料-编辑-编辑名称"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.正确输入并点击保存（中文、英文、特殊符号）
+        mep1.input_name("姓名", "周星星123@！#")
+        mep1.click_save()
+        mep1.is_toast_save_success()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_028(self):
+        """“验证我-个人资料-编辑-编辑名称"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.set_network_status(0)
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.正确输入并点击保存（中文、英文、特殊符号）
+        mep1.input_name("姓名", "周星星123@！#%12")
+        mep1.click_save()
+        self.assertEquals(mep1.is_toast_net(), True)
+        # 5点击返回，并恢复网络
+        mep1.click_back()
+        mep1.click_cancel_mod()
+        mup.click_back()
+        mup.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_029(self):
+        """“编辑资料” 姓名栏输入超长字符"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.姓名输入超长字符串，提示格式错误
+        mep1.input_name("姓名", "周星星123@！#" * 50)
+        self.assertEquals(mep1.is_toast_format("姓名"), True)
+        self.assertEquals(mep1.get_element_text("姓名"), True)
+        mep1.click_back()
+        mep1.click_cancel_mod()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_030(self):
+        """“编辑资料” 公司栏输入超长字符"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.姓名输入超长字符串，提示格式错误
+        mep1.input_name("公司", "周星星123@！#" * 50)
+        self.assertEquals(mep1.is_toast_format("公司"), True)
+        # 5.点击返回
+        mep1.click_back()
+        mep1.click_cancel_mod()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_031(self):
+        """“编辑资料” 职位栏输入超长字符"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.职位输入超长字符串，提示格式错误
+        mep1.input_name("职位", "周星星123@！#" * 50)
+        self.assertEquals(mep1.is_toast_format("职位"), True)
+        # 5.点击返回
+        mep1.click_back()
+        mep1.click_cancel_mod()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_032(self):
+        """“编辑资料” 邮箱栏输入超长字符"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.职位输入超长字符串，提示格式错误
+        mep1.swipe_up()
+        mep1.input_name("邮箱", "周星星123@！#" * 50)
+        self.assertEquals(mep1.is_toast_format("邮箱"), True)
+        # 5.点击返回
+        mep1.click_back()
+        mep1.click_cancel_mod()
         mup.click_back()

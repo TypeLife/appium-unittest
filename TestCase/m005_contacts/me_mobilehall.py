@@ -94,8 +94,6 @@ class MeMobilehall(TestCase):
         Preconditions.make_already_in_message_page()
         pass
 
-
-
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Me_Mobilehall_0001(self):
         """001移动厅页面校验"""
@@ -106,7 +104,6 @@ class MeMobilehall(TestCase):
         mg=MeMobileHallPage()
         mg.assert_enterprise_account_list_is_empty()
         mg.rallbackto_mobile()
-
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Me_Mobilehall_0002(self):
@@ -128,6 +125,3 @@ class MeMobilehall(TestCase):
         cg.input_passwod_text("12345678912345678912345")
         cg.click_mobile_chargesoon()
         cg.click_mobile_chargesoon_back()
-
-if __name__ == '__main__':
-    unittest.main()
