@@ -52,7 +52,8 @@ class GroupChatSetPage(BasePage):
                   '删除并退出': (MobileBy.ID, 'com.chinasofti.rcs:id/delete_and_exit'),
                   "确认": (MobileBy.XPATH, '//*[@text ="确认"]'),
                   "确定": (MobileBy.XPATH, '//*[@text ="确定"]'),
-                  "取消": (MobileBy.XPATH, '//*[@text ="取消"]')
+                  "取消": (MobileBy.XPATH, '//*[@text ="取消"]'),
+                  '群成员': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_head'),
                   }
 
     @TestLogger.log()
@@ -243,3 +244,9 @@ class GroupChatSetPage(BasePage):
     def click_search_chat_record(self):
         """点击 查找聊天内容"""
         self.click_element(self.__class__.__locators['查找聊天内容'])
+
+    @TestLogger.log()
+    def click_add_member(self):
+        """点击 “+”添加成员"""
+        els=self.get_elements(self.__class__.__locators['群成员'])
+        els[-2].click()

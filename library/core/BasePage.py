@@ -506,3 +506,7 @@ class BasePage(object):
         # pointY=0
         TouchAction(self.driver).long_press(element, duration=3000).move_to(element, pointX,
                                                                                     pointY).wait(3).release().perform()
+
+    def tap_coordinate(self, positions):
+        """模拟手指点击（最多五个手指）positions:[(100, 20), (100, 60), (100,100)]"""
+        return self.mobile.tap(positions)
