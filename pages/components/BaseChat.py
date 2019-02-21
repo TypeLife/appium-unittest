@@ -408,3 +408,8 @@ class BaseChatPage(BasePage):
     def is_exist_video_msg(self):
         """是否存在视频消息"""
         return self._is_element_present(self.__class__.__locators['消息视频'])
+
+    @TestLogger.log()
+    def is_exist_pic_msg(self):
+        """是否存在图片消息"""
+        return self._is_element_present(self.__class__.__locators['消息图片'])
