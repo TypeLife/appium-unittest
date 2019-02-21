@@ -1757,3 +1757,36 @@ class MsgLabelGroupingTest(TestCase):
             raise AssertionError("视频显示格式异常，不是‘xx:xx’类型格式！")
         cpp.click_back()
         chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0099(self):
+        """标签分组会话窗，发送相册内一个视频"""
+        # 1、在标签分组会话窗，点击输入框左上方的相册图标
+        chat = LabelGroupingChatPage()
+        chat.click_pic()
+        # 2、选中一个视屏，点击发送
+        cpp = ChatPicPage()
+        cpp.select_video()
+        cpp.click_send()
+        chat.wait_for_page_load()
+        # 发送成功，会话窗口可见可播放
+        chat.play_video()
+        chat.wait_for_play_video_page_load()
+        chat.close_video()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0100(self):
+        """标签分组会话窗，发送相册内多个视频"""
+        # 1、在标签分组会话窗，点击输入框左上方的相册图标
+        chat = LabelGroupingChatPage()
+        chat.click_pic()
+        # 2、选中多个视屏
+        cpp = ChatPicPage()
+        cpp.select_video(n=1)
+        cpp.select_video(n=2)
+        # 提示最多只能选择1个视频
+        if not cpp.is_toast_exist("最多只能选择1个视频", timeout=5):
+            raise AssertionError("选择多个视频时，无‘最多只能选择1个视频’提示")
+        cpp.click_back()
+        chat.wait_for_page_load()
