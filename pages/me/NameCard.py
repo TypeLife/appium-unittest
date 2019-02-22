@@ -36,6 +36,7 @@ class NameCardPage(BasePage):
 
     @TestLogger.log('分享名片')
     def click_share_btn(self):
+        self.swipe_by_percent_on_screen(50, 60, 50, 40, 800)
         self.click_element(self.__locators['分享名片'])
 
     @TestLogger.log('点击编辑')
