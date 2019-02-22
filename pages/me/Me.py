@@ -77,7 +77,23 @@ class MePage(FooterPage):
 
     @TestLogger.log('点击个人名片头像')
     def click_head(self):
-        self.click_element(self.__locators['com.chinasofti.rcs:id/card_head_photo'])
+        self.click_element(self.__locators['个人头像'])
+
+    @TestLogger.log()
+    def wait_for_head_load(self, timeout=60, auto_accept_alerts=True):
+        """等待个人名片头像加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["个人头像"])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
 
     @TestLogger.log('点击二维码图标')
     def click_qr_code_icon(self):
