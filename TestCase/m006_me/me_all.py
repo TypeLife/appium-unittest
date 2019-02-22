@@ -442,6 +442,7 @@ class MeAll(TestCase):
         # 3. a点击拍照，重拍|使用照片
         mep1.click_take_pics()
         mep1.click_taking_pics()
+        time.sleep(1)
         self.assertEquals(mep1.element_is_click_able("取消照片"), True)
         # 4. 点击拍照完成
         mep1.click_save_pics()
@@ -874,3 +875,33 @@ class MeAll(TestCase):
         mep1.click_back()
         mep1.click_cancel_mod()
         mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_034(self):
+        """“编辑资料” “编辑资料” 邮箱字段空格"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.职位输入带空格的字符串
+        mep1.swipe_up()
+        mep1.input_name("邮箱", " 9 58535269 @ qq.com ")
+        mep1.click_save()
+        # 5.点击返回
+        if mep1.is_toast_save():
+            mep1.click_back()
+            mup.click_back()
+        if mep1.is_toast_save_success():
+            mup.click_back()
+        else:
+            pass
+
+        # 5.点击返回
+

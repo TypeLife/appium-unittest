@@ -165,7 +165,7 @@ class MeEditUserProfilePage(BasePage):
     @TestLogger.log('拍照')
     def click_taking_pics(self):
         self.click_element(self.__locators["拍照"])
-        time.sleep(4.5)
+        time.sleep(6.5)
 
     @TestLogger.log('点击确定照片')
     def click_save_pics(self):

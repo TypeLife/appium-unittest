@@ -438,6 +438,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpp = ChatPicPreviewPage()
         cpp.wait_for_page_load()
         # 4.点击编辑（预览图片）
+        time.sleep(2)
         cpp.click_edit()
         cpe = ChatPicEditPage()
         time.sleep(1)
@@ -479,6 +480,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpp = ChatPicPreviewPage()
         cpp.wait_for_page_load()
         # 4.点击编辑（预览图片）
+        time.sleep(2)
         cpp.click_edit()
         cpe = ChatPicEditPage()
         # 5.点击图片编辑（预览图片）
@@ -521,6 +523,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpp = ChatPicPreviewPage()
         cpp.wait_for_page_load()
         # 4.点击编辑（预览图片）
+        time.sleep(2)
         cpp.click_edit()
         cpe = ChatPicEditPage()
         # 5.点击文本编辑（预览图片）
@@ -562,6 +565,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpp = ChatPicPreviewPage()
         cpp.wait_for_page_load()
         # 4.点击编辑（预览图片）
+        time.sleep(2)
         cpp.click_edit()
         cpe = ChatPicEditPage()
         # 5.点击文本编辑（预览图片）
@@ -601,6 +605,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpp = ChatPicPreviewPage()
         cpp.wait_for_page_load()
         # 4.点击编辑（预览图片）
+        time.sleep(2)
         cpp.click_edit()
         cpe = ChatPicEditPage()
         # 5.点击文本编辑（预览图片）
