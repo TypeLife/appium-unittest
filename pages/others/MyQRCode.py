@@ -31,13 +31,9 @@ class MyQRCodePage(BasePage):
 
     @TestLogger.log('等待加载完毕')
     def wait_for_loading_animation_end(self):
-        self.mobile.wait_until_not(
-            condition=lambda d: self.get_element(self.__locators['加载中']),
-            timeout=20
-        )
         self.mobile.wait_until(
-            condition=lambda d: self.get_element(self.__locators['二维码']),
-            timeout=30
+            condition=lambda d: self.get_element(self.__locators['com.chinasofti.rcs:id/qecode_share_btn']),
+            timeout=60
         )
 
     def decode_qr_code(self):

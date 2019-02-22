@@ -1553,6 +1553,10 @@ class MsgCommonGroupTest(TestCase):
         #未选择联系人时，右上角的确定按钮是否置灰展示
         if contacts_page.is_text_present("确定(1/499)"):
             raise AssertionError("未选择联系人时，右上角的确定按钮没有置灰展示")
+        time.sleep(2)
+        contacts_page.click_back()
+        time.sleep(1)
+        gcsp.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
     def test_msg_common_group_0052(self):
@@ -1628,8 +1632,102 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(2)
         gcp.is_toast_exist("发出群邀请")
 
+    def tearDown_test_msg_common_group_0053(self):
+        #删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp=GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            #点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            #点击确认
+            gcsp.click_determine()
+            flag=gcsp.is_toast_exist("聊天记录清除成功")
+            self.assertTrue(flag)
+            #点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            #判断是否返回到群聊页面
+            self.assertTrue(scp.is_on_this_page())
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                raise e
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    def test_msg_common_group_0059(self):
+        """1、在聊天设置页面，点击群成员下方的+号，跳转到联系人选择器页面
+            2.选择1个联系人，点击右上角的确定按钮，是否会向被邀请发送一条邀请信息并在聊天会话页面同步提示"""
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击“+”按钮
+        gcsp.click_add_member()
+        time.sleep(2)
+        cgacp = ChatGroupAddContactsPage()
+        contactNnames = cgacp.get_contacts_name()
+        if contactNnames:
+            # 选择一个联系人
+            cgacp.select_one_member_by_name(contactNnames[0])
+        else:
+            raise AssertionError("通讯录没有联系人，请添加")
+        cgacp.click_sure()
+        time.sleep(2)
+        gcp.is_toast_exist("发出群邀请")
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    def test_msg_common_group_0060(self):
+        """1.在聊天设置页面，点击群成员下方的移除群成员按钮—号，是否可以进入群成员列表展示页面"""
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击“-”按钮
+        gcsp.click_del_member()
+        time.sleep(1)
+        if gcsp.is_text_present("移除群成员"):
+            raise AssertionError("在一人情况下还可以进入移除群成员页面")
+        gcsp.click_back()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    def test_msg_common_group_0065(self):
+        """1、点击群名称进入到群名称编辑修改页面
+            2、清除旧的群名称后，页面右上角的确定按钮是否置灰展示"""
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_modify_group_name()
+        time.sleep(1)
+        gcsp.clear_group_name()
+        time.sleep(1)
+        if gcsp.is_enabled_of_group_name_save_button():
+            raise AssertionError("页面右上角的确定按钮没有置灰展示")
+        gcsp.click_edit_group_name_back()
+        gcsp.click_back()
 
-
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    def test_msg_common_group_0066(self):
+        """1、点击群名称进入到群名称编辑修改页面
+            2、清除旧名称，录入新的群名称后，页面右上角的确定按钮是否高亮展示
+            3、点击高亮展示的确定按钮，群名称自动更改为新名称"""
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_modify_group_name()
+        time.sleep(1)
+        gcsp.clear_group_name()
+        time.sleep(1)
+        #录入新群名
+        gcsp.input_new_group_name("new_group_name")
+        time.sleep(1)
+        if not gcsp.is_enabled_of_group_name_save_button():
+            raise AssertionError("页面右上角的确定按钮没有高亮展示")
+        gcsp.save_group_name()
+        if not gcsp.is_toast_exist("修改成功"):
+            raise AssertionError("群名称更改为新名称失败")

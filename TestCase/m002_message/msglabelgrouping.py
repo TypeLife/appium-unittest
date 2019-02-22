@@ -45,8 +45,9 @@ class Preconditions(LoginPreconditions):
             slc.click_sure()
             label_grouping.wait_for_page_load()
             label_grouping.select_group(group_name)
-        # 选择一个标签分组
-        label_grouping.select_group(group_names[0])
+        else:
+            # 选择一个标签分组
+            label_grouping.select_group(group_names[0])
         lgdp = LableGroupDetailPage()
         time.sleep(1)
         # 标签分组成员小于2人，需要添加成员
@@ -1704,7 +1705,7 @@ class MsgLabelGroupingTest(TestCase):
         if chat.is_exist_video_msg():
             raise AssertionError("在标签分组会话窗，删除自己发送的视频失败！")
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_Msg_PrivateChat_VideoPic_0097(self):
         """标签分组会话窗，收藏自己发送的视频"""
         # 1、在标签分组会话窗，长按自己发送的视频
@@ -1739,7 +1740,7 @@ class MsgLabelGroupingTest(TestCase):
         ldgp.click_send_group_info()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_Msg_PrivateChat_VideoPic_0098(self):
         """标签分组会话窗，发送相册内的视频"""
         # 1、在标签分组会话窗，点击输入框左上方的相册图标
@@ -1758,7 +1759,7 @@ class MsgLabelGroupingTest(TestCase):
         cpp.click_back()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_Msg_PrivateChat_VideoPic_0099(self):
         """标签分组会话窗，发送相册内一个视频"""
         # 1、在标签分组会话窗，点击输入框左上方的相册图标
@@ -1775,7 +1776,7 @@ class MsgLabelGroupingTest(TestCase):
         chat.close_video()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_Msg_PrivateChat_VideoPic_0100(self):
         """标签分组会话窗，发送相册内多个视频"""
         # 1、在标签分组会话窗，点击输入框左上方的相册图标
@@ -1791,7 +1792,7 @@ class MsgLabelGroupingTest(TestCase):
         cpp.click_back()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_Msg_PrivateChat_VideoPic_0101(self):
         """标签分组会话窗，同时发送相册内视频和图片"""
         # 1、在标签分组会话窗，点击输入框左上方的相册图标
@@ -1807,7 +1808,7 @@ class MsgLabelGroupingTest(TestCase):
         cpp.click_back()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_Msg_PrivateChat_VideoPic_0102(self):
         """标签分组会话窗，发送视频时预览视频"""
         # 1、在标签分组会话窗，点击输入框左上方的相册图标
@@ -1824,7 +1825,7 @@ class MsgLabelGroupingTest(TestCase):
         cpp.click_back()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
     def test_Msg_PrivateChat_VideoPic_0105(self):
         """标签分组会话窗，验证点击趣图搜搜入口"""
         # 1、进入标签分组会话窗
@@ -1839,3 +1840,125 @@ class MsgLabelGroupingTest(TestCase):
         gif.close_gif()
         current_mobile().hide_keyboard_if_display()
         chat.wait_for_page_load()
+
+    @staticmethod
+    def delete_media_msg():
+        """删除标签分组会话窗的图片，gif消息"""
+        chat = LabelGroupingChatPage()
+        while True:
+            chat.wait_for_page_load()
+            if not chat.is_exist_pic_msg():
+                break
+            chat.press_pic()
+            chat.click_delete()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0106(self):
+        """标签分组会话窗，验证点击趣图搜搜入口"""
+        self.delete_media_msg()
+        # 1、进入标签分组会话窗
+        chat = LabelGroupingChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        # 2、点击GIF
+        chat.click_gif()
+        # 3、选择表情点击
+        gif.wait_for_page_load(timeout=60)
+        gif.send_gif()
+        gif.close_gif()
+        current_mobile().hide_keyboard_if_display()
+        if not chat.is_exist_pic_msg():
+            raise AssertionError("发送gif后，在标签分组会话窗无gif")
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0107(self):
+        """标签分组会话窗，断网情况下发送表情搜搜"""
+        # 1、进入标签分组会话窗
+        chat = LabelGroupingChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        current_mobile().set_network_status(0)
+        # 2、点击GIF
+        chat.click_gif()
+        # 提示：“网络异常，请重新设置网络”
+        if not chat.is_toast_exist("请检查网络设置", timeout=10):
+            raise AssertionError("断网情况下点击GIF无 ‘请检查网络设置’提示")
+
+    @staticmethod
+    def tearDown_test_Msg_PrivateChat_VideoPic_0107():
+        current_mobile().set_network_status(6)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0108(self):
+        """标签分组会话窗，搜索数字关键字选择发送趣图"""
+        self.delete_media_msg()
+        # 1、点击GIF图标
+        chat = LabelGroupingChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、搜索框输入数字
+        gif.input_message(1)
+        if gif.is_toast_exist("无搜索结果，换个热词试试", timeout=4):
+            raise AssertionError("输入数字 1 无gif趣图 ")
+        # 3、点击选择表情
+        gif.send_gif()
+        gif.close_gif()
+        current_mobile().hide_keyboard_if_display()
+        if not chat.is_exist_pic_msg():
+            raise AssertionError("发送gif后，在标签分组会话窗无gif")
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0109(self):
+        """标签分组会话窗，搜索特殊字符关键字发送趣图"""
+        self.delete_media_msg()
+        # 1、点击GIF图标
+        chat = LabelGroupingChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、搜索框输入特殊字符 @ ? ...
+        chars = ['@', '?', '...']
+        for msg in chars:
+            gif.input_message(msg)
+            if not gif.is_toast_exist("无搜索结果，换个热词试试", timeout=4):
+                # 3、点击选择表情
+                gif.send_gif()
+                if not chat.is_exist_pic_msg():
+                    raise AssertionError("发送gif后，在标签分组会话窗无gif")
+                gif.close_gif()
+                current_mobile().hide_keyboard_if_display()
+                chat.wait_for_page_load()
+                return
+        raise AssertionError("搜索框输入特殊字符" + "、".join(chars) + "无gif搜索结果")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0110(self):
+        """标签分组会话窗，搜索无结果的趣图"""
+        self.delete_media_msg()
+        # 1、点击GIF图标
+        chat = LabelGroupingChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、搜索框输入关键字
+        chars = ['appium', 'xxxx', 'a', '123456', '*']
+        # 提示无搜索结果，换个关键词试试
+        for msg in chars:
+            gif.input_message(msg)
+            if gif.is_toast_exist("无搜索结果，换个热词试试", timeout=4):
+                gif.close_gif()
+                current_mobile().hide_keyboard_if_display()
+                chat.wait_for_page_load()
+                return
+        raise AssertionError("搜索框输入关键字" + "、".join(chars) + "有gif搜索结果，请换输入关键字试试")
