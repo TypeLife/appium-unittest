@@ -416,6 +416,7 @@ class MeTest(TestCase):
         """个人资料-分享名片到群"""
         # 点击头像进入名片
         me_page = MePage()
+        me_page.wait_for_head_load()
         me_page.click_head()
 
         # 点击分享名片
