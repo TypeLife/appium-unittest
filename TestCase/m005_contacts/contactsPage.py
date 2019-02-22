@@ -152,7 +152,7 @@ class Preconditions(object):
         mess.click_contacts()
 
 
-
+@unittest.skip("修改调试中。。。。。")
 class ContactsPage(TestCase):
     """
     模块:通讯录
