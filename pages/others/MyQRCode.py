@@ -19,13 +19,13 @@ class MyQRCodePage(BasePage):
         'com.chinasofti.rcs:id/qr_code_info_view': (MobileBy.ID, 'com.chinasofti.rcs:id/qr_code_info_view'),
         'com.chinasofti.rcs:id/rl_qr_info': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_qr_info'),
         'com.chinasofti.rcs:id/profile_info': (MobileBy.ID, 'com.chinasofti.rcs:id/profile_info'),
-        '你大爷': (MobileBy.ID, 'com.chinasofti.rcs:id/twodimension_name_text'),
-        'com.chinasofti.rcs:id/twodimensioncode_myprofile_icon': (
+        '二维码中的名称': (MobileBy.ID, 'com.chinasofti.rcs:id/twodimension_name_text'),
+        '二维码中的头像': (
             MobileBy.ID, 'com.chinasofti.rcs:id/twodimensioncode_myprofile_icon'),
         '二维码': (MobileBy.ID, 'com.chinasofti.rcs:id/my_twodimensionCode'),
         '扫描二维码，添加和飞信': (MobileBy.ID, 'com.chinasofti.rcs:id/textView2'),
-        'com.chinasofti.rcs:id/qecode_share_btn': (MobileBy.ID, 'com.chinasofti.rcs:id/qecode_share_btn'),
-        'com.chinasofti.rcs:id/qecode_save_btn': (MobileBy.ID, 'com.chinasofti.rcs:id/qecode_save_btn'),
+        '分享二维码': (MobileBy.ID, 'com.chinasofti.rcs:id/qecode_share_btn'),
+        '保存二维码': (MobileBy.ID, 'com.chinasofti.rcs:id/qecode_save_btn'),
         'android:id/statusBarBackground': (MobileBy.ID, 'android:id/statusBarBackground')
     }
 
@@ -58,8 +58,13 @@ class MyQRCodePage(BasePage):
 
     @TestLogger.log('点击转发（分享）二维码')
     def click_forward_qr_code(self):
-        self.click_element(self.__locators['com.chinasofti.rcs:id/qecode_share_btn'], default_timeout=15)
+        self.click_element(self.__locators["分享二维码"], default_timeout=15)
 
     @TestLogger.log('点击下载（保存）二维码')
     def click_save_qr_code(self):
-        self.click_element(self.__locators['com.chinasofti.rcs:id/qecode_save_btn'], default_timeout=15)
+        self.click_element(self.__locators['保存二维码'], default_timeout=15)
+
+    @TestLogger.log()
+    def is_element_exist(self, text):
+        """当前页面是否包含此元素"""
+        return self._is_element_present(self.__locators[text])
