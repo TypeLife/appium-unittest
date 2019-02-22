@@ -54,6 +54,8 @@ class GroupChatSetPage(BasePage):
                   "确定": (MobileBy.XPATH, '//*[@text ="确定"]'),
                   "取消": (MobileBy.XPATH, '//*[@text ="取消"]'),
                   '群成员': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_head'),
+                  '完成': (MobileBy.ID, 'com.chinasofti.rcs:id/group_name_save'),
+                  '修改群名返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
                   }
 
     @TestLogger.log()
@@ -250,3 +252,34 @@ class GroupChatSetPage(BasePage):
         """点击 “+”添加成员"""
         els=self.get_elements(self.__class__.__locators['群成员'])
         els[-2].click()
+
+    @TestLogger.log()
+    def clear_group_name(self):
+        """清空群名称"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/edit_query'))
+        el.clear()
+
+    @TestLogger.log()
+    def is_enabled_of_group_name_save_button(self):
+        """判断群名称保存按钮是否置灰"""
+        return self._is_enabled(self.__class__.__locators['完成'])
+
+    @TestLogger.log()
+    def input_new_group_name(self,message):
+        """输入新群名"""
+        self.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/edit_query'), message)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+        return self
+
+    @TestLogger.log()
+    def save_group_name(self):
+        """保存新群名"""
+        self.click_element(self.__class__.__locators['完成'])
+
+    @TestLogger.log()
+    def click_edit_group_name_back(self):
+        """修改群名返回"""
+        self.click_element(self.__class__.__locators['修改群名返回'])
