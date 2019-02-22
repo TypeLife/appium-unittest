@@ -50,6 +50,7 @@ class GroupChatPage(BaseChatPage):
                   '重发按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
                   '重发消息确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
                   '语音消息体': (MobileBy.ID, 'com.chinasofti.rcs:id/img_audio_play_icon'),
+                  '位置返回': (MobileBy.ID, 'com.chinasofti.rcs:id/location_back_btn'),
                   }
 
     def is_exist_msg_videos(self):
@@ -248,3 +249,8 @@ class GroupChatPage(BaseChatPage):
     def click_end_call_button(self):
         """点击结束呼叫按钮 """
         self.click_element((MobileBy.ID, 'com.android.incallui:id/endButton'))
+
+    @TestLogger.log()
+    def click_location_back(self):
+        """点击位置页面返回 """
+        self.click_element(self.__class__.__locators['位置返回'])

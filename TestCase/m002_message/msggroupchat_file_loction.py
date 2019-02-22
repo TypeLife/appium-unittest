@@ -655,6 +655,7 @@ class MsgGroupChatFileLocationTest(TestCase):
             sog.wait_for_page_load()
             sog.click_back()
             sc.click_back()
+            time.sleep(2)
             chat_file.click_back()
             search.click_back()
             gcsp.click_back()
@@ -665,6 +666,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     def tearDown_test_msg_group_chat_file_location_0010(self):
         # 删除聊天记录
         scp = GroupChatPage()
+        time.sleep(2)
         if scp.is_on_this_page():
             scp.click_setting()
             gcsp = GroupChatSetPage()
@@ -1015,6 +1017,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         gcp.press_file(".html")
         if gcp.is_text_present("撤回"):
             raise AssertionError("超过十分钟可以撤回")
+        time.sleep(2)
 
     def tearDown_test_msg_group_chat_file_location_0042(self):
         # 删除聊天记录
@@ -1268,7 +1271,7 @@ class MsgGroupChatFileLocationTest(TestCase):
             except AssertionError as e:
                 print(e)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','DEBUG_YYX')
     def test_msg_group_chat_file_location_0050(self):
         """1、在当前页面点击位置消息体
             2、点击右下角按钮"""
@@ -1285,6 +1288,10 @@ class MsgGroupChatFileLocationTest(TestCase):
             raise AssertionError("未发现手机导航应用")
         map_flag = gcp.is_text_present("地图")
         self.assertTrue(map_flag)
+        gcp.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+        gcp.click_location_back()
+        time.sleep(2)
+
 
     def tearDown_test_msg_group_chat_file_location_0050(self):
         # 删除聊天记录
