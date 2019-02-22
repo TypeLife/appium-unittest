@@ -45,8 +45,9 @@ class Preconditions(LoginPreconditions):
             slc.click_sure()
             label_grouping.wait_for_page_load()
             label_grouping.select_group(group_name)
-        # 选择一个标签分组
-        label_grouping.select_group(group_names[0])
+        else:
+            # 选择一个标签分组
+            label_grouping.select_group(group_names[0])
         lgdp = LableGroupDetailPage()
         time.sleep(1)
         # 标签分组成员小于2人，需要添加成员
