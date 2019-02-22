@@ -1284,6 +1284,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         gcp.wait_for_location_page_load()
         # 点击右下角按钮
         gcp.click_nav_btn()
+        #判断是否有手机导航应用
         if gcp.is_toast_exist("未发现手机导航应用", timeout=3):
             raise AssertionError("未发现手机导航应用")
         map_flag = gcp.is_text_present("地图")
