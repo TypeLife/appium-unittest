@@ -9,14 +9,12 @@ from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
+from pages.contacts.EditContactPage import EditContactPage
+
 
 REQUIRED_MOBILES = {
-    # 'Android-移动': 'single_mobile',
     'Android-移动': 'M960BDQN229CH',
-    'Android-移动-联通': 'mobile_and_union',
-    'Android-移动-电信': '',
-    'Android-移动-移动': 'double_mobile',
-    'Android-XX-XX': 'others_double',
+    'Android-XX': ''  # 用来发短信
 }
 
 
@@ -153,14 +151,13 @@ class Preconditions(object):
 
 
 
-class ContactsPage(TestCase):
+class Contacts(TestCase):
     """
     模块:通讯录
     文件位置:全量测试用例/8.通讯录全量测试用例 曲新莉
     表格:8.通讯录全量测试用例 曲新莉
 
     """
-
     @staticmethod
     def setUp_test_contacts_0001():
         """
@@ -170,14 +167,20 @@ class ContactsPage(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        time.sleep(2)
 
 
     @tags('All','CMCC')
     def test_contacts_0001(self):
         contacts = ContactsPage()
-        # contacts.wait_for_page_load()
         contacts.page_should_contain_text('通讯录')
-        contacts.page_should_contain_text('+')
+        # contacts.page_should_contain_text('+')
+        # contacts.page_should_contain_text('搜索')
+        if contacts.is_text_present('备份你的手机通讯录，联系人数据不丢失'):
+            contacts.page_should_contain_text('备份你的手机通讯录，联系人数据不丢失')
+        time.sleep(2)
         contacts.page_should_contain_text('群聊')
         contacts.page_should_contain_text('标签分组')
         contacts.page_should_contain_text('公众号')
@@ -186,7 +189,7 @@ class ContactsPage(TestCase):
 
     @staticmethod
     def setUp_test_contacts_0002():
-        """允许访问本地通讯录"""
+
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.reset_and_relaunch_app()
@@ -196,15 +199,15 @@ class ContactsPage(TestCase):
 
     @tags('All', 'CMCC')
     def test_contacts_0002(self):
+        """访问本地通讯录权限框,点击确定"""
         MessagePage().click_contacts()
-        contact=ContactsPage()
-        contact.wait_for_page_load()
-        contact.click_always_allowed()
+        ContactsPage().click_always_allowed()
+        time.sleep(2)
 
 
     @staticmethod
     def setUp_test_contacts_0003():
-        """允许访问本地通讯录"""
+
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.reset_and_relaunch_app()
@@ -214,34 +217,58 @@ class ContactsPage(TestCase):
 
     @tags('All', 'CMCC')
     def test_contacts_0003(self):
+        """允许访问本地通讯录"""
         MessagePage().click_contacts()
         contact=ContactsPage()
-        contact.wait_for_page_load()
         contact.click_forbidden()
+        time.sleep(2)
+
 
     @staticmethod
     def setUp_test_contacts_0015():
-        """
-        已保存到本地的RCS用户的profile页
-        """
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
         if ContactsPage().is_text_present('需要使用通讯录权限'):
             ContactsPage().click_always_allowed()
+        time.sleep(2)
+        # 创建联系人 测试1
+        ContactsPage().click_add()
+        creat_contact = CreateContactPage()
+        creat_contact.click_input_name()
+        creat_contact.input_name('测试1')
+        creat_contact.click_input_number()
+        creat_contact.input_number('17324448506')
+        creat_contact.save_contact()
+        time.sleep(2)
+        # 创建联系人2
+        ContactDetailsPage().click_back_icon()
+        ContactsPage().click_add()
+        creat_contact.click_input_name()
+        creat_contact.input_name('测试2')
+        creat_contact.click_input_number()
+        creat_contact.input_number('15570670329')
+        creat_contact.save_contact()
+        time.sleep(2)
+        ContactDetailsPage().click_back_icon()
+
 
     @tags('All', 'CMCC')
     def test_contacts_0015(self):
+        """
+        已保存到本地的RCS用户的profile页
+        """
         ContactsPage().click_search_box()
         # 搜索联系人:测试1
         ContactListSearchPage().input_search_keyword('测试1')
         ContactListSearchPage().click_contact('测试1')
+        time.sleep(3)
         # 进入个人详情页
         # 页面包含的元素
         detailpage = ContactDetailsPage()
         detailpage.page_should_contain_text('测试1')
-        detailpage.page_should_contain_text('176 6537 2216')
+        detailpage.page_should_contain_text('173 2444 8506')
         detailpage.page_should_contain_text('C')
         if detailpage.is_text_present("公司"):
             detailpage.page_should_contain_text('公司')
@@ -296,6 +323,7 @@ class ContactsPage(TestCase):
         #搜索联系人:测试2
         ContactListSearchPage().input_search_keyword('测试2')
         ContactListSearchPage().click_contact('测试2')
+        time.sleep(2)
         #进入个人详情页
         #页面包含的元素
         detailpage=ContactDetailsPage()
@@ -332,7 +360,6 @@ class ContactsPage(TestCase):
         #点击电话/点击语音通话/点击视频通话先不做
         #点击分享名片
         detailpage.click_share_business_card()
-        # SelectContactsPage().input_search_keyword('测试1')
         SelectContactsPage().select_local_contacts()
         SelectContactsPage().input_search_keyword('测试1')
         SelectContactsPage().click_cantact_avatar()
@@ -348,32 +375,39 @@ class ContactsPage(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
+        time.sleep(3)
         if ContactsPage().is_text_present('需要使用通讯录权限'):
             ContactsPage().click_always_allowed()
-         # 添加联系人:本机
+
+        # 创建联系人本机
         ContactsPage().click_add()
-        creat_contact = CreateContactPage()
-        creat_contact.click_input_name()
-        creat_contact.input_name('本机')
+        creat_contact2=CreateContactPage()
+        creat_contact2.click_input_name()
+        creat_contact2.input_name('本机')
+        creat_contact2.click_input_number()
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)
+        creat_contact2.input_number(phone_number[0])
+        creat_contact2.save_contact()
         time.sleep(2)
-        creat_contact.click_input_number()
-        phone_numbers = current_mobile().get_cards(CardType.CHINA_MOBILE)
-        creat_contact.input_number(phone_numbers[0])  #获取本机电话号码
-        creat_contact.save_contact()
+        ContactDetailsPage().click_back_icon()
 
 
     def test_contacts_0017(self):
-        # ContactsPage().click_search_box()
-        # # 搜索联系人:本机
-        # ContactListSearchPage().input_search_keyword('本机')
-        # ContactListSearchPage().click_contact('本机')
-        # # 进入个人详情页
-
-        # 判断页面包含的元素
+        """
+        已保存到本地的本机用户的profile页
+        """
+        ContactsPage().click_search_box()
+        # 搜索联系人:本机
+        ContactListSearchPage().input_search_keyword('本机')
+        ContactListSearchPage().click_contact('本机')
+        time.sleep(2)
+        # 进入个人详情页
+        #判断页面包含的元素
         detailpage = ContactDetailsPage()
         detailpage.page_should_contain_text('本机')
-        detailpage.page_should_contain_text('19849476421')
-        detailpage.page_should_contain_text('C')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)
+        detailpage.page_should_contain_text('198 4947 6421')
+        detailpage.page_should_contain_text('B')
         if detailpage.is_text_present("公司"):
             detailpage.page_should_contain_text('公司')
         if detailpage.is_text_present("职位"):
@@ -393,13 +427,12 @@ class ContactsPage(TestCase):
         SelectContactsPage().click_cantact_avatar()
         SelectContactsPage().click_share_card()
         #消息、电话、语音视频、视频电话、副号拨打、和飞信电话置灰，不可点击
-        detailpage.message_btn_is_enabled()
-        detailpage.call_btn_is_enabled()
-        detailpage.voice_btn_is_enabled()
-        detailpage.video_call_btn_is_enabled()
-        detailpage.hefeixin_call_btn_is_enabled()
-
-
+        time.sleep(2)
+        detailpage.message_btn_is_clickable()
+        detailpage.call_btn_is_clickable()
+        detailpage.voice_btn_is_clickable()
+        detailpage.video_call_btn_is_clickable()
+        detailpage.hefeixin_call_btn_is_clickable()
 
 
     @staticmethod
@@ -416,6 +449,8 @@ class ContactsPage(TestCase):
     def test_contacts_0036(self):
         contact=ContactsPage()
         contact.click_and_address()
+
+
 
 
 

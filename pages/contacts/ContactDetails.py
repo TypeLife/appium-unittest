@@ -103,26 +103,26 @@ class ContactDetailsPage(BasePage):
         self.click_element(self.__locators['邀请使用'])
 
     @TestLogger.log()
-    def message_btn_is_enabled(self):
+    def message_btn_is_clickable(self):
         """消息按钮是否可点击"""
         return self._is_enabled(self.__class__.__locators["消息"])
 
     @TestLogger.log()
-    def call_btn_is_enabled(self):
+    def call_btn_is_clickable(self):
         """电话按钮是否可点击"""
-        return self._is_enabled(self.__class__.__locators["电话"])
+        return self._is_clickable(self.__class__.__locators["电话"])
 
     @TestLogger.log()
-    def voice_btn_is_enabled(self):
+    def voice_btn_is_clickable(self):
         """语音通话按钮状态是否可点击"""
-        return self._is_enabled(self.__class__.__locators["语音通话"])
+        return self._is_clickable(self.__class__.__locators["语音通话"])
 
     @TestLogger.log()
-    def video_call_btn_is_enabled(self):
+    def video_call_btn_is_clickable(self):
         """视频通话按钮状态是否可点击"""
-        return self._is_enabled(self.__class__.__locators["视频通话"])
+        return self._is_clickable(self.__class__.__locators["视频通话"])
 
     @TestLogger.log()
-    def hefeixin_call_btn_is_enabled(self):
+    def hefeixin_call_btn_is_clickable(self):
         """和飞信通话按钮状态是否可点击"""
-        return self._is_enabled(self.__class__.__locators["和飞信电话"])
+        return self._is_clickable(self.__class__.__locators["和飞信电话"])
