@@ -150,13 +150,8 @@ class Preconditions(object):
         mess.click_contacts()
 
 
-<<<<<<< HEAD
+class ContactPage(TestCase):
 
-class Contacts(TestCase):
-=======
-@unittest.skip("修改调试中。。。。。")
-class ContactsPage(TestCase):
->>>>>>> origin/dev
     """
     模块:通讯录
     文件位置:全量测试用例/8.通讯录全量测试用例 曲新莉
@@ -380,9 +375,10 @@ class ContactsPage(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
-        time.sleep(3)
+        time.sleep(1)
         if ContactsPage().is_text_present('需要使用通讯录权限'):
             ContactsPage().click_always_allowed()
+        time.sleep(2)
 
         # 创建联系人本机
         ContactsPage().click_add()
