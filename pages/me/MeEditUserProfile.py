@@ -38,7 +38,7 @@ class MeEditUserProfilePage(BasePage):
                   '保存截图': (MobileBy.ID, 'com.chinasofti.rcs:id/ok'),
                   '修改资料提示框': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_content'),
                   '取消1': (MobileBy.XPATH, "//*[contains(@text, '取消')]"),
-                  '保存1': (MobileBy.XPATH, "//*[contains(@text, '保存')]"),
+                  '保存1': (MobileBy.ID, "com.chinasofti.rcs:id/btn_ok"),
 
                   }
 
@@ -165,7 +165,7 @@ class MeEditUserProfilePage(BasePage):
     @TestLogger.log('拍照')
     def click_taking_pics(self):
         self.click_element(self.__locators["拍照"])
-        time.sleep(4.5)
+        time.sleep(6.5)
 
     @TestLogger.log('点击确定照片')
     def click_save_pics(self):
@@ -189,6 +189,10 @@ class MeEditUserProfilePage(BasePage):
     @TestLogger.log('点击取消修改资料')
     def click_cancel_mod(self):
         self.click_element(self.__locators["取消1"])
+
+    @TestLogger.log('点击保存修改资料')
+    def click_save_mod(self):
+        self.click_element(self.__locators["保存1"])
 
     @TestLogger.log()
     def is_text_exist(self, text):

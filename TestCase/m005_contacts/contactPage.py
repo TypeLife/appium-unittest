@@ -150,8 +150,13 @@ class Preconditions(object):
         mess.click_contacts()
 
 
+<<<<<<< HEAD
 
 class Contacts(TestCase):
+=======
+@unittest.skip("修改调试中。。。。。")
+class ContactsPage(TestCase):
+>>>>>>> origin/dev
     """
     模块:通讯录
     文件位置:全量测试用例/8.通讯录全量测试用例 曲新莉
