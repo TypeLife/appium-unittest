@@ -160,8 +160,10 @@ class ChatPicPage(BasePage):
     @TestLogger.log()
     def select_pic_fk(self, n=1):
         """选择n个图片"""
-        # 切换 选项
-        time.sleep(3)
+        # 切换到有图片选项
+        self.click_element(self.__class__.__locators['切换按钮'])
+        time.sleep(2)
+        self.click_element((MobileBy.XPATH, "//*[contains(@text, 'pic')]"))
         pics = self.get_elements(self.__class__.__locators['所有图片'])
         if n > len(pics):
             raise AssertionError("在所有照片首页没有 %s 张图片，请上传图片." % n)

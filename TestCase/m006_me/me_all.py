@@ -1007,3 +1007,51 @@ class MeAll(TestCase):
         # 3.恢复网络后返回
         mep.set_network_status(6)
         qr_code.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_039(self):
+        """我的二维码-分享"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 2、点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_040(self):
+        """我的二维码-分享"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 2、点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_041(self):
+        """我的二维码分享-关键字搜索"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 2、点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        # 3、点击搜索框
+        scg.click_search_keyword()
+        current_mobile().hide_keyboard_if_display()
