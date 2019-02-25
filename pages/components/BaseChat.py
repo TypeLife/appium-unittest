@@ -195,6 +195,12 @@ class BaseChatPage(BasePage):
         self.click_element(self.__class__.__locators["选择更多"])
 
     @TestLogger.log()
+    def is_open_more(self):
+        """是否打开 更多+ (通过判断是否有位置元素来判断是否有打开 更多+)"""
+        els = self.get_elements((MobileBy.XPATH, '//*[@text="位置"]'))
+        return len(els) > 0
+
+    @TestLogger.log()
     def input_message(self, message):
         """输入聊天信息"""
         self.input_text(self.__class__.__locators["说点什么..."], message)
