@@ -150,6 +150,7 @@ class Preconditions(object):
         mess.click_contacts()
 
 
+@unittest.skip("调试中。。。。")
 class ContactPage(TestCase):
 
     """
