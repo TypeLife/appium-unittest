@@ -56,7 +56,6 @@ class ContactsPage(FooterPage):
         '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe'),
         '弹出框点击允许': (MobileBy.ID, 'com.android.packageinstaller:id/permission_allow_button'),
         '弹出框点击禁止': (MobileBy.ID, 'com.android.packageinstaller:id/permission_deny_button'),
-
     }
 
     @TestLogger.log("获取所有联系人名")

@@ -104,8 +104,13 @@ class SelectContactsPage(BasePage):
 
     @TestLogger.log('搜索或输入手机号')
     def input_search_keyword(self, keyword):
-        """点击搜索或输入手机号"""
+        """输入搜索内容"""
         self.input_text(self.__locators['搜索或输入手机号'], keyword)
+
+    @TestLogger.log()
+    def click_search_keyword(self):
+        """点击搜索或输入手机号"""
+        self.click_element(self.__class__.__locators["搜索或输入手机号"])
 
 
     @TestLogger.log('点击联系人')
