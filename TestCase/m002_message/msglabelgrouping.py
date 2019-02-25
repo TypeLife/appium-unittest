@@ -1966,3 +1966,56 @@ class MsgLabelGroupingTest(TestCase):
                 chat.wait_for_page_load()
                 return
         raise AssertionError("搜索框输入关键字" + "、".join(chars) + "有gif搜索结果，请换输入关键字试试")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0111(self):
+        """标签分组会话窗，搜索趣图过程中返回至消息列表重新进入"""
+        # 1、点击GIF图标
+        chat = LabelGroupingChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、搜索框输入关键字匹配到对应结果后点击返回
+        chars = ['ok', 'o', '哈哈', 'no', 'yes']
+        for msg in chars:
+            gif.input_message(msg)
+            if not gif.is_toast_exist("无搜索结果，换个热词试试", timeout=4):
+                chat.click_back()
+                # 3、再次进入该会话页面
+                lgdp = LableGroupDetailPage()
+                lgdp.click_send_group_info()
+                chat.wait_for_page_load()
+                if gif.is_gif_exist():
+                    raise AssertionError("gif搜索到对应结果后点击返回,再次进入该会话页面时gif存在")
+                return
+        raise AssertionError("搜索框输入特殊字符" + "、".join(chars) + "无gif搜索结果")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0112(self):
+        """标签分组会话窗，趣图发送成功后搜索结果依然保留"""
+        self.delete_media_msg()
+        # 1、点击GIF图标
+        chat = LabelGroupingChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、搜索框输入关键字匹配到对应结果后点击发送
+        chars = ['ok', 'o', '哈哈', 'no', 'yes']
+        for msg in chars:
+            gif.input_message(msg)
+            if not gif.is_toast_exist("无搜索结果，换个热词试试", timeout=4):
+                gif.send_gif()
+                if not chat.is_exist_pic_msg():
+                    raise AssertionError("发送gif后，在标签分组会话窗无gif")
+                if not gif.is_gif_exist():
+                    raise AssertionError("gif发送后，gif的搜索内容不存在")
+                gif.close_gif()
+                current_mobile().hide_keyboard_if_display()
+                chat.wait_for_page_load()
+                return
+        raise AssertionError("搜索框输入特殊字符" + "、".join(chars) + "无gif搜索结果")
+
