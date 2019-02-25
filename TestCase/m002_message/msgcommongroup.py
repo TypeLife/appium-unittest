@@ -565,6 +565,7 @@ class MsgCommonGroupTest(TestCase):
         #返回消息页面
         gcp.click_back()
         sogp = SelectOneGroupPage()
+        time.sleep(1)
         sogp.click_back()
         sc.click_back()
         time.sleep(1)
@@ -1693,7 +1694,7 @@ class MsgCommonGroupTest(TestCase):
             raise AssertionError("在一人情况下还可以进入移除群成员页面")
         gcsp.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
     def test_msg_common_group_0065(self):
         """1、点击群名称进入到群名称编辑修改页面
             2、清除旧的群名称后，页面右上角的确定按钮是否置灰展示"""
@@ -1710,7 +1711,7 @@ class MsgCommonGroupTest(TestCase):
         gcsp.click_edit_group_name_back()
         gcsp.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
     def test_msg_common_group_0066(self):
         """1、点击群名称进入到群名称编辑修改页面
             2、清除旧名称，录入新的群名称后，页面右上角的确定按钮是否高亮展示
@@ -1731,3 +1732,124 @@ class MsgCommonGroupTest(TestCase):
         gcsp.save_group_name()
         if not gcsp.is_toast_exist("修改成功"):
             raise AssertionError("群名称更改为新名称失败")
+        gcsp.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0067(self):
+        """1、点击群名片入口，能否进入到群名片修改页面
+            2、旧名称右边是否会展示“X”按钮
+            3、点击X按钮，是否可以一次清除旧名称
+            4、名称修改框为空时，右上角的完成按钮是否置灰展示"""
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_modify_group_name()
+        time.sleep(1)
+        #判断是否有“X”按钮
+        if gcsp.is_group_name_delete_exit():
+            #点击“X”按钮
+            gcsp.click_group_name_delete_button()
+            time.sleep(1)
+            #判断是否清除成功
+            if not gcsp.is_text_present("请输入群聊名称"):
+                raise AssertionError("旧群名不能清除成功")
+            #判断右上角的按钮是否置灰展示
+            if gcsp.is_enabled_of_group_name_save_button():
+                raise AssertionError("名称修改框为空时，右上角的完成按钮没有置灰展示")
+        else:
+            raise AssertionError("没有找到“X”按钮")
+        gcsp.click_edit_group_name_back()
+        gcsp.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0068(self):
+        """1、录入新的内容后，右上角展示的完成按钮是否会高亮展示
+            2、在名称输入框中输入10汉字，点击右上角的完成按钮，是否可以保存输入的名称内容"""
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_modify_group_name()
+        time.sleep(1)
+        # 点击“X”按钮
+        gcsp.click_group_name_delete_button()
+        gcsp.input_new_group_name("哈哈哈哈哈哈哈哈哈哈")
+        #判断按钮是否高亮展示
+        if gcsp.is_enabled_of_group_name_save_button():
+            gcsp.save_group_name()
+            gcsp.is_toast_exist("修改成功")
+            time.sleep(2)
+            #验证上面输入的名称内容都保存
+            gcsp.click_modify_group_name()
+            time.sleep(1)
+            if not gcsp.get_edit_query_text()=="哈哈哈哈哈哈哈哈哈哈":
+                raise AssertionError("不可以保存输入的名称内容")
+            gcsp.click_edit_group_name_back()
+            gcsp.click_back()
+        else:
+            raise AssertionError("按钮不会高亮展示")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0069(self):
+        """1、在群名片修改页面，录入11个汉字，是否可以录入成功"""
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_modify_group_name()
+        time.sleep(1)
+        # 点击“X”按钮
+        gcsp.click_group_name_delete_button()
+        gcsp.input_new_group_name("哈哈哈哈哈哈哈哈哈哈哈")
+        time.sleep(1)
+        text=gcsp.get_edit_query_text()
+        if text=="哈哈哈哈哈哈哈哈哈哈哈":
+            raise AssertionError("可录入11个汉字")
+        else:
+            if not text=="哈哈哈哈哈哈哈哈哈哈":
+                raise AssertionError("录入的汉字最多不是10个")
+        gcsp.click_edit_group_name_back()
+        gcsp.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0070(self):
+        """1、在群名片修改页面，录入30个英文字符，是否可以录入成功
+            2、录入成功后，点击右上角的完成按钮，是否可以保存成功"""
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_modify_group_name()
+        time.sleep(1)
+        # 点击“X”按钮
+        gcsp.click_group_name_delete_button()
+        newName="h"*30
+        gcsp.input_new_group_name(newName)
+        time.sleep(1)
+        if not gcsp.get_edit_query_text()==newName:
+            raise AssertionError("录入30个英文字符不可以录入成功")
+        gcsp.save_group_name()
+        gcsp.is_toast_exist("修改成功")
+        gcsp.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0071(self):
+        """1、在群名片修改页面，录入31个英文字符，是否可以录入成功"""
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_modify_group_name()
+        time.sleep(1)
+        # 点击“X”按钮
+        gcsp.click_group_name_delete_button()
+        newName = "j" * 31
+        gcsp.input_new_group_name(newName)
+        time.sleep(1)
+        if gcsp.get_edit_query_text() == newName:
+            raise AssertionError("可以录入31个英文字符")
+        if not gcsp.get_edit_query_text()=="j"*30:
+            raise AssertionError("无法最多录入30个英文字符")
+        gcsp.click_edit_group_name_back()
+        gcsp.click_back()
