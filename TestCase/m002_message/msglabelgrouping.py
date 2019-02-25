@@ -889,7 +889,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前会话窗口点击位置
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_location()
         location_page = ChatLocationPage()
@@ -905,7 +906,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前会话窗口点击位置
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_location()
         location_page = ChatLocationPage()
@@ -922,7 +924,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前会话窗口点击位置
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_location()
         location_page = ChatLocationPage()
@@ -941,7 +944,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前会话窗口点击位置
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_location()
         location_page = ChatLocationPage()
