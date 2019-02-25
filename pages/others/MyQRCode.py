@@ -32,7 +32,7 @@ class MyQRCodePage(BasePage):
     @TestLogger.log('等待加载完毕')
     def wait_for_loading_animation_end(self):
         self.mobile.wait_until(
-            condition=lambda d: self.get_element(self.__locators['com.chinasofti.rcs:id/qecode_share_btn']),
+            condition=lambda d: self.get_element(self.__locators['分享二维码']),
             timeout=60
         )
 

@@ -12,6 +12,7 @@ from pages import *
 from pages.me.MeEditUserProfile import MeEditUserProfilePage
 from pages.me.MeViewUserProfile import MeViewUserProfilePage
 
+
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
     # 'Android-移动': 'single_mobile',
@@ -419,8 +420,10 @@ class MeAll(TestCase):
         mep1.click_taking_pics()
         mep1.click_save_pics()
         mep1.click_back()
+        time.sleep(1)
         # c跳转到选择照片页面
         mep1.click_select_pics(1)
+        time.sleep(1)
         self.assertEquals(mep1.is_element_exist("照片框"), True)
         mep1.click_back()
         mep1.click_back()
@@ -1006,3 +1009,55 @@ class MeAll(TestCase):
         # 3.恢复网络后返回
         mep.set_network_status(6)
         qr_code.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_039(self):
+        """我的二维码-分享"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 2、点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_040(self):
+        """我的二维码-分享"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 2、点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_041(self):
+        """我的二维码分享-关键字搜索"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 2、点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        # 3、点击搜索框
+        scg.click_search_keyword()
+        scg.input_search_keyword("123fk$#@ %")
+
+
+
+

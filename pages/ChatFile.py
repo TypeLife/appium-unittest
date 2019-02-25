@@ -61,4 +61,11 @@ class ChatFilePage(BasePage):
         self.press(el)
         self.click_element(self.__class__.__locators['转发'])
 
+    @TestLogger.log()
+    def is_on_this_page(self):
+        """是否在此页面"""
+        if self.is_text_present("本月"):
+            return True
+        else:
+            return False
 

@@ -56,6 +56,7 @@ class GroupChatSetPage(BasePage):
                   '群成员': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_head'),
                   '完成': (MobileBy.ID, 'com.chinasofti.rcs:id/group_name_save'),
                   '修改群名返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
+                  'X按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect'),
                   }
 
     @TestLogger.log()
@@ -283,3 +284,23 @@ class GroupChatSetPage(BasePage):
     def click_edit_group_name_back(self):
         """修改群名返回"""
         self.click_element(self.__class__.__locators['修改群名返回'])
+
+    @TestLogger.log()
+    def is_group_name_delete_exit(self):
+        """判断X按钮是否存在"""
+        if self.get_element(self.__class__.__locators["X按钮"]):
+            return True
+        else:
+            return False
+
+    @TestLogger.log()
+    def click_group_name_delete_button(self):
+        """点击X按钮"""
+        self.click_element(self.__class__.__locators["X按钮"])
+
+    @TestLogger.log()
+    def get_edit_query_text(self):
+        """获取修改群名输入框文本"""
+        el=self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/edit_query'))
+        text=el.get_attribute("text")
+        return text
