@@ -656,7 +656,8 @@ class MsgGroupChatFileLocationTest(TestCase):
             sog.click_back()
             sc.click_back()
             time.sleep(2)
-            chat_file.click_back()
+            if chat_file.is_on_this_page():
+                chat_file.click_back()
             search.click_back()
             gcsp.click_back()
             time.sleep(1)
