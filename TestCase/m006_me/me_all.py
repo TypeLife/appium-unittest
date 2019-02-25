@@ -12,6 +12,7 @@ from pages import *
 from pages.me.MeEditUserProfile import MeEditUserProfilePage
 from pages.me.MeViewUserProfile import MeViewUserProfilePage
 
+
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
     # 'Android-移动': 'single_mobile',
@@ -420,8 +421,10 @@ class MeAll(TestCase):
         mep1.click_taking_pics()
         mep1.click_save_pics()
         mep1.click_back()
+        time.sleep(1)
         # c跳转到选择照片页面
         mep1.click_select_pics(1)
+        time.sleep(1)
         self.assertEquals(mep1.is_element_exist("照片框"), True)
         mep1.click_back()
         mep1.click_back()
@@ -1054,4 +1057,8 @@ class MeAll(TestCase):
         scg.wait_for_page_load()
         # 3、点击搜索框
         scg.click_search_keyword()
-        current_mobile().hide_keyboard_if_display()
+        scg.input_search_keyword("123fk$#@ %")
+
+
+
+
