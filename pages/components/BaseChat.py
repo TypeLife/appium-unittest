@@ -57,7 +57,27 @@ class BaseChatPage(BasePage):
                   "gif群聊会话中的元素": (MobileBy.ID, 'com.chinasofti.rcs:id/layout_loading'),
                   "gif趣图搜索框": (MobileBy.ID, 'com.chinasofti.rcs:id/et_message'),
                   "关闭gif趣图聊天框": (MobileBy.ID, 'com.chinasofti.rcs:id/iv_cancel_gif'),
+                  # 消息发送失败 重发弹窗
+                  "是否重发该条信息": (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_message'),
+                  "确定重发": (MobileBy.XPATH, '//*[@text="确定"]'),
+                  "取消重发": (MobileBy.XPATH, '//*[@text="取消"]'),
+                  "发送失败icon": (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed')
                   }
+
+    @TestLogger.log()
+    def is_msg_send_fail(self):
+        """消息是否发送失败"""
+        return self._is_element_present(self.__class__.__locators['发送失败icon'])
+
+    @TestLogger.log()
+    def repeat_send_msg(self):
+        """重发消息"""
+        self.click_element(self.__class__.__locators['发送失败icon'])
+
+    @TestLogger.log()
+    def click_sure_repeat_msg(self):
+        """点击 确定 重发消息"""
+        self.click_element(self.__class__.__locators['确定重发'])
 
     @TestLogger.log()
     def click_addr_info(self):
