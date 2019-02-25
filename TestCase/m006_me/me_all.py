@@ -197,6 +197,7 @@ class MeAll(TestCase):
     def default_setUp(self):
         """确保每个用例运行前在群聊聊天会话页面"""
         Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_me_all_page()
 
     def default_tearDown(self):
