@@ -31,7 +31,7 @@ class MeEditUserProfilePage(BasePage):
                   '选择图片': (MobileBy.XPATH, "//*[contains(@text, '选择图片')]"),
                   '点击拍照': (MobileBy.ID, 'com.chinasofti.rcs:id/camera_picture'),
                   '拍照': (MobileBy.ID, 'com.huawei.camera:id/shutter_button'),
-                  '确定照片': (MobileBy.ID, 'com.huawei.camera:id/done_button'),
+                  '确定照片': (MobileBy.XPATH, "//*[@content-desc='确定']"),
                   '取消照片': (MobileBy.ID, 'com.huawei.camera:id/btn_review_cancel'),
                   '选择照片': (MobileBy.ID, 'com.chinasofti.rcs:id/album_picture'),
                   '照片框': (MobileBy.ID, 'com.chinasofti.rcs:id/foreground_bg'),
