@@ -1269,7 +1269,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcf.click_back()
         gcs.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk1')
     def test_msg_group_chat_video_0074(self):
         """转发聊天内容中的已下载的图片给任意对象"""
         # 1.检验是否当前聊天会话页面且有图片
@@ -1310,7 +1310,7 @@ class MsgGroupChatvedioTest(TestCase):
         self.assertEquals(gcp.is_exist_msg_image(), True)
         gcp.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk1')
     def test_msg_group_chat_video_0077(self):
         """转发聊天内容中的已下载的视频（缩略图）"""
         # 1.检验是否当前聊天会话页面且有图片
@@ -1339,7 +1339,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcf.click_back()
         gcs.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk1')
     def test_msg_group_chat_video_0078(self):
         """转发聊天内容中的已下载的视频（放大图）"""
         # 1.检验是否当前聊天会话页面且有图片
@@ -1367,10 +1367,14 @@ class MsgGroupChatvedioTest(TestCase):
         # 6.点击返回到群聊页面
         scp.click_back()
         gcv.click_close_pre_video()
+        time.sleep(1)
+        if gcv._is_element_present(["id", 'com.chinasofti.rcs:id/title']):
+            gcv.click_back()
+        time.sleep(1)
         gcf.click_back()
         gcs.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk1')
     def test_msg_group_chat_video_0079(self):
         """转发聊天内容中的已下载的视频给任意对象"""
         # 1.检验是否当前聊天会话页面且有视频
@@ -1412,7 +1416,7 @@ class MsgGroupChatvedioTest(TestCase):
         time.sleep(1)
         gcp.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk1')
     def test_msg_group_chat_video_0081(self):
         """收藏聊天内容中的已下载的图片"""
         # 1.检验是否当前聊天会话页面且有图片
@@ -1457,7 +1461,7 @@ class MsgGroupChatvedioTest(TestCase):
         mcp.click_back()
         fp.open_message_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk1')
     def test_msg_group_chat_video_0082(self):
         """删除聊天内容中的图片"""
         # 1.检验是否当前聊天会话页面且有图片
@@ -1482,7 +1486,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcs.click_back()
         # self.assertEquals(gcp.is_exist_msg_image(), False)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk1')
     def test_msg_group_chat_video_0083(self):
         """保存聊天内容中的图片到本地"""
         # 1.检验是否当前聊天会话页面且有图片
@@ -1512,7 +1516,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcf.click_back()
         gcs.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk1')
     def test_msg_group_chat_video_0084(self):
         """保存聊天内容中的视频到本地"""
         # 1.检验是否当前聊天会话页面且有图片
@@ -1537,12 +1541,14 @@ class MsgGroupChatvedioTest(TestCase):
         # 5.检验在选择联系人页面
         self.assertEquals(gcv.is_toast_exist_save_video(), True)
         gcv.click_close_pre_video()
-        gcv.click_back()
+        time.sleep(1)
+        if gcv._is_element_present(["id", 'com.chinasofti.rcs:id/title']):
+            gcv.click_back()
         time.sleep(1)
         gcf.click_back()
         gcs.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk1')
     def test_msg_group_chat_video_0085(self):
         """编辑聊天内容中的图片，并发送"""
         # 1.检验是否当前聊天会话页面且有图片

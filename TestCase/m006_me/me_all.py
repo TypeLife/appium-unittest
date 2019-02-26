@@ -139,7 +139,7 @@ class Preconditions(object):
         mup.click_edit()
         mep1 = MeEditUserProfilePage()
         mep1.wait_for_page_load()
-        mep1.input_name("姓名", "中国人123*#!")
+        mep1.input_name("姓名", "中国人123*#!!")
         mep1.edit_clear("公司")
         mep1.edit_clear("职位")
         # mep.swipe_up()
@@ -172,7 +172,7 @@ class Preconditions(object):
         mep1.swipe_up()
         mep1.input_name("姓名", "中国人123*#!")
         mep1.input_name("公司", "中移科技有限公司")
-        mep1.input_name("职位", "高级工程师")
+        mep1.input_name("职位", "高级工程师123")
         # mep.swipe_up()
         mep1.input_name("邮箱", "958535269@qq.com")
         time.sleep(1)
@@ -210,14 +210,15 @@ class MeAll(TestCase):
         """我页面跳转验证"""
         # 1.检验是否跳转到我页面
         mep = MePage()
-        mep.is_on_this_page()
+        self.assertEquals(mep.is_on_this_page(), True)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_002(self):
         """"我"模块页面信息显示验证"""
         # 1.检验是否跳转到我页面
         mep = MePage()
-        mep.is_on_this_page()
+        self.assertEquals(mep.is_on_this_page(), True)
+        time.sleep(2.8)
         # 2.检查页面包含姓名，电话号码，查看并编辑人资料入口，个人头像，我的二维码入口,多方电话可用时长入口,和包支付,移动营业厅,福利
         self.assertEquals(mep.is_element_exist("姓名"), True)
         self.assertEquals(mep.is_element_exist("电话号码"), True)
@@ -229,6 +230,7 @@ class MeAll(TestCase):
         self.assertEquals(mep.is_text_exist("移动营业厅"), True)
         self.assertEquals(mep.is_text_exist("福利"), True)
         mep.page_down()
+        time.sleep(1)
         # 3.检查页面包含关于和飞信,推荐和飞信、帮助与反馈、设置
         self.assertEquals(mep.is_text_exist("关于和飞信"), True)
         self.assertEquals(mep.is_text_exist("推荐和飞信"), True)
@@ -665,6 +667,7 @@ class MeAll(TestCase):
         self.assertEquals(mep1.is_element_exist("照片框"), True)
         # 4.点击返回按钮，重新选取照片
         mep1.click_back()
+        time.sleep(1)
         mep1.click_select_pics(1)
         # 5.点击保存
         mep1.click_save_save_pics()
@@ -1025,10 +1028,13 @@ class MeAll(TestCase):
         qr_code.click_forward_qr_code()
         scg = SelectContactsPage()
         scg.wait_for_page_load()
+        # 3.点击返回
+        scg.click_back()
+        qr_code.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_040(self):
-        """我的二维码-分享"""
+        """我的二维码分享-关键字搜索"""
         # 0.检验是否跳转到我页面
         mep = MePage()
         mep.is_on_this_page()
@@ -1040,6 +1046,18 @@ class MeAll(TestCase):
         qr_code.click_forward_qr_code()
         scg = SelectContactsPage()
         scg.wait_for_page_load()
+        # 3、点击搜索框，输入信息
+        scg.click_search_keyword()
+        scg.input_search_keyword("给1234%6在$")
+        time.sleep(1)
+        # 4.检验有结果和无结果两种情况
+        self.assertEquals(scg.page_contain_element('X'), True)
+        self.assertEquals(scg.get_element_texts("最近聊天"), True)
+        if scg.is_text_present("本地联系人"):
+            self.assertEquals(scg.get_element_texts("local联系人"), True)
+        # 5.点击返回
+        scg.click_back()
+        qr_code.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_041(self):
@@ -1055,9 +1073,75 @@ class MeAll(TestCase):
         qr_code.click_forward_qr_code()
         scg = SelectContactsPage()
         scg.wait_for_page_load()
-        # 3、点击搜索框
+        # 3、点击搜索框，输入信息
         scg.click_search_keyword()
-        scg.input_search_keyword("123fk$#@ %")
+        scg.input_search_keyword("+861591873097")
+        time.sleep(1)
+        # 4.检验有结果和无结果两种情况
+        self.assertEquals(scg.page_contain_element('X'), True)
+        self.assertEquals(scg.get_element_texts("最近聊天"), True)
+        if scg.is_text_present("本地联系人"):
+            self.assertEquals(scg.get_element_texts("聊天电话"), True)
+        # 5.点击返回
+        scg.click_back()
+        qr_code.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_042(self):
+        """我的二维码分享-非手机号码的数字搜索"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 2、点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        # 3、点击搜索框，输入信息
+        scg.click_search_keyword()
+        scg.input_search_keyword("15918730974")
+        time.sleep(1)
+        # 4.检验有结果和无结果两种情况
+        self.assertEquals(scg.page_contain_element('X'), True)
+        self.assertEquals(scg.get_element_texts("最近聊天"), True)
+        if scg.is_text_present("本地联系人"):
+            self.assertEquals(scg.get_element_texts("聊天电话"), True)
+        # 5.点击返回
+        scg.click_back()
+        qr_code.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_043(self):
+        """我的二维码分享-无本地结果且二次查询无结果"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 2、点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        # 3、点击搜索框，输入信息
+        scg.click_search_keyword()
+        scg.input_search_keyword("我们是谁？")
+        time.sleep(1)
+        # 4.检验无结果
+        self.assertEquals(scg.page_contain_element('X'), True)
+        self.assertEquals(scg.get_element_texts("最近聊天"), True)
+        # 5.点击二次搜索
+        scg.click_search_he_contact()
+        time.sleep(1.8)
+        self.assertEquals(scg.is_text_present("无搜索结果"), True)
+        # 6.点击返回
+        scg.click_element(["id", 'com.chinasofti.rcs:id/btn_back'])
+        scg.click_back()
+        qr_code.click_back()
 
 
 
