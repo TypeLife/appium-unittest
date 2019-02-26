@@ -32,6 +32,7 @@ class MeEditUserProfilePage(BasePage):
                   '点击拍照': (MobileBy.ID, 'com.chinasofti.rcs:id/camera_picture'),
                   '拍照': (MobileBy.XPATH, "//*[contains(@resource-id, 'camera') and contains(@resource-id, 'shutter_button')]"),
                   '确定照片': (MobileBy.XPATH, "//*[contains(@resource-id, 'camera') and contains(@resource-id, 'done')]"),
+                  '确定照片2': (MobileBy.XPATH, "//*[contains(@resource-id, 'camera') and contains(@resource-id, 'confirm')]"),
                   '取消照片': (MobileBy.XPATH, "//*[contains(@resource-id, 'camera') and contains(@resource-id, 'cancel')]"),
                   '选择照片': (MobileBy.ID, 'com.chinasofti.rcs:id/album_picture'),
                   '照片框': (MobileBy.ID, 'com.chinasofti.rcs:id/foreground_bg'),
@@ -169,7 +170,10 @@ class MeEditUserProfilePage(BasePage):
 
     @TestLogger.log('点击确定照片')
     def click_save_pics(self):
-        self.click_element(self.__locators["确定照片"])
+        if self._is_element_present(self.__locators["确定照片"]):
+            self.click_element(self.__locators["确定照片"])
+        else:
+            self.click_element(self.__locators["确定照片2"])
 
     @TestLogger.log('点击取消照片')
     def click_cancel_pics(self):
