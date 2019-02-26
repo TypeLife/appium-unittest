@@ -111,7 +111,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         # 2、点击本地文件
         more_page = ChatMorePage()
         more_page.click_file()
@@ -133,7 +134,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         # 2、点击本地文件
         more_page = ChatMorePage()
         more_page.click_file()
@@ -159,7 +161,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         # 2、点击视频
         more_page = ChatMorePage()
         more_page.click_file()
@@ -181,7 +184,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         # 2、点击视频
         more_page = ChatMorePage()
         more_page.click_file()
@@ -212,7 +216,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         # 2、点击照片
         more_page = ChatMorePage()
         more_page.click_file()
@@ -234,7 +239,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         # 2、点击照片
         more_page = ChatMorePage()
         more_page.click_file()
@@ -265,7 +271,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         # 2、点击音乐
         more_page = ChatMorePage()
         more_page.click_file()
@@ -287,7 +294,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         # 2、点击音乐
         more_page = ChatMorePage()
         more_page.click_file()
@@ -318,7 +326,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -402,7 +411,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -439,7 +449,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -487,7 +498,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -533,7 +545,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -591,7 +604,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -648,7 +662,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -696,7 +711,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -742,7 +758,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -777,7 +794,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -810,7 +828,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -846,7 +865,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -1053,7 +1073,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 点击更多
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         # 点击位置
         more_page.click_location()
