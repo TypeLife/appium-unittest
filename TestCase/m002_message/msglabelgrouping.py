@@ -2019,3 +2019,17 @@ class MsgLabelGroupingTest(TestCase):
                 return
         raise AssertionError("搜索框输入特殊字符" + "、".join(chars) + "无gif搜索结果")
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'label_grouping')
+    def test_Msg_PrivateChat_VideoPic_0114(self):
+        """标签分组会话窗，关闭GIF搜索框"""
+        # 1、点击GIF图标
+        chat = LabelGroupingChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、点击搜索框左方×
+        gif.close_gif()
+        if gif.is_gif_exist():
+            raise AssertionError("点击左方× gif关闭后趣图页面还存在")
