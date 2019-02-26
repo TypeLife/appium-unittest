@@ -12,7 +12,6 @@ from pages import *
 from pages.me.MeEditUserProfile import MeEditUserProfilePage
 from pages.me.MeViewUserProfile import MeViewUserProfilePage
 
-
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
     # 'Android-移动': 'single_mobile',
@@ -184,6 +183,32 @@ class Preconditions(object):
         else:
             pass
 
+    @staticmethod
+    def make_already_in_me_save_part_name_page():
+        """确保编辑我的个人资料数据部分为空"""
+        Preconditions.make_already_in_me_all_page()
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.点击进入编辑
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        mep1.input_name("姓名", "哈哈@！！")
+        time.sleep(1)
+        mep1.click_save()
+        if mep1.is_toast_save_success():
+            mep1.click_back()
+        if mep1.is_toast_save():
+            mep1.click_back()
+            mup.click_back()
+        else:
+            pass
+
 
 class MeAll(TestCase):
     """_
@@ -214,6 +239,8 @@ class MeAll(TestCase):
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_002(self):
         """"我"模块页面信息显示验证"""
+        # 0.确保卡的有名字
+        Preconditions.make_already_in_me_save_part_name_page()
         # 1.检验是否跳转到我页面
         mep = MePage()
         self.assertEquals(mep.is_on_this_page(), True)
@@ -1142,6 +1169,29 @@ class MeAll(TestCase):
         scg.click_back()
         qr_code.click_back()
 
-
-
-
+    # @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    # def test_me_all_page_044(self):
+    #     """我的二维码分享-搜索未保存在本地的手机号码"""
+    #     # 0.检验是否跳转到我页面
+    #     mep = MePage()
+    #     mep.is_on_this_page()
+    #     # 1.点击个人二维码
+    #     mep.click_qr_code_icon()
+    #     qr_code = MyQRCodePage()
+    #     qr_code.wait_for_loading_animation_end()
+    #     # 2、点击“分享我的二维码”
+    #     qr_code.click_forward_qr_code()
+    #     scg = SelectContactsPage()
+    #     scg.wait_for_page_load()
+    #     # 3、点击搜索框，输入信息
+    #     scg.click_search_keyword()
+    #     scg.input_search_keyword("15918730944")
+    #     time.sleep(1)
+    #     # 4.检验有结果和无结果两种情况
+    #     self.assertEquals(scg.page_contain_element('X'), True)
+    #     self.assertEquals(scg.get_element_texts("最近聊天"), True)
+    #     if scg.is_text_present("本地联系人"):
+    #         self.assertEquals(scg.get_element_texts("聊天电话"), True)
+    #     # 5.点击返回
+    #     scg.click_back()
+    #     qr_code.click_back()
