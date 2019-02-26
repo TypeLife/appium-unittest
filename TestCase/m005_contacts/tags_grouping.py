@@ -502,7 +502,7 @@ class TagsGroupingTest(TestCase):
         mtc.assert_caller_tips_is_display()
 
         # 等待来电
-        mtc.wait_for_call_back(max_wait_time=8)
+        mtc.wait_for_call_back(max_wait_time=16)
         # 挂断电话
         current_mobile().hang_up_the_call()
 
