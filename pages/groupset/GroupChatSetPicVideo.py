@@ -9,7 +9,7 @@ class GroupChatSetPicVideoPage(BasePage):
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.ChatFileActivity'
 
     __locators = {
-                  '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
+                  '返回': (MobileBy.XPATH, "//*[contains(@resource-id, 'back')]"),
                   '图片与视频标题': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
                   '图片与视频': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_thumb'),
                   'com.chinasofti.rcs:id/result_list': (MobileBy.ID, 'com.chinasofti.rcs:id/result_list'),
