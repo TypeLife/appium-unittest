@@ -846,3 +846,71 @@ class MsgPrivateChatVideoPicTest(TestCase):
         preview.click_back()
         cpp.click_back()
         chat.wait_for_page_load()
+
+    @staticmethod
+    def delete_media_msg():
+        """删除在单聊会话窗的图片，gif消息"""
+        chat = SingleChatPage()
+        while True:
+            chat.wait_for_page_load()
+            if not chat.is_exist_pic_msg():
+                break
+            chat.press_pic()
+            chat.click_delete()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0115(self):
+        """在单聊会话窗，验证点击趣图搜搜入口"""
+        # 1、点击GIF图标
+        chat = SingleChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 进入趣图选择页面
+        if not gif.is_gif_exist():
+            raise AssertionError("趣图页面无gif趣图")
+        gif.close_gif()
+        current_mobile().hide_keyboard_if_display()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0116(self):
+        """在单聊会话窗，网络正常发送表情搜搜"""
+        self.delete_media_msg()
+        # 1、点击GIF图标
+        chat = SingleChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、选择表情点击发送
+        gif.send_gif()
+        gif.close_gif()
+        current_mobile().hide_keyboard_if_display()
+        if not chat.is_exist_pic_msg():
+            raise AssertionError("发送表情后，在单聊会话窗无表情趣图存在")
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0117(self):
+        """在单聊会话窗，断网情况下发送表情搜搜"""
+        # 断网
+        current_mobile().set_network_status(0)
+        # 点击GIF图标
+        chat = SingleChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        # 提示：“网络异常，请重新设置网络”
+        if not chat.is_toast_exist("请检查网络设置", timeout=10):
+            raise AssertionError("断网情况下点击GIF无含有 ‘请检查网络设置’的提示")
+        chat.wait_for_page_load()
+
+    @staticmethod
+    def tearDown_test_Msg_PrivateChat_VideoPic_0117():
+        """恢复网络"""
+        current_mobile().set_network_status(6)

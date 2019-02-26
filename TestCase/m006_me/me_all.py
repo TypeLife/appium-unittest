@@ -82,12 +82,11 @@ class Preconditions(object):
         one_key = OneKeyLoginPage()
         one_key.wait_for_tell_number_load(60)
         one_key.click_one_key_login()
-        one_key.click_read_agreement_detail()
-
-        # 同意协议
-        agreement = AgreementDetailPage()
-        agreement.click_agree_button()
-
+        if one_key.have_read_agreement_detail():
+            one_key.click_read_agreement_detail()
+            # 同意协议
+            agreement = AgreementDetailPage()
+            agreement.click_agree_button()
         # 等待消息页
         message_page = MessagePage()
         message_page.wait_login_success(60)
