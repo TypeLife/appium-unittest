@@ -788,7 +788,9 @@ class MsgGroupChatFileLocationTest(TestCase):
         sc.wait_for_page_local_contact_load()
         sc.click_back()
         sc.click_back()
-        chat_file.click_back()
+        time.sleep(2)
+        if chat_file.is_on_this_page():
+            chat_file.click_back()
         search.click_back()
         gcsp.click_back()
         time.sleep(1)

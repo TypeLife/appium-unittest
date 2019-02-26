@@ -55,8 +55,11 @@ class GroupChatSetPage(BasePage):
                   "取消": (MobileBy.XPATH, '//*[@text ="取消"]'),
                   '群成员': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_head'),
                   '完成': (MobileBy.ID, 'com.chinasofti.rcs:id/group_name_save'),
-                  '修改群名返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
+                  '修改群名或群名片返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
                   'X按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect'),
+                  '群名片完成': (MobileBy.ID, 'com.chinasofti.rcs:id/group_card_save'),
+                  '二维码转发': (MobileBy.ID, 'com.chinasofti.rcs:id/qecode_share_btn'),
+                  '二维码下载': (MobileBy.ID, 'com.chinasofti.rcs:id/qecode_save_btn'),
                   }
 
     @TestLogger.log()
@@ -283,10 +286,10 @@ class GroupChatSetPage(BasePage):
     @TestLogger.log()
     def click_edit_group_name_back(self):
         """修改群名返回"""
-        self.click_element(self.__class__.__locators['修改群名返回'])
+        self.click_element(self.__class__.__locators['修改群名或群名片返回'])
 
     @TestLogger.log()
-    def is_group_name_delete_exit(self):
+    def is_iv_delete_exit(self):
         """判断X按钮是否存在"""
         if self.get_element(self.__class__.__locators["X按钮"]):
             return True
@@ -294,13 +297,54 @@ class GroupChatSetPage(BasePage):
             return False
 
     @TestLogger.log()
-    def click_group_name_delete_button(self):
+    def click_iv_delete_button(self):
         """点击X按钮"""
         self.click_element(self.__class__.__locators["X按钮"])
 
     @TestLogger.log()
     def get_edit_query_text(self):
-        """获取修改群名输入框文本"""
+        """获取输入框文本"""
         el=self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/edit_query'))
         text=el.get_attribute("text")
         return text
+
+    @TestLogger.log()
+    def click_edit_group_card_back(self):
+        """修改群名片返回"""
+        self.click_element(self.__class__.__locators['修改群名或群名片返回'])
+
+    @TestLogger.log()
+    def save_group_card_name(self):
+        """保存新群名片名字"""
+        self.click_element(self.__class__.__locators['群名片完成'])
+
+    @TestLogger.log()
+    def is_enabled_of_group_card_save_button(self):
+        """判断群名片保存按钮是否置灰"""
+        return self._is_enabled(self.__class__.__locators['群名片完成'])
+
+    @TestLogger.log()
+    def wait_for_qecode_load(self, timeout=8, auto_accept_alerts=True):
+        """等待群二维码加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("该二维码7天内")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def click_qecode_share_button(self):
+        """点击群二维码分享按钮"""
+        self.click_element(self.__class__.__locators['二维码转发'])
+
+    @TestLogger.log()
+    def click_qecode_download_button(self):
+        """点击群二维码下载按钮"""
+        self.click_element(self.__class__.__locators['二维码下载'])
