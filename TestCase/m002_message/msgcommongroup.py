@@ -1351,7 +1351,9 @@ class MsgCommonGroupTest(TestCase):
         # 输入信息
         info = "12345678900"
         gcp.input_message(info)
-        gcp.hide_keyboard()
+        if gcp.is_keyboard_shown():
+            gcp.hide_keyboard()
+        time.sleep(1)
         gcp.send_message()
         # 验证是否发送成功
         cwp = ChatWindowPage()
