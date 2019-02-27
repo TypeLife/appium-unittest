@@ -94,6 +94,6 @@ class ChatGIFPage(BasePage):
 
     @TestLogger.log()
     def is_gif_exist(self):
-        """是否存在gif"""
-        els = self.get_elements(self.__class__.__locators["所有gif"])
-        return len(els) > 0
+        """gif是否打开"""
+        return self._is_element_present(self.__class__.__locators["关闭gif"])
+
