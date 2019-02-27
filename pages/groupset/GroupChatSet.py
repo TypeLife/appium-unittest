@@ -60,6 +60,10 @@ class GroupChatSetPage(BasePage):
                   '群名片完成': (MobileBy.ID, 'com.chinasofti.rcs:id/group_card_save'),
                   '二维码转发': (MobileBy.ID, 'com.chinasofti.rcs:id/qecode_share_btn'),
                   '二维码下载': (MobileBy.ID, 'com.chinasofti.rcs:id/qecode_save_btn'),
+                  '二维码返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
+                  '群管理返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
+                  '群主管理权转让': (MobileBy.ID, 'com.chinasofti.rcs:id/group_transfer'),
+                  '解散群': (MobileBy.ID, 'com.chinasofti.rcs:id/group_disband'),
                   }
 
     @TestLogger.log()
@@ -234,6 +238,11 @@ class GroupChatSetPage(BasePage):
         self.click_element(self.__locators['取消'])
 
     @TestLogger.log()
+    def click_sure(self):
+        """点击确定"""
+        self.click_element(self.__locators['确定'])
+
+    @TestLogger.log()
     def scroll_to_bottom(self):
         """滑到菜单底部"""
         self.wait_until(
@@ -348,3 +357,39 @@ class GroupChatSetPage(BasePage):
     def click_qecode_download_button(self):
         """点击群二维码下载按钮"""
         self.click_element(self.__class__.__locators['二维码下载'])
+
+    @TestLogger.log()
+    def click_qecode_back_button(self):
+        """点击群二维码页面返回按钮"""
+        self.click_element(self.__class__.__locators['二维码返回'])
+
+    @TestLogger.log()
+    def wait_for_group_manage_load(self, timeout=8, auto_accept_alerts=True):
+        """等待群管理页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("群管理")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def click_group_manage_back_button(self):
+        """点击群管理页面返回按钮"""
+        self.click_element(self.__class__.__locators['群管理返回'])
+
+    @TestLogger.log()
+    def click_group_manage_transfer_button(self):
+        """点击群主管理权转让按钮"""
+        self.click_element(self.__class__.__locators['群主管理权转让'])
+
+    @TestLogger.log()
+    def click_group_manage_disband_button(self):
+        """点击解散群按钮"""
+        self.click_element(self.__class__.__locators['解散群'])

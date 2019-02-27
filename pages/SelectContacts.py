@@ -221,9 +221,16 @@ class SelectContactsPage(BasePage):
             pass
         return self
 
-    @TestLogger.log('获取元素文本内容')
-    def get_element_text(self, locator):
+    @TestLogger.log('检验搜索名称')
+    def get_element_text_net_name(self, locator):
         text = self.get_text(self.__locators["搜索或输入手机号"])
+        text = text+"(未知号码)"
+        return self.element_should_contain_text(self.__locators[locator], text)
+
+    @TestLogger.log('检验搜索号码')
+    def get_element_text_net_number(self, locator):
+        text = self.get_text(self.__locators["搜索或输入手机号"])
+        text = "tel: +86"+text
         return self.element_should_contain_text(self.__locators[locator], text)
 
     @TestLogger.log('获取元素文本内容')
@@ -244,8 +251,7 @@ class SelectContactsPage(BasePage):
     def page_contain_element(self, locator):
         return self.page_should_contain_element(self.__locators[locator])
 
-    @TestLogger.log('点击')
+    @TestLogger.log('点击最近聊天')
     def click_search_he_contact(self):
         self.click_element(self.__locators["最近聊天"])
-
 
