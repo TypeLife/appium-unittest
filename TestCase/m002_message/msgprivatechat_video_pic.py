@@ -858,7 +858,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
             chat.press_pic()
             chat.click_delete()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_VideoPic_0115(self):
         """在单聊会话窗，验证点击趣图搜搜入口"""
         # 1、点击GIF图标
@@ -875,7 +875,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         current_mobile().hide_keyboard_if_display()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_VideoPic_0116(self):
         """在单聊会话窗，网络正常发送表情搜搜"""
         self.delete_media_msg()
@@ -894,7 +894,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
             raise AssertionError("发送表情后，在单聊会话窗无表情趣图存在")
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_VideoPic_0117(self):
         """在单聊会话窗，断网情况下发送表情搜搜"""
         # 断网
@@ -914,3 +914,161 @@ class MsgPrivateChatVideoPicTest(TestCase):
     def tearDown_test_Msg_PrivateChat_VideoPic_0117():
         """恢复网络"""
         current_mobile().set_network_status(6)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0118(self):
+        """在单聊会话窗，搜索数字关键字选择发送趣图"""
+        self.delete_media_msg()
+        # 1、点击GIF图标
+        chat = SingleChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、搜索框输入数字
+        nums = ['1', '2', '6', '666', '8']
+        for msg in nums:
+            gif.input_message(msg)
+            if not gif.is_toast_exist("无搜索结果，换个热词试试", timeout=4):
+                # 3、点击选择表情
+                gif.send_gif()
+                gif.input_message("")
+                gif.close_gif()
+                current_mobile().hide_keyboard_if_display()
+                if not chat.is_exist_pic_msg():
+                    raise AssertionError("发送gif后，在单聊会话窗无gif")
+                chat.wait_for_page_load()
+                return
+        raise AssertionError("输入数字 " + ",".join(nums) + "无gif趣图 ")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0119(self):
+        """在单聊会话窗，搜索特殊字符关键字发送趣图"""
+        self.delete_media_msg()
+        # 1、点击GIF图标
+        chat = SingleChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、搜索框输入特殊字符 @ ? ...
+        chars = ['@', '?', '...']
+        for msg in chars:
+            gif.input_message(msg)
+            if not gif.is_toast_exist("无搜索结果，换个热词试试", timeout=4):
+                # 3、点击选择表情
+                gif.send_gif()
+                if not chat.is_exist_pic_msg():
+                    raise AssertionError("发送gif后，在单聊会话窗无gif")
+                gif.input_message("")
+                gif.close_gif()
+                current_mobile().hide_keyboard_if_display()
+                chat.wait_for_page_load()
+                return
+        raise AssertionError("搜索框输入特殊字符" + "、".join(chars) + "无gif搜索结果")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0120(self):
+        """在单聊会话窗，搜索特殊字符关键字发送趣图"""
+        self.delete_media_msg()
+        # 1、点击GIF图标
+        chat = SingleChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、搜索框输入关键字
+        chars = ['appium', 'xxxx', 'a', '123456', '*']
+        # 提示无搜索结果，换个关键词试试
+        for msg in chars:
+            gif.input_message(msg)
+            if gif.is_toast_exist("无搜索结果，换个热词试试", timeout=4):
+                gif.input_message("")
+                gif.close_gif()
+                current_mobile().hide_keyboard_if_display()
+                chat.wait_for_page_load()
+                return
+        raise AssertionError("搜索框输入关键字" + "、".join(chars) + "有gif搜索结果，请换输入关键字试试")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0121(self):
+        """在单聊会话窗，搜索趣图过程中返回至消息列表重新进入"""
+        # 1、点击GIF图标
+        chat = SingleChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、搜索框输入关键字匹配到对应结果后点击返回
+        chars = ['ok', 'o', '哈哈', 'no', 'yes']
+        for msg in chars:
+            gif.input_message(msg)
+            if not gif.is_toast_exist("无搜索结果，换个热词试试", timeout=4):
+                chat.click_back()
+                # 3、再次进入该会话页面
+                cdp = ContactDetailsPage()
+                cdp.click_message_icon()
+                gif.input_message("")
+                current_mobile().hide_keyboard_if_display()
+                chat.wait_for_page_load()
+                if gif.is_gif_exist():
+                    raise AssertionError("在单聊会话窗，gif搜索到对应结果后点击返回,再次进入该会话页面时gif存在")
+                return
+        raise AssertionError("在单聊会话窗，搜索框输入特殊字符" + "、".join(chars) + "无gif搜索结果")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0122(self):
+        """在单聊会话窗，趣图发送成功后搜索结果依然保留"""
+        self.delete_media_msg()
+        # 1、点击GIF图标
+        chat = SingleChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、搜索框输入关键字匹配到对应结果后点击发送
+        chars = ['ok', 'o', '哈哈', 'no', 'yes']
+        for msg in chars:
+            gif.input_message(msg)
+            if not gif.is_toast_exist("无搜索结果，换个热词试试", timeout=4):
+                gif.send_gif()
+                if not chat.is_exist_pic_msg():
+                    raise AssertionError("在单聊会话窗,发送gif后，在标签分组会话窗无gif")
+                if not gif.is_gif_exist():
+                    raise AssertionError("gif发送后，gif的搜索内容不存在")
+                gif.input_message("")
+                gif.close_gif()
+                current_mobile().hide_keyboard_if_display()
+                chat.wait_for_page_load()
+                return
+        raise AssertionError("在单聊会话窗,搜索框输入特殊字符" + "、".join(chars) + "无gif搜索结果")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0124(self):
+        """在单聊会话窗，关闭GIF搜索框"""
+        # 1、点击GIF图标
+        chat = SingleChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、点击搜索框左方×
+        gif.close_gif()
+        if gif.is_gif_exist():
+            raise AssertionError("点击左方× gif关闭后趣图页面还存在")
+        current_mobile().hide_keyboard_if_display()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0127(self):
+        """转发聊天内容中的已下载的图片（缩略图）"""
+        # 1.在聊天会话页面，点击右上角设置图标
+        # 2.点击查找聊天内容
+        # 3.点击图片与视频
+        # 4.长按任意一个图片，点击转发
