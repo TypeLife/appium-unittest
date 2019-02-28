@@ -1403,8 +1403,11 @@ class MsgGroupChatvedioTest(TestCase):
         self.assertEquals(gcv.is_toast_exist_zf(), True)
         # 6.点击返回到群聊页面
         gcv.click_back()
+        time.sleep(1)
         gcf.click_back()
+        time.sleep(1)
         gcs.click_back()
+        time.sleep(1)
         gcp.click_back()
         sog = SelectOneGroupPage()
         sog.click_back()
@@ -1535,7 +1538,7 @@ class MsgGroupChatvedioTest(TestCase):
         # 4.进入图片与视频页面
         gcv = GroupChatSetPicVideoPage()
         gcv.wait_for_page_load()
-        gcv.click_pic_video()
+        gcv.click_video()
         time.sleep(1)
         gcv.press_pre_video_to_do("保存视频")
         # 5.检验在选择联系人页面
