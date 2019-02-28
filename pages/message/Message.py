@@ -51,6 +51,7 @@ class MessagePage(FooterPage):
         '置顶群': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name"]'),
         '消息发送失败感叹号': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_fail_status'),
         '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
+        '收藏': (MobileBy.XPATH, "//*[contains(@text, '收藏')]"),
     }
 
     @TestLogger.log('检查顶部搜索框是否显示')

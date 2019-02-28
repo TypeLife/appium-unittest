@@ -1,5 +1,3 @@
-import random
-import re
 import time
 import unittest
 import uuid
@@ -11,6 +9,7 @@ from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
+from pages.components import BaseChatPage
 from pages.me.MeEditUserProfile import MeEditUserProfilePage
 from pages.me.MeViewUserProfile import MeViewUserProfilePage
 
@@ -125,91 +124,29 @@ class Preconditions(object):
         mess.open_me_page()
 
     @staticmethod
-    def make_already_in_me_save_part_page():
-        """确保编辑我的个人资料数据部分为空"""
-        Preconditions.make_already_in_me_all_page()
-        # 1.检验是否跳转到我页面
-        mep = MePage()
-        mep.is_on_this_page()
-        # 2.点击进入查看并编辑资料
-        mep.click_view_edit()
-        mup = MeViewUserProfilePage()
-        mup.wait_for_page_load()
-        # 3.点击进入编辑
-        mup.click_edit()
-        mep1 = MeEditUserProfilePage()
-        mep1.wait_for_page_load()
-        mep1.input_name("姓名", "中国人123*#!!")
-        mep1.edit_clear("公司")
-        mep1.edit_clear("职位")
-        # mep.swipe_up()
-        mep1.edit_clear("邮箱")
-        time.sleep(1)
-        mep1.click_save()
-        if mep1.is_toast_save_success():
-            mep1.click_back()
-        if mep1.is_toast_save():
-            mep1.click_back()
-            mup.click_back()
-        else:
-            pass
-
-    @staticmethod
-    def make_already_in_me_save_all_page():
-        """确保编辑我的个人资料数据都完整"""
-        Preconditions.make_already_in_me_all_page()
-        # 1.检验是否跳转到我页面
-        mep = MePage()
-        mep.is_on_this_page()
-        # 2.点击进入查看并编辑资料
-        mep.click_view_edit()
-        mup = MeViewUserProfilePage()
-        mup.wait_for_page_load()
-        # 3.点击进入编辑
-        mup.click_edit()
-        mep1 = MeEditUserProfilePage()
-        mep1.wait_for_page_load()
-        mep1.swipe_up()
-        mep1.input_name("姓名", "中国人123*#!")
-        mep1.input_name("公司", "中移科技有限公司")
-        mep1.input_name("职位", "高级工程师123")
-        # mep.swipe_up()
-        mep1.input_name("邮箱", "958535269@qq.com")
-        time.sleep(1)
-        mep1.click_save()
-        if mep1.is_toast_save_success():
-            mep1.click_back()
-        if mep1.is_toast_save():
-            mep1.click_back()
-            mup.click_back()
-        else:
-            pass
-
-    @staticmethod
-    def make_already_in_me_save_part_name_page():
-        """确保编辑我的个人资料数据部分为空"""
-        Preconditions.make_already_in_me_all_page()
-        # 1.检验是否跳转到我页面
-        mep = MePage()
-        mep.is_on_this_page()
-        # 2.点击进入查看并编辑资料
-        mep.click_view_edit()
-        mup = MeViewUserProfilePage()
-        mup.wait_for_page_load()
-        # 3.点击进入编辑
-        mup.click_edit()
-        mep1 = MeEditUserProfilePage()
-        mep1.wait_for_page_load()
-        mep1.input_name("姓名", str(uuid.uuid1()))
-        time.sleep(1)
-        mep1.click_save()
-        if mep1.is_toast_save_success():
-            mep1.click_back()
-        if mep1.is_toast_save():
-            mep1.click_back()
-            mup.click_back()
-        else:
-            pass
+    def make_already_set_message():
+        """确保已经发送一条消息"""
+        Preconditions.make_already_in_message_page()
+        # 1.点击新建消息
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_add_icon()
+        mess.click_new_message()
+        # 2.选择联系人发送一条消息
+        scp = SelectContactsPage()
+        scp.wait_for_page_local_contact_load()
+        scp.click_one_contact("大佬1")
+        bcp = BaseChatPage()
+        if bcp.is_exist_dialog():
+            bcp.click_i_have_read()
+        infor = "测试工程师"
+        bcp.input_message(infor * 30)
+        bcp.send_message()
+        # 3.点击该信息收藏
+        mess.press_file_to_do("测试工程师", "收藏")
+        if not bcp.is_toast_exist("已收藏"):
+            raise AssertionError("没有此弹框")
+        bcp.click_element(["id", 'com.chinasofti.rcs:id/back_arrow'])
 
 
 class MeAllCollect(TestCase):
@@ -225,22 +162,30 @@ class MeAllCollect(TestCase):
         """确保每个用例运行前在群聊聊天会话页面"""
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_me_all_page()
+        Preconditions.make_already_in_message_page()
 
     def default_tearDown(self):
         pass
         # current_mobile().disconnect_mobile()
 
-    # @staticmethod
-    # def setUp_test_login_406():
-    #     Preconditions.select_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     Preconditions.make_already_in_one_key_login_page()
-    #     Preconditions.login_by_one_key_login()
-    #
-    # @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    # def test_me_all_page_406(self):
-    #     """我页面跳转验证"""
-    #     # 1.检验是否跳转到我页面
-    #     mep = MePage()
-    #     self.assertEquals(mep.is_on_this_page(), True)
+    @staticmethod
+    def setUp_test_me_all_page_406():
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_set_message()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_406(self):
+        """我页面跳转验证"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击我的收藏,进入收藏页面
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        mcp.element_contain_text("我", "我")
+

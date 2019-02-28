@@ -23,9 +23,9 @@ class MeCollectionPage(BasePage):
                   'www.baidu.com': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_tv'),
                   'com.chinasofti.rcs:id/favorite_content': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_content'),
                   'com.chinasofti.rcs:id/favorite_image_shortcut': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/favorite_image_shortcut'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/favorite_image_shortcut'),
                   'com.chinasofti.rcs:id/favorite_file_name_size': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/favorite_file_name_size'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/favorite_file_name_size'),
                   'ppt测试文件.ppt': (MobileBy.ID, 'com.chinasofti.rcs:id/file_name'),
                   '文件名': (MobileBy.ID, 'com.chinasofti.rcs:id/file_name'),
                   '100.5KB': (MobileBy.ID, 'com.chinasofti.rcs:id/file_size'),
@@ -43,7 +43,7 @@ class MeCollectionPage(BasePage):
                   # 打开位置页面元素
                   "导航按钮": (MobileBy.ID, 'com.chinasofti.rcs:id/location_nativ_btn'),
                   '收藏消息体': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_layout'),
-                  "删除收藏":(MobileBy.ID, 'com.chinasofti.rcs:id/swipe_right'),
+                  "删除收藏": (MobileBy.ID, 'com.chinasofti.rcs:id/swipe_right'),
                   '确定': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
                   '收藏语音消息体': (MobileBy.ID, 'com.chinasofti.rcs:id/linearlayout_msg_content'),
                   }
@@ -240,7 +240,7 @@ class MeCollectionPage(BasePage):
     @TestLogger.log()
     def press_and_move_left(self):
         """元素内向左滑动"""
-        self.swipe_by_direction(self.__class__.__locators["收藏消息体"],"left")
+        self.swipe_by_direction(self.__class__.__locators["收藏消息体"], "left")
 
     @TestLogger.log()
     def is_delete_element_present(self):
@@ -263,3 +263,8 @@ class MeCollectionPage(BasePage):
     def click_collection_voice_msg(self):
         """点击收藏语音消息体"""
         self.click_element(self.__class__.__locators["收藏语音消息体"])
+
+    @TestLogger.log()
+    def element_contain_text(self, locator, expected, message=''):
+        """检查某元素是否包含对应文本信息"""
+        return self.element_should_contain_text(self.__locators[locator], expected, message)
