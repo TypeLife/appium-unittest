@@ -111,7 +111,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         # 2、点击本地文件
         more_page = ChatMorePage()
         more_page.click_file()
@@ -133,7 +134,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         # 2、点击本地文件
         more_page = ChatMorePage()
         more_page.click_file()
@@ -159,7 +161,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         # 2、点击视频
         more_page = ChatMorePage()
         more_page.click_file()
@@ -181,7 +184,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         # 2、点击视频
         more_page = ChatMorePage()
         more_page.click_file()
@@ -212,7 +216,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         # 2、点击照片
         more_page = ChatMorePage()
         more_page.click_file()
@@ -234,7 +239,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         # 2、点击照片
         more_page = ChatMorePage()
         more_page.click_file()
@@ -265,7 +271,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         # 2、点击音乐
         more_page = ChatMorePage()
         more_page.click_file()
@@ -287,7 +294,8 @@ class MsgLabelGroupingTest(TestCase):
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         # 2、点击音乐
         more_page = ChatMorePage()
         more_page.click_file()
@@ -318,7 +326,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -402,7 +411,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -439,7 +449,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -487,7 +498,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -533,7 +545,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -591,7 +604,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -648,7 +662,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -696,7 +711,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -742,7 +758,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -777,7 +794,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -810,7 +828,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -846,7 +865,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 进入到文件选择页面
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         more_page.click_file()
         # 点击本地文件，进入到本地文件中
@@ -1053,7 +1073,8 @@ class MsgLabelGroupingTest(TestCase):
         chat = LabelGroupingChatPage()
         chat.wait_for_page_load()
         # 点击更多
-        chat.click_more()
+        if not chat.is_open_more():
+            chat.click_more()
         more_page = ChatMorePage()
         # 点击位置
         more_page.click_location()
@@ -1912,6 +1933,7 @@ class MsgLabelGroupingTest(TestCase):
             raise AssertionError("输入数字 1 无gif趣图 ")
         # 3、点击选择表情
         gif.send_gif()
+        gif.input_message("")
         gif.close_gif()
         current_mobile().hide_keyboard_if_display()
         if not chat.is_exist_pic_msg():
@@ -1938,6 +1960,7 @@ class MsgLabelGroupingTest(TestCase):
                 gif.send_gif()
                 if not chat.is_exist_pic_msg():
                     raise AssertionError("发送gif后，在标签分组会话窗无gif")
+                gif.input_message("")
                 gif.close_gif()
                 current_mobile().hide_keyboard_if_display()
                 chat.wait_for_page_load()
@@ -1961,6 +1984,7 @@ class MsgLabelGroupingTest(TestCase):
         for msg in chars:
             gif.input_message(msg)
             if gif.is_toast_exist("无搜索结果，换个热词试试", timeout=4):
+                gif.input_message("")
                 gif.close_gif()
                 current_mobile().hide_keyboard_if_display()
                 chat.wait_for_page_load()
@@ -2013,6 +2037,7 @@ class MsgLabelGroupingTest(TestCase):
                     raise AssertionError("发送gif后，在标签分组会话窗无gif")
                 if not gif.is_gif_exist():
                     raise AssertionError("gif发送后，gif的搜索内容不存在")
+                gif.input_message("")
                 gif.close_gif()
                 current_mobile().hide_keyboard_if_display()
                 chat.wait_for_page_load()
@@ -2033,3 +2058,12 @@ class MsgLabelGroupingTest(TestCase):
         gif.close_gif()
         if gif.is_gif_exist():
             raise AssertionError("点击左方× gif关闭后趣图页面还存在")
+        current_mobile().hide_keyboard_if_display()
+        chat.wait_for_page_load()
+
+    @staticmethod
+    def tearDown_test_Msg_PrivateChat_VideoPic_0114():
+        """如果gif存在是打开的，则关闭"""
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()

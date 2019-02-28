@@ -15,7 +15,7 @@ class LableGroupDetailPage(LabelSettingMenu, BasePage):
         'android:id/content': (MobileBy.ID, 'android:id/content'),
         'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
         'com.chinasofti.rcs:id/rl_label_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_label_toolbar'),
-        '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_label_left_back'),
+        '返回': (MobileBy.XPATH, "//*[contains(@resource-id, 'back')]"),
         '标题': (MobileBy.ID, 'com.chinasofti.rcs:id/label_toolbar_title'),
         '设置': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_label_setting'),
         'com.chinasofti.rcs:id/recyclerView_contactList_label': (
