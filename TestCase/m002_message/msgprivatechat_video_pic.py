@@ -1068,7 +1068,174 @@ class MsgPrivateChatVideoPicTest(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
     def test_Msg_PrivateChat_VideoPic_0127(self):
         """转发聊天内容中的已下载的图片（缩略图）"""
+        self.public_send_pic()
         # 1.在聊天会话页面，点击右上角设置图标
+        chat = SingleChatPage()
+        chat.click_setting()
         # 2.点击查找聊天内容
+        set_page = SingleChatSetPage()
+        set_page.search_chat_record()
         # 3.点击图片与视频
+        record = FindChatRecordPage()
+        record.click_pic_video()
         # 4.长按任意一个图片，点击转发
+        pv = PicVideoPage()
+        pv.wait_for_page_load()
+        pv.press_pic_to_do("转发")
+        # 调起联系人选择器
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 返回聊天页面
+        scp.click_back()
+        pv.click_back()
+        record.click_back()
+        set_page.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0128(self):
+        """转发聊天内容中的已下载的图片（放大图）"""
+        self.public_send_pic()
+        # 1.在聊天会话页面，点击右上角设置图标
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击查找聊天内容
+        set_page = SingleChatSetPage()
+        set_page.search_chat_record()
+        # 3.点击图片与视频
+        record = FindChatRecordPage()
+        record.click_pic_video()
+        # 4.点开放大一张图片，长按点击转发
+        pv = PicVideoPage()
+        pv.click_pic()
+        pv.wait_for_pic_preview_page_load()
+        pv.press_preview_pic_to_do("转发")
+        # 调起联系人选择器
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        scp.click_back()
+        pv.close_pic_preview()
+        pv.click_back()
+        record.click_back()
+        set_page.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0129(self):
+        """转发聊天内容中的已下载的图片给任意对象"""
+        self.public_send_pic()
+        # 1.在聊天会话页面，点击右上角设置图标
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击查找聊天内容
+        set_page = SingleChatSetPage()
+        set_page.search_chat_record()
+        # 3.点击图片与视频
+        record = FindChatRecordPage()
+        record.click_pic_video()
+        # 4.长按任意一个图片，点击转发
+        pv = PicVideoPage()
+        pv.wait_for_page_load()
+        pv.press_pic_to_do("转发")
+        # 5.选择任意对象
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        scp.select_local_contacts()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        names = slcp.get_contacts_name()
+        if "本机" in names:
+            names.remove("本机")
+        if not names:
+            raise AssertionError("WARN: There is no linkman.")
+        slcp.select_one_member_by_name(names[0])
+        slcp.click_sure_forward()
+        flag = slcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("转发聊天内容中的已下载的图片无‘已转发’提示")
+        if pv.is_on_this_page():
+            pv.click_back()
+        # 回到消息页面
+        record.click_back()
+        set_page.click_back()
+        chat.click_back()
+        cdp = ContactDetailsPage()
+        cdp.click_back_icon()
+        mess = MessagePage()
+        mess.open_message_page()
+        mess.wait_for_page_load()
+        # 在转发人的聊天界面可查看转发内容
+        mess.look_detail_news_by_name(names[0])
+        chat.wait_for_page_load()
+        if not chat.is_exist_pic_msg():
+            raise AssertionError("转发图片时在转发人的聊天界面无转发的图片")
+        chat.click_back()
+        mess.wait_for_page_load()
+        # 从消息页面进入单聊页面
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        contacts.wait_for_page_load()
+        names = contacts.get_contacts_name()
+        chat = SingleChatPage()
+        contacts.select_people_by_name(names[0])
+        cdp.wait_for_page_load()
+        # 点击消息进入单聊会话页面
+        cdp.click_message_icon()
+        # 如果弹框用户须知则点击处理
+        flag = chat.is_exist_dialog()
+        if flag:
+            chat.click_i_have_read()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0132(self):
+        """转发聊天内容中的已下载的视频（缩略图）"""
+        self.public_send_video()
+        # 1.在聊天会话页面，点击右上角设置图标
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击查找聊天内容
+        set_page = SingleChatSetPage()
+        set_page.search_chat_record()
+        # 3.点击图片与视频
+        record = FindChatRecordPage()
+        record.click_pic_video()
+        # 4.长按任意一个视频，点击转发
+        pv = PicVideoPage()
+        pv.wait_for_page_load()
+        pv.press_video_to_do("转发")
+        # 调起联系人选择器
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 返回聊天页面
+        scp.click_back()
+        pv.click_back()
+        record.click_back()
+        set_page.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0133(self):
+        """转发聊天内容中的已下载的视频（放大图）"""
+        self.public_send_video()
+        # 1.在聊天会话页面，点击右上角设置图标
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击查找聊天内容
+        set_page = SingleChatSetPage()
+        set_page.search_chat_record()
+        # 3.点击图片与视频
+        record = FindChatRecordPage()
+        record.click_pic_video()
+        # 4.点开放大一张视频，长按点击转发
+        pv = PicVideoPage()
+        pv.click_video()
+        pv.wait_for_play_video_page_load()
+        pv.press_preview_video_to_do("转发")
+        # 调起联系人选择器
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        scp.click_back()
+        pv.close_video()
+        if pv.is_on_this_page():
+            pv.click_back()
+        record.click_back()
+        set_page.click_back()
+
