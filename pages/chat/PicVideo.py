@@ -39,6 +39,19 @@ class PicVideoPage(BasePage):
         return self
 
     @TestLogger.log()
+    def is_on_this_page(self, timeout=2, auto_accept_alerts=True):
+        """是否在当前页面"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["图片与视频标题"])
+            )
+            return True
+        except:
+            return False
+
+    @TestLogger.log()
     def is_exist_video(self):
         """是否存在视频"""
         return self._is_element_present(self.__class__.__locators['视频'])
@@ -68,6 +81,23 @@ class PicVideoPage(BasePage):
         self.click_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % text))
 
     @TestLogger.log()
+    def clear_record(self):
+        """清除图片与视频记录"""
+        while True:
+            if not self._is_element_present(self.__class__.__locators['图片与视频']):
+                break
+            el = self.get_element(self.__class__.__locators['图片与视频'])
+            self.press(el)
+            self.click_element((MobileBy.XPATH, "//*[contains(@text, '删除')]"))
+            time.sleep(0.5)
+
+    @TestLogger.log()
+    def get_record_nums(self):
+        """获取图片和视频记录数"""
+        els = self.get_elements(self.__class__.__locators['图片与视频'])
+        return len(els)
+
+    @TestLogger.log()
     def click_pic(self):
         """点击图片"""
         self.delete_video()
@@ -77,7 +107,6 @@ class PicVideoPage(BasePage):
     def click_video(self):
         """点击视频"""
         self.click_element(self.__class__.__locators['视频'])
-
 
     @TestLogger.log()
     def click_back(self):
@@ -127,6 +156,11 @@ class PicVideoPage(BasePage):
         el = self.get_element(self.__class__.__locators['放大的图片'])
         self.press(el)
         self.click_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % text))
+
+    @TestLogger.log()
+    def close_pic_preview(self):
+        """退出图片阅览"""
+        self.click_element(self.__class__.__locators['放大的图片'])
 
     @TestLogger.log()
     def press_preview_video_to_do(self, text):

@@ -515,3 +515,8 @@ class BasePage(object):
     def is_keyboard_shown(self):
         """判断键盘是否弹起"""
         return self.mobile.is_keyboard_shown()
+
+    @TestLogger.log("点击返回")
+    def click_back(self):
+        """点击返回"""
+        self.click_element((MobileBy.XPATH, "//*[contains(@resource-id, 'back')]"))

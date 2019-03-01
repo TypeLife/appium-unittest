@@ -383,3 +383,8 @@ class MessagePage(FooterPage):
         el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))
         self.press(el)
         self.click_element(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def look_detail_news_by_name(self, name):
+        """查看详细消息"""
+        self.click_element((MobileBy.XPATH, "//*[@text='%s']" % name))

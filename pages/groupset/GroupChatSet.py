@@ -393,3 +393,8 @@ class GroupChatSetPage(BasePage):
     def click_group_manage_disband_button(self):
         """点击解散群按钮"""
         self.click_element(self.__class__.__locators['解散群'])
+
+    @TestLogger.log("下一页")
+    def page_up(self):
+        """向上滑动一页"""
+        self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
