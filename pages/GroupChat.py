@@ -261,7 +261,6 @@ class GroupChatPage(BaseChatPage):
         """点击位置页面返回 """
         self.click_element(self.__class__.__locators['位置返回'])
 
-
     @TestLogger.log()
     def click_expression_button(self):
         """点击表情按钮"""
@@ -281,6 +280,7 @@ class GroupChatPage(BaseChatPage):
         """获取表情包"""
         els = self.get_elements(self.__locators['表情'])
         return els
+
     def get_input_box(self):
         """获取输入框"""
         el = self.get_element(self.__locators['输入框'])
