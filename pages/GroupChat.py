@@ -51,6 +51,11 @@ class GroupChatPage(BaseChatPage):
                   '重发消息确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
                   '语音消息体': (MobileBy.ID, 'com.chinasofti.rcs:id/img_audio_play_icon'),
                   '位置返回': (MobileBy.ID, 'com.chinasofti.rcs:id/location_back_btn'),
+                  '表情按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression'),
+                  '表情页': (MobileBy.ID, 'com.chinasofti.rcs:id/gv_expression'),
+                  '表情': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_expression_image'),
+                  '输入框': (MobileBy.ID, 'com.chinasofti.rcs:id/et_message'),
+                  '关闭表情页': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression_keyboard'),
                   }
 
     def is_exist_msg_videos(self):
@@ -254,3 +259,32 @@ class GroupChatPage(BaseChatPage):
     def click_location_back(self):
         """点击位置页面返回 """
         self.click_element(self.__class__.__locators['位置返回'])
+
+    @TestLogger.log()
+    def click_expression_button(self):
+        """点击表情按钮"""
+        self.click_element(self.__class__.__locators["表情按钮"])
+
+    @TestLogger.log()
+    def is_exist_expression_page(self):
+        """是否存在表情页"""
+        return self._is_element_present(self.__class__.__locators["表情页"])
+
+    @TestLogger.log()
+    def click_expression_page_close_button(self):
+        """点击表情页关闭"""
+        self.click_element(self.__class__.__locators["关闭表情页"])
+
+    def get_expressions(self):
+        """获取表情包"""
+        els = self.get_elements(self.__locators['表情'])
+        return els
+    def get_input_box(self):
+        """获取输入框"""
+        el = self.get_element(self.__locators['输入框'])
+        return el
+
+    def is_enabled_of_send_button(self):
+        """发送按钮状态"""
+        flag = self._is_enabled((MobileBy.ID, 'com.chinasofti.rcs:id/ib_send'))
+        return flag
