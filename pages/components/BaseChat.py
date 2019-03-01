@@ -205,6 +205,11 @@ class BaseChatPage(BasePage):
         self.click_element(self.__class__.__locators["选择相机"])
 
     @TestLogger.log()
+    def click_name_card(self):
+        """点击选择名片"""
+        self.click_element(self.__class__.__locators["选择名片"])
+
+    @TestLogger.log()
     def click_gif(self):
         """点击选择gif"""
         self.click_element(self.__class__.__locators["选择gif"])
@@ -237,6 +242,12 @@ class BaseChatPage(BasePage):
         return el.text
 
     @TestLogger.log()
+    def get_name_card(self):
+        """获取个人卡名信息"""
+        el = self.get_element([MobileBy.ID, 'com.chinasofti.rcs:id/tv_card_name'])
+        return el.text
+
+    @TestLogger.log()
     def send_message(self):
         """发送聊天信息"""
         self.click_element(self.__class__.__locators["发送按钮"])
@@ -251,6 +262,11 @@ class BaseChatPage(BasePage):
     def page_should_contain_send_btn(self):
         """发送按钮检查"""
         self.page_should_contain_element(self.__locators["发送按钮"])
+
+    @TestLogger.log()
+    def click_send_btn(self):
+        """点击发送按钮"""
+        self.click_element(self.__locators["发送按钮"])
 
     @TestLogger.log()
     def click_audio_btn(self):

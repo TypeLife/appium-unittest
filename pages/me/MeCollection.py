@@ -46,6 +46,7 @@ class MeCollectionPage(BasePage):
                   "删除收藏": (MobileBy.ID, 'com.chinasofti.rcs:id/swipe_right'),
                   '确定': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
                   '收藏语音消息体': (MobileBy.ID, 'com.chinasofti.rcs:id/linearlayout_msg_content'),
+                  '视频时长': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_favorite_video_length'),
                   }
 
     @TestLogger.log()
@@ -87,7 +88,7 @@ class MeCollectionPage(BasePage):
             for el in els:
                 file_names.append(el.text)
         else:
-             return None
+            return None
         flag = True
         while flag:
             self.page_up()
@@ -268,3 +269,20 @@ class MeCollectionPage(BasePage):
     def element_contain_text(self, locator, expected, message=''):
         """检查某元素是否包含对应文本信息"""
         return self.element_should_contain_text(self.__locators[locator], expected, message)
+
+    @TestLogger.log()
+    def get_video_len(self, locator):
+        """获取该元素文本信息"""
+        el = self.get_elements(self.__class__.__locators[locator])
+        el = el[0]
+        return el.text
+
+    @TestLogger.log()
+    def get_width_of_collection_of_text(self):
+        """获取收藏内容框的大小不超过三行"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/favorite_tv'))
+        rect = el.rect
+        height = rect["height"]
+        if height > 177:
+            return False
+        return True

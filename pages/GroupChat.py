@@ -211,6 +211,7 @@ class GroupChatPage(BaseChatPage):
     def click_resend_confirm(self):
         """点击重发消息确定"""
         self.click_element(self.__class__.__locators["重发消息确定"])
+
     @TestLogger.log()
     def click_clean_video(self):
         """点击删除消息视频"""
