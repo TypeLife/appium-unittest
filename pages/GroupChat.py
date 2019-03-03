@@ -170,7 +170,8 @@ class GroupChatPage(BaseChatPage):
     @TestLogger.log()
     def press_message_to_do(self, text):
         """长按指定信息进行操作"""
-        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/lloc_famous_address_text'))
+        el = self.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lloc_famous_address_text'))
+        el = el [-1]
         self.press(el)
         self.click_element(self.__class__.__locators[text])
 
@@ -231,7 +232,8 @@ class GroupChatPage(BaseChatPage):
     @TestLogger.log()
     def press_voice_message_to_do(self,text):
         """长按语言消息体"""
-        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/linearlayout_msg_content'))
+        el = self.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/linearlayout_msg_content'))
+        el = el[-1]
         self.press(el)
         self.click_element(self.__class__.__locators[text])
 

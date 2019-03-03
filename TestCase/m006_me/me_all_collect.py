@@ -3,6 +3,7 @@ import unittest
 import uuid
 import re
 
+import itchat as itchat
 from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.TestCase import TestCase
@@ -282,13 +283,17 @@ class Preconditions(object):
             scp.click_i_have_read()
         scp.click_audio_btn()
         time.sleep(7)
+        if scp.is_text_present("仅发送语音"):
+            scp.click_element([MobileBy.XPATH, "//*[contains(@text,'仅发送语音')]"], 15)
+            scp.click_element([MobileBy.XPATH, "//*[contains(@text,'确定')]"], 15)
         if scp.is_text_present("无法识别，请重试"):
             scp.click_element([MobileBy.XPATH, "//*[contains(@text,'设置')]"], 15)
             scp.click_element([MobileBy.XPATH, "//*[contains(@text,'仅发送语音')]"], 15)
             scp.click_element([MobileBy.XPATH, "//*[contains(@text,'确定')]"], 15)
-        time.sleep(3)
+        time.sleep(2)
         scp.click_send_btn()
         # 3.点击该信息收藏
+        time.sleep(2.5)
         scp.press_voice_message_to_do("收藏")
         if not scp.is_toast_exist("已收藏"):
             raise AssertionError("没有此弹框")
@@ -327,22 +332,58 @@ class Preconditions(object):
         if scp.is_exist_dialog():
             scp.click_i_have_read()
         scp.click_more()
-        scp.click_element(["id", 'com.chinasofti.rcs:id/iocn_img'], 15)
+        scp.click_element([MobileBy.XPATH, "//*[contains(@text,'位置')]"], 15)
         clp = ChatLocationPage()
         clp.wait_for_page_load()
         clp.click_send()
         # 3.点击该信息收藏
-        scp.press_file_to_do("省市", "收藏")
+        scp.press_message_to_do("收藏")
         if not scp.is_toast_exist("已收藏"):
             raise AssertionError("没有此弹框")
         scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
 
+    @staticmethod
+    def make_already_set_chart_group_file(file_type):
+        """确保群聊已经发送一个文件信息，且已收藏"""
+        Preconditions.enter_group_chat_page()
+        # 1.点击更多位置信息
+        scp = GroupChatPage()
+        if scp.is_exist_dialog():
+            scp.click_i_have_read()
+        scp.click_more()
+        scp.click_element([MobileBy.XPATH, "//*[contains(@text,'文件')]"], 15)
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        # 3、选择任意文件，点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        flag = local_file.push_preset_file()
+        if flag:
+            local_file.click_back()
+            csf.click_local_file()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(file_type)
+        if file:
+            local_file.click_send()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+        # 3.点击该信息收藏
+        scp.press_file_to_do(file_type, "收藏")
+        if not scp.is_toast_exist("已收藏"):
+            raise AssertionError("没有此弹框")
+        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
 
 class MeAllCollect(TestCase):
-    """_
-    模块：我的
+    """
+    模块：我的_收藏
 
     文件位置：全量/4.我模块全量测试用例-张淑丽.xlsx
     表格：我页面（收藏模块406后）
@@ -508,20 +549,50 @@ class MeAllCollect(TestCase):
         mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         mep.open_message_page()
 
-    # @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    # def test_me_all_page_417(self):
-    #     """查看收藏内容为位置信息的展示"""
-    #     Preconditions.make_already_set_chart_group_location()
-    #     # 1.点击跳转到我的页面
-    #     mess = MessagePage()
-    #     mess.wait_for_page_load()
-    #     # 2.点击我的收藏,进入收藏页面
-    #     mess.open_me_page()
-    #     mep = MePage()
-    #     mep.is_on_this_page()
-    #     mep.click_collection()
-    #     mcp = MeCollectionPage()
-    #     mcp.wait_for_page_load()
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_417(self):
+        """查看收藏内容为位置信息的展示"""
+        Preconditions.make_already_set_chart_group_file()
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 进入群聊获取卡名
+        mess.click_element([MobileBy.XPATH, "//*[contains(@text,'位置')]"], 15)
+        scp = GroupChatPage()
+        scp.wait_for_page_load()
+        location = scp.get_location()
+        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        time.sleep(1.8)
+        # 2.点击我的收藏,进入收藏页面
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        # 3.校验名片格式
+        mcp.page_should_contain_element(["id", 'com.chinasofti.rcs:id/favorite_image_shortcut'])
+        flag1 = mcp.get_video_len("[位置]广东省深圳市龙岗区居里夫人大道与环城路交叉口")
+        flag2 = "[位置]" +location
+        self.assertEquals(flag1, flag2)
+        # 4.点击返回
+        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.open_message_page()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_419(self):
+        """查看收藏内容为未知文件的展示"""
+        Preconditions.make_already_set_chart_group_file(".log")
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的收藏,进入收藏页面
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
     #     # 3.校验名片格式
     #     mcp.page_should_contain_element(["id", 'com.chinasofti.rcs:id/favorite_image_shortcut'])
     #     flag1 = mcp.get_video_len("[位置]广东省深圳市龙岗区居里夫人大道与环城路交叉口")
@@ -530,3 +601,4 @@ class MeAllCollect(TestCase):
     #     # 4.点击返回
     #     mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
     #     mep.open_message_page()
+

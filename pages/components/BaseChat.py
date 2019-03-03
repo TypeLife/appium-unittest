@@ -248,6 +248,13 @@ class BaseChatPage(BasePage):
         return el.text
 
     @TestLogger.log()
+    def get_location(self):
+        """获最近一次发送位置信息"""
+        el = self.get_elements(self.__class__.__locators["深圳市龙岗区交叉口"])
+        el = el[-1]
+        return el.text
+
+    @TestLogger.log()
     def send_message(self):
         """发送聊天信息"""
         self.click_element(self.__class__.__locators["发送按钮"])
