@@ -30,12 +30,17 @@ class MeEditUserProfilePage(BasePage):
                   '编辑图片': (MobileBy.ID, 'com.chinasofti.rcs:id/change_photo'),
                   '选择图片': (MobileBy.XPATH, "//*[contains(@text, '选择图片')]"),
                   '点击拍照': (MobileBy.ID, 'com.chinasofti.rcs:id/camera_picture'),
-                  '拍照': (MobileBy.ID, 'com.huawei.camera:id/shutter_button'),
-                  '确定照片': (MobileBy.ID, 'com.huawei.camera:id/done_button'),
-                  '取消照片': (MobileBy.ID, 'com.huawei.camera:id/btn_review_cancel'),
+                  '拍照': (MobileBy.XPATH, "//*[contains(@resource-id, 'camera') and contains(@resource-id, 'shutter_button')]"),
+                  '确定照片': (MobileBy.XPATH, "//*[contains(@resource-id, 'camera') and contains(@resource-id, 'done')]"),
+                  '确定照片2': (MobileBy.XPATH, "//*[contains(@resource-id, 'camera') and contains(@resource-id, 'confirm')]"),
+                  '取消照片': (MobileBy.XPATH, "//*[contains(@resource-id, 'camera') and contains(@resource-id, 'cancel')]"),
                   '选择照片': (MobileBy.ID, 'com.chinasofti.rcs:id/album_picture'),
                   '照片框': (MobileBy.ID, 'com.chinasofti.rcs:id/foreground_bg'),
                   '保存截图': (MobileBy.ID, 'com.chinasofti.rcs:id/ok'),
+                  '修改资料提示框': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_content'),
+                  '取消1': (MobileBy.XPATH, "//*[contains(@text, '取消')]"),
+                  '保存1': (MobileBy.ID, "com.chinasofti.rcs:id/btn_ok"),
+
                   }
 
     @TestLogger.log()
@@ -103,9 +108,21 @@ class MeEditUserProfilePage(BasePage):
     def is_toast_save_success(self):
         return self.is_toast_exist("保存成功")
 
-    @TestLogger.log('是否有弹框提示')
+    @TestLogger.log('是否有弹框提示资料未变化，不保存')
     def is_toast_save(self):
         return self.is_toast_exist("您的资料未变化，无需保存")
+
+    @TestLogger.log('是否有弹框提示资料未变化，不保存')
+    def is_toast_save_null(self):
+        return self.is_toast_exist("姓名不能为空")
+
+    @TestLogger.log('是否有弹框提示网路异常')
+    def is_toast_net(self):
+        return self.is_toast_exist("网络不可用，请检查网络设置")
+
+    @TestLogger.log('是否有弹框提示输入格式异常')
+    def is_toast_format(self, text):
+        return self.is_toast_exist("%s格式不正确，请重新输入" % text)
 
     @TestLogger.log()
     def edit_clear(self, locator):
@@ -149,20 +166,39 @@ class MeEditUserProfilePage(BasePage):
     @TestLogger.log('拍照')
     def click_taking_pics(self):
         self.click_element(self.__locators["拍照"])
-        time.sleep(4.5)
+        time.sleep(6.5)
 
     @TestLogger.log('点击确定照片')
     def click_save_pics(self):
-        self.click_element(self.__locators["确定照片"])
+        if self._is_element_present(self.__locators["确定照片"]):
+            self.click_element(self.__locators["确定照片"])
+        else:
+            self.click_element(self.__locators["确定照片2"])
 
     @TestLogger.log('点击取消照片')
     def click_cancel_pics(self):
         self.click_element(self.__locators["取消照片"])
 
     @TestLogger.log('点击选择照片')
-    def click_select_pics(self):
-        self.click_element(self.__locators["选择照片"])
+    def click_select_pics(self, n):
+        pics = self.get_elements(self.__locators["选择照片"])
+        if n > len(pics):
+            raise AssertionError("在所有照片首页没有 %s 张图片，请上传图片." % n)
+        pics[n].click()
 
     @TestLogger.log('点击保存截图')
     def click_save_save_pics(self):
         self.click_element(self.__locators["保存截图"])
+
+    @TestLogger.log('点击取消修改资料')
+    def click_cancel_mod(self):
+        self.click_element(self.__locators["取消1"])
+
+    @TestLogger.log('点击保存修改资料')
+    def click_save_mod(self):
+        self.click_element(self.__locators["保存1"])
+
+    @TestLogger.log()
+    def is_text_exist(self, text):
+        """当前页面是否包含此文本"""
+        return self.is_text_present(text)

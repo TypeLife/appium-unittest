@@ -9,9 +9,10 @@ class GroupChatSetPicVideoPage(BasePage):
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.ChatFileActivity'
 
     __locators = {
-                  '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
+                  '返回': (MobileBy.XPATH, "//*[contains(@resource-id, 'back')]"),
                   '图片与视频标题': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
                   '图片与视频': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_thumb'),
+                  '视频': (MobileBy.ID, 'com.chinasofti.rcs:id/video_duration'),
                   'com.chinasofti.rcs:id/result_list': (MobileBy.ID, 'com.chinasofti.rcs:id/result_list'),
                   '收藏': (MobileBy.XPATH, "//*[contains(@text, '收藏')]"),
                   '转发': (MobileBy.XPATH, "//*[contains(@text, '转发')]"),
@@ -57,6 +58,11 @@ class GroupChatSetPicVideoPage(BasePage):
     def click_pic_video(self):
         """点击该图片和视频"""
         self.click_element(self.__class__.__locators['图片与视频'])
+
+    @TestLogger.log()
+    def click_video(self):
+        """点击该视频"""
+        self.click_element(self.__class__.__locators['视频'])
 
     @TestLogger.log()
     def click_pre_pic_video(self):

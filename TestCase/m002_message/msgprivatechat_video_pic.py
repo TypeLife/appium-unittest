@@ -460,7 +460,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         cpp = ChatPicPage()
         cpp.wait_for_page_load()
         # 选择一张照片发送
-        cpp.select_pic()
+        cpp.select_pic_fk()
         cpp.click_send()
         chat.wait_for_page_load()
 
@@ -846,3 +846,662 @@ class MsgPrivateChatVideoPicTest(TestCase):
         preview.click_back()
         cpp.click_back()
         chat.wait_for_page_load()
+
+    @staticmethod
+    def delete_media_msg():
+        """删除在单聊会话窗的图片，gif消息"""
+        chat = SingleChatPage()
+        while True:
+            chat.wait_for_page_load()
+            if not chat.is_exist_pic_msg():
+                break
+            chat.press_pic()
+            chat.click_delete()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0115(self):
+        """在单聊会话窗，验证点击趣图搜搜入口"""
+        # 1、点击GIF图标
+        chat = SingleChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 进入趣图选择页面
+        if not gif.is_gif_exist():
+            raise AssertionError("趣图页面无gif趣图")
+        gif.close_gif()
+        current_mobile().hide_keyboard_if_display()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0116(self):
+        """在单聊会话窗，网络正常发送表情搜搜"""
+        self.delete_media_msg()
+        # 1、点击GIF图标
+        chat = SingleChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、选择表情点击发送
+        gif.send_gif()
+        gif.close_gif()
+        current_mobile().hide_keyboard_if_display()
+        if not chat.is_exist_pic_msg():
+            raise AssertionError("发送表情后，在单聊会话窗无表情趣图存在")
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0117(self):
+        """在单聊会话窗，断网情况下发送表情搜搜"""
+        # 断网
+        current_mobile().set_network_status(0)
+        # 点击GIF图标
+        chat = SingleChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        # 提示：“网络异常，请重新设置网络”
+        if not chat.is_toast_exist("请检查网络设置", timeout=10):
+            raise AssertionError("断网情况下点击GIF无含有 ‘请检查网络设置’的提示")
+        chat.wait_for_page_load()
+
+    @staticmethod
+    def tearDown_test_Msg_PrivateChat_VideoPic_0117():
+        """恢复网络"""
+        current_mobile().set_network_status(6)
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0118(self):
+        """在单聊会话窗，搜索数字关键字选择发送趣图"""
+        self.delete_media_msg()
+        # 1、点击GIF图标
+        chat = SingleChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、搜索框输入数字
+        nums = ['1', '2', '6', '666', '8']
+        for msg in nums:
+            gif.input_message(msg)
+            if not gif.is_toast_exist("无搜索结果，换个热词试试", timeout=4):
+                # 3、点击选择表情
+                gif.send_gif()
+                gif.input_message("")
+                gif.close_gif()
+                current_mobile().hide_keyboard_if_display()
+                if not chat.is_exist_pic_msg():
+                    raise AssertionError("发送gif后，在单聊会话窗无gif")
+                chat.wait_for_page_load()
+                return
+        raise AssertionError("输入数字 " + ",".join(nums) + "无gif趣图 ")
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0119(self):
+        """在单聊会话窗，搜索特殊字符关键字发送趣图"""
+        self.delete_media_msg()
+        # 1、点击GIF图标
+        chat = SingleChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、搜索框输入特殊字符 @ ? ...
+        chars = ['@', '?', '...']
+        for msg in chars:
+            gif.input_message(msg)
+            if not gif.is_toast_exist("无搜索结果，换个热词试试", timeout=4):
+                # 3、点击选择表情
+                gif.send_gif()
+                if not chat.is_exist_pic_msg():
+                    raise AssertionError("发送gif后，在单聊会话窗无gif")
+                gif.input_message("")
+                gif.close_gif()
+                current_mobile().hide_keyboard_if_display()
+                chat.wait_for_page_load()
+                return
+        raise AssertionError("搜索框输入特殊字符" + "、".join(chars) + "无gif搜索结果")
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0120(self):
+        """在单聊会话窗，搜索特殊字符关键字发送趣图"""
+        self.delete_media_msg()
+        # 1、点击GIF图标
+        chat = SingleChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、搜索框输入关键字
+        chars = ['appium', 'xxxx', 'a', '123456', '*']
+        # 提示无搜索结果，换个关键词试试
+        for msg in chars:
+            gif.input_message(msg)
+            if gif.is_toast_exist("无搜索结果，换个热词试试", timeout=4):
+                gif.input_message("")
+                gif.close_gif()
+                current_mobile().hide_keyboard_if_display()
+                chat.wait_for_page_load()
+                return
+        raise AssertionError("搜索框输入关键字" + "、".join(chars) + "有gif搜索结果，请换输入关键字试试")
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_VideoPic_0121(self):
+        """在单聊会话窗，搜索趣图过程中返回至消息列表重新进入"""
+        # 1、点击GIF图标
+        chat = SingleChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、搜索框输入关键字匹配到对应结果后点击返回
+        chars = ['ok', 'o', '哈哈', 'no', 'yes']
+        for msg in chars:
+            gif.input_message(msg)
+            if not gif.is_toast_exist("无搜索结果，换个热词试试", timeout=4):
+                chat.click_back()
+                # 3、再次进入该会话页面
+                cdp = ContactDetailsPage()
+                cdp.click_message_icon()
+                gif.input_message("")
+                current_mobile().hide_keyboard_if_display()
+                chat.wait_for_page_load()
+                if gif.is_gif_exist():
+                    raise AssertionError("在单聊会话窗，gif搜索到对应结果后点击返回,再次进入该会话页面时gif存在")
+                return
+        raise AssertionError("在单聊会话窗，搜索框输入特殊字符" + "、".join(chars) + "无gif搜索结果")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0122(self):
+        """在单聊会话窗，趣图发送成功后搜索结果依然保留"""
+        self.delete_media_msg()
+        # 1、点击GIF图标
+        chat = SingleChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、搜索框输入关键字匹配到对应结果后点击发送
+        chars = ['ok', 'o', '哈哈', 'no', 'yes']
+        for msg in chars:
+            gif.input_message(msg)
+            if not gif.is_toast_exist("无搜索结果，换个热词试试", timeout=4):
+                gif.send_gif()
+                if not chat.is_exist_pic_msg():
+                    raise AssertionError("在单聊会话窗,发送gif后，在标签分组会话窗无gif")
+                if not gif.is_gif_exist():
+                    raise AssertionError("gif发送后，gif的搜索内容不存在")
+                gif.input_message("")
+                gif.close_gif()
+                current_mobile().hide_keyboard_if_display()
+                chat.wait_for_page_load()
+                return
+        raise AssertionError("在单聊会话窗,搜索框输入特殊字符" + "、".join(chars) + "无gif搜索结果")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0124(self):
+        """在单聊会话窗，关闭GIF搜索框"""
+        # 1、点击GIF图标
+        chat = SingleChatPage()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        chat.click_gif()
+        gif.wait_for_page_load()
+        # 2、点击搜索框左方×
+        gif.close_gif()
+        if gif.is_gif_exist():
+            raise AssertionError("点击左方× gif关闭后趣图页面还存在")
+        current_mobile().hide_keyboard_if_display()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0127(self):
+        """转发聊天内容中的已下载的图片（缩略图）"""
+        self.public_send_pic()
+        # 1.在聊天会话页面，点击右上角设置图标
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击查找聊天内容
+        set_page = SingleChatSetPage()
+        set_page.search_chat_record()
+        # 3.点击图片与视频
+        record = FindChatRecordPage()
+        record.click_pic_video()
+        # 4.长按任意一个图片，点击转发
+        pv = PicVideoPage()
+        pv.wait_for_page_load()
+        pv.press_pic_to_do("转发")
+        # 调起联系人选择器
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 返回聊天页面
+        scp.click_back()
+        pv.click_back()
+        record.click_back()
+        set_page.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0128(self):
+        """转发聊天内容中的已下载的图片（放大图）"""
+        self.public_send_pic()
+        # 1.在聊天会话页面，点击右上角设置图标
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击查找聊天内容
+        set_page = SingleChatSetPage()
+        set_page.search_chat_record()
+        # 3.点击图片与视频
+        record = FindChatRecordPage()
+        record.click_pic_video()
+        # 4.点开放大一张图片，长按点击转发
+        pv = PicVideoPage()
+        pv.wait_for_page_load()
+        pv.click_pic()
+        pv.wait_for_pic_preview_page_load()
+        pv.press_preview_pic_to_do("转发")
+        # 调起联系人选择器
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        scp.click_back()
+        pv.close_pic_preview()
+        pv.click_back()
+        record.click_back()
+        set_page.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0129(self):
+        """转发聊天内容中的已下载的图片给任意对象"""
+        self.public_send_pic()
+        # 1.在聊天会话页面，点击右上角设置图标
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击查找聊天内容
+        set_page = SingleChatSetPage()
+        set_page.search_chat_record()
+        # 3.点击图片与视频
+        record = FindChatRecordPage()
+        record.click_pic_video()
+        # 4.长按任意一个图片，点击转发
+        pv = PicVideoPage()
+        pv.wait_for_page_load()
+        pv.press_pic_to_do("转发")
+        # 5.选择任意对象
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        scp.select_local_contacts()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        names = slcp.get_contacts_name()
+        if "本机" in names:
+            names.remove("本机")
+        if not names:
+            raise AssertionError("WARN: There is no linkman.")
+        slcp.select_one_member_by_name(names[0])
+        slcp.click_sure_forward()
+        flag = slcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("转发聊天内容中的已下载的图片无‘已转发’提示")
+        if pv.is_on_this_page():
+            pv.click_back()
+        # 回到消息页面
+        record.click_back()
+        set_page.click_back()
+        chat.click_back()
+        cdp = ContactDetailsPage()
+        cdp.click_back_icon()
+        mess = MessagePage()
+        mess.open_message_page()
+        mess.wait_for_page_load()
+        # 在转发人的聊天界面可查看转发内容
+        mess.look_detail_news_by_name(names[0])
+        chat.wait_for_page_load()
+        if not chat.is_exist_pic_msg():
+            raise AssertionError("转发图片时在转发人的聊天界面无转发的图片")
+        chat.click_back()
+        mess.wait_for_page_load()
+        # 从消息页面进入单聊页面
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        contacts.wait_for_page_load()
+        names = contacts.get_contacts_name()
+        chat = SingleChatPage()
+        contacts.select_people_by_name(names[0])
+        cdp.wait_for_page_load()
+        # 点击消息进入单聊会话页面
+        cdp.click_message_icon()
+        # 如果弹框用户须知则点击处理
+        flag = chat.is_exist_dialog()
+        if flag:
+            chat.click_i_have_read()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0132(self):
+        """转发聊天内容中的已下载的视频（缩略图）"""
+        self.public_send_video()
+        # 1.在聊天会话页面，点击右上角设置图标
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击查找聊天内容
+        set_page = SingleChatSetPage()
+        set_page.search_chat_record()
+        # 3.点击图片与视频
+        record = FindChatRecordPage()
+        record.click_pic_video()
+        # 4.长按任意一个视频，点击转发
+        pv = PicVideoPage()
+        pv.wait_for_page_load()
+        pv.press_video_to_do("转发")
+        # 调起联系人选择器
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 返回聊天页面
+        scp.click_back()
+        pv.click_back()
+        record.click_back()
+        set_page.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0133(self):
+        """转发聊天内容中的已下载的视频（放大图）"""
+        self.public_send_video()
+        # 1.在聊天会话页面，点击右上角设置图标
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击查找聊天内容
+        set_page = SingleChatSetPage()
+        set_page.search_chat_record()
+        # 3.点击图片与视频
+        record = FindChatRecordPage()
+        record.click_pic_video()
+        # 4.点开放大一张视频，长按点击转发
+        pv = PicVideoPage()
+        pv.click_video()
+        pv.wait_for_play_video_page_load()
+        pv.press_preview_video_to_do("转发")
+        # 调起联系人选择器
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        scp.click_back()
+        pv.close_video()
+        if pv.is_on_this_page():
+            pv.click_back()
+        record.click_back()
+        set_page.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0134(self):
+        """转发聊天内容中的已下载的视频给任意对象"""
+        self.public_send_video()
+        # 1.在聊天会话页面，点击右上角设置图标
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击查找聊天内容
+        set_page = SingleChatSetPage()
+        set_page.search_chat_record()
+        # 3.点击图片与视频
+        record = FindChatRecordPage()
+        record.click_pic_video()
+        # 4.长按任意一个视频，点击转发
+        pv = PicVideoPage()
+        pv.wait_for_page_load()
+        pv.press_video_to_do("转发")
+        # 5.选择任意对象
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        scp.select_local_contacts()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        names = slcp.get_contacts_name()
+        if "本机" in names:
+            names.remove("本机")
+        if not names:
+            raise AssertionError("WARN: There is no linkman.")
+        slcp.select_one_member_by_name(names[0])
+        slcp.click_sure_forward()
+        flag = slcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("转发聊天内容中的已下载的视频无‘已转发’提示")
+        if pv.is_on_this_page():
+            pv.click_back()
+        # 回到消息页面
+        record.click_back()
+        set_page.click_back()
+        chat.click_back()
+        cdp = ContactDetailsPage()
+        cdp.click_back_icon()
+        mess = MessagePage()
+        mess.open_message_page()
+        mess.wait_for_page_load()
+        # 在转发人的聊天界面可查看转发内容
+        mess.look_detail_news_by_name(names[0])
+        chat.wait_for_page_load()
+        if not chat.is_exist_video_msg():
+            raise AssertionError("转发视频时在转发人的聊天界面无转发的视频")
+        chat.click_back()
+        mess.wait_for_page_load()
+        # 从消息页面进入单聊页面
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        contacts.wait_for_page_load()
+        names = contacts.get_contacts_name()
+        chat = SingleChatPage()
+        contacts.select_people_by_name(names[0])
+        cdp.wait_for_page_load()
+        # 点击消息进入单聊会话页面
+        cdp.click_message_icon()
+        # 如果弹框用户须知则点击处理
+        flag = chat.is_exist_dialog()
+        if flag:
+            chat.click_i_have_read()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0136(self):
+        """收藏聊天内容中的已下载的图片"""
+        self.public_send_pic()
+        # 1.在聊天会话页面，点击右上角设置图标
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击查找聊天内容
+        set_page = SingleChatSetPage()
+        set_page.search_chat_record()
+        # 3.点击图片与视频
+        record = FindChatRecordPage()
+        record.click_pic_video()
+        # 4.长按任意一个图片，点击收藏
+        pv = PicVideoPage()
+        pv.wait_for_page_load()
+        pv.press_pic_to_do("收藏")
+        # toast提醒“已收藏”
+        if not pv.is_toast_exist("已收藏"):
+            raise AssertionError("收藏聊天记录中的图片无‘已收藏’提示")
+        # 回到我页面
+        pv.click_back()
+        record.click_back()
+        set_page.click_back()
+        chat.click_back()
+        cdp = ContactDetailsPage()
+        cdp.click_back_icon()
+        mess = MessagePage()
+        mess.open_me_page()
+        # 我模块收藏列表可见
+        me = MePage()
+        me.click_menu("收藏")
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        if not mcp.have_collection_pic():
+            raise AssertionError("收藏图片后，在我的收藏中不可见")
+        # 回到单聊会话页面
+        mcp.click_back()
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        contacts.wait_for_page_load()
+        names = contacts.get_contacts_name()
+        contacts.select_people_by_name(names[0])
+        cdp.wait_for_page_load()
+        cdp.click_message_icon()
+        flag = chat.is_exist_dialog()
+        if flag:
+            chat.click_i_have_read()
+        chat.wait_for_page_load()
+
+    @staticmethod
+    def clear_PicVideo_Record():
+        """清除聊天内容中的图片与视频记录"""
+        chat = SingleChatPage()
+        chat.click_setting()
+        set_page = SingleChatSetPage()
+        set_page.search_chat_record()
+        record = FindChatRecordPage()
+        record.click_pic_video()
+        pv = PicVideoPage()
+        pv.wait_for_page_load()
+        pv.clear_record()
+        pv.click_back()
+        record.click_back()
+        set_page.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0137(self):
+        """删除聊天内容中的图片"""
+        self.clear_PicVideo_Record()
+        self.public_send_pic()
+        # 1.在聊天会话页面，点击右上角设置图标
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击查找聊天内容
+        set_page = SingleChatSetPage()
+        set_page.search_chat_record()
+        # 3.点击图片与视频
+        record = FindChatRecordPage()
+        record.click_pic_video()
+        # 4.长按任意一个图片，点击删除
+        pv = PicVideoPage()
+        pv.wait_for_page_load()
+        pv.press_pic_to_do("删除")
+        # 无任何提醒
+        if pv.is_toast_exist("删除", timeout=3):
+            raise AssertionError("删除聊天记录中的图片有toast‘删除’提示")
+        nums = pv.get_record_nums()
+        if nums != 0:
+            raise AssertionError("聊天记录中的图片删除失败，删除后依然存在")
+        pv.click_back()
+        record.click_back()
+        set_page.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0138(self):
+        """保存聊天内容中的图片到本地"""
+        self.public_send_pic()
+        # 1.在聊天会话页面，点击右上角设置图标
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击查找聊天内容
+        set_page = SingleChatSetPage()
+        set_page.search_chat_record()
+        # 3.点击图片与视频
+        record = FindChatRecordPage()
+        record.click_pic_video()
+        # 4.点击任意一个图片放大后，长按选择保存图片
+        pv = PicVideoPage()
+        pv.wait_for_page_load()
+        pv.click_pic()
+        pv.wait_for_pic_preview_page_load()
+        pv.press_preview_pic_to_do("保存")
+        # toast提醒"正在保存...","保存成功"
+        msg = "在单聊设置查找聊天内容的图片与视频页面,放大图片后,长按选择保存图片"
+        if not pv.is_toast_exist("正在保存", timeout=3):
+            raise AssertionError(msg + "无‘正在保存’提示！")
+        if not pv.is_toast_exist("保存成功", timeout=3):
+            raise AssertionError(msg + "无‘保存成功’提示！")
+        pv.close_pic_preview()
+        pv.click_back()
+        record.click_back()
+        set_page.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0139(self):
+        """保存聊天内容中的视频到本地"""
+        self.public_send_video()
+        # 1.在聊天会话页面，点击右上角设置图标
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击查找聊天内容
+        set_page = SingleChatSetPage()
+        set_page.search_chat_record()
+        # 3.点击图片与视频
+        record = FindChatRecordPage()
+        record.click_pic_video()
+        # 4.点击任意一个视频放大后，长按选择保存视频
+        pv = PicVideoPage()
+        pv.click_video()
+        pv.wait_for_play_video_page_load()
+        pv.press_preview_video_to_do("保存视频")
+        # toast提醒“视频已保存”
+        msg = "在单聊设置查找聊天内容的图片与视频页面,放大视频后,长按选择保存视频"
+        if not pv.is_toast_exist("视频已保存"):
+            raise AssertionError(msg + "无‘视频已保存’提示！")
+        pv.close_video()
+        if pv.is_on_this_page():
+            pv.click_back()
+        record.click_back()
+        set_page.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_VideoPic_0140(self):
+        """编辑聊天内容中的图片，并发送"""
+        self.public_send_pic()
+        # 1.在聊天会话页面，点击右上角设置图标
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击查找聊天内容
+        set_page = SingleChatSetPage()
+        set_page.search_chat_record()
+        # 3.点击图片与视频
+        record = FindChatRecordPage()
+        record.click_pic_video()
+        # 4.点击任意一个图片放大后，长按选择编辑
+        pv = PicVideoPage()
+        pv.wait_for_page_load()
+        pv.click_pic()
+        pv.wait_for_pic_preview_page_load()
+        pv.press_preview_pic_to_do("编辑")
+        # 可对图片涂鸦、马赛克、文本
+        pic = ChatPicEditPage()
+        pic.click_doodle()
+        pic.do_doodle()
+        pic.click_mosaic()
+        pic.do_mosaic()
+        pic.click_text_edit_btn()
+        pic.input_pic_text("VideoPic_0140")
+        pic.click_save()
+        # 5.点击发送按钮,调起联系人选择器
+        pic.click_send()
+        scp = SelectContactsPage()
+        try:
+            scp.wait_for_page_load()
+        except:
+            raise AssertionError("编辑图片后，发送图片未跳转到选择联系人界面")
+        scp.click_back()
+        pv.close_pic_preview()
+        pv.click_back()
+        record.click_back()
+        set_page.click_back()
+        chat.wait_for_page_load()
+

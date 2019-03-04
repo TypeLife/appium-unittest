@@ -57,7 +57,27 @@ class BaseChatPage(BasePage):
                   "gif群聊会话中的元素": (MobileBy.ID, 'com.chinasofti.rcs:id/layout_loading'),
                   "gif趣图搜索框": (MobileBy.ID, 'com.chinasofti.rcs:id/et_message'),
                   "关闭gif趣图聊天框": (MobileBy.ID, 'com.chinasofti.rcs:id/iv_cancel_gif'),
+                  # 消息发送失败 重发弹窗
+                  "是否重发该条信息": (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_message'),
+                  "确定重发": (MobileBy.XPATH, '//*[@text="确定"]'),
+                  "取消重发": (MobileBy.XPATH, '//*[@text="取消"]'),
+                  "发送失败icon": (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed')
                   }
+
+    @TestLogger.log()
+    def is_msg_send_fail(self):
+        """消息是否发送失败"""
+        return self._is_element_present(self.__class__.__locators['发送失败icon'])
+
+    @TestLogger.log()
+    def repeat_send_msg(self):
+        """重发消息"""
+        self.click_element(self.__class__.__locators['发送失败icon'])
+
+    @TestLogger.log()
+    def click_sure_repeat_msg(self):
+        """点击 确定 重发消息"""
+        self.click_element(self.__class__.__locators['确定重发'])
 
     @TestLogger.log()
     def click_addr_info(self):
@@ -185,6 +205,11 @@ class BaseChatPage(BasePage):
         self.click_element(self.__class__.__locators["选择相机"])
 
     @TestLogger.log()
+    def click_name_card(self):
+        """点击选择名片"""
+        self.click_element(self.__class__.__locators["选择名片"])
+
+    @TestLogger.log()
     def click_gif(self):
         """点击选择gif"""
         self.click_element(self.__class__.__locators["选择gif"])
@@ -193,6 +218,12 @@ class BaseChatPage(BasePage):
     def click_more(self):
         """点击选择更多 +"""
         self.click_element(self.__class__.__locators["选择更多"])
+
+    @TestLogger.log()
+    def is_open_more(self):
+        """是否打开 更多+ (通过判断是否有位置元素来判断是否有打开 更多+)"""
+        els = self.get_elements((MobileBy.XPATH, '//*[@text="位置"]'))
+        return len(els) > 0
 
     @TestLogger.log()
     def input_message(self, message):
@@ -211,6 +242,19 @@ class BaseChatPage(BasePage):
         return el.text
 
     @TestLogger.log()
+    def get_name_card(self):
+        """获取个人卡名信息"""
+        el = self.get_element([MobileBy.ID, 'com.chinasofti.rcs:id/tv_card_name'])
+        return el.text
+
+    @TestLogger.log()
+    def get_location(self):
+        """获最近一次发送位置信息"""
+        el = self.get_elements(self.__class__.__locators["深圳市龙岗区交叉口"])
+        el = el[-1]
+        return el.text
+
+    @TestLogger.log()
     def send_message(self):
         """发送聊天信息"""
         self.click_element(self.__class__.__locators["发送按钮"])
@@ -225,6 +269,11 @@ class BaseChatPage(BasePage):
     def page_should_contain_send_btn(self):
         """发送按钮检查"""
         self.page_should_contain_element(self.__locators["发送按钮"])
+
+    @TestLogger.log()
+    def click_send_btn(self):
+        """点击发送按钮"""
+        self.click_element(self.__locators["发送按钮"])
 
     @TestLogger.log()
     def click_audio_btn(self):

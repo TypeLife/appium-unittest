@@ -110,6 +110,7 @@ class ChatPicEditPage(BasePage):
         self.swipe_by_percent_on_screen(50,15,60,40,duration=200)
         self.swipe_by_percent_on_screen(40,17,50,50,duration=200)
         self.swipe_by_percent_on_screen(50,17,50,30, duration=200)
+
     @TestLogger.log()
     def click_picture_edit_crred(self):
         """点击涂鸦红色"""

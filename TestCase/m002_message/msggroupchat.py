@@ -1515,8 +1515,9 @@ class MsgGroupChatTest(TestCase):
         name = "w" + str(int(time.time()))
         mycard.input_my_name(name)
         mycard.click_save()
-        flag = group_set.is_toast_exist("修改成功")
-        self.assertTrue(flag)
+        flag = group_set.is_toast_exist("修改成功", timeout=8)
+        if not flag:
+            raise AssertionError("修改群名片后，无‘修改成功’提示")
         group_set.wait_for_page_load()
         group_set.click_back()
         gcp.wait_for_page_load()
@@ -1546,7 +1547,8 @@ class MsgGroupChatTest(TestCase):
         # 5.点击高亮展示的保存按钮，是否可以保存
         mycard.click_save()
         flag = group_set.is_toast_exist("修改成功")
-        self.assertTrue(flag)
+        if not flag:
+            raise AssertionError("修改群名片后，无‘修改成功’提示")
         group_set.wait_for_page_load()
         group_set.click_back()
         gcp.wait_for_page_load()
