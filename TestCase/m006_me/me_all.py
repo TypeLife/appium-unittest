@@ -1304,6 +1304,10 @@ class MeAll(TestCase):
         mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back', 15])
         mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back', 15])
 
+    def tearDown_test_me_all_page_108(self):
+        mep = MePage()
+        mep.set_network_status(6)
+
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
     def test_me_all_page_111(self):
         """银行卡页面展示-未绑定任何银行卡"""
@@ -1372,4 +1376,3 @@ class MeAll(TestCase):
         mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_addKjbankcard_return'], 15)
         mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_condition_return'], 15)
         mep.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-

@@ -271,10 +271,10 @@ class MeCollectionPage(BasePage):
         return self.element_should_contain_text(self.__locators[locator], expected, message)
 
     @TestLogger.log()
-    def get_video_len(self, locator):
+    def get_video_len(self, locator, index=0):
         """获取该元素文本信息"""
         el = self.get_elements(self.__class__.__locators[locator])
-        el = el[0]
+        el = el[index]
         return el.text
 
     @TestLogger.log()
