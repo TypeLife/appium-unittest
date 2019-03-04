@@ -2769,6 +2769,7 @@ class MsgCommonGroupTest(TestCase):
         gcp = GroupChatPage()
         gcp.press_file_to_do("26", "多选")
         gcp.click_text("转发")
+        gcp.is_on_this_page
 
 
 
