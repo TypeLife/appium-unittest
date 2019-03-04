@@ -382,6 +382,23 @@ class Preconditions(object):
         scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
 
+    @staticmethod
+    def delete_all_my_collection():
+        """确保群聊已经发送一个文件信息，且已收藏"""
+        mep = MePage()
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        file_names = mcp.get_all_collection()
+        for i in range(len(file_names)):
+            mcp.press_and_move_left()
+            if mcp.is_delete_element_present():
+                mcp.click_delete_collection()
+                mcp.click_sure_forward()
+                # 4.点击返回
+        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.open_message_page()
+
 
 class MeAllCollect(TestCase):
     """
@@ -420,6 +437,10 @@ class MeAllCollect(TestCase):
         mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         mep.open_message_page()
 
+    def tearDown_test_me_all_page_406(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
+
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_407(self):
         """我页面跳转验证"""
@@ -438,9 +459,14 @@ class MeAllCollect(TestCase):
         mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         mep.open_message_page()
 
+    def tearDown_test_me_all_page_407(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
+
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_408(self):
         """我页面跳转验证"""
+        Preconditions.make_already_set_chart_group_message()
         # 1.点击跳转到我的页面
         mess = MessagePage()
         mess.wait_for_page_load()
@@ -456,6 +482,10 @@ class MeAllCollect(TestCase):
         # 3.点击返回
         mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         mep.open_message_page()
+
+    def tearDown_test_me_all_page_408(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_412(self):
@@ -479,6 +509,10 @@ class MeAllCollect(TestCase):
         mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         mep.open_message_page()
 
+    def tearDown_test_me_all_page_412(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
+
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_413(self):
         """查看收藏内容为文字（含短信）的展示"""
@@ -498,6 +532,10 @@ class MeAllCollect(TestCase):
         # 4.点击返回
         mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         mep.open_message_page()
+
+    def tearDown_test_me_all_page_413(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_414(self):
@@ -520,6 +558,10 @@ class MeAllCollect(TestCase):
         # 4.点击返回
         mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         mep.open_message_page()
+
+    def tearDown_test_me_all_page_414(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_416(self):
@@ -550,6 +592,10 @@ class MeAllCollect(TestCase):
         # 4.点击返回
         mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         mep.open_message_page()
+
+    def tearDown_test_me_all_page_416(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_417(self):
@@ -582,10 +628,8 @@ class MeAllCollect(TestCase):
         mep.open_message_page()
 
     def tearDown_test_me_all_page_417(self):
-        Preconditions.select_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        current_mobile().reset_app()
-        Preconditions.make_already_in_message_page()
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_419(self):
@@ -621,6 +665,10 @@ class MeAllCollect(TestCase):
         # 4.点击返回
         mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         mep.open_message_page()
+
+    def tearDown_test_me_all_page_419(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_420(self):
@@ -661,6 +709,10 @@ class MeAllCollect(TestCase):
         mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         mep.open_message_page()
 
+    def tearDown_test_me_all_page_420(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
+
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_421(self):
         """查看收藏内容为可识别的幻灯片格式"""
@@ -697,6 +749,10 @@ class MeAllCollect(TestCase):
         # 4.点击返回
         mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         mep.open_message_page()
+
+    def tearDown_test_me_all_page_421(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_422(self):
@@ -735,6 +791,10 @@ class MeAllCollect(TestCase):
         mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         mep.open_message_page()
 
+    def tearDown_test_me_all_page_422(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
+
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_423(self):
         """查看收藏内容为可识别的PDF格式"""
@@ -769,3 +829,19 @@ class MeAllCollect(TestCase):
         # 4.点击返回
         mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         mep.open_message_page()
+
+    def tearDown_test_me_all_page_423(self):
+        Preconditions.delete_all_my_collection()
+        # mep = MePage()
+        # mep.click_collection()
+        # mcp = MeCollectionPage()
+        # mcp.wait_for_page_load()
+        # file_names = mcp.get_all_file_names()
+        # for i in range(len(file_names)):
+        #     mcp.press_and_move_left()
+        #     if mcp.is_delete_element_present():
+        #         mcp.click_delete_collection()
+        #         mcp.click_sure_forward()
+        #  # 4.点击返回
+        # mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        # mep.open_message_page()

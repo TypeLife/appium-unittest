@@ -286,3 +286,24 @@ class MeCollectionPage(BasePage):
         if height > 177:
             return False
         return True
+
+    def get_all_collection(self):
+        """获取所有收藏的文件名"""
+        els = self.get_elements(self.__class__.__locators["收藏消息体"])
+        file_names = []
+        if els:
+            for el in els:
+                file_names.append(el.text)
+        else:
+            return None
+        flag = True
+        while flag:
+            self.page_up()
+            els = self.get_elements(self.__class__.__locators["收藏消息体"])
+            for el in els:
+                if el.text not in file_names:
+                    file_names.append(el.text)
+                    flag = True
+                else:
+                    flag = False
+        return file_names
