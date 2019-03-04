@@ -1,4 +1,5 @@
 import time
+import unittest
 
 from selenium.common.exceptions import TimeoutException
 
@@ -2585,3 +2586,192 @@ class MsgCommonGroupTest(TestCase):
             raise AssertionError("表情没有缩小展示")
         gcp.click_expression_page_close_button()
         gcp.hide_keyboard()
+
+    def tearDown_test_msg_common_group_0100(self):
+            # 删除聊天记录
+            scp = GroupChatPage()
+            if scp.is_on_this_page():
+                scp.click_setting()
+                gcsp = GroupChatSetPage()
+                gcsp.wait_for_page_load()
+                # 点击删除聊天记录
+                gcsp.click_clear_chat_record()
+                gcsp.wait_clear_chat_record_confirmation_box_load()
+                # 点击确认
+                gcsp.click_determine()
+                flag = gcsp.is_toast_exist("聊天记录清除成功")
+                self.assertTrue(flag)
+                # 点击返回群聊页面
+                gcsp.click_back()
+                time.sleep(2)
+                # 判断是否返回到群聊页面
+                self.assertTrue(scp.is_on_this_page())
+            else:
+                try:
+                    raise AssertionError("没有返回到群聊页面，无法删除记录")
+                except AssertionError as e:
+                    raise e
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0101(self):
+        """1.消息会话框中长按消息体
+            2.点击“多选”
+            3.查看页面展示"""
+        gcp = GroupChatPage()
+        # 输入信息
+        dex=0
+        while dex<3:
+            gcp.input_message(dex)
+            # 点击发送
+            gcp.send_message()
+            # 验证是否发送成功
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            dex+=1
+        gcp.press_file_to_do("0","多选")
+        #显示左上角的【×】关闭按钮，有勾选消息时，左上角文案展示为： 已选择+数量
+        if not gcp.is_exist_multiple_selection_back():
+            raise AssertionError("没有显示【×】关闭按钮")
+        #验证有勾选信息
+        els=gcp.get_multiple_selection_select_box()
+        if els[0].get_attribute("checked"):
+            if gcp.is_exist_multiple_selection_count():
+                if not gcp.is_text_present("已选择"):
+                    raise AssertionError("没有显示‘已选择+数量’字样")
+            else:
+                raise AssertionError("没有显示‘已选择+数量’字样")
+            #底部删除、转发按钮，高亮展示
+            if not gcp.is_enabled_multiple_selection_delete():
+                raise AssertionError("勾选信息后底部删除按钮没有高亮展示")
+            if not gcp.is_enabled_multiple_selection_forward():
+                raise AssertionError("勾选信息后底部转发按钮没有高亮展示")
+        else:
+            raise AssertionError("没有勾选信息")
+        #取消勾选信息
+        els[0].click()
+        time.sleep(1)
+        #未选择任何消息时，左上角文案展示为：未选择，底部删除，转发按钮默认置灰展示
+        if not gcp.is_text_present("未选择"):
+            raise AssertionError("未选择任何消息时没有展示‘未选择’")
+        # 底部删除、转发按钮，置灰展示
+        if gcp.is_enabled_multiple_selection_delete():
+            raise AssertionError("未勾选信息后底部删除按钮没有置灰展示")
+        if gcp.is_enabled_multiple_selection_forward():
+            raise AssertionError("未勾选信息后底部转发按钮没有置灰展示")
+        gcp.click_multiple_selection_back()
+
+    def tearDown_test_msg_common_group_0101(self):
+            # 删除聊天记录
+            scp = GroupChatPage()
+            if scp.is_on_this_page():
+                scp.click_setting()
+                gcsp = GroupChatSetPage()
+                gcsp.wait_for_page_load()
+                # 点击删除聊天记录
+                gcsp.click_clear_chat_record()
+                gcsp.wait_clear_chat_record_confirmation_box_load()
+                # 点击确认
+                gcsp.click_determine()
+                flag = gcsp.is_toast_exist("聊天记录清除成功")
+                self.assertTrue(flag)
+                # 点击返回群聊页面
+                gcsp.click_back()
+                time.sleep(2)
+                # 判断是否返回到群聊页面
+                self.assertTrue(scp.is_on_this_page())
+            else:
+                try:
+                    raise AssertionError("没有返回到群聊页面，无法删除记录")
+                except AssertionError as e:
+                    raise e
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0102(self):
+        """1.消息会话框中长按消息体
+            2.点击“多选”
+            3.下滑"""
+        gcp = GroupChatPage()
+        # 输入信息
+        dex = 0
+        while dex < 30:
+            gcp.input_message(dex)
+            # 点击发送
+            gcp.send_message()
+            # 验证是否发送成功
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            dex += 1
+        gcp.click_back()
+        time.sleep(1)
+        groupName=Preconditions.get_group_chat_name()
+        gcp.click_text(groupName)
+        time.sleep(1)
+        gcp.press_file_to_do("26", "多选")
+        gcp.page_down()
+        if not gcp.is_text_present("9"):
+            raise AssertionError("下滑加载历史信息不成功")
+        gcp.click_multiple_selection_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0103(self):
+        """1.消息会话框中长按消息体
+            2.点击“多选”
+            3.点击左上角“X”，或者点击系统返回键（安卓）"""
+        gcp = GroupChatPage()
+        gcp.press_file_to_do("16", "多选")
+        gcp.click_multiple_selection_back()
+        if gcp.is_exist_multiple_selection_select_box():
+            raise AssertionError("复选框没有消失")
+        #转发操作选项直接消失
+        if gcp.is_text_present("转发"):
+            raise AssertionError("转发操作选项没有消失")
+        #出现底部聊天输入框
+        if not gcp.is_text_present("说点什么..."):
+            raise AssertionError("底部聊天输入框没有出现")
+        #返回到聊天会话窗口
+        if not gcp.is_on_this_page():
+            raise AssertionError("没有返回到聊天会话窗口")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0104(self):
+        """1.消息会话框中长按消息体
+            2.点击“多选”
+            3.查看页面选中的消息体数量
+            4.点击转发
+            5.查看弹框设计是否符合UI设计"""
+        gcp = GroupChatPage()
+        gcp.press_file_to_do("16", "多选")
+        gcp.click_text("转发")
+        time.sleep(2)
+        if not gcp.is_text_present("选择联系人"):
+            raise AssertionError("不符合UI设计")
+        scp=SelectContactsPage()
+        scp.click_back()
+        gcp.click_multiple_selection_back()
+
+    # @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    @unittest.skip("不清晰先跳过")
+    def test_msg_common_group_0106(self):
+        """1.消息会话框中长按消息体
+            2.点击“多选”
+            3.查看页面选中的消息体数量
+            4.点击转发
+            5.任意选择一个对象
+            6.点击取消/弹框以外区域
+            7.点击确定
+            8.查看接收方会话窗口中的消息排列顺序"""
+        gcp = GroupChatPage()
+        gcp.press_file_to_do("26", "多选")
+        gcp.click_text("转发")
+        gcp.is_on_this_page
+
+
+
+
+

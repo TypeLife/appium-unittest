@@ -170,8 +170,7 @@ class GroupChatPage(BaseChatPage):
     @TestLogger.log()
     def press_message_to_do(self, text):
         """长按指定信息进行操作"""
-        el = self.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lloc_famous_address_text'))
-        el = el [-1]
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/lloc_famous_address_text'))
         self.press(el)
         self.click_element(self.__class__.__locators[text])
 
@@ -217,7 +216,6 @@ class GroupChatPage(BaseChatPage):
     def click_resend_confirm(self):
         """点击重发消息确定"""
         self.click_element(self.__class__.__locators["重发消息确定"])
-
     @TestLogger.log()
     def click_clean_video(self):
         """点击删除消息视频"""
@@ -232,8 +230,7 @@ class GroupChatPage(BaseChatPage):
     @TestLogger.log()
     def press_voice_message_to_do(self,text):
         """长按语言消息体"""
-        el = self.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/linearlayout_msg_content'))
-        el = el[-1]
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/linearlayout_msg_content'))
         self.press(el)
         self.click_element(self.__class__.__locators[text])
 
@@ -278,17 +275,60 @@ class GroupChatPage(BaseChatPage):
         """点击表情页关闭"""
         self.click_element(self.__class__.__locators["关闭表情页"])
 
+    @TestLogger.log()
     def get_expressions(self):
         """获取表情包"""
         els = self.get_elements(self.__locators['表情'])
         return els
 
+
+    @TestLogger.log()
     def get_input_box(self):
         """获取输入框"""
         el = self.get_element(self.__locators['输入框'])
         return el
 
+    @TestLogger.log()
     def is_enabled_of_send_button(self):
         """发送按钮状态"""
         flag = self._is_enabled((MobileBy.ID, 'com.chinasofti.rcs:id/ib_send'))
         return flag
+
+    @TestLogger.log()
+    def is_exist_multiple_selection_back(self):
+        """是否存在多选【×】关闭按钮"""
+        return self._is_element_present(self.__class__.__locators["多选返回"])
+
+    @TestLogger.log()
+    def is_exist_multiple_selection_count(self):
+        """是否存在多选计数"""
+        return self._is_element_present(self.__class__.__locators["多选计数"])
+
+    @TestLogger.log()
+    def get_multiple_selection_select_box(self):
+        """获取多选选择框"""
+        els=self.get_elements(self.__class__.__locators["多选选择框"])
+        if els:
+            return els
+        else:
+            raise AssertionError("没有找到多选选择框")
+
+    @TestLogger.log()
+    def is_enabled_multiple_selection_delete(self):
+        """判断多选删除是否高亮展示"""
+        return self._is_enabled(self.__class__.__locators["多选删除"])
+
+    @TestLogger.log()
+    def is_enabled_multiple_selection_forward(self):
+        """判断多选转发是否高亮展示"""
+        return self._is_enabled(self.__class__.__locators["多选转发"])
+
+    @TestLogger.log()
+    def click_multiple_selection_back(self):
+        """点击多选返回"""
+        self.click_element(self.__class__.__locators["多选返回"])
+
+    @TestLogger.log()
+    def is_exist_multiple_selection_select_box(self):
+        """是否存在多选选择框"""
+        return self._is_element_present(self.__class__.__locators["多选选择框"])

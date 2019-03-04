@@ -71,10 +71,15 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def is_on_this_page(self):
         """当前页面是否在消息页"""
-        el = self.get_elements(self.__locators['+号'])
-        if len(el) > 0:
+        try:
+            self.wait_until(
+                timeout=8,
+                auto_accept_permission_alert=True,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["+号"])
+            )
             return True
-        return False
+        except:
+            return False
 
     @TestLogger.log()
     def click_add_icon(self):
