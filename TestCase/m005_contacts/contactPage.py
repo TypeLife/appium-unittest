@@ -161,9 +161,7 @@ class ContactPage(TestCase):
     """
     @staticmethod
     def setUp_test_contacts_0001():
-        """
-        验证通讯录页面元素
-        """
+
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
@@ -175,6 +173,7 @@ class ContactPage(TestCase):
 
     @tags('All','CMCC')
     def test_contacts_0001(self):
+        """验证通讯录页面元素"""
         contacts = ContactsPage()
         contacts.page_should_contain_text('通讯录')
         # contacts.page_should_contain_text('+')
@@ -257,9 +256,7 @@ class ContactPage(TestCase):
 
     @tags('All', 'CMCC')
     def test_contacts_0015(self):
-        """
-        已保存到本地的RCS用户的profile页
-        """
+        """已保存到本地的RCS用户的profile页"""
         ContactsPage().click_search_box()
         # 搜索联系人:测试1
         ContactListSearchPage().input_search_keyword('测试1')
@@ -308,9 +305,7 @@ class ContactPage(TestCase):
 
     @staticmethod
     def setUp_test_contacts_0016():
-        """
-        已保存到本地的非RCS用户的profile页
-        """
+
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
@@ -320,6 +315,7 @@ class ContactPage(TestCase):
 
     @tags('All', 'CMCC')
     def test_contacts_0016(self):
+        """已保存到本地的非RCS用户的profile页"""
         ContactsPage().click_search_box()
         #搜索联系人:测试2
         ContactListSearchPage().input_search_keyword('测试2')
@@ -369,14 +365,10 @@ class ContactPage(TestCase):
 
     @staticmethod
     def setUp_test_contacts_0017():
-        """
-        已保存到本地的本机用户的profile页
-        """
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
-        time.sleep(1)
         if ContactsPage().is_text_present('需要使用通讯录权限'):
             ContactsPage().click_always_allowed()
         time.sleep(2)
@@ -395,9 +387,7 @@ class ContactPage(TestCase):
 
 
     def test_contacts_0017(self):
-        """
-        已保存到本地的本机用户的profile页
-        """
+        """已保存到本地的本机用户的profile页"""
         ContactsPage().click_search_box()
         # 搜索联系人:本机
         ContactListSearchPage().input_search_keyword('本机')
@@ -436,6 +426,89 @@ class ContactPage(TestCase):
         detailpage.video_call_btn_is_clickable()
         detailpage.hefeixin_call_btn_is_clickable()
 
+    @staticmethod
+    def setUp_test_contacts_0195():
+
+        Preconditions.connect_mobile('Android-联通')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_search_box()
+        ContactListSearchPage().input_search_keyword('测试1')
+        ContactListSearchPage().click_contact('测试1')
+
+    def test_contacts_0195(self):
+        """
+        分享名片,搜索选择一个群分享名片,弹框确认是否分享
+        """
+        ContactListSearchPage().click_share_card()
+        SelectContactsPage().click_select_one_group()
+        #搜索框文本显示'搜索群组'
+        SelectOneGroupPage().is_text_present('搜索群组')
+        #不存在搜索结果时,显示"无搜索结果
+        SelectOneGroupPage().click_search_group()
+        SelectOneGroupPage().input_search_keyword('测试')
+        SelectOneGroupPage().page_should_contain_text('无搜索结果')
+        #存在搜索结果时,搜索结果包含关键字
+        time.sleep(2)
+        SelectOneGroupPage().click_back_icon()
+        SelectOneGroupPage().click_search_group()
+        SelectOneGroupPage().input_search_keyword('红包')
+        SelectOneGroupPage().select_one_group_by_name('红包')
+        SelectOneGroupPage().click_share_business_card()
+
+    @staticmethod
+    def setUp_test_contacts_0196():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_search_box()
+        ContactListSearchPage().input_search_keyword('测试1')
+        ContactListSearchPage().click_contact('测试1')
+
+    def test_contacts_0196(self):
+        """群聊列表展示页面选择一个群分享"""
+        ContactListSearchPage().click_share_card()
+        SelectContactsPage().click_select_one_group()
+        SelectOneGroupPage().select_one_group_by_name('红包')
+        SelectOneGroupPage().click_share_business_card()
+
+    @staticmethod
+    def setUp_test_contacts_0197():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_search_box()
+        ContactListSearchPage().input_search_keyword('测试1')
+        ContactListSearchPage().click_contact('测试1')
+        ContactDetailsPage().click_share_business_card()
+
+    def test_contacts_0197(self):
+        """群聊列表展示页面选择本地联系人分享"""
+        SelectContactsPage().select_local_contacts()
+        SelectContactsPage().page_should_contain_text('选择联系人')
+        SelectContactsPage().page_should_contain_text('搜索或输入手机号')
+        #无搜索结果时,下方是否展示：无搜索结果
+        SelectContactsPage().click_search_keyword()
+        SelectContactsPage().input_search_keyword('文本')
+        SelectContactsPage().is_text_present('无搜索结果')
+
+        #存在搜索结果时,判断显示是否正确
+        SelectContactsPage().click_x_icon()
+        time.sleep(1)
+        SelectContactsPage().input_search_keyword('测试2')
+        SelectContactsPage().click_cantact_avatar()
+        SelectContactsPage().click_share_card()
+
+
 
     @staticmethod
     def setUp_test_contacts_0036():
@@ -451,6 +524,7 @@ class ContactPage(TestCase):
     def test_contacts_0036(self):
         contact=ContactsPage()
         contact.click_and_address()
+        time.sleep(3)
 
 
 

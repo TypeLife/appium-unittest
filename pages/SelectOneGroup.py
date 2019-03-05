@@ -39,6 +39,10 @@ class SelectOneGroupPage(BasePage):
                   '发送给': (MobileBy.XPATH, "//*[contains(@text, '发送给')]"),
                   '取消': (MobileBy.XPATH, "//*[contains(@text, '取消')]"),
                   '确定': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
+                  '分享名片': (MobileBy.ID, 'com.chinasofti.rcs:id/send_tv'),
+                  '群-搜索': (MobileBy.ID, 'com.chinasofti.rcs:id/edit_query'),
+                  '搜索-返回': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_back'),
+                  '搜索结果展示': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
                   }
 
     @TestLogger.log()
@@ -66,6 +70,33 @@ class SelectOneGroupPage(BasePage):
         """通过群名选择一个群"""
         self.click_element(
             (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text ="%s"]' % name))
+
+    @TestLogger.log()
+    def click_search_group(self):
+        """点击搜索群组"""
+        self.click_element(self.__class__.__locators['搜索群组'])
+
+    @TestLogger.log("点击分享名片")
+    def click_share_business_card(self):
+        """点击分享名片"""
+        self.click_element(self.__locators['分享名片'])
+
+    @TestLogger.log('点击联系人')
+    def click_contact(self, name):
+        self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and ' +
+                            '@text="{}"]'.format(name)))
+
+
+    @TestLogger.log()
+    def input_search_keyword(self, keyword):
+        """输入搜索内容"""
+        self.input_text(self.__locators['群-搜索'], keyword)
+
+    @TestLogger.log()
+    def click_back_icon(self):
+        """点击返回按钮"""
+        self.click_element(self.__class__.__locators['搜索-返回'])
+
 
     @TestLogger.log()
     def click_back(self):
