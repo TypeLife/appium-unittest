@@ -106,11 +106,11 @@ class MeEditUserProfilePage(BasePage):
 
     @TestLogger.log('是否有弹框提示保存成功')
     def is_toast_save_success(self):
-        return self.is_toast_exist("保存成功")
+        return self.is_toast_exist("保存成功", timeout=10)
 
     @TestLogger.log('是否有弹框提示资料未变化，不保存')
     def is_toast_save(self):
-        return self.is_toast_exist("您的资料未变化，无需保存")
+        return self.is_toast_exist("您的资料未变化，无需保存", timeout=10)
 
     @TestLogger.log('是否有弹框提示资料未变化，不保存')
     def is_toast_save_null(self):
