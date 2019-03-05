@@ -61,6 +61,8 @@ class GroupChatPage(BaseChatPage):
                   '多选选择框': (MobileBy.ID, 'com.chinasofti.rcs:id/multi_check'),
                   '多选删除': (MobileBy.ID, 'com.chinasofti.rcs:id/multi_btn_delete'),
                   '多选转发': (MobileBy.ID, 'com.chinasofti.rcs:id/multi_btn_forward'),
+                  '删除已选信息': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
+                  '取消删除已选信息': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
                   }
 
     def is_exist_msg_videos(self):
@@ -337,3 +339,18 @@ class GroupChatPage(BaseChatPage):
     def is_exist_multiple_selection_select_box(self):
         """是否存在多选选择框"""
         return self._is_element_present(self.__class__.__locators["多选选择框"])
+
+    @TestLogger.log()
+    def click_multiple_selection_delete(self):
+        """点击多选删除"""
+        self.click_element(self.__class__.__locators["多选删除"])
+
+    @TestLogger.log()
+    def click_multiple_selection_delete_cancel(self):
+        """点击取消删除已选信息"""
+        self.click_element(self.__class__.__locators["取消删除已选信息"])
+
+    @TestLogger.log()
+    def click_multiple_selection_delete_sure(self):
+        """点击确定删除已选信息"""
+        self.click_element(self.__class__.__locators["删除已选信息"])
