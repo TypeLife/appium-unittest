@@ -278,17 +278,17 @@ class MeCollectionPage(BasePage):
         return el.text
 
     @TestLogger.log()
-    def get_width_of_collection_of_text(self):
-        """获取收藏内容框的大小不超过三行"""
-        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/favorite_tv'))
+    def get_width_of_collection(self, locator, n):
+        """获取收藏的大小不超过多少行"""
+        el = self.get_element(self.__class__.__locators[locator])
         rect = el.rect
         height = rect["height"]
-        if height > 177:
+        if height > 70*n:
             return False
         return True
 
     def get_all_collection(self):
-        """获取所有收藏的文件名"""
+        """获取所有收藏的内容"""
         els = self.get_elements(self.__class__.__locators["收藏消息体"])
         file_names = []
         if els:
@@ -307,3 +307,8 @@ class MeCollectionPage(BasePage):
                 else:
                     flag = False
         return file_names
+
+    @TestLogger.log()
+    def click_collection_file_name(self):
+        """点击收藏文件"""
+        self.click_element(self.__class__.__locators["文件名"])

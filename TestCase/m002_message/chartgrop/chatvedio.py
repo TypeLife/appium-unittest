@@ -4,6 +4,8 @@ import time
 import unittest
 import uuid
 
+from appium.webdriver.common.mobileby import MobileBy
+
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
@@ -1299,14 +1301,15 @@ class MsgGroupChatvedioTest(TestCase):
         # 6.点击返回到群聊页面
         gcv.click_back()
         gcf.click_back()
-        gcs.click_back()
+        gcs.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         gcp.click_back()
         sog = SelectOneGroupPage()
         sog.click_back()
         sct = SelectContactsPage()
         sct.click_back()
         scp.click_one_contact("大佬2")
-        gcp.click_i_have_read()
+        if gcp.is_exist_dialog():
+            gcp.click_i_have_read()
         self.assertEquals(gcp.is_exist_msg_image(), True)
         gcp.click_back()
 
