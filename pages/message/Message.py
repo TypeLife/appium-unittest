@@ -51,6 +51,7 @@ class MessagePage(FooterPage):
         '置顶群': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name"]'),
         '消息发送失败感叹号': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_fail_status'),
         '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
+        '收藏': (MobileBy.XPATH, "//*[contains(@text, '收藏')]"),
     }
 
     @TestLogger.log('检查顶部搜索框是否显示')
@@ -70,10 +71,15 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def is_on_this_page(self):
         """当前页面是否在消息页"""
-        el = self.get_elements(self.__locators['+号'])
-        if len(el) > 0:
+        try:
+            self.wait_until(
+                timeout=8,
+                auto_accept_permission_alert=True,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["+号"])
+            )
             return True
-        return False
+        except:
+            return False
 
     @TestLogger.log()
     def click_add_icon(self):
@@ -382,3 +388,8 @@ class MessagePage(FooterPage):
         el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))
         self.press(el)
         self.click_element(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def look_detail_news_by_name(self, name):
+        """查看详细消息"""
+        self.click_element((MobileBy.XPATH, "//*[@text='%s']" % name))

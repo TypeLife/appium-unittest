@@ -23,9 +23,9 @@ class MeCollectionPage(BasePage):
                   'www.baidu.com': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_tv'),
                   'com.chinasofti.rcs:id/favorite_content': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_content'),
                   'com.chinasofti.rcs:id/favorite_image_shortcut': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/favorite_image_shortcut'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/favorite_image_shortcut'),
                   'com.chinasofti.rcs:id/favorite_file_name_size': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/favorite_file_name_size'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/favorite_file_name_size'),
                   'ppt测试文件.ppt': (MobileBy.ID, 'com.chinasofti.rcs:id/file_name'),
                   '文件名': (MobileBy.ID, 'com.chinasofti.rcs:id/file_name'),
                   '100.5KB': (MobileBy.ID, 'com.chinasofti.rcs:id/file_size'),
@@ -43,9 +43,10 @@ class MeCollectionPage(BasePage):
                   # 打开位置页面元素
                   "导航按钮": (MobileBy.ID, 'com.chinasofti.rcs:id/location_nativ_btn'),
                   '收藏消息体': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_layout'),
-                  "删除收藏":(MobileBy.ID, 'com.chinasofti.rcs:id/swipe_right'),
+                  "删除收藏": (MobileBy.ID, 'com.chinasofti.rcs:id/swipe_right'),
                   '确定': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
                   '收藏语音消息体': (MobileBy.ID, 'com.chinasofti.rcs:id/linearlayout_msg_content'),
+                  '视频时长': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_favorite_video_length'),
                   }
 
     @TestLogger.log()
@@ -87,7 +88,7 @@ class MeCollectionPage(BasePage):
             for el in els:
                 file_names.append(el.text)
         else:
-             return None
+            return None
         flag = True
         while flag:
             self.page_up()
@@ -240,7 +241,7 @@ class MeCollectionPage(BasePage):
     @TestLogger.log()
     def press_and_move_left(self):
         """元素内向左滑动"""
-        self.swipe_by_direction(self.__class__.__locators["收藏消息体"],"left")
+        self.swipe_by_direction(self.__class__.__locators["收藏消息体"], "left")
 
     @TestLogger.log()
     def is_delete_element_present(self):
@@ -263,3 +264,46 @@ class MeCollectionPage(BasePage):
     def click_collection_voice_msg(self):
         """点击收藏语音消息体"""
         self.click_element(self.__class__.__locators["收藏语音消息体"])
+
+    @TestLogger.log()
+    def element_contain_text(self, locator, expected, message=''):
+        """检查某元素是否包含对应文本信息"""
+        return self.element_should_contain_text(self.__locators[locator], expected, message)
+
+    @TestLogger.log()
+    def get_video_len(self, locator, index=0):
+        """获取该元素文本信息"""
+        el = self.get_elements(self.__class__.__locators[locator])
+        el = el[index]
+        return el.text
+
+    @TestLogger.log()
+    def get_width_of_collection_of_text(self):
+        """获取收藏内容框的大小不超过三行"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/favorite_tv'))
+        rect = el.rect
+        height = rect["height"]
+        if height > 177:
+            return False
+        return True
+
+    def get_all_collection(self):
+        """获取所有收藏的文件名"""
+        els = self.get_elements(self.__class__.__locators["收藏消息体"])
+        file_names = []
+        if els:
+            for el in els:
+                file_names.append(el.text)
+        else:
+            return None
+        flag = True
+        while flag:
+            self.page_up()
+            els = self.get_elements(self.__class__.__locators["收藏消息体"])
+            for el in els:
+                if el.text not in file_names:
+                    file_names.append(el.text)
+                    flag = True
+                else:
+                    flag = False
+        return file_names

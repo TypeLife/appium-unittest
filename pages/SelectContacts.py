@@ -30,6 +30,8 @@ class SelectContactsPage(BasePage):
         '选择和通讯录联系人': (MobileBy.XPATH, '//*[@text ="选择和通讯录联系人"]'),
         '本地联系人': (MobileBy.XPATH, '//*[@text ="本地联系人"]'),
         '最近聊天': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint'),
+        'X': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect'),
+        '聊天电话': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),
         # 分享二维码的选择联系人页面
         '选择本地联系人': (MobileBy.XPATH, '//*[@text ="选择本地联系人"]'),
         # 未知号码
@@ -41,6 +43,9 @@ class SelectContactsPage(BasePage):
         'local联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         '分享名片': (MobileBy.ID, 'com.chinasofti.rcs:id/send_tv'),
         '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
+        '右侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView'),
+        '左侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/index_text"]'),
+
         'X': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect'),
         '查看更多': (MobileBy.XPATH, '//*[@text ="查看更多"]')
     }
@@ -103,12 +108,6 @@ class SelectContactsPage(BasePage):
         """点击分享名片"""
         self.click_element(self.__locators['分享名片'])
 
-    @TestLogger.log()
-    def click_x_icon(self):
-        """点击 X"""
-        self.click_element(self.__class__.__locators["X"])
-
-
     @TestLogger.log('搜索或输入手机号')
     def input_search_keyword(self, keyword):
         """输入搜索内容"""
@@ -118,7 +117,6 @@ class SelectContactsPage(BasePage):
     def click_search_keyword(self):
         """点击搜索或输入手机号"""
         self.click_element(self.__class__.__locators["搜索或输入手机号"])
-
 
     @TestLogger.log('点击联系人')
     def click_contact(self, name):
@@ -154,8 +152,8 @@ class SelectContactsPage(BasePage):
     @TestLogger.log()
     def click_one_local_contacts(self):
         """点击一个本地联系人"""
-        els=self.get_elements(self.__class__.__locators["local联系人"])
-        contactnames=[]
+        els = self.get_elements(self.__class__.__locators["local联系人"])
+        contactnames = []
         if els:
             for el in els:
                 contactnames.append(el.text)
@@ -186,7 +184,7 @@ class SelectContactsPage(BasePage):
         return self
 
     @TestLogger.log()
-    def catch_message_in_page(self,text):
+    def catch_message_in_page(self, text):
         return self.is_toast_exist(text)
 
     @TestLogger.log()
@@ -209,7 +207,7 @@ class SelectContactsPage(BasePage):
         self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
 
     @TestLogger.log()
-    def click_one_contact(self,contactName):
+    def click_one_contact(self, contactName):
         """选择特定联系人"""
         el = self.find_element_by_swipe((MobileBy.XPATH, '//*[@text="%s"]' % contactName))
         if el:
@@ -228,4 +226,37 @@ class SelectContactsPage(BasePage):
             pass
         return self
 
+    @TestLogger.log('检验搜索名称')
+    def get_element_text_net_name(self, locator):
+        text = self.get_text(self.__locators["搜索或输入手机号"])
+        text = text+"(未知号码)"
+        return self.element_should_contain_text(self.__locators[locator], text)
+
+    @TestLogger.log('检验搜索号码')
+    def get_element_text_net_number(self, locator):
+        text = self.get_text(self.__locators["搜索或输入手机号"])
+        text = "tel: +86"+text
+        return self.element_should_contain_text(self.__locators[locator], text)
+
+    @TestLogger.log('获取元素文本内容')
+    def get_element_texts(self, locator):
+        text = self.get_text(self.__locators["搜索或输入手机号"])
+        locator = self.get_text(self.__locators[locator])
+        if text.startswith("+86"):
+            text = text[3:]
+        if text.startswith("+852"):
+            text = text[4:]
+        if text.startswith("+"):
+            text = text[1:]
+        if text in locator:
+            return True
+        return False
+
+    @TestLogger.log('判断该页面是否有元素')
+    def page_contain_element(self, locator):
+        return self.page_should_contain_element(self.__locators[locator])
+
+    @TestLogger.log('点击最近聊天')
+    def click_search_he_contact(self):
+        self.click_element(self.__locators["最近聊天"])
 

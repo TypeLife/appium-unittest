@@ -61,7 +61,10 @@ class BaseChatPage(BasePage):
                   "是否重发该条信息": (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_message'),
                   "确定重发": (MobileBy.XPATH, '//*[@text="确定"]'),
                   "取消重发": (MobileBy.XPATH, '//*[@text="取消"]'),
-                  "发送失败icon": (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed')
+                  "发送失败icon": (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
+                  # 消息文件
+                  "文件名": (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_name'),
+                  "文件大小": (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_size'),
                   }
 
     @TestLogger.log()
@@ -205,6 +208,11 @@ class BaseChatPage(BasePage):
         self.click_element(self.__class__.__locators["选择相机"])
 
     @TestLogger.log()
+    def click_name_card(self):
+        """点击选择名片"""
+        self.click_element(self.__class__.__locators["选择名片"])
+
+    @TestLogger.log()
     def click_gif(self):
         """点击选择gif"""
         self.click_element(self.__class__.__locators["选择gif"])
@@ -237,6 +245,26 @@ class BaseChatPage(BasePage):
         return el.text
 
     @TestLogger.log()
+    def get_name_card(self):
+        """获取个人卡名信息"""
+        el = self.get_element([MobileBy.ID, 'com.chinasofti.rcs:id/tv_card_name'])
+        return el.text
+
+    @TestLogger.log()
+    def get_file_info(self, locator):
+        """获最近一次发送文件信息"""
+        el = self.get_elements(self.__class__.__locators[locator])
+        el = el[-1]
+        return el.text
+
+    @TestLogger.log()
+    def get_location(self):
+        """获最近一次发送位置信息"""
+        el = self.get_elements(self.__class__.__locators["深圳市龙岗区交叉口"])
+        el = el[-1]
+        return el.text
+
+    @TestLogger.log()
     def send_message(self):
         """发送聊天信息"""
         self.click_element(self.__class__.__locators["发送按钮"])
@@ -251,6 +279,11 @@ class BaseChatPage(BasePage):
     def page_should_contain_send_btn(self):
         """发送按钮检查"""
         self.page_should_contain_element(self.__locators["发送按钮"])
+
+    @TestLogger.log()
+    def click_send_btn(self):
+        """点击发送按钮"""
+        self.click_element(self.__locators["发送按钮"])
 
     @TestLogger.log()
     def click_audio_btn(self):

@@ -73,7 +73,7 @@ class ChatSelectLocalFilePage(BasePage):
         self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
 
     @TestLogger.log()
-    def find_element_by_swipe(self, locator, times=10):
+    def find_element_by_swipe(self, locator, times=15):
         """找不到元素就滑动"""
         if self._is_element_present(locator):
             return self.get_element(locator)

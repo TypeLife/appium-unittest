@@ -123,6 +123,7 @@ class Preconditions(object):
         # 进入一键登录页
         Preconditions.make_already_in_message_page(reset=False)
         mess.open_me_page()
+        time.sleep(1)
 
     @staticmethod
     def make_already_in_me_save_part_page():
@@ -236,6 +237,7 @@ class MeAll(TestCase):
         """我页面跳转验证"""
         # 1.检验是否跳转到我页面
         mep = MePage()
+        mep.wait_for_head_load()
         self.assertEquals(mep.is_on_this_page(), True)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
@@ -245,6 +247,7 @@ class MeAll(TestCase):
         Preconditions.make_already_in_me_save_part_name_page()
         # 1.检验是否跳转到我页面
         mep = MePage()
+        mep.wait_for_head_load()
         self.assertEquals(mep.is_on_this_page(), True)
         time.sleep(2.8)
         # 2.检查页面包含姓名，电话号码，查看并编辑人资料入口，个人头像，我的二维码入口,多方电话可用时长入口,和包支付,移动营业厅,福利
@@ -1274,35 +1277,36 @@ class MeAll(TestCase):
         mep = MePage()
         mep.is_on_this_page()
         # 1.点击和包支付
-        mep.click_element(["id", 'com.chinasofti.rcs:id/repager_text'])
-        time.sleep(2)
-        mep.click_element(["id", 'com.chinasofti.rcs:id/tv_flow_unit'])
-        time.sleep(2)
-        mep.click_element(["id", 'com.chinasofti.rcs:id/id_goto_charge_redpaper'])
-        time.sleep(1)
+        mep.click_element(["id", 'com.chinasofti.rcs:id/repager_text'], 15)
+        mep.click_element(["id", 'com.chinasofti.rcs:id/tv_flow_unit'], 25)
+        mep.click_element(["id", 'com.chinasofti.rcs:id/id_goto_charge_redpaper'], 15)
+        time.sleep(3)
         mep.is_text_present("可用流量不足100M,暂不能充到手机")
-        mep.click_element([MobileBy.XPATH, '//*[@text = "知道了"]'])
-        mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'])
-        mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'])
-        mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'])
+        mep.click_element([MobileBy.XPATH, '//*[@text = "知道了"]'], 15)
+        mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'], 15)
+        mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'], 15)
+        mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'], 15)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
     def test_me_all_page_108(self):
         """网络异常时进入流量页面"""
         # 0.检验是否跳转到我页面
-        # 0.检验是否跳转到我页面
         mep = MePage()
         mep.is_on_this_page()
         # 1.点击和包支付
-        mep.click_element(["id", 'com.chinasofti.rcs:id/repager_text'])
+        mep.click_element(["id", 'com.chinasofti.rcs:id/repager_text'], 15)
         time.sleep(1)
         # 2.断掉网络,点击流量
         mep.set_network_status(0)
-        mep.click_element(["id", 'com.chinasofti.rcs:id/tv_flow_unit'])
+        mep.click_element(["id", 'com.chinasofti.rcs:id/tv_flow_unit'], 15)
         mep.is_toast_exist("当前网络不可用，请检查网络设置")
         mep.set_network_status(6)
-        mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'])
-        mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'])
+        mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back', 15])
+        mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back', 15])
+
+    def tearDown_test_me_all_page_108(self):
+        mep = MePage()
+        mep.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
     def test_me_all_page_111(self):
@@ -1311,14 +1315,13 @@ class MeAll(TestCase):
         mep = MePage()
         mep.is_on_this_page()
         # 1.点击和包支付
-        mep.click_element(["id", 'com.chinasofti.rcs:id/repager_text'])
+        mep.click_element(["id", 'com.chinasofti.rcs:id/repager_text', 15])
         time.sleep(1)
         # 3.点击银行卡
-        mep.click_element([MobileBy.XPATH, '//*[@text="银行卡"]'])
-        time.sleep(4.5)
+        mep.click_element([MobileBy.XPATH, '//*[@text="银行卡"]'], 15)
         mep.element_should_be_enabled(["id", 'com.chinasofti.rcs:id/ipos_condition_addcard'])
-        mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_condition_return'])
-        mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'])
+        mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_condition_return', 15])
+        mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back', 15])
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
     def test_me_all_page_112(self):
@@ -1327,36 +1330,36 @@ class MeAll(TestCase):
         mep = MePage()
         mep.is_on_this_page()
         # 1.点击和包支付
-        mep.click_element(["id", 'com.chinasofti.rcs:id/repager_text'])
+        mep.click_element(["id", 'com.chinasofti.rcs:id/repager_text'], 15)
         time.sleep(1)
         # 3.点击银行卡
-        mep.click_element([MobileBy.XPATH, '//*[@text = "银行卡"]'])
+        mep.click_element([MobileBy.XPATH, '//*[@text = "银行卡"]'], 15)
         time.sleep(4.5)
         mep.element_should_be_enabled(["id", 'com.chinasofti.rcs:id/ipos_condition_addcard'])
-        mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_condition_addcard'])
+        mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_condition_addcard'], 15)
         time.sleep(2.5)
         self.assertEquals(mep.is_text_present("银行卡信息"), True)
         mep.input_text(["id", 'com.chinasofti.rcs:id/ipos_addbankcard_cardnoEdit'], "1231231231231")
         self.assertEquals(mep._is_enabled([MobileBy.XPATH, '//*[@text = "下一步"]']), False)
         # 4.点击返回
-        mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_addKjbankcard_return'])
-        mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_condition_return'])
-        mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'])
+        mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_addKjbankcard_return'], 15)
+        mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_condition_return'], 15)
+        mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'], 15)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
     def test_me_all_page_113(self):
-        """银行卡页面填写0-14位银行卡号"""
+        """银行卡页面填写15-19位无效的银行卡号"""
         # 0.检验是否跳转到我页面
         mep = MePage()
         mep.is_on_this_page()
         # 1.点击和包支付
-        mep.click_element(["id", 'com.chinasofti.rcs:id/repager_text'])
+        mep.click_element(["id", 'com.chinasofti.rcs:id/repager_text'], 15)
         time.sleep(1)
         # 3.点击银行卡
-        mep.click_element([MobileBy.XPATH, '//*[@text = "银行卡"]'])
+        mep.click_element([MobileBy.XPATH, '//*[@text = "银行卡"]'], 15)
         time.sleep(4.5)
         mep.element_should_be_enabled(["id", 'com.chinasofti.rcs:id/ipos_condition_addcard'])
-        mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_condition_addcard'])
+        mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_condition_addcard'], 15)
         time.sleep(2.5)
         self.assertEquals(mep.is_text_present("银行卡信息"), True)
         # 4.填写15至19位无效的银行卡号
@@ -1367,40 +1370,9 @@ class MeAll(TestCase):
         time.sleep(1.8)
         self.assertEquals(mep.is_text_exist("该银行系统升级中，请选择其他银行支付"), True)
         # 6.点击确认
-        mep.click_element([MobileBy.XPATH, '//*[@text = "确认"]'])
+        mep.click_element([MobileBy.XPATH, '//*[@text = "确认"]'], 15)
         self.assertEquals(mep.is_text_present("银行卡信息"), True)
         # 7.点击返回
-        mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_addKjbankcard_return'])
-        mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_condition_return'])
-        mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'])
-
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
-    def test_me_all_page_406(self):
-        """收藏内容来自于个人私聊的展示"""
-        # 0.检验是否跳转到我页面
-        mep = MePage()
-        mep.is_on_this_page()
-        # 1.点击和包支付
-        mep.click_element(["id", 'com.chinasofti.rcs:id/repager_text'])
-        time.sleep(1)
-        # 3.点击银行卡
-        mep.click_element([MobileBy.XPATH, '//*[@text = "银行卡"]'])
-        time.sleep(4.5)
-        mep.element_should_be_enabled(["id", 'com.chinasofti.rcs:id/ipos_condition_addcard'])
-        mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_condition_addcard'])
-        time.sleep(2.5)
-        self.assertEquals(mep.is_text_present("银行卡信息"), True)
-        # 4.填写15至19位无效的银行卡号
-        mep.input_text(["id", 'com.chinasofti.rcs:id/ipos_addbankcard_cardnoEdit'], "6231231231231123123")
-        self.assertEquals(mep._is_enabled([MobileBy.XPATH, '//*[@text = "下一步"]']), True)
-        # 5.点击下一步
-        mep.click_element([MobileBy.XPATH, '//*[@text = "下一步"]'])
-        time.sleep(1.8)
-        self.assertEquals(mep.is_text_exist("该银行系统升级中，请选择其他银行支付"), True)
-        # 6.点击确认
-        mep.click_element([MobileBy.XPATH, '//*[@text = "确认"]'])
-        self.assertEquals(mep.is_text_present("银行卡信息"), True)
-        # 7.点击返回
-        mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_addKjbankcard_return'])
-        mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_condition_return'])
-        mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'])
+        mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_addKjbankcard_return'], 15)
+        mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_condition_return'], 15)
+        mep.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
