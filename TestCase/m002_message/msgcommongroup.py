@@ -2403,7 +2403,7 @@ class MsgCommonGroupTest(TestCase):
             raise AssertionError("没有系统消息：你已退出群")
         gcsp.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
     def test_msg_common_group_0096(self):
         """1、点击输入框右边的表情按钮，是否可以展示表情页
         2、任意点击一个表情，被选中的表情是否存放输入框展示。"""
@@ -2426,7 +2426,7 @@ class MsgCommonGroupTest(TestCase):
         gcp.click_expression_page_close_button()
         gcp.hide_keyboard()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
     def test_msg_common_group_0097(self):
         """1、输入框中存在多个表情内容时，右边的发送按钮，是否高亮展示
             2、点击输入框右边的发送按钮，发送出去的表情消息展示是否正常"""
@@ -2476,7 +2476,7 @@ class MsgCommonGroupTest(TestCase):
                 except AssertionError as e:
                     raise e
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
     def test_msg_common_group_0098(self):
         """1、点击输入框右边的表情按钮，是否可以展示表情菜单
             2、连续点击多个表情，被选中的表情是否存放输入框展示。"""
@@ -2502,7 +2502,7 @@ class MsgCommonGroupTest(TestCase):
         gcp.click_expression_page_close_button()
         gcp.hide_keyboard()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
     def test_msg_common_group_0099(self):
         """1、点击选中的表情，存放到输入框中进行展示
             2、长按发送按钮，向上滑动，然后发送，发送出去的表情是否被放大展示"""
@@ -2557,7 +2557,7 @@ class MsgCommonGroupTest(TestCase):
                 except AssertionError as e:
                     raise e
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
     def test_msg_common_group_0100(self):
         """1、点击选中的表情，存放到输入框中进行展示
         2、长按发送按钮，向下滑动，然后发送，发送出去的表情是否被缩小展示"""
@@ -2755,21 +2755,30 @@ class MsgCommonGroupTest(TestCase):
         scp.click_back()
         gcp.click_multiple_selection_back()
 
-    # @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
-    @unittest.skip("不清晰先跳过")
-    def test_msg_common_group_0106(self):
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    def test_msg_common_group_0105(self):
         """1.消息会话框中长按消息体
             2.点击“多选”
             3.查看页面选中的消息体数量
             4.点击转发
-            5.任意选择一个对象
-            6.点击取消/弹框以外区域
-            7.点击确定
-            8.查看接收方会话窗口中的消息排列顺序"""
+            5.点击确定
+            6.点击取消/弹框以外区域"""
         gcp = GroupChatPage()
-        gcp.press_file_to_do("26", "多选")
+        gcp.press_file_to_do("16", "多选")
+        time.sleep(1)
         gcp.click_text("转发")
-        gcp.is_on_this_page
+        sc = SelectContactsPage()
+        sc.wait_for_page_local_contact_load()
+        sc.select_local_contacts()
+        # 选择“和飞信电话”联系人进行转发
+        sc.click_one_contact("和飞信电话")
+        sc.click_cancel_forward()
+        sc.click_back()
+        sc.click_back()
+        time.sleep(1)
+        gcp.click_multiple_selection_back()
+
+
 
 
 
