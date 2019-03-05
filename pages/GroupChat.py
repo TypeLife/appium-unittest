@@ -56,6 +56,11 @@ class GroupChatPage(BaseChatPage):
                   '表情': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_expression_image'),
                   '输入框': (MobileBy.ID, 'com.chinasofti.rcs:id/et_message'),
                   '关闭表情页': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression_keyboard'),
+                  '多选返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
+                  '多选计数': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_count'),
+                  '多选选择框': (MobileBy.ID, 'com.chinasofti.rcs:id/multi_check'),
+                  '多选删除': (MobileBy.ID, 'com.chinasofti.rcs:id/multi_btn_delete'),
+                  '多选转发': (MobileBy.ID, 'com.chinasofti.rcs:id/multi_btn_forward'),
                   }
 
     def is_exist_msg_videos(self):
