@@ -1,3 +1,5 @@
+import time
+
 from appium.webdriver.common.mobileby import MobileBy
 import re
 from library.core.BasePage import BasePage
@@ -283,7 +285,7 @@ class MeCollectionPage(BasePage):
         el = self.get_element(self.__class__.__locators[locator])
         rect = el.rect
         height = rect["height"]
-        if height > 70*n:
+        if height > 70 * n:
             return False
         return True
 
@@ -309,6 +311,13 @@ class MeCollectionPage(BasePage):
         return file_names
 
     @TestLogger.log()
-    def click_collection_file_name(self):
+    def click_collection_file_name(self, i=0):
         """点击收藏文件"""
-        self.click_element(self.__class__.__locators["文件名"])
+        els = self.get_elements(self.__class__.__locators["文件名"])
+        els[i].click()
+        time.sleep(1)
+
+    @TestLogger.log()
+    def click_collection_pic_video(self, text):
+        """点击收藏图片或者视频"""
+        self.click_element(self.__class__.__locators[text])
