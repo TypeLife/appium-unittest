@@ -56,6 +56,13 @@ class GroupChatPage(BaseChatPage):
                   '表情': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_expression_image'),
                   '输入框': (MobileBy.ID, 'com.chinasofti.rcs:id/et_message'),
                   '关闭表情页': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression_keyboard'),
+                  '多选返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'),
+                  '多选计数': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_count'),
+                  '多选选择框': (MobileBy.ID, 'com.chinasofti.rcs:id/multi_check'),
+                  '多选删除': (MobileBy.ID, 'com.chinasofti.rcs:id/multi_btn_delete'),
+                  '多选转发': (MobileBy.ID, 'com.chinasofti.rcs:id/multi_btn_forward'),
+                  '删除已选信息': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
+                  '取消删除已选信息': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
                   }
 
     def is_exist_msg_videos(self):
@@ -216,6 +223,7 @@ class GroupChatPage(BaseChatPage):
     def click_resend_confirm(self):
         """点击重发消息确定"""
         self.click_element(self.__class__.__locators["重发消息确定"])
+
     @TestLogger.log()
     def click_clean_video(self):
         """点击删除消息视频"""
@@ -281,7 +289,6 @@ class GroupChatPage(BaseChatPage):
         els = self.get_elements(self.__locators['表情'])
         return els
 
-
     @TestLogger.log()
     def get_input_box(self):
         """获取输入框"""
@@ -332,3 +339,18 @@ class GroupChatPage(BaseChatPage):
     def is_exist_multiple_selection_select_box(self):
         """是否存在多选选择框"""
         return self._is_element_present(self.__class__.__locators["多选选择框"])
+
+    @TestLogger.log()
+    def click_multiple_selection_delete(self):
+        """点击多选删除"""
+        self.click_element(self.__class__.__locators["多选删除"])
+
+    @TestLogger.log()
+    def click_multiple_selection_delete_cancel(self):
+        """点击取消删除已选信息"""
+        self.click_element(self.__class__.__locators["取消删除已选信息"])
+
+    @TestLogger.log()
+    def click_multiple_selection_delete_sure(self):
+        """点击确定删除已选信息"""
+        self.click_element(self.__class__.__locators["删除已选信息"])

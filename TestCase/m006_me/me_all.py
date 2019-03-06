@@ -247,6 +247,7 @@ class MeAll(TestCase):
         Preconditions.make_already_in_me_save_part_name_page()
         # 1.检验是否跳转到我页面
         mep = MePage()
+        time.sleep(3)
         mep.wait_for_head_load()
         self.assertEquals(mep.is_on_this_page(), True)
         time.sleep(2.8)
@@ -1270,6 +1271,7 @@ class MeAll(TestCase):
         # 3.点击返回
         qr_code.click_back()
 
+    @unittest.skip("和包支付的控件id需优化")
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
     def test_me_all_page_101(self):
         """和包支付—无流量时充到手机"""
@@ -1287,7 +1289,7 @@ class MeAll(TestCase):
         mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'], 15)
         mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'], 15)
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    @unittest.skip("和包支付的控件id需优化")
     def test_me_all_page_108(self):
         """网络异常时进入流量页面"""
         # 0.检验是否跳转到我页面
@@ -1308,7 +1310,7 @@ class MeAll(TestCase):
         mep = MePage()
         mep.set_network_status(6)
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    @unittest.skip("和包支付的控件id需优化")
     def test_me_all_page_111(self):
         """银行卡页面展示-未绑定任何银行卡"""
         # 0.检验是否跳转到我页面
@@ -1323,7 +1325,7 @@ class MeAll(TestCase):
         mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_condition_return', 15])
         mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back', 15])
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    @unittest.skip("和包支付的控件id需优化")
     def test_me_all_page_112(self):
         """银行卡页面填写0-14位银行卡号"""
         # 0.检验是否跳转到我页面
@@ -1346,7 +1348,7 @@ class MeAll(TestCase):
         mep.click_element(["id", 'com.chinasofti.rcs:id/ipos_condition_return'], 15)
         mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'], 15)
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    @unittest.skip("和包支付的控件id需优化")
     def test_me_all_page_113(self):
         """银行卡页面填写15-19位无效的银行卡号"""
         # 0.检验是否跳转到我页面

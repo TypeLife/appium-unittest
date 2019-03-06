@@ -577,8 +577,10 @@ class MsgGroupChatTest(TestCase):
         """在群聊聊天会话页面，发送GIF图片消息"""
         # 1.在当前聊天会话页面，点击输入框上方的GIF图标，进入到GIF图片展示页面
         gcp = GroupChatPage()
-        gcp.click_gif()
         gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        gcp.click_gif()
         gif.wait_for_page_load()
         # 2、在GIF图片展示页面，点击输入框右边的语音，是否可以切换到语音模式页面
         gcp.click_audio_btn()
@@ -594,7 +596,11 @@ class MsgGroupChatTest(TestCase):
         """在群聊聊天会话页面，点击输入框右上角的+号，展示隐藏图标按钮"""
         # 1.在当前聊天会话页面，点击输入框右上方的+号，是否会展示隐藏功能图标
         gcp = GroupChatPage()
-        gcp.click_more()
+        gif = ChatGIFPage()
+        if gif.is_gif_exist():
+            gif.close_gif()
+        if not gcp.is_open_more():
+            gcp.click_more()
         time.sleep(1)
         gcp.page_should_contain_text("文件")
         gcp.page_should_contain_text("群短信")
@@ -610,7 +616,8 @@ class MsgGroupChatTest(TestCase):
         for file_type in files:
             # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
             gcp = GroupChatPage()
-            gcp.click_more()
+            if not gcp.is_open_more():
+                gcp.click_more()
             # 2.点击展示的隐藏功能图标，文件图标，进入到文件选择页面
             more_page = ChatMorePage()
             more_page.click_file()
@@ -647,7 +654,8 @@ class MsgGroupChatTest(TestCase):
         """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，文件功能图标"""
         # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
         gcp = GroupChatPage()
-        gcp.click_more()
+        if not gcp.is_open_more():
+            gcp.click_more()
         # 2.点击展示的隐藏功能图标，文件图标，进入到文件选择页面
         more_page = ChatMorePage()
         more_page.click_file()
@@ -674,7 +682,8 @@ class MsgGroupChatTest(TestCase):
         """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，文件功能图标"""
         # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
         gcp = GroupChatPage()
-        gcp.click_more()
+        if not gcp.is_open_more():
+            gcp.click_more()
         # 2.点击展示的隐藏功能图标，文件图标，进入到文件选择页面
         more_page = ChatMorePage()
         more_page.click_file()
@@ -701,7 +710,8 @@ class MsgGroupChatTest(TestCase):
         """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，文件功能图标"""
         # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
         gcp = GroupChatPage()
-        gcp.click_more()
+        if not gcp.is_open_more():
+            gcp.click_more()
         # 2.点击展示的隐藏功能图标，文件图标，进入到文件选择页面
         more_page = ChatMorePage()
         more_page.click_file()
@@ -723,12 +733,13 @@ class MsgGroupChatTest(TestCase):
             gcp.wait_for_page_load()
             raise AssertionError("There is no music")
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG')
     def test_msg_group_chat_0043(self):
         """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，位置功能图标"""
         # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
         gcp = GroupChatPage()
-        gcp.click_more()
+        if not gcp.is_open_more():
+            gcp.click_more()
         # 2.点击展示的隐藏功能图标，位置功能图标，进入到位置详情展示页面
         more_page = ChatMorePage()
         more_page.click_location()
@@ -744,13 +755,13 @@ class MsgGroupChatTest(TestCase):
         gcp.wait_for_page_load()
         # gcp.wait_until(condition=lambda d: gcp.is_text_present(addr))
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG')
     def test_msg_group_chat_0044(self):
         """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，位置功能图标"""
         # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
         gcp = GroupChatPage()
         gcp.wait_for_page_load()
-        if not gcp.page_should_contain_text("位置"):
+        if not gcp.is_open_more():
             gcp.click_more()
         # 2.点击展示的隐藏功能图标，位置功能图标，进入到位置详情展示页面
         more_page = ChatMorePage()
