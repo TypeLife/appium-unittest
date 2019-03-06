@@ -65,6 +65,7 @@ class BaseChatPage(BasePage):
                   # 消息文件
                   "文件名": (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_name'),
                   "文件大小": (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_size'),
+                  '消息文本内容': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'),
                   }
 
     @TestLogger.log()
@@ -474,6 +475,18 @@ class BaseChatPage(BasePage):
         return self._is_element_present(self.__class__.__locators['消息图片'])
 
     @TestLogger.log()
+    def clear_msg(self):
+        """清除会话窗的消息"""
+        while True:
+            els = self.get_elements(self.__class__.__locators["消息文本内容"])
+            if not els:
+                break
+            for el in els:
+                self.press(el)
+                self.click_element(self.__class__.__locators["删除"])
+
+    @TestLogger.log()
     def click_cancel_repeat_msg(self):
         """点击 取消 重发消息"""
         self.click_element(self.__class__.__locators['取消重发'])
+
