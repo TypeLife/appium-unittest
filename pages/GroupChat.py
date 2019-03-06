@@ -354,3 +354,18 @@ class GroupChatPage(BaseChatPage):
     def click_multiple_selection_delete_sure(self):
         """点击确定删除已选信息"""
         self.click_element(self.__class__.__locators["删除已选信息"])
+
+    @TestLogger.log()
+    def click_multiple_selection_forward(self):
+        """点击多选转发"""
+        self.click_element(self.__class__.__locators["多选转发"])
+
+    @TestLogger.log()
+    def press_audio_to_do(self,text):
+        """长按语音消息体进行操作"""
+        els = self.get_elements(self.__class__.__locators["语音消息体"])
+        if els:
+            self.press(els[0])
+            self.click_element(self.__class__.__locators[text])
+        else:
+            raise AssertionError("没有找到语音消息体")

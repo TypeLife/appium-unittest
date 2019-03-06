@@ -472,3 +472,8 @@ class BaseChatPage(BasePage):
     def is_exist_pic_msg(self):
         """是否存在图片消息"""
         return self._is_element_present(self.__class__.__locators['消息图片'])
+
+    @TestLogger.log()
+    def click_cancel_repeat_msg(self):
+        """点击 取消 重发消息"""
+        self.click_element(self.__class__.__locators['取消重发'])

@@ -52,6 +52,7 @@ class MessagePage(FooterPage):
         '消息发送失败感叹号': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_fail_status'),
         '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
         '收藏': (MobileBy.XPATH, "//*[contains(@text, '收藏')]"),
+        '删除聊天': (MobileBy.XPATH, "//*[contains(@text, '删除聊天')]"),
     }
 
     @TestLogger.log('检查顶部搜索框是否显示')
