@@ -484,3 +484,9 @@ class BaseChatPage(BasePage):
             for el in els:
                 self.press(el)
                 self.click_element(self.__class__.__locators["删除"])
+
+    @TestLogger.log()
+    def click_cancel_repeat_msg(self):
+        """点击 取消 重发消息"""
+        self.click_element(self.__class__.__locators['取消重发'])
+

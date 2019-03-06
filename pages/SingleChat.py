@@ -40,6 +40,7 @@ class SingleChatPage(BaseChatPage):
                   'hello': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'),
                   'com.chinasofti.rcs:id/svd_head': (MobileBy.ID, 'com.chinasofti.rcs:id/svd_head'),
                   '选择短信': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
+                  '语音消息体': (MobileBy.ID, 'com.chinasofti.rcs:id/img_audio_play_icon'),
                   }
 
     @TestLogger.log()
@@ -78,3 +79,8 @@ class SingleChatPage(BaseChatPage):
     def click_setting(self):
         """点击 设置"""
         self.click_element(self.__class__.__locators['设置'])
+
+    @TestLogger.log()
+    def is_audio_exist(self):
+        """是否存在语音消息"""
+        return self._is_element_present(self.__class__.__locators['语音消息体'])
