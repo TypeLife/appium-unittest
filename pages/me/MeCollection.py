@@ -1,3 +1,5 @@
+import time
+
 from appium.webdriver.common.mobileby import MobileBy
 import re
 from library.core.BasePage import BasePage
@@ -271,18 +273,51 @@ class MeCollectionPage(BasePage):
         return self.element_should_contain_text(self.__locators[locator], expected, message)
 
     @TestLogger.log()
-    def get_video_len(self, locator):
+    def get_video_len(self, locator, index=0):
         """获取该元素文本信息"""
         el = self.get_elements(self.__class__.__locators[locator])
-        el = el[0]
+        el = el[index]
         return el.text
 
     @TestLogger.log()
-    def get_width_of_collection_of_text(self):
-        """获取收藏内容框的大小不超过三行"""
-        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/favorite_tv'))
+    def get_width_of_collection(self, locator, n):
+        """获取收藏的大小不超过多少行"""
+        el = self.get_element(self.__class__.__locators[locator])
         rect = el.rect
         height = rect["height"]
-        if height > 177:
+        if height > 70 * n:
             return False
         return True
+
+    def get_all_collection(self):
+        """获取所有收藏的内容"""
+        els = self.get_elements(self.__class__.__locators["收藏消息体"])
+        file_names = []
+        if els:
+            for el in els:
+                file_names.append(el.text)
+        else:
+            return None
+        flag = True
+        while flag:
+            self.page_up()
+            els = self.get_elements(self.__class__.__locators["收藏消息体"])
+            for el in els:
+                if el.text not in file_names:
+                    file_names.append(el.text)
+                    flag = True
+                else:
+                    flag = False
+        return file_names
+
+    @TestLogger.log()
+    def click_collection_file_name(self, i=0):
+        """点击收藏文件"""
+        els = self.get_elements(self.__class__.__locators["文件名"])
+        els[i].click()
+        time.sleep(1)
+
+    @TestLogger.log()
+    def click_collection_pic_video(self, text):
+        """点击收藏图片或者视频"""
+        self.click_element(self.__class__.__locators[text])

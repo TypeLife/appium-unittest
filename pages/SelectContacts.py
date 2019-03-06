@@ -1,5 +1,6 @@
 from appium.webdriver.common.mobileby import MobileBy
-
+import copy
+import re
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
@@ -43,6 +44,9 @@ class SelectContactsPage(BasePage):
         'local联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         '分享名片': (MobileBy.ID, 'com.chinasofti.rcs:id/send_tv'),
         '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
+        '右侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView'),
+        '左侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/index_text"]'),
+
     }
 
     @TestLogger.log()
@@ -255,3 +259,44 @@ class SelectContactsPage(BasePage):
     def click_search_he_contact(self):
         self.click_element(self.__locators["最近聊天"])
 
+    @TestLogger.log()
+    def wait_for_create_msg_page_load(self, timeout=8, auto_accept_alerts=True):
+        """等待 '消息页面 点击+ ->新建消息->选择联系人页面' 加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["选择联系人"])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(message)
+
+    @TestLogger.log()
+    def is_left_letters_sorted(self):
+        """左侧字母是否顺序排序"""
+        els = self.get_elements(self.__locators['左侧字母索引'])
+        letters = []
+        for el in els:
+            letters.append(el.text)
+        # 过滤特殊字符
+        for item in letters:
+            if not re.match(r'[A-Za-z]', item):
+                letters.remove(item)
+        arrs = copy.deepcopy(letters)
+        letters = sorted(letters)
+        return arrs == letters
+
+    @TestLogger.log()
+    def is_right_letters_sorted(self):
+        """右侧字母是否顺序排序"""
+        els = self.get_elements(self.__locators['右侧字母索引'])
+        letters = []
+        for el in els:
+            letters.append(el.text)
+        for item in letters:
+            if not re.match(r'[A-Za-z]', item):
+                letters.remove(item)
+        arrs = copy.deepcopy(letters)
+        letters = sorted(letters)
+        return arrs == letters

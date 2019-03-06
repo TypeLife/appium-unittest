@@ -61,7 +61,10 @@ class BaseChatPage(BasePage):
                   "是否重发该条信息": (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_message'),
                   "确定重发": (MobileBy.XPATH, '//*[@text="确定"]'),
                   "取消重发": (MobileBy.XPATH, '//*[@text="取消"]'),
-                  "发送失败icon": (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed')
+                  "发送失败icon": (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
+                  # 消息文件
+                  "文件名": (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_name'),
+                  "文件大小": (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_size'),
                   }
 
     @TestLogger.log()
@@ -245,6 +248,13 @@ class BaseChatPage(BasePage):
     def get_name_card(self):
         """获取个人卡名信息"""
         el = self.get_element([MobileBy.ID, 'com.chinasofti.rcs:id/tv_card_name'])
+        return el.text
+
+    @TestLogger.log()
+    def get_file_info(self, locator):
+        """获最近一次发送文件信息"""
+        el = self.get_elements(self.__class__.__locators[locator])
+        el = el[-1]
         return el.text
 
     @TestLogger.log()
@@ -462,3 +472,8 @@ class BaseChatPage(BasePage):
     def is_exist_pic_msg(self):
         """是否存在图片消息"""
         return self._is_element_present(self.__class__.__locators['消息图片'])
+
+    @TestLogger.log()
+    def click_cancel_repeat_msg(self):
+        """点击 取消 重发消息"""
+        self.click_element(self.__class__.__locators['取消重发'])

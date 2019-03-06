@@ -52,6 +52,7 @@ class MessagePage(FooterPage):
         '消息发送失败感叹号': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_fail_status'),
         '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
         '收藏': (MobileBy.XPATH, "//*[contains(@text, '收藏')]"),
+        '删除聊天': (MobileBy.XPATH, "//*[contains(@text, '删除聊天')]"),
     }
 
     @TestLogger.log('检查顶部搜索框是否显示')
@@ -393,3 +394,8 @@ class MessagePage(FooterPage):
     def look_detail_news_by_name(self, name):
         """查看详细消息"""
         self.click_element((MobileBy.XPATH, "//*[@text='%s']" % name))
+
+    @TestLogger.log()
+    def click_msg_by_content(self, text):
+        """点击消息"""
+        self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_content" and @text="%s"]' % text))

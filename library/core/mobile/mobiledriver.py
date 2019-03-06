@@ -1280,9 +1280,12 @@ class MobileDriver(ABC):
             if not package:
                 package = self._desired_caps['appPackage']
             result = self.execute_shell_command('pm', 'dump', package, '|', 'grep', '"versionName"')
-            name, value = result.strip().split('=')
-            del name
-            return value
+            try:
+                name, value = result.strip().split('=')
+                del name
+                return value
+            except:
+                return '未知版本'
         else:
             # TODO IOS平台待实现
             raise NotImplementedError('该接口目前只支持Android')
