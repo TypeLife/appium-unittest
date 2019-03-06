@@ -315,7 +315,7 @@ class MeCollectionPage(BasePage):
         """点击收藏文件"""
         els = self.get_elements(self.__class__.__locators["文件名"])
         els[i].click()
-        time.sleep(1)
+        time.sleep(3)
 
     @TestLogger.log()
     def click_collection_pic_video(self, text):

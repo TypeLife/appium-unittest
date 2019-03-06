@@ -402,7 +402,7 @@ class Preconditions(object):
                 mcp.click_delete_collection()
                 mcp.click_sure_forward()
                 # 4.点击返回
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
 
@@ -440,7 +440,7 @@ class MeAllCollect(TestCase):
         mcp = MeCollectionPage()
         mcp.wait_for_page_load()
         mcp.element_contain_text("我", "我")
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_406(self):
@@ -936,7 +936,7 @@ class MeAllCollect(TestCase):
         )
         mcp.page_should_contain_element(["id", 'com.chinasofti.rcs:id/sv_video'])
         # 4.点击返回
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         mep.open_message_page()
 
@@ -944,7 +944,7 @@ class MeAllCollect(TestCase):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_429(self):
         """在收藏列表中打开音频文件"""
         Preconditions.make_already_set_chart_group_file(".mp3")
@@ -975,7 +975,7 @@ class MeAllCollect(TestCase):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_430(self):
         """查看收藏内容为图片的展示"""
         Preconditions.make_already_set_chart_group_video(pic_video="pic")
@@ -1004,7 +1004,7 @@ class MeAllCollect(TestCase):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_431(self):
         """在收藏列表中打开文本文件"""
         Preconditions.make_already_set_chart_group_file(".txt")
@@ -1022,7 +1022,10 @@ class MeAllCollect(TestCase):
         file_names = mcp.get_all_file_names()
         # 3.点击收藏的按钮,文本文件可以显示
         for i in range(len(file_names)):
-            mcp.click_collection_file_name(i=i)
+            try:
+                mcp.click_collection_file_name(i=i)
+            except Exception:
+                mcp.click_collection_file_name(i=i)
             mcp.wait_until(
                 condition=lambda d: current_mobile()._is_enabled(['id', 'com.chinasofti.rcs:id/title'])
             )
@@ -1036,7 +1039,7 @@ class MeAllCollect(TestCase):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_432(self):
         """在收藏列表中打开文本文件"""
         Preconditions.make_already_set_chart_group_file(".ppt")
@@ -1052,9 +1055,12 @@ class MeAllCollect(TestCase):
         mcp = MeCollectionPage()
         mcp.wait_for_page_load()
         file_names = mcp.get_all_file_names()
-        # 3.点击收藏的按钮,文本文件可以显示
+        # 3.点击收藏的按钮(尝试两次),文本文件可以显示
         for i in range(len(file_names)):
-            mcp.click_collection_file_name(i=i)
+            try:
+                mcp.click_collection_file_name(i=i)
+            except Exception:
+                mcp.click_collection_file_name(i=i)
             mcp.wait_until(
                 condition=lambda d: current_mobile()._is_enabled(['id', 'com.chinasofti.rcs:id/title'])
             )
@@ -1086,14 +1092,17 @@ class MeAllCollect(TestCase):
         file_names = mcp.get_all_file_names()
         # 3.点击收藏的按钮,文本文件可以显示
         for i in range(len(file_names)):
-            mcp.click_collection_file_name(i=i)
+            try:
+                mcp.click_collection_file_name(i=i)
+            except Exception:
+                mcp.click_collection_file_name(i=i)
             mcp.wait_until(
                 condition=lambda d: current_mobile()._is_enabled(['id', 'com.chinasofti.rcs:id/title'])
             )
             file_name = file_names[i]
             mcp.page_should_contain_text(file_name)
             mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_433(self):
@@ -1123,10 +1132,38 @@ class MeAllCollect(TestCase):
         )
         mcp.page_should_contain_text(file_name)
         # 4.点击返回
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_434(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_437(self):
+        """打开收藏的位置信息"""
+        Preconditions.make_already_set_chart_group_location()
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的收藏,进入收藏页面
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        # 3.点击收藏的按钮,文本文件可以显示
+        mcp.open_location()
+    #     mcp.wait_until(
+    #         condition=lambda d: current_mobile()._is_enabled(['id', 'com.chinasofti.rcs:id/title'])
+    #     )
+    #     # 4.点击返回
+    #     mep.click_back()
+    #     mep.click_back()
+    #     mep.open_message_page()
+    #
+    # def tearDown_test_me_all_page_437(self):
+    #     Preconditions.make_already_in_me_all_page()
+    #     Preconditions.delete_all_my_collection()
