@@ -194,3 +194,58 @@ class MsgPrivateChatMsgList(TestCase):
     def tearDown_test_Msg_PrivateChat_MsgList_0010():
         """恢复网络连接"""
         current_mobile().set_network_status(6)
+
+    @staticmethod
+    def setUp_test_Msg_PrivateChat_MsgList_0012():
+        """消息列表点击消息记录前，先发送一条消息"""
+        Preconditions.enter_private_chat_page()
+        chat = SingleChatPage()
+        chat.input_message("hello")
+        chat.send_message()
+        chat.click_back()
+        ContactDetailsPage().click_back()
+        mess = MessagePage()
+        mess.open_message_page()
+        mess.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_MsgList_0012(self):
+        """消息-消息列表-消息列表显示未发送成功"""
+        # 1、 在会话页面输入文本消息
+        mess = MessagePage()
+        mess.click_msg_by_content("hello")
+        chat = SingleChatPage()
+        chat.wait_for_page_load()
+        # 断网
+        current_mobile().set_network_status(0)
+        chat.input_message("MsgList_0012")
+        # 2、点击发送
+        chat.send_message()
+        if not chat.is_msg_send_fail():
+            raise AssertionError("断网发送消息，在聊天会话窗无发送失败标志")
+        # 3、点击返回消息列表
+        chat.click_back()
+        mess.wait_for_page_load()
+        if not mess.is_iv_fail_status_present():
+            raise AssertionError("断网发送消息，在消息列表无发送失败标志")
+        mess.click_msg_by_content("MsgList_0012")
+        # 恢复网络重发消息
+        current_mobile().set_network_status(6)
+        chat.repeat_send_msg()
+        chat.click_sure_repeat_msg()
+        chat.click_back()
+        mess.wait_for_page_load()
+        if mess.is_iv_fail_status_present():
+            raise AssertionError("恢复网络重发消息，在消息列表依然存在发送失败标志")
+
+    @staticmethod
+    def tearDown_test_Msg_PrivateChat_MsgList_0012():
+        """恢复网络连接"""
+        current_mobile().set_network_status(6)
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_MsgList_0013(self):
+        """消息-消息列表-消息列表中文本消息预览"""
+        # 1、查看消息列表中一对一文本消息记录
+        mess = MessagePage()
+
