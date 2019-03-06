@@ -16,6 +16,15 @@ class Preconditions(LoginPreconditions):
         # 登录进入消息页面
         Preconditions.make_already_in_message_page(reset)
 
+    @staticmethod
+    def enter_private_chat_setting_page(reset=False):
+        """进入单聊设置页面"""
+        Preconditions.enter_private_chat_page(reset)
+        chat = SingleChatPage()
+        chat.click_setting()
+        setting = SingleChatSetPage()
+        setting.wait_for_page_load()
+
 
 class MsgPrivateChatMsgList(TestCase):
     """
@@ -194,3 +203,141 @@ class MsgPrivateChatMsgList(TestCase):
     def tearDown_test_Msg_PrivateChat_MsgList_0010():
         """恢复网络连接"""
         current_mobile().set_network_status(6)
+
+    @staticmethod
+    def setUp_test_Msg_PrivateChat_MsgList_0012():
+        """消息列表点击消息记录前，先发送一条消息"""
+        Preconditions.enter_private_chat_page()
+        chat = SingleChatPage()
+        chat.wait_for_page_load()
+        chat.clear_msg()
+        chat.input_message("hello")
+        chat.send_message()
+        chat.click_back()
+        ContactDetailsPage().click_back()
+        mess = MessagePage()
+        mess.open_message_page()
+        mess.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_MsgList_0012(self):
+        """消息-消息列表-消息列表显示未发送成功"""
+        # 1、 在会话页面输入文本消息
+        mess = MessagePage()
+        mess.click_msg_by_content("hello")
+        chat = SingleChatPage()
+        chat.wait_for_page_load()
+        # 断网
+        current_mobile().set_network_status(0)
+        chat.input_message("MsgList_0012")
+        # 2、点击发送
+        chat.send_message()
+        if not chat.is_msg_send_fail():
+            raise AssertionError("断网发送消息，在聊天会话窗无发送失败标志")
+        # 3、点击返回消息列表
+        chat.click_back()
+        mess.wait_for_page_load()
+        if not mess.is_iv_fail_status_present():
+            raise AssertionError("断网发送消息，在消息列表无发送失败标志")
+        mess.click_msg_by_content("MsgList_0012")
+        # 恢复网络重发消息
+        current_mobile().set_network_status(6)
+        chat.repeat_send_msg()
+        chat.click_sure_repeat_msg()
+        chat.click_back()
+        mess.wait_for_page_load()
+        if mess.is_iv_fail_status_present():
+            raise AssertionError("恢复网络重发消息，在消息列表依然存在发送失败标志")
+
+    @staticmethod
+    def tearDown_test_Msg_PrivateChat_MsgList_0012():
+        """恢复网络连接"""
+        current_mobile().set_network_status(6)
+
+    @staticmethod
+    def setUp_test_Msg_PrivateChat_MsgList_0013():
+        """消息列表点击消息记录前，先发送一条消息"""
+        Preconditions.enter_private_chat_page()
+        chat = SingleChatPage()
+        msg = "哈哈" * 30
+        chat.input_message(msg)
+        chat.send_message()
+        chat.click_back()
+        ContactDetailsPage().click_back()
+        mess = MessagePage()
+        mess.open_message_page()
+        mess.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_MsgList_0013(self):
+        """消息-消息列表-消息列表中文本消息预览"""
+        # 1、查看消息列表中一对一文本消息记录
+        mess = MessagePage()
+        # 消息记录左面显示头像，右侧显示时间，中间上方显示发送消息人的名称，
+        mess.page_contain_element('消息头像')
+        mess.page_contain_element('消息时间')
+        mess.page_contain_element('消息名称')
+        # 下方显示文本内容，文本过长时以省略号显示
+        mess.page_contain_element('消息简要内容')
+        mess.msg_is_contain_ellipsis()
+
+
+class MsgPrivateChatMsgSetting(TestCase):
+    """
+    模块：单聊->单聊设置
+    文件位置：全量/10.整理全量测试用例---黄彩最.xlsx
+    表格：单聊
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        pass
+
+    def default_setUp(self):
+        """确保每个用例运行前在单聊设置页面"""
+        Preconditions.select_mobile('Android-移动')
+        setting = SingleChatSetPage()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_private_chat_setting_page()
+        if setting.is_on_this_page():
+            return
+        else:
+            current_mobile().reset_app()
+            Preconditions.enter_private_chat_setting_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_Setting_0001(self):
+        """消息—一对一消息会话—设置"""
+        setting = SingleChatSetPage()
+        setting.click_back()
+        chat = SingleChatPage()
+        # 1.点击右上角的设置按钮,进入聊天设置页面
+        chat.click_setting()
+        setting.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_Setting_0002(self):
+        """消息—一对一消息会话—设置页面头像转跳"""
+        # 1. 点击联系人头像,进入到联系人详情页。
+        setting = SingleChatSetPage()
+        setting.click_avatar()
+        detail = ContactDetailsPage()
+        detail.wait_for_page_load()
+        # 回到设置页面
+        detail.click_message_icon()
+        chat = SingleChatPage()
+        chat.click_setting()
+        setting.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_Msg_PrivateChat_Setting_0007(self):
+        """消息-一对一消息会话-设置页面查找聊天内容"""
+        # 1. 点击下方的查找聊天内容按钮, 跳到搜索页面
+        setting = SingleChatSetPage()
+        setting.search_chat_record()
+        fcrp = FindChatRecordPage()
+        fcrp.wait_for_page_load()
+        fcrp.click_back()
+        setting.wait_for_page_load()
+

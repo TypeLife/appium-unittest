@@ -249,7 +249,7 @@ class Preconditions(object):
         scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
 
     @staticmethod
-    def make_already_set_chart_group_video():
+    def make_already_set_chart_group_video(pic_video="video"):
         """确保群聊已经发送一条视频，且已收藏"""
         Preconditions.enter_group_chat_page()
         # 1.点击新建消息
@@ -260,11 +260,17 @@ class Preconditions(object):
         cpg = ChatPicPage()
         cpg.wait_for_page_load()
         time.sleep(2)
-        cpg.select_video_fk()
-        cpg.click_send()
-        time.sleep(3)
+        if pic_video == "video":
+            cpg.select_video_fk()
+            cpg.click_send()
+            time.sleep(3)
+            scp.press_video()
+        if pic_video == "pic":
+            cpg.select_pic_fk()
+            cpg.click_send()
+            time.sleep(3)
+            scp.press_pic()
         # 3.点击该信息收藏
-        scp.press_video()
         scp.click_collection()
         if not scp.is_toast_exist("已收藏"):
             raise AssertionError("没有此弹框")
@@ -396,7 +402,7 @@ class Preconditions(object):
                 mcp.click_delete_collection()
                 mcp.click_sure_forward()
                 # 4.点击返回
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
 
@@ -434,7 +440,7 @@ class MeAllCollect(TestCase):
         mcp = MeCollectionPage()
         mcp.wait_for_page_load()
         mcp.element_contain_text("我", "我")
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_406(self):
@@ -910,6 +916,35 @@ class MeAllCollect(TestCase):
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_428(self):
+        """查看收藏内容为短视频的展示"""
+        Preconditions.make_already_set_chart_group_video()
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击我的收藏,进入收藏页面
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        # 3.点击该收藏内容
+        mcp.click_collection_pic_video("收藏的视频")
+        mcp.wait_until(
+            condition=lambda d: current_mobile()._is_enabled(['id', 'com.chinasofti.rcs:id/favorite_title'])
+        )
+        mcp.page_should_contain_element(["id", 'com.chinasofti.rcs:id/sv_video'])
+        # 4.点击返回
+        mep.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.open_message_page()
+
+    def tearDown_test_me_all_page_428(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_429(self):
         """在收藏列表中打开音频文件"""
         Preconditions.make_already_set_chart_group_file(".mp3")
@@ -941,9 +976,143 @@ class MeAllCollect(TestCase):
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_430(self):
+        """查看收藏内容为图片的展示"""
+        Preconditions.make_already_set_chart_group_video(pic_video="pic")
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击我的收藏,进入收藏页面
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        # 3.点击该收藏内容
+        mcp.click_collection_pic_video("收藏的图片")
+        mcp.wait_until(
+            condition=lambda d: current_mobile()._is_enabled(['id', 'com.chinasofti.rcs:id/favorite_title'])
+        )
+        mcp.page_should_contain_element(["id", 'com.chinasofti.rcs:id/iv_photo'])
+        # 4.点击返回
+        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.open_message_page()
+
+    def tearDown_test_me_all_page_430(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_431(self):
         """在收藏列表中打开文本文件"""
         Preconditions.make_already_set_chart_group_file(".txt")
+        Preconditions.make_already_set_chart_group_file(".doc")
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的收藏,进入收藏页面
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        file_names = mcp.get_all_file_names()
+        # 3.点击收藏的按钮,文本文件可以显示
+        for i in range(len(file_names)):
+            try:
+                mcp.click_collection_file_name(i=i)
+            except Exception:
+                mcp.click_collection_file_name(i=i)
+            mcp.wait_until(
+                condition=lambda d: current_mobile()._is_enabled(['id', 'com.chinasofti.rcs:id/title'])
+            )
+            file_name = file_names[i]
+            mcp.page_should_contain_text(file_name)
+            mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.open_message_page()
+
+    def tearDown_test_me_all_page_431(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_432(self):
+        """在收藏列表中打开文本文件"""
+        Preconditions.make_already_set_chart_group_file(".ppt")
+        Preconditions.make_already_set_chart_group_file(".pptx")
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的收藏,进入收藏页面
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        file_names = mcp.get_all_file_names()
+        # 3.点击收藏的按钮(尝试两次),文本文件可以显示
+        for i in range(len(file_names)):
+            try:
+                mcp.click_collection_file_name(i=i)
+            except Exception:
+                mcp.click_collection_file_name(i=i)
+            mcp.wait_until(
+                condition=lambda d: current_mobile()._is_enabled(['id', 'com.chinasofti.rcs:id/title'])
+            )
+            file_name = file_names[i]
+            mcp.page_should_contain_text(file_name)
+            mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.open_message_page()
+
+    def tearDown_test_me_all_page_432(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_433(self):
+        """打开表格格式为.xls  .xlsx"""
+        Preconditions.make_already_set_chart_group_file(".xls")
+        Preconditions.make_already_set_chart_group_file(".xlsx")
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的收藏,进入收藏页面
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        file_names = mcp.get_all_file_names()
+        # 3.点击收藏的按钮,文本文件可以显示
+        for i in range(len(file_names)):
+            try:
+                mcp.click_collection_file_name(i=i)
+            except Exception:
+                mcp.click_collection_file_name(i=i)
+            mcp.wait_until(
+                condition=lambda d: current_mobile()._is_enabled(['id', 'com.chinasofti.rcs:id/title'])
+            )
+            file_name = file_names[i]
+            mcp.page_should_contain_text(file_name)
+            mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
+        mep.open_message_page()
+
+    def tearDown_test_me_all_page_433(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_434(self):
+        """打开文件PDF格式为.pdf"""
+        Preconditions.make_already_set_chart_group_file(".pdf")
         # 1.点击跳转到我的页面
         mess = MessagePage()
         mess.wait_for_page_load()
@@ -958,12 +1127,43 @@ class MeAllCollect(TestCase):
         file_name = file_names[0]
         # 3.点击收藏的按钮,文本文件可以显示
         mcp.click_collection_file_name()
+        mcp.wait_until(
+            condition=lambda d: current_mobile()._is_enabled(['id', 'com.chinasofti.rcs:id/title'])
+        )
         mcp.page_should_contain_text(file_name)
         # 4.点击返回
-    #     mcp.click_element([MobileBy.CLASS_NAME, "android.widget.ImageView"], 15)
-    #     mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
+        mep.click_back()
+        mep.open_message_page()
+
+    def tearDown_test_me_all_page_434(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_437(self):
+        """打开收藏的位置信息"""
+        Preconditions.make_already_set_chart_group_location()
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的收藏,进入收藏页面
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        # 3.点击收藏的按钮,文本文件可以显示
+        mcp.open_location()
+    #     mcp.wait_until(
+    #         condition=lambda d: current_mobile()._is_enabled(['id', 'com.chinasofti.rcs:id/title'])
+    #     )
+    #     # 4.点击返回
+    #     mep.click_back()
+    #     mep.click_back()
     #     mep.open_message_page()
     #
-    # def tearDown_test_me_all_page_431(self):
+    # def tearDown_test_me_all_page_437(self):
     #     Preconditions.make_already_in_me_all_page()
     #     Preconditions.delete_all_my_collection()
