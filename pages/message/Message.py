@@ -53,6 +53,11 @@ class MessagePage(FooterPage):
         '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
         '收藏': (MobileBy.XPATH, "//*[contains(@text, '收藏')]"),
         '删除聊天': (MobileBy.XPATH, "//*[contains(@text, '删除聊天')]"),
+        # 消息页中点击已发送文件
+        '文件': (MobileBy.XPATH, "//*[contains(@text, '文件')]"),
+        '位置': (MobileBy.XPATH, "//*[contains(@text, '位置')]"),
+        '发送名片': (MobileBy.XPATH, "//*[contains(@text, '发送名片')]"),
+        '名片': (MobileBy.XPATH, "//*[contains(@text, '名片')]"),
     }
 
     @TestLogger.log('检查顶部搜索框是否显示')
@@ -414,3 +419,8 @@ class MessagePage(FooterPage):
             if "…" in msg:
                 return True
         raise AssertionError("消息列表的消息无省略号")
+
+    @TestLogger.log()
+    def click_set_message(self, locator):
+        """点击已发文件类型"""
+        self.click_element(self.__locators[locator])
