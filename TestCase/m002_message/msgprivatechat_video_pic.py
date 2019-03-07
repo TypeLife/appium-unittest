@@ -1403,7 +1403,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         set_page.click_back()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG1')
     def test_Msg_PrivateChat_VideoPic_0138(self):
         """保存聊天内容中的图片到本地"""
         self.public_send_pic()
@@ -1421,13 +1421,18 @@ class MsgPrivateChatVideoPicTest(TestCase):
         pv.wait_for_page_load()
         pv.click_pic()
         pv.wait_for_pic_preview_page_load()
-        pv.press_preview_pic_to_do("保存")
-        # toast提醒"正在保存...","保存成功"
         msg = "在单聊设置查找聊天内容的图片与视频页面,放大图片后,长按选择保存图片"
-        if not pv.is_toast_exist("正在保存", timeout=3):
-            raise AssertionError(msg + "无‘正在保存’提示！")
-        if not pv.is_toast_exist("保存成功", timeout=3):
-            raise AssertionError(msg + "无‘保存成功’提示！")
+        times = 10
+        while times > 0:
+            pv.press_preview_pic_to_do("保存")
+            # toast提醒"正在保存...","保存成功"
+            flag1 = pv.is_toast_exist("正在保存", timeout=4)
+            flag2 = pv.is_toast_exist("保存成功", timeout=4)
+            if flag1 and flag2:
+                break
+            times = times - 1
+        if times == 0:
+            return AssertionError(msg + "无‘正在保存’或者 ‘保存成功’提示！")
         pv.close_pic_preview()
         pv.click_back()
         record.click_back()

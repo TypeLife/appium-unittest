@@ -52,6 +52,12 @@ class MessagePage(FooterPage):
         '消息发送失败感叹号': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_fail_status'),
         '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
         '收藏': (MobileBy.XPATH, "//*[contains(@text, '收藏')]"),
+        '删除聊天': (MobileBy.XPATH, "//*[contains(@text, '删除聊天')]"),
+        # 消息页中点击已发送文件
+        '文件': (MobileBy.XPATH, "//*[contains(@text, '文件')]"),
+        '位置': (MobileBy.XPATH, "//*[contains(@text, '位置')]"),
+        '发送名片': (MobileBy.XPATH, "//*[contains(@text, '发送名片')]"),
+        '名片': (MobileBy.XPATH, "//*[contains(@text, '名片')]"),
     }
 
     @TestLogger.log('检查顶部搜索框是否显示')
@@ -398,3 +404,23 @@ class MessagePage(FooterPage):
     def click_msg_by_content(self, text):
         """点击消息"""
         self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_content" and @text="%s"]' % text))
+
+    @TestLogger.log('判断该页面是否有元素')
+    def page_contain_element(self, locator):
+        return self.page_should_contain_element(self.__locators[locator])
+
+    @TestLogger.log("判断消息列表的消息是否包含省略号")
+    def msg_is_contain_ellipsis(self):
+        contents = []
+        els = self.get_elements(self.__locators['消息简要内容'])
+        for el in els:
+            contents.append(el.text)
+        for msg in contents:
+            if "…" in msg:
+                return True
+        raise AssertionError("消息列表的消息无省略号")
+
+    @TestLogger.log()
+    def click_set_message(self, locator):
+        """点击已发文件类型"""
+        self.click_element(self.__locators[locator])

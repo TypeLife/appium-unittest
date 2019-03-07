@@ -136,7 +136,7 @@ class Preconditions(object):
         # 2.选择联系人发送一条消息
         scp = SelectContactsPage()
         scp.wait_for_page_local_contact_load()
-        scp.click_one_contact("大佬1")
+        scp.click_one_contact("大佬2")
         bcp = BaseChatPage()
         if bcp.is_exist_dialog():
             bcp.click_i_have_read()
@@ -244,12 +244,13 @@ class Preconditions(object):
         scp.press_file_to_do("我是测试工程师", "收藏")
         if not scp.is_toast_exist("已收藏"):
             raise AssertionError("没有此弹框")
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mess = MessagePage()
+        mess.click_back()
+        mess.click_back()
+        mess.click_back()
 
     @staticmethod
-    def make_already_set_chart_group_video():
+    def make_already_set_chart_group_video(pic_video="video"):
         """确保群聊已经发送一条视频，且已收藏"""
         Preconditions.enter_group_chat_page()
         # 1.点击新建消息
@@ -260,17 +261,24 @@ class Preconditions(object):
         cpg = ChatPicPage()
         cpg.wait_for_page_load()
         time.sleep(2)
-        cpg.select_video_fk()
-        cpg.click_send()
-        time.sleep(3)
+        if pic_video == "video":
+            cpg.select_video_fk()
+            cpg.click_send()
+            time.sleep(3)
+            scp.press_video()
+        if pic_video == "pic":
+            cpg.select_pic_fk()
+            cpg.click_send()
+            time.sleep(3)
+            scp.press_pic()
         # 3.点击该信息收藏
-        scp.press_video()
         scp.click_collection()
         if not scp.is_toast_exist("已收藏"):
             raise AssertionError("没有此弹框")
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mess = MessagePage()
+        mess.click_back()
+        mess.click_back()
+        mess.click_back()
 
     @staticmethod
     def make_already_set_chart_group_voice():
@@ -296,15 +304,17 @@ class Preconditions(object):
         scp.press_voice_message_to_do("收藏")
         if not scp.is_toast_exist("已收藏"):
             raise AssertionError("没有此弹框")
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mess = MessagePage()
+        mess.click_back()
+        mess.click_back()
+        mess.click_back()
 
     @staticmethod
     def make_already_set_chart_group_name_card():
         """确保群聊已经发送一个名片，且已收藏"""
         Preconditions.enter_group_chat_page()
         # 1.点击新建消息
+        mess = MessagePage()
         scp = GroupChatPage()
         if scp.is_exist_dialog():
             scp.click_i_have_read()
@@ -318,20 +328,22 @@ class Preconditions(object):
         scp.press_file_to_do("个人名片", "收藏")
         if not scp.is_toast_exist("已收藏"):
             raise AssertionError("没有此弹框")
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mess = MessagePage()
+        mess.click_back()
+        mess.click_back()
+        mess.click_back()
 
     @staticmethod
     def make_already_set_chart_group_location():
         """确保群聊已经发送一个位置信息，且已收藏"""
         Preconditions.enter_group_chat_page()
         # 1.点击更多位置信息
+        mess = MessagePage()
         scp = GroupChatPage()
         if scp.is_exist_dialog():
             scp.click_i_have_read()
         scp.click_more()
-        scp.click_element([MobileBy.XPATH, "//*[contains(@text,'位置')]"], 15)
+        mess.click_set_message("位置")
         clp = ChatLocationPage()
         clp.wait_for_page_load()
         clp.click_send()
@@ -339,9 +351,9 @@ class Preconditions(object):
         scp.press_message_to_do("收藏")
         if not scp.is_toast_exist("已收藏"):
             raise AssertionError("没有此弹框")
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mess.click_back()
+        mess.click_back()
+        mess.click_back()
 
     @staticmethod
     def make_already_set_chart_group_file(file_type):
@@ -352,9 +364,9 @@ class Preconditions(object):
         if scp.is_exist_dialog():
             scp.click_i_have_read()
         scp.click_more()
-        # scp.click_element([MobileBy.XPATH, "//*[@text = '文件']"], 15)
-        scp.click_element(
-            [MobileBy.XPATH, '//*[(@resource-id="com.chinasofti.rcs:id/iocn_tv") and (@text="文件")]'], 15)
+        cmp = ChatMorePage()
+        cmp.wait_for_page_load()
+        cmp.click_file1()
         csf = ChatSelectFilePage()
         csf.wait_for_page_load()
         csf.click_local_file()
@@ -378,9 +390,9 @@ class Preconditions(object):
         scp.press_file_to_do(file_type, "收藏")
         if not scp.is_toast_exist("已收藏"):
             raise AssertionError("没有此弹框")
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        cmp.click_back()
+        cmp.click_back()
+        cmp.click_back()
 
     @staticmethod
     def delete_all_my_collection():
@@ -396,7 +408,7 @@ class Preconditions(object):
                 mcp.click_delete_collection()
                 mcp.click_sure_forward()
                 # 4.点击返回
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
 
@@ -434,7 +446,7 @@ class MeAllCollect(TestCase):
         mcp = MeCollectionPage()
         mcp.wait_for_page_load()
         mcp.element_contain_text("我", "我")
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_406(self):
@@ -456,7 +468,7 @@ class MeAllCollect(TestCase):
         mcp = MeCollectionPage()
         mcp.wait_for_page_load()
         mcp.element_contain_text("我", Preconditions.get_group_chat_name())
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_407(self):
@@ -480,7 +492,7 @@ class MeAllCollect(TestCase):
         mcp.element_contain_text("今天", "今天")
         mcp.element_contain_text("我", Preconditions.get_group_chat_name())
         # 3.点击返回
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_408(self):
@@ -506,7 +518,7 @@ class MeAllCollect(TestCase):
         self.assertIsNotNone(re.match(r'(\d\d:\d\d)', flag))
         mcp.page_should_contain_element([MobileBy.ID, 'com.chinasofti.rcs:id/iv_favorite_video_bg'])
         # 4.点击返回
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_412(self):
@@ -530,7 +542,7 @@ class MeAllCollect(TestCase):
         # 3.校验收藏内容不超过三行
         self.assertEquals(mcp.get_width_of_collection("www.baidu.com", 3), True)
         # 4.点击返回
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_413(self):
@@ -556,7 +568,7 @@ class MeAllCollect(TestCase):
         flag = mcp.get_video_len("[位置]广东省深圳市龙岗区居里夫人大道与环城路交叉口")
         self.assertIsNotNone(re.match(r'(\d+秒)', flag))
         # 4.点击返回
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_414(self):
@@ -571,11 +583,11 @@ class MeAllCollect(TestCase):
         mess = MessagePage()
         mess.wait_for_page_load()
         # 进入群聊获取卡名
-        mess.click_element([MobileBy.XPATH, "//*[contains(@text,'名片')]"], 15)
+        mess.click_set_message("名片")
         scp = GroupChatPage()
         scp.wait_for_page_load()
         name = scp.get_name_card()
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mess.click_back()
         time.sleep(1.8)
         # 2.点击我的收藏,进入收藏页面
         mess.open_me_page()
@@ -592,7 +604,7 @@ class MeAllCollect(TestCase):
         flag2 = "[名片]" + name + "的个人名片"
         self.assertEquals(flag1, flag2)
         # 4.点击返回
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_416(self):
@@ -607,11 +619,11 @@ class MeAllCollect(TestCase):
         mess = MessagePage()
         mess.wait_for_page_load()
         # 进入群聊获取卡名
-        mess.click_element([MobileBy.XPATH, "//*[contains(@text,'位置')]"], 15)
+        mess.click_set_message('位置')
         scp = GroupChatPage()
         scp.wait_for_page_load()
         location = scp.get_location()
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mess.click_back()
         time.sleep(1.8)
         # 2.点击我的收藏,进入收藏页面
         mess.open_me_page()
@@ -628,7 +640,7 @@ class MeAllCollect(TestCase):
         self.assertEquals(mcp.get_width_of_collection("[位置]广东省深圳市龙岗区居里夫人大道与环城路交叉口", 2), True)
         self.assertEquals(flag1, flag2)
         # 4.点击返回
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_417(self):
@@ -642,12 +654,12 @@ class MeAllCollect(TestCase):
         # 1.点击跳转到我的页面
         mess = MessagePage()
         mess.wait_for_page_load()
-        mess.click_element([MobileBy.XPATH, "//*[contains(@text,'文件')]"], 15)
+        mess.click_set_message('文件')
         scp = GroupChatPage()
         scp.wait_for_page_load()
         file_name1 = scp.get_file_info("文件名")
         file_size1 = scp.get_file_info("文件大小")
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mess.click_back()
         time.sleep(1.8)
         # 2.点击我的收藏,进入收藏页面
         mess.open_me_page()
@@ -668,7 +680,7 @@ class MeAllCollect(TestCase):
         mcp.element_should_contain_text(["id", 'com.chinasofti.rcs:id/file_name'], ".log")
         self.assertEquals(mcp.get_width_of_collection("文件名", 1), True)
         # 4.点击返回
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_419(self):
@@ -684,12 +696,12 @@ class MeAllCollect(TestCase):
         # 1.点击跳转到我的页面
         mess = MessagePage()
         mess.wait_for_page_load()
-        mess.click_element([MobileBy.XPATH, "//*[contains(@text,'文件')]"], 15)
+        mess.click_set_message('文件')
         scp = GroupChatPage()
         scp.wait_for_page_load()
         file_name1 = scp.get_file_info("文件名")
         file_size1 = scp.get_file_info("文件大小")
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mess.click_back()
         time.sleep(1.8)
         # 2.点击我的收藏,进入收藏页面
         mess.open_me_page()
@@ -711,7 +723,7 @@ class MeAllCollect(TestCase):
         self.assertEquals(file_names[1].endswith(".txt"), True)
         self.assertEquals(file_names[2].endswith(".doc"), True)
         # 4.点击返回
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_420(self):
@@ -726,12 +738,12 @@ class MeAllCollect(TestCase):
         # 1.点击跳转到我的页面
         mess = MessagePage()
         mess.wait_for_page_load()
-        mess.click_element([MobileBy.XPATH, "//*[contains(@text,'文件')]"], 15)
+        mess.click_set_message('文件')
         scp = GroupChatPage()
         scp.wait_for_page_load()
         file_name1 = scp.get_file_info("文件名")
         file_size1 = scp.get_file_info("文件大小")
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mess.click_back()
         time.sleep(1.8)
         # 2.点击我的收藏,进入收藏页面
         mess.open_me_page()
@@ -752,7 +764,7 @@ class MeAllCollect(TestCase):
         self.assertEquals(file_names[0].endswith(".pptx"), True)
         self.assertEquals(file_names[1].endswith(".ppt"), True)
         # 4.点击返回
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_421(self):
@@ -767,12 +779,12 @@ class MeAllCollect(TestCase):
         # 1.点击跳转到我的页面
         mess = MessagePage()
         mess.wait_for_page_load()
-        mess.click_element([MobileBy.XPATH, "//*[contains(@text,'文件')]"], 15)
+        mess.click_set_message('文件')
         scp = GroupChatPage()
         scp.wait_for_page_load()
         file_name1 = scp.get_file_info("文件名")
         file_size1 = scp.get_file_info("文件大小")
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mess.click_back()
         time.sleep(1.8)
         # 2.点击我的收藏,进入收藏页面
         mess.open_me_page()
@@ -791,7 +803,7 @@ class MeAllCollect(TestCase):
         self.assertEquals(file_names[0].endswith(".xlsx"), True)
         self.assertEquals(file_names[1].endswith(".xls"), True)
         # 4.点击返回
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_422(self):
@@ -805,12 +817,12 @@ class MeAllCollect(TestCase):
         # 1.点击跳转到我的页面
         mess = MessagePage()
         mess.wait_for_page_load()
-        mess.click_element([MobileBy.XPATH, "//*[contains(@text,'文件')]"], 15)
+        mess.click_set_message('文件')
         scp = GroupChatPage()
         scp.wait_for_page_load()
         file_name1 = scp.get_file_info("文件名")
         file_size1 = scp.get_file_info("文件大小")
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mess.click_back()
         time.sleep(1.8)
         # 2.点击我的收藏,进入收藏页面
         mess.open_me_page()
@@ -828,7 +840,7 @@ class MeAllCollect(TestCase):
         self.assertEquals(file_size1, file_size2)
         self.assertEquals(file_names[0].endswith(".pdf"), True)
         # 4.点击返回
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_423(self):
@@ -842,12 +854,12 @@ class MeAllCollect(TestCase):
         # 1.点击跳转到我的页面
         mess = MessagePage()
         mess.wait_for_page_load()
-        mess.click_element([MobileBy.XPATH, "//*[contains(@text,'文件')]"], 15)
+        mess.click_set_message('文件')
         scp = GroupChatPage()
         scp.wait_for_page_load()
         file_name1 = scp.get_file_info("文件名")
         file_size1 = scp.get_file_info("文件大小")
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mess.click_back()
         time.sleep(1.8)
         # 2.点击我的收藏,进入收藏页面
         mess.open_me_page()
@@ -865,7 +877,7 @@ class MeAllCollect(TestCase):
         self.assertEquals(file_size1, file_size2)
         self.assertEquals(file_names[0].endswith(".mp3"), True)
         # 4.点击返回
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_425(self):
@@ -879,12 +891,12 @@ class MeAllCollect(TestCase):
         # 1.点击跳转到我的页面
         mess = MessagePage()
         mess.wait_for_page_load()
-        mess.click_element([MobileBy.XPATH, "//*[contains(@text,'文件')]"], 15)
+        mess.click_set_message('文件')
         scp = GroupChatPage()
         scp.wait_for_page_load()
         file_name1 = scp.get_file_info("文件名")
         file_size1 = scp.get_file_info("文件大小")
-        scp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mess.click_back()
         time.sleep(1.8)
         # 2.点击我的收藏,进入收藏页面
         mess.open_me_page()
@@ -902,10 +914,39 @@ class MeAllCollect(TestCase):
         self.assertEquals(file_size1, file_size2)
         self.assertEquals(file_names[0].endswith(".rar"), True)
         # 4.点击返回
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_427(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_428(self):
+        """查看收藏内容为短视频的展示"""
+        Preconditions.make_already_set_chart_group_video()
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击我的收藏,进入收藏页面
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        # 3.点击该收藏内容
+        mcp.click_collection_pic_video("收藏的视频")
+        mcp.wait_until(
+            condition=lambda d: current_mobile()._is_enabled(['id', 'com.chinasofti.rcs:id/favorite_title'])
+        )
+        mcp.page_should_contain_element(["id", 'com.chinasofti.rcs:id/sv_video'])
+        # 4.点击返回
+        mep.click_back()
+        mep.click_back()
+        mep.open_message_page()
+
+    def tearDown_test_me_all_page_428(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
@@ -933,7 +974,7 @@ class MeAllCollect(TestCase):
         mcp.page_should_contain_text(file_name)
         # 4.点击返回
         mcp.click_element(["id", "com.android.mediacenter:id/close_mediaplay"], 15)
-        mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        mep.click_back()
         mep.open_message_page()
 
     def tearDown_test_me_all_page_429(self):
@@ -941,9 +982,143 @@ class MeAllCollect(TestCase):
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_430(self):
+        """查看收藏内容为图片的展示"""
+        Preconditions.make_already_set_chart_group_video(pic_video="pic")
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击我的收藏,进入收藏页面
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        # 3.点击该收藏内容
+        mcp.click_collection_pic_video("收藏的图片")
+        mcp.wait_until(
+            condition=lambda d: current_mobile()._is_enabled(['id', 'com.chinasofti.rcs:id/favorite_title'])
+        )
+        mcp.page_should_contain_element(["id", 'com.chinasofti.rcs:id/iv_photo'])
+        # 4.点击返回
+        mep.click_back()
+        mep.click_back()
+        mep.open_message_page()
+
+    def tearDown_test_me_all_page_430(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_431(self):
         """在收藏列表中打开文本文件"""
         Preconditions.make_already_set_chart_group_file(".txt")
+        Preconditions.make_already_set_chart_group_file(".doc")
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的收藏,进入收藏页面
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        file_names = mcp.get_all_file_names()
+        # 3.点击收藏的按钮,文本文件可以显示
+        for i in range(len(file_names)):
+            try:
+                mcp.click_collection_file_name(i=i)
+            except Exception:
+                mcp.click_collection_file_name(i=i)
+            mcp.wait_until(
+                condition=lambda d: current_mobile()._is_enabled(['id', 'com.chinasofti.rcs:id/title'])
+            )
+            file_name = file_names[i]
+            mcp.page_should_contain_text(file_name)
+            mep.click_back()
+        mep.click_back()
+        mep.open_message_page()
+
+    def tearDown_test_me_all_page_431(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_432(self):
+        """在收藏列表中打开文本文件"""
+        Preconditions.make_already_set_chart_group_file(".ppt")
+        Preconditions.make_already_set_chart_group_file(".pptx")
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的收藏,进入收藏页面
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        file_names = mcp.get_all_file_names()
+        # 3.点击收藏的按钮(尝试两次),文本文件可以显示
+        for i in range(len(file_names)):
+            try:
+                mcp.click_collection_file_name(i=i)
+            except Exception:
+                mcp.click_collection_file_name(i=i)
+            mcp.wait_until(
+                condition=lambda d: current_mobile()._is_enabled(['id', 'com.chinasofti.rcs:id/title'])
+            )
+            file_name = file_names[i]
+            mcp.page_should_contain_text(file_name)
+            mep.click_back()
+        mep.click_back()
+        mep.open_message_page()
+
+    def tearDown_test_me_all_page_432(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_433(self):
+        """打开表格格式为.xls  .xlsx"""
+        Preconditions.make_already_set_chart_group_file(".xls")
+        Preconditions.make_already_set_chart_group_file(".xlsx")
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的收藏,进入收藏页面
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        file_names = mcp.get_all_file_names()
+        # 3.点击收藏的按钮,文本文件可以显示
+        for i in range(len(file_names)):
+            try:
+                mcp.click_collection_file_name(i=i)
+            except Exception:
+                mcp.click_collection_file_name(i=i)
+            mcp.wait_until(
+                condition=lambda d: current_mobile()._is_enabled(['id', 'com.chinasofti.rcs:id/title'])
+            )
+            file_name = file_names[i]
+            mcp.page_should_contain_text(file_name)
+            mep.click_back()
+        mep.click_back()
+        mep.open_message_page()
+
+    def tearDown_test_me_all_page_433(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_434(self):
+        """打开文件PDF格式为.pdf"""
+        Preconditions.make_already_set_chart_group_file(".pdf")
         # 1.点击跳转到我的页面
         mess = MessagePage()
         mess.wait_for_page_load()
@@ -958,12 +1133,71 @@ class MeAllCollect(TestCase):
         file_name = file_names[0]
         # 3.点击收藏的按钮,文本文件可以显示
         mcp.click_collection_file_name()
+        mcp.wait_until(
+            condition=lambda d: current_mobile()._is_enabled(['id', 'com.chinasofti.rcs:id/title'])
+        )
         mcp.page_should_contain_text(file_name)
         # 4.点击返回
-    #     mcp.click_element([MobileBy.CLASS_NAME, "android.widget.ImageView"], 15)
-    #     mcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-    #     mep.open_message_page()
-    #
-    # def tearDown_test_me_all_page_431(self):
-    #     Preconditions.make_already_in_me_all_page()
-    #     Preconditions.delete_all_my_collection()
+        mep.click_back()
+        mep.click_back()
+        mep.open_message_page()
+
+    def tearDown_test_me_all_page_434(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_437(self):
+        """打开收藏的位置信息"""
+        Preconditions.make_already_set_chart_group_location()
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的收藏,进入收藏页面
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        # 3.点击收藏的按钮,文本文件可以显示
+        mcp.open_location("位置")
+        mcp.wait_for_location_page_load()
+        mcp.page_contain_element("导航按钮")
+        # 4.点击返回
+        mep.click_back()
+        mep.click_back()
+        mep.open_message_page()
+
+    def tearDown_test_me_all_page_437(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_438(self):
+        """打开收藏的位置信息"""
+        Preconditions.make_already_set_chart_group_location()
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的收藏,进入收藏页面
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        # 3.点击收藏的按钮,文本文件可以显示
+        mcp.open_location("位置")
+        mcp.wait_for_location_page_load()
+        mcp.page_contain_element("导航按钮")
+        # 4.点击返回，检验是否在收藏位置页面
+        mep.click_back()
+        mcp.element_contain_text("[位置]广东省深圳市龙岗区居里夫人大道与环城路交叉口", "位置")
+        # 5.点击返回
+        mep.click_back()
+        mep.open_message_page()
+
+    def tearDown_test_me_all_page_438(self):
+        Preconditions.make_already_in_me_all_page()
+        Preconditions.delete_all_my_collection()

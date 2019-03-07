@@ -63,7 +63,7 @@ class MeTest(TestCase):
 
         pg = PickGroupPage()
         pg.wait_for_page_load()
-        pg.select_group('群聊1')
+        pg.select_group('群聊')
         current_mobile().click_text("确定", True)
 
         toast = current_mobile().wait_until(
@@ -74,7 +74,7 @@ class MeTest(TestCase):
         qr_code.click_back()
 
         me_page.open_message_page()
-        current_mobile().click_text('群聊1')
+        current_mobile().click_text('群聊')
 
         chat = ChatWindowPage()
         chat.wait_for_page_load()
@@ -196,8 +196,8 @@ class MeTest(TestCase):
         pg.search_group()
 
         sp = SearchGroupPage()
-        sp.search('群聊1')
-        sp.click_group('群聊1')
+        sp.search('群聊')
+        sp.click_group('群聊')
         current_mobile().click_text("确定", True)
 
         toast = current_mobile().wait_until(
@@ -208,7 +208,7 @@ class MeTest(TestCase):
         qr_code.click_back()
 
         me_page.open_message_page()
-        current_mobile().click_text('群聊1')
+        current_mobile().click_text('群聊')
 
         chat = ChatWindowPage()
         chat.wait_for_page_load()
@@ -431,7 +431,7 @@ class MeTest(TestCase):
 
         pg = PickGroupPage()
         pg.wait_for_page_load()
-        pg.select_group('群聊1')
+        pg.select_group('群聊')
         current_mobile().click_text("发送名片", True)
 
         toast = current_mobile().wait_until(
