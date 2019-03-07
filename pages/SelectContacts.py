@@ -45,8 +45,6 @@ class SelectContactsPage(BasePage):
         '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
         '右侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView'),
         '左侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/index_text"]'),
-
-        'X': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect'),
         '查看更多': (MobileBy.XPATH, '//*[@text ="查看更多"]')
     }
 
@@ -168,6 +166,18 @@ class SelectContactsPage(BasePage):
             (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text ="%s"]' % name))
 
     @TestLogger.log()
+    def select_one_group_by_name(self, name):
+        """通过群名选择一个群"""
+        self.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % name))
+
+    @TestLogger.log()
+    def select_one_recently_contact_by_name(self, name):
+        """通过名称选择一个最近聊天的联系人"""
+        self.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text ="%s"]' % name))
+
+    @TestLogger.log()
     def wait_for_page_local_contact_load(self, timeout=8, auto_accept_alerts=True):
         """等待选择联系人页面加载"""
         try:
@@ -259,4 +269,14 @@ class SelectContactsPage(BasePage):
     @TestLogger.log('点击最近聊天')
     def click_search_he_contact(self):
         self.click_element(self.__locators["最近聊天"])
+
+    @TestLogger.log()
+    def click_x_icon(self):
+        """点击 X"""
+        self.click_element(self.__class__.__locators["X"])
+
+    @TestLogger.log()
+    def click_read_more(self):
+        """点击查看更多"""
+        self.click_element(self.__class__.__locators["查看更多"])
 
