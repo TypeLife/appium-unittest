@@ -160,3 +160,11 @@ class SettingPage(BasePage):
                     return
                 if self._is_on_the_end_of_menu_view():
                     raise NoSuchElementException('页面找不到元素：{}'.format(locator))
+
+    @TestLogger.log()
+    def page_contain_texts(self, menu):
+        for text in menu:
+            self.assert_list_contains_menu(text)
+        return True
+
+
