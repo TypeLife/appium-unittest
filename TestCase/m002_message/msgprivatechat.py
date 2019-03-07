@@ -5,6 +5,7 @@ from library.core.utils.applicationcache import current_mobile
 from preconditions.BasePreconditions import LoginPreconditions
 from library.core.utils.testcasefilter import tags
 from pages import *
+import uuid
 
 
 class Preconditions(LoginPreconditions):
@@ -341,3 +342,174 @@ class MsgPrivateChatMsgSetting(TestCase):
         fcrp.click_back()
         setting.wait_for_page_load()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0008(self):
+        """消息-一对一消息会话-设置页面查找聊天内容"""
+        # 先发送消息
+        setting = SingleChatSetPage()
+        setting.click_back()
+        chat = SingleChatPage()
+        msg = 'hehe'
+        chat.input_message(msg)
+        chat.send_message()
+        chat.click_setting()
+        # 1. 点击下方的查找聊天内容按钮
+        setting.search_chat_record()
+        # 2. 搜索已接收或发送消息的关键字
+        fcrp = FindChatRecordPage()
+        fcrp.wait_for_page_load()
+        fcrp.input_search_message(msg)
+        self.assertTrue(fcrp.is_element_exit('发送人头像'))
+        self.assertTrue(fcrp.is_element_exit('发送人名称'))
+        self.assertTrue(fcrp.is_element_exit('发送的内容'))
+        self.assertTrue(fcrp.is_element_exit('发送的时间'))
+        # 3.点击任意一个搜索到的聊天信息
+        fcrp.click_record()
+        chat.click_setting()
+        setting.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0009(self):
+        """消息-一对一消息会话-设置页面查找不存在的聊天内容"""
+        # 1. 点击下方的查找聊天内容按钮
+        setting = SingleChatSetPage()
+        setting.search_chat_record()
+        # 2. 搜索不存在的关键字
+        fcrp = FindChatRecordPage()
+        times = 20
+        while times > 0:
+            msg = uuid.uuid4().__str__()
+            fcrp.input_search_message(msg)
+            try:
+                fcrp.page_should_contain_text("无搜索结果")
+                break
+            except:
+                times = times - 1
+                continue
+        if times == 0:
+            raise AssertionError("搜索异常，页面无‘无搜索结果’文本")
+        fcrp.click_back()
+        setting.wait_for_page_load()
+
+    @staticmethod
+    def public_send_file(file_type):
+        # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
+        setting = SingleChatSetPage()
+        setting.click_back()
+        chat = SingleChatPage()
+        chat.wait_for_page_load()
+        if not chat.is_open_more():
+            chat.click_more()
+        # 2、点击本地文件
+        more_page = ChatMorePage()
+        more_page.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        # 3、选择任意文件，点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        flag = local_file.push_preset_file()
+        if flag:
+            local_file.click_back()
+            csf.click_local_file()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(file_type)
+        if file:
+            local_file.click_send()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0010(self):
+        """消息-一对一消息会话-设置页面查找聊天文件"""
+        self.public_send_file('.txt')
+        chat = SingleChatPage()
+        # 1. 点击右上角个人设置按钮
+        chat.click_setting()
+        setting = SingleChatSetPage()
+        # 2. 点击下方的查找聊天内容按钮
+        setting.search_chat_record()
+        # 3.点击文件
+        fcrp = FindChatRecordPage()
+        fcrp.click_file()
+        file = ChatFilePage()
+        file.wait_for_page_load()
+        file.page_should_contain_file()
+        file.click_back()
+        fcrp.click_back()
+        setting.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0011(self):
+        """消息-一对一消息会话-设置页面查找聊天文件"""
+        # 1. 点击右上角个人设置按钮
+        setting = SingleChatSetPage()
+        # 2. 点击下方的查找聊天内容按钮
+        setting.search_chat_record()
+        # 3.点击文件
+        fcrp = FindChatRecordPage()
+        fcrp.click_file()
+        file = ChatFilePage()
+        file.wait_for_page_load()
+        file.clear_file_record()
+        file.page_should_contain_text("暂无文件")
+        file.click_back()
+        fcrp.click_back()
+        setting.wait_for_page_load()
+
+    @staticmethod
+    def public_send_video():
+        """在聊天会话页面发送一个视频"""
+        setting = SingleChatSetPage()
+        setting.click_back()
+        chat = SingleChatPage()
+        # 点击图片按钮
+        chat.click_pic()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 选择一个视频发送
+        cpp.select_video()
+        cpp.click_send()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0012(self):
+        """消息-一对一消息会话-设置页面查找聊天图片与视频"""
+        self.public_send_video()
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 1.点击查找聊天内容
+        setting = SingleChatSetPage()
+        setting.search_chat_record()
+        # 2.点击图片与视频
+        fcrp = FindChatRecordPage()
+        fcrp.click_pic_video()
+        pv = PicVideoPage()
+        pv.wait_for_page_load()
+        if not pv.is_exist_video():
+            raise AssertionError("发送视频后在聊天记录的图片与视频页面无视频")
+        pv.click_back()
+        fcrp.click_back()
+        setting.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0013(self):
+        """消息-一对一消息会话-设置页面查找聊天图片与视频"""
+        # 1.点击查找聊天内容
+        setting = SingleChatSetPage()
+        setting.search_chat_record()
+        # 2.点击图片与视频
+        fcrp = FindChatRecordPage()
+        fcrp.click_pic_video()
+        pv = PicVideoPage()
+        pv.wait_for_page_load()
+        pv.clear_record()
+        pv.page_should_contain_text("暂无内容")
+        pv.click_back()
+        fcrp.click_back()
+        setting.wait_for_page_load()

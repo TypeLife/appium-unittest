@@ -1201,3 +1201,75 @@ class MeAllCollect(TestCase):
     def tearDown_test_me_all_page_438(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_439(self):
+        """设置页面显示验证"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的设置
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_setting_menu()
+        # 3.检验设置列表页面展示
+        sp = SettingPage()
+        sp.wait_for_page_load()
+        menu = {"短信设置", "消息通知", "来电管理", "副号管理", "联系人管理", "字体大小", "多语言", "参与体验改善计划", "退出", }
+        self.assertEquals(sp.page_contain_texts(menu), True)
+        # 4.点击返回
+        sp.click_back()
+        mep.open_message_page()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_page_442(self):
+        """验证我-设置-退出登录(正常网络)"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的设置
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_setting_menu()
+        # 3.点击退出登陆
+        sp = SettingPage()
+        sp.wait_for_page_load()
+        sp.click_logout()
+        sp.click_ok_of_alert()
+        # 4.校验退出后在登陆页面
+        one_key = OneKeyLoginPage()
+        one_key.wait_for_page_load()
+        self.assertEquals(one_key.is_on_this_page(), True)
+
+    # @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    # def test_me_all_page_443(self):
+    #     """验证我-设置-退出登录(异常网络)"""
+    #     # 1.点击跳转到我的页面
+    #     mess = MessagePage()
+    #     mess.wait_for_page_load()
+    #     mess.set_network_status(0)
+    #     # 2.点击我的设置
+    #     mess.open_me_page()
+    #     mep = MePage()
+    #     mep.is_on_this_page()
+    #     mep.click_setting_menu()
+    #     # 3.点击退出登陆
+    #     sp = SettingPage()
+    #     sp.wait_for_page_load()
+    #     sp.click_logout()
+    #     sp.click_ok_of_alert()
+    #     # 4.校验退出后在登陆页面
+    #     one_key = OneKeyLoginPage()
+    #     one_key.wait_for_page_load()
+    #     self.assertEquals(one_key.is_on_this_page(), True)
+    #     # 5.退出后再点击一键登录有弹框提示
+    #     one_key.click_one_key_login()
+    #     if not one_key.is_toast_exist("请检查网络设置"):
+    #         raise AssertionError("没有此网络异常弹框")
+    #
+    # def tearDown_test_me_all_page_443(self):
+    #     # 1.打开网络
+    #     mess = MessagePage()
+    #     mess.set_network_status(6)

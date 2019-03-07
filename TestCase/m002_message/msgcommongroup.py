@@ -3280,7 +3280,275 @@ class MsgCommonGroupTest(TestCase):
         if not els[0].get_attribute("checked") and els[1].get_attribute("checked"):
             raise AssertionError("点击的消息体没有被选中")
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0115(self):
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 输入信息
+        dex = 0
+        while dex < 3:
+            message = "哈哈" + str(dex)
+            gcp.input_message(message)
+            # 点击发送
+            gcp.send_message()
+            # 验证是否发送成功
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            dex += 1
+        gcp.press_file_to_do("哈哈0", "多选")
+        # 点击其他复选框
+        els = gcp.get_multiple_selection_select_box()
+        if els:
+            els[1].click()
+            els[2].click()
+        else:
+            raise AssertionError("没有找到复选框")
+        # 点击转发
+        gcp.click_multiple_selection_forward()
+        sc = SelectContactsPage()
+        sc.wait_for_page_local_contact_load()
+        sc.select_local_contacts()
+        time.sleep(1)
+        # 选择“和飞信电话”联系人进行转发
+        sc.click_one_contact("和飞信电话")
+        # 点击取消
+        gcp.click_cancel_repeat_msg()
+        # 验证停留在最近聊天选择器页面
+        if not gcp.is_text_present("选择联系人"):
+            raise AssertionError("没有停留在最近聊天选择器页面")
+        sc.click_one_contact("和飞信电话")
+        # 点击确定
+        gcp.click_sure_repeat_msg()
+        flag = sc.is_toast_exist("已转发")
+        self.assertTrue(flag)
+        # 返回消息页面
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        time.sleep(2)
+        sogp.click_back()
+        sc.click_back()
+        time.sleep(2)
+        # 判断消息页面有新的会话窗口
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            self.assertTrue(mess.is_text_present("和飞信电话"))
+            mess.click_element_by_text("和飞信电话")
+            chat = SingleChatPage()
+            if chat.is_text_present("用户须知"):
+                chat.click_i_have_read()
+            chat.wait_for_page_load()
+            # 验证是否发送成功
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            chat.click_back()
+            time.sleep(2)
+            mess.press_file_to_do("和飞信电话", "删除聊天")
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0116(self):
+        gcp = GroupChatPage()
+        time.sleep(2)
+        # 断开网络
+        gcp.set_network_status(0)
+        gcp.press_file_to_do("哈哈0", "多选")
+        # 点击其他复选框
+        els = gcp.get_multiple_selection_select_box()
+        if els:
+            els[1].click()
+            els[2].click()
+        else:
+            raise AssertionError("没有找到复选框")
+        # 点击转发
+        gcp.click_multiple_selection_forward()
+        sc = SelectContactsPage()
+        sc.wait_for_page_local_contact_load()
+        sc.select_local_contacts()
+        time.sleep(1)
+        # 选择“和飞信电话”联系人进行转发
+        sc.click_one_contact("和飞信电话")
+        # 点击取消
+        gcp.click_cancel_repeat_msg()
+        # 验证停留在最近聊天选择器页面
+        if not gcp.is_text_present("选择联系人"):
+            raise AssertionError("没有停留在最近聊天选择器页面")
+        sc.click_one_contact("和飞信电话")
+        # 点击确定
+        gcp.click_sure_repeat_msg()
+        flag = sc.is_toast_exist("已转发")
+        self.assertTrue(flag)
+        # 返回消息页面
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        time.sleep(2)
+        sogp.click_back()
+        sc.click_back()
+        time.sleep(2)
+        # 判断消息页面有新的会话窗口
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            self.assertTrue(mess.is_text_present("和飞信电话"))
+            mess.click_element_by_text("和飞信电话")
+            chat = SingleChatPage()
+            if chat.is_text_present("用户须知"):
+                chat.click_i_have_read()
+            chat.wait_for_page_load()
+            # 验证是否发送失败
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+            except TimeoutException:
+                raise AssertionError('断网情况下消息在 {}s 内发送成功'.format(10))
+            # 判断是否有重发按钮
+            if not gcp.is_exist_msg_send_failed_button():
+                try:
+                    raise AssertionError("没有重发按钮")
+                except AssertionError as e:
+                    raise e
+            if chat.is_audio_exist():
+                raise AssertionError("不支持转发的消息体没有被过滤掉")
+            chat.click_back()
+            time.sleep(2)
+            mess.press_file_to_do("和飞信电话", "删除聊天")
+
+    def tearDown_test_msg_common_group_0116(self):
+        #重连网络
+        gcp = GroupChatPage()
+        gcp.set_network_status(6)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0117(self):
+        """1.消息会话框中长按消息体
+            2.点击“多选”
+            3.点击其他消息体的复选框/消息气泡/头像
+            4.点击删除
+            5.点击确定
+            6.查看聊天会话窗口"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 输入信息
+        dex = 0
+        while dex < 3:
+            message = "哈哈" + str(dex)
+            gcp.input_message(message)
+            # 点击发送
+            gcp.send_message()
+            # 验证是否发送成功
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            dex += 1
+        gcp.press_file_to_do("哈哈0", "多选")
+        # 点击其他复选框
+        els = gcp.get_multiple_selection_select_box()
+        if els:
+            els[1].click()
+            els[2].click()
+        else:
+            raise AssertionError("没有找到复选框")
+        #被点到的相对应消息体被选中
+        if not (els[2].get_attribute("checked") and els[1].get_attribute("checked")):
+            raise AssertionError("点击的消息体没有被选中")
+        # 点击删除
+        gcp.click_multiple_selection_delete()
+        #点击确定
+        gcp.click_multiple_selection_delete_sure()
+        flag = gcp.is_toast_exist("删除成功")
+        self.assertTrue(flag)
+        #验证删除掉的消息体已删除成功
+        if gcp.is_text_present("哈哈0"):
+            raise AssertionError("删除掉的消息体没有删除成功")
+        if gcp.is_text_present("哈哈1"):
+            raise AssertionError("删除掉的消息体没有删除成功")
+        if gcp.is_text_present("哈哈2"):
+            raise AssertionError("删除掉的消息体没有删除成功")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0118(self):
+        """1.消息会话框中长按消息体
+            2.点击“多选”
+            3.点击其他消息体的复选框/消息气泡/头像
+            4.点击删除
+            5.点击取消/点击弹框区域外
+            6.查看聊天会话窗口"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 输入信息
+        dex = 0
+        while dex < 3:
+            message = "哈哈" + str(dex)
+            gcp.input_message(message)
+            # 点击发送
+            gcp.send_message()
+            # 验证是否发送成功
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            dex += 1
+        gcp.press_file_to_do("哈哈0", "多选")
+        # 点击其他复选框
+        els = gcp.get_multiple_selection_select_box()
+        if els:
+            els[1].click()
+            els[2].click()
+        else:
+            raise AssertionError("没有找到复选框")
+        # 被点到的相对应消息体被选中
+        if not (els[2].get_attribute("checked") and els[1].get_attribute("checked")):
+            raise AssertionError("点击的消息体没有被选中")
+        # 点击删除
+        gcp.click_multiple_selection_delete()
+        # 点击取消
+        gcp.click_multiple_selection_delete_cancel()
+        #验证还停留在批量选择器页面
+        if not gcp.is_text_present("已选择"):
+            raise AssertionError("没有停留在批量选择器页面")
+        #验证选中的消息体还在选中状态
+        if not (els[2].get_attribute("checked") and els[1].get_attribute("checked") and els[0].get_attribute("checked")):
+            raise AssertionError("选中的消息体没有在选中状态")
+        time.sleep(2)
+        gcp.click_multiple_selection_back()
+
+    # @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    @unittest.skip("用例先不做")
+    def test_msg_common_group_0119(self):
+        """1.消息会话框中长按消息体
+            2.点击“多选”
+            3.点击其他消息体的复选框/消息气泡/头像
+            4.当点击选择第101条时"""
+        gcp = GroupChatPage()
+        # Preconditions.delete_record_group_chat()
+        # # 输入信息
+        # dex = 0
+        # while dex < 101:
+        #     message = "哈哈" + str(dex)
+        #     gcp.input_message(message)
+        #     # 点击发送
+        #     gcp.send_message()
+        #     # 验证是否发送成功
+        #     cwp = ChatWindowPage()
+        #     try:
+        #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        #     except TimeoutException:
+        #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        #     dex += 1
+        gcp.press_file_to_do("哈哈100", "多选")
+
+        while not gcp.is_text_present("哈哈0"):
+            els = gcp.get_multiple_selection_select_box()
+            for el in els:
+                flag=el.get_attribute("checked")
+                if flag:
+                    el.click()
 
 
 
