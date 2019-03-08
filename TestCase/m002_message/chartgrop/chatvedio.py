@@ -1605,3 +1605,89 @@ class MsgGroupChatvedioTest(TestCase):
         gcv.click_back()
         gcf.click_back()
         gcs.click_back()
+
+
+class MsgGroupChatTotalQuantityTest(TestCase):
+    """
+    模块：消息->群聊
+    文件位置：全量-测试用例-V2019-01-23/3.全量用例--肖立平.xlsx
+    表格：群聊-图片视频-GIF
+    """
+
+    @classmethod
+    def setUpClass(cls):
+
+        # 创建联系人
+        fail_time = 0
+        import dataproviders
+        while fail_time < 3:
+            try:
+                required_contacts = dataproviders.get_preset_contacts()
+                conts = ContactsPage()
+                Preconditions.connect_mobile('Android-移动')
+                current_mobile().hide_keyboard_if_display()
+                for name, number in required_contacts:
+                    Preconditions.make_already_in_message_page()
+                    conts.open_contacts_page()
+                    conts.create_contacts_if_not_exits(name, number)
+
+                # 创建群
+                required_group_chats = dataproviders.get_preset_group_chats()
+
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
+                return
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
+
+    def default_setUp(self):
+        """确保每个用例运行前在群聊聊天会话页面"""
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    def default_tearDown(self):
+        pass
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_total_quantity_0023(self):
+        """群聊会话页面,转发自己发送的图片到当前会话窗口"""
+
+        # 确保当前群聊页面已有图片
+        Preconditions.make_already_have_my_picture()
+        gcp = GroupChatPage()
+        # 当前页面是否在群聊天页
+        gcp.is_on_this_page()
+        # 长按自己发送的图片并转发
+        gcp.forward_pic()
+        scg = SelectContactsPage()
+        # 等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 获取当前会话窗口群名
+        group_name = Preconditions.get_group_chat_name()
+        # 选择最近聊天中的当前会话窗口
+        scg.select_recent_chat_by_name(group_name)
+        # 点击弹框弹出的确定按钮
+        scg.click_sure_button()
+        # 校验当前页面是否在群聊天页
+        gcp.is_on_this_page()
+        # 是否提示已转发
+        self.assertEquals(gcp.is_exist_forward(), True)
