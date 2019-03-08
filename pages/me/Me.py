@@ -209,10 +209,11 @@ class MePage(FooterPage):
         return self._is_element_present(self.__locators['设置'])
 
     @TestLogger.log()
-    def click_help_menu(self):
+    def click_help_menu(self, timeout=60):
         """点击帮助与反馈菜单"""
         self.scroll_to_bottom()
         self.wait_until(
+            timeout=timeout,
             condition=lambda d: self.get_element(self.__locators['帮助与反馈'])
         ).click()
 
@@ -243,4 +244,3 @@ class MePage(FooterPage):
     def click_view_edit(self):
         """点击查看并编辑资料按钮"""
         self.click_element(self.__locators['查看并编辑个人资料'])
-
