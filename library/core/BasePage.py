@@ -519,7 +519,7 @@ class BasePage(object):
     @TestLogger.log("点击返回")
     def click_back(self):
         """点击返回"""
-        self.click_element((MobileBy.XPATH, "//*[contains(@resource-id, 'back')]"))
+        self.click_element((MobileBy.XPATH, "//*[contains(@resource-id, 'back')]"), 10)
 
     @TestLogger.log("下一页")
     def page_up(self):
