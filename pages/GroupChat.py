@@ -369,3 +369,8 @@ class GroupChatPage(BaseChatPage):
             self.click_element(self.__class__.__locators[text])
         else:
             raise AssertionError("没有找到语音消息体")
+
+    @TestLogger.log()
+    def get_group_name(self):
+        """在群聊页面获取群聊名称"""
+        return self.get_element(self.__class__.__locators['群聊001(2)']).text
