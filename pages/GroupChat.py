@@ -369,3 +369,12 @@ class GroupChatPage(BaseChatPage):
             self.click_element(self.__class__.__locators[text])
         else:
             raise AssertionError("没有找到语音消息体")
+
+    @TestLogger.log()
+    def get_multiple_selection_count(self):
+        """获取多选计数框"""
+        el = self.get_element(self.__class__.__locators["多选计数"])
+        if el:
+            return el
+        else:
+            raise AssertionError("没有找到多选选择框")
