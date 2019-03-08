@@ -1145,7 +1145,7 @@ class MeAllCollect(TestCase):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     def test_me_all_page_437(self):
         """打开收藏的位置信息"""
         Preconditions.make_already_set_chart_group_location()
@@ -1289,6 +1289,7 @@ class MeAllCollect(TestCase):
         sp = SettingPage()
         sp.wait_for_page_load()
         sp.click_menu("参与体验改善计划")
+        time.sleep(3)
         sp.click_menu("上传日志")
         if not sp.is_toast_exist("上传失败，请稍后重试"):
             raise AssertionError("没有此网络异常弹框")
@@ -1443,7 +1444,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_452(self):
+    def test_me_all_page_552(self):
         """常见问题页面问题分类功能验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
