@@ -71,7 +71,12 @@ class WorkbenchPage(FooterPage):
                   '通话': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCall'),
                   '工作台': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCircle'),
                   '通讯录': (MobileBy.ID, 'com.chinasofti.rcs:id/tvContact'),
-                  '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe')
+                  '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe'),
+                  # 未创建或者未加入团队时的页面元素
+                  '马上创建团队': (MobileBy.XPATH, '//*[@text="马上创建团队"]'),
+                  '欢迎创建团队': (MobileBy.XPATH, '//*[@text="欢迎创建团队"]'),
+                  # 点击左上角的企业名称的倒三角形的团队元素定位
+                  '团队列表': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_listitem'),
                   }
 
     def swipe_half_page_up(self):
@@ -288,7 +293,37 @@ class WorkbenchPage(FooterPage):
             raise AssertionError("该页面没有定位到 权益 控件")
 
     @TestLogger.log()
-    def click_enterprise_name(self):
-        """点击左上角的企业名称的倒三角"""
+    def click_enterprise_name_triangle(self):
+        """点击左上角的企业名称的倒三角形选择团队"""
         name = self.get_element(self.__class__.__locators['当前团队名称:myteam02']).text
         self.click_element((MobileBy.XPATH, '//*[@text="%s"]' % name))
+
+    @TestLogger.log()
+    def get_team_names(self):
+        """获取所有团队的名字"""
+        names = []
+        els = self.get_elements(self.__class__.__locators['团队列表'])
+        for el in els:
+            names.append(el.text)
+        return names
+
+    @TestLogger.log()
+    def select_team_by_name(self, name):
+        self.click_element((MobileBy.XPATH, '//*[@text="%s"]' % name))
+
+    @TestLogger.log()
+    def click_now_create_team(self):
+        """点击马上创建团队"""
+        self.click_element(self.__class__.__locators['马上创建团队'])
+
+    def is_on_welcome_page(self):
+        """当前页面是否在 欢迎创建团队页面"""
+        try:
+            self.wait_until(
+                timeout=3,
+                auto_accept_permission_alert=True,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["欢迎创建团队"])
+            )
+            return True
+        except:
+            return False

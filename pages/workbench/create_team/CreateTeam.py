@@ -16,12 +16,17 @@ class CreateTeamPage(BasePage):
         MobileBy.ID, 'com.chinasofti.rcs:id/actionbar_main_enterprise'),
         '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back_actionbar'),
         '创建团队': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_actionbar'),
-        '请输入团队名称': (MobileBy.ID, 'qy_name'),
+        # '请输入团队名称': (MobileBy.ID, 'qy_name'),
+        '请输入团队名称': (MobileBy.XPATH, '//*[@text="请输入团队名称"]'),
         '选择行业': (MobileBy.XPATH, '//*[@content-desc="选择行业"]'),
         '选择所在地': (MobileBy.XPATH, '//*[@content-desc="选择所在地"]'),
-        '请务必填写真实姓名': (MobileBy.ID, 'gly_name'),
-        '14775290489@139.com': (MobileBy.ID, 'gly_email'),
+        # '请务必填写真实姓名': (MobileBy.ID, 'gly_name'),
+        '请务必填写真实姓名': (MobileBy.XPATH, '//*[@text="请务必填写真实姓名"]'),
+        # '14775290489@139.com': (MobileBy.ID, 'gly_email'),
+        '邮箱': (MobileBy.XPATH, '//*[contains(@text, "@139.com")]'),
         '立即创建团队': (MobileBy.XPATH, '//*[@content-desc="立即创建团队"]'),
+        # 点击创建团队后，设置工作台
+        '完成设置工作台': (MobileBy.XPATH, '//*[@content-desc="完成设置工作台"]'),
         # 创建成功后页面
         '创建成功': (MobileBy.XPATH, '//*[@content-desc="创建成功"]'),
         '登录后台可体验更全面的管理功能': (MobileBy.XPATH, '//*[@content-desc="登录后台可体验更全面的管理功能"]'),
@@ -98,3 +103,42 @@ class CreateTeamPage(BasePage):
     def click_immediately_create_team(self):
         """点击立即创建团队"""
         self.click_element(self.__class__.__locators['立即创建团队'])
+
+    @TestLogger.log()
+    def is_on_this_page(self):
+        """当前页面是否在创建团队页面"""
+        try:
+            self.wait_until(
+                timeout=8,
+                auto_accept_permission_alert=True,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["立即创建团队"])
+            )
+            return True
+        except:
+            return False
+
+    @TestLogger.log()
+    def click_finish_setting_workbench(self):
+        """点击 完成设置工作台"""
+        self.click_element(self.__class__.__locators['完成设置工作台'])
+
+    @TestLogger.log()
+    def wait_for_create_team_success_page_load(self, timeout=10, auto_accept_alerts=True):
+        """等待 创建团队 成功页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("创建成功")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def input_email(self, email):
+        """输入团队名字"""
+        self.input_text(self.__class__.__locators["邮箱"], email)
