@@ -123,7 +123,7 @@ class MassMessengerTest(TestCase):
     def default_tearDown(self):
         pass
 
-    @tags('ALL')
+    @tags('ALL','workbench')
     def test_QFXS_0008(self):
         """1、点击用户本人头像"""
         mess = MessagePage()
@@ -153,7 +153,7 @@ class MassMessengerTest(TestCase):
         mgp.wait_for_edit_message_page_load()
         mgp.click_close()
 
-    @tags('ALL')
+    @tags('ALL','workbench')
     def test_QFXS_0010(self):
         """1、搜索不存在的用户名称"""
         mess = MessagePage()
@@ -183,7 +183,7 @@ class MassMessengerTest(TestCase):
         mgp.wait_for_edit_message_page_load()
         mgp.click_close()
 
-    @tags('ALL')
+    @tags('ALL','workbench')
     def test_QFXS_0011(self):
         """1、再次点击头像，取消选择人员"""
         mess = MessagePage()
@@ -229,7 +229,7 @@ class MassMessengerTest(TestCase):
         mgp.wait_for_edit_message_page_load()
         mgp.click_close()
 
-    @tags('ALL')
+    @tags('ALL','workbench')
     def test_QFXS_0013(self):
         """1、点击“+”，添加接收人
             2、添加人数小于当前企业剩余条数"""
