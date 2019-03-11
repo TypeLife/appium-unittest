@@ -292,3 +292,27 @@ class WorkbenchPage(FooterPage):
         """点击左上角的企业名称的倒三角"""
         name = self.get_element(self.__class__.__locators['当前团队名称:myteam02']).text
         self.click_element((MobileBy.XPATH, '//*[@text="%s"]' % name))
+
+    @TestLogger.log()
+    def is_on_this_page(self):
+        """判断是否在此页面"""
+        el = self.get_elements(self.__locators['工作台管理'])
+        if len(el) > 0:
+            return True
+        return False
+
+    @TestLogger.log()
+    def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
+        """等待消息页面加载（自动允许权限）"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["工作台管理"])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
