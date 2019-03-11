@@ -71,7 +71,10 @@ class WorkbenchPage(FooterPage):
                   '通话': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCall'),
                   '工作台': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCircle'),
                   '通讯录': (MobileBy.ID, 'com.chinasofti.rcs:id/tvContact'),
-                  '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe')
+                  '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe'),
+                  '解散团队': (MobileBy.XPATH, '//*[@text="解散团队"]'),
+                  '确定1': (MobileBy.XPATH, '//*[@text="确定"]'),
+                  '团队返回': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_listitem'),
                   }
 
     def swipe_half_page_up(self):
@@ -316,3 +319,26 @@ class WorkbenchPage(FooterPage):
                 message
             )
         return self
+
+    @TestLogger.log()
+    def click_press_enterprise_name(self):
+        """点击并长按左上角的企业名称的倒三角"""
+        name = self.get_element(self.__class__.__locators['当前团队名称:myteam02']).text
+        self.click_element((MobileBy.XPATH, '//*[@text="%s"]' % name))
+        el = self.get_element((MobileBy.XPATH, '//*[@text="%s"]' % name))
+        self.press(el)
+
+    @TestLogger.log()
+    def click_cancel_team(self):
+        """点击解散团队"""
+        self.click_element(self.__class__.__locators["解散团队"])
+
+    @TestLogger.log()
+    def click_sure(self):
+        """点击确定解散团队"""
+        self.click_element(self.__class__.__locators["确定1"])
+
+    @TestLogger.log()
+    def click_back_team(self):
+        """点击确定解散团队"""
+        self.click_element(self.__class__.__locators["团队返回"])
