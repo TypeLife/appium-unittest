@@ -384,3 +384,9 @@ class GroupChatPage(BaseChatPage):
         else:
             raise AssertionError("没有找到多选选择框")
 
+    @TestLogger.log()
+    def press_voice_message(self):
+        """长按语言消息体"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/linearlayout_msg_content'))
+        self.press(el)
+

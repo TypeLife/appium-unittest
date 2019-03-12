@@ -173,8 +173,10 @@ class MassMessengerTest(TestCase):
         # 点击本机号码
         sccp = SelectCompanyContactsPage()
         sccp.wait_for_page_load()
+        import random
+        a=str(random.random())
         #搜索框输入不存在用户名
-        sccp.input_search_message("嗯嗯")
+        sccp.input_search_message(a)
         if not sccp.is_toast_exist("无搜索结果"):
             raise AssertionError("没有提示 无搜索结果")
         sccp.click_back()

@@ -9,6 +9,7 @@ __all__ = [
     'OfficialAccountDetailPage',
     'SearchOfficialAccountPage',
     'EditContactPage'
+    'HeContacts'
 ]
 from .ContactDetails import ContactDetailsPage
 from .ContactListSearch import ContactListSearchPage
