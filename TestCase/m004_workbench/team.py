@@ -1,9 +1,8 @@
 import unittest
-from preconditions.BasePreconditions import LoginPreconditions
+from preconditions.BasePreconditions import WorkbenchPreconditions
 from library.core.TestCase import TestCase
 from library.core.utils.testcasefilter import tags
 from library.core.utils.applicationcache import current_mobile
-from library.core.common.simcardtype import CardType
 from pages import *
 import time
 
@@ -12,52 +11,9 @@ from library.core.utils.applicationcache import current_mobile, current_driver, 
 from TestCase.m001_login.login import *
 
 
-class Preconditions(LoginPreconditions):
+class Preconditions(WorkbenchPreconditions):
     """前置条件"""
-
-    @staticmethod
-    def enter_create_team_page(reset=False):
-        """从消息进入创建团队页面"""
-        # 登录进入消息页面
-        Preconditions.make_already_in_message_page(reset)
-        mess = MessagePage()
-        # 从消息进入创建团队页面
-        mess.open_workbench_page()
-        workbench = WorkbenchPage()
-        if workbench.is_on_welcome_page():
-            workbench.click_now_create_team()
-        else:
-            workbench.wait_for_page_load()
-            workbench.click_create_team()
-        team = CreateTeamPage()
-        team.wait_for_page_load()
-
-    @staticmethod
-    def get_team_name():
-        """获取团队"""
-        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
-        team_name = "ateam" + phone_number[-4:]
-        return team_name
-
-    @staticmethod
-    def create_team(team_name=None, user_name="admin"):
-        """创建团队"""
-        if not team_name:
-            team_name = Preconditions.get_team_name()
-        team = CreateTeamPage()
-        team.input_team_name(team_name)
-        team.choose_location()
-        team.choose_industry()
-        team.input_real_name(user_name)
-        # 立即创建团队
-        team.click_immediately_create_team()
-        # 点击完成设置工作台
-        team.click_finish_setting_workbench()
-        team.wait_for_create_team_success_page_load()
-        # 进入工作台
-        team.click_enter_workbench()
-        workbench = WorkbenchPage()
-        workbench.wait_for_page_load()
+    pass
 
 
 class TeamTest(TestCase):
