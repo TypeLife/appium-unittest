@@ -21,7 +21,8 @@ class SmsLoginPage(BasePage):
         "我知道了": (MobileBy.ID, 'com.chinasofti.rcs:id/btn_know'),
         "和飞信软件许可及服务协议": (MobileBy.ID, "com.chinasofti.rcs:id/agreement_tv"),
         "切换另一号码登录": (MobileBy.ID, "com.chinasofti.rcs:id/change_to_one"),
-        '查看详情': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_check_detail')
+        '查看详情': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_check_detail'),
+        '语言': (MobileBy.ID, '	com.chinasofti.rcs:id/tv_language'),
     }
 
     @TestLogger.log()
@@ -232,3 +233,8 @@ class SmsLoginPage(BasePage):
             raise AssertionError(
                 message
             )
+
+    @TestLogger.log()
+    def click_language(self):
+        """点击查看详情"""
+        self.click_element(self.__locators['语言'])

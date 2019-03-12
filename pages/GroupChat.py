@@ -369,3 +369,24 @@ class GroupChatPage(BaseChatPage):
             self.click_element(self.__class__.__locators[text])
         else:
             raise AssertionError("没有找到语音消息体")
+
+    @TestLogger.log()
+    def get_group_name(self):
+        """在群聊页面获取群聊名称"""
+        return self.get_element(self.__class__.__locators['群聊001(2)']).text
+
+    @TestLogger.log()
+    def get_multiple_selection_count(self):
+        """获取多选计数框"""
+        el = self.get_element(self.__class__.__locators["多选计数"])
+        if el:
+            return el
+        else:
+            raise AssertionError("没有找到多选选择框")
+
+    @TestLogger.log()
+    def press_voice_message(self):
+        """长按语言消息体"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/linearlayout_msg_content'))
+        self.press(el)
+

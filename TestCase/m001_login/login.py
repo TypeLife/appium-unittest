@@ -948,3 +948,342 @@ class LoginTest(TestCase):
                 if reinstall_try_time == 0:
                     import traceback
                     traceback.print_exc()
+
+
+    @staticmethod
+    def setUp_test_login_0072():
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.make_already_in_one_key_login_page()
+
+    @tags('ALL', 'Login', 'CMCC')
+    def test_login_0072(self, login_time=60):
+        '''
+        有网络,安卓和飞信APP未登录开机屏检查
+        :param login_time:
+        :return:
+        '''
+        oklp = OneKeyLoginPage()
+        Preconditions.terminate_app()
+        sl = SmsLoginPage()
+        sl.page_should_not_contain_text('一键登陆')
+
+    @staticmethod
+    def setUp_test_login_0073():
+
+        Preconditions.select_mobile('Android-移动')
+        oklp = OneKeyLoginPage()
+        oklp.set_network_status(1)
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.make_already_in_one_key_login_page()
+
+    @tags('ALL', 'Login', 'CMCC')
+    def test_login_0073(self, logintime=60):
+        '''
+        无网络,安桌飞信APP未登录开机屏检查
+        :param logintime:
+        :return:
+        '''
+        oklp = OneKeyLoginPage()
+        oklp.kill_flyme_app()
+        sl = SmsLoginPage()
+        sl.page_should_not_contain_text('一键登陆')
+
+    @staticmethod
+    def tearDown_test_login_0073():
+        # 恢复网络连接
+        oklp = OneKeyLoginPage()
+        oklp.set_network_status(6)
+
+    @staticmethod
+    def setUp_test_login_0074():
+        from settings.available_devices import TARGET_APP
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        if not current_mobile().is_app_installed(TARGET_APP.get('APP_PACKAGE')):
+            current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                         replace=True)
+
+    @tags('ALL', 'Login', 'CMCC')
+    def test_login_0074(self):
+        """ 先卸载后安装"""
+        # 卸载和飞信
+        from settings.available_devices import TARGET_APP
+        current_mobile().remove_app(TARGET_APP.get('APP_PACKAGE'))
+        current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                     replace=True)
+        #  Preconditions.make_already_in_message_page()
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.app_start_for_the_first_time()
+        sl = SmsLoginPage()
+        sl.page_should_not_contain_text('一键登陆')
+
+    @staticmethod
+    def setUp_test_login_0075():
+        from settings.available_devices import TARGET_APP
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        if not current_mobile().is_app_installed(TARGET_APP.get('APP_PACKAGE')):
+            current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                         replace=True)
+
+    @tags('ALL', 'Login', 'CMCC')
+    def test_login_0075(self):
+        """ 先卸载后安装"""
+        # 卸载和飞信
+        from settings.available_devices import TARGET_APP
+        current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                     replace=True)
+        #  Preconditions.make_already_in_message_page()
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.app_start_for_the_first_time()
+        sl = SmsLoginPage()
+        sl.page_should_not_contain_text('一键登陆')
+
+    @staticmethod
+    def setUp_test_login_0096():
+        """进入一键登录页"""
+        Preconditions.select_mobile('Android-移动')
+        oklp = OneKeyLoginPage()
+        oklp.set_network_status(1)
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.make_already_in_one_key_login_page()
+
+    @tags('ALL', 'Login', "移动")
+    def test_login_0096(self):
+        """一移动一异网卡登录"""
+        oklp = OneKeyLoginPage()
+        oklp.click_one_key_login()
+        sms = SmsLoginPage()
+        time.sleep(0.5)
+        if sms.is_text_present("查看详情"):
+            # 查看详情
+            sms.click_read_agreement_detail()
+            # 同意协议
+            agreement = AgreementDetailPage()
+            agreement.click_agree_button()
+            time.sleep(0.5)
+        if sms.is_text_present("我知道了"):
+            # 点击‘我知道了’
+            sms.click_i_know()
+        # 网络异常提示
+        flag = sms.is_toast_exist("当前网络不可用(102101)")
+        self.assertTrue(flag)
+
+    @staticmethod
+    def tearDown_test_login_0096():
+        # 恢复网络连接
+        oklp = OneKeyLoginPage()
+        oklp.set_network_status(6)
+
+    @staticmethod
+    def setUp_test_login_0113():
+        Preconditions.select_mobile('Android-移动')
+        oklp = OneKeyLoginPage()
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_one_key_login_page()
+
+    @tags('ALL', 'Login', 'CMCC')
+    def test_login_0113(self):
+        """ 界面点击“语言”按钮"""
+        oklp = OneKeyLoginPage()
+        oklp.wait_for_page_load()
+        # 点击“语言”按钮
+        oklp.click_language()
+        sml = MeSetMultiLanguagePage()
+        # 点击繁体中文
+        sml.select_traditional_chinese()
+        # 点击完成
+        sml.click_finish()
+        # 检查繁体中文
+        time.sleep(2)
+        try:
+            oklp.wait_until(
+                condition=lambda d: oklp.is_text_present('一鍵登入')
+            )
+        except TimeoutException:
+            raise AssertionError('没有找到繁体字文案：一键登录')
+        # 为不影响其他用例，切换回简体中文
+        oklp.click_language()
+        sml.select_simplified_chinese()
+        sml.click_finish()
+        oklp.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_login_0114():
+        Preconditions.select_mobile('Android-移动')
+        oklp = OneKeyLoginPage()
+        Preconditions.app_start_for_the_first_time()
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_one_key_login_page()
+
+    @tags('ALL', 'Login', 'CMCC')
+    def test_login_0114(self):
+        """ 界面点击“语言”按钮"""
+        oklp = OneKeyLoginPage()
+        oklp.wait_for_page_load()
+        # 点击“语言”按钮
+        oklp.click_one_key_login()
+        time.sleep(5)
+        oklp.page_should_contain_text('查看详情')
+        oklp.press_home_key(2)
+
+    @staticmethod
+    def setUp_test_login_0116():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.app_start_for_the_first_time()
+        oklp = OneKeyLoginPage()
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_one_key_login_page()
+
+    @tags('ALL', 'Login', 'CMCC')
+    def test_login_0116(self):
+        """ 界面点击“语言”按钮"""
+
+        oklp = OneKeyLoginPage()
+        sl = SmsLoginPage()
+        oklp.wait_for_page_load()
+        oklp.click_one_key_login()
+        time.sleep(1)
+        oklp.page_should_contain_text('查看详情')
+        # 查看详情
+        sl.click_read_agreement_detail()
+        # 同意协议
+        agreement = AgreementDetailPage()
+        agreement.click_agree_button()
+        time.sleep(1)
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.click_menu('设置')
+        me_page.click_menu('退出')
+
+    @staticmethod
+    def setUp_test_login_0117():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.app_start_for_the_first_time()
+        oklp = OneKeyLoginPage()
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_one_key_login_page()
+
+    @tags('ALL', 'Login', 'CMCC')
+    def test_login_0117(self):
+        """ 老版用户更新后登录"""
+        oklp = OneKeyLoginPage()
+        sl = SmsLoginPage()
+        oklp.wait_for_page_load()
+        oklp.click_one_key_login()
+        time.sleep(1)
+        oklp.page_should_contain_text('查看详情')
+        # 查看详情
+        sl.click_read_agreement_detail()
+        # 同意协议
+        agreement = AgreementDetailPage()
+        agreement.click_agree_button()
+        time.sleep(1)
+        from settings.available_devices import TARGET_APP
+        current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                     replace=True)
+        time.sleep(5)
+        current_mobile().activate_app()
+        time.sleep(10)
+        oklp.page_should_contain_text('消息')
+
+    @staticmethod
+    def tearDown_test_login_0117():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.app_start_for_the_first_time()
+
+    @staticmethod
+    def setUp_test_login_0131():
+        """进入一键登录页"""
+        Preconditions.select_mobile('Android-移动')
+        oklp = OneKeyLoginPage()
+        oklp.set_network_status(1)
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.make_already_in_one_key_login_page()
+
+    @tags('ALL', 'Login', "移动")
+    def test_login_0131(self):
+        """无网络时，android统一认证提示"""
+        oklp = OneKeyLoginPage()
+        oklp.click_one_key_login()
+        sms = SmsLoginPage()
+        time.sleep(0.5)
+        if sms.is_text_present("查看详情"):
+            # 查看详情
+            sms.click_read_agreement_detail()
+            # 同意协议
+            agreement = AgreementDetailPage()
+            agreement.click_agree_button()
+            time.sleep(0.5)
+        if sms.is_text_present("我知道了"):
+            # 点击‘我知道了’
+            sms.click_i_know()
+            # 网络异常提示
+            #  flag = sms.is_toast_exist("当前网络不可用(102101)")
+        flag = sms.is_toast_exist("当前网络不可用(102101)，请检查网络设置")
+        self.assertTrue(flag)
+
+    @staticmethod
+    def tearDown_test_login_0131():
+        # 恢复网络连接
+        oklp = OneKeyLoginPage()
+        oklp.set_network_status(6)
+        oklp.press_home_key(2)
+
+    @staticmethod
+    def setUp_test_login_0135():
+        """进入一键登录页"""
+        Preconditions.select_mobile('Android-移动')
+        oklp = OneKeyLoginPage()
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.make_already_in_one_key_login_page()
+
+    @tags('ALL', 'Login', "移动")
+    def test_login_0135(self):
+        """网络超时（ 假wifi或弱网环境），android统一认证提示"""
+        oklp = OneKeyLoginPage()
+        oklp.click_one_key_login()
+        sms = SmsLoginPage()
+        time.sleep(0.5)
+        if sms.is_text_present("查看详情"):
+            # 查看详情
+            sms.click_read_agreement_detail()
+            # 同意协议
+            agreement = AgreementDetailPage()
+            agreement.click_agree_button()
+            time.sleep(0.5)
+        if sms.is_text_present("我知道了"):
+            # 点击‘我知道了’
+            sms.click_i_know()
+        # 网络异常提示
+        flag = sms.is_toast_exist("网络连接超时(102102)，请使用短信验证码登录")
+        self.assertTrue(flag)
+        oklp.press_home_key(2)
+
+    @staticmethod
+    def setUp_test_login_0122():
+        """进入一键登录页"""
+        Preconditions.select_mobile('Android-移动')
+        oklp = OneKeyLoginPage()
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.make_already_in_one_key_login_page()
+
+    @tags('ALL', 'Login', "移动")
+    def test_login_0122(self):
+        """安卓/IOS登录界面，显示本机号码"""
+        oklp = OneKeyLoginPage()
+        time.sleep(3)
+        phone_numbers = current_mobile().get_cards(CardType.CHINA_MOBILE)
+        print(phone_numbers)
+        oklp.assert_phone_number_equals_to(phone_numbers[0])
+        oklp.press_home_key(2)
+

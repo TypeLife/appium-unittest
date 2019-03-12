@@ -79,3 +79,8 @@ class SingleChatSetPage(BasePage):
             return True
         except:
             return False
+
+    @TestLogger.log()
+    def get_name(self):
+        """获取聊天人的人名"""
+        return self.get_element(self.__class__.__locators['axz']).text
