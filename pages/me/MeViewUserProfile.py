@@ -66,3 +66,9 @@ class MeViewUserProfilePage(BasePage):
     def element_contain_text(self, locator, expected):
         """该元素是否包含文本"""
         self.element_should_contain_text(self.__locators[locator], expected, "该元素不是此文本")
+
+    @TestLogger.log()
+    def click_share_card(self):
+        """点击分享名片"""
+        self.click_element(self.__locators['分享名片'])
+
