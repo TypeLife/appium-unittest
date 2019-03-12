@@ -336,13 +336,13 @@ class WorkbenchPage(FooterPage):
         return False
 
     @TestLogger.log()
-    def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
-        """等待消息页面加载（自动允许权限）"""
+    def wait_for_page_load(self, timeout=60, auto_accept_alerts=True):
+        """工作台管理页面加载"""
         try:
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_element_present(self.__class__.__locators["工作台管理"])
+                condition=lambda d: self._is_element_present(self.__class__.__locators["当前团队名称:myteam02"])
             )
         except:
             message = "页面在{}s内，没有加载成功".format(str(timeout))
