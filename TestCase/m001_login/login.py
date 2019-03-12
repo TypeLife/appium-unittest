@@ -948,3 +948,13 @@ class LoginTest(TestCase):
                 if reinstall_try_time == 0:
                     import traceback
                     traceback.print_exc()
+
+    @tags('ALL', 'Login', "移动")
+    def test_login_0122(self):
+        """安卓/IOS登录界面，显示本机号码"""
+        oklp = OneKeyLoginPage()
+        time.sleep(3)
+        phone_numbers = current_mobile().get_cards(CardType.CHINA_MOBILE)
+        print(phone_numbers)
+        oklp.assert_phone_number_equals_to(phone_numbers[0])
+        oklp.press_home_key(2)
