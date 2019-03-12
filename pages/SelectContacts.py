@@ -34,6 +34,8 @@ class SelectContactsPage(BasePage):
         '聊天电话': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),
         # 分享二维码的选择联系人页面
         '选择本地联系人': (MobileBy.XPATH, '//*[@text ="选择本地联系人"]'),
+        'tel:+86': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_number"]'),
+
         # 未知号码
         '未知号码': (MobileBy.XPATH, '//*[contains(@text,"未知号码")]'),
         # 选择一个联系人转发消息时的弹框
@@ -105,6 +107,11 @@ class SelectContactsPage(BasePage):
     def click_share_card(self):
         """点击分享名片"""
         self.click_element(self.__locators['分享名片'])
+
+    @TestLogger.log('搜索或输入手机号')
+    def click_search_contact(self):
+        """点击搜索或输入手机号"""
+        self.click_element(self.__locators['搜索或输入手机号'])
 
     @TestLogger.log('搜索或输入手机号')
     def input_search_keyword(self, keyword):
