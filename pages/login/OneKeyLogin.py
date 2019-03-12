@@ -162,3 +162,16 @@ class OneKeyLoginPage(BasePage):
     def page_should_contain_client_logo_pic(self):
         """登录页客户端头像检查"""
         self.page_should_contain_element(self.__locators["客户端头像"])
+
+    @TestLogger.log('关闭应用')
+    def kill_flyme_app(self):
+        self.execute_shell_command('adb shell am force-stop com.chinasofti.rcs')
+
+    @TestLogger.log('点按手机Home键')
+    def press_home_key(self,times=1):
+        try:
+            for i in range(times):
+                self.execute_shell_command('input','keyevent',3)
+            return
+        except:
+            raise NotImplementedError('该API不支持android/ios以外的系统')

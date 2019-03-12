@@ -171,5 +171,8 @@ class SettingPage(BasePage):
         return True
 
 
-
+    @TestLogger.log("切换语言")
+    def change_system_language(self,language):
+        self.execute_shell_command('adb shell "am start -n  com.android.providers.settings/.SettingsProvider"')
+        self.is_current_activity_match_this_page()
 

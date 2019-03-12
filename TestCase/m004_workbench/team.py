@@ -7,6 +7,10 @@ from library.core.common.simcardtype import CardType
 from pages import *
 import time
 
+from pages.workbench.create_team.CreateTeam import CreateTeamPage
+from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
+from TestCase.m001_login.login import *
+
 
 class Preconditions(LoginPreconditions):
     """前置条件"""
@@ -211,3 +215,193 @@ class TeamTest(TestCase):
         workbench.wait_for_page_load()
         workbench.click_create_team()
         team.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_workbench_GGXX_0005():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        pg = CreateTeamPage()
+        pg.click_workbeanch_button()
+        time.sleep(5)
+        pg.page_up()
+        pg.click_public_message()
+        pg.create_team_message("天气预报","晴天转多云")
+        time.sleep(1)
+
+    @tags('ALL', 'Login', "workbench")
+    def test_workbench_GGXX_0005(self):
+        '验证公告信息首页搜索是否正确'
+        pg = CreateTeamPage()
+        pg.click_enter_search()
+        pg.input_search_text()
+        pg.is_text_present('天气预报')
+
+    @staticmethod
+    def tearDown_test_workbench_GGXX_0005():
+        # 恢复网络连接
+        oklp = OneKeyLoginPage()
+        pg = CreateTeamPage()
+        pg.remove_message()
+        oklp.press_home_key(3)
+
+    @staticmethod
+    def setUp_test_workbench_GGXX_0006():
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        pg = CreateTeamPage()
+        pg.click_workbeanch_button()
+        time.sleep(5)
+        pg.page_up()
+        pg.click_public_message()
+        pg.save_team__message("天气预报", "晴天转多云,风云多变")
+        time.sleep(1)
+
+    @tags('ALL', 'Login', "workbench")
+    def test_workbench_GGXX_0006(self):
+        '验证未发公告页搜索是否正确'
+        pg = CreateTeamPage()
+        pg.click_no_publish()
+        pg.click_enter_search()
+        pg.input_search_text()
+        pg.is_text_present('天气预报')
+
+    @staticmethod
+    def tearDown_test_workbench_GGXX_0006():
+        # 恢复网络连接
+        oklp = OneKeyLoginPage()
+        pg = CreateTeamPage()
+        pg.remove_message()
+        oklp.press_home_key(3)
+
+    @staticmethod
+    def setUp_test_workbench_GGXX_0007():
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        pg = CreateTeamPage()
+        pg.click_workbeanch_button()
+        time.sleep(5)
+        pg.page_up()
+        pg.click_public_message()
+        pg.create_team_message("天气预报", "晴天转多云,风云多变")
+        time.sleep(1)
+
+    @tags('ALL', 'Login', "workbench")
+    def test_workbench_GGXX_0007(self):
+        '已发布公告下线'
+        pg = CreateTeamPage()
+        pg.click_list_message()
+        pg.click_remove_message()
+        time.sleep(2)
+        pg.page_should_not_contain_text('天气预报')
+
+    @staticmethod
+    def tearDown_test_workbench_GGXX_0007():
+        oklp = OneKeyLoginPage()
+        pg = CreateTeamPage()
+        pg.remove_message()
+        oklp.press_home_key(3)
+
+
+    @staticmethod
+    def setUp_test_workbench_GGXX_0008():
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        pg = CreateTeamPage()
+        pg.click_workbeanch_button()
+        time.sleep(5)
+        pg.page_up()
+        pg.click_public_message()
+        pg.save_team__message("天气预报", "晴天转多云,风云多变")
+        time.sleep(1)
+
+    @tags('ALL', 'Login', "workbench")
+    def test_workbench_GGXX_0008(self):
+        '公告存草稿'
+        pg = CreateTeamPage()
+        pg.click_no_publish()
+        time.sleep(1)
+        pg.page_should_contain_text("天气预报")
+
+    @staticmethod
+    def tearDown_test_workbench_GGXX_0008():
+        # 恢复网络连接
+        oklp = OneKeyLoginPage()
+        pg = CreateTeamPage()
+        pg.remove_message()
+        oklp.press_home_key(3)
+
+    @staticmethod
+    def setUp_test_workbench_GGXX_0009():
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        pg = CreateTeamPage()
+        pg.click_workbeanch_button()
+        time.sleep(5)
+        pg.page_up()
+        pg.click_public_message()
+        pg.save_team__message("天气预报", "晴天转多云,风云多变")
+        time.sleep(1)
+
+    @tags('ALL', 'Login', "workbench")
+    def test_workbench_GGXX_0009(self):
+        """
+        发布未发布中公告
+        :return:
+        """
+        pg = CreateTeamPage()
+        pg.click_no_publish()
+        time.sleep(1)
+        pg.click_list_message()
+        pg.click_publish()
+        pg.click_sure()
+        time.sleep(2)
+        pg.page_should_contain_text("天气预报")
+        time.sleep(1)
+
+    @staticmethod
+    def tearDown_test_workbench_GGXX_0009():
+        # 恢复网络连接
+        oklp = OneKeyLoginPage()
+        pg = CreateTeamPage()
+        pg.remove_message()
+        oklp.press_home_key(3)
+
+    @staticmethod
+    def setUp_test_workbench_GGXX_00010():
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        pg = CreateTeamPage()
+        pg.click_workbeanch_button()
+        time.sleep(5)
+        pg.page_up()
+        pg.click_public_message()
+        pg.save_team__message("天气预报", "晴天转多云,风云多变")
+        time.sleep(1)
+
+    @tags('ALL', 'Login', "workbench")
+    def test_workbench_GGXX_00010(self):
+        """
+        删除,公告中草稿
+        """
+        pg = CreateTeamPage()
+        time.sleep(1)
+        pg.click_no_publish()
+        time.sleep(1)
+        pg.remove_message()
+        time.sleep(2)
+        flag=pg.page_should_not_contain_text("天气预报")
+
+    @staticmethod
+    def tearDown_test_workbench_GGXX_00010():
+        oklp = OneKeyLoginPage()
+        time.sleep(10)
+        pg = CreateTeamPage()
+        pg.remove_message()
+        oklp.press_home_key(3)
