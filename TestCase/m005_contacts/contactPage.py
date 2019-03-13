@@ -9,6 +9,8 @@ from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
+from pages.contacts.HeContacts import HeContactsPage
+from pages.contacts.official_account import OfficialAccountPage
 from pages.contacts.EditContactPage import EditContactPage
 
 
@@ -149,8 +151,7 @@ class Preconditions(object):
         mess=MessagePage()
         mess.click_contacts()
 
-
-@unittest.skip("调试中。。。。")
+# @unittest.skip("调试中。。。。")
 class ContactPage(TestCase):
 
     """
@@ -161,24 +162,23 @@ class ContactPage(TestCase):
     """
     @staticmethod
     def setUp_test_contacts_0001():
-        """
-        验证通讯录页面元素
-        """
+
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
+        time.sleep(1)
         if ContactsPage().is_text_present('需要使用通讯录权限'):
             ContactsPage().click_always_allowed()
-        time.sleep(2)
-
+        time.sleep(1)
 
     @tags('All','CMCC')
     def test_contacts_0001(self):
+        """验证通讯录页面元素"""
         contacts = ContactsPage()
         contacts.page_should_contain_text('通讯录')
-        # contacts.page_should_contain_text('+')
-        # contacts.page_should_contain_text('搜索')
+        # contacts.page_should_contain_element('+')
+        contacts.page_should_contain_text('搜索')
         if contacts.is_text_present('备份你的手机通讯录，联系人数据不丢失'):
             contacts.page_should_contain_text('备份你的手机通讯录，联系人数据不丢失')
         time.sleep(2)
@@ -222,18 +222,18 @@ class ContactPage(TestCase):
         MessagePage().click_contacts()
         contact=ContactsPage()
         contact.click_forbidden()
-        time.sleep(2)
-
+        time.sleep(1)
 
     @staticmethod
     def setUp_test_contacts_0015():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
+        time.sleep(1)
         MessagePage().click_contacts()
+        time.sleep(2)
         if ContactsPage().is_text_present('需要使用通讯录权限'):
             ContactsPage().click_always_allowed()
-        time.sleep(2)
         # 创建联系人 测试1
         ContactsPage().click_add()
         creat_contact = CreateContactPage()
@@ -253,13 +253,29 @@ class ContactPage(TestCase):
         creat_contact.save_contact()
         time.sleep(2)
         ContactDetailsPage().click_back_icon()
+        #创建联系人测试3
+        ContactsPage().click_add()
+        creat_contact.click_input_name()
+        creat_contact.input_name('测试3')
+        creat_contact.click_input_number()
+        creat_contact.input_number('12554555554')
+        creat_contact.save_contact()
+        time.sleep(2)
+        ContactDetailsPage().click_back_icon()
+        #创建联系人测试4
+        ContactsPage().click_add()
+        creat_contact.click_input_name()
+        creat_contact.input_name('测试4')
+        creat_contact.click_input_number()
+        creat_contact.input_number('12345678912')
+        creat_contact.save_contact()
+        time.sleep(2)
+        ContactDetailsPage().click_back_icon()
 
 
     @tags('All', 'CMCC')
     def test_contacts_0015(self):
-        """
-        已保存到本地的RCS用户的profile页
-        """
+        """已保存到本地的RCS用户的profile页"""
         ContactsPage().click_search_box()
         # 搜索联系人:测试1
         ContactListSearchPage().input_search_keyword('测试1')
@@ -283,11 +299,11 @@ class ContactPage(TestCase):
         detailpage.page_should_contain_text('视频通话')
         detailpage.page_should_contain_text('和飞信电话')
         detailpage.page_should_contain_text('分享名片')
-        # 点击大图 可以查看大图
+        # 点击头像查看大图
         detailpage.click_avatar()
         time.sleep(2)
         detailpage.click_big_avatar()
-        # 点击消息按钮,进入对话
+        # 消息按钮可点击
         detailpage.click_message_icon()  # 进入消息页面
         time.sleep(2)
         if ChatWindowPage().is_text_present("用户须知"):
@@ -298,19 +314,21 @@ class ContactPage(TestCase):
         else:
             ChatWindowPage().click_back()
         # 点击电话/点击语音通话/点击视频通话先不做
-        # 点击分享名片
+        # 分享名片按钮可点击
         detailpage.click_share_business_card()
         SelectContactsPage().select_local_contacts()
         SelectContactsPage().input_search_keyword('测试2')
         SelectContactsPage().click_cantact_avatar()
         SelectContactsPage().click_share_card()
+        #返回消息页面
+        detailpage.click_back_icon()
+        ContactListSearchPage().click_back()
+        ContactsPage().click_message_icon()
 
 
     @staticmethod
     def setUp_test_contacts_0016():
-        """
-        已保存到本地的非RCS用户的profile页
-        """
+
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
@@ -320,6 +338,7 @@ class ContactPage(TestCase):
 
     @tags('All', 'CMCC')
     def test_contacts_0016(self):
+        """已保存到本地的非RCS用户的profile页"""
         ContactsPage().click_search_box()
         #搜索联系人:测试2
         ContactListSearchPage().input_search_keyword('测试2')
@@ -344,11 +363,12 @@ class ContactPage(TestCase):
         detailpage.page_should_contain_text('和飞信电话')
         detailpage.page_should_contain_text('分享名片')
         detailpage.page_should_contain_text('邀请使用')
-        #点击大图 可以查看大图
+        time.sleep(2)
+        #点击头像可查看大图
         detailpage.click_avatar()
         time.sleep(2)
         detailpage.click_big_avatar()
-        #点击消息按钮,进入对话
+        #消息按钮可点击
         detailpage.click_message_icon() #进入消息页面
         time.sleep(2)
         if ChatWindowPage().is_text_present("用户须知"):
@@ -365,18 +385,20 @@ class ContactPage(TestCase):
         SelectContactsPage().input_search_keyword('测试1')
         SelectContactsPage().click_cantact_avatar()
         SelectContactsPage().click_share_card()
+        #邀请使用按钮可点击  暂时未做
+
+        #返回消息页面
+        detailpage.click_back_icon()
+        ContactListSearchPage().click_back()
+        ContactsPage().click_message_icon()
 
 
     @staticmethod
     def setUp_test_contacts_0017():
-        """
-        已保存到本地的本机用户的profile页
-        """
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
-        time.sleep(1)
         if ContactsPage().is_text_present('需要使用通讯录权限'):
             ContactsPage().click_always_allowed()
         time.sleep(2)
@@ -393,11 +415,9 @@ class ContactPage(TestCase):
         time.sleep(2)
         ContactDetailsPage().click_back_icon()
 
-
+    @tags('All', 'CMCC')
     def test_contacts_0017(self):
-        """
-        已保存到本地的本机用户的profile页
-        """
+        """已保存到本地的本机用户的profile页"""
         ContactsPage().click_search_box()
         # 搜索联系人:本机
         ContactListSearchPage().input_search_keyword('本机')
@@ -435,27 +455,388 @@ class ContactPage(TestCase):
         detailpage.voice_btn_is_clickable()
         detailpage.video_call_btn_is_clickable()
         detailpage.hefeixin_call_btn_is_clickable()
+        time.sleep(2)
+        #返回消息页面
+        detailpage.click_back_icon()
+        ContactListSearchPage().click_back()
+        ContactsPage().click_message_icon()
 
 
     @staticmethod
     def setUp_test_contacts_0036():
-        """
-        用户未加入任何企业
-        """
         Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()  #收起键盘
-        Preconditions.make_already_in_message_page()  #当前已在消息界面
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
 
     @tags('All', 'CMCC')
     def test_contacts_0036(self):
+        """用户未加入任何企业"""
         contact=ContactsPage()
         contact.click_and_address()
+        time.sleep(3)
+        HeContactsPage().page_should_contain_text('未加入企业')
+        #返回消息页面
+        HeContactsPage().click_back_icon()
+        ContactsPage().click_message_icon()
 
 
+    @staticmethod
+    def setUp_test_contacts_0195():
+        #进入通讯录页面
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_search_box()
+        ContactListSearchPage().input_search_keyword('测试1')
+        ContactListSearchPage().click_contact('测试1')
+        time.sleep(2)
 
+    @tags('All', 'CMCC')
+    def test_contacts_0195(self):
+        """分享名片,搜索选择一个群分享名片,弹框确认是否分享"""
+        ContactListSearchPage().click_share_card()
+        SelectContactsPage().click_select_one_group()
+        #搜索框文本显示'搜索群组'
+        SelectOneGroupPage().is_text_present('搜索群组')
+        #不存在搜索结果时,显示"无搜索结果
+        SelectOneGroupPage().click_search_group()
+        SelectOneGroupPage().input_search_keyword('红包')
+        SelectOneGroupPage().page_should_contain_text('无搜索结果')
+        #存在搜索结果时,搜索结果包含关键字
+        time.sleep(2)
+        SelectOneGroupPage().click_back_icon()
+        SelectOneGroupPage().click_search_group()
+        SelectOneGroupPage().input_search_keyword('测试群1')
+        SelectOneGroupPage().is_group_in_list('测试群1')
+        SelectOneGroupPage().select_one_group_by_name('测试群1')
+        SelectOneGroupPage().click_share_business_card()
+        #返回消息页面
+        ContactDetailsPage().click_back_icon()
+        ContactListSearchPage().click_back()
+        ContactsPage().click_message_icon()
 
+    @staticmethod
+    def setUp_test_contacts_0196():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_search_box()
+        ContactListSearchPage().input_search_keyword('测试1')
+        ContactListSearchPage().click_contact('测试1')
+        time.sleep(2)
 
+    @tags('All', 'CMCC')
+    def test_contacts_0196(self):
+        """群聊列表展示页面选择一个群分享"""
+        ContactListSearchPage().click_share_card()
+        SelectContactsPage().click_select_one_group()
+        SelectOneGroupPage().select_one_group_by_name('测试群1')
+        SelectOneGroupPage().is_text_present('发送名片')
+        SelectOneGroupPage().click_share_business_card()
+        #返回消息页面
+        ContactDetailsPage().click_back_icon()
+        ContactListSearchPage().click_back()
+        ContactsPage().click_message_icon()
+
+    @staticmethod
+    def setUp_test_contacts_0197():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_search_box()
+        ContactListSearchPage().input_search_keyword('测试1')
+        ContactListSearchPage().click_contact('测试1')
+        ContactDetailsPage().click_share_business_card()
+
+    @tags('All', 'CMCC')
+    def test_contacts_0197(self):
+        """群聊列表展示页面选择本地联系人分享"""
+        SelectContactsPage().select_local_contacts()
+        SelectContactsPage().page_should_contain_text('选择联系人')
+        SelectContactsPage().page_should_contain_text('搜索或输入手机号')
+        #无搜索结果时,下方是否展示：无搜索结果
+        SelectContactsPage().click_search_keyword()
+        SelectContactsPage().input_search_keyword('文本')
+        SelectContactsPage().is_text_present('无搜索结果')
+        time.sleep(2)
+        #存在搜索结果时,判断显示是否正确
+        SelectContactsPage().click_x_icon()
+        time.sleep(1)
+        SelectContactsPage().input_search_keyword('测试2')
+        SelectContactsPage().select_one_contact_by_name('测试2')
+        SelectContactsPage().click_share_card()
+        #返回消息页面
+        ContactDetailsPage().click_back_icon()
+        ContactListSearchPage().click_back()
+        ContactsPage().click_message_icon()
+
+    @staticmethod
+    def setUp_test_contacts_0198():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_search_box()
+        ContactListSearchPage().input_search_keyword('测试1')
+        ContactListSearchPage().click_contact('测试1')
+        ContactDetailsPage().click_share_business_card()
+
+    @tags('All', 'CMCC')
+    def test_contacts_0198(self):
+        """选择本地联系人分享名片"""
+        select_contact=SelectContactsPage()
+        select_contact.select_local_contacts()
+        select_contact.select_one_contact_by_name('测试2')
+        time.sleep(2)
+        select_contact.page_should_contain_text('发送名片')
+        select_contact.click_share_card()
+        #返回消息页面
+        ContactDetailsPage().click_back_icon()
+        ContactListSearchPage().click_back()
+        ContactsPage().click_message_icon()
+
+    @staticmethod
+    def setUp_test_contacts_0201():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_search_box()
+        ContactListSearchPage().input_search_keyword('测试1')
+        ContactListSearchPage().click_contact('测试1')
+        ContactListSearchPage().click_share_card()
+
+    @tags('All', 'CMCC')
+    def test_contacts_0201(self):
+        """选择和通讯录联系人联系人分享名片"""
+        SelectContactsPage().click_he_contacts()
+        time.sleep(2)
+        SelectContactsPage().page_should_contain_text('未加入企业')
+        #返回消息页面
+        HeContactsPage().click_back()
+        SelectContactsPage().click_back()
+        ContactDetailsPage().click_back_icon()
+        ContactListSearchPage().click_back()
+        ContactsPage().click_message_icon()
+
+    @staticmethod
+    #和飞信联系人里面已经有超过3个已测试开始的联系人,同时有超过3个群名称包含测试字段的群组
+    def setUp_test_contacts_0207():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_search_box()
+        ContactListSearchPage().input_search_keyword('测试1')
+        ContactListSearchPage().click_contact('测试1')
+        ContactDetailsPage().click_share_business_card()
+
+    @tags('All', 'CMCC')
+    def test_contacts_0207(self):
+        """分享名片时,搜索结果多于3人"""
+        select_contacts=SelectContactsPage()
+        #输入'测试'进行搜索,搜索结果显示情况
+        select_contacts.click_search_keyword()
+        select_contacts.input_search_keyword('测试')
+        select_contacts.hide_keyboard()
+        select_contacts.page_should_contain_text('搜索和通讯录联系人')
+        select_contacts.page_should_contain_text('本地联系人')
+        select_contacts.page_should_contain_text('查看更多')
+        select_contacts.page_should_contain_text('群聊')
+        #选择本地联系人是否会弹出弹框 #是否弹出弹框未检测
+        select_contacts.select_one_contact_by_name('测试1')
+        select_contacts.is_text_present('发送名片')
+        select_contacts.click_share_card()
+        #选择群联系人是否会出现弹框  是否弹出弹框未检测
+        ContactDetailsPage().click_share_business_card()
+        select_contacts.click_search_keyword()
+        select_contacts.input_search_keyword('测试')
+        select_contacts.hide_keyboard()
+        select_contacts.select_one_group_by_name('测试群1')
+        select_contacts.is_text_present('发送名片')
+        select_contacts.click_share_card()
+        #点击查看按钮,是否会展示折叠的搜索结果
+        ContactDetailsPage().click_share_business_card()
+        select_contacts.click_search_keyword()
+        select_contacts.input_search_keyword('测试')
+        select_contacts.hide_keyboard()
+        select_contacts.click_read_more()
+        time.sleep(2)
+        select_contacts.page_should_contain_text('测试4')
+        select_contacts.select_one_contact_by_name('测试4')
+        select_contacts.click_share_card()
+        #返回消息页面
+        ContactDetailsPage().click_back_icon()
+        ContactListSearchPage().click_back()
+        ContactsPage().click_message_icon()
+
+    @staticmethod
+    def setUp_test_contacts_0208():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_search_box()
+        ContactListSearchPage().input_search_keyword('测试1')
+        ContactListSearchPage().click_contact('测试1')
+        ContactListSearchPage().click_share_card()
+
+    @tags('All', 'CMCC')
+    def test_contacts_0208(self):
+        """选择最近聊天中的联系人,可分享名片"""
+        select_contacts = SelectContactsPage()
+        select_contacts.select_one_recently_contact_by_name('测试2')
+        time.sleep(1)
+        select_contacts.page_should_contain_text('发送名片')
+        select_contacts.click_share_card()
+        #返回消息页面
+        ContactDetailsPage().click_back_icon()
+        ContactListSearchPage().click_back()
+        ContactsPage().click_message_icon()
+
+    @staticmethod
+    def setUp_test_contacts_0209():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_search_box()
+        ContactListSearchPage().input_search_keyword('测试1')
+        ContactListSearchPage().click_contact('测试1')
+        ContactListSearchPage().click_share_card()
+
+    @tags('All', 'CMCC')
+    def test_contacts_0209(self):
+        """选择最近聊天中的群,可分享名片"""
+        select_contacts = SelectContactsPage()
+        select_contacts.select_one_recently_contact_by_name('测试群1')
+        time.sleep(1)
+        select_contacts.page_should_contain_text('发送名片')
+        select_contacts.click_share_card()
+        #返回消息页面
+        ContactDetailsPage().click_back_icon()
+        ContactListSearchPage().click_back()
+        ContactsPage().click_message_icon()
+
+    @staticmethod
+    def setUp_test_contacts_0210():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_search_box()
+        ContactListSearchPage().input_search_keyword('测试1')
+        ContactListSearchPage().click_contact('测试1')
+        ContactListSearchPage().click_share_card()
+
+    @tags('ALL','CMCC')
+    def test_contacts_0210(self):
+        """联系人选择器 搜索我的电脑"""
+        time.sleep(1)
+        SelectContactsPage().click_search_contact()
+        SelectContactsPage().input_search_keyword('我的电脑')
+        SelectContactsPage().hide_keyboard()
+        time.sleep(2)
+        #返回消息页面
+        SelectContactsPage().click_back()
+        ContactDetailsPage().click_back()
+        ContactListSearchPage().click_back()
+        ContactsPage().click_message_icon()
+
+    @staticmethod
+    def setUp_test_contacts_0211():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_search_box()
+        ContactListSearchPage().input_search_keyword('测试1')
+        ContactListSearchPage().click_contact('测试1')
+        ContactListSearchPage().click_share_card()
+
+    @tags('ALL','CMCC')
+    def test_contacts_0211(self):
+        """联系人选择器  输入陌生手机号码"""
+        time.sleep(1)
+        select_contact=SelectContactsPage()
+        select_contact.click_search_contact()
+        select_contact.input_search_keyword('15575256658')
+        select_contact.hide_keyboard()
+        time.sleep(2)
+        select_contact.get_element_text_net_name('未知号码')
+        select_contact.get_element_text_net_number('tel:+86')
+        time.sleep(2)
+        #返回消息页面
+        SelectContactsPage().click_back()
+        ContactDetailsPage().click_back()
+        ContactListSearchPage().click_back()
+        ContactsPage().click_message_icon()
+
+    @staticmethod
+    def setUp_test_contacts_0321():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+
+    def test_contacts_0321(self):
+        "公众号默认关注公众号检查"
+        ContactsPage().click_official_account_icon()
+        time.sleep(1)
+        official_account = OfficialAccountPage()
+        official_account.page_should_contain_text('中国移动10086')
+        official_account.page_should_contain_text('和飞信')
+        official_account.page_should_contain_text('和飞信团队')
+        #返回消息页面
+        official_account.click_back()
+        ContactsPage().click_message_icon()
+
+    @staticmethod
+    def setUp_test_contacts_0322():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+
+    def test_contacts_0322(self):
+        """公众号列表为空"""
+        ContactsPage().click_official_account_icon()
+        official_account = OfficialAccountPage()
+        official_account.click_tag("企业号")
+        time.sleep(1)
+        official_account.page_should_contain_text('未关注任何企业号')
+        official_account.assert_enterprise_account_list_is_empty()
+        #返回消息页面
+        official_account.click_back()
+        ContactsPage().click_message_icon()
 
 
 

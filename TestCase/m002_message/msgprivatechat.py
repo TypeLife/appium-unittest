@@ -342,7 +342,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         fcrp.click_back()
         setting.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0008(self):
         """消息-一对一消息会话-设置页面查找聊天内容"""
         # 先发送消息
@@ -368,7 +368,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         chat.click_setting()
         setting.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0009(self):
         """消息-一对一消息会话-设置页面查找不存在的聊天内容"""
         # 1. 点击下方的查找聊天内容按钮
@@ -424,7 +424,7 @@ class MsgPrivateChatMsgSetting(TestCase):
             csf.click_back()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0010(self):
         """消息-一对一消息会话-设置页面查找聊天文件"""
         self.public_send_file('.txt')
@@ -444,7 +444,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         fcrp.click_back()
         setting.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0011(self):
         """消息-一对一消息会话-设置页面查找聊天文件"""
         # 1. 点击右上角个人设置按钮
@@ -477,7 +477,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         cpp.click_send()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0012(self):
         """消息-一对一消息会话-设置页面查找聊天图片与视频"""
         self.public_send_video()
@@ -513,3 +513,314 @@ class MsgPrivateChatMsgSetting(TestCase):
         pv.click_back()
         fcrp.click_back()
         setting.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0020(self):
+        """ 一对一聊天设置创建群聊 """
+        # 1.点击+添加成员,进入选择成员页面
+        setting = SingleChatSetPage()
+        setting.click_add_icon()
+        scp = SelectContactsPage()
+        scp.wait_for_page_local_contact_load()
+        scp.click_back()
+        setting.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0021(self):
+        """ 一对一聊天设置创建群聊 """
+        setting = SingleChatSetPage()
+        setting.click_back()
+        # 1.进入一对一聊天窗口
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击进入聊天设置，再点击+添加成员
+        setting.click_add_icon()
+        # 3.点击选择一个或多个成员
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        names = slcp.get_contacts_name()
+        for name in names:
+            slcp.select_one_member_by_name(name)
+            if not slcp.is_toast_exist("该联系人不可选择", timeout=3):
+                break
+        # 4.点击反回聊天设置
+        slcp.click_back()
+        setting.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0022(self):
+        """ 一对一聊天设置创建群聊 """
+        setting = SingleChatSetPage()
+        setting.click_back()
+        # 1.进入一对一聊天窗口
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击进入聊天设置，再点击+添加成员
+        setting.click_add_icon()
+        # 3.点击选择一个或多个成员
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        # 选择一个成员
+        names = slcp.get_contacts_name()
+        for name in names:
+            slcp.select_one_member_by_name(name)
+            if not slcp.is_toast_exist("该联系人不可选择", timeout=3):
+                break
+        # 4.点击确定,进入群聊名称设置
+        slcp.click_sure()
+        name_set = CreateGroupNamePage()
+        name_set.wait_for_page_load()
+        name_set.click_back()
+        slcp.click_back()
+        setting.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0023(self):
+        """ 一对一聊天设置创建群聊 """
+        setting = SingleChatSetPage()
+        setting.click_back()
+        # 1.进入一对一聊天窗口
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击进入聊天设置，再点击+添加成员
+        setting.click_add_icon()
+        # 3.搜索选择一个或多个成员
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        names = slcp.get_contacts_name()
+        for name in names:
+            slcp.search_and_select_one_member_by_name(name)
+        # 4.点击确定,进入群聊名称设置
+        slcp.click_sure()
+        name_set = CreateGroupNamePage()
+        name_set.wait_for_page_load()
+        name_set.click_back()
+        slcp.click_back()
+        setting.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0024(self):
+        """ 一对一聊天设置创建群聊 """
+        setting = SingleChatSetPage()
+        setting.click_back()
+        # 1.进入一对一聊天窗口
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击进入聊天设置，再点击+添加成员
+        setting.click_add_icon()
+        # 3.点击选择一个或多个成员
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        # 选择一个成员
+        names = slcp.get_contacts_name()
+        for name in names:
+            slcp.select_one_member_by_name(name)
+            if not slcp.is_toast_exist("该联系人不可选择", timeout=3):
+                break
+        # 4.点击确定进入群聊名称设置
+        slcp.click_sure()
+        name_set = CreateGroupNamePage()
+        name_set.wait_for_page_load()
+        # 5.再点击返回聊天设置
+        name_set.click_back()
+        slcp.click_back()
+        setting.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0025(self):
+        """ 一对一聊天设置创建群聊 """
+        setting = SingleChatSetPage()
+        setting.click_back()
+        # 1.进入一对一聊天窗口
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击进入聊天设置，再点击+添加成员
+        setting.click_add_icon()
+        # 3.搜索选择一个或多个成员
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        # 选择多个成员
+        names = slcp.get_contacts_name()
+        for name in names:
+            slcp.search_and_select_one_member_by_name(name)
+        # 4.点击确定进入群聊名称设置
+        slcp.click_sure()
+        name_set = CreateGroupNamePage()
+        name_set.wait_for_page_load()
+        # 5.再点击返回聊天设置
+        name_set.click_back()
+        slcp.click_back()
+        setting.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0026(self):
+        """ 一对一聊天设置创建群聊 """
+        setting = SingleChatSetPage()
+        cur_name = setting.get_name()
+        setting.click_back()
+        # 1.进入一对一聊天窗口
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击进入聊天设置，再点击+添加成员
+        setting.click_add_icon()
+        # 3.搜索选择一个或多个成员
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        # 选择一个成员
+        names = slcp.get_contacts_name()
+        if cur_name in names:
+            names.remove(cur_name)
+        if '本机' in names:
+            names.remove('本机')
+        for name in names:
+            slcp.search_and_select_one_member_by_name(name)
+            if not slcp.is_toast_exist("该联系人不可选择", timeout=3):
+                if not slcp.contacts_is_selected(name):
+                    raise AssertionError("联系人未被选中")
+                # 4.点击左上角选择的成员名称或再次点击列表里该成员名称
+                slcp.select_one_member_by_name(name)
+                if slcp.contacts_is_selected(name):
+                    raise AssertionError("搜索选择一个成员后再次点击列表里该成员，依然是选择状态")
+                break
+        slcp.click_back()
+        setting.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0027(self):
+        """ 一对一聊天设置创建群聊 """
+        setting = SingleChatSetPage()
+        cur_name = setting.get_name()
+        setting.click_back()
+        # 1.进入一对一聊天窗口
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击进入聊天设置，再点击+添加成员
+        setting.click_add_icon()
+        # 3.点击选择一个或多个成员
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        # 选择一个成员
+        names = slcp.get_contacts_name()
+        if cur_name in names:
+            names.remove(cur_name)
+        if '本机' in names:
+            names.remove('本机')
+        for name in names:
+            slcp.select_one_member_by_name(name)
+            if not slcp.is_toast_exist("该联系人不可选择", timeout=3):
+                if not slcp.contacts_is_selected(name):
+                    raise AssertionError("联系人未被选中")
+                # 4.点击左上角选择的成员名称或再次点击列表里该成员名称
+                slcp.select_one_member_by_name(name)
+                if slcp.contacts_is_selected(name):
+                    raise AssertionError("搜索选择一个成员后再次点击列表里该成员，依然是选择状态")
+                break
+        slcp.click_back()
+        setting.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0028(self):
+        """ 一对一聊天设置创建群聊,无网络 """
+        setting = SingleChatSetPage()
+        cur_name = setting.get_name()
+        setting.click_back()
+        # 1.进入一对一聊天窗口
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击进入聊天设置，再点击+添加成员
+        setting.click_add_icon()
+        # 3.点击选择一个或多个成员
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        names = slcp.get_contacts_name()
+        if cur_name in names:
+            names.remove(cur_name)
+        if '本机' in names:
+            names.remove('本机')
+        for name in names:
+            slcp.select_one_member_by_name(name)
+            if not slcp.is_toast_exist("该联系人不可选择", timeout=3):
+                break
+        # 4.点击确定，再点击创建
+        slcp.click_sure()
+        # 断网
+        current_mobile().set_network_status(0)
+        name_set = CreateGroupNamePage()
+        name_set.wait_for_page_load()
+        name_set.click_sure()
+        if not name_set.is_toast_exist("网络不可用", timeout=6):
+            raise AssertionError("无网络不可用提示")
+        name_set.click_back()
+        slcp.click_back()
+        setting.wait_for_page_load()
+
+    @staticmethod
+    def tearDown_test_Msg_PrivateChat_Setting_0028():
+        """恢复网络连接"""
+        current_mobile().set_network_status(6)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0029(self):
+        """ 一对一聊天设置创建群聊,无网络 """
+        setting = SingleChatSetPage()
+        cur_name = setting.get_name()
+        setting.click_back()
+        # 1.进入一对一聊天窗口
+        chat = SingleChatPage()
+        chat.click_setting()
+        # 2.点击进入聊天设置，再点击+添加成员
+        setting.click_add_icon()
+        # 3.点击选择一个或多个成员
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        names = slcp.get_contacts_name()
+        if cur_name in names:
+            names.remove(cur_name)
+        if '本机' in names:
+            names.remove('本机')
+        for name in names:
+            slcp.select_one_member_by_name(name)
+            if not slcp.is_toast_exist("该联系人不可选择", timeout=3):
+                break
+        # 4.点击确定，统一群聊名称，再点击创建
+        slcp.click_sure()
+        name_set = CreateGroupNamePage()
+        name_set.wait_for_page_load()
+        group_name = 'testGroup'
+        name_set.input_group_name(group_name)
+        name_set.click_sure()
+        group_chat = GroupChatPage()
+        group_chat.wait_for_page_load()
+        if group_name not in group_chat.get_group_name():
+            raise AssertionError("群聊的名称显示不是所编辑的名称 " + group_name)
+        # 清除测试数据
+        group_chat.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.click_delete_and_exit()
+        group_set.click_sure()
+        chat.wait_for_page_load()
+        chat.click_setting()
+        setting.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0031(self):
+        """ 点对点建群"""
+        setting = SingleChatSetPage()
+        setting.click_back()
+        # 1.长按文本消息
+        chat = SingleChatPage()
+        chat.input_message("hello")
+        chat.send_message()
+        chat.press_mess("hello")
+        # 弹出多功能列表，包含复制、转发、删除、撤回、收藏、（移动用户有/异网无）转为短信发送、多选
+        chat.page_should_contain_text("复制")
+        chat.page_should_contain_text("转发")
+        chat.page_should_contain_text("删除")
+        chat.page_should_contain_text("撤回")
+        chat.page_should_contain_text("收藏")
+        chat.page_should_contain_text("转为短信发送")
+        chat.page_should_contain_text("多选")
+        chat.driver.back()
+        chat.click_setting()
+        setting.wait_for_page_load()
+

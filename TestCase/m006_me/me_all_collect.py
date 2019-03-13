@@ -11,8 +11,8 @@ from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
 from pages.components import BaseChatPage
-from pages.me.MeEditUserProfile import MeEditUserProfilePage
-from pages.me.MeViewUserProfile import MeViewUserProfilePage
+from pages.me.MeAboutChinasofti import MeAboutChinasoftiPage
+from pages.me.MeHelpAndFeedback import MeHelpAndFeedbackPage
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -1146,7 +1146,7 @@ class MeAllCollect(TestCase):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     def test_me_all_page_437(self):
         """打开收藏的位置信息"""
         Preconditions.make_already_set_chart_group_location()
@@ -1202,7 +1202,7 @@ class MeAllCollect(TestCase):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     def test_me_all_page_439(self):
         """设置页面显示验证"""
         # 1.点击跳转到我的页面
@@ -1222,7 +1222,7 @@ class MeAllCollect(TestCase):
         sp.click_back()
         mep.open_message_page()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     def test_me_all_page_442(self):
         """验证我-设置-退出登录(正常网络)"""
         # 1.点击跳转到我的页面
@@ -1243,33 +1243,375 @@ class MeAllCollect(TestCase):
         one_key.wait_for_page_load()
         self.assertEquals(one_key.is_on_this_page(), True)
 
-    # @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    # def test_me_all_page_443(self):
-    #     """验证我-设置-退出登录(异常网络)"""
-    #     # 1.点击跳转到我的页面
-    #     mess = MessagePage()
-    #     mess.wait_for_page_load()
-    #     mess.set_network_status(0)
-    #     # 2.点击我的设置
-    #     mess.open_me_page()
-    #     mep = MePage()
-    #     mep.is_on_this_page()
-    #     mep.click_setting_menu()
-    #     # 3.点击退出登陆
-    #     sp = SettingPage()
-    #     sp.wait_for_page_load()
-    #     sp.click_logout()
-    #     sp.click_ok_of_alert()
-    #     # 4.校验退出后在登陆页面
-    #     one_key = OneKeyLoginPage()
-    #     one_key.wait_for_page_load()
-    #     self.assertEquals(one_key.is_on_this_page(), True)
-    #     # 5.退出后再点击一键登录有弹框提示
-    #     one_key.click_one_key_login()
-    #     if not one_key.is_toast_exist("请检查网络设置"):
-    #         raise AssertionError("没有此网络异常弹框")
-    #
-    # def tearDown_test_me_all_page_443(self):
-    #     # 1.打开网络
-    #     mess = MessagePage()
-    #     mess.set_network_status(6)
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_443(self):
+        """验证我-设置-退出登录(异常网络)"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.set_network_status(0)
+        # 2.点击我的设置
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_setting_menu()
+        # 3.点击退出登陆
+        sp = SettingPage()
+        sp.wait_for_page_load()
+        sp.click_logout()
+        sp.click_ok_of_alert()
+        # 4.校验退出后在登陆页面
+        one_key = OneKeyLoginPage()
+        one_key.wait_for_page_load()
+        self.assertEquals(one_key.is_on_this_page(), True)
+        # 5.退出后再点击一键登录有弹框提示
+        one_key.click_one_key_login()
+        if not one_key.is_toast_exist("请检查网络设置"):
+            raise AssertionError("没有此网络异常弹框")
+
+    def tearDown_test_me_all_page_443(self):
+        # 1.打开网络
+        mess = MessagePage()
+        mess.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_445(self):
+        """设置-参与体验改善计划(异常网络)"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.set_network_status(0)
+        # 2.点击我的设置
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_setting_menu()
+        # 3.点击参与体验改善计划
+        sp = SettingPage()
+        sp.wait_for_page_load()
+        sp.click_menu("参与体验改善计划")
+        time.sleep(3)
+        sp.click_menu("上传日志")
+        if not sp.is_toast_exist("上传失败，请稍后重试"):
+            raise AssertionError("没有此网络异常弹框")
+        mess.click_back()
+        mess.click_back()
+        mep.open_message_page()
+
+    def tearDown_test_me_all_page_445(self):
+        # 1.打开网络
+        mess = MessagePage()
+        mess.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_446(self):
+        """帮助与反馈跳转功能验证"""
+        Preconditions.make_already_set_chart_group_file(".ppt")
+        Preconditions.make_already_set_chart_group_file(".doc")
+        Preconditions.make_already_set_chart_group_file(".xls")
+        Preconditions.make_already_set_chart_group_file(".html")
+        Preconditions.make_already_set_chart_group_file(".pdf")
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的帮助与反馈
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_help_menu()
+        # 3.点击进入帮助与反馈
+        mfp = MeHelpAndFeedbackPage()
+        mfp.wait_for_page_load()
+        time.sleep(3)
+        mfp.page_should_contain_text("意见反馈")
+        mfp.click_back()
+        mess.open_message_page()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_447(self):
+        """帮助与反馈页面显示验证"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的帮助与反馈
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_help_menu()
+        # 3.点击进入帮助与反馈
+        from pages.me.MeHelpAndFeedback import MeHelpAndFeedbackPage
+        mfp = MeHelpAndFeedbackPage()
+        mfp.wait_for_page_load()
+        menu = {"常见问题", "更多", "哪些人可以开通和使用和飞信", "如何登录及退出登录和飞信", "怎么开启和飞信同步手机通讯录的权限", "在线咨询", "客服热线", "企业专家服务", "论坛互动",
+                "意见反馈"}
+        self.assertEquals(mfp.page_contain_text(menu), True)
+        mfp.click_back()
+        mess.open_message_page()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_448(self):
+        """常见问题列表信息跳转到详情页验证"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的帮助与反馈
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_help_menu()
+        # 3.点击常见问题列表信息
+        mfp = MeHelpAndFeedbackPage()
+        mfp.wait_for_page_load()
+        menu = {"常见问题", "更多", "哪些人可以开通和使用和飞信", "如何登录及退出登录和飞信", "怎么开启和飞信同步手机通讯录的权限", "在线咨询", "客服热线", "企业专家服务", "论坛互动",
+                "意见反馈"}
+        self.assertEquals(mfp.page_contain_text(menu), True)
+        mfp.click_text_button("哪些人可以开通和使用和飞信")
+        mfp.wait_for_page_load()
+        mfp.page_should_contain_text("哪些人可以开通和使用和飞信")
+        # 4.点击返回
+        mfp.click_back()
+        self.assertEquals(mfp.page_contain_text(menu), True)
+        mfp.click_back()
+        mess.open_message_page()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_449(self):
+        """常见问题更多跳转功能验证"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的帮助与反馈
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_help_menu()
+        # 3.点击进入帮助与反馈的更多,跳转到热点问题页面
+        mfp = MeHelpAndFeedbackPage()
+        mfp.wait_for_page_load()
+        mfp.click_text_button("更多")
+        mfp.wait_for_page_load()
+        mfp.page_should_contain_text("常见问题")
+        mfp.page_should_contain_text("问题分类")
+        # 4.点击返回
+        mfp.click_back()
+        mfp.click_back()
+        mess.open_message_page()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_450(self):
+        """常见问题更多页面显示验证"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的帮助与反馈
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_help_menu()
+        # 3.点击进入帮助与反馈的更多,跳转到热点问题页面
+        mfp = MeHelpAndFeedbackPage()
+        mfp.wait_for_page_load()
+        mfp.click_text_button("更多")
+        mfp.wait_for_page_load()
+        menu = {"常见问题", "问题分类", "消息篇", "通话篇", "通讯录", "工作台", "通用篇", "资费篇"}
+        self.assertEquals(mfp.page_contain_text(menu), True)
+        # 4.点击返回
+        mfp.click_back()
+        mfp.click_back()
+        mess.open_message_page()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_451(self):
+        """常见问题列表信息跳转到详情页验证"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的帮助与反馈
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_help_menu()
+        # 3.点击常见问题列表信息
+        mfp = MeHelpAndFeedbackPage()
+        mfp.wait_for_page_load()
+        menu = {"常见问题", "更多", "哪些人可以开通和使用和飞信", "如何登录及退出登录和飞信", "怎么开启和飞信同步手机通讯录的权限", "在线咨询", "客服热线", "企业专家服务", "论坛互动",
+                "意见反馈"}
+        self.assertEquals(mfp.page_contain_text(menu), True)
+        mfp.click_text_button("哪些人可以开通和使用和飞信")
+        mfp.wait_for_page_load()
+        mfp.page_should_contain_text("哪些人可以开通和使用和飞信")
+        # 4.点击返回
+        mfp.click_back()
+        self.assertEquals(mfp.page_contain_text(menu), True)
+        # 5.点击关闭
+        mfp.click_text_button("哪些人可以开通和使用和飞信")
+        mfp.wait_for_page_load()
+        mfp.click_text_button("X")
+        mess.open_message_page()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_452(self):
+        """常见问题页面问题分类功能验证"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的帮助与反馈
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_help_menu()
+        # 3.点击进入帮助与反馈的更多,跳转到热点问题页面
+        mfp = MeHelpAndFeedbackPage()
+        mfp.wait_for_page_load()
+        mfp.click_text_button("更多")
+        mfp.wait_for_page_load()
+        menu = {"常见问题", "问题分类", "消息篇", "通话篇", "通讯录", "工作台", "通用篇", "资费篇"}
+        self.assertEquals(mfp.page_contain_text(menu), True)
+        # 4.点击任意问题分类
+        mfp.click_text_button("资费篇1")
+        mfp.element_contain_text("资费篇", "资费篇")
+        mfp.page_should_contain_text("基本资费")
+        mfp.click_text_button("每月10GB定向流量套餐是什么")
+        mfp.element_contain_text("资费篇", "资费篇")
+        mfp.page_should_contain_text("每月10G流量包内定向流量仅适用于和飞信手机APP")
+        # 5.点击返回
+        mfp.click_back()
+        mfp.page_should_contain_text("基本资费")
+        # 6.点击关掉
+        mfp.click_text_button("X")
+        mess.open_message_page()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_453(self):
+        """在线咨询跳转功能验证"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的帮助与反馈
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_help_menu()
+        # 3.点击进入帮助与反馈的在线咨询
+        mfp = MeHelpAndFeedbackPage()
+        mfp.wait_for_page_load()
+        mfp.click_text_button("在线咨询")
+        mfp.wait_for_page_load()
+        mfp.page_contain_text("在线客服")
+        # 4.点击返回
+        mfp.click_back()
+        mfp.click_text_button("X")
+        mess.open_message_page()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_455(self):
+        """企业专家服务跳转功能验证"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的帮助与反馈
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_help_menu()
+        # 3.点击进入帮助与反馈的客服热线
+        mfp = MeHelpAndFeedbackPage()
+        mfp.wait_for_page_load()
+        mfp.click_text_button("企业专家服务")
+        mfp.wait_for_page_load()
+        mfp.page_contain_text("预约")
+        # 5.点击返回
+        mfp.click_back()
+        mfp.click_back()
+        mess.open_message_page()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_456(self):
+        """论坛互动跳转功能验证"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的帮助与反馈
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_help_menu()
+        # 3.点击进入帮助与反馈的客服热线
+        mfp = MeHelpAndFeedbackPage()
+        mfp.wait_for_page_load()
+        mfp.click_text_button("论坛互动")
+        mfp.wait_for_page_load()
+        mfp.page_contain_text("和飞信社区")
+        # 5.点击返回
+        mfp.click_back()
+        mfp.click_back()
+        mess.open_message_page()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_457(self):
+        """意见反馈页面显示验证"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的帮助与反馈
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_help_menu()
+        # 3.点击进入帮助与反馈的客服热线
+        mfp = MeHelpAndFeedbackPage()
+        mfp.wait_for_page_load()
+        mfp.click_text_button("意见反馈")
+        mfp.wait_for_page_load()
+        menu = {"你想反馈的类型", "请补充详细问题和意见", "建议输入10个字以上的描述", "相册/相机", "提交"}
+        mfp.page_contain_text(menu)
+        # 5.点击返回
+        mfp.click_back()
+        mfp.click_back()
+        mess.open_message_page()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_460(self):
+        """关于和飞信入口"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的关于和飞信
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_menu("关于和飞信")
+        mcp = MeAboutChinasoftiPage()
+        # 3.校验关于和飞信页面
+        mcp.wait_for_page_load()
+        mcp.page_contain_el("产品logo")
+        menu = {"和飞信V", "检查更新", "新手引导", "产品介绍"}
+        self.assertEquals(mcp.page_contain_text(menu), True)
+        # 4.点击返回
+        mcp.click_back()
+        mess.open_message_page()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_461(self):
+        """已是最新版本-检查更新弹窗"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的关于和飞信
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_menu("关于和飞信")
+        mcp = MeAboutChinasoftiPage()
+        mcp.wait_for_page_load_about()
+        # 3.点击检查更新
+        mcp.click_check_update()
+        mcp.wait_for_page_load_update()
+        # 4.点击抢先下载
+        mcp.click_update()
+        if not mcp.is_toast_exist("已是最新版本"):
+            raise AssertionError("不存在已是最新版本此弹框")
+        # 5.点击返回
+        mcp.click_back()
+
+

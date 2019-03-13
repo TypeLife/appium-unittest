@@ -66,6 +66,8 @@ class BaseChatPage(BasePage):
                   "文件名": (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_name'),
                   "文件大小": (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_size'),
                   '消息文本内容': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'),
+                  "粘贴": (MobileBy.XPATH, '//*[@text="粘贴"]'),
+                  "粘贴": (MobileBy.XPATH, '//*[@text="粘贴"]'),
                   }
 
     @TestLogger.log()
@@ -490,3 +492,13 @@ class BaseChatPage(BasePage):
         """点击 取消 重发消息"""
         self.click_element(self.__class__.__locators['取消重发'])
 
+    @TestLogger.log()
+    def press_input(self):
+        """长按文本输入框"""
+        el = self.get_element(self.__class__.__locators['说点什么...'])
+        self.press(el)
+
+    @TestLogger.log()
+    def click_to_do(self, text):
+        """根据文本text去点击操作 """
+        self.click_element((MobileBy.XPATH, '//*[@text="%s"]' % text))
