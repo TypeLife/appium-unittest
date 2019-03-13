@@ -17,11 +17,11 @@ class CreateTeamPage(BasePage):
         '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back_actionbar'),
         '创建团队': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_actionbar'),
         # '请输入团队名称': (MobileBy.ID, 'qy_name'),
-        '请输入团队名称': (MobileBy.XPATH, '//*[@text="请输入团队名称"]'),
+        '请输入团队名称': (MobileBy.XPATH, '//*[@text="请输入团队名称"  or @content-desc="请输入团队名称"]'),
         '选择行业': (MobileBy.XPATH, '//*[@content-desc="选择行业"]'),
         '选择所在地': (MobileBy.XPATH, '//*[@content-desc="选择所在地"]'),
         # '请务必填写真实姓名': (MobileBy.ID, 'gly_name'),
-        '请务必填写真实姓名': (MobileBy.XPATH, '//*[@text="请务必填写真实姓名"]'),
+        '请务必填写真实姓名': (MobileBy.XPATH, '//*[@text="请务必填写真实姓名" or @content-desc="请务必填写真实姓名" ]'),
         # '14775290489@139.com': (MobileBy.ID, 'gly_email'),
         '邮箱': (MobileBy.XPATH, '//*[contains(@text, "@139.com")]'),
         '立即创建团队': (MobileBy.XPATH, '//*[@content-desc="立即创建团队"]'),
@@ -49,7 +49,6 @@ class CreateTeamPage(BasePage):
         '搜索框': (MobileBy.XPATH, '//*[@content-desc="搜索"]'),
         '天气预报': (MobileBy.XPATH, '//*[@content-desc="天气预报"]'),
         '删除': (MobileBy.XPATH, '//*[@content-desc="删除"]'),
-        '发布': (MobileBy.XPATH, '//*[@content-desc="发布"]'),
 
     }
 
