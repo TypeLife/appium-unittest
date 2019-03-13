@@ -47,8 +47,7 @@ class SelectContactsPage(BasePage):
         '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
         '右侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView'),
         '左侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/index_text"]'),
-        '查看更多': (MobileBy.XPATH, '//*[@text ="查看更多"]')
-        # 选择图片发送至最近聊天的会话窗时弹出的确定按钮
+        '查看更多': (MobileBy.XPATH, '//*[@text ="查看更多"]'),
         "确定按钮": (MobileBy.ID, "com.chinasofti.rcs:id/btn_ok")
     }
 
