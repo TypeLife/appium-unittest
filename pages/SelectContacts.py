@@ -329,3 +329,9 @@ class SelectContactsPage(BasePage):
         arrs = copy.deepcopy(letters)
         letters = sorted(letters)
         return arrs == letters
+
+    @TestLogger.log()
+    def select_recent_chat_by_name(self, name):
+        """根据名字选择最近聊天会话窗口"""
+        self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text ="%s"]' % name))
+
