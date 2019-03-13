@@ -234,3 +234,24 @@ class SelectLocalContactsPage(BasePage):
         else:
             if not sure_info == '确定':
                 raise AssertionError("确定按钮显示异常，不是‘确定’或者 ‘确定(3/499)’格式")
+
+    @TestLogger.log()
+    def selecting_local_contacts_by_name(self, name):
+        """选择一个本地联系人"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text ="%s"]' % name)
+        max_try = 10
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.page_down()
+        self.click_element(locator)
+
+    @TestLogger.log("下一页")
+    def page_down(self):
+        self.wait_until(
+            condition=lambda d: self._is_element_present(self.__class__.__locators['容器列表'])
+        )
+        self.swipe_by_direction(self.__class__.__locators['容器列表'], 'up')
+

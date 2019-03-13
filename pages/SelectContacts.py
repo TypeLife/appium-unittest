@@ -287,3 +287,12 @@ class SelectContactsPage(BasePage):
         """点击查看更多"""
         self.click_element(self.__class__.__locators["查看更多"])
 
+
+    @TestLogger.log()
+    def select_recent_chat_by_name(self, name):
+        """根据名字选择最近聊天会话窗口"""
+        self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text ="%s"]' % name))
+
+
+
+
