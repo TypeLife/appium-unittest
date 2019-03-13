@@ -3913,3 +3913,33 @@ class MsgCommonGroupTest(TestCase):
 
 
 
+class MsgCommonGroupAllTest(TestCase):
+    """
+            模块：消息-普通群
+
+            文件位置：1.1.3全量测试用例\113和飞信全量测试用例-肖秋.xlsx
+            表格：和飞信全量测试用例
+        """
+
+    @classmethod
+    def setUpClass(cls):
+        pass
+
+    def default_setUp(self):
+        """确保每个用例运行前在群聊聊天会话页面"""
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    def default_tearDown(self):
+        pass
+        # current_mobile().disconnect_mobile()
