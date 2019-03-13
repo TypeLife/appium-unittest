@@ -1960,6 +1960,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
         # 返回消息页
         gcp.click_back()
+        #
 
 
 
