@@ -1692,10 +1692,10 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         scg.wait_for_page_load()
         # 获取当前会话窗口群名
         group_name = Preconditions.get_group_chat_name()
-        # 3.选择最近聊天中的当前会话窗口
+        # 3.根据名字选择最近聊天会话窗口
         scg.select_recent_chat_by_name(group_name)
         # 确定转发
-        scg.click_sure_button()
+        scg.click_sure_forward()
         # 4.是否提示已转发,等待群聊页面加载
         self.assertEquals(gcp.is_exist_forward(), True)
         gcp.wait_for_page_load()
@@ -1711,19 +1711,20 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         """群聊会话页面，转发他人发送的图片到当前会话窗口时失败"""
 
         gcp = GroupChatPage()
+        gcsp = GroupChatSetPage()
         # 如果当前群聊页面已有消息发送失败标识，需要先清除聊天记录
         if not gcp.is_send_sucess():
             # 点击聊天设置
             gcp.click_setting()
             time.sleep(2)
-            # 滑动“群聊设置”页面 找到“清空聊天记录”菜单
-            gcp.sliding_group_chat_settings()
+            # 滑到菜单底部
+            gcsp.scroll_to_bottom()
             # 点击“清空聊天记录”菜单
-            gcp.click_empty_chat_records()
-            # 点击清空聊天记录时弹出的确定按钮
-            gcp.click_sure_button()
-            # 群聊设置页面 返回上一级
-            gcp.click_return()
+            gcsp.click_clear_chat_record()
+            # 点击确定按钮
+            gcsp.click_sure()
+            # 返回上一级
+            gcp.click_back()
             time.sleep(2)
         # 确保当前群聊页面已有图片
         Preconditions.make_already_have_my_picture()
@@ -1741,7 +1742,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 3.选择最近聊天中的当前会话窗口
         scg.select_recent_chat_by_name(group_name)
         # 确定转发
-        scg.click_sure_button()
+        scg.click_sure_forward()
         # 4.是否提示已转发,等待群聊页面加载
         self.assertEquals(gcp.is_exist_forward(), True)
         gcp.wait_for_page_load()
@@ -1767,7 +1768,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 3.选择最近聊天中的当前会话窗口
         scg.select_recent_chat_by_name(group_name)
         # 取消转发
-        scg.click_cancel_button()
+        scg.click_cancel_forward()
         # 4.等待选择联系人页面加载
         scg.wait_for_page_load()
         # 返回群聊天页面
@@ -1796,7 +1797,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 3.选择一个本地联系人
         slc.selecting_local_contacts_by_name(name)
         # 确定转发
-        scg.click_sure_button()
+        scg.click_sure_forward()
         # 4.是否提示已转发,等待群聊页面加载
         self.assertEquals(gcp.is_exist_forward(), True)
         gcp.wait_for_page_load()
@@ -1850,7 +1851,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 3.选择一个本地联系人
         slc.selecting_local_contacts_by_name(name)
         # 确定转发
-        scg.click_sure_button()
+        scg.click_sure_forward()
         # 4.是否提示已转发,等待群聊页面加载
         self.assertEquals(gcp.is_exist_forward(), True)
         gcp.wait_for_page_load()
@@ -1902,7 +1903,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 3.选择一个本地联系人
         slc.selecting_local_contacts_by_name(name)
         # 取消转发
-        scg.click_cancel_button()
+        scg.click_cancel_forward()
         # 4.等待选择联系人->本地联系人 页面加载
         slc.wait_for_page_load()
         # 返回群聊天页面
@@ -1930,9 +1931,9 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         time.sleep(2)
         current_mobile().hide_keyboard_if_display()
         # 3.选择陌生号码转发
-        scg.select_stranger_by_number()
+        scg.click_unknown_member()
         # 确定转发
-        scg.click_sure_button()
+        scg.click_sure_forward()
         # 4.是否提示已转发,等待群聊页面加载
         self.assertEquals(gcp.is_exist_forward(), True)
         gcp.wait_for_page_load()
@@ -1960,7 +1961,6 @@ class MsgGroupChatTotalQuantityTest(TestCase):
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
         # 返回消息页
         gcp.click_back()
-        #
 
 
 

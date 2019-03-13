@@ -47,8 +47,7 @@ class SelectContactsPage(BasePage):
         '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
         '右侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView'),
         '左侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/index_text"]'),
-        '查看更多': (MobileBy.XPATH, '//*[@text ="查看更多"]'),
-        "确定按钮": (MobileBy.ID, "com.chinasofti.rcs:id/btn_ok")
+        '查看更多': (MobileBy.XPATH, '//*[@text ="查看更多"]')
     }
 
     @TestLogger.log()
@@ -291,14 +290,9 @@ class SelectContactsPage(BasePage):
 
     @TestLogger.log()
     def select_recent_chat_by_name(self, name):
-        """选择最近聊天中的当前会话窗口"""
+        """根据名字选择最近聊天会话窗口"""
+        self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text ="%s"]' % name))
 
-        self.click_element(
-            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text ="%s"]' % name))
 
-    @TestLogger.log()
-    def click_sure_button(self):
-        """选择图片发送至最近聊天的会话窗时弹出的按钮"""
 
-        self.click_element(self.__class__.__locators["确定按钮"])
 
