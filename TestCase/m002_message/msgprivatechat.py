@@ -30,7 +30,7 @@ class Preconditions(LoginPreconditions):
 class MsgPrivateChatMsgList(TestCase):
     """
     模块：单聊->消息列表
-    文件位置：全量/10.整理全量测试用例---黄彩最.xlsx
+    文件位置：113整理全量测试用例-黄彩最.xlsx
     表格：单聊
     """
 
@@ -286,7 +286,7 @@ class MsgPrivateChatMsgList(TestCase):
 class MsgPrivateChatMsgSetting(TestCase):
     """
     模块：单聊->单聊设置
-    文件位置：全量/10.整理全量测试用例---黄彩最.xlsx
+    文件位置：113整理全量测试用例-黄彩最.xlsx
     表格：单聊
     """
 
@@ -497,7 +497,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         fcrp.click_back()
         setting.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0013(self):
         """消息-一对一消息会话-设置页面查找聊天图片与视频"""
         # 1.点击查找聊天内容
@@ -514,7 +514,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         fcrp.click_back()
         setting.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0020(self):
         """ 一对一聊天设置创建群聊 """
         # 1.点击+添加成员,进入选择成员页面
@@ -525,7 +525,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         scp.click_back()
         setting.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0021(self):
         """ 一对一聊天设置创建群聊 """
         setting = SingleChatSetPage()
@@ -547,7 +547,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         slcp.click_back()
         setting.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0022(self):
         """ 一对一聊天设置创建群聊 """
         setting = SingleChatSetPage()
@@ -574,7 +574,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         slcp.click_back()
         setting.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0023(self):
         """ 一对一聊天设置创建群聊 """
         setting = SingleChatSetPage()
@@ -598,7 +598,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         slcp.click_back()
         setting.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0024(self):
         """ 一对一聊天设置创建群聊 """
         setting = SingleChatSetPage()
@@ -626,7 +626,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         slcp.click_back()
         setting.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0025(self):
         """ 一对一聊天设置创建群聊 """
         setting = SingleChatSetPage()
@@ -652,7 +652,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         slcp.click_back()
         setting.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0026(self):
         """ 一对一聊天设置创建群聊 """
         setting = SingleChatSetPage()
@@ -685,7 +685,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         slcp.click_back()
         setting.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0027(self):
         """ 一对一聊天设置创建群聊 """
         setting = SingleChatSetPage()
@@ -718,7 +718,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         slcp.click_back()
         setting.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0028(self):
         """ 一对一聊天设置创建群聊,无网络 """
         setting = SingleChatSetPage()
@@ -759,7 +759,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         """恢复网络连接"""
         current_mobile().set_network_status(6)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0029(self):
         """ 一对一聊天设置创建群聊,无网络 """
         setting = SingleChatSetPage()
@@ -809,6 +809,8 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.click_back()
         # 1.长按文本消息
         chat = SingleChatPage()
+        chat.wait_for_page_load()
+        chat.clear_msg()
         chat.input_message("hello")
         chat.send_message()
         chat.press_mess("hello")
@@ -823,4 +825,85 @@ class MsgPrivateChatMsgSetting(TestCase):
         chat.driver.back()
         chat.click_setting()
         setting.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0033(self):
+        """ 输入框中输入表情消息不发送，进入查找聊天内容后是否还显示草稿"""
+        setting = SingleChatSetPage()
+        setting.click_back()
+        # 1、进入一对一聊天界面
+        chat = SingleChatPage()
+        chat.wait_for_page_load()
+        chat.input_message("hello")
+        chat.send_message()
+        if not chat.is_open_expression():
+            chat.open_expression()
+        # 2、在聊天输入框中输入数十个表情
+        chat.select_expression(n=10)
+        # 3、点击设置按钮
+        chat.click_setting()
+        # 4.点击查找聊天内容
+        setting.search_chat_record()
+        # 5.输入框中输入已存在会话中的关键词
+        fcrp = FindChatRecordPage()
+        fcrp.wait_for_page_load()
+        fcrp.input_search_message('hello')
+        # 6.点击任意一条搜索结果
+        fcrp.click_record()
+        chat.wait_for_page_load()
+        chat.page_should_contain_text('说点什么...')
+        chat.click_setting()
+        setting.wait_for_page_load()
+
+    @staticmethod
+    def public_input_mess(msg):
+        """Msg_PrivateChat_Setting_0034-0038共有部分提取"""
+        setting = SingleChatSetPage()
+        setting.click_back()
+        # 1、进入一对一聊天界面
+        chat = SingleChatPage()
+        chat.wait_for_page_load()
+        chat.input_message("hello")
+        chat.send_message()
+        # 2、在聊天输入框中输入msg
+        chat.input_message(msg)
+        # 3、点击设置按钮
+        chat.click_setting()
+        # 4.点击查找聊天内容
+        setting.search_chat_record()
+        # 5.输入框中输入已存在会话中的关键词
+        fcrp = FindChatRecordPage()
+        fcrp.wait_for_page_load()
+        fcrp.input_search_message('hello')
+        # 6.点击任意一条搜索结果
+        fcrp.click_record()
+        chat.wait_for_page_load()
+        chat.page_should_contain_text('说点什么...')
+        chat.click_setting()
+        setting.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG2')
+    def test_Msg_PrivateChat_Setting_0034(self):
+        """ 输入框中输入文字不发送，进入查找聊天内容后是否还显示草稿"""
+        self.public_input_mess("您好")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG2')
+    def test_Msg_PrivateChat_Setting_0035(self):
+        """ 输入框中输入数字消息不发送，进入查找聊天内容后是否还显示草稿"""
+        self.public_input_mess("123456789")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0036(self):
+        """ 输入框中输入字母消息不发送，进入查找聊天内容后是否还显示草稿"""
+        self.public_input_mess("abcdef")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0037(self):
+        """ 输入框中输入字符消息不发送，进入查找聊天内容后是否还显示草稿"""
+        self.public_input_mess("@#$%%%^&")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_Msg_PrivateChat_Setting_0038(self):
+        """ 输入框中输入各种混合消息体不发送，进入查找聊天内容后是否还显示草稿"""
+        self.public_input_mess("abc123@#$%^&")
 

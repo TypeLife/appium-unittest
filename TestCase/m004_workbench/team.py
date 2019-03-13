@@ -17,7 +17,11 @@ class Preconditions(WorkbenchPreconditions):
 
 
 class TeamTest(TestCase):
-    """团队 模块"""
+    """
+    模块：单聊->单聊设置
+    文件位置：移动端自动化用例整理20190304(工作台部分).xlsx
+    表格：工作台-团队创建
+    """
 
     def default_setUp(self):
         """进入创建团队页面"""

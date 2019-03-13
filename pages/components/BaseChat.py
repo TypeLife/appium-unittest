@@ -67,7 +67,9 @@ class BaseChatPage(BasePage):
                   "文件大小": (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_size'),
                   '消息文本内容': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'),
                   "粘贴": (MobileBy.XPATH, '//*[@text="粘贴"]'),
-                  "粘贴": (MobileBy.XPATH, '//*[@text="粘贴"]'),
+                  '打开表情': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression'),
+                  '关闭表情': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression_keyboard'),
+                  '表情id': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_expression_image'),
                   }
 
     @TestLogger.log()
@@ -502,3 +504,27 @@ class BaseChatPage(BasePage):
     def click_to_do(self, text):
         """根据文本text去点击操作 """
         self.click_element((MobileBy.XPATH, '//*[@text="%s"]' % text))
+
+    @TestLogger.log()
+    def is_open_expression(self):
+        """是否打开表情"""
+        return self._is_element_present(self.__class__.__locators['表情id'])
+
+    @TestLogger.log()
+    def open_expression(self):
+        """打开表情"""
+        self.click_element(self.__class__.__locators["打开表情"])
+
+    @TestLogger.log()
+    def close_expression(self):
+        """关闭表情"""
+        self.click_element(self.__class__.__locators["关闭表情"])
+
+    @TestLogger.log()
+    def select_expression(self, n=1):
+        """选择表情"""
+        els = self.get_elements(self.__class__.__locators['表情id'])
+        if n > len(els):
+            raise AssertionError("表情选择过多，没有 %s 个表情" % n)
+        for i in range(n):
+            els[i].click()
