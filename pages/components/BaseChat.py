@@ -70,6 +70,12 @@ class BaseChatPage(BasePage):
                   '打开表情': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression'),
                   '关闭表情': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression_keyboard'),
                   '表情id': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_expression_image'),
+                  '表情集选择栏': (MobileBy.ID, 'com.chinasofti.rcs:id/lltButton'),
+                  '表情集选择栏btn1': (MobileBy.ID, 'com.chinasofti.rcs:id/first_emoji'),
+                  '表情集选择栏btn2': (MobileBy.ID, 'com.chinasofti.rcs:id/sec_emoji'),
+                  '翻页小圆点': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/pcv_expression"]/android.widget.ImageView'),
+                  '删除表情按钮': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iv_expression_image" and contains(@text,"删除")]'),
+
                   }
 
     @TestLogger.log()
@@ -524,7 +530,24 @@ class BaseChatPage(BasePage):
     def select_expression(self, n=1):
         """选择表情"""
         els = self.get_elements(self.__class__.__locators['表情id'])
+        texts = []
         if n > len(els):
             raise AssertionError("表情选择过多，没有 %s 个表情" % n)
         for i in range(n):
             els[i].click()
+            texts.append(els[i].text)
+        return texts
+
+    @TestLogger.log("页面元素判断")
+    def page_should_contains_element(self, locator):
+        self.page_should_contain_element(self.__class__.__locators[locator])
+
+    @TestLogger.log()
+    def click_msg_input_box(self):
+        """点击消息编辑框"""
+        self.click_element(self.__locators["说点什么..."])
+
+    @TestLogger.log()
+    def delete_expression(self):
+        """删除表情"""
+        self.click_element(self.__locators["删除表情按钮"])
