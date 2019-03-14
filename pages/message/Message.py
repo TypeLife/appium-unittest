@@ -424,3 +424,22 @@ class MessagePage(FooterPage):
     def click_set_message(self, locator):
         """点击已发文件类型"""
         self.click_element(self.__locators[locator])
+
+    @TestLogger.log()
+    def choose_chat_by_name(self, name):
+        """通过名字选择一个聊天"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % name)
+        max_try = 10
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.page_down()
+        self.click_element(locator)
+
+    @TestLogger.log()
+    def click_workbench(self):
+        """点击工作台"""
+        self.click_element(self.__class__.__locators["工作台"])
+

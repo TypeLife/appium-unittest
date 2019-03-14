@@ -1,6 +1,6 @@
 from appium.webdriver.common.mobileby import MobileBy
-import copy
 import re
+import copy
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
@@ -35,6 +35,8 @@ class SelectContactsPage(BasePage):
         '聊天电话': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),
         # 分享二维码的选择联系人页面
         '选择本地联系人': (MobileBy.XPATH, '//*[@text ="选择本地联系人"]'),
+        'tel:+86': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_number"]'),
+
         # 未知号码
         '未知号码': (MobileBy.XPATH, '//*[contains(@text,"未知号码")]'),
         # 选择一个联系人转发消息时的弹框
@@ -46,7 +48,7 @@ class SelectContactsPage(BasePage):
         '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
         '右侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView'),
         '左侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/index_text"]'),
-
+        '查看更多': (MobileBy.XPATH, '//*[@text ="查看更多"]')
     }
 
     @TestLogger.log()
@@ -108,6 +110,11 @@ class SelectContactsPage(BasePage):
         self.click_element(self.__locators['分享名片'])
 
     @TestLogger.log('搜索或输入手机号')
+    def click_search_contact(self):
+        """点击搜索或输入手机号"""
+        self.click_element(self.__locators['搜索或输入手机号'])
+
+    @TestLogger.log('搜索或输入手机号')
     def input_search_keyword(self, keyword):
         """输入搜索内容"""
         self.input_text(self.__locators['搜索或输入手机号'], keyword)
@@ -165,6 +172,18 @@ class SelectContactsPage(BasePage):
         """通过名称选择一个联系人"""
         self.click_element(
             (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text ="%s"]' % name))
+
+    @TestLogger.log()
+    def select_one_group_by_name(self, name):
+        """通过群名选择一个群"""
+        self.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % name))
+
+    @TestLogger.log()
+    def select_one_recently_contact_by_name(self, name):
+        """通过名称选择一个最近聊天的联系人"""
+        self.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text ="%s"]' % name))
 
     @TestLogger.log()
     def wait_for_page_local_contact_load(self, timeout=8, auto_accept_alerts=True):
@@ -260,6 +279,16 @@ class SelectContactsPage(BasePage):
         self.click_element(self.__locators["最近聊天"])
 
     @TestLogger.log()
+    def click_x_icon(self):
+        """点击 X"""
+        self.click_element(self.__class__.__locators["X"])
+
+    @TestLogger.log()
+    def click_read_more(self):
+        """点击查看更多"""
+        self.click_element(self.__class__.__locators["查看更多"])
+
+    @TestLogger.log()
     def wait_for_create_msg_page_load(self, timeout=8, auto_accept_alerts=True):
         """等待 '消息页面 点击+ ->新建消息->选择联系人页面' 加载"""
         try:
@@ -300,3 +329,9 @@ class SelectContactsPage(BasePage):
         arrs = copy.deepcopy(letters)
         letters = sorted(letters)
         return arrs == letters
+
+    @TestLogger.log()
+    def select_recent_chat_by_name(self, name):
+        """根据名字选择最近聊天会话窗口"""
+        self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text ="%s"]' % name))
+

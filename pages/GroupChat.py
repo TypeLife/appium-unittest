@@ -63,6 +63,7 @@ class GroupChatPage(BaseChatPage):
                   '多选转发': (MobileBy.ID, 'com.chinasofti.rcs:id/multi_btn_forward'),
                   '删除已选信息': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
                   '取消删除已选信息': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
+                  "返回上一级": (MobileBy.ID, "com.chinasofti.rcs:id/left_back")
                   }
 
     def is_exist_msg_videos(self):
@@ -383,4 +384,15 @@ class GroupChatPage(BaseChatPage):
             return el
         else:
             raise AssertionError("没有找到多选选择框")
+
+    @TestLogger.log()
+    def press_voice_message(self):
+        """长按语言消息体"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/linearlayout_msg_content'))
+        self.press(el)
+
+    @TestLogger.log()
+    def click_return(self):
+        """返回上一级"""
+        self.click_element(self.__class__.__locators["返回上一级"])
 

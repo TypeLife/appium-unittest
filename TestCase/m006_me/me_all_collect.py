@@ -11,6 +11,7 @@ from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
 from pages.components import BaseChatPage
+from pages.me.MeAboutChinasofti import MeAboutChinasoftiPage
 from pages.me.MeHelpAndFeedback import MeHelpAndFeedbackPage
 
 REQUIRED_MOBILES = {
@@ -1562,31 +1563,55 @@ class MeAllCollect(TestCase):
         mfp.wait_for_page_load()
         mfp.click_text_button("意见反馈")
         mfp.wait_for_page_load()
-        menu = {"你想反馈的类型", "请补充详细问题和意见", "建议输入10个字以上的描述", "相册/相机", "提交",}
+        menu = {"你想反馈的类型", "请补充详细问题和意见", "建议输入10个字以上的描述", "相册/相机", "提交"}
         mfp.page_contain_text(menu)
         # 5.点击返回
         mfp.click_back()
         mfp.click_back()
         mess.open_message_page()
 
-    # @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    # def test_me_all_page_460(self):
-    #         """关于和飞信入口"""
-    #         # 1.点击跳转到我的页面
-    #         mess = MessagePage()
-    #         mess.wait_for_page_load()
-    #         # 2.点击我的关于和飞信
-    #         mess.open_me_page()
-    #         mep = MePage()
-    #         mep.is_on_this_page()
-    #         mep._find_menu("关于和飞信")
-    #         mep.click_menu("关于和飞信")
-    #         mfp = MeHelpAndFeedbackPage()
-    #         mfp.wait_for_page_load()
-    #         mfp.click_text_button("论坛互动")
-    #         mfp.wait_for_page_load()
-    #         mfp.page_contain_text("和飞信社区")
-    #         # 5.点击返回
-    #         mfp.click_back()
-    #         mfp.click_back()
-    #         mess.open_message_page()
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_460(self):
+        """关于和飞信入口"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的关于和飞信
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_menu("关于和飞信")
+        mcp = MeAboutChinasoftiPage()
+        # 3.校验关于和飞信页面
+        mcp.wait_for_page_load()
+        mcp.page_contain_el("产品logo")
+        menu = {"和飞信V", "检查更新", "新手引导", "产品介绍"}
+        self.assertEquals(mcp.page_contain_text(menu), True)
+        # 4.点击返回
+        mcp.click_back()
+        mess.open_message_page()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_461(self):
+        """已是最新版本-检查更新弹窗"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的关于和飞信
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_menu("关于和飞信")
+        mcp = MeAboutChinasoftiPage()
+        mcp.wait_for_page_load_about()
+        # 3.点击检查更新
+        mcp.click_check_update()
+        mcp.wait_for_page_load_update()
+        # 4.点击抢先下载
+        mcp.click_update()
+        if not mcp.is_toast_exist("已是最新版本"):
+            raise AssertionError("不存在已是最新版本此弹框")
+        # 5.点击返回
+        mcp.click_back()
+
+

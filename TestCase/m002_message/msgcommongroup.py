@@ -256,6 +256,64 @@ class Preconditions(object):
             except AssertionError as e:
                 raise e
 
+    @staticmethod
+    def build_one_new_group(group_name):
+        """新建一个指定名称的群，如果已存在，不建群"""
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(2)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
+        sc.click_select_one_group()
+        # 群名
+        # group_name = Preconditions.get_group_chat_name()
+        # 获取已有群名
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        group_names = sog.get_group_name()
+        # 有群返回，无群创建
+        if group_name in group_names:
+            sog.click_back()
+            sc.click_back()
+            return
+        sog.click_back()
+        # 从本地联系人中选择成员创建群
+        sc.click_local_contacts()
+        slc = SelectLocalContactsPage()
+        names = slc.get_contacts_name()
+        if not names:
+            raise AssertionError("No contacts, please add contacts in address book.")
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        slc.click_sure()
+        # 创建群
+        cgnp = CreateGroupNamePage()
+        cgnp.input_group_name(group_name)
+        cgnp.click_sure()
+        # 等待群聊页面加载
+        GroupChatPage().wait_for_page_load()
+        GroupChatPage().click_back()
+
+
+
 
 class MsgCommonGroupTest(TestCase):
     """
@@ -3667,4 +3725,468 @@ class MsgCommonGroupTest(TestCase):
         if not gcp.is_text_present("你撤回了一条信息"):
             raise AssertionError("没有成功撤回信息")
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0162(self):
+        """1、在聊天会话页面，发送一条文本消息，然后长按，撤回按钮是否存在"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 输入信息
+        gcp.input_message("哈哈0")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        #等待超过十分钟
+        a=1
+        while a<11:
+            time.sleep(60)
+            gcp.get_input_box()
+            print("{}分钟".format(a))
+            a+=1
+        gcp.press_file("哈哈0")
+        if gcp.is_text_present("撤回"):
+            raise AssertionError("存在撤回按钮")
 
+    @staticmethod
+    def setUp_test_msg_common_group_0164():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0164(self):
+        """APP端第一次使用撤回功能"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 输入信息
+        gcp.input_message("哈哈0")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        gcp.press_file_to_do("哈哈0", "撤回")
+        time.sleep(1)
+        if gcp.is_text_present("发送时间超10分钟的消息，不能被撤回"):
+            gcp.click_text("知道了")
+        else:
+            raise AssertionError("没有弹窗出现")
+        if gcp.is_text_present("哈哈0"):
+            raise AssertionError("消息撤回失败")
+        if not gcp.is_text_present("你撤回了一条信息"):
+            raise AssertionError("不会展示：你撤回了一条信息")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0165(self):
+        """撤回，发送成功不足一分钟的语音消息"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("始终允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        gcp.hide_keyboard()
+        time.sleep(1)
+        gcp.press_voice_message_to_do("撤回")
+        if not gcp.is_text_present("你撤回了一条信息"):
+            raise AssertionError("没有成功撤回信息")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0166(self):
+        """网络异常，撤回，发送成功不足一分钟的语音消息"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("始终允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        gcp.hide_keyboard()
+        time.sleep(1)
+        #断开网络
+        gcp.set_network_status(0)
+        time.sleep(2)
+        gcp.press_voice_message_to_do("撤回")
+        if not gcp.is_toast_exist("当前网络不可用，请检查网络设置"):
+            raise AssertionError("没有toast提示")
+        if gcp.is_text_present("你撤回了一条信息"):
+            raise AssertionError("网络异常时成功撤回信息")
+
+    def tearDown_test_msg_common_group_0166(self):
+        #重连网络
+        gcp = GroupChatPage()
+        gcp.set_network_status(6)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0167(self):
+        """撤回，发送成功的语音消息，时间超过一分钟的消息"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("始终允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        gcp.hide_keyboard()
+        # 等待超过一分钟
+        a = 1
+        while a < 3:
+            time.sleep(60)
+            gcp.get_input_box()
+            print("{}分钟".format(a))
+            a += 1
+        gcp.press_voice_message_to_do("撤回")
+        if not gcp.is_text_present("你撤回了一条信息"):
+            raise AssertionError("没有成功撤回信息")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0169(self):
+        """撤回，发送成功的语音消息，时间超过10分钟的消息"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("始终允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        gcp.hide_keyboard()
+        # 等待超过十分钟
+        a = 1
+        while a < 11:
+            time.sleep(60)
+            gcp.get_input_box()
+            print("{}分钟".format(a))
+            a += 1
+        gcp.press_voice_message()
+        if gcp.is_text_present("撤回"):
+            raise AssertionError("存在撤回按钮")
+        gcp.tap_coordinate([(100, 20), (100, 60), (100,100)])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    def test_msg_common_group_0170(self):
+        """发送一条语音消息，在9分55秒时，长按展示功能菜单列表"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("始终允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        gcp.hide_keyboard()
+        # 等待到九分钟以上
+        a = 1
+        while a < 10:
+            time.sleep(60)
+            gcp.get_input_box()
+            print("{}分钟".format(a))
+            a += 1
+        gcp.press_voice_message()
+        time.sleep(60)
+        gcp.click_text("撤回")
+        if gcp.is_toast_exist("发送时间超10分钟的消息，不能被撤回"):
+            gcp.click_text("知道了")
+        if gcp.is_toast_exist("你撤回了一条信息"):
+            raise AssertionError("消息超过十秒可以撤回")
+
+
+
+class MsgCommonGroupAllTest(TestCase):
+    """
+            模块：消息-普通群
+
+            文件位置：1.1.3全量测试用例\113和飞信全量测试用例-肖秋.xlsx
+            表格：和飞信全量测试用例
+        """
+
+    @classmethod
+    def setUpClass(cls):
+        pass
+
+    def default_setUp(self):
+        """确保每个用例运行前在群聊聊天会话页面"""
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    def default_tearDown(self):
+        pass
+        # current_mobile().disconnect_mobile()
+
+    @staticmethod
+    def setUp_test_msg_common_group_all_0001():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL','CMCC','group_chat')
+    def test_msg_common_group_all_0001(self):
+        """1、点击右上角的+号，发起群聊
+            2、点击选择一个群，是否可以进入到群聊列表展示页面
+            3、中文模糊搜索，是否可以匹配展示搜索结果"""
+        # 先保证有中文名称的群
+        Preconditions.build_one_new_group("啊测测试试")
+        #先点击加号
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        sog.input_search_keyword("啊")
+        time.sleep(2)
+        if not sog.is_text_present("啊测测试试"):
+            raise AssertionError("无法中文模糊搜索")
+        sog.click_back_icon()
+        sog.click_back()
+        sc.click_back()
+
+    @staticmethod
+    def setUp_test_msg_common_group_all_0002():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_common_group_all_0002(self):
+        """1、中文模糊搜索，是否可以匹配展示搜索结果"""
+        # 先保证有中文名称的群
+        Preconditions.build_one_new_group("啊测测试试")
+        # 先点击加号
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        sog.input_search_keyword("啊啊测")
+        time.sleep(2)
+        if not sog.is_text_present("无搜索结果"):
+            raise AssertionError("没有提示 无搜索结果")
+        sog.click_back_icon()
+        sog.click_back()
+        sc.click_back()
+
+    @staticmethod
+    def setUp_test_msg_common_group_all_0003():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_common_group_all_0003(self):
+        """1、中文精确搜索，是否可以匹配展示搜索结果"""
+        # 先保证有中文名称的群
+        Preconditions.build_one_new_group("啊测测试试")
+        # 先点击加号
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        sog.input_search_keyword("啊测测试试")
+        time.sleep(2)
+        if not sog.is_text_present("啊测测试试"):
+            raise AssertionError("无法中文精确搜索")
+        sog.click_back_icon()
+        sog.click_back()
+        sc.click_back()
+
+    @staticmethod
+    def setUp_test_msg_common_group_all_0004():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_common_group_all_0004(self):
+        """1、中文精确搜索，无匹配搜索结果，展示提示：无搜索结果"""
+        # 先保证有中文名称的群
+        Preconditions.build_one_new_group("啊测测试试")
+        # 先点击加号
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        sog.input_search_keyword("啊测测试试啊")
+        time.sleep(2)
+        if not sog.is_text_present("无搜索结果"):
+            raise AssertionError("没有提示 无搜索结果")
+        sog.click_back_icon()
+        sog.click_back()
+        sc.click_back()
+
+    @staticmethod
+    def setUp_test_msg_common_group_all_0005():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_common_group_all_0005(self):
+        """1、英文精确搜索，可以匹配展示搜索结果"""
+        # 先保证有中文名称的群
+        Preconditions.build_one_new_group("atteesstt")
+        # 先点击加号
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        sog.input_search_keyword("atteesstt")
+        time.sleep(2)
+        if not sog.is_text_present("atteesstt"):
+            raise AssertionError("无法英文精确搜索")
+        sog.click_back_icon()
+        sog.click_back()
+        sc.click_back()

@@ -53,7 +53,7 @@ class MeViewUserProfilePage(BasePage):
         return self._is_element_present(self.__locators[text])
 
     @TestLogger.log()
-    def click_back(self):
+    def click_back1(self):
         """点击返回按钮"""
         self.click_element(self.__locators['返回'])
 
@@ -66,3 +66,18 @@ class MeViewUserProfilePage(BasePage):
     def element_contain_text(self, locator, expected):
         """该元素是否包含文本"""
         self.element_should_contain_text(self.__locators[locator], expected, "该元素不是此文本")
+
+    @TestLogger.log()
+    def click_share_card(self):
+        """点击分享名片"""
+        self.click_element(self.__locators['分享名片'])
+
+    @TestLogger.log('获取名片信息')
+    def get_name_cards_info(self):
+        info = dict()
+        info['name'] = self.get_text(self.__locators['姓名'])
+        info['tel'] = self.get_text(self.__locators['电话'])
+        info['company'] = self.get_text(self.__locators['公司'])
+        info['position'] = self.get_text(self.__locators['职位'])
+        info['email'] = self.get_text(self.__locators['邮箱'])
+        return info
