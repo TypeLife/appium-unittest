@@ -110,7 +110,7 @@ class Preconditions(object):
 
     @staticmethod
     def make_already_in_me_all_page():
-        """确保应用在消息页面"""
+        """确保应用在我的页面"""
 
         # 如果在消息页，不做任何操作
         mess = MessagePage()
@@ -677,9 +677,187 @@ class MeAllTest(TestCase):
         mnp.click_el_text("发送名片")
         mup.click_back()
 
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_017(self):
+        """分享名片-选择本地联系人-通过姓名关键字或者手机号码搜索在本地通讯录中的联系人（非自己）"""
+        # 0.检验是否跳转到我页面,点击进入查看并编辑资料
+        mep = MePage()
+        self.assertEquals(mep.is_on_this_page(), True)
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 获取卡名信息
+        info = mup.get_name_cards_info()
+        print(info)
+        # 1.点击分享名片
+        mup.click_share_card()
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择本地联系人
+        scp.select_local_contacts()
+        slp = SelectLocalContactsPage()
+        slp.wait_for_page_load()
+        # 3.在页面顶部输入姓名关键字或手机号码搜索
+        name = "给个红包4"
+        slp.search_and_select_one_member_by_name(name)
+        # 4.跳转到卡名
+        mnp = MeCardNamePage()
+        mnp.wait_for_page_load()
+        info1 = mnp.get_name_cards_info()
+        self.assertEquals(info, info1)
+        # 默认不勾选
+        default = (255, 255, 255, 255)
+        select = mnp.check_select_box("职位选框")
+        self.assertEquals(default, select)
+        # 5.点击字段选项
+        mnp.click_el_text("职位")
+        select1 = mnp.check_select_box("职位选框")
+        # 6.点击已选中字段
+        self.assertIsNot(select, select1)
+        mnp.click_el_text("邮箱")
+        mnp.click_el_text("职位")
+        select2 = mnp.check_select_box("职位选框")
+        self.assertEquals(select, select2)
+        # 7.点击弹窗左上角X
+        mnp.click_el_text("关闭")
+        # 8.再次选择任意群聊
+        slp.search_and_select_one_member_by_name(name)
+        mnp.wait_for_page_load()
+        # 9.点击发送名片按钮
+        mnp.click_el_text("发送名片")
+        mup.click_back()
 
-# class MeAll(TestCase):
-#     """_
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_018(self):
+        """分享名片-选择本地联系人-通过姓名关键字或者手机号码搜索自己"""
+        # 0.检验是否跳转到我页面,点击进入查看并编辑资料
+        mep = MePage()
+        self.assertEquals(mep.is_on_this_page(), True)
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 获取卡名信息
+        info = mup.get_name_cards_info()
+        print(info)
+        # 1.点击分享名片
+        mup.click_share_card()
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择本地联系人
+        scp.select_local_contacts()
+        slp = SelectLocalContactsPage()
+        slp.wait_for_page_load()
+        # 3.在页面顶部输入姓名关键字或手机号码搜索(自己)
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        slp.search_and_select_one_member_by_name(phone_number)
+        # 4.校验选择自己的号码提示不可选
+        if not slp.is_toast_exist("该联系人不可选"):
+            raise AssertionError("无该联系人不可选弹框")
+        # 5.点击返回
+        mup.click_back()
+        mup.click_back()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_019(self):
+        """分享名片-选择本地联系人-搜索不在本地通讯录的联系人"""
+        # 0.检验是否跳转到我页面,点击进入查看并编辑资料
+        mep = MePage()
+        self.assertEquals(mep.is_on_this_page(), True)
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 获取卡名信息
+        info = mup.get_name_cards_info()
+        print(info)
+        # 1.点击分享名片
+        mup.click_share_card()
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择本地联系人
+        scp.select_local_contacts()
+        slp = SelectLocalContactsPage()
+        slp.wait_for_page_load()
+        # 3.在页面顶部输入姓名关键字或手机号码搜索(自己)
+        name = "杨大大"
+        slp.search(name)
+        self.assertEquals(slp.contacts_is_selected(name), False)
+        # 5.点击返回
+        mup.click_back()
+        mup.click_back()
+        mup.click_back()
+
+    @staticmethod
+    def setUp_test_me_all_020():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_me_all_page()
+        # 0.检验是否跳转到我页面,点击进入查看并编辑资料
+        mep = MePage()
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 获取卡名信息
+        info = mup.get_name_cards_info()
+        print(info)
+        # 1.点击分享名片
+        mup.click_share_card()
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择本地联系人
+        scp.select_local_contacts()
+        slp = SelectLocalContactsPage()
+        slp.wait_for_page_load()
+        # 3.在页面顶部输入姓名关键字或手机号码搜索
+        name = "给个红包4"
+        slp.search_and_select_one_member_by_name(name)
+        mnp = MeCardNamePage()
+        mnp.wait_for_page_load()
+        # 9.点击发送名片按钮
+        mnp.click_el_text("发送名片")
+        mnp.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_020(self):
+        """分享名片-选择最近聊天联系人   """
+        # 0.检验是否跳转到我页面,点击进入查看并编辑资料
+        mep = MePage()
+        self.assertEquals(mep.is_on_this_page(), True)
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 1.点击分享名片
+        mup.click_share_card()
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击最近聊天中的联系人或群
+        name = "给个红包4"
+        scp.select_one_recently_contact_by_name(name)
+        mnp = MeCardNamePage()
+        mnp.wait_for_page_load()
+        # 3.点击左上角X
+        mnp.click_el_text("关闭")
+        scp.wait_for_page_load()
+        # 4.再次点击联系人/群聊名称
+        scp.select_one_recently_contact_by_name(name)  # 默认不勾选
+        select = mnp.check_select_box("职位选框")
+        # 5.点击字段选项
+        mnp.click_el_text("职位")
+        select1 = mnp.check_select_box("职位选框")
+        # 6.点击已选中字段
+        self.assertIsNot(select, select1)
+        mnp.click_el_text("职位")
+        select2 = mnp.check_select_box("职位选框")
+        self.assertEquals(select, select2)
+        # 7.点击已选中字段
+        mnp.click_el_text("发送名片")
+        time.sleep(5)
+        # 5.点击返回
+        mup.click_back()
+
+     # class MeAll(TestCase):
+
+# """_
 #     模块：我的
 #
 #     文件位置112版：全量/4.我模块全量测试用例-张淑丽.xlsx
