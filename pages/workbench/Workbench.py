@@ -377,4 +377,22 @@ class WorkbenchPage(FooterPage):
         """点击确定解散团队"""
         self.click_element(self.__class__.__locators["团队返回"])
 
+    @TestLogger.log()
+    def wait_for_workbench_page_load(self, timeout=20, auto_accept_alerts=True):
+        """等待工作台页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.driver.current_activity == self.ACTIVITY
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
+
+
+
 
