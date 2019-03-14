@@ -45,3 +45,9 @@ class OfficialAccountPage(BasePage):
             )
         except TimeoutException:
             raise AssertionError("检查点：企业号列表为空")
+
+    @TestLogger.log()
+    def select_one_account_by_name(self, name):
+        """通过名称选择一个公众号"""
+        self.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/textview_user_name" and @text ="%s"]' % name))
