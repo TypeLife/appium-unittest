@@ -255,3 +255,8 @@ class SelectLocalContactsPage(BasePage):
         )
         self.swipe_by_direction(self.__class__.__locators['容器列表'], 'up')
 
+    @TestLogger.log()
+    def is_search_result(self, msg):
+        """搜索结果判断"""
+        els = self.get_elements((MobileBy.XPATH,'//*[contains(@text, "%s")]' % msg))
+        return len(els) > 1

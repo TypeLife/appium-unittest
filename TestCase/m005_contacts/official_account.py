@@ -7,7 +7,7 @@ from library.core.utils.applicationcache import current_mobile, current_driver, 
 from library.core.utils.testcasefilter import tags
 from pages import *
 from pages.contacts import OfficialAccountPage, SearchOfficialAccountPage
-
+import time
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
 }
@@ -177,6 +177,157 @@ class OfficialAccountTest(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
+    @staticmethod
+    def setUp_test_contacts_0321():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_0321(self):
+        """订阅号/服务号列表显示"""
+        conts_page = ContactsPage()
+        officea=OfficialAccountPage()
+        conts_page.open_contacts_page()
+        conts_page.click_official_account_icon()
+        conts_page.is_text_present('和飞信')
+        conts_page.is_text_present('和飞信团队')
+        conts_page.is_text_present('和飞信新闻')
+        conts_page.is_text_present('中国移动10086')
+
+    @staticmethod
+    def setUp_test_contacts_0323():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_0323(self):
+        """公众号会话页面"""
+        conts_page = ContactsPage()
+        official = OfficialAccountPage()
+        conts_page.open_contacts_page()
+        conts_page.click_official_account_icon()
+        official.click_officel_account()
+        time.sleep(2)
+        official.page_contain_expresssion()
+        official.page_contain_send_button()
+        official.page_contain_news()
+        official.page_contain_setting()
+
+    @staticmethod
+    def setUp_test_contacts_0324():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_0324(self):
+        """公众号会话页面,查看输入框"""
+        conts_page = ContactsPage()
+        official = OfficialAccountPage()
+        conts_page.open_contacts_page()
+        conts_page.click_official_account_icon()
+        official.click_officel_account()
+        time.sleep(2)
+        official.page_contain_expresssion()
+        official.page_contain_send_button()
+        official.page_contain_news()
+        official.page_contain_setting()
+        official.click_input_box()
+        official.page_contain_input_box()
+
+    @staticmethod
+    def setUp_test_contacts_0325():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_0325(self):
+        """公众号会话页面,发送信息"""
+        conts_page = ContactsPage()
+        official = OfficialAccountPage()
+        conts_page.open_contacts_page()
+        conts_page.click_official_account_icon()
+        official.click_officel_account()
+        time.sleep(2)
+        official.click_input_box()
+        official.input_message('good news')
+        official.click_send_button()
+        official.page_should_not_contain_sendfail_element()
+        official.page_should_contain_text('good news')
+
+    @staticmethod
+    def setUp_test_contacts_0326():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_0326(self):
+        """公众号会话页面，发送表情"""
+        conts_page = ContactsPage()
+        official = OfficialAccountPage()
+        conts_page.open_contacts_page()
+        conts_page.click_official_account_icon()
+        official.click_officel_account()
+        time.sleep(2)
+        official.click_expression()
+        official.click_expression('[微笑1]')
+        official.click_send_button()
+        time.sleep(1)
+        official.click_expression('expression_keyboard')
+        official.page_should_not_contain_sendfail_element()
+        official.page_should_contain_text('[微笑1]')
+
+    @staticmethod
+    def setUp_test_contacts_0327():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_0327(self):
+        """公众号会话页面，发送表情+信息"""
+        conts_page = ContactsPage()
+        official = OfficialAccountPage()
+        conts_page.open_contacts_page()
+        conts_page.click_official_account_icon()
+        official.click_officel_account()
+        time.sleep(2)
+        official.input_message('good news')
+        official.click_expression()
+        official.click_expression('[微笑1]')
+        time.sleep(2)
+        official.click_send_button()
+        time.sleep(1)
+        official.click_expression('expression_keyboard')
+        official.page_should_not_contain_sendfail_element()
+        official.page_should_contain_text('good news')
+        official.page_should_contain_text('[微笑1]')
+
+    @staticmethod
+    def setUp_test_contacts_0328():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_0328(self):
+        """公众号会话页面，发送长信息"""
+        conts_page = ContactsPage()
+        official = OfficialAccountPage()
+        conts_page.open_contacts_page()
+        conts_page.click_official_account_icon()
+        official.click_officel_account()
+        time.sleep(2)
+        official.click_input_box()
+        mesaage='good news'*10
+        official.input_message(mesaage)
+        official.click_send_button()
+        official.page_should_not_contain_sendfail_element()
+        official.page_should_contain_text(mesaage)
 
 if __name__ == '__main__':
     unittest.main()
