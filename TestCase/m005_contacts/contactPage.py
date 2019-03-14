@@ -452,6 +452,23 @@ class ContactPage(TestCase):
         contact=ContactsPage()
         contact.click_and_address()
 
+    @staticmethod
+    def setUp_test_contacts_0006():
+        """
+        用户未加入任何企业
+        """
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()  # 收起键盘
+        Preconditions.make_already_in_message_page()  # 当前已在消息界面
+        MessagePage().click_contacts()
+
+    @tags('All', 'CMCC', "contacts")
+    def test_contacts_0006(self):
+        contact = ContactsPage()
+        contact.click_and_address()
+        contact.click_search_box()
+        contact.input_text()
+
 
 
 
