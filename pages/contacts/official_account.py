@@ -39,6 +39,15 @@ class OfficialAccountPage(BasePage):
         '收藏': (MobileBy.XPATH, '//*[@text="收藏"]'),
         '转发': (MobileBy.XPATH, '//*[@text="转发"]'),
         '复制': (MobileBy.XPATH, '//*[@text="复制"]'),
+        '百度一下': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_title'),
+        '百度连接':(MobileBy.XPATH,'//*[@text="www.baidu.com"]'),
+        '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
+        '进入公众号': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_into_public'),
+        '查看历史资讯': (MobileBy.XPATH,'//*[@text="查看历史资讯"]'),
+        '认证主体': (MobileBy.ID, 'com.chinasofti.rcs:id/public_auth_text'),
+        '功能介绍': (MobileBy.ID, 'com.chinasofti.rcs:id/intro_title'),
+        '更多': (MobileBy.ID, 'com.chinasofti.rcs:id/menu_more'),
+        '公众号头像': (MobileBy.ID, 'com.chinasofti.rcs:id/public_header'),
 
     }
 
@@ -70,6 +79,11 @@ class OfficialAccountPage(BasePage):
         """检查该页面是否包含某元素"""
         return self.page_should_contain_element(self.__locators['setting'])
 
+    @TestLogger.log("检查对应元素是否存在")
+    def page_contain_element(self,text='setting'):
+        """检查该页面是否包含某元素"""
+        return self.page_should_contain_element(self.__locators[text])
+
     @TestLogger.log("input_box")
     def page_contain_input_box(self):
         """检查该页面是否包含某元素"""
@@ -93,6 +107,14 @@ class OfficialAccountPage(BasePage):
     @TestLogger.log('检查发送失败按钮')
     def page_should_not_contain_sendfail_element(self):
         return self.page_should_not_contain_element(self.__locators['发送失败'])
+
+    @TestLogger.log('存在发送失败按钮')
+    def page_should_contain_sendfail_element(self):
+        return self.page_should_contain_element(self.__locators['发送失败'])
+
+    @TestLogger.log('点击发送失败按妞')
+    def click_repeat_button(self):
+        self.click_element(self.__locators['发送失败'])
 
     @TestLogger.log('使用坐标点击')
     def click_coordinate(self, x=1300, y=2450):
@@ -125,9 +147,14 @@ class OfficialAccountPage(BasePage):
     def click_expression(self, text='expression'):
         self.click_element(self.__locators[text])
 
-    @TestLogger.log('删除信息')
-    def remove_message(self):
-        if self.page_should_contain_element(self.__locators['信息']):
-            self.click_element(self.__locators['信息'])
-            el = self.get_element(self.__locators['信息'])
-            self.driver.long_press(el, 1, 1, 2000)
+    @TestLogger.log('点击百度连接')
+    def click_baidu_button(self):
+        self.click_element(self.__locators['百度连接'])
+
+    @TestLogger.log('点击确定')
+    def click_sure_button(self):
+        self.click_element(self.__locators['确定'])
+
+    @TestLogger.log('点击设置')
+    def click_setting_button(self):
+        self.click_element(self.__locators['setting'])
