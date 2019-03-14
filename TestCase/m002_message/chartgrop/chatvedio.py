@@ -1675,6 +1675,19 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         gcp = GroupChatPage()
         gcp.set_network_status(6)
 
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_group_chat_total_quantity_0021(self):
+        """群聊会话页面，打开拍照，立刻返回会话窗口"""
+
+        gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        # 点击富媒体行拍照图标
+        gcp.click_take_photo()
+        # 等待聊天拍照页面加载
+        cpp = ChatPhotoPage()
+        cpp.wait_for_page_load()
+
 
     @tags('ALL', 'CMCC', 'group_chat')
     def test_msg_group_chat_total_quantity_0041(self):
