@@ -86,7 +86,6 @@ class SelectOneGroupPage(BasePage):
         self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and ' +
                             '@text="{}"]'.format(name)))
 
-
     @TestLogger.log()
     def input_search_keyword(self, keyword):
         """输入搜索内容"""
@@ -96,7 +95,6 @@ class SelectOneGroupPage(BasePage):
     def click_back_icon(self):
         """点击返回按钮"""
         self.click_element(self.__class__.__locators['搜索-返回'])
-
 
     @TestLogger.log()
     def click_back(self):
@@ -140,6 +138,10 @@ class SelectOneGroupPage(BasePage):
                 return True
         return False
 
-    @TestLogger.log()
+    @TestLogger.log('toast信息存在判断')
     def catch_message_in_page(self, text):
         return self.is_toast_exist(text)
+
+    @TestLogger.log('点击搜索结果')
+    def click_search_result(self):
+        self.click_element(self.__class__.__locators['搜索结果展示'])

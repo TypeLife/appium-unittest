@@ -802,7 +802,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         chat.click_setting()
         setting.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0031(self):
         """ 点对点建群"""
         setting = SingleChatSetPage()
@@ -826,7 +826,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         chat.click_setting()
         setting.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0033(self):
         """ 输入框中输入表情消息不发送，进入查找聊天内容后是否还显示草稿"""
         setting = SingleChatSetPage()
@@ -882,27 +882,27 @@ class MsgPrivateChatMsgSetting(TestCase):
         chat.click_setting()
         setting.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG2')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0034(self):
         """ 输入框中输入文字不发送，进入查找聊天内容后是否还显示草稿"""
         self.public_input_mess("您好")
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG2')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0035(self):
         """ 输入框中输入数字消息不发送，进入查找聊天内容后是否还显示草稿"""
         self.public_input_mess("123456789")
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0036(self):
         """ 输入框中输入字母消息不发送，进入查找聊天内容后是否还显示草稿"""
         self.public_input_mess("abcdef")
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0037(self):
         """ 输入框中输入字符消息不发送，进入查找聊天内容后是否还显示草稿"""
         self.public_input_mess("@#$%%%^&")
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0038(self):
         """ 输入框中输入各种混合消息体不发送，进入查找聊天内容后是否还显示草稿"""
         self.public_input_mess("abc123@#$%^&")
