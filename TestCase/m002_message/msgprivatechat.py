@@ -948,3 +948,31 @@ class MsgContactSelector(TestCase):
         scp.page_contain_element("local联系人")
         scp.click_back()
         mess.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1194(self):
+        """ 进入免费/发送短信查看展示页面"""
+        # 1.点击右上角的+
+        mess = MessagePage()
+        mess.click_add_icon()
+        # 2.点击免费/发送短信
+        mess.click_free_sms()
+        # 首次进入会弹出“欢迎使用免费短信”/“欢迎使用短信”弹框，点击确定后直接进入联系人选择器，
+        # 非首次进入的直接进入联系人选择器
+        try:
+            time.sleep(1)
+            mess.page_should_contain_text("欢迎使用免费短信")
+            mess.click_text("确定")
+        except:
+            pass
+        # 3.查看页面展示
+        scp = SelectContactsPage()
+        scp.wait_for_create_msg_page_load()
+        # 左上角标题：选择联系人；搜索栏缺省文字：搜索或输入手机号；
+        # 选择和通讯录联系人；下方为本地联系人列表
+        scp.page_should_contain_text("选择联系人")
+        scp.page_should_contain_text("搜索或输入手机号")
+        scp.page_should_contain_text("选择和通讯录联系人")
+        scp.page_contain_element("local联系人")
+        scp.click_back()
+        mess.wait_for_page_load()
