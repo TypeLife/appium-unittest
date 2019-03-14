@@ -163,8 +163,8 @@ class Preconditions(object):
         强制关闭app,退出后台
         :return:
         """
-        app_id = current_driver().desired_capability['appPackage']
-        current_mobile().termiate_app(app_id)
+        app_id = current_driver().capabilities['appPackage']
+        current_mobile().terminate_app(app_id)
 
     @staticmethod
     def background_app(seconds):
