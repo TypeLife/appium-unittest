@@ -220,6 +220,56 @@ class Preconditions(object):
         group_name = "chargourp" + phone_number[-4:]
         return group_name
 
+    @staticmethod
+    def make_already_delete_my_group():
+        """确保删掉所有群"""
+        # 消息页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(2)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
+        sc.click_select_one_group()
+        # 获取已有群名
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        group_names = sog.get_group_name()
+        # 有群删除，无群返回
+        if len(group_names) == 0:
+            pass
+        else:
+            for group_name in group_names:
+                sog.select_one_group_by_name(group_name)
+                gcp = GroupChatPage()
+                gcp.wait_for_page_load()
+                gcp.click_setting()
+                gcs = GroupChatSetPage()
+                gcs.wait_for_page_load()
+                gcs.click_delete_and_exit()
+                gcs.click_sure()
+                if not gcs.is_toast_exist("已退出群聊"):
+                    raise AssertionError("无退出群聊提示")
+        sog.click_back()
+        sc.click_back()
+        mess.open_me_page()
+
 
 class MeAllTest(TestCase):
     """_
@@ -1003,6 +1053,948 @@ class MeAllTest(TestCase):
         mup.click_back()
         mup.click_back()
 
+    @staticmethod
+    def setUp_test_me_all_028():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        Preconditions.make_already_delete_my_group()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_028(self):
+        """分享名片-选择一个群-用户未加入任何群聊"""
+        # 0.检验是否跳转到我页面,点击进入查看并编辑资料
+        mep = MePage()
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 1.点击分享名片
+        mup.click_share_card()
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择一个群（当前无群组）
+        scp.click_select_one_group()
+        sop = SelectOneGroupPage()
+        sop.wait_for_page_load()
+        sop.page_should_contain_text("你还未加入任何普通群，立即建群畅享沟通")
+        sop.page_should_contain_text("创建群聊")
+        # 3.点击返回
+        mup.click_back()
+        mup.click_back()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_029(self):
+        """进入“编辑资料”界面信息"""
+        Preconditions.make_already_in_me_save_all_page()
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.校验点 a顶部显示返回按钮和保存按钮,b手机号不可编辑，可编辑的内容为：头像、姓名、公司、职位、邮箱
+        self.assertEquals(mep1.is_element_exist("返回"), True)
+        self.assertEquals(mep1.element_is_enabled_able("保存"), False)
+        self.assertEquals(mep1.element_is_click_able("电话"), False)
+        self.assertEquals(mep1.element_is_click_able("编辑图片"), True)
+        self.assertEquals(mep1.element_is_click_able("姓名"), True)
+        self.assertEquals(mep1.element_is_click_able("公司"), True)
+        self.assertEquals(mep1.element_is_click_able("职位"), True)
+        mep1.swipe_up()
+        self.assertEquals(mep1.element_is_click_able("邮箱"), True)
+        mep1.input_name("邮箱", "12345678@qq.com")
+        self.assertEquals(mep1.element_is_enabled_able("保存"), True)
+        # 5.点击编辑图像进入选择照片页面
+        mep1.click_edit_pic()
+        mep1.wait_for_select_pic_page_load()
+        # 6.点击返回
+        mep1.click_back()
+        mep1.click_save()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_030(self):
+        """“编辑资料” 头像设置"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        # 4.点击进入照相
+        mep1.click_edit_pics()
+        mep1.wait_for_select_pic_page_load()
+        # 5.跳转到选择照片页面校验点
+        # a隐藏弹窗
+        mep1.click_back()
+        mep1.wait_for_page_load()
+        mep1.click_edit_pics()
+        # b调起‘拍照窗口’
+        mep1.click_take_pics()
+        mep1.click_taking_pics()
+        mep1.click_save_pics()
+        mep1.click_back()
+        time.sleep(1)
+        # c跳转到选择照片页面
+        mep1.click_select_pics(1)
+        time.sleep(1)
+        self.assertEquals(mep1.is_element_exist("照片框"), True)
+        mep1.click_back()
+        mep1.click_back()
+        mep1.click_back()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_031(self):
+        """“编辑资料” 头像设置"""
+        # 0-1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 0-2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 1.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        # 2.点击进入照相
+        mep1.click_edit_pics()
+        mep1.wait_for_select_pic_page_load()
+        # 3. a点击拍照，重拍|使用照片
+        mep1.click_take_pics()
+        mep1.click_taking_pics()
+        time.sleep(1)
+        self.assertEquals(mep1.element_is_click_able("取消照片"), True)
+        # 4. 点击拍照完成
+        mep1.click_save_pics()
+        # 5.返回
+        mep1.click_back()
+        mep1.click_back()
+        mep1.click_back()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_032(self):
+        """“编辑资料” 头像设置"""
+        # 0-1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 0-2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 1.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        # 2.点击进入照相
+        mep1.click_edit_pics()
+        mep1.wait_for_select_pic_page_load()
+        # 3. a点击拍照，重拍|使用照片
+        mep1.click_take_pics()
+        mep1.click_taking_pics()
+        time.sleep(2)
+        self.assertEquals(mep1.element_is_click_able("取消照片"), True)
+        # 4. 点击选择重拍
+        mep1.click_cancel_pics()
+        self.assertEquals(mep1.is_element_exist("拍照"), True)
+        # 5.点击返回
+        mep1.click_taking_pics()
+        mep1.click_save_pics()
+        mep1.click_back()
+        mep1.click_back()
+        mep1.click_back()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_033(self):
+        """“编辑资料” 头像设置"""
+        # 0-1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 0-2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 1.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        # 2.点击进入照相
+        mep1.click_edit_pics()
+        mep1.wait_for_select_pic_page_load()
+        # 3.a点击拍照，重拍|使用照片
+        mep1.click_take_pics()
+        mep1.click_taking_pics()
+        time.sleep(2)
+        self.assertEquals(mep1.element_is_click_able("取消照片"), True)
+        # 4.点击完成，选择使用照片，跳转到“头像截取”界面
+        mep1.click_save_pics()
+        time.sleep(1)
+        self.assertEquals(mep1.is_element_exist("照片框"), True)
+        # 5.点击返回
+        mep1.click_back()
+        mep1.click_back()
+        mep1.click_back()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_034(self):
+        """“编辑资料” 头像设置"""
+        # 0-1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 0-2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 1.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        # 2.点击进入照相
+        mep1.click_edit_pics()
+        mep1.wait_for_select_pic_page_load()
+        # 3.a点击拍照，重拍|使用照片
+        mep1.click_take_pics()
+        mep1.click_taking_pics()
+        time.sleep(2)
+        self.assertEquals(mep1.element_is_click_able("取消照片"), True)
+        # 4.点击完成，选择使用照片，跳转到“头像截取”界面
+        mep1.click_save_pics()
+        time.sleep(1)
+        self.assertEquals(mep1.is_element_exist("照片框"), True)
+        # 5.点击保存截图,返回到资料编辑页面
+        mep1.click_save_save_pics()
+        mep1.wait_for_page_load()
+        mep1.click_back()
+        mep1.click_cancel_mod()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_035(self):
+        """“编辑资料” 头像设置"""
+        # 0-1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 0-2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 1.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        # 2.点击进入照相
+        mep1.click_edit_pics()
+        mep1.wait_for_select_pic_page_load()
+        # 3.a点击拍照，重拍|使用照片
+        mep1.click_take_pics()
+        mep1.click_taking_pics()
+        time.sleep(2)
+        self.assertEquals(mep1.element_is_click_able("取消照片"), True)
+        # 4.点击完成，选择使用照片，跳转到“头像截取”界面
+        mep1.click_save_pics()
+        time.sleep(1)
+        self.assertEquals(mep1.is_element_exist("照片框"), True)
+        # 5.点击保存截图,返回到资料编辑页面
+        mep1.click_save_save_pics()
+        mep1.wait_for_page_load()
+        mep1.click_save()
+        self.assertEquals(mep1.is_toast_save_success(), True)
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_036(self):
+        """“编辑资料” 头像设置"""
+        # 0-1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 0-2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 1.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        # 2.点击进入照相
+        mep1.click_edit_pics()
+        mep1.wait_for_select_pic_page_load()
+        self.assertEquals(mep1.is_element_exist("点击拍照"), True)
+        # 3.点击选择图片
+        mep1.click_select_pics(1)
+        time.sleep(2)
+        self.assertEquals(mep1.is_element_exist("照片框"), True)
+        # 4.点击返回
+        mep1.click_back()
+        mep1.click_back()
+        mep1.click_back()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_038(self):
+        """“编辑资料” 头像设置-修改头像"""
+        # 0-1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 0-2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 1.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        # 2.点击进入照相
+        mep1.click_edit_pics()
+        mep1.wait_for_select_pic_page_load()
+        self.assertEquals(mep1.is_element_exist("点击拍照"), True)
+        # 3.点击选择图片，跳转到“头像截取”界面
+        mep1.click_select_pics(1)
+        time.sleep(2)
+        self.assertEquals(mep1.is_element_exist("照片框"), True)
+        # 4.选择使用照片，跳转到“头像截取”界面，点击保存
+        mep1.click_save_save_pics()
+        mep1.wait_for_page_load()
+        mep1.click_save()
+        self.assertEquals(mep1.is_toast_save_success(), True)
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_039(self):
+        """“编辑资料” 头像设置-多次选择图片"""
+        # 0-1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 0-2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 1.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        # 2.点击进入照相
+        mep1.click_edit_pics()
+        mep1.wait_for_select_pic_page_load()
+        self.assertEquals(mep1.is_element_exist("点击拍照"), True)
+        # 3.点击选择图片，跳转到“头像截取”界面
+        mep1.click_select_pics(0)
+        time.sleep(2)
+        self.assertEquals(mep1.is_element_exist("照片框"), True)
+        # 4.点击返回按钮，重新选取照片
+        mep1.click_back()
+        time.sleep(1)
+        mep1.click_select_pics(1)
+        # 5.点击保存
+        mep1.click_save_save_pics()
+        mep1.wait_for_page_load()
+        mep1.click_save()
+        self.assertEquals(mep1.is_toast_save_success(), True)
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_042(self):
+        """“编辑资料” 头像设置-修改头像未保存退出编辑-取消"""
+        # 0-1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 0-2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 1.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        # 2.点击进入照相
+        mep1.click_edit_pics()
+        mep1.wait_for_select_pic_page_load()
+        self.assertEquals(mep1.is_element_exist("点击拍照"), True)
+        # 3.点击选择图片，跳转到“头像截取”界面
+        mep1.click_select_pics(1)
+        time.sleep(2)
+        self.assertEquals(mep1.is_element_exist("照片框"), True)
+        # 4.选择使用照片，跳转到“头像截取”界面，点击保存，上传头像
+        mep1.click_save_save_pics()
+        mep1.wait_for_page_load()
+        # 5.在编辑个人资料页面点击返回按钮，不保存
+        mep1.click_back()
+        time.sleep(1)
+        self.assertEquals(mep1.is_text_exist("当前资料已修改，是否保存"), True)
+        mep1.click_cancel_mod()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_043(self):
+        """“编辑资料” 所有输入栏 为空"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.所有输入栏信息为空
+        mep1.edit_clear("姓名")
+        mep1.edit_clear("公司")
+        mep1.edit_clear("职位")
+        mep1.edit_clear("邮箱")
+        mep1.click_save()
+        self.assertEquals(mep1.is_toast_save_null(), True)
+        # 5.点击返回
+        mep1.click_back()
+        mep1.click_cancel_mod()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_044(self):
+        """“编辑资料” 除了姓名,其他为空"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.所有输入栏信息为空
+        mep1.input_name("姓名", "123")
+        mep1.edit_clear("公司")
+        mep1.edit_clear("职位")
+        mep1.edit_clear("邮箱")
+        mep1.click_save()
+        self.assertEquals(mep1.is_toast_save_success(), True)
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_045(self):
+        """“验证我-个人资料-编辑-编辑名称"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.正确输入并点击保存（中文、英文、特殊符号）
+        mep1.input_name("姓名", "周星星123@！#")
+        mep1.click_save()
+        self.assertEquals(mep1.is_toast_save_success(), True)
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_046(self):
+        """“验证我-个人资料-编辑-编辑名称"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.set_network_status(0)
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.正确输入并点击保存（中文、英文、特殊符号）
+        mep1.input_name("姓名", "周星星123@！#%12")
+        mep1.click_save()
+        self.assertEquals(mep1.is_toast_net(), True)
+        # 5点击返回，并恢复网络
+        mep1.click_back()
+        mep1.click_cancel_mod()
+        mup.click_back()
+        mup.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_047(self):
+        """“编辑资料” 姓名栏输入超长字符"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.姓名输入超长字符串，提示格式错误
+        mep1.input_name("姓名", "周星星123@！#" * 50)
+        self.assertEquals(mep1.is_toast_format("姓名"), True)
+        self.assertEquals(mep1.get_element_text("姓名"), True)
+        mep1.click_back()
+        mep1.click_cancel_mod()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_048(self):
+        """“编辑资料” 公司栏输入超长字符"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.姓名输入超长字符串，提示格式错误
+        mep1.input_name("公司", "周星星123@！#" * 50)
+        self.assertEquals(mep1.is_toast_format("公司"), True)
+        # 5.点击返回
+        mep1.click_back()
+        mep1.click_cancel_mod()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_049(self):
+        """“编辑资料” 职位栏输入超长字符"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.职位输入超长字符串，提示格式错误
+        mep1.input_name("职位", "周星星123@！#" * 50)
+        self.assertEquals(mep1.is_toast_format("职位"), True)
+        # 5.点击返回
+        mep1.click_back()
+        mep1.click_cancel_mod()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_050(self):
+        """“编辑资料” 邮箱栏输入超长字符"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.职位输入超长字符串，提示格式错误
+        mep1.swipe_up()
+        mep1.input_name("邮箱", "周星星123@！#" * 50)
+        self.assertEquals(mep1.is_toast_format("邮箱"), True)
+        # 5.点击返回
+        time.sleep(1)
+        mep1.click_back()
+        mep1.click_cancel_mod()
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_051(self):
+        """“编辑资料” 邮箱字段输入特殊字符"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.职位输入超长字符串，提示格式错误
+        mep1.swipe_up()
+        mep1.input_name("邮箱", "#魑魅*|、星123@·！魍魉")
+        mep1.click_save()
+        if not mep1.is_toast_exist("保存成功"):
+            raise AssertionError("没有保存成功此弹框")
+        # # 5.点击返回
+        mep1.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_052(self):
+        """“编辑资料” “编辑资料” 邮箱字段空格"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        # 4.职位输入带空格的字符串
+        mep1.swipe_up()
+        mep1.input_name("邮箱", " 9 58535269 @ qq.com ")
+        mep1.click_save()
+        # 5.点击返回
+        if mep1.is_toast_save():
+            mep1.click_back()
+            mup.click_back()
+        if mep1.is_toast_save_success():
+            mup.click_back()
+        else:
+            pass
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_053(self):
+        """编辑个人资料-编辑之后返回"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,保存按钮置灰不可点
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        self.assertEquals(mep1.element_is_enabled_able("保存"), False)
+        # 5.编辑信息后，点击取消
+        mep1.input_name("姓名", str(uuid.uuid1()))
+        self.assertEquals(mep1.element_is_enabled_able("保存"), True)
+        mep1.click_back()
+        time.sleep(1)
+        self.assertEquals(mep1.is_text_exist("当前资料已修改，是否保存"), True)
+        mep1.click_cancel_mod()
+        # 6.编辑信息后，点击保存
+        mup.click_edit()
+        mep1.wait_for_page_load()
+        mep1.input_name("姓名", str(uuid.uuid1()))
+        mep1.click_back()
+        time.sleep(1)
+        self.assertEquals(mep1.is_text_exist("当前资料已修改，是否保存"), True)
+        mep1.click_save_mod()
+        self.assertEquals(mep1.is_toast_save_success(), True)
+        mup.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_054(self):
+        """编辑个人资料-编辑之后断网保存"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入查看并编辑资料
+        mep.click_view_edit()
+        mup = MeViewUserProfilePage()
+        mup.wait_for_page_load()
+        # 3.进入个人编辑页面信息,保存按钮置灰不可点
+        mup.click_edit()
+        mep1 = MeEditUserProfilePage()
+        mep1.wait_for_page_load()
+        self.assertEquals(mep1.element_is_enabled_able("保存"), False)
+        # 5.编辑信息后，点击取消
+        mep1.input_name("姓名", "我是周星星54321")
+        self.assertEquals(mep1.element_is_enabled_able("保存"), True)
+        # 6.断网保存
+        mep1.set_network_status(0)
+        mep1.click_save()
+        self.assertEquals(mep1.is_toast_net(), True)
+        # 7.连网返回
+        mep1.set_network_status(6)
+        mep1.click_back()
+        mep1.click_cancel_mod()
+        mup.click_back()
+
+    @staticmethod
+    def tearDown_test_me_all_054():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_055(self):
+        """我的二维码"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.点击进入二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        self.assertEquals(qr_code.is_element_exist("二维码"), True)
+        self.assertEquals(qr_code.is_element_exist("二维码中的名称"), True)
+        self.assertEquals(qr_code.is_element_exist("二维码中的头像"), True)
+        self.assertEquals(qr_code.is_element_exist("分享二维码"), True)
+        self.assertEquals(qr_code.is_element_exist("保存二维码"), True)
+        # 3.点击返回
+        qr_code.click_back()
+        time.sleep(1)
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_056(self):
+        """我的二维码-网络异常"""
+        # 1.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 2.断网点击进入二维码
+        mep.set_network_status(0)
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        self.assertEquals(qr_code.is_toast_exist("获取失败"), True)
+        self.assertEquals(qr_code.is_text_present("二维码加载失败"), True)
+        # 3.恢复网络后返回
+        qr_code.click_back()
+
+    @staticmethod
+    def tearDown_test_me_all_056():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_057(self):
+        """我的二维码-分享"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 2、点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        # 3.点击一个本地联系人
+        scg.select_local_contacts()
+        slp = SelectLocalContactsPage()
+        slp.wait_for_page_load()
+        name = slp.get_contacts_name()[0]
+        slp.select_one_member_by_name(name)
+        # 4.点击取消
+        slp.click_cancel_forward()
+        # 5.点击确定转发
+        slp.select_one_member_by_name(name)
+        slp.click_sure_forward()
+        self.assertEquals(slp.is_toast_exist("已转发"), True)
+        # 3.点击返回
+        qr_code.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_058(self):
+        """我的二维码分享-关键字搜索"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 2、点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        # 3、点击搜索框，输入信息
+        scg.click_search_keyword()
+        scg.input_search_keyword("给1234%6在$")
+        time.sleep(1)
+        # 4.检验有结果和无结果两种情况
+        self.assertEquals(scg.page_contain_element('X'), True)
+        self.assertEquals(scg.get_element_texts("最近聊天"), True)
+        if scg.is_text_present("本地联系人"):
+            self.assertEquals(scg.get_element_texts("local联系人"), True)
+        # 5.点击返回
+        scg.click_back()
+        qr_code.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_059(self):
+        """我的二维码分享-号码搜索"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 2、点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        # 3、点击搜索框，输入信息
+        scg.click_search_keyword()
+        scg.input_search_keyword("+861591873097")
+        time.sleep(1)
+        # 4.检验有结果和无结果两种情况
+        self.assertEquals(scg.page_contain_element('X'), True)
+        self.assertEquals(scg.get_element_texts("最近聊天"), True)
+        if scg.is_text_present("本地联系人"):
+            self.assertEquals(scg.get_element_texts("聊天电话"), True)
+        # 5.点击返回
+        scg.click_back()
+        qr_code.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_060(self):
+        """我的二维码分享-非手机号码的数字搜索"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 2、点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        # 3、点击搜索框，输入信息
+        scg.click_search_keyword()
+        scg.input_search_keyword("15918730974")
+        time.sleep(1)
+        # 4.检验有结果和无结果两种情况
+        self.assertEquals(scg.page_contain_element('X'), True)
+        self.assertEquals(scg.get_element_texts("最近聊天"), True)
+        if scg.is_text_present("本地联系人"):
+            self.assertEquals(scg.get_element_texts("聊天电话"), True)
+        # 5.点击返回
+        scg.click_back()
+        qr_code.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_061(self):
+        """我的二维码分享-无本地结果且二次查询无结果"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 2、点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        # 3、点击搜索框，输入信息
+        scg.click_search_keyword()
+        scg.input_search_keyword("遇见未知的自己？")
+        time.sleep(1)
+        # 4.检验无结果
+        self.assertEquals(scg.page_contain_element('X'), True)
+        self.assertEquals(scg.get_element_texts("最近聊天"), True)
+        # 5.点击二次搜索
+        scg.click_search_he_contact()
+        time.sleep(2.8)
+        self.assertEquals(scg.is_text_present("无搜索结果"), True)
+        # 6.点击返回
+        scg.click_element(["id", 'com.chinasofti.rcs:id/btn_back'])
+        scg.click_back()
+        qr_code.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_062(self):
+        """我的二维码分享-搜索未保存在本地的手机号码"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 2、点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        # 3、点击搜索框，输入信息
+        scg.click_search_keyword()
+        scg.input_search_keyword("13738485245")
+        time.sleep(1)
+        # 4.检验有未保存在本地的手机号码
+        self.assertEquals(scg.page_contain_element('X'), True)
+        self.assertEquals(scg.get_element_texts("最近聊天"), True)
+        self.assertEquals(scg.is_text_present("网络搜索"), True)
+        self.assertEquals(scg.get_element_text_net_name("local联系人"), True)
+        self.assertEquals(scg.get_element_text_net_number("聊天电话"), True)
+        # 5.点击未知号码,点击取消
+        scg.click_unknown_member()
+        time.sleep(1)
+        self.assertEquals(scg.is_text_present("确定"), True)
+        self.assertEquals(scg.is_text_present("取消"), True)
+        scg.click_cancel_forward()
+        scg.wait_for_page_load()
+        # 6.点击未知号码,点击确定
+        scg.input_search_keyword("13738485245")
+        time.sleep(1)
+        scg.click_unknown_member()
+        scg.click_sure_forward()
+        self.assertEquals(scg.is_toast_exist("已转发"), True)
+        # 6.点击返回
+        qr_code.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_063(self):
+        """我的二维码分享-搜索字母特殊字符关数字，手机号等关键字有本地联系人结果"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 2、点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        # 3、点击搜索框，输入信息
+        scg.click_search_keyword()
+        scg.input_search_keyword("13738485245")
+        time.sleep(1)
+        # 4.检验有未保存在本地的手机号码
+        self.assertEquals(scg.page_contain_element('X'), True)
+        self.assertEquals(scg.get_element_texts("最近聊天"), True)
+        self.assertEquals(scg.is_text_present("网络搜索"), True)
+        self.assertEquals(scg.get_element_text_net_name("local联系人"), True)
+        self.assertEquals(scg.get_element_text_net_number("聊天电话"), True)
+        # 5.点击未知号码,点击取消
+        scg.click_unknown_member()
+        time.sleep(1)
+        self.assertEquals(scg.is_text_present("确定"), True)
+        self.assertEquals(scg.is_text_present("取消"), True)
+        scg.click_cancel_forward()
+        scg.wait_for_page_load()
+        # 6.点击未知号码,点击确定
+        scg.input_search_keyword("13738485245")
+        time.sleep(1)
+        scg.click_unknown_member()
+        scg.click_sure_forward()
+        self.assertEquals(scg.is_toast_exist("已转发"), True)
+        # 6.点击返回
+        qr_code.click_back()
+
+
+
+
 @unittest.skip("113版用例")
 class MeAll(TestCase):
     """_
@@ -1012,6 +2004,7 @@ class MeAll(TestCase):
     表格：我页面
 
     """
+
     def default_setUp(self):
         """确保每个用例运行前在群聊聊天会话页面"""
         Preconditions.select_mobile('Android-移动')
@@ -1020,6 +2013,7 @@ class MeAll(TestCase):
 
     def default_tearDown(self):
         pass
+
     # current_mobile().disconnect_mobile()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
@@ -1501,7 +2495,7 @@ class MeAll(TestCase):
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_024(self):
-        """“编辑资料” 头像设置"""
+        """“编辑资料” 头像设置-修改头像未保存退出编辑-取消"""
         # 0-1.检验是否跳转到我页面
         mep = MePage()
         mep.is_on_this_page()
@@ -1884,7 +2878,7 @@ class MeAll(TestCase):
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_041(self):
-        """我的二维码分享-关键字搜索"""
+        """我的二维码分享-号码搜索"""
         # 0.检验是否跳转到我页面
         mep = MePage()
         mep.is_on_this_page()
