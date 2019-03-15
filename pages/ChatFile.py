@@ -25,6 +25,7 @@ class ChatFilePage(BasePage):
                   MobileBy.ID, 'com.chinasofti.rcs:id/favorite_image_shortcut'),
                   'com.chinasofti.rcs:id/favorite_file_name_size': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/favorite_file_name_size'),
+                  '文件名': (MobileBy.ID, 'com.chinasofti.rcs:id/file_name'),
                   '录制.txt': (MobileBy.ID, 'com.chinasofti.rcs:id/file_name'),
                   '271.0B': (MobileBy.ID, 'com.chinasofti.rcs:id/file_size'),
                   '445475fa1e154603b4fd64ce34fa8c62.amr': (MobileBy.ID, 'com.chinasofti.rcs:id/file_name'),
@@ -60,3 +61,27 @@ class ChatFilePage(BasePage):
         el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))
         self.press(el)
         self.click_element(self.__class__.__locators['转发'])
+
+    @TestLogger.log()
+    def is_on_this_page(self):
+        """是否在此页面"""
+        if self.is_text_present("本月"):
+            return True
+        else:
+            return False
+
+    @TestLogger.log()
+    def clear_file_record(self):
+        """清除文件记录"""
+        while True:
+            els = self.get_elements(self.__class__.__locators['文件名'])
+            if not els:
+                break
+            for el in els:
+                self.press(el)
+                self.click_element(self.__class__.__locators["删除"])
+
+    @TestLogger.log()
+    def page_should_contain_file(self):
+        """页面应该有文件记录"""
+        self.page_should_contain_element(self.__class__.__locators['文件名'])

@@ -34,23 +34,64 @@ class BaseChatPage(BasePage):
                   '撤回': (MobileBy.XPATH, "//*[contains(@text, '撤回')]"),
                   '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
                   # 撤回消息时的弹窗
-                  '我知道了': (MobileBy.XPATH, "//*[contains(@text, '我知道了')]"),
+                  '我知道了': (MobileBy.XPATH, "//*[contains(@text, '知道了')]"),
                   # 用户须知
                   '用户须知': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title'),
                   '我已阅读': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_check'),
                   '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_btn_ok'),
                   # 在聊天会话页面点击不可阅读文件时的弹窗
-                  '打开方式': (MobileBy.XPATH, "//*[contains(@text, '打开方式')]"),
+                  '打开方式': (MobileBy.XPATH, "//*[contains(@text,'方式')] | //*[contains(@text,'打开')]"),
                   '取消': (MobileBy.ID, 'android:id/button2'),
                   # 位置信息
                   '深圳市龙岗区交叉口': (MobileBy.ID, 'com.chinasofti.rcs:id/lloc_famous_address_text'),
                   # 消息图片
                   '消息图片': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_image'),
                   # 消息视频
-                  '消息视频': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_video_start'),
+                  '消息视频': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_video_time'),
+                  '视频播放按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/video_play'),
+                  '视频关闭按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_close'),
                   # 打开位置页面元素
                   "导航按钮": (MobileBy.ID, 'com.chinasofti.rcs:id/location_nativ_btn'),
+                  # 打开gif图片后元素
+                  "gif图片元素列表": (MobileBy.ID, 'com.chinasofti.rcs:id/stickers_container'),
+                  "gif群聊会话中的元素": (MobileBy.ID, 'com.chinasofti.rcs:id/layout_loading'),
+                  "gif趣图搜索框": (MobileBy.ID, 'com.chinasofti.rcs:id/et_message'),
+                  "关闭gif趣图聊天框": (MobileBy.ID, 'com.chinasofti.rcs:id/iv_cancel_gif'),
+                  # 消息发送失败 重发弹窗
+                  "是否重发该条信息": (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_message'),
+                  "确定重发": (MobileBy.XPATH, '//*[@text="确定"]'),
+                  "取消重发": (MobileBy.XPATH, '//*[@text="取消"]'),
+                  "发送失败icon": (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
+                  # 消息文件
+                  "文件名": (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_name'),
+                  "文件大小": (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_size'),
+                  '消息文本内容': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'),
+                  "粘贴": (MobileBy.XPATH, '//*[@text="粘贴"]'),
+                  '打开表情': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression'),
+                  '关闭表情': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression_keyboard'),
+                  '表情id': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_expression_image'),
+                  '表情集选择栏': (MobileBy.ID, 'com.chinasofti.rcs:id/lltButton'),
+                  '表情集选择栏btn1': (MobileBy.ID, 'com.chinasofti.rcs:id/first_emoji'),
+                  '表情集选择栏btn2': (MobileBy.ID, 'com.chinasofti.rcs:id/sec_emoji'),
+                  '翻页小圆点': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/pcv_expression"]/android.widget.ImageView'),
+                  '删除表情按钮': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iv_expression_image" and contains(@text,"删除")]'),
+
                   }
+
+    @TestLogger.log()
+    def is_msg_send_fail(self):
+        """消息是否发送失败"""
+        return self._is_element_present(self.__class__.__locators['发送失败icon'])
+
+    @TestLogger.log()
+    def repeat_send_msg(self):
+        """重发消息"""
+        self.click_element(self.__class__.__locators['发送失败icon'])
+
+    @TestLogger.log()
+    def click_sure_repeat_msg(self):
+        """点击 确定 重发消息"""
+        self.click_element(self.__class__.__locators['确定重发'])
 
     @TestLogger.log()
     def click_addr_info(self):
@@ -178,6 +219,11 @@ class BaseChatPage(BasePage):
         self.click_element(self.__class__.__locators["选择相机"])
 
     @TestLogger.log()
+    def click_name_card(self):
+        """点击选择名片"""
+        self.click_element(self.__class__.__locators["选择名片"])
+
+    @TestLogger.log()
     def click_gif(self):
         """点击选择gif"""
         self.click_element(self.__class__.__locators["选择gif"])
@@ -186,6 +232,12 @@ class BaseChatPage(BasePage):
     def click_more(self):
         """点击选择更多 +"""
         self.click_element(self.__class__.__locators["选择更多"])
+
+    @TestLogger.log()
+    def is_open_more(self):
+        """是否打开 更多+ (通过判断是否有位置元素来判断是否有打开 更多+)"""
+        els = self.get_elements((MobileBy.XPATH, '//*[@text="位置"]'))
+        return len(els) > 0
 
     @TestLogger.log()
     def input_message(self, message):
@@ -204,6 +256,26 @@ class BaseChatPage(BasePage):
         return el.text
 
     @TestLogger.log()
+    def get_name_card(self):
+        """获取个人卡名信息"""
+        el = self.get_element([MobileBy.ID, 'com.chinasofti.rcs:id/tv_card_name'])
+        return el.text
+
+    @TestLogger.log()
+    def get_file_info(self, locator):
+        """获最近一次发送文件信息"""
+        el = self.get_elements(self.__class__.__locators[locator])
+        el = el[-1]
+        return el.text
+
+    @TestLogger.log()
+    def get_location(self):
+        """获最近一次发送位置信息"""
+        el = self.get_elements(self.__class__.__locators["深圳市龙岗区交叉口"])
+        el = el[-1]
+        return el.text
+
+    @TestLogger.log()
     def send_message(self):
         """发送聊天信息"""
         self.click_element(self.__class__.__locators["发送按钮"])
@@ -218,6 +290,11 @@ class BaseChatPage(BasePage):
     def page_should_contain_send_btn(self):
         """发送按钮检查"""
         self.page_should_contain_element(self.__locators["发送按钮"])
+
+    @TestLogger.log()
+    def click_send_btn(self):
+        """点击发送按钮"""
+        self.click_element(self.__locators["发送按钮"])
 
     @TestLogger.log()
     def click_audio_btn(self):
@@ -292,3 +369,185 @@ class BaseChatPage(BasePage):
     def click_cancle(self):
         """点击取消"""
         self.click_element(self.__class__.__locators['取消'])
+
+    @TestLogger.log()
+    def play_video(self):
+        """在聊天会话页面点击视频播放"""
+        self.click_element(self.__class__.__locators['视频播放按钮'], default_timeout=30)
+
+    @TestLogger.log()
+    def close_video(self):
+        """关闭视频播放"""
+        self.click_element(self.__class__.__locators['视频关闭按钮'])
+
+    @TestLogger.log()
+    def wait_for_play_video_page_load(self, timeout=8, auto_accept_alerts=True):
+        """等待视频播放页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators['视频关闭按钮'])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(message)
+        return self
+
+    @TestLogger.log()
+    def wait_for_play_video_button_load(self, timeout=8, auto_accept_alerts=True):
+        """等待视频播放页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators['视频播放按钮'])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(message)
+        return self
+
+    @TestLogger.log()
+    def wait_for_gif_ele_load(self, timeout=8, auto_accept_alerts=True):
+        """等待gif图片页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators['gif图片元素列表'])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(message)
+
+    @TestLogger.log()
+    def send_gif(self):
+        """点击选择发送gif图片"""
+        self.click_element(self.__class__.__locators['gif图片元素列表'])
+        time.sleep(1)
+
+    @TestLogger.log()
+    def is_send_gif(self):
+        """检验会话窗口是否有gif图片"""
+        return self.page_should_contain_element(self.__class__.__locators["gif群聊会话中的元素"])
+
+    @TestLogger.log()
+    def press_and_move_down(self, element):
+        """按住并向下滑动"""
+        # b=self.get_element_attribute(self.__class__.__locators[element],"bounds")
+        self.press_and_move_to_down(self.__class__.__locators[element])
+
+    @TestLogger.log()
+    def press_and_move_up(self, element):
+        """按住并向上滑动"""
+        # b=self.get_element_attribute(self.__class__.__locators[element],"bounds")
+        self.press_and_move_to_up(self.__class__.__locators[element])
+
+    @TestLogger.log()
+    def input_gif(self, message):
+        """输入gif搜索框信息"""
+        self.input_text(self.__class__.__locators["gif趣图搜索框"], message)
+        self.driver.hide_keyboard()
+        return self
+
+    @TestLogger.log()
+    def is_gif_exist_toast(self):
+        """是否有趣图无搜索结果提示"""
+        return self.is_toast_exist("无搜索结果，换个热词试试")
+
+    @TestLogger.log()
+    def click_cancel_gif(self):
+        """点击关闭gif图片框"""
+        self.click_element((self.__class__.__locators['关闭gif趣图聊天框']))
+
+    @TestLogger.log()
+    def edit_clear(self, text):
+        """清楚输入框内容"""
+        self.driver.keyevent(123)
+        for i in range(0, len(text)):
+            self.driver.keyevent(67)
+
+    @TestLogger.log()
+    def is_exist_gif_ele(self):
+        """当前页面是否有gif框的消息"""
+        el = self.get_elements(self.__class__.__locators['gif图片元素列表'])
+        return len(el) > 0
+
+    @TestLogger.log()
+    def is_exist_video_msg(self):
+        """是否存在视频消息"""
+        return self._is_element_present(self.__class__.__locators['消息视频'])
+
+    @TestLogger.log()
+    def is_exist_pic_msg(self):
+        """是否存在图片消息"""
+        return self._is_element_present(self.__class__.__locators['消息图片'])
+
+    @TestLogger.log()
+    def clear_msg(self):
+        """清除会话窗的消息"""
+        while True:
+            els = self.get_elements(self.__class__.__locators["消息文本内容"])
+            if not els:
+                break
+            for el in els:
+                self.press(el)
+                self.click_element(self.__class__.__locators["删除"])
+
+    @TestLogger.log()
+    def click_cancel_repeat_msg(self):
+        """点击 取消 重发消息"""
+        self.click_element(self.__class__.__locators['取消重发'])
+
+    @TestLogger.log()
+    def press_input(self):
+        """长按文本输入框"""
+        el = self.get_element(self.__class__.__locators['说点什么...'])
+        self.press(el)
+
+    @TestLogger.log()
+    def click_to_do(self, text):
+        """根据文本text去点击操作 """
+        self.click_element((MobileBy.XPATH, '//*[@text="%s"]' % text))
+
+    @TestLogger.log()
+    def is_open_expression(self):
+        """是否打开表情"""
+        return self._is_element_present(self.__class__.__locators['表情id'])
+
+    @TestLogger.log()
+    def open_expression(self):
+        """打开表情"""
+        self.click_element(self.__class__.__locators["打开表情"])
+
+    @TestLogger.log()
+    def close_expression(self):
+        """关闭表情"""
+        self.click_element(self.__class__.__locators["关闭表情"])
+
+    @TestLogger.log()
+    def select_expression(self, n=1):
+        """选择表情"""
+        els = self.get_elements(self.__class__.__locators['表情id'])
+        texts = []
+        if n > len(els):
+            raise AssertionError("表情选择过多，没有 %s 个表情" % n)
+        for i in range(n):
+            els[i].click()
+            texts.append(els[i].text)
+        return texts
+
+    @TestLogger.log("页面元素判断")
+    def page_should_contains_element(self, locator):
+        self.page_should_contain_element(self.__class__.__locators[locator])
+
+    @TestLogger.log()
+    def click_msg_input_box(self):
+        """点击消息编辑框"""
+        self.click_element(self.__locators["说点什么..."])
+
+    @TestLogger.log()
+    def delete_expression(self):
+        """删除表情"""
+        self.click_element(self.__locators["删除表情按钮"])

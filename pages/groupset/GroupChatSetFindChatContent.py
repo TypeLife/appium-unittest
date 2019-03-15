@@ -12,7 +12,7 @@ class GroupChatSetFindChatContentPage(BasePage):
                   'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
                   'android:id/content': (MobileBy.ID, 'android:id/content'),
                   'com.chinasofti.rcs:id/id_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/id_toolbar'),
-                  '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_back'),
+                  '返回': (MobileBy.XPATH, "//*[contains(@resource-id, 'back')]"),
                   'com.chinasofti.rcs:id/iv_back': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_back'),
                   '输入关键词快速搜索': (MobileBy.ID, 'com.chinasofti.rcs:id/edit_query'),
                   '分类索引': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint_2'),
@@ -57,4 +57,9 @@ class GroupChatSetFindChatContentPage(BasePage):
     def click_back(self):
         """点击返回"""
         self.click_element(self.__class__.__locators["返回"])
+
+    @TestLogger.log()
+    def click_pic_video(self):
+        """点击图片与视频"""
+        self.click_element(self.__class__.__locators["图片与视频"])
 

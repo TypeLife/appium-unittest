@@ -23,7 +23,7 @@ class ContactsSelector(BasePage):
         '搜索或输入手机号': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_search_bar'),
         'com.chinasofti.rcs:id/contact_selection_list_view': (
             MobileBy.ID, 'com.chinasofti.rcs:id/contact_selection_list_view'),
-        '联系人列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list'),
+        '联系人列表': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_list" or android.support.v7.widget.RecyclerView]'),
         '联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
         '选择和通讯录联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/local_contacts'),
         'com.chinasofti.rcs:id/arrow_right': (MobileBy.ID, 'com.chinasofti.rcs:id/arrow_right'),
@@ -37,7 +37,30 @@ class ContactsSelector(BasePage):
         '字母导航栏': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_container')
     }
 
-    @TestLogger.log('选择本地联系人')
+    @TestLogger.log('搜索联系人')
+    def search(self, name):
+        self.mobile.input_text(self.__locators['搜索或输入手机号'], name)
+
+    @TestLogger.log('点击联系人')
+    def click_local_contacts(self, *name_list):
+        name_list = list(name_list)
+
+        self.wait_until(
+            condition=lambda d: self._is_element_present(self.__locators['搜索或输入手机号'])
+        )
+        for cont in self.mobile.list_iterator(self.__locators['联系人列表'], self.__locators['联系人']):
+            name = cont.find_element(*self.__locators['联系人名称']).text
+            if name in name_list:
+                cont.click()
+                name_list.remove(name)
+            if not name_list:
+                break
+        if name_list:
+            print('没有找到以下联系人：{}'.format(name_list))
+            return False
+        return True
+
+    @TestLogger.log('选择本地联系人并点击确定')
     def select_local_contacts(self, *name_list):
         name_list = list(name_list)
 
@@ -68,7 +91,7 @@ class ContactsSelector(BasePage):
 
     @TestLogger.log('检查点：页面标题="选择联系人"')
     def assert_contacts_selector_page_title_is_right(self):
-        self.mobile.assert_element_text_should_be(self.__locators['选择联系人'], '选择联系人')
+        self.mobile.assert_element_text_should_be(self.__locators['选择联系人'], '添加群成员')
 
     @TestLogger.log('检查点：右上角显示确定按钮')
     def assert_contacts_selector_page_display_ok_button(self):
@@ -121,25 +144,30 @@ class PictureSelector(BasePage):
         import re
         if not self.get_elements(self.__locators['下拉菜单选项']):
             self.click_element(self.__locators['下拉菜单箭头'])
-        menus = self.get_elements(self.__locators['下拉菜单选项'])
-        for menu in menus:
-            menu_text = menu.text
-            assert re.match(r'.+\(\d+\)', menu_text), r'Assert menu text match Regex:."+\(\d+\)"'
-            display_name, total = re.findall(r'(.+)\((\d+)\)', menu_text)[0]
-            if len(display_name) > 3:
-                result = re.findall(r'(.+)([.]{3})$', display_name)
-                if result:
-                    if path.find(result[0][0]) == 0:
-                        menu.click()
-                        return result[0][0], int(total)
+        menu_list = ['xpath', '//*[@resource-id="com.chinasofti.rcs:id/list_select"]']
+        self.swipe_by_direction(menu_list, 'down', 600)
+        menu_item = ['xpath', '//*[@resource-id="com.chinasofti.rcs:id/list_select"]/*']
+        for i in self.mobile.list_iterator(menu_list, menu_item):
+            del i
+            menus = self.get_elements(self.__locators['下拉菜单选项'])
+            for menu in menus:
+                menu_text = menu.text
+                assert re.match(r'.+\(\d+\)', menu_text), r'Assert menu text match Regex:."+\(\d+\)"'
+                display_name, total = re.findall(r'(.+)\((\d+)\)', menu_text)[0]
+                if len(display_name) > 3:
+                    result = re.findall(r'(.+)([.]{3})$', display_name)
+                    if result:
+                        if path.find(result[0][0]) == 0:
+                            menu.click()
+                            return result[0][0], int(total)
+                    else:
+                        if path.find(display_name) == 0:
+                            menu.click()
+                            return display_name, int(total)
                 else:
-                    if path.find(display_name) == 0:
+                    if display_name == path:
                         menu.click()
-                        return display_name, int(total)
-            else:
-                if display_name == path:
-                    menu.click()
-                    return path, int(total)
+                        return path, int(total)
         raise NoSuchElementException('下拉菜单没有找到名称为"{}"的目录'.format(path))
 
     @TestLogger.log('选择指定序号的图片（视频）')
@@ -194,16 +222,36 @@ class PictureSelector(BasePage):
             raise ValueError('参数类型错误')
 
         selector = item.find_element(*self.__locators['选择'])
-        import io
-        fp = io.BytesIO(selector.screenshot_as_png)
-        from library.core.utils import image_util
-        # 获取圆环位置的颜色
-        color = image_util.get_pixel_point_color(fp, 5, 50, True)
-        if color == (255, 255, 255, 255):
+        color = self.get_coordinate_color_of_element(selector, 5, 50, True)
+        white = (255, 255, 255, 255)
+        blue = (21, 124, 248, 255)
+        if color == white:
             # 未选择状态为不透明白色
             return False
-        elif color == (21, 124, 248, 255):
+        elif color == blue:
             # 已选状态为不透明蓝色
             return True
         else:
             raise RuntimeError('RGBA颜色{}无法识别勾选状态'.format(color))
+
+    @TestLogger.log('点击发送')
+    def click_send_of_img_selector(self):
+        self.click_element(self.__locators['发送'])
+
+    @TestLogger.log('选择并发送')
+    def select_and_send_in_img_selector(self, mapper):
+        """
+        选择文件进行发送
+            mapper格式：
+                {
+                    # 文件夹名  # 文件位置序号
+                    '文件夹1': (1, 2, 3, 4, 5)
+                    '文件夹2': (2, 3, 4, 5, 8)
+                }
+        :param mapper: 文件位置字典
+        :return:
+        """
+        for folder_name, orders in mapper.items():
+            self.switch_to_given_folder(folder_name)
+            self.select_items_by_given_orders(*orders)
+        self.click_send_of_img_selector()

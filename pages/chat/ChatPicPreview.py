@@ -31,7 +31,18 @@ class ChatPicPreviewPage(BasePage):
                   # 视频预览页面
                   '视频播放三角形': (MobileBy.ID, 'com.chinasofti.rcs:id/pv_item'),
                   '视频页面': (MobileBy.ID, 'com.chinasofti.rcs:id/vp_preview'),
+                  '视频关闭': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_close'),
                   }
+
+    @TestLogger.log()
+    def edit_btn_is_toast(self):
+        """获取编辑按钮状态是可点击是否有提示框"""
+        return self.is_toast_exist("当前版本仅支持勾选单张图片时进行编辑", 3)
+
+    @TestLogger.log()
+    def click_edit(self):
+        """点击编辑"""
+        self.click_element(self.__class__.__locators["编辑"])
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=10, auto_accept_alerts=True):
@@ -53,6 +64,11 @@ class ChatPicPreviewPage(BasePage):
     def play_video(self):
         """视频播放"""
         self.click_element(self.__class__.__locators["视频播放三角形"])
+
+    @TestLogger.log()
+    def close_video(self):
+        """关闭视频"""
+        self.click_element(self.__class__.__locators["视频关闭"])
 
     @TestLogger.log()
     def play_video_btn_is_enabled(self):
@@ -108,8 +124,3 @@ class ChatPicPreviewPage(BasePage):
         self.click_element(self.__class__.__locators["发送(2)"])
         # 发送图片需要时间
         time.sleep(times)
-
-    @TestLogger.log()
-    def click_edit(self):
-        """点击编辑"""
-        self.click_element(self.__class__.__locators["编辑"])

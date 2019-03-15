@@ -51,7 +51,19 @@ class GroupChatSetPage(BasePage):
                   '清空聊天记录': (MobileBy.ID, 'com.chinasofti.rcs:id/left_empty_chat_tv'),
                   '删除并退出': (MobileBy.ID, 'com.chinasofti.rcs:id/delete_and_exit'),
                   "确认": (MobileBy.XPATH, '//*[@text ="确认"]'),
-                  "取消": (MobileBy.XPATH, '//*[@text ="取消"]')
+                  "确定": (MobileBy.XPATH, '//*[@text ="确定"]'),
+                  "取消": (MobileBy.XPATH, '//*[@text ="取消"]'),
+                  '群成员': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_head'),
+                  '完成': (MobileBy.ID, 'com.chinasofti.rcs:id/group_name_save'),
+                  '修改群名或群名片返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
+                  'X按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect'),
+                  '群名片完成': (MobileBy.ID, 'com.chinasofti.rcs:id/group_card_save'),
+                  '二维码转发': (MobileBy.ID, 'com.chinasofti.rcs:id/qecode_share_btn'),
+                  '二维码下载': (MobileBy.ID, 'com.chinasofti.rcs:id/qecode_save_btn'),
+                  '二维码返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
+                  '群管理返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
+                  '群主管理权转让': (MobileBy.ID, 'com.chinasofti.rcs:id/group_transfer'),
+                  '解散群': (MobileBy.ID, 'com.chinasofti.rcs:id/group_disband'),
                   }
 
     @TestLogger.log()
@@ -226,9 +238,163 @@ class GroupChatSetPage(BasePage):
         self.click_element(self.__locators['取消'])
 
     @TestLogger.log()
+    def click_sure(self):
+        """点击确定"""
+        self.click_element(self.__locators['确定'])
+
+    @TestLogger.log()
     def scroll_to_bottom(self):
         """滑到菜单底部"""
         self.wait_until(
             condition=lambda d: self.get_element(self.__locators['群聊设置'])
         )
         self.swipe_by_direction(self.__locators['菜单区域'], 'up')
+
+    @TestLogger.log()
+    def click_determine(self):
+        """点击确定"""
+        self.click_element(self.__locators['确定'])
+
+    @TestLogger.log()
+    def click_search_chat_record(self):
+        """点击 查找聊天内容"""
+        self.click_element(self.__class__.__locators['查找聊天内容'])
+
+    @TestLogger.log()
+    def click_add_member(self):
+        """点击 “+”添加成员"""
+        els=self.get_elements(self.__class__.__locators['群成员'])
+        els[-2].click()
+
+    @TestLogger.log()
+    def clear_group_name(self):
+        """清空群名称"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/edit_query'))
+        el.clear()
+
+    @TestLogger.log()
+    def is_enabled_of_group_name_save_button(self):
+        """判断群名称保存按钮是否置灰"""
+        return self._is_enabled(self.__class__.__locators['完成'])
+
+    @TestLogger.log()
+    def input_new_group_name(self,message):
+        """输入新群名"""
+        self.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/edit_query'), message)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+        return self
+
+    @TestLogger.log()
+    def save_group_name(self):
+        """保存新群名"""
+        self.click_element(self.__class__.__locators['完成'])
+
+    @TestLogger.log()
+    def click_edit_group_name_back(self):
+        """修改群名返回"""
+        self.click_element(self.__class__.__locators['修改群名或群名片返回'])
+
+    @TestLogger.log()
+    def is_iv_delete_exit(self):
+        """判断X按钮是否存在"""
+        if self.get_element(self.__class__.__locators["X按钮"]):
+            return True
+        else:
+            return False
+
+    @TestLogger.log()
+    def click_iv_delete_button(self):
+        """点击X按钮"""
+        self.click_element(self.__class__.__locators["X按钮"])
+
+    @TestLogger.log()
+    def get_edit_query_text(self):
+        """获取输入框文本"""
+        el=self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/edit_query'))
+        text=el.get_attribute("text")
+        return text
+
+    @TestLogger.log()
+    def click_edit_group_card_back(self):
+        """修改群名片返回"""
+        self.click_element(self.__class__.__locators['修改群名或群名片返回'])
+
+    @TestLogger.log()
+    def save_group_card_name(self):
+        """保存新群名片名字"""
+        self.click_element(self.__class__.__locators['群名片完成'])
+
+    @TestLogger.log()
+    def is_enabled_of_group_card_save_button(self):
+        """判断群名片保存按钮是否置灰"""
+        return self._is_enabled(self.__class__.__locators['群名片完成'])
+
+    @TestLogger.log()
+    def wait_for_qecode_load(self, timeout=8, auto_accept_alerts=True):
+        """等待群二维码加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("该二维码7天内")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def click_qecode_share_button(self):
+        """点击群二维码分享按钮"""
+        self.click_element(self.__class__.__locators['二维码转发'])
+
+    @TestLogger.log()
+    def click_qecode_download_button(self):
+        """点击群二维码下载按钮"""
+        self.click_element(self.__class__.__locators['二维码下载'])
+
+    @TestLogger.log()
+    def click_qecode_back_button(self):
+        """点击群二维码页面返回按钮"""
+        self.click_element(self.__class__.__locators['二维码返回'])
+
+    @TestLogger.log()
+    def wait_for_group_manage_load(self, timeout=8, auto_accept_alerts=True):
+        """等待群管理页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("群管理")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def click_group_manage_back_button(self):
+        """点击群管理页面返回按钮"""
+        self.click_element(self.__class__.__locators['群管理返回'])
+
+    @TestLogger.log()
+    def click_group_manage_transfer_button(self):
+        """点击群主管理权转让按钮"""
+        self.click_element(self.__class__.__locators['群主管理权转让'])
+
+    @TestLogger.log()
+    def click_group_manage_disband_button(self):
+        """点击解散群按钮"""
+        self.click_element(self.__class__.__locators['解散群'])
+
+    @TestLogger.log("下一页")
+    def page_up(self):
+        """向上滑动一页"""
+        self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)

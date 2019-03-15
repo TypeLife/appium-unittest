@@ -47,9 +47,17 @@ class MessagePage(FooterPage):
         '通讯录': (MobileBy.ID, 'com.chinasofti.rcs:id/tvContact'),
         '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe'),
         '消息免打扰': (MobileBy.XPATH,
-                  '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text="%s"]/../following-sibling::*[@resource-id="com.chinasofti.rcs:id/iv_conv_slient"]'),
-        '置顶群': (MobileBy.XPATH,
-                '//android.support.v7.widget.RecyclerView/android.widget.RelativeLayout[1]//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name"]'),
+                  '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text="%s"]/../../*[@resource-id="com.chinasofti.rcs:id/ll_unread"]'),
+        '置顶群': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name"]'),
+        '消息发送失败感叹号': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_fail_status'),
+        '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
+        '收藏': (MobileBy.XPATH, "//*[contains(@text, '收藏')]"),
+        '删除聊天': (MobileBy.XPATH, "//*[contains(@text, '删除聊天')]"),
+        # 消息页中点击已发送文件
+        '文件': (MobileBy.XPATH, "//*[contains(@text, '文件')]"),
+        '位置': (MobileBy.XPATH, "//*[contains(@text, '位置')]"),
+        '发送名片': (MobileBy.XPATH, "//*[contains(@text, '发送名片')]"),
+        '名片': (MobileBy.XPATH, "//*[contains(@text, '名片')]"),
     }
 
     @TestLogger.log('检查顶部搜索框是否显示')
@@ -69,10 +77,15 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def is_on_this_page(self):
         """当前页面是否在消息页"""
-        el = self.get_elements(self.__locators['+号'])
-        if len(el) > 0:
+        try:
+            self.wait_until(
+                timeout=8,
+                auto_accept_permission_alert=True,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["+号"])
+            )
             return True
-        return False
+        except:
+            return False
 
     @TestLogger.log()
     def click_add_icon(self):
@@ -196,7 +209,7 @@ class MessagePage(FooterPage):
             self.wait_condition_and_listen_unexpected(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_element_present(self.__class__.__locators["+号"]),
+                condition=lambda d: self._is_element_present(self.__locators["+号"]),
                 unexpected=unexpected
             )
         except TimeoutException:
@@ -364,3 +377,69 @@ class MessagePage(FooterPage):
     def get_top_news_name(self):
         """获取置顶群的名字"""
         return self.get_element(self.__class__.__locators['置顶群']).text
+
+    @TestLogger.log()
+    def click_element_by_text(self,text):
+        """点击指定元素"""
+        self.click_element((MobileBy.XPATH, '//*[@text="%s"]' % text))
+
+    @TestLogger.log()
+    def is_iv_fail_status_present(self):
+        """判断消息发送失败“！”标致是否存在"""
+        return self._is_element_present(self.__locators['消息发送失败感叹号'])
+
+    @TestLogger.log()
+    def press_file_to_do(self, file, text):
+        """长按指定文件进行操作"""
+        el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))
+        self.press(el)
+        self.click_element(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def look_detail_news_by_name(self, name):
+        """查看详细消息"""
+        self.click_element((MobileBy.XPATH, "//*[@text='%s']" % name))
+
+    @TestLogger.log()
+    def click_msg_by_content(self, text):
+        """点击消息"""
+        self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_content" and @text="%s"]' % text))
+
+    @TestLogger.log('判断该页面是否有元素')
+    def page_contain_element(self, locator):
+        return self.page_should_contain_element(self.__locators[locator])
+
+    @TestLogger.log("判断消息列表的消息是否包含省略号")
+    def msg_is_contain_ellipsis(self):
+        contents = []
+        els = self.get_elements(self.__locators['消息简要内容'])
+        for el in els:
+            contents.append(el.text)
+        for msg in contents:
+            if "…" in msg:
+                return True
+        raise AssertionError("消息列表的消息无省略号")
+
+    @TestLogger.log()
+    def click_set_message(self, locator):
+        """点击已发文件类型"""
+        self.click_element(self.__locators[locator])
+
+    @TestLogger.log()
+    def choose_chat_by_name(self, name):
+        """通过名字选择一个聊天"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % name)
+        max_try = 10
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.page_down()
+        self.click_element(locator)
+
+    @TestLogger.log()
+    def click_workbench(self):
+        """点击工作台"""
+        self.click_element(self.__class__.__locators["工作台"])
+

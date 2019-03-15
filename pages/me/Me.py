@@ -28,8 +28,7 @@ class MePage(FooterPage):
         '电话号码': (MobileBy.ID, 'com.chinasofti.rcs:id/card_photo_num'),
         '查看并编辑个人资料': (MobileBy.ID, 'com.chinasofti.rcs:id/check_user_profile'),
         'com.chinasofti.rcs:id/profile_photo_out': (MobileBy.ID, 'com.chinasofti.rcs:id/profile_photo_out'),
-        'com.chinasofti.rcs:id/avatar_bg_id': (MobileBy.ID, 'com.chinasofti.rcs:id/avatar_bg_id'),
-        'com.chinasofti.rcs:id/card_head_photo': (MobileBy.ID, 'com.chinasofti.rcs:id/card_head_photo'),
+        '个人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/card_head_photo'),
         'com.chinasofti.rcs:id/layout_for_mall': (MobileBy.ID, 'com.chinasofti.rcs:id/layout_for_mall'),
         'com.chinasofti.rcs:id/internet_mutil_call_layout_id': (
             MobileBy.ID, 'com.chinasofti.rcs:id/internet_mutil_call_layout_id'),
@@ -72,8 +71,37 @@ class MePage(FooterPage):
         '帮助与反馈': (MobileBy.ID, 'com.chinasofti.rcs:id/feedback_text'),
         'com.chinasofti.rcs:id/setting': (MobileBy.ID, 'com.chinasofti.rcs:id/setting'),
         '设置': (MobileBy.ID, 'com.chinasofti.rcs:id/setting_app_text'),
-
+        '移动营业厅': (MobileBy.ID, 'com.chinasofti.rcs:id/onlinehall_text'),
+        '姓名': (MobileBy.ID, 'com.chinasofti.rcs:id/card_name'),
     }
+
+    @TestLogger.log('点击个人名片头像')
+    def click_head(self):
+        self.click_element(self.__locators['个人头像'])
+
+    @TestLogger.log()
+    def wait_for_head_load(self, timeout=60, auto_accept_alerts=True):
+        """等待个人名片头像加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["个人头像"])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log('点击二维码图标')
+    def click_qr_code_icon(self):
+        self.click_element(self.__locators['二维码入口'])
+
+    @TestLogger.log('点击移动营业厅')
+    def click_mobile_hall_butten(self):
+        self.click_element(self.__locators['移动营业厅'])
 
     @TestLogger.log("点击菜单项")
     def click_menu(self, menu):
@@ -81,7 +109,7 @@ class MePage(FooterPage):
         self._find_menu(locator)
         self.click_element(locator)
 
-    @TestLogger.log()
+    @TestLogger.log("回到列表顶部")
     def scroll_to_top(self):
         self.wait_until(
             condition=lambda d: self.get_element(self.__locators['菜单区域'])
@@ -117,7 +145,7 @@ class MePage(FooterPage):
                 break
         return True
 
-    @TestLogger.log()
+    @TestLogger.log("点击设置菜单")
     def click_setting_menu(self):
         """点击设置菜单"""
         self.scroll_to_bottom()
@@ -179,3 +207,40 @@ class MePage(FooterPage):
     def _is_on_the_end_of_menu_view(self):
         """判断是否在菜单开头"""
         return self._is_element_present(self.__locators['设置'])
+
+    @TestLogger.log()
+    def click_help_menu(self, timeout=60):
+        """点击帮助与反馈菜单"""
+        self.scroll_to_bottom()
+        self.wait_until(
+            timeout=timeout,
+            condition=lambda d: self.get_element(self.__locators['帮助与反馈'])
+        ).click()
+
+    @TestLogger.log()
+    def click_collection(self):
+        """点击收藏按钮"""
+        self.click_element(self.__locators['收藏'])
+
+    @TestLogger.log()
+    def is_on_this_page(self):
+        """当前页面是否在我的页面"""
+        el = self.get_elements(self.__locators['查看并编辑个人资料'])
+        if len(el) > 0:
+            return True
+        return False
+
+    @TestLogger.log()
+    def is_element_exist(self, text):
+        """当前页面是否包含此元素"""
+        return self._is_element_present(self.__locators[text])
+
+    @TestLogger.log()
+    def is_text_exist(self, text):
+        """当前页面是否包含此元素"""
+        return self.is_text_present(text)
+
+    @TestLogger.log()
+    def click_view_edit(self):
+        """点击查看并编辑资料按钮"""
+        self.click_element(self.__locators['查看并编辑个人资料'])

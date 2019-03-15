@@ -4,8 +4,8 @@ import re
 import sys
 import time
 from collections import OrderedDict
-from xml.etree import ElementTree as Et
-
+from lxml import etree
+import uuid
 from appium.webdriver.common.mobileby import MobileBy
 
 import settings
@@ -77,15 +77,24 @@ def generate_page_object():
         sys.stdin.readline().strip().upper()
         activity = driver.current_activity
         page_source = driver.page_source
-        tree = Et.XML(page_source)
+        tree = etree.fromstring(page_source.encode())
         elements = []
 
         def parse(node):
-            for child in list(node):
-                resource_id = child.get('resource-id')
-                text = child.get('text') if child.get('text') else resource_id
-                elements.append((text, (MobileBy.ID, resource_id)))
-                parse(child)
+            for e in node.iter():
+                resource_id = e.get('resource-id')
+                xpath = node.getroottree().getpath(e)
+                text = e.get('text')
+                if isinstance(text, str):
+                    text = text.replace('\n', '')
+                key = text if text else resource_id
+                if key in dict(elements):
+                    key = key + uuid.uuid4().__str__()
+                if key:
+                    if resource_id:
+                        elements.append((key, (MobileBy.ID, resource_id)))
+                    else:
+                        elements.append((key, (MobileBy.XPATH, xpath)))
 
         parse(tree)
         locators = re.sub(r"('[^)]+\),?)", r'\1\n', dict(OrderedDict(elements)).__repr__())

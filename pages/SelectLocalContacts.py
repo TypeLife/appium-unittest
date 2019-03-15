@@ -1,5 +1,5 @@
 from appium.webdriver.common.mobileby import MobileBy
-import time
+import re
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
@@ -154,7 +154,7 @@ class SelectLocalContactsPage(BasePage):
     @TestLogger.log()
     def contacts_is_selected(self, name):
         """获取联系人的选择状态"""
-        selected_els = self.get_elements((MobileBy.XPATH, '//*[@text ="%s"]/../../android.widget.RelativeLayout/android.widget.ImageView[@resource-id="com.chinasofti.rcs:id/select_icon"]' % name))
+        selected_els = self.get_elements((MobileBy.XPATH, '//*[@text ="%s"]/../android.widget.ImageView[@resource-id="com.chinasofti.rcs:id/contact_icon"]' % name))
         if selected_els:
             return True
         else:
@@ -182,7 +182,7 @@ class SelectLocalContactsPage(BasePage):
             for el in els:
                 contacts_name.append(el.text)
         else:
-            raise AssertionError("No contacts, please add contacts in address book.")
+            raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
         flag = True
         while flag:
             self.page_up()
@@ -214,7 +214,7 @@ class SelectLocalContactsPage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self.is_text_present("选择联系人")
+                condition=lambda d: self._is_element_present(self.__locators['选择联系人'])
             )
         except:
             message = "页面在{}s内，没有加载成功".format(str(timeout))
@@ -222,3 +222,41 @@ class SelectLocalContactsPage(BasePage):
                 message
             )
         return self
+
+    @TestLogger.log()
+    def get_selected_and_threshold_nums(self):
+        """获取确定按钮上的选择人数与可选的总人数"""
+        # sure_info = "确定(3/499)"
+        sure_info = self.get_element(self.__class__.__locators['确定']).text
+        nums = re.findall(r'\d+', sure_info)
+        if len(nums) == 2:
+            return int(nums[0]), int(nums[1])
+        else:
+            if not sure_info == '确定':
+                raise AssertionError("确定按钮显示异常，不是‘确定’或者 ‘确定(3/499)’格式")
+
+    @TestLogger.log()
+    def selecting_local_contacts_by_name(self, name):
+        """选择一个本地联系人"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text ="%s"]' % name)
+        max_try = 10
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.page_down()
+        self.click_element(locator)
+
+    @TestLogger.log("下一页")
+    def page_down(self):
+        self.wait_until(
+            condition=lambda d: self._is_element_present(self.__class__.__locators['容器列表'])
+        )
+        self.swipe_by_direction(self.__class__.__locators['容器列表'], 'up')
+
+    @TestLogger.log()
+    def is_search_result(self, msg):
+        """搜索结果判断"""
+        els = self.get_elements((MobileBy.XPATH,'//*[contains(@text, "%s")]' % msg))
+        return len(els) > 1

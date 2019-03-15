@@ -26,11 +26,16 @@ class ContactListSearchPage(BasePage):
         '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_head'),
         '联系人名': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name'),
         '联系人号码': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_phone'),
+        '分享名片': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_share_card'),
     }
 
     @TestLogger.log('点击返回')
     def click_back(self):
         self.click_element(self.__locators['返回'])
+
+    @TestLogger.log('点击分享名片')
+    def click_share_card(self):
+        self.click_element(self.__locators['分享名片'])
 
     @TestLogger.log('输入搜索关键字')
     def input_search_keyword(self, keyword):

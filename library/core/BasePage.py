@@ -20,19 +20,31 @@ class BasePage(object):
 
     @property
     def driver(self):
-        from library.core.utils.applicationcache import MOBILE_DRIVER_CACHE
-        return MOBILE_DRIVER_CACHE.current.driver
+        return self.mobile.driver
 
     @property
     def mobile(self):
         from library.core.utils.applicationcache import current_mobile
         return current_mobile()
 
+    @TestLogger.log('后台运行APP')
     def background_app(self, seconds):
-        self.driver.background_app(seconds)
+        """
+        APP 切换到后台运行一段时间，时间结束自动返回前台运行
+        :param seconds: 后台运行的时间（单位S）
+        :return:
+        """
+        self.mobile.background_app(seconds)
 
+    @TestLogger.log('强制结束APP进程')
     def terminate_app(self, app_id, **options):
-        self.terminate_app(app_id, **options)
+        """
+        结束APP进程
+        :param app_id: APP包名
+        :param options:
+        :return:
+        """
+        return self.mobile.terminate_app(app_id, **options)
 
     def _get_platform(self):
         try:
@@ -52,17 +64,17 @@ class BasePage(object):
         else:
             return 'other'
 
+    @TestLogger.log('查找元素')
     def get_element(self, locator):
-        return self.driver.find_element(*locator)
+        return self.mobile.get_element(locator)
 
+    @TestLogger.log('查找所有元素')
     def get_elements(self, locator):
-        return self.driver.find_elements(*locator)
+        return self.mobile.get_elements(locator)
 
+    @TestLogger.log('获取元素文本内容')
     def get_text(self, locator):
-        elements = self.get_elements(locator)
-        if len(elements) > 0:
-            return elements[0].text
-        return None
+        return self.mobile.get_text(locator)
 
     @TestLogger.log("获取控件属性")
     def get_element_attribute(self, locator, attr, wait_time=0):
@@ -351,14 +363,20 @@ class BasePage(object):
             self,
             condition,
             timeout=8,
+            poll=0.2,
             auto_accept_permission_alert=True,
-            unexpected=None
+            unexpected=None,
+            *args,
+            **kwargs
     ):
         return self.mobile.wait_condition_and_listen_unexpected(
-            condition,
+            condition=condition,
             timeout=timeout,
+            poll=poll,
             auto_accept_permission_alert=auto_accept_permission_alert,
-            unexpected=unexpected
+            unexpected=unexpected,
+            args=args,
+            kwargs=kwargs
         )
 
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
@@ -415,7 +433,7 @@ class BasePage(object):
 
     def get_network_status(self):
         """获取网络链接状态"""
-        return self.driver.network_connection
+        return self.mobile.get_network_status()
 
     def set_network_status(self, status):
         """设置网络
@@ -437,7 +455,7 @@ class BasePage(object):
             ALL_NETWORK_ON = 6
 
         """
-        self.driver.set_network_connection(status)
+        return self.mobile.set_network_status(status)
 
     def is_toast_exist(self, text, timeout=30, poll_frequency=0.5):
         """is toast exist, return True or False
@@ -463,3 +481,52 @@ class BasePage(object):
     def press(self, el, times=3000):
         """按压操作"""
         TouchAction(self.driver).long_press(el, duration=times).wait(1).perform()
+
+    @TestLogger.log('获取元素指定坐标颜色')
+    def get_coordinate_color_of_element(self, element, x, y, by_percent=False, mode='RGBA') -> tuple:
+        return self.mobile.get_coordinate_color_of_element(element, x, y, by_percent, mode)
+
+    @TestLogger.log("按住并向下滑动")
+    def press_and_move_to_down(self, locator):
+        """按住并滑动"""
+        element = self.get_element(locator)
+        rect = element.rect
+        pointX = int(rect["x"]) + int(rect["width"])/2
+        pointY = int(rect["y"]) + int(rect["height"]) * 1
+        TouchAction(self.driver).long_press(element, duration=3000).move_to(element, pointX,
+                                                                                    pointY).wait(1).release().perform()
+
+    @TestLogger.log("按住并向上滑动")
+    def press_and_move_to_up(self, locator):
+        """按住并滑动"""
+        element = self.get_element(locator)
+        rect = element.rect
+        pointX = int(rect["x"]) + int(rect["width"])/2
+        pointY = -(int(rect["y"]) - 20)
+        # pointY=0
+        TouchAction(self.driver).long_press(element, duration=3000).move_to(element, pointX,
+                                                                                    pointY).wait(3).release().perform()
+
+    def tap_coordinate(self, positions):
+        """模拟手指点击（最多五个手指）positions:[(100, 20), (100, 60), (100,100)]"""
+        return self.mobile.tap(positions)
+
+    @TestLogger.log('键盘是否弹起')
+    def is_keyboard_shown(self):
+        """判断键盘是否弹起"""
+        return self.mobile.is_keyboard_shown()
+
+    @TestLogger.log("点击返回")
+    def click_back(self):
+        """点击返回"""
+        self.click_element((MobileBy.XPATH, "//*[contains(@resource-id, 'back')]"), 10)
+
+    @TestLogger.log("下一页")
+    def page_up(self):
+        """向上滑动一页"""
+        self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+
+    @TestLogger.log("上一页")
+    def page_down(self):
+        """向下滑动"""
+        self.swipe_by_percent_on_screen(50, 30, 50, 70, 800)

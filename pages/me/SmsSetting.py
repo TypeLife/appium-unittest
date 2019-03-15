@@ -41,8 +41,8 @@ class SmsSettingPage(BasePage):
 
         self._find_item(switch_locator)
 
-        open_states = ['开启']
-        close_states = ['关闭']
+        open_states = ['开启', '打开', 'ON']
+        close_states = ['关闭', 'OFF']
         current_status = self.get_text(switch_locator)
         if current_status in open_states:
             return
@@ -65,8 +65,8 @@ class SmsSettingPage(BasePage):
 
         self._find_item(switch_locator)
 
-        open_states = ['开启']
-        close_states = ['关闭']
+        open_states = ['开启', '打开', 'ON']
+        close_states = ['关闭', 'OFF']
         current_status = self.get_text(switch_locator)
         if current_status in open_states:
             self.click_element(switch_locator)
@@ -133,8 +133,8 @@ class SmsSettingPage(BasePage):
 
         self._find_item(switch_locator)
 
-        open_states = ['开启']
-        close_states = ['关闭']
+        open_states = ['开启', '打开', 'ON']
+        close_states = ['关闭', 'OFF']
         current_status = self.get_text(switch_locator)
         if current_status in open_states:
             return
@@ -152,8 +152,8 @@ class SmsSettingPage(BasePage):
 
         self._find_item(switch_locator)
 
-        open_states = ['开启']
-        close_states = ['关闭']
+        open_states = ['开启', '打开', 'ON']
+        close_states = ['关闭', 'OFF']
         current_status = self.get_text(switch_locator)
         if current_status in open_states:
             raise AssertionError('设置项"{}"没有关闭，当前状态为：{}'.format(item, current_status))

@@ -40,7 +40,10 @@ class SettingPage(BasePage):
 
         '确定退出？': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_message'),
         '取消': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
-        '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok')
+        '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
+        # 打开参与体验改善计划
+        '上传日志': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_send')
+
     }
 
     @TestLogger.log('点击返回上一页图标')
@@ -160,3 +163,16 @@ class SettingPage(BasePage):
                     return
                 if self._is_on_the_end_of_menu_view():
                     raise NoSuchElementException('页面找不到元素：{}'.format(locator))
+
+    @TestLogger.log("检查页面包含文本")
+    def page_contain_texts(self, menu):
+        for text in menu:
+            self.assert_list_contains_menu(text)
+        return True
+
+
+    @TestLogger.log("切换语言")
+    def change_system_language(self,language):
+        self.execute_shell_command('adb shell "am start -n  com.android.providers.settings/.SettingsProvider"')
+        self.is_current_activity_match_this_page()
+

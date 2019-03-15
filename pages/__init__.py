@@ -72,6 +72,9 @@ __all__ = [
     'ChatFilePage',
     'FindChatRecordPage',
     'SingleChatSetPage',
+    'PicVideoPage',
+    'WorkbenchPage',
+    'CreateTeamPage',
 ]
 
 from .ChatFile import ChatFilePage
@@ -99,6 +102,7 @@ from .chat import ChatPicPreviewPage
 from .chat import ChatProfilePage
 from .chat import ChatSelectFilePage
 from .chat import ChatSelectLocalFilePage
+from .chat import PicVideoPage
 from .contacts import ContactDetailsPage
 from .contacts import ContactListSearchPage
 from .contacts import ContactsPage
@@ -147,3 +151,5 @@ from .search import GlobalSearchGroupPage
 from .search import GlobalSearchMessagePage
 from .search import MessageSearchPage
 from .search import SearchPage
+from .workbench import WorkbenchPage
+from .workbench.create_team import CreateTeamPage

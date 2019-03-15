@@ -15,7 +15,7 @@ class LableGroupDetailPage(LabelSettingMenu, BasePage):
         'android:id/content': (MobileBy.ID, 'android:id/content'),
         'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
         'com.chinasofti.rcs:id/rl_label_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_label_toolbar'),
-        '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_label_left_back'),
+        '返回': (MobileBy.XPATH, "//*[contains(@resource-id, 'back')]"),
         '标题': (MobileBy.ID, 'com.chinasofti.rcs:id/label_toolbar_title'),
         '设置': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_label_setting'),
         'com.chinasofti.rcs:id/recyclerView_contactList_label': (
@@ -49,6 +49,7 @@ class LableGroupDetailPage(LabelSettingMenu, BasePage):
         '大佬1': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         '大佬2': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         '大佬3': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
+        '成员名字': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         'com.chinasofti.rcs:id/contact_index_bar_view': (
             MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_view'),
         'com.chinasofti.rcs:id/contact_index_bar_container': (
@@ -69,20 +70,25 @@ class LableGroupDetailPage(LabelSettingMenu, BasePage):
     def open_setting_menu(self):
         self.click_element(self.__locators['设置'])
 
-    @TestLogger.log()
+    @TestLogger.log('点击群发信息')
     def click_send_group_info(self):
         """点击群发信息"""
-        self.click_element(self.__class__.__locators['群发信息'])
+        self.click_element(self.__locators['群发信息'])
 
-    @TestLogger.log()
+    @TestLogger.log('点击添加成员')
     def click_add_members(self):
         """点击添加成员"""
-        self.click_element(self.__class__.__locators['添加成员'])
+        self.click_element(self.__locators['添加成员'])
 
-    @TestLogger.log()
+    @TestLogger.log('点击多方通话')
     def click_multi_tel(self):
         """点击多方通话"""
-        self.click_element(self.__class__.__locators['多方电话'])
+        self.click_element(self.__locators['多方电话'])
+
+    @TestLogger.log('点击多方视频')
+    def click_multiparty_videos(self):
+        """点击多方通话"""
+        self.click_element(self.__locators['多方视频'])
 
     @TestLogger.log('检查点：当前页面为标签详情页')
     def assert_this_page_is_opened(self):
@@ -92,3 +98,13 @@ class LableGroupDetailPage(LabelSettingMenu, BasePage):
             )
         except TimeoutException:
             raise AssertionError('当前页面不是标签组详情页')
+
+    @TestLogger.log("获取标签分组成员人名")
+    def get_members_names(self):
+        """获取标签分组成员人名"""
+        els = self.get_elements(self.__class__.__locators['成员名字'])
+        names = []
+        if els:
+            for el in els:
+                names.append(el.text)
+        return names
