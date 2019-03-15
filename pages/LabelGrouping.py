@@ -345,3 +345,17 @@ class LabelGroupingPage(ContactsSelector, BasePage):
     @TestLogger.log('返回')
     def click_back(self):
         self.click_element(self.__locators['返回'])
+
+    @TestLogger.log()
+    def page_contain_title(self):
+        """页面应该包含的元素-标题"""
+        return self.page_should_contain_element(self.__locators['新建分组页面'])
+
+    @TestLogger.log()
+    def page_contain_title(self):
+        """页面应该包含的元素-标题"""
+        return self.page_should_contain_element(self.__locators['确定'])
+
+    @TestLogger.log()
+    def sure_btn_is_clickable(self):
+        return self._is_clickable(self.__class__.__locators["确定"])

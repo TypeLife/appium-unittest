@@ -11,7 +11,9 @@ class MenuMore(BasePage):
     __locators = {
         '点击空白': (MobileBy.ID, 'com.chinasofti.rcs:id/touch_outside'),
         '清空消息': (MobileBy.ID, 'com.chinasofti.rcs:id/clear_msg'),
-        '取消关注': (MobileBy.ID, 'com.chinasofti.rcs:id/unsubscribe')
+        '取消关注': (MobileBy.ID, 'com.chinasofti.rcs:id/unsubscribe'),
+        '取消': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
+        '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
     }
 
     @TestLogger.log('点击空白')
@@ -29,3 +31,11 @@ class MenuMore(BasePage):
     @TestLogger.log('判断是否显示“取消关注”菜单')
     def is_unsubscribe_menu_display(self):
         return self._is_element_present(self.__locators['取消关注'])
+
+    @TestLogger.log('点击取消')
+    def click_not_clear(self):
+        self.click_element(self.__locators['取消'])
+
+    @TestLogger.log('点击确定')
+    def click_sure_clear(self):
+        self.click_element(self.__locators['确定'])
