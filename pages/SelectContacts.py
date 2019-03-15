@@ -48,7 +48,9 @@ class SelectContactsPage(BasePage):
         '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
         '右侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView'),
         '左侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/index_text"]'),
-        '查看更多': (MobileBy.XPATH, '//*[@text ="查看更多"]')
+        '查看更多': (MobileBy.XPATH, '//*[@text ="查看更多"]'),
+        '和通讯录返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back'),
+
     }
 
     @TestLogger.log()
@@ -103,6 +105,12 @@ class SelectContactsPage(BasePage):
     def click_back(self):
         """点击 返回"""
         self.click_element(self.__class__.__locators["返回"])
+
+    @TestLogger.log()
+    def click_he_back(self):
+        """点击 和通讯录返回"""
+        self.click_element(self.__class__.__locators["和通讯录返回"])
+
 
     @TestLogger.log('点击分享名片')
     def click_share_card(self):
@@ -333,5 +341,12 @@ class SelectContactsPage(BasePage):
     @TestLogger.log()
     def select_recent_chat_by_name(self, name):
         """根据名字选择最近聊天会话窗口"""
-        self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text ="%s"]' % name))
-
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text ="%s"]' % name)
+        max_try = 10
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.page_up()
+        self.click_element(locator)

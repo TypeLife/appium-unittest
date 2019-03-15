@@ -4038,7 +4038,8 @@ class MsgCommonGroupAllTest(TestCase):
         sog.click_search_group()
         sog.input_search_keyword("啊")
         time.sleep(2)
-        if not sog.is_text_present("啊测测试试"):
+        els = sog.get_search_result_group()
+        if not els[0].get_attribute("text") == "啊测测试试":
             raise AssertionError("无法中文模糊搜索")
         sog.click_back_icon()
         sog.click_back()
@@ -4114,7 +4115,8 @@ class MsgCommonGroupAllTest(TestCase):
         sog.click_search_group()
         sog.input_search_keyword("啊测测试试")
         time.sleep(2)
-        if not sog.is_text_present("啊测测试试"):
+        els = sog.get_search_result_group()
+        if not els[0].get_attribute("text") == "啊测测试试":
             raise AssertionError("无法中文精确搜索")
         sog.click_back_icon()
         sog.click_back()
@@ -4190,7 +4192,8 @@ class MsgCommonGroupAllTest(TestCase):
         sog.click_search_group()
         sog.input_search_keyword("atteesstt")
         time.sleep(2)
-        if not sog.is_text_present("atteesstt"):
+        els = sog.get_search_result_group()
+        if not els[0].get_attribute("text") == "atteesstt":
             raise AssertionError("无法英文精确搜索")
         sog.click_back_icon()
         sog.click_back()
@@ -4266,7 +4269,8 @@ class MsgCommonGroupAllTest(TestCase):
         sog.click_search_group()
         sog.input_search_keyword(" ")
         time.sleep(2)
-        if not sog.is_text_present("a a"):
+        els = sog.get_search_result_group()
+        if not els[0].get_attribute("text") == "a a":
             raise AssertionError("无法空格精确搜索")
         sog.click_back_icon()
         sog.click_back()
@@ -4342,7 +4346,8 @@ class MsgCommonGroupAllTest(TestCase):
         sog.click_search_group()
         sog.input_search_keyword("112233445566")
         time.sleep(2)
-        if not sog.is_text_present("112233445566"):
+        els = sog.get_search_result_group()
+        if not els[0].get_attribute("text") == "112233445566":
             raise AssertionError("无法数字精确搜索")
         sog.click_back_icon()
         sog.click_back()
@@ -4385,3 +4390,5 @@ class MsgCommonGroupAllTest(TestCase):
         sog.click_back_icon()
         sog.click_back()
         sc.click_back()
+
+

@@ -976,3 +976,67 @@ class MsgContactSelector(TestCase):
         scp.page_contain_element("local联系人")
         scp.click_back()
         mess.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1205(self):
+        """ 最近聊天选择器：单聊内转发消息"""
+        # 1、在聊天会话页面，长按可转发的消息，是否可以跳转到联系人选择器页面
+        Preconditions.enter_private_chat_page()
+        chat = SingleChatPage()
+        chat.input_message("hehe")
+        chat.send_message()
+        chat.press_mess('hehe')
+        chat.click_to_do('转发')
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        scp.click_back()
+        chat.click_back()
+        ContactDetailsPage().click_back()
+        ContactsPage().open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1206(self):
+        """ 最近聊天选择器：单聊内转发消息--选择一个群"""
+        Preconditions.enter_private_chat_page()
+        chat = SingleChatPage()
+        chat.input_message("hello")
+        chat.send_message()
+        chat.press_mess('hello')
+        chat.click_to_do('转发')
+        # 1、在联系人选择器页面，点击选择一个群
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        # 2、进入到群聊列表展示页面，顶部的搜索文案是否展示为：搜索群聊
+        sogp.page_should_contain_text("搜索群组")
+        group_names = sogp.get_group_name()
+        sogp.click_search_group()
+        # 3、在顶部的搜索框中输入搜索条件，不存在搜索结果时下方展示文案是否是：无搜索结果
+        times = 60
+        while times > 0:
+            msg = uuid.uuid4().__str__()
+            sogp.input_search_keyword(msg)
+            time.sleep(1)
+            if sogp.is_text_present('无搜索结果'):
+                break
+            times -= 1
+        if times == 0:
+            raise AssertionError("无 ‘无搜索结果’")
+        if not group_names:
+            raise AssertionError('无群，请创建！')
+        # 4、存在搜索结果时，展示的搜索结果是否符合需求
+        sogp.input_search_keyword(group_names[0])
+        time.sleep(1)
+        sogp.page_should_contain_text(group_names[0])
+        # 5、点击选中一个搜索结果，是否会弹出确认弹窗
+        sogp.click_search_result()
+        time.sleep(2)
+        if not sogp.is_text_present("发送给"):
+            raise AssertionError("转发消息给群组时，无含‘发送给’文本的弹窗")
+        sogp.click_text("确定")
+        chat.wait_for_page_load()
+        chat.click_back()
+        ContactDetailsPage().click_back()
+        ContactsPage().open_message_page()
