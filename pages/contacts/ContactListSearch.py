@@ -27,6 +27,7 @@ class ContactListSearchPage(BasePage):
         '联系人名': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name'),
         '联系人号码': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_phone'),
         '分享名片': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_share_card'),
+        '搜索结果': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name"]'),
     }
 
     @TestLogger.log('点击返回')
@@ -59,3 +60,4 @@ class ContactListSearchPage(BasePage):
     def click_contact(self, name):
         self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and ' +
                             '@text="{}"]'.format(name)))
+

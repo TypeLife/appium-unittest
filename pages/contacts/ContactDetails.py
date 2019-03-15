@@ -126,3 +126,8 @@ class ContactDetailsPage(BasePage):
     def hefeixin_call_btn_is_clickable(self):
         """和飞信通话按钮状态是否可点击"""
         return self._is_clickable(self.__class__.__locators["和飞信电话"])
+
+    @TestLogger.log()
+    def page_should_contain_element_first_letter(self):
+        """页面应该包含首字母"""
+        return self.page_should_contain_element("名片首字母")
