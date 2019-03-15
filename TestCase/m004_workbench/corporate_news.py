@@ -95,7 +95,7 @@ class Preconditions(object):
         cnp.wait_for_page_load()
         # 点击发布新闻
         cnp.click_release_news()
-        time.sleep(5)
+        time.sleep(10)
         # 点击链接发布
         cnp.click_link_publishing()
         time.sleep(2)
@@ -152,7 +152,7 @@ class CorporateNewsTest(TestCase):
         cnp.wait_for_page_load()
         # 点击发布新闻
         cnp.click_release_news()
-        time.sleep(5)
+        time.sleep(10)
         # 点击链接发布
         cnp.click_link_publishing()
         time.sleep(2)

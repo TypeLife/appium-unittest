@@ -102,6 +102,8 @@ class LoginPreconditions(object):
         contacts = ContactsPage()
         contacts.wait_for_page_load()
         names = contacts.get_contacts_name()
+        if '本机' in names:
+            names.remove('本机')
         chat = SingleChatPage()
         cdp = ContactDetailsPage()
         # 不存在联系则创建联系人
