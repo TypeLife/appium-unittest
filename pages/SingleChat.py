@@ -65,7 +65,7 @@ class SingleChatPage(BaseChatPage):
     @TestLogger.log()
     def click_sms(self):
         """点击选择短信"""
-        self.click_element(self.__class__.__locators["选择名片"])
+        self.click_element(self.__class__.__locators["选择短信"])
 
     @TestLogger.log()
     def is_on_this_page(self):
