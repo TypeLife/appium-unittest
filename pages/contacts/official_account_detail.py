@@ -11,6 +11,7 @@ class OfficialAccountDetailPage(MenuMore, BasePage):
 
     __locators = {
         '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
+        '标题名称': (MobileBy.ID, 'com.chinasofti.rcs:id/toolbar_title'),
         '公众号名称': (MobileBy.ID, 'com.chinasofti.rcs:id/public_name'),
         '更多菜单': (MobileBy.ID, 'com.chinasofti.rcs:id/menu_more'),
         'com.chinasofti.rcs:id/public_scrollview_detail': (
@@ -33,13 +34,68 @@ class OfficialAccountDetailPage(MenuMore, BasePage):
         '查看历史资讯': (MobileBy.ID, ''),
         'com.chinasofti.rcs:id/my_group_name_right_arrow': (
             MobileBy.ID, 'com.chinasofti.rcs:id/my_group_name_right_arrow'),
-        '进入公众号': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_into_public')
+        '进入公众号': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_into_public'),
+        '时间显示': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_time"]'),
     }
 
-    @TestLogger.log('点击返回')
-    def click_menu_more(self):
-        self.click_element(self.__locators['返回'])
+    # @TestLogger.log('点击返回')
+    # def click_menu_more(self):
+    #     self.click_element(self.__locators['返回'])
 
     @TestLogger.log('点击打开更多菜单')
     def click_menu_more(self):
         self.click_element(self.__locators['更多菜单'])
+
+    @TestLogger.log()
+    def page_contain_public_name(self,):
+        """页面应该包含的元素-公众号名称"""
+        return self.page_should_contain_element(self.__locators['公众号名称'])
+
+    @TestLogger.log()
+    def page_contain_public_title_name(self,):
+        """页面应该包含的元素-公众号名称"""
+        return self.page_should_contain_element(self.__locators['标题名称'])
+
+    @TestLogger.log()
+    def page_contain_public_header(self):
+        """页面应该包含的元素-公众号头像"""
+        return self.page_should_contain_element(self.__locators['com.chinasofti.rcs:id/public_header'])
+
+    @TestLogger.log()
+    def page_contain_public_number(self):
+        """页面应该包含的元素-公共账号"""
+        return self.page_should_contain_element(self.__locators['公共账号：4011020490'])
+
+    @TestLogger.log()
+    def page_contain_features(self):
+        """页面应该包含的元素-功能介绍"""
+        return self.page_should_contain_element(self.__locators['功能介绍'])
+
+    @TestLogger.log()
+    def page_contain_certification(self):
+        """页面应该包含的元素-认证主体"""
+        return self.page_should_contain_element(self.__locators['认证主体'])
+
+    @TestLogger.log()
+    def page_contain_read_more(self):
+        """页面应该包含的元素-更多"""
+        return self.page_should_contain_element(self.__locators['更多菜单'])
+
+    @TestLogger.log('点击置顶公众号')
+    def click_to_be_top(self):
+        self.click_element(self.__locators['关闭'])
+
+    @TestLogger.log('点击查看历史资讯')
+    def click_read_old_message(self):
+        self.click_element(self.__locators['com.chinasofti.rcs:id/my_group_name_right_arrow'])
+
+    @TestLogger.log()
+    def page_contain_time(self):
+        """页面应该包含的元素-时间"""
+        return self.page_should_contain_element(self.__locators['时间显示'])
+
+    @TestLogger.log('点击进入公众号')
+    def click_into_public(self):
+        self.click_element(self.__locators['进入公众号'])
+
+

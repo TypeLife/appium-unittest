@@ -1180,7 +1180,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcp.click_cancel_gif()
         gcp.edit_clear("3")
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @unittest.skip("断网后gif图片无法加载")
     def test_msg_group_chat_video_0068(self):
         """在群聊会话窗，趣图发送失败后出现重新发送按钮"""
         # 1.检验是否在当前聊天会话页
@@ -1675,6 +1675,22 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         gcp = GroupChatPage()
         gcp.set_network_status(6)
 
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_group_chat_total_quantity_0021(self):
+        """群聊会话页面，打开拍照，立刻返回会话窗口"""
+
+        gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        # 点击富媒体行拍照图标
+        gcp.click_take_photo()
+        cpp = ChatPhotoPage()
+        # 等待聊天拍照页面加载
+        cpp.wait_for_page_load()
+        # 点击"∨"
+        cpp.take_photo_back()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'group_chat')
     def test_msg_group_chat_total_quantity_0041(self):
@@ -1701,33 +1717,15 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         gcp.wait_for_page_load()
         # 5.验证是否发送成功
         cwp = ChatWindowPage()
-        try:
-            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-        except TimeoutException:
-            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
 
     @tags('ALL', 'CMCC', 'group_chat')
     def test_msg_group_chat_total_quantity_0042(self):
         """群聊会话页面，转发他人发送的图片到当前会话窗口时失败"""
 
-        gcp = GroupChatPage()
-        gcsp = GroupChatSetPage()
-        # 如果当前群聊页面已有消息发送失败标识，需要先清除聊天记录
-        if not gcp.is_send_sucess():
-            # 点击聊天设置
-            gcp.click_setting()
-            time.sleep(2)
-            # 滑到菜单底部
-            gcsp.scroll_to_bottom()
-            # 点击“清空聊天记录”菜单
-            gcsp.click_clear_chat_record()
-            # 点击确定按钮
-            gcsp.click_sure()
-            # 返回上一级
-            gcp.click_back()
-            time.sleep(2)
         # 确保当前群聊页面已有图片
         Preconditions.make_already_have_my_picture()
+        gcp = GroupChatPage()
         # 等待群聊页面加载
         gcp.wait_for_page_load()
         # 设置手机网络断开
@@ -1746,8 +1744,9 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 4.是否提示已转发,等待群聊页面加载
         self.assertEquals(gcp.is_exist_forward(), True)
         gcp.wait_for_page_load()
+        cwp = ChatWindowPage()
         # 5.是否显示消息发送失败标识
-        self.assertEquals(gcp.is_send_sucess(), False)
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
 
     @tags('ALL', 'CMCC', 'group_chat')
     def test_msg_group_chat_total_quantity_0043(self):
@@ -1756,8 +1755,8 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 确保当前群聊页面已有图片
         Preconditions.make_already_have_my_picture()
         gcp = GroupChatPage()
-        # 当前页面是否在群聊天页
-        gcp.is_on_this_page()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
         # 1.长按自己发送的图片并转发
         gcp.forward_pic()
         scg = SelectContactsPage()
@@ -1819,10 +1818,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
             chat.click_i_have_read()
         # 5.验证是否发送成功
         cwp = ChatWindowPage()
-        try:
-            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-        except TimeoutException:
-            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
         # 返回消息页
         gcp.click_back()
 
@@ -1873,10 +1869,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
             chat.click_i_have_read()
         # 5.是否显示消息发送失败标识
         cwp = ChatWindowPage()
-        try:
-            cwp.wait_for_msg_send_status_become_to('发送失败', 10)
-        except TimeoutException:
-            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
         # 返回消息页
         gcp.click_back()
 
@@ -1955,13 +1948,87 @@ class MsgGroupChatTotalQuantityTest(TestCase):
             chat.click_i_have_read()
         # 5.验证是否发送成功
         cwp = ChatWindowPage()
-        try:
-            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-        except TimeoutException:
-            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
         # 返回消息页
         gcp.click_back()
 
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_group_chat_total_quantity_0051(self):
+        """群聊会话页面，转发自己发送的图片到陌生人时失败"""
+
+        # 确保当前群聊页面已有图片
+        Preconditions.make_already_have_my_picture()
+        gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        # 设置手机网络断开
+        gcp.set_network_status(0)
+        # 1.长按自己发送的图片并转发
+        gcp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        number = "13855558888"
+        # 输入陌生手机号码
+        scg.input_search_keyword(number)
+        time.sleep(2)
+        current_mobile().hide_keyboard_if_display()
+        # 3.选择陌生号码转发
+        scg.click_unknown_member()
+        # 确定转发
+        scg.click_sure_forward()
+        # 4.是否提示已转发,等待群聊页面加载
+        self.assertEquals(gcp.is_exist_forward(), True)
+        gcp.wait_for_page_load()
+        # 返回到消息页
+        gcp.click_back()
+        time.sleep(2)
+        gcp.click_return()
+        time.sleep(2)
+        scg.click_back()
+        message = MessagePage()
+        # 等待消息页面加载
+        message.wait_for_page_load()
+        # 选择刚发送消息的陌生联系人
+        message.choose_chat_by_name(number)
+        time.sleep(2)
+        chat = BaseChatPage()
+        if chat.is_exist_dialog():
+            # 点击我已阅读
+            chat.click_i_have_read()
+        # 5.是否显示消息发送失败标识
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        # 返回消息页
+        gcp.click_back()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_group_chat_total_quantity_0052(self):
+        """群聊会话页面，转发自己发送的图片到陌生人时点击取消转发"""
+
+        # 确保当前群聊页面已有图片
+        Preconditions.make_already_have_my_picture()
+        gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        # 1.长按自己发送的图片并转发
+        gcp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        number = "13855558888"
+        # 输入陌生手机号码
+        scg.input_search_keyword(number)
+        time.sleep(2)
+        current_mobile().hide_keyboard_if_display()
+        # 3.选择陌生号码转发
+        scg.click_unknown_member()
+        # 取消转发
+        scg.click_cancel_forward()
+        # 4.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 返回群聊天页面
+        scg.click_back()
 
 
 

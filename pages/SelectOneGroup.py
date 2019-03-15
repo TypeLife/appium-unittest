@@ -147,6 +147,19 @@ class SelectOneGroupPage(BasePage):
         self.click_element(self.__class__.__locators['搜索结果展示'])
 
     @TestLogger.log()
+    def selecting_one_group_by_name(self, name):
+        """根据群名选择一个群"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text ="%s"]' % name)
+        max_try = 10
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.page_up()
+        self.click_element(locator)
+
+    @TestLogger.log()
     def get_search_result_group(self):
         """获取搜索结果群"""
         els = self.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'))
