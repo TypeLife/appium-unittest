@@ -9,37 +9,7 @@ from pages import *
 
 class Preconditions(LoginPreconditions):
     """前置条件"""
-
-    @staticmethod
-    def enter_private_chat_page(reset=False):
-        """进入单聊会话页面"""
-        # 登录进入消息页面
-        Preconditions.make_already_in_message_page(reset)
-        mess = MessagePage()
-        # 点击‘通讯录’
-        mess.open_contacts_page()
-        contacts = ContactsPage()
-        contacts.wait_for_page_load()
-        names = contacts.get_contacts_name()
-        chat = SingleChatPage()
-        cdp = ContactDetailsPage()
-        # 不存在联系则创建联系人
-        if not names:
-            contacts.click_add()
-            ccp = CreateContactPage()
-            ccp.wait_for_page_load()
-            name = "atest" + str(random.randint(100, 999))
-            number = "147752" + str(time.time())[-5:]
-            ccp.create_contact(name, number)
-        contacts.select_people_by_name(names[0])
-        cdp.wait_for_page_load()
-        # 点击消息进入单聊会话页面
-        cdp.click_message_icon()
-        # 如果弹框用户须知则点击处理
-        flag = chat.is_exist_dialog()
-        if flag:
-            chat.click_i_have_read()
-        chat.wait_for_page_load()
+    pass
 
 
 class MsgPrivateChatFileLocationTest(TestCase):
