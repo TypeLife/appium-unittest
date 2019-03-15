@@ -1,3 +1,4 @@
+import time
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.common.exceptions import TimeoutException
 
@@ -38,7 +39,18 @@ class OfficialAccountPage(BasePage):
         '收藏': (MobileBy.XPATH, '//*[@text="收藏"]'),
         '转发': (MobileBy.XPATH, '//*[@text="转发"]'),
         '复制': (MobileBy.XPATH, '//*[@text="复制"]'),
+        '和飞信2': (MobileBy.XPATH, '//*[@text="和飞信"]'),
 
+        '键盘': (MobileBy.ID, 'com.chinasofti.rcs:id/conversation_bottom_showCustomMenuView'),
+        '底部菜单1': (MobileBy.ID, 'com.chinasofti.rcs:id/public_menu_name1'),
+        '底部菜单2': (MobileBy.ID, 'com.chinasofti.rcs:id/public_menu_name2'),
+        '底部菜单3': (MobileBy.ID, 'com.chinasofti.rcs:id/public_menu_name3'),
+        '菜单1的菜单详情列表1': (MobileBy.ID, 'com.chinasofti.rcs:id/public_item_menu_name1'),
+        '页面详情点击返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back_actionbar'),
+        '表情详情': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iv_expression_image"]'),
+        'message': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_message"]'),
+        '取消': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
+        '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
     }
 
     @TestLogger.log('点击添加')
@@ -138,3 +150,97 @@ class OfficialAccountPage(BasePage):
             el = self.get_element(self.__locators['信息'])
             self.driver.long_press(el, 1, 1, 2000)
 
+    @TestLogger.log()
+    def send_btn_is_clickable(self):
+        """发送按钮是否可点击"""
+        return self._is_clickable(self.__class__.__locators["send_button"])
+
+    @TestLogger.log()
+    def page_contain_keyboard(self):
+        """页面应该包含键盘"""
+        return self.page_should_contain_element(self.__locators["键盘"])
+
+    @TestLogger.log()
+    def page_should_contain_element_menu(self):
+        """页面应该包含底部菜单栏"""
+        return self.page_should_contain_element(self.__locators["底部菜单1"])
+
+    @TestLogger.log('底部菜单栏1')
+    def click_menu_name1(self):
+        self.click_element(self.__locators['底部菜单1'])
+
+    @TestLogger.log('菜单1的菜单详情列表1')
+    def click_menu_detail_name1(self):
+        self.click_element(self.__locators['菜单1的菜单详情列表1'])
+
+    @TestLogger.log('页面详情点击返回')
+    def click_menu_detail_back(self):
+        self.click_element(self.__locators['页面详情点击返回'])
+
+    @TestLogger.log('点击键盘')
+    def click_keyboard(self):
+        self.click_element(self.__locators['键盘'])
+
+    @TestLogger.log()
+    def click_expression_detail(self):
+        """点击表情详情"""
+        self.click_element(self.__locators['表情详情'])
+
+    @TestLogger.log()
+    def click_send_detail(self, text):
+        """点击发送的内容"""
+        self.click_text(text)
+
+    @TestLogger.log()
+    def page_should_contain_element_unsent(self):
+        """页面应该包含未发送成功图标"""
+        return self.page_should_contain_element(self.__locators["发送失败"])
+
+    @TestLogger.log()
+    def click_element_unsent(self):
+        """点击未发送成功图标"""
+        self.click_element(self.__locators['发送失败'])
+
+    @TestLogger.log()
+    def click_sure_resent(self):
+        """点击确定重发"""
+        self.click_element(self.__locators['确定'])
+
+    @TestLogger.log()
+    def click_not_resent(self):
+        """点击取消重发"""
+        self.click_element(self.__locators['取消'])
+
+    @TestLogger.log()
+    def page_not_contain_element_unsent(self):
+        """页面不存在未发送成功图标"""
+        self.page_should_not_contain_element(self.__locators['发送失败'])
+
+    @TestLogger.log()
+    def click_setting(self):
+        """点击设置"""
+        self.click_element(self.__locators['setting'])
+
+    @TestLogger.log()
+    def page_contain_element_message(self):
+        """页面应该包含信息"""
+        return self.page_should_contain_element(self.__locators["message"])
+
+    @TestLogger.log()
+    def page_not_contain_element_message(self):
+        """页面不应该包含信息"""
+        return self.page_should_not_contain_element(self.__locators["message"])
+
+    @TestLogger.log('查看是否显示公众号')
+    def is_public_in_list(self, name):
+        time.sleep(1)
+        groups = self.mobile.list_iterator(self.__locators['公众号列表'], self.__locators['公众号列表项'])
+        for group in groups:
+            if group.find_elements(MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/textview_user_name" and ' +
+                                                   '@text="{}"]'.format(name)):
+                return True
+        return False
+
+    @TestLogger.log()
+    def is_element_present_message(self):
+        return self._is_element_present(self.__locators["message"])

@@ -14,6 +14,7 @@ from pages.contacts.official_account import OfficialAccountPage
 from pages.contacts.search_official_account import SearchOfficialAccountPage
 from pages.contacts.official_account_detail import OfficialAccountDetailPage
 from pages.contacts.EditContactPage import EditContactPage
+from pages.contacts.components.menu_more import MenuMore
 
 
 REQUIRED_MOBILES = {
@@ -162,39 +163,39 @@ class ContactPage(TestCase):
     表格:8.通讯录全量测试用例 曲新莉
 
     """
-    @classmethod
-    def setUpClass(cls):
-
-        # 创建联系人
-        fail_time = 0
-        import dataproviders
-        while fail_time < 3:
-            try:
-                required_contacts = dataproviders.get_preset_contacts()
-                conts = ContactsPage()
-                Preconditions.connect_mobile('Android-移动')
-                current_mobile().hide_keyboard_if_display()
-                for name, number in required_contacts:
-                    Preconditions.make_already_in_message_page()
-                    conts.open_contacts_page()
-                    conts.create_contacts_if_not_exits(name, number)
-
-                # 创建群
-                required_group_chats = dataproviders.get_preset_group_chats()
-
-                conts.open_group_chat_list()
-                group_list = GroupListPage()
-                for group_name, members in required_group_chats:
-                    group_list.wait_for_page_load()
-                    group_list.create_group_chats_if_not_exits(group_name, members)
-                group_list.click_back()
-                conts.open_message_page()
-                return
-            except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
+    # @classmethod
+    # def setUpClass(cls):
+    #
+    #     # 创建联系人
+    #     fail_time = 0
+    #     import dataproviders
+    #     while fail_time < 3:
+    #         try:
+    #             required_contacts = dataproviders.get_preset_contacts()
+    #             conts = ContactsPage()
+    #             Preconditions.connect_mobile('Android-移动')
+    #             current_mobile().hide_keyboard_if_display()
+    #             for name, number in required_contacts:
+    #                 Preconditions.make_already_in_message_page()
+    #                 conts.open_contacts_page()
+    #                 conts.create_contacts_if_not_exits(name, number)
+    #
+    #             # 创建群
+    #             required_group_chats = dataproviders.get_preset_group_chats()
+    #
+    #             conts.open_group_chat_list()
+    #             group_list = GroupListPage()
+    #             for group_name, members in required_group_chats:
+    #                 group_list.wait_for_page_load()
+    #                 group_list.create_group_chats_if_not_exits(group_name, members)
+    #             group_list.click_back()
+    #             conts.open_message_page()
+    #             return
+    #         except:
+    #             fail_time += 1
+    #             import traceback
+    #             msg = traceback.format_exc()
+    #             print(msg)
 
 
     @staticmethod
@@ -265,7 +266,7 @@ class ContactPage(TestCase):
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
-        time.sleep(2)
+        time.sleep(1)
         if ContactsPage().is_text_present('需要使用通讯录权限'):
             ContactsPage().click_always_allowed()
         ContactsPage().click_search_box()
@@ -281,7 +282,7 @@ class ContactPage(TestCase):
             creat_contact.click_input_name()
             creat_contact.input_name('测试1')
             creat_contact.click_input_number()
-            creat_contact.input_number('17324448506')
+            creat_contact.input_number('17324448507')
             creat_contact.save_contact()
             time.sleep(2)
             ContactDetailsPage().click_back()
@@ -298,7 +299,7 @@ class ContactPage(TestCase):
         # 页面包含的元素
         detailpage = ContactDetailsPage()
         detailpage.page_should_contain_text('测试1')
-        detailpage.page_should_contain_text('173 2444 8506')
+        detailpage.page_should_contain_text('173 2444 8507')
         detailpage.page_should_contain_text('C')
         if detailpage.is_text_present("公司"):
             detailpage.page_should_contain_text('公司')
@@ -597,22 +598,22 @@ class ContactPage(TestCase):
         ContactDetailsPage().click_share_business_card()
 
 
-    @staticmethod
-    def setUp_test_contacts_0006():
-        """
-        用户未加入任何企业
-        """
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()  # 收起键盘
-        Preconditions.make_already_in_message_page()  # 当前已在消息界面
-        MessagePage().click_contacts()
-
-    @tags('All', 'CMCC', "contacts")
-    def test_contacts_0006(self):
-        contact = ContactsPage()
-        contact.click_and_address()
-        contact.click_search_box()
-        contact.input_text()
+    # @staticmethod
+    # def setUp_test_contacts_0006():
+    #     """
+    #     用户未加入任何企业
+    #     """
+    #     Preconditions.connect_mobile('Android-移动')
+    #     current_mobile().hide_keyboard_if_display()  # 收起键盘
+    #     Preconditions.make_already_in_message_page()  # 当前已在消息界面
+    #     MessagePage().click_contacts()
+    #
+    # @tags('All', 'CMCC', "contacts")
+    # def test_contacts_0006(self):
+    #     contact = ContactsPage()
+    #     contact.click_and_address()
+    #     contact.click_search_box()
+    #     contact.input_text()
 
     @tags('All', 'CMCC')
     def test_contacts_0198(self):
@@ -866,27 +867,26 @@ class ContactPage(TestCase):
         """未配置底部菜单栏的公众号"""
         ContactsPage().click_official_account_icon()
         time.sleep(1)
-        OfficialAccountPage().select_one_account_by_name('中软国际一家亲')
+        OfficialAccountPage().select_one_account_by_name('和飞信新闻')
         #公众号详情页(未配置底部菜单栏)
-        official_account_detail = OfficialAccountDetailPage()
+        official_account = OfficialAccountPage()
         time.sleep(2)
-        official_account_detail.page_should_contain_text('中软国际一家亲')
-        official_account_detail.page_should_contain_element_setting()
-        official_account_detail.page_should_contain_element_input()
-        official_account_detail.page_should_contain_element_expression()
-        official_account_detail.page_should_contain_element_send()
-        official_account_detail.send_btn_is_clickable()
-        #返回消息页面
-        official_account_detail.click_back()
+        official_account.page_should_contain_text('和飞信新闻')
+        official_account.page_contain_setting()
+        official_account.page_contain_input_box()
+        official_account.page_contain_expresssion()
+        official_account.page_contain_send_button()
+        official_account.send_btn_is_clickable()
+        #返回通讯录页面
+        official_account.click_back()
         OfficialAccountPage().click_back()
-        ContactsPage().click_message_icon()
+
 
     @staticmethod
     def setUp_test_contacts_0324():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-        MessagePage().click_contacts()
+        Preconditions.init_and_enter_contacts_page()
         if ContactsPage().is_text_present('需要使用通讯录权限'):
             ContactsPage().click_always_allowed()
 
@@ -897,85 +897,82 @@ class ContactPage(TestCase):
         time.sleep(1)
         OfficialAccountPage().select_one_account_by_name('和飞信')
         #判断页面包含的元素
-        official_account_detail = OfficialAccountDetailPage()
+        official_account = OfficialAccountPage()
         time.sleep(2)
-        official_account_detail.page_should_contain_text('和飞信')
-        official_account_detail.page_should_contain_element_setting()
-        official_account_detail.page_should_contain_element_keyboard()
-        official_account_detail.page_should_contain_element_menu()
+        official_account.page_should_contain_text('和飞信')
+        official_account.page_contain_setting()
+        official_account.page_contain_keyboard()
+        official_account.page_should_contain_element_menu()
         #点击底部菜单,可以进入到菜单详情页
-        official_account_detail.click_menu_name1()
+        official_account.click_menu_name1()
         time.sleep(1)
-        official_account_detail.page_should_contain_text('多方电话')
-        official_account_detail.click_menu_detail_name1()
+        official_account.page_should_contain_text('多方电话')
+        official_account.click_menu_detail_name1()
         time.sleep(4)
-        official_account_detail.click_menu_detail_back()
+        official_account.click_menu_detail_back()
         #点击键盘标志,页面显示输入框等
-        official_account_detail.click_keyboard()
-        official_account_detail.page_should_contain_element_input()
-        official_account_detail.page_should_contain_element_expression()
-        official_account_detail.page_should_contain_element_send()
-        official_account_detail.send_btn_is_clickable()
+        official_account.click_keyboard()
+        official_account.page_contain_input_box()
+        official_account.page_contain_expresssion()
+        official_account.page_contain_send_button()
+        official_account.send_btn_is_clickable()
         time.sleep(2)
         #再次点击键盘,又展示底部菜单
-        official_account_detail.click_keyboard()
-        official_account_detail.page_should_contain_element_menu()
+        official_account.click_keyboard()
+        official_account.page_should_contain_element_menu()
         time.sleep(2)
         #返回消息页面
-        official_account_detail.click_back()
+        official_account.click_back()
         OfficialAccountPage().click_back()
         ContactsPage().click_message_icon()
 
     @staticmethod
     def setUp_test_contacts_0325():
-        #用户已关注'中软国际一家亲'公众号
+
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-        MessagePage().click_contacts()
+        Preconditions.init_and_enter_contacts_page()
         if ContactsPage().is_text_present('需要使用通讯录权限'):
             ContactsPage().click_always_allowed()
         ContactsPage().click_official_account_icon()
         time.sleep(1)
-        OfficialAccountPage().select_one_account_by_name('中软国际一家亲')
+        OfficialAccountPage().select_one_account_by_name('和飞信新闻')
 
     @tags('ALL', 'CMCC')
     def test_contacts_0325(self):
         """文本消息发送成功"""
-        official_account_detail = OfficialAccountDetailPage()
-        official_account_detail.click_input_box()
-        official_account_detail.input_keyword('和飞信')
-        official_account_detail.click_send()
+        official_account = OfficialAccountPage()
+        official_account.click_input_box()
+        official_account.input_message('和飞信')
+        official_account.click_send_button()
         time.sleep(2)
-        official_account_detail.page_should_contain_text('和飞信')
+        official_account.page_should_contain_text('和飞信')
         #返回消息页面
-        official_account_detail.click_back()
+        official_account.click_back()
         OfficialAccountPage().click_back()
         ContactsPage().click_message_icon()
 
     @staticmethod
     def setUp_test_contacts_0326():
-        #用户已关注'中软国际一家亲'公众号
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-        MessagePage().click_contacts()
+        Preconditions.init_and_enter_contacts_page()
         if ContactsPage().is_text_present('需要使用通讯录权限'):
             ContactsPage().click_always_allowed()
         ContactsPage().click_official_account_icon()
         time.sleep(1)
-        OfficialAccountPage().select_one_account_by_name('中软国际一家亲')
+        OfficialAccountPage().select_one_account_by_name('和飞信新闻')
 
     @tags('ALL', 'CMCC')
     def test_contacts_0326(self):
         """表情符号发送成功"""
-        official_account_detail = OfficialAccountDetailPage()
-        official_account_detail.click_expression()
-        official_account_detail.click_expression_detail()
-        official_account_detail.click_send()
+        official_account = OfficialAccountPage()
+        official_account.click_expression()
+        official_account.click_expression_detail()
+        official_account.click_send_button()
         time.sleep(2)
         #返回通讯录页面
-        official_account_detail.click_back()
+        official_account.click_back()
         OfficialAccountPage().click_back()
 
     @staticmethod
@@ -983,26 +980,25 @@ class ContactPage(TestCase):
         #用户已关注'中软国际一家亲'公众号
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-        MessagePage().click_contacts()
+        Preconditions.init_and_enter_contacts_page()
         if ContactsPage().is_text_present('需要使用通讯录权限'):
             ContactsPage().click_always_allowed()
         ContactsPage().click_official_account_icon()
         time.sleep(1)
-        OfficialAccountPage().select_one_account_by_name('中软国际一家亲')
+        OfficialAccountPage().select_one_account_by_name('和飞信新闻')
 
     @tags('ALL', 'CMCC')
     def test_contacts_0327(self):
         """文本消息和表情发送成功"""
-        official_account_detail = OfficialAccountDetailPage()
-        official_account_detail.click_input_box()
-        official_account_detail.input_keyword('和飞信')
-        official_account_detail.click_expression()
-        official_account_detail.click_expression_detail()
-        official_account_detail.click_send()
+        official_account = OfficialAccountPage()
+        official_account.click_input_box()
+        official_account.input_message('和飞信')
+        official_account.click_expression()
+        official_account.click_expression_detail()
+        official_account.click_send_button()
         time.sleep(2)
         #返回通讯录页面
-        official_account_detail.click_back()
+        official_account.click_back()
         OfficialAccountPage().click_back()
 
     @staticmethod
@@ -1010,28 +1006,339 @@ class ContactPage(TestCase):
         #用户已关注'中软国际一家亲'公众号
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-        MessagePage().click_contacts()
+        Preconditions.init_and_enter_contacts_page()
         if ContactsPage().is_text_present('需要使用通讯录权限'):
             ContactsPage().click_always_allowed()
         ContactsPage().click_official_account_icon()
         time.sleep(1)
-        OfficialAccountPage().select_one_account_by_name('中软国际一家亲')
+        OfficialAccountPage().select_one_account_by_name('和飞信新闻')
 
     @tags('ALL', 'CMCC')
     def test_contacts_0328(self):
         """长文本消息发送成功"""
-        official_account_detail = OfficialAccountDetailPage()
-        official_account_detail.click_input_box()
+        official_account = OfficialAccountPage()
+        official_account.click_input_box()
         keyword=str("我"*255)
-        official_account_detail.input_keyword([keyword])
-        official_account_detail.click_send()
+        official_account.input_message([keyword])
+        official_account.click_send_button()
+        time.sleep(2)
+        #返回通讯录页面
+        official_account.click_back()
+        OfficialAccountPage().click_back()
+
+    @staticmethod
+    def setUp_test_contacts_0329():
+        #用户已关注'中软国际一家亲'公众号
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.init_and_enter_contacts_page()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_official_account_icon()
+        time.sleep(1)
+        OfficialAccountPage().select_one_account_by_name('和飞信新闻')
+
+    @tags('ALL', 'CMCC')
+    def test_contacts_0329(self):
+        """文本消息发送成功"""
+        official_account = OfficialAccountPage()
+        official_account.click_input_box()
+        keyword="https://www.baidu.com/"
+        official_account.input_message(keyword)
+        official_account.click_send_button()
+        time.sleep(1)
+        official_account.click_send_detail(keyword)
+        time.sleep(2)
+        #返回通讯录页面
+        official_account.click_back()
+        official_account.click_back()
+        OfficialAccountPage().click_back()
+
+    @staticmethod
+    def setUp_test_contacts_0330():
+        #用户已关注'中软国际一家亲'公众号
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.init_and_enter_contacts_page()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_official_account_icon()
+        time.sleep(1)
+        OfficialAccountPage().select_one_account_by_name('和飞信新闻')
+
+    @tags('ALL', 'CMCC')
+    def test_contacts_0330(self):
+        """断网状态发送文本不成功"""
+        official_account = OfficialAccountPage()
+        #断网
+        official_account.set_network_status(0)
+        official_account.click_input_box()
+        official_account.input_message('和飞信')
+        official_account.click_send_button()
+        time.sleep(2)
+        official_account.page_should_contain_element_unsent()
+        #回复网络 发送成功
+        official_account.set_network_status(6)
+        time.sleep(3)
+        official_account.click_element_unsent()
+        official_account.click_sure_resent()
+        time.sleep(2)
+        official_account.page_not_contain_element_unsent()
+        #返回通讯录页面
+        official_account.click_back()
+        official_account.click_back()
+
+
+    @staticmethod
+    def setUp_test_contacts_0331():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.init_and_enter_contacts_page()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_official_account_icon()
+        time.sleep(1)
+        OfficialAccountPage().select_one_account_by_name('和飞信')
+
+    @tags('ALL', 'CMCC')
+    def test_contacts_0331(self):
+        """公众号详情页面元素检查"""
+        OfficialAccountPage().click_setting()
+        time.sleep(2)
+        official_account_detail=OfficialAccountDetailPage()
+        official_account_detail.page_contain_public_title_name()
+        official_account_detail.page_contain_public_name()
+        official_account_detail.page_contain_public_header()
+        official_account_detail.page_contain_public_number()
+        official_account_detail.page_contain_features()
+        official_account_detail.page_contain_certification()
+        official_account_detail.page_should_contain_text('置顶公众号')
+        official_account_detail.page_should_contain_text('查看历史资讯')
+        official_account_detail.page_should_contain_text('进入公众号')
         time.sleep(2)
         #返回通讯录页面
         official_account_detail.click_back()
         OfficialAccountPage().click_back()
+        OfficialAccountPage().click_back()
+
+    @staticmethod
+    def setUp_test_contacts_0333():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.init_and_enter_contacts_page()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_official_account_icon()
+        time.sleep(1)
+        OfficialAccountPage().select_one_account_by_name('和飞信新闻')
+
+    @tags('ALL', 'CMCC')
+    def test_contacts_0333(self):
+        """公众号详情-接收消息"""
+        OfficialAccountPage().click_setting()
+        time.sleep(2)
+        OfficialAccountDetailPage().click_to_be_top()
+        #判断是否置顶  不完全
+        OfficialAccountDetailPage().click_back()
+        OfficialAccountPage().click_back()
+        time.sleep(2)
+        #返回通讯录页面
+        OfficialAccountPage().click_back()
 
 
+    @staticmethod
+    def setUp_test_contacts_0334():
+        #用户已关注'中软国际一家亲'公众号
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.init_and_enter_contacts_page()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+
+
+    @tags('ALL', 'CMCC')
+    def test_contacts_0334(self):
+        """公众号详情-查看历史资讯"""
+        ContactsPage().click_official_account_icon()
+        time.sleep(1)
+        #无历史资讯的公众号
+        OfficialAccountPage().select_one_account_by_name('中软国际一家亲')
+        time.sleep(1)
+        OfficialAccountPage().click_setting()
+        official_account_detail = OfficialAccountDetailPage()
+        official_account_detail.click_read_old_message()
+        time.sleep(2)
+        official_account_detail.page_should_contain_text('无历史推送资讯')
+        #有历史资讯时的公众号
+        official_account_detail.click_back()
+        official_account_detail.click_back()
+        OfficialAccountPage().click_back()
+        OfficialAccountPage().select_one_account_by_name('和飞信')
+        time.sleep(1)
+        OfficialAccountPage().click_setting()
+        official_account_detail = OfficialAccountDetailPage()
+        official_account_detail.click_read_old_message()
+        time.sleep(5)
+        official_account_detail.page_contain_time()
+        #返回通讯录页面
+        OfficialAccountDetailPage().click_back()
+        OfficialAccountDetailPage().click_back()
+        OfficialAccountPage().click_back()
+        OfficialAccountPage().click_back()
+
+    @staticmethod
+    def setUp_test_contacts_0335():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.init_and_enter_contacts_page()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_official_account_icon()
+        time.sleep(1)
+        OfficialAccountPage().select_one_account_by_name('和飞信新闻')
+
+    @tags('ALL', 'CMCC')
+    def test_contacts_0335(self):
+        """公众号详情-进入公众号回话页面"""
+        OfficialAccountPage().click_setting()
+        time.sleep(2)
+        OfficialAccountDetailPage().click_into_public()
+        time.sleep(1)
+        OfficialAccountPage().page_contain_setting()
+        #返回通讯录页面
+        OfficialAccountPage().click_back()
+        OfficialAccountPage().click_back()
+        OfficialAccountPage().click_back()
+
+    @staticmethod
+    def setUp_test_contacts_0336():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.init_and_enter_contacts_page()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_official_account_icon()
+        time.sleep(1)
+        OfficialAccountPage().select_one_account_by_name('和飞信')
+        time.sleep(2)
+        if OfficialAccountPage().is_element_present_message():
+            OfficialAccountPage().click_setting()
+        else:
+            OfficialAccountPage().click_keyboard()
+            OfficialAccountPage().click_input_box()
+            OfficialAccountPage().input_message('测试数据')
+            OfficialAccountPage().click_send_button()
+            time.sleep(2)
+            OfficialAccountPage().click_setting()
+
+    @tags('ALL', 'CMCC')
+    def test_contacts_0336(self):
+        """公众号详情-更多菜单"""
+        time.sleep(2)
+        official_account_detail=OfficialAccountDetailPage()
+        official_account_detail.click_menu_more()
+        time.sleep(1)
+        #点击清空消息--取消
+        menu_more=MenuMore()
+        menu_more.click_clean_msg_menu()
+        menu_more.click_not_clear()
+        official_account_detail.click_back()
+        time.sleep(2)
+        OfficialAccountPage().page_contain_element_message()
+        #点击清空消息--确定
+        OfficialAccountPage().click_setting()
+        time.sleep(1)
+        official_account_detail.click_menu_more()
+        menu_more.click_clean_msg_menu()
+        menu_more.click_sure_clear()
+        official_account_detail.click_back()
+        OfficialAccountPage().page_not_contain_element_message()
+        #点击取消关注
+        OfficialAccountPage().click_setting()
+        time.sleep(1)
+        official_account_detail.click_menu_more()
+        menu_more.click_unsubscribe_menu()
+        time.sleep(2)
+        OfficialAccountPage().is_public_in_list('和飞信')
+        #返回通讯录页面
+        OfficialAccountPage().click_back()
+
+    @staticmethod
+    def setUp_test_contacts_0337():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.init_and_enter_contacts_page()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_official_account_icon()
+        time.sleep(1)
+
+    @tags('ALL', 'CMCC')
+    def test_contacts_0337(self):
+        """点击+号,页面进入搜索公众号页面"""
+        OfficialAccountPage().click_add()
+        time.sleep(2)
+        SearchOfficialAccountPage().page_should_contain_text('搜索公众号')
+        #返回通讯录页面
+        SearchOfficialAccountPage().click_back()
+        OfficialAccountPage().click_back()
+
+
+    @staticmethod
+    def setUp_test_contacts_0345():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.init_and_enter_contacts_page()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        ContactsPage().click_official_account_icon()
+        time.sleep(2)
+        OfficialAccountPage().select_one_account_by_name('中国移动10086')
+        time.sleep(2)
+        if OfficialAccountPage().is_element_present_message():
+            OfficialAccountPage().click_setting()
+        else:
+            OfficialAccountPage().click_keyboard()
+            OfficialAccountPage().click_input_box()
+            OfficialAccountPage().input_message('测试数据')
+            OfficialAccountPage().click_send_button()
+            time.sleep(2)
+            OfficialAccountPage().click_setting()
+
+
+    @tags('ALL', 'CMCC')
+    def test_contacts_0351(self):
+        """公众号详情-清空消息"""
+        time.sleep(2)
+        official_account_detail=OfficialAccountDetailPage()
+        official_account_detail.click_menu_more()
+        time.sleep(1)
+        MenuMore().click_clean_msg_menu()
+        MenuMore().click_sure_clear()
+        official_account_detail.click_back()
+        OfficialAccountPage().page_not_contain_element_message()
+        #返回消息页面
+        OfficialAccountPage().click_back()
+        OfficialAccountPage().click_back()
+
+
+#通讯录--标签分组页面
+    @staticmethod
+    def setUp_test_contacts_0351():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.init_and_enter_contacts_page()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+
+    @tags('ALL', 'CMCC')
+    def test_contacts_0351(self):
+        """标签分组页面元素检查"""
+        ContactsPage().click_label_grouping()
+        time.sleep(2)
+        LabelGroupingPage().page_should_contain_text('新建分组')
+        #返回通讯录页面
+        LabelGroupingPage().click_back()
 
 
 
