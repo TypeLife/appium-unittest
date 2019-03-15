@@ -907,3 +907,72 @@ class MsgPrivateChatMsgSetting(TestCase):
         """ 输入框中输入各种混合消息体不发送，进入查找聊天内容后是否还显示草稿"""
         self.public_input_mess("abc123@#$%^&")
 
+
+class MsgContactSelector(TestCase):
+    """
+    模块：单聊->联系人选择器
+    文件位置：113整理全量测试用例-黄彩最.xlsx
+    表格：单聊
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        pass
+
+    def default_setUp(self):
+        """确保每个用例运行前在消息页面"""
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        else:
+            current_mobile().reset_app()
+            Preconditions.enter_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1183(self):
+        """ 进入新建消息是否正常"""
+        # 1.点击右上角的+
+        mess = MessagePage()
+        mess.click_add_icon()
+        # 2.点击新建消息
+        mess.click_new_message()
+        # 3.查看页面展示
+        scp = SelectContactsPage()
+        scp.wait_for_create_msg_page_load()
+        # 左上角标题：选择联系人；搜索栏缺省文字：搜索或输入手机号；
+        # 选择和通讯录联系人；下方为本地联系人列表
+        scp.page_should_contain_text("选择联系人")
+        scp.page_should_contain_text("搜索或输入手机号")
+        scp.page_should_contain_text("选择和通讯录联系人")
+        scp.page_contain_element("local联系人")
+        scp.click_back()
+        mess.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1194(self):
+        """ 进入免费/发送短信查看展示页面"""
+        # 1.点击右上角的+
+        mess = MessagePage()
+        mess.click_add_icon()
+        # 2.点击免费/发送短信
+        mess.click_free_sms()
+        # 首次进入会弹出“欢迎使用免费短信”/“欢迎使用短信”弹框，点击确定后直接进入联系人选择器，
+        # 非首次进入的直接进入联系人选择器
+        try:
+            time.sleep(1)
+            mess.page_should_contain_text("欢迎使用免费短信")
+            mess.click_text("确定")
+        except:
+            pass
+        # 3.查看页面展示
+        scp = SelectContactsPage()
+        scp.wait_for_create_msg_page_load()
+        # 左上角标题：选择联系人；搜索栏缺省文字：搜索或输入手机号；
+        # 选择和通讯录联系人；下方为本地联系人列表
+        scp.page_should_contain_text("选择联系人")
+        scp.page_should_contain_text("搜索或输入手机号")
+        scp.page_should_contain_text("选择和通讯录联系人")
+        scp.page_contain_element("local联系人")
+        scp.click_back()
+        mess.wait_for_page_load()

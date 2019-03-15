@@ -40,7 +40,6 @@ class OfficialAccountPage(BasePage):
         '转发': (MobileBy.XPATH, '//*[@text="转发"]'),
         '复制': (MobileBy.XPATH, '//*[@text="复制"]'),
         '和飞信2': (MobileBy.XPATH, '//*[@text="和飞信"]'),
-
         '键盘': (MobileBy.ID, 'com.chinasofti.rcs:id/conversation_bottom_showCustomMenuView'),
         '底部菜单1': (MobileBy.ID, 'com.chinasofti.rcs:id/public_menu_name1'),
         '底部菜单2': (MobileBy.ID, 'com.chinasofti.rcs:id/public_menu_name2'),
@@ -51,6 +50,13 @@ class OfficialAccountPage(BasePage):
         'message': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_message"]'),
         '取消': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
         '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
+        '百度一下': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_title'),
+        '百度连接':(MobileBy.XPATH,'//*[@text="www.baidu.com"]'),
+        '进入公众号': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_into_public'),
+        '查看历史资讯': (MobileBy.XPATH,'//*[@text="查看历史资讯"]'),
+        '认证主体': (MobileBy.ID, 'com.chinasofti.rcs:id/public_auth_text'),
+        '功能介绍': (MobileBy.ID, 'com.chinasofti.rcs:id/intro_title'),
+        '更多': (MobileBy.ID, 'com.chinasofti.rcs:id/menu_more'),
     }
 
     @TestLogger.log('点击添加')
@@ -88,6 +94,11 @@ class OfficialAccountPage(BasePage):
         """检查该页面是否包含某元素"""
         return self.page_should_contain_element(self.__locators['setting'])
 
+    @TestLogger.log("检查对应元素是否存在")
+    def page_contain_element(self,text='setting'):
+        """检查该页面是否包含某元素"""
+        return self.page_should_contain_element(self.__locators[text])
+
     @TestLogger.log("input_box")
     def page_contain_input_box(self):
         """检查该页面是否包含某元素"""
@@ -111,6 +122,14 @@ class OfficialAccountPage(BasePage):
     @TestLogger.log('检查发送失败按钮')
     def page_should_not_contain_sendfail_element(self):
         return self.page_should_not_contain_element(self.__locators['发送失败'])
+
+    @TestLogger.log('存在发送失败按钮')
+    def page_should_contain_sendfail_element(self):
+        return self.page_should_contain_element(self.__locators['发送失败'])
+
+    @TestLogger.log('点击发送失败按妞')
+    def click_repeat_button(self):
+        self.click_element(self.__locators['发送失败'])
 
     @TestLogger.log('使用坐标点击')
     def click_coordinate(self, x=1300, y=2450):
@@ -244,3 +263,16 @@ class OfficialAccountPage(BasePage):
     @TestLogger.log()
     def is_element_present_message(self):
         return self._is_element_present(self.__locators["message"])
+
+    @TestLogger.log('点击百度连接')
+    def click_baidu_button(self):
+        self.click_element(self.__locators['百度连接'])
+
+    @TestLogger.log('点击确定')
+    def click_sure_button(self):
+        self.click_element(self.__locators['确定'])
+
+    @TestLogger.log('点击设置')
+    def click_setting_button(self):
+        self.click_element(self.__locators['setting'])
+
