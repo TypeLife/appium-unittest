@@ -287,12 +287,17 @@ class Preconditions(object):
         # 获取已有群名
         sog = SelectOneGroupPage()
         sog.wait_for_page_load()
-        group_names = sog.get_group_name()
-        # 有群返回，无群创建
-        if group_name in group_names:
-            sog.click_back()
-            sc.click_back()
-            return
+        a=0
+        while a<10:
+            group_names = sog.get_group_name()
+            # 有群返回，无群创建
+            if group_name in group_names:
+                sog.click_back()
+                sc.click_back()
+                return
+            a+=1
+            sog.page_up()
+
         sog.click_back()
         # 从本地联系人中选择成员创建群
         sc.click_local_contacts()
@@ -4011,12 +4016,12 @@ class MsgCommonGroupAllTest(TestCase):
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL','CMCC','group_chat')
+    @tags('ALL','CMCC','group_chat','full')
     def test_msg_common_group_all_0001(self):
         """1、点击右上角的+号，发起群聊
             2、点击选择一个群，是否可以进入到群聊列表展示页面
             3、中文模糊搜索，是否可以匹配展示搜索结果"""
-        # 先保证有中文名称的群
+        # 先保证有特定名称的群
         Preconditions.build_one_new_group("啊测测试试")
         #先点击加号
         mess = MessagePage()
@@ -4051,10 +4056,10 @@ class MsgCommonGroupAllTest(TestCase):
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @tags('ALL', 'CMCC', 'group_chat','full')
     def test_msg_common_group_all_0002(self):
         """1、中文模糊搜索，是否可以匹配展示搜索结果"""
-        # 先保证有中文名称的群
+        # 先保证有特定名称的群
         Preconditions.build_one_new_group("啊测测试试")
         # 先点击加号
         mess = MessagePage()
@@ -4089,10 +4094,10 @@ class MsgCommonGroupAllTest(TestCase):
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @tags('ALL', 'CMCC', 'group_chat','full')
     def test_msg_common_group_all_0003(self):
         """1、中文精确搜索，是否可以匹配展示搜索结果"""
-        # 先保证有中文名称的群
+        # 先保证有特定名称的群
         Preconditions.build_one_new_group("啊测测试试")
         # 先点击加号
         mess = MessagePage()
@@ -4127,10 +4132,10 @@ class MsgCommonGroupAllTest(TestCase):
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @tags('ALL', 'CMCC', 'group_chat','full')
     def test_msg_common_group_all_0004(self):
         """1、中文精确搜索，无匹配搜索结果，展示提示：无搜索结果"""
-        # 先保证有中文名称的群
+        # 先保证有特定名称的群
         Preconditions.build_one_new_group("啊测测试试")
         # 先点击加号
         mess = MessagePage()
@@ -4165,10 +4170,10 @@ class MsgCommonGroupAllTest(TestCase):
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @tags('ALL', 'CMCC', 'group_chat','full')
     def test_msg_common_group_all_0005(self):
         """1、英文精确搜索，可以匹配展示搜索结果"""
-        # 先保证有中文名称的群
+        # 先保证有特定名称的群
         Preconditions.build_one_new_group("atteesstt")
         # 先点击加号
         mess = MessagePage()
@@ -4187,6 +4192,196 @@ class MsgCommonGroupAllTest(TestCase):
         time.sleep(2)
         if not sog.is_text_present("atteesstt"):
             raise AssertionError("无法英文精确搜索")
+        sog.click_back_icon()
+        sog.click_back()
+        sc.click_back()
+
+    @staticmethod
+    def setUp_test_msg_common_group_all_0006():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CMCC', 'group_chat','full')
+    def test_msg_common_group_all_0006(self):
+        """1、英文精确搜索，无匹配搜索结果，展示提示：无搜索结果"""
+        # 先保证有特定名称的群
+        Preconditions.build_one_new_group("atteesstt")
+        # 先点击加号
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        sog.input_search_keyword("aatteesstt")
+        time.sleep(2)
+        if not sog.is_text_present("无搜索结果"):
+            raise AssertionError("没有提示 无搜索结果")
+        sog.click_back_icon()
+        sog.click_back()
+        sc.click_back()
+
+    @staticmethod
+    def setUp_test_msg_common_group_all_0007():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CMCC', 'group_chat','full')
+    def test_msg_common_group_all_0007(self):
+        """1、空格精确搜索，可以匹配展示搜索结果"""
+        # 先保证有特定名称的群
+        Preconditions.build_one_new_group("a a")
+        # 先点击加号
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        sog.input_search_keyword(" ")
+        time.sleep(2)
+        if not sog.is_text_present("a a"):
+            raise AssertionError("无法空格精确搜索")
+        sog.click_back_icon()
+        sog.click_back()
+        sc.click_back()
+
+    @staticmethod
+    def setUp_test_msg_common_group_all_0008():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CMCC', 'group_chat','full')
+    def test_msg_common_group_all_0008(self):
+        """1、空格精确搜索，无匹配搜索结果，展示提示：无搜索结果"""
+        # 先保证有特定名称的群
+        Preconditions.build_one_new_group("a a")
+        # 先点击加号
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        sog.input_search_keyword("  ")
+        time.sleep(2)
+        if not sog.is_text_present("无搜索结果"):
+            raise AssertionError("没有提示 无搜索结果")
+        sog.click_back_icon()
+        sog.click_back()
+        sc.click_back()
+
+    @staticmethod
+    def setUp_test_msg_common_group_all_0009():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CMCC', 'group_chat','full')
+    def test_msg_common_group_all_0009(self):
+        """1、数字精确搜索，可以匹配展示搜索结果"""
+        # 先保证有特定名称的群
+        Preconditions.build_one_new_group("112233445566")
+        # 先点击加号
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        sog.input_search_keyword("112233445566")
+        time.sleep(2)
+        if not sog.is_text_present("112233445566"):
+            raise AssertionError("无法数字精确搜索")
+        sog.click_back_icon()
+        sog.click_back()
+        sc.click_back()
+
+    @staticmethod
+    def setUp_test_msg_common_group_all_0010():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CMCC', 'group_chat','full')
+    def test_msg_common_group_all_0010(self):
+        """1、数字精确搜索，无匹配搜索结果，展示提示：无搜索结果"""
+        # 先保证有特定名称的群
+        Preconditions.build_one_new_group("112233445566")
+        # 先点击加号
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        sog.input_search_keyword("1112233445566")
+        time.sleep(2)
+        if not sog.is_text_present("无搜索结果"):
+            raise AssertionError("没有提示 无搜索结果")
         sog.click_back_icon()
         sog.click_back()
         sc.click_back()
