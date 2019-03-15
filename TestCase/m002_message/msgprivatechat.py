@@ -976,3 +976,113 @@ class MsgContactSelector(TestCase):
         scp.page_contain_element("local联系人")
         scp.click_back()
         mess.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1205(self):
+        """ 最近聊天选择器：单聊内转发消息"""
+        # 1、在聊天会话页面，长按可转发的消息，是否可以跳转到联系人选择器页面
+        Preconditions.enter_private_chat_page()
+        chat = SingleChatPage()
+        chat.input_message("hehe")
+        chat.send_message()
+        chat.press_mess('hehe')
+        chat.click_to_do('转发')
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        scp.click_back()
+        chat.click_back()
+        ContactDetailsPage().click_back()
+        ContactsPage().open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1206(self):
+        """ 最近聊天选择器：单聊内转发消息--选择一个群"""
+        Preconditions.enter_private_chat_page()
+        chat = SingleChatPage()
+        chat.input_message("hello")
+        chat.send_message()
+        chat.press_mess('hello')
+        chat.click_to_do('转发')
+        # 1、在联系人选择器页面，点击选择一个群
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        # 2、进入到群聊列表展示页面，顶部的搜索文案是否展示为：搜索群聊
+        sogp.page_should_contain_text("搜索群组")
+        group_names = sogp.get_group_name()
+        sogp.click_search_group()
+        # 3、在顶部的搜索框中输入搜索条件，不存在搜索结果时下方展示文案是否是：无搜索结果
+        times = 60
+        while times > 0:
+            msg = uuid.uuid4().__str__()
+            sogp.input_search_keyword(msg)
+            time.sleep(1)
+            if sogp.is_text_present('无搜索结果'):
+                break
+            times -= 1
+        if times == 0:
+            raise AssertionError("无 ‘无搜索结果’")
+        if not group_names:
+            raise AssertionError('无群，请创建！')
+        # 4、存在搜索结果时，展示的搜索结果是否符合需求
+        sogp.input_search_keyword(group_names[0])
+        time.sleep(1)
+        sogp.page_should_contain_text(group_names[0])
+        # 5、点击选中一个搜索结果，是否会弹出确认弹窗
+        sogp.click_search_result()
+        time.sleep(2)
+        if not sogp.is_text_present("发送给"):
+            raise AssertionError("转发消息给群组时，无含‘发送给’文本的弹窗")
+        sogp.click_text("确定")
+        chat.wait_for_page_load()
+        chat.click_back()
+        ContactDetailsPage().click_back()
+        ContactsPage().open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1207(self):
+        """ 最近聊天选择器：单聊内转发消息--选择本地联系人"""
+        Preconditions.enter_private_chat_page()
+        chat = SingleChatPage()
+        chat.input_message("hehe")
+        chat.send_message()
+        chat.press_mess('hehe')
+        chat.click_to_do('转发')
+        # 1、在联系人选择器页面，点击选择本地联系人，跳转到本地联系人列表展示页面
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        scp.select_local_contacts()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        # 2、当前页面左上角展示的文案是否符合需求展示为：选择联系人
+        slcp.page_should_contain_text("选择联系人")
+        # 3、顶部搜索框中，默认展示的文案是否是：搜索或输入手机号
+        slcp.page_should_contain_text('搜索或输入手机号')
+        names = slcp.get_contacts_name()
+        # 4、在搜索框中输入搜索条件，检查不存在搜索结果时，下方是否展示：无搜索结果
+        times = 60
+        while times > 0:
+            msg = uuid.uuid4().__str__()
+            slcp.search(msg)
+            time.sleep(1)
+            if not slcp.is_search_result(msg):
+                break
+            times -= 1
+        if times == 0:
+            raise AssertionError("无 ‘无搜索结果’")
+        if not names:
+            raise AssertionError('无联系人，请创建！')
+        # 5、在搜索框中输入搜索条件，存在搜索结果时，下方展示的搜索结果是否符合需求
+        # 6、点击选中搜索出的结果，是否会弹出确认弹窗
+        slcp.search_and_select_one_member_by_name(names[0])
+        time.sleep(2)
+        if not slcp.is_text_present("发送给"):
+            raise AssertionError("转发消息给本地联系人时，无含‘发送给’文本的弹窗")
+        slcp.click_text("确定")
+        chat.wait_for_page_load()
+        chat.click_back()
+        ContactDetailsPage().click_back()
+        ContactsPage().open_message_page()
+
