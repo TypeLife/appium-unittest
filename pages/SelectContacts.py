@@ -333,5 +333,12 @@ class SelectContactsPage(BasePage):
     @TestLogger.log()
     def select_recent_chat_by_name(self, name):
         """根据名字选择最近聊天会话窗口"""
-        self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text ="%s"]' % name))
-
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text ="%s"]' % name)
+        max_try = 10
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.page_up()
+        self.click_element(locator)

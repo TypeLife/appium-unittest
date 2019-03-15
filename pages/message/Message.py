@@ -435,7 +435,7 @@ class MessagePage(FooterPage):
             if self._is_element_present(locator):
                 break
             current += 1
-            self.page_down()
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         self.click_element(locator)
 
     @TestLogger.log()

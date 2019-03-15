@@ -1723,24 +1723,9 @@ class MsgGroupChatTotalQuantityTest(TestCase):
     def test_msg_group_chat_total_quantity_0042(self):
         """群聊会话页面，转发他人发送的图片到当前会话窗口时失败"""
 
-        gcp = GroupChatPage()
-        gcsp = GroupChatSetPage()
-        # 如果当前群聊页面已有消息发送失败标识，需要先清除聊天记录
-        if not gcp.is_send_sucess():
-            # 点击聊天设置
-            gcp.click_setting()
-            time.sleep(2)
-            # 滑到菜单底部
-            gcsp.scroll_to_bottom()
-            # 点击“清空聊天记录”菜单
-            gcsp.click_clear_chat_record()
-            # 点击确定按钮
-            gcsp.click_sure()
-            # 返回上一级
-            gcp.click_back()
-            time.sleep(2)
         # 确保当前群聊页面已有图片
         Preconditions.make_already_have_my_picture()
+        gcp = GroupChatPage()
         # 等待群聊页面加载
         gcp.wait_for_page_load()
         # 设置手机网络断开
@@ -1759,8 +1744,9 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 4.是否提示已转发,等待群聊页面加载
         self.assertEquals(gcp.is_exist_forward(), True)
         gcp.wait_for_page_load()
+        cwp = ChatWindowPage()
         # 5.是否显示消息发送失败标识
-        self.assertEquals(gcp.is_send_sucess(), False)
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
 
     @tags('ALL', 'CMCC', 'group_chat')
     def test_msg_group_chat_total_quantity_0043(self):
@@ -1769,8 +1755,8 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 确保当前群聊页面已有图片
         Preconditions.make_already_have_my_picture()
         gcp = GroupChatPage()
-        # 当前页面是否在群聊天页
-        gcp.is_on_this_page()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
         # 1.长按自己发送的图片并转发
         gcp.forward_pic()
         scg = SelectContactsPage()
@@ -2012,10 +1998,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
             chat.click_i_have_read()
         # 5.是否显示消息发送失败标识
         cwp = ChatWindowPage()
-        try:
-            cwp.wait_for_msg_send_status_become_to('发送失败', 10)
-        except TimeoutException:
-            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
         # 返回消息页
         gcp.click_back()
 
