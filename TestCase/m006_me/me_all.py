@@ -897,13 +897,16 @@ class MeAllTest(TestCase):
         scp.wait_for_page_load()
         # 4.再次点击联系人/群聊名称
         scp.select_one_recently_contact_by_name(name)  # 默认不勾选
+        time.sleep(1.8)
         select = mnp.check_select_box("职位选框")
         # 5.点击字段选项
         mnp.click_el_text("职位")
+        time.sleep(1.8)
         select1 = mnp.check_select_box("职位选框")
         # 6.点击已选中字段
         self.assertIsNot(select, select1)
         mnp.click_el_text("职位")
+        time.sleep(1.8)
         select2 = mnp.check_select_box("职位选框")
         self.assertEquals(select, select2)
         # 7.点击已选中字段
@@ -1953,8 +1956,8 @@ class MeAllTest(TestCase):
         qr_code.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_063(self):
-        """我的二维码分享-搜索字母特殊字符关数字，手机号等关键字有本地联系人结果"""
+    def test_me_all_066(self):
+        """我的二维码分享-选择联系人页面搜索自己的用户名/手机号并选择自己"""
         # 0.检验是否跳转到我页面
         mep = MePage()
         mep.is_on_this_page()
@@ -1966,36 +1969,81 @@ class MeAllTest(TestCase):
         qr_code.click_forward_qr_code()
         scg = SelectContactsPage()
         scg.wait_for_page_load()
-        # 3、点击搜索框，输入信息
+        # 3、点击搜索框，输入信自己的手机号码搜索
         scg.click_search_keyword()
-        scg.input_search_keyword("13738485245")
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        scg.input_search_keyword(phone_number)
         time.sleep(1)
         # 4.检验有未保存在本地的手机号码
-        self.assertEquals(scg.page_contain_element('X'), True)
-        self.assertEquals(scg.get_element_texts("最近聊天"), True)
-        self.assertEquals(scg.is_text_present("网络搜索"), True)
-        self.assertEquals(scg.get_element_text_net_name("local联系人"), True)
-        self.assertEquals(scg.get_element_text_net_number("聊天电话"), True)
-        # 5.点击未知号码,点击取消
-        scg.click_unknown_member()
-        time.sleep(1)
-        self.assertEquals(scg.is_text_present("确定"), True)
-        self.assertEquals(scg.is_text_present("取消"), True)
-        scg.click_cancel_forward()
-        scg.wait_for_page_load()
-        # 6.点击未知号码,点击确定
-        scg.input_search_keyword("13738485245")
-        time.sleep(1)
-        scg.click_unknown_member()
-        scg.click_sure_forward()
-        self.assertEquals(scg.is_toast_exist("已转发"), True)
+        scg.click_one_local_contacts()
+        self.assertEquals(scg.is_toast_exist("该联系人不可选"), True)
         # 6.点击返回
+        scg.click_back()
+        qr_code.click_back()
+        time.sleep(30)
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    def test_me_all_067(self):
+        """我的二维码分享-选择本地联系人-选择自己"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 0.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 1.点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        # 2.点击本地联系人
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        # 3.滑动通讯录找到自己的联系方式
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        slc.selecting_local_contacts_by_number(phone_number)
+        time.sleep(1)
+        # 4.检验有未保存在本地的手机号码
+        scg.click_one_local_contacts()
+        self.assertEquals(scg.is_toast_exist("该联系人不可选"), True)
+        # 6.点击返回
+        scg.click_back()
+        slc.click_back()
         qr_code.click_back()
 
+    # @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    # def test_me_all_068(self):
+    #     """我的二维码分享-选择本地联系人通过用户名/手机号搜索并选择自己"""
+    #     # 0.检验是否跳转到我页面
+    #     mep = MePage()
+    #     mep.is_on_this_page()
+    #     # 0.点击个人二维码
+    #     mep.click_qr_code_icon()
+    #     qr_code = MyQRCodePage()
+    #     qr_code.wait_for_loading_animation_end()
+    #     # 1.点击“分享我的二维码”
+    #     qr_code.click_forward_qr_code()
+    #     scg = SelectContactsPage()
+    #     scg.wait_for_page_load()
+    #     # 2.点击本地联系人
+    #     scg.select_local_contacts()
+    #     slc = SelectLocalContactsPage()
+    #     slc.wait_for_page_load()
+    #     # 3.在搜索框输入信自己的手机号码搜索
+    #     phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+    #     slc.search(phone_number)
+    #     time.sleep(1)
+    #     # 4.检验有未保存在本地的手机号码
+    #     scg.click_one_local_contacts()
+    #     self.assertEquals(scg.is_toast_exist("该联系人不可选"), True)
+    #     # 6.点击返回
+    #     scg.click_back()
+    #     slc.click_back()
+    #     qr_code.click_back()
 
 
-
-@unittest.skip("113版用例")
+@unittest.skip("112版用例跳过")
 class MeAll(TestCase):
     """_
     模块：我的
