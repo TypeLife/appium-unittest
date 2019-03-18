@@ -253,3 +253,5 @@ class SelectLocalContactsPage(BasePage):
         """搜索结果判断"""
         els = self.get_elements((MobileBy.XPATH,'//*[contains(@text, "%s")]' % msg))
         return len(els) > 1
+
+
