@@ -18,9 +18,9 @@ class Preconditions(WorkbenchPreconditions):
 
 class TeamTest(TestCase):
     """
-    模块：单聊->单聊设置
+    模块：工作台->团队创建
     文件位置：移动端自动化用例整理20190304(工作台部分).xlsx
-    表格：工作台-团队创建
+    表格：团队创建
     """
 
     def default_setUp(self):
@@ -176,6 +176,14 @@ class TeamTest(TestCase):
         workbench.click_create_team()
         team.wait_for_page_load()
 
+
+class WorkbenchGGXXTest(TestCase):
+    """
+    模块：工作台->公告信息
+    文件位置：移动端自动化用例整理20190304(工作台部分).xlsx
+    表格：公告信息
+    """
+
     @staticmethod
     def setUp_test_workbench_GGXX_0005():
 
@@ -264,7 +272,6 @@ class TeamTest(TestCase):
         pg = CreateTeamPage()
         pg.remove_message()
         oklp.press_home_key(3)
-
 
     @staticmethod
     def setUp_test_workbench_GGXX_0008():
