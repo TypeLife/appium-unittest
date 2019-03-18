@@ -41,6 +41,9 @@ class SingleChatPage(BaseChatPage):
                   'com.chinasofti.rcs:id/svd_head': (MobileBy.ID, 'com.chinasofti.rcs:id/svd_head'),
                   '选择短信': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
                   '语音消息体': (MobileBy.ID, 'com.chinasofti.rcs:id/img_audio_play_icon'),
+                  '消息图片': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_image'),
+                  '消息视频': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_video_time'),
+                  '选择照片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic')
                   }
 
     @TestLogger.log()
@@ -84,3 +87,23 @@ class SingleChatPage(BaseChatPage):
     def is_audio_exist(self):
         """是否存在语音消息"""
         return self._is_element_present(self.__class__.__locators['语音消息体'])
+
+    def is_exist_msg_videos(self):
+        """当前页面是否有发视频消息"""
+        el = self.get_elements(self.__class__.__locators['消息视频'])
+        return len(el) > 0
+
+    def is_exist_msg_image(self):
+        """当前页面是否有发图片消息"""
+        el = self.get_elements(self.__class__.__locators['消息图片'])
+        return len(el) > 0
+
+    @TestLogger.log()
+    def click_picture(self):
+        """点击选择照片"""
+        self.click_element(self.__class__.__locators["选择照片"])
+
+    @TestLogger.log()
+    def is_exist_forward(self):
+        """是否存在消息已转发"""
+        return self.is_toast_exist("已转发")

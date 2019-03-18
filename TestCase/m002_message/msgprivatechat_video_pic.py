@@ -3,6 +3,7 @@ import time
 import re
 from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile
+from pages.components import BaseChatPage
 from preconditions.BasePreconditions import LoginPreconditions
 from library.core.utils.testcasefilter import tags
 from pages import *
@@ -10,8 +11,51 @@ from pages import *
 
 class Preconditions(LoginPreconditions):
     """前置条件"""
-    pass
 
+    @staticmethod
+    def enter_single_chat_page():
+        """进入单聊聊天会话页面"""
+
+        # 进入消息页面
+        Preconditions.make_already_in_message_page()
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 点击 +
+        mp.click_add_icon()
+        # 点击“新建消息”
+        mp.click_new_message()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        name = "大佬1"
+        # 进入单聊会话页面
+        slc.selecting_local_contacts_by_name(name)
+        bcp = BaseChatPage()
+        if bcp.is_exist_dialog():
+            # 点击我已阅读
+            bcp.click_i_have_read()
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+
+    @staticmethod
+    def make_already_have_my_picture():
+        """确保当前页面已有图片"""
+
+        # 1.点击输入框左上方的相册图标
+        scp = SingleChatPage()
+        cpp = ChatPicPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        if scp.is_exist_msg_image():
+            return
+        else:
+            # 2.进入相片页面,选择一张片相发送
+            time.sleep(2)
+            scp.click_picture()
+            cpp.wait_for_page_load()
+            cpp.select_pic_fk(1)
+            cpp.click_send()
+            time.sleep(5)
 
 class MsgPrivateChatVideoPicTest(TestCase):
     """
