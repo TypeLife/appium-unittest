@@ -1,6 +1,7 @@
 from appium.webdriver.common.mobileby import MobileBy
 from library.core.TestLogger import TestLogger
 from pages.components.BaseChat import BaseChatPage
+import time
 
 
 class SingleChatPage(BaseChatPage):
@@ -41,6 +42,9 @@ class SingleChatPage(BaseChatPage):
                   'com.chinasofti.rcs:id/svd_head': (MobileBy.ID, 'com.chinasofti.rcs:id/svd_head'),
                   '选择短信': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
                   '语音消息体': (MobileBy.ID, 'com.chinasofti.rcs:id/img_audio_play_icon'),
+                  '短信发送按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_sms_send'),
+                  '短信输入框': (MobileBy.ID, 'com.chinasofti.rcs:id/et_sms'),
+                  '短信资费提醒': (MobileBy.XPATH, '//*[@text="资费提醒"]'),
                   }
 
     @TestLogger.log()
@@ -84,3 +88,37 @@ class SingleChatPage(BaseChatPage):
     def is_audio_exist(self):
         """是否存在语音消息"""
         return self._is_element_present(self.__class__.__locators['语音消息体'])
+
+    @TestLogger.log()
+    def is_enabled_sms_send_btn(self):
+        """短信发送按钮是否可点击"""
+        return self._is_enabled(self.__class__.__locators['短信发送按钮'])
+
+    @TestLogger.log()
+    def input_sms_message(self, message):
+        """输入短信信息"""
+        self.input_text(self.__class__.__locators["短信输入框"], message)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+        return self
+
+    @TestLogger.log()
+    def send_sms(self):
+        """发送短信"""
+        self.click_element(self.__class__.__locators["短信发送按钮"])
+        time.sleep(1)
+
+    @TestLogger.log()
+    def is_present_sms_fee_remind(self, timeout=3, auto_accept_alerts=True):
+        """是否出现短信资费提醒窗"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["短信资费提醒"])
+            )
+            return True
+        except:
+            return False
