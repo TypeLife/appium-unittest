@@ -363,15 +363,14 @@ class MsgCommonGroupTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0001(self):
-        """1、在输入框中不输入任何内容，输入框右边展示的按钮是否是语音按钮"""
+        """输入框中输入字符数为空"""
         #检查是否存在语言按钮
         gcp = GroupChatPage()
         gcp.page_should_contain_audio_btn()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0002(self):
-        """1.在输入框中输入一段文本，字符数大于0
-            2.点击输入框右边高亮展示的发送按钮，发送此段文本"""
+        """输入框中输入字符数大于0"""
         gcp = GroupChatPage()
         #输入信息
         gcp.input_message("哈哈")
@@ -413,8 +412,7 @@ class MsgCommonGroupTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0003(self):
-        """1.在输入框中输入一段文本，字符数小于5000
-            2.点击输入框右边高亮展示的发送按，发送此段文本"""
+        """输入框中输入字符数等于5000"""
         gcp = GroupChatPage()
         # 输入信息
         info="Hello everyone, Welcome to my group, I hope my group can bring you happy."
@@ -455,7 +453,7 @@ class MsgCommonGroupTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0004(self):
-        """1.在当前聊天会话页面，在输入框中输入一段文本，字符数大于5000，是否可以输入此段文本"""
+        """输入框中输入字符数大于5000"""
         gcp = GroupChatPage()
         # 输入信息
         info1 = "哈"*5001
@@ -471,8 +469,7 @@ class MsgCommonGroupTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0005(self):
-        """1.在当前聊天会话页面，在输入框中输入一段文本，字符数等于5000
-            2、然后按住发送按钮，向上滑动，放大发送此段文本，文本是否可以放大发送成功"""
+        """向上滑动发送按钮，放大发送输入框中的5000文本字符内容"""
         gcp = GroupChatPage()
         # 输入信息
         info = "哈" * 5000
@@ -513,8 +510,7 @@ class MsgCommonGroupTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0006(self):
-        """1.在当前聊天会话页面，在输入框中输入一段文本，字符数等于5000
-            2、然后按住发送按钮，向下滑动，缩小发送此段文本，文本是否可以缩小发送成功"""
+        """向上滑动发送按钮，缩小发送输入框中的5000文本字符内容"""
         gcp = GroupChatPage()
         # 输入信息
         info = "哈" * 5000
@@ -555,9 +551,7 @@ class MsgCommonGroupTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0007(self):
-        """1、长按文本消息，是否会弹窗展示：功能菜单栏。
-            2、点击选择复制功能，复制成功后，是否会弹出toast提示：已复制
-            3、长按输入框，是否会弹出粘贴内容到输入框中的提示"""
+        """在聊天会话页面，长按文本消息，使用复制功能"""
         gcp = GroupChatPage()
         # 输入信息
         gcp.input_message("哈哈")
@@ -606,8 +600,7 @@ class MsgCommonGroupTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0008(self):
-        """1、长按文本消息，是否会弹窗展示：功能菜单栏。
-        2、点击选择删除功能，删除成功后，聊天会话页面的消息是否会消失"""
+        """在聊天会话页面，长按文本消息，使用删除功能"""
         gcp = GroupChatPage()
         # 输入信息
         gcp.input_message("哈哈")
@@ -627,10 +620,7 @@ class MsgCommonGroupTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0009(self):
-        """1、长按文本消息，选择转发功能，是否可以跳转到联系人选择器页面
-            2、搜索选择转发对象，选择搜索结果，确认转发后，是否弹出toast提示：已转发
-            3、转发成功后，返回到消息列表，是否产生了一个新的会话窗口
-            4、进入到新会话窗口页面中，转发的消息，是否已发送成功"""
+        """在聊天会话页面，转发5000字符的文本消息"""
         gcp = GroupChatPage()
         # 输入信息
         gcp.input_message("哈哈")
@@ -686,10 +676,7 @@ class MsgCommonGroupTest(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0010(self):
         """
-        1、长按文本消息，选择转发功能，是否可以跳转到联系人选择器页面
-        2、搜索选择转发对象，选择搜索结果，确认转发后，是否弹出toast提示：已转发
-        3、转发成功后，返回到消息列表，是否产生了一个新的会话窗口并且在当前会话窗口上展示一个发送失败的标志：“！”
-        4、进入到新会话窗口页面中，转发的消息，是否会展示为发送失败的状态
+        在聊天会话页面，转发5000字符的文本消息
         """
         gcp = GroupChatPage()
         # 输入信息
@@ -759,9 +746,7 @@ class MsgCommonGroupTest(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0011(self):
         """
-        1、长按文本消息，选择转发功能，是否可以跳转到联系人选择器页面
-        2、搜索选择转发对象，选择搜索结果，确认转发后，是否弹出toast提示：已转发
-        3、转发成功后，返回到消息列表，是否产生了一个新的会话窗口
+        在聊天会话页面，长按文本消息，使用转发功能，搜索选择转发对象
         """
         gcp = GroupChatPage()
         # 输入信息
@@ -815,8 +800,7 @@ class MsgCommonGroupTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0012(self):
-        """1、点击发送失败消息体，左边的重发按钮，点击重发按钮，是否会弹出确认重新发送的弹窗
-            2、点击确认重新发送，是否可以重新发送成功此条消息"""
+        """在聊天会话页面，点击重发按钮，重新发送发送失败的消息"""
         gcp = GroupChatPage()
         #断开网络
         gcp.set_network_status(1)
@@ -851,10 +835,7 @@ class MsgCommonGroupTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0013(self):
-        """1、长按文本消息，选择转发功能，跳转到联系人选择器页面
-            2、选择一个群，进入到群聊列表展示页面，任意选中一个群聊，确认转发，是否会在消息列表，
-            重新产生一个新的会话窗口或者在已有窗口中增加一条记录
-        3、进入到聊天会话窗口页面，转发的消息，是否已发送成功并正常展示"""
+        """在聊天会话页面，长按文本消息，使用转发功能，选择一个群作为转发对象"""
         gcp = GroupChatPage()
         cwp = ChatWindowPage()
         # 长按信息并点击转发
@@ -908,9 +889,7 @@ class MsgCommonGroupTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0015(self):
-        """1、长按文本消息，选择转发功能，跳转到联系人选择器页面
-            2、选择本地联系人，确认转发，是否会在消息列表，重新产生一个新的会话窗口或者在已有窗口中增加一条记录
-            3、进入到聊天会话窗口页面，转发的消息，是否已发送成功并正常展示"""
+        """在聊天会话页面，长按文本消息，使用转发功能，选择本地联系人作为转发对象"""
         gcp = GroupChatPage()
         # 输入信息
         gcp.input_message("哈哈")
@@ -974,9 +953,7 @@ class MsgCommonGroupTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0016(self):
-        """1、长按文本消息，选择转发功能，跳转到联系人选择器页面
-            2、选择最近聊天，确认转发，是否会在消息列表，重新产生一个新的会话窗口或者在已有窗口中增加一条记录
-            3、进入到聊天会话窗口页面，转发的消息，是否已发送成功并正常展示"""
+        """在聊天会话页面，长按文本消息，使用转发功能，选择最近聊天作为转发对象"""
         gcp = GroupChatPage()
         # 输入信息
         gcp.input_message("哈哈")
@@ -1027,11 +1004,7 @@ class MsgCommonGroupTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0017(self):
-        """1、长按文本消息，选择收藏功能，收藏成功后，是否弹出toast提示：已收藏
-            2、在我的页面，点击收藏入口，检查刚收藏的消息内容，是否可以正常展示出来
-            3、点击收藏成功的消息体，是否可以进入到消息展示详情页面
-            4、左滑收藏消息体，是否会展示删除按钮
-            5、点击删除按钮，是否可以删除收藏的消息体"""
+        """在聊天会话页面，长按文本消息，使用收藏功能"""
         gcp = GroupChatPage()
         # 长按信息并点击收藏
         gcp.press_file_to_do("哈哈", "收藏")
@@ -1086,12 +1059,7 @@ class MsgCommonGroupTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0018(self):
-        """1、长按语音消息，选择收藏功能，收藏成功后，是否弹出toast提示：已收藏
-            2、在我的页面，点击收藏入口，检查刚收藏的语音消息体，是否可以正常展示出来
-            3、点击收藏成功的消息体，是否可以进入到消息展示详情页面
-            4、在收藏消息体详情页面，是否可以点击播放和暂停语音消息
-            5、左滑收藏消息体，是否会展示删除按钮
-            6、点击删除按钮，是否可以删除收藏的消息体"""
+        """在聊天会话页面，长按语音消息，使用收藏功能"""
         gcp = GroupChatPage()
         gcp.click_audio_btn()
         audio = ChatAudioPage()
@@ -1162,7 +1130,7 @@ class MsgCommonGroupTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0019(self):
-        """1.点击输入框右边的语音按钮，在未获取录音权限时，是否会弹出权限申请允许弹窗"""
+        """未获取权限时，点击输入框右边的语音按钮，检查是否会弹出提示权限"""
         gcp = GroupChatPage()
         gcp.click_audio_btn()
         audio = ChatAudioPage()
@@ -1179,8 +1147,7 @@ class MsgCommonGroupTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0020(self):
-        """1、点击输入框右边的语音按钮，跳转到的页面是否是语音模式设置页面
-            2、默认展示的选择项是否是，语音+文字模式"""
+        """首次使用语音功能"""
         gcp = GroupChatPage()
         gcp.click_audio_btn()
         audio = ChatAudioPage()
@@ -4018,9 +3985,10 @@ class MsgCommonGroupAllTest(TestCase):
 
     @tags('ALL','CMCC','group_chat','full')
     def test_msg_common_group_all_0001(self):
-        """1、点击右上角的+号，发起群聊
-            2、点击选择一个群，是否可以进入到群聊列表展示页面
-            3、中文模糊搜索，是否可以匹配展示搜索结果"""
+        """消息列表——发起群聊——选择已有群"""
+        # 1、点击右上角的+号，发起群聊
+        # 2、点击选择一个群，是否可以进入到群聊列表展示页面
+        # 3、中文模糊搜索，是否可以匹配展示搜索结果
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("啊测测试试")
         #先点击加号
@@ -4059,7 +4027,7 @@ class MsgCommonGroupAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat','full')
     def test_msg_common_group_all_0002(self):
-        """1、中文模糊搜索，是否可以匹配展示搜索结果"""
+        """消息列表——发起群聊——选择已有群"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("啊测测试试")
         # 先点击加号
@@ -4097,7 +4065,7 @@ class MsgCommonGroupAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat','full')
     def test_msg_common_group_all_0003(self):
-        """1、中文精确搜索，是否可以匹配展示搜索结果"""
+        """群聊列表展示页面——中文精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("啊测测试试")
         # 先点击加号
@@ -4136,7 +4104,7 @@ class MsgCommonGroupAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat','full')
     def test_msg_common_group_all_0004(self):
-        """1、中文精确搜索，无匹配搜索结果，展示提示：无搜索结果"""
+        """群聊列表展示页面——中文精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("啊测测试试")
         # 先点击加号
@@ -4174,7 +4142,7 @@ class MsgCommonGroupAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat','full')
     def test_msg_common_group_all_0005(self):
-        """1、英文精确搜索，可以匹配展示搜索结果"""
+        """群聊列表展示页面——英文精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("atteesstt")
         # 先点击加号
@@ -4213,7 +4181,7 @@ class MsgCommonGroupAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat','full')
     def test_msg_common_group_all_0006(self):
-        """1、英文精确搜索，无匹配搜索结果，展示提示：无搜索结果"""
+        """群聊列表展示页面——英文精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("atteesstt")
         # 先点击加号
@@ -4251,7 +4219,7 @@ class MsgCommonGroupAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat','full')
     def test_msg_common_group_all_0007(self):
-        """1、空格精确搜索，可以匹配展示搜索结果"""
+        """群聊列表展示页面——空格精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("a a")
         # 先点击加号
@@ -4290,7 +4258,7 @@ class MsgCommonGroupAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat','full')
     def test_msg_common_group_all_0008(self):
-        """1、空格精确搜索，无匹配搜索结果，展示提示：无搜索结果"""
+        """群聊列表展示页面——空格精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("a a")
         # 先点击加号
@@ -4328,7 +4296,7 @@ class MsgCommonGroupAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat','full')
     def test_msg_common_group_all_0009(self):
-        """1、数字精确搜索，可以匹配展示搜索结果"""
+        """群聊列表展示页面——数字精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("112233445566")
         # 先点击加号
@@ -4367,7 +4335,7 @@ class MsgCommonGroupAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat','full')
     def test_msg_common_group_all_0010(self):
-        """1、数字精确搜索，无匹配搜索结果，展示提示：无搜索结果"""
+        """群聊列表展示页面——数字精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("112233445566")
         # 先点击加号
@@ -4405,7 +4373,7 @@ class MsgCommonGroupAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0011(self):
-        """1、数字精确搜索，可以匹配展示搜索结果"""
+        """群聊列表展示页面——数字精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("112233445566")
         # 先点击加号
@@ -4444,7 +4412,7 @@ class MsgCommonGroupAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0012(self):
-        """1、数字精确搜索，无匹配搜索结果，展示提示：无搜索结果"""
+        """群聊列表展示页面——数字精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("112233445566")
         # 先点击加号
@@ -4482,7 +4450,7 @@ class MsgCommonGroupAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0013(self):
-        """1、字符精确搜索，可以匹配展示搜索结果"""
+        """群聊列表展示页面——字符精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("$$")
         # 先点击加号
@@ -4521,7 +4489,7 @@ class MsgCommonGroupAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0014(self):
-        """1、字符精确搜索，无匹配搜索结果，展示提示：无搜索结果"""
+        """群聊列表展示页面——字符精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("$$")
         # 先点击加号
@@ -4559,7 +4527,7 @@ class MsgCommonGroupAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0015(self):
-        """1、使用群聊列表中的索引字母，定位选择，可以进行定位"""
+        """群聊列表展示页面——索引字母定位选择"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("iiiiii")
         # 先点击加号
@@ -4583,8 +4551,7 @@ class MsgCommonGroupAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0017(self):
-        """1、在输入框中输入一个字符，右边的语音按钮是否自动变为发送按钮
-            2、点击发送按钮"""
+        """在群聊天会话页面，发送一条字符长度等于：1的，文本消息"""
         gcp = GroupChatPage()
         # 输入信息
         gcp.input_message("哈")
@@ -4599,3 +4566,4 @@ class MsgCommonGroupAllTest(TestCase):
             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
         except TimeoutException:
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+
