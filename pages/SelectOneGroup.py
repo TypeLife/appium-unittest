@@ -158,3 +158,13 @@ class SelectOneGroupPage(BasePage):
             current += 1
             self.page_up()
         self.click_element(locator)
+
+    @TestLogger.log()
+    def get_search_result_group(self):
+        """获取搜索结果群"""
+        els = self.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'))
+        if els:
+            return els
+        else:
+            raise AssertionError("没有搜索结果")
+
