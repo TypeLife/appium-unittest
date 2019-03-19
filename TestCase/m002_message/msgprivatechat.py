@@ -282,6 +282,44 @@ class MsgPrivateChatMsgList(TestCase):
         mess.page_contain_element('消息简要内容')
         mess.msg_is_contain_ellipsis()
 
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_1315(self):
+        """新建消息"""
+        # 1、点击右上角+号 - 新建消息
+        mess = MessagePage()
+        mess.open_message_page()
+        mess.click_add_icon()
+        mess.click_new_message()
+        scp = SelectContactsPage()
+        scp.wait_for_create_msg_page_load()
+        # 页面元素有为号码输入或搜索框，黄页通讯录列表（含名称与号码、按名称拼音首字母排列）
+        scp.page_contain_element('搜索或输入手机号')
+        scp.page_contain_element('local联系人')
+        scp.page_contain_element('左侧字母索引')
+        if not scp.is_left_letters_sorted():
+            raise AssertionError("左侧字母索引未排序")
+        scp.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_1317(self):
+        """新建消息"""
+        # 1、点击右上角+号 - 新建消息
+        mess = MessagePage()
+        mess.open_message_page()
+        mess.click_add_icon()
+        mess.click_new_message()
+        scp = SelectContactsPage()
+        scp.wait_for_create_msg_page_load()
+        # 2、选中黄页内一名联系人，进入聊天窗口
+        scp.click_one_local_contacts()
+        chat = SingleChatPage()
+        # 如果弹框用户须知则点击处理
+        flag = chat.is_exist_dialog()
+        if flag:
+            chat.click_i_have_read()
+        chat.wait_for_page_load()
+        chat.click_back()
+
 
 class MsgPrivateChatMsgSetting(TestCase):
     """

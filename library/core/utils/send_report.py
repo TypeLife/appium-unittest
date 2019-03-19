@@ -8,9 +8,7 @@ import traceback
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
 import requests
-
 import settings
 
 SUBJECT = u'【持续集成】和飞信[%s]集成报告'
@@ -21,7 +19,6 @@ PASSWORD = 'wang1234'
 
 # 报告路径
 UI_REPORT = settings.REPORT_HTML_PATH
-
 FILES = [UI_REPORT, settings.LOG_FILE_PATH]
 SONAR_URL = """
 http://10.1.0.101:9000/api/measures/component?\

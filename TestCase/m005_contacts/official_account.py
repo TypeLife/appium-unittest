@@ -337,7 +337,7 @@ class OfficialAccountTest(TestCase):
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_0329(self):
-        """公众号会话页面，发送长信息"""
+        """公众号会话页面发送链接消息"""
         conts_page = ContactsPage()
         official = OfficialAccountPage()
         conts_page.open_contacts_page()
@@ -367,7 +367,7 @@ class OfficialAccountTest(TestCase):
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_0330(self):
-        """公众号会话页面，发送长信息"""
+        """公众号会话页面网络异常情况下发送消息"""
         conts_page = ContactsPage()
         official = OfficialAccountPage()
         conts_page.open_contacts_page()
@@ -404,20 +404,20 @@ class OfficialAccountTest(TestCase):
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_0331(self):
-        """公众号会话页面，发送长信息"""
+        """公众号会话页面右上角设置按钮"""
         conts_page = ContactsPage()
         official = OfficialAccountPage()
         conts_page.open_contacts_page()
         conts_page.click_official_account_icon()
         official.click_officel_account()
         official.click_setting_button()
+        time.sleep(3)
         official.page_contain_element('进入公众号')
         official.page_contain_element('查看历史资讯')
         official.page_contain_element('认证主体')
         official.page_contain_element('功能介绍')
         official.page_contain_element('更多')
         official.page_contain_element('公众号头像')
-
 
     @staticmethod
     def tearDown_test_contacts_0331():
