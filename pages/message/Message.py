@@ -1,4 +1,5 @@
 from appium.webdriver.common.mobileby import MobileBy
+from appium.webdriver.common.touch_action import TouchAction
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as ec
 
@@ -58,6 +59,7 @@ class MessagePage(FooterPage):
         '位置': (MobileBy.XPATH, "//*[contains(@text, '位置')]"),
         '发送名片': (MobileBy.XPATH, "//*[contains(@text, '发送名片')]"),
         '名片': (MobileBy.XPATH, "//*[contains(@text, '名片')]"),
+        "未读消息气泡": (MobileBy.ID, "com.chinasofti.rcs:id/rnMessageBadge")
     }
 
     @TestLogger.log('检查顶部搜索框是否显示')
@@ -442,4 +444,49 @@ class MessagePage(FooterPage):
     def click_workbench(self):
         """点击工作台"""
         self.click_element(self.__class__.__locators["工作台"])
+
+    @TestLogger.log()
+    def search_box_is_enabled(self):
+        """页面搜索框是否可点击"""
+        return self._is_enabled(self.__class__.__locators["搜索"])
+
+    @TestLogger.log()
+    def add_icon_is_enabled(self):
+        """+号图标是否可点击"""
+        return self._is_enabled(self.__class__.__locators["+号"])
+
+    @TestLogger.log()
+    def is_exist_network_anomaly(self):
+        """是否存在网络异常"""
+        return self.is_text_present("网络连接异常，请检查你的无线网络设置")
+
+    @TestLogger.log()
+    def is_exist_unread_messages(self):
+        """是否存在未读消息"""
+        els = self.get_elements(self.__class__.__locators["未读消息气泡"])
+        return len(els) > 0
+
+    @TestLogger.log()
+    def clear_up_unread_messages(self):
+        """清空未读消息"""
+        els = self.get_elements(self.__class__.__locators["未读消息气泡"])
+        rect = els[-1].rect
+        pointX = int(rect["x"]) + int(rect["width"]) / 2
+        pointY = -(int(rect["y"]) - 20)
+        TouchAction(self.driver).long_press(els[-1], duration=3000).move_to(els[-1], pointX,
+                                                                            pointY).wait(3).release().perform()
+
+    @TestLogger.log()
+    def wait_for_message_list_load(self, timeout=20, auto_accept_alerts=True):
+        """等待消息列表加载"""
+
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["消息名称"])
+            )
+        except:
+            raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
+        return self
 

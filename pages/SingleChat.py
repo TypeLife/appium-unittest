@@ -1,6 +1,7 @@
 from appium.webdriver.common.mobileby import MobileBy
 from library.core.TestLogger import TestLogger
 from pages.components.BaseChat import BaseChatPage
+import time
 
 
 class SingleChatPage(BaseChatPage):
@@ -41,6 +42,14 @@ class SingleChatPage(BaseChatPage):
                   'com.chinasofti.rcs:id/svd_head': (MobileBy.ID, 'com.chinasofti.rcs:id/svd_head'),
                   '选择短信': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
                   '语音消息体': (MobileBy.ID, 'com.chinasofti.rcs:id/img_audio_play_icon'),
+                  '消息图片': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_image'),
+                  '消息视频': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_video_time'),
+                  '选择照片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic'),
+                  '短信发送按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_sms_send'),
+                  '短信输入框': (MobileBy.ID, 'com.chinasofti.rcs:id/et_sms'),
+                  '短信资费提醒': (MobileBy.XPATH, '//*[@text="资费提醒"]'),
+                  "文本输入框": (MobileBy.ID, "com.chinasofti.rcs:id/et_message"),
+                  "文本发送按钮": (MobileBy.ID, "com.chinasofti.rcs:id/ib_send")
                   }
 
     @TestLogger.log()
@@ -84,3 +93,73 @@ class SingleChatPage(BaseChatPage):
     def is_audio_exist(self):
         """是否存在语音消息"""
         return self._is_element_present(self.__class__.__locators['语音消息体'])
+
+    def is_exist_msg_videos(self):
+        """当前页面是否有发视频消息"""
+        el = self.get_elements(self.__class__.__locators['消息视频'])
+        return len(el) > 0
+
+    def is_exist_msg_image(self):
+        """当前页面是否有发图片消息"""
+        el = self.get_elements(self.__class__.__locators['消息图片'])
+        return len(el) > 0
+
+    @TestLogger.log()
+    def click_picture(self):
+        """点击选择照片"""
+        self.click_element(self.__class__.__locators["选择照片"])
+
+    @TestLogger.log()
+    def is_exist_forward(self):
+        """是否存在消息已转发"""
+        return self.is_toast_exist("已转发")
+
+    @TestLogger.log()
+    def is_enabled_sms_send_btn(self):
+        """短信发送按钮是否可点击"""
+        return self._is_enabled(self.__class__.__locators['短信发送按钮'])
+
+    @TestLogger.log()
+    def input_sms_message(self, message):
+        """输入短信信息"""
+        self.input_text(self.__class__.__locators["短信输入框"], message)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+        return self
+
+    @TestLogger.log()
+    def send_sms(self):
+        """发送短信"""
+        self.click_element(self.__class__.__locators["短信发送按钮"])
+        time.sleep(1)
+
+    @TestLogger.log()
+    def is_present_sms_fee_remind(self, timeout=3, auto_accept_alerts=True):
+        """是否出现短信资费提醒窗"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["短信资费提醒"])
+            )
+            return True
+        except:
+            return False
+
+    @TestLogger.log()
+    def input_text_message(self, message):
+        """输入文本信息"""
+        self.input_text(self.__class__.__locators["文本输入框"], message)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+        return self
+
+    @TestLogger.log()
+    def send_text(self):
+        """发送文本"""
+        self.click_element(self.__class__.__locators["文本发送按钮"])
+        time.sleep(1)

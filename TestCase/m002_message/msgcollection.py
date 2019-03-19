@@ -35,6 +35,8 @@ class Preconditions(LoginPreconditions):
         contacts = ContactsPage()
         contacts.wait_for_page_load()
         names = contacts.get_contacts_name()
+        if '本机' in names:
+            names.remove('本机')
         contacts.select_people_by_name(names[0])
         contact_detail = ContactDetailsPage()
         contact_detail.click_message_icon()

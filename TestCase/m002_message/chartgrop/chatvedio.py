@@ -1708,7 +1708,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         scg.wait_for_page_load()
         # 获取当前会话窗口群名
         group_name = Preconditions.get_group_chat_name()
-        # 3.根据名字选择最近聊天会话窗口
+        # 3.选择最近聊天中的当前会话窗口
         scg.select_recent_chat_by_name(group_name)
         # 确定转发
         scg.click_sure_forward()
@@ -2030,5 +2030,257 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 返回群聊天页面
         scg.click_back()
 
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_group_chat_total_quantity_0053(self):
+        """群聊会话页面，转发自己发送的图片到普通群"""
+
+        # 确保当前群聊页面已有图片
+        Preconditions.make_already_have_my_picture()
+        gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        # 1.长按自己发送的图片并转发
+        gcp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 点击“选择一个群”菜单
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        name = "群聊1"
+        # 3.选择一个普通群
+        sog.selecting_one_group_by_name(name)
+        # 确定转发
+        sog.click_sure_forward()
+        # 4.是否提示已转发,等待群聊页面加载
+        self.assertEquals(gcp.is_exist_forward(), True)
+        gcp.wait_for_page_load()
+        # 返回到消息页
+        gcp.click_back()
+        time.sleep(2)
+        gcp.click_return()
+        time.sleep(2)
+        scg.click_back()
+        message = MessagePage()
+        # 等待消息页面加载
+        message.wait_for_page_load()
+        # 选择刚发送消息的聊天页
+        message.choose_chat_by_name(name)
+        time.sleep(2)
+        # 5.验证是否发送成功
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        # 返回消息页
+        gcp.click_back()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_group_chat_total_quantity_0054(self):
+        """群聊会话页面，转发自己发送的图片到普通群时失败"""
+
+        # 确保当前群聊页面已有图片
+        Preconditions.make_already_have_my_picture()
+        gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        # 设置手机网络断开
+        gcp.set_network_status(0)
+        # 1.长按自己发送的图片并转发
+        gcp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 点击“选择一个群”菜单
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        name = "群聊1"
+        # 3.选择一个普通群
+        sog.selecting_one_group_by_name(name)
+        # 确定转发
+        sog.click_sure_forward()
+        # 4.是否提示已转发,等待群聊页面加载
+        self.assertEquals(gcp.is_exist_forward(), True)
+        gcp.wait_for_page_load()
+        # 返回到消息页
+        gcp.click_back()
+        time.sleep(2)
+        gcp.click_return()
+        time.sleep(2)
+        scg.click_back()
+        message = MessagePage()
+        # 等待消息页面加载
+        message.wait_for_page_load()
+        # 选择刚发送消息的聊天页
+        message.choose_chat_by_name(name)
+        time.sleep(2)
+        # 5.是否显示消息发送失败标识
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        # 返回消息页
+        gcp.click_back()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_group_chat_total_quantity_0055(self):
+        """群聊会话页面，转发自己发送的图片到普通群时点击取消转发"""
+
+        # 确保当前群聊页面已有图片
+        Preconditions.make_already_have_my_picture()
+        gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        # 1.长按自己发送的图片并转发
+        gcp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 点击“选择一个群”菜单
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 3.等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        name = "群聊1"
+        # 4.选择一个普通群
+        sog.selecting_one_group_by_name(name)
+        # 取消转发
+        sog.click_cancel_forward()
+        # 5.等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        sog.click_back()
+        # 等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 返回群聊天页面
+        scg.click_back()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_group_chat_total_quantity_0069(self):
+        """群聊会话页面，转发自己发送的视频给本地联系人"""
+
+        # 确保当前群聊页面已有视频
+        Preconditions.make_already_have_my_videos()
+        gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        # 1.长按自己发送的视频并转发
+        gcp.forward_video()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载,点击“选择本地联系人”菜单
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        # 等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        name = "大佬1"
+        # 3.选择一个本地联系人
+        slc.selecting_local_contacts_by_name(name)
+        # 确定转发
+        scg.click_sure_forward()
+        # 4.是否提示已转发,等待群聊页面加载
+        self.assertEquals(gcp.is_exist_forward(), True)
+        gcp.wait_for_page_load()
+        # 返回到消息页
+        gcp.click_back()
+        time.sleep(2)
+        gcp.click_return()
+        time.sleep(2)
+        scg.click_back()
+        message = MessagePage()
+        # 等待消息页面加载
+        message.wait_for_page_load()
+        # 选择刚发送消息的聊天页
+        message.choose_chat_by_name(name)
+        time.sleep(2)
+        chat = BaseChatPage()
+        if chat.is_exist_dialog():
+            # 点击我已阅读
+            chat.click_i_have_read()
+        # 5.验证是否发送成功
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        # 返回消息页
+        gcp.click_back()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_group_chat_total_quantity_0070(self):
+        """群聊会话页面，转发自己发送的视频给本地联系人时失败"""
+
+        # 确保当前群聊页面已有视频
+        Preconditions.make_already_have_my_videos()
+        gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        # 设置手机网络断开
+        gcp.set_network_status(0)
+        # 1.长按自己发送的视频并转发
+        gcp.forward_video()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载,点击“选择本地联系人”菜单
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        # 等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        name = "大佬1"
+        # 3.选择一个本地联系人
+        slc.selecting_local_contacts_by_name(name)
+        # 确定转发
+        scg.click_sure_forward()
+        # 4.是否提示已转发,等待群聊页面加载
+        self.assertEquals(gcp.is_exist_forward(), True)
+        gcp.wait_for_page_load()
+        # 返回到消息页
+        gcp.click_back()
+        time.sleep(2)
+        gcp.click_return()
+        time.sleep(2)
+        scg.click_back()
+        message = MessagePage()
+        # 等待消息页面加载
+        message.wait_for_page_load()
+        # 选择刚发送消息的聊天页
+        message.choose_chat_by_name(name)
+        time.sleep(2)
+        chat = BaseChatPage()
+        if chat.is_exist_dialog():
+            # 点击我已阅读
+            chat.click_i_have_read()
+        # 5.是否显示消息发送失败标识
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        # 返回消息页
+        gcp.click_back()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_group_chat_total_quantity_0071(self):
+        """群聊会话页面，转发自己发送的视频给本地联系人时点击取消转发"""
+
+        # 确保当前群聊页面已有视频
+        Preconditions.make_already_have_my_videos()
+        gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        # 1.长按自己发送的视频并转发
+        gcp.forward_video()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 点击“选择本地联系人”菜单
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        # 等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        name = "大佬1"
+        # 3、4.选择一个本地联系人
+        slc.selecting_local_contacts_by_name(name)
+        # 取消转发
+        scg.click_cancel_forward()
+        # 5.等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        # 返回群聊天页面
+        slc.click_back()
+        scg.wait_for_page_load()
+        scg.click_back()
 
 
