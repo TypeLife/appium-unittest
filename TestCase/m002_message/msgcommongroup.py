@@ -281,6 +281,7 @@ class Preconditions(object):
             else:
                 break
             n = n + 1
+        time.sleep(2)
         sc.click_select_one_group()
         # 群名
         # group_name = Preconditions.get_group_chat_name()
@@ -4459,4 +4460,359 @@ class MsgCommonGroupAllTest(TestCase):
             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
         except TimeoutException:
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    def test_msg_common_group_all_0018(self):
+        """在群聊天会话页面，发送一条字符长度，大于1的文本消息"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 输入信息
+        mess="哈"*10
+        gcp.input_message(mess)
+        if gcp.is_audio_btn_exit():
+            raise AssertionError("右边的语音按钮不会自动变为发送按钮")
+        gcp.page_should_contain_send_btn()
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    def test_msg_common_group_all_0021(self):
+        """在群聊天会话页面，输入框中录入1个字符，使用缩小功能发送"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 获取文本信息正常的宽度
+        info = "哈"
+        gcp.input_message(info)
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        width = gcp.get_width_of_msg_of_text()
+        Preconditions.delete_record_group_chat()
+        time.sleep(2)
+        # 再继续输入信息
+        info = "哈"
+        gcp.input_message(info)
+        # 长按发送按钮并滑动
+        gcp.press_and_move_down("发送按钮")
+        # 验证是否发送成功
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 判断文本是否缩小,‘哈哈’文本框信息正常宽度为width
+        # if not gcp.get_width_of_msg_of_text() <= width:
+        #     raise AssertionError("文本消息没有缩小展示")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    def test_msg_common_group_all_0022(self):
+        """在群聊天会话页面，输入框中录入500个字符，使用缩小功能发送"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 获取文本信息正常的高度
+        info = "哈"*500
+        gcp.input_message(info)
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        height= gcp.get_height_of_msg_of_text()
+        Preconditions.delete_record_group_chat()
+        time.sleep(2)
+        # 再继续输入信息
+        info = "哈"*500
+        gcp.input_message(info)
+        # 长按发送按钮并滑动
+        gcp.press_and_move_down("发送按钮")
+        # 验证是否发送成功
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 判断文本是否缩小,文本框信息正常高度为height
+        if not gcp.get_height_of_msg_of_text() < height:
+            raise AssertionError("文本消息没有缩小展示")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    def test_msg_common_group_all_0023(self):
+        """在群聊天会话页面，输入框中录入5000个字符，使用缩小功能发送"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 获取文本信息正常的高度
+        info = "哈" * 5000
+        gcp.input_message(info)
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        height = gcp.get_height_of_msg_of_text()
+        Preconditions.delete_record_group_chat()
+        time.sleep(2)
+        # 再继续输入信息
+        info = "哈" * 5000
+        gcp.input_message(info)
+        # 长按发送按钮并滑动
+        gcp.press_and_move_down("发送按钮")
+        # 验证是否发送成功
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 判断文本是否缩小,文本框信息正常高度为height
+        # if not gcp.get_height_of_msg_of_text() <= height:
+        #     raise AssertionError("文本消息没有缩小展示")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    def test_msg_common_group_all_0024(self):
+        """在群聊天会话页面，输入框中录入1个字符，使用放大功能发送"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 获取文本信息正常的宽度
+        info = "哈"
+        gcp.input_message(info)
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        width = gcp.get_width_of_msg_of_text()
+        Preconditions.delete_record_group_chat()
+        time.sleep(2)
+        # 再继续输入信息
+        info = "哈"
+        gcp.input_message(info)
+        # 长按发送按钮并滑动
+        gcp.press_and_move_up("发送按钮")
+        # 验证是否发送成功
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 判断文本是否缩小,‘哈哈’文本框信息正常宽度为width
+        if not gcp.get_width_of_msg_of_text() > width:
+            raise AssertionError("文本消息没有放大展示")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    def test_msg_common_group_all_0025(self):
+        """在群聊天会话页面，输入框中录入500个字符，使用放大功能发送"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 获取文本信息正常的宽度
+        info = "哈"*500
+        gcp.input_message(info)
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        width = gcp.get_width_of_msg_of_text()
+        Preconditions.delete_record_group_chat()
+        time.sleep(2)
+        # 再继续输入信息
+        info = "哈"*500
+        gcp.input_message(info)
+        # 长按发送按钮并滑动
+        gcp.press_and_move_up("发送按钮")
+        # 验证是否发送成功
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 判断文本是否缩小,‘哈哈’文本框信息正常宽度为width
+        # if not gcp.get_width_of_msg_of_text() > width:
+        #     raise AssertionError("文本消息没有放大展示")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    def test_msg_common_group_all_0026(self):
+        """在群聊天会话页面，输入框中录入5000个字符，使用放大功能发送"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 获取文本信息正常的宽度
+        info = "哈" * 5000
+        gcp.input_message(info)
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        width = gcp.get_width_of_msg_of_text()
+        Preconditions.delete_record_group_chat()
+        time.sleep(2)
+        # 再继续输入信息
+        info = "哈" * 5000
+        gcp.input_message(info)
+        # 长按发送按钮并滑动
+        gcp.press_and_move_up("发送按钮")
+        # 验证是否发送成功
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            # 判断文本是否缩小,‘哈哈’文本框信息正常宽度为width
+            # if not gcp.get_width_of_msg_of_text() > width:
+            #     raise AssertionError("文本消息没有放大展示")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+    def test_msg_common_group_all_0028(self):
+        """进入到群聊天会话页面，录入500个表情字符，缩小发送"""
+        gcp=GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 点击表情按钮
+        gcp.click_expression_button()
+        time.sleep(2)
+        # 任意点击一个表情
+        els = gcp.get_expressions()
+        i=0
+        while i<500:
+            els[0].click()
+            i+=1
+        # inputText = gcp.get_input_box().get_attribute("text")
+        # if not inputText == els[0].get_attribute("text")*500:
+        #     raise AssertionError("被选中的表情不可以存放输入框展示")
+
+        # 长按发送按钮并滑动
+        gcp.press_and_move_down("发送按钮")
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        gcp.click_expression_page_close_button()
+        gcp.hide_keyboard()
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+    def test_msg_common_group_all_0032(self):
+        """进入到群聊天会话页面，录入500个表情字符，放大发送"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 点击表情按钮
+        gcp.click_expression_button()
+        time.sleep(2)
+        # 任意点击一个表情
+        els = gcp.get_expressions()
+        i = 0
+        while i < 500:
+            els[0].click()
+            i += 1
+        # inputText = gcp.get_input_box().get_attribute("text")
+        # if not inputText == els[0].get_attribute("text") * 500:
+        #     raise AssertionError("被选中的表情不可以存放输入框展示")
+
+        # 长按发送按钮并滑动
+        gcp.press_and_move_up("发送按钮")
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        gcp.click_expression_page_close_button()
+        gcp.hide_keyboard()
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+    def test_msg_common_group_all_0035(self):
+        """进入到群聊天会话页面，录入文字+表情字符，放大发送"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 获取信息正常的宽度
+        info = "哈"
+        gcp.input_message(info)
+        # 点击表情按钮
+        gcp.click_expression_button()
+        time.sleep(2)
+        # 任意点击一个表情
+        els = gcp.get_expressions()
+        els[0].click()
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        width = gcp.get_width_of_msg_of_text()
+        Preconditions.delete_record_group_chat()
+        time.sleep(2)
+        # 再继续输入信息
+        gcp.input_message(info)
+        # 任意点击一个表情
+        els = gcp.get_expressions()
+        els[0].click()
+        # 长按发送按钮并滑动
+        gcp.press_and_move_up("发送按钮")
+        # 验证是否发送成功
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 判断文本是否缩小,‘哈哈’文本框信息正常宽度为width
+        if not gcp.get_width_of_msg_of_text() > width:
+            raise AssertionError("文本消息没有放大展示")
+        gcp.click_expression_page_close_button()
+        gcp.hide_keyboard()
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+    def test_msg_common_group_all_0036(self):
+        """进入到群聊天会话页面，录入文字+表情字符，缩小发送"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 获取信息正常的宽度
+        info = "哈"
+        gcp.input_message(info)
+        # 点击表情按钮
+        gcp.click_expression_button()
+        time.sleep(2)
+        # 任意点击一个表情
+        els = gcp.get_expressions()
+        els[0].click()
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        width = gcp.get_width_of_msg_of_text()
+        Preconditions.delete_record_group_chat()
+        time.sleep(2)
+        # 再继续输入信息
+        gcp.input_message(info)
+        # 任意点击一个表情
+        els = gcp.get_expressions()
+        els[0].click()
+        # 长按发送按钮并滑动
+        gcp.press_and_move_down("发送按钮")
+        # 验证是否发送成功
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 判断文本是否缩小,‘哈哈’文本框信息正常宽度为width
+        if not gcp.get_width_of_msg_of_text() < width:
+            raise AssertionError("文本消息没有放大展示")
+        gcp.click_expression_page_close_button()
+        gcp.hide_keyboard()
+
 
