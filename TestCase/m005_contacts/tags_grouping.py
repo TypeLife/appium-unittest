@@ -11,6 +11,7 @@ from pages.call.multipartycall import MultipartyCallPage
 from pages.call.mutivideo import MutiVideoPage
 from pages.components import ContactsSelector
 from pages.components.dialogs import SuspendedTips, MutiVideoTipsPage
+import time
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -180,7 +181,7 @@ class Preconditions(object):
             detail_page.wait_for_page_load()
             detail_page.click_back_icon()
 
-
+@unittest.skip
 class TagsGroupingTest(TestCase):
     """通讯录 - 标签分组"""
 
@@ -573,6 +574,178 @@ class TagsGroupingTest(TestCase):
         except:
             import traceback
             traceback.print_exc()
+
+class Tag_Group(TestCase):
+
+
+    @staticmethod
+    def setUp_test_contacts_0352():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_0352(self):
+        """新建分组,检查元素"""
+        GroupPage=GroupListPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        GroupPage.click_new_group()
+        time.sleep(1)
+        GroupPage.check_if_contains_element('为你的分组创建一个名称')
+        GroupPage.check_if_contains_element('请输入标签分组名称')
+        GroupPage.check_if_contains_element('标题新建分组')
+        GroupPage.check_if_contains_element()
+
+    @staticmethod
+    def setUp_test_contacts_0353():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_0353(self):
+        """新建分组,标签分组名称为空"""
+        GroupPage=GroupListPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        GroupPage.click_new_group()
+        GroupPage.click_sure_element()
+        time.sleep(3)
+        GroupPage.check_if_contains_element()
+
+    @staticmethod
+    def setUp_test_contacts_0354():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_0354(self):
+        """新建分组,标签分组名称输入空格"""
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        GroupPage.click_new_group()
+        GroupPage.click_input_element()
+        time.sleep(3)
+        GroupPage.click_coordinate()
+        GroupPage.click_coordinate()
+        GroupPage.click_coordinate()
+        GroupPage.click_sure_element()
+        time.sleep(2)
+        GroupPage.check_if_contains_element()
+
+    @staticmethod
+    def setUp_test_contacts_0355():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_0355(self):
+        """新建分组,标签分组名称输入9个汉字"""
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        GroupPage.click_new_group()
+        GroupPage.click_input_element()
+        time.sleep(3)
+        GroupPage.input_content()
+        GroupPage.click_sure_element()
+        time.sleep(2)
+        GroupPage.page_should_contain_text('选择和通讯录联系人')
+
+    def tearDown_test_contacts_0355(self):
+        GroupPage = GroupListPage()
+        GroupPage.click_back()
+        GroupPage.click_back()
+        GroupPage.delete_group()
+
+    def tearDown_test_contacts_0355(self):
+        Preconditions.reset_and_relaunch_app()
+
+    @staticmethod
+    def setUp_test_contacts_0356():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_0356(self):
+        """新建分组,标签分组名称输入10个汉字"""
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        GroupPage.click_new_group()
+        GroupPage.click_input_element()
+        time.sleep(3)
+        GroupPage.input_content(text="祝一路顺风和幸福美满")
+        GroupPage.click_sure_element()
+        time.sleep(2)
+        GroupPage.page_should_contain_text('选择和通讯录联系人')
+
+    def tearDown_test_contacts_0356(self):
+        GroupPage = GroupListPage()
+        GroupPage.click_back_button()
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.delete_group(name='祝一路顺风和幸福美满')
+
+    @staticmethod
+    def setUp_test_contacts_0357():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_0357(self):
+        """新建分组,标签分组名称输入11个汉字"""
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        GroupPage.click_new_group()
+        GroupPage.click_input_element()
+        time.sleep(1)
+        try:
+            GroupPage.input_content(text="祝一路顺风和幸福美满啊")
+            flag=False
+        except:
+            print("分组名不能超过10个汉字.")
+            flag=True
+        self.assertTrue(flag)
+
+
+    @staticmethod
+    def setUp_test_contacts_0358():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_0358(self):
+        """新建分组,标签分组名称输入29个数字"""
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.click_new_group()
+        GroupPage.click_input_element()
+        time.sleep(1)
+        self.message='1'*29
+        GroupPage.input_content(text=self.message)
+        time.sleep(1)
+        GroupPage.click_sure_element()
+        time.sleep(1)
+        GroupPage.page_should_contain_text('选择和通讯录联系人')
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.click_back_button()
+
+    def tearDown_test_contacts_0358(self):
+        GroupPage = GroupListPage()
+        time.sleep(2)
+        GroupPage.delete_group(name=self.message)
 
 
 if __name__ == '__main__':

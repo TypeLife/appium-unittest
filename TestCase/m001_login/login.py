@@ -987,7 +987,8 @@ class LoginTest(TestCase):
         :return:
         '''
         oklp = OneKeyLoginPage()
-        oklp.kill_flyme_app()
+       # Preconditions.terminate_app()
+        current_mobile().terminate_app('com.chinasofti.rcs',timeout=2000)
         sl = SmsLoginPage()
         sl.page_should_not_contain_text('一键登陆')
 
