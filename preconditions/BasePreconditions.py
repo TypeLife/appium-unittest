@@ -115,7 +115,8 @@ class LoginPreconditions(object):
             name = "atest" + str(random.randint(100, 999))
             number = "147752" + str(time.time())[-5:]
             ccp.create_contact(name, number)
-        contacts.select_people_by_name(names[0])
+        else:
+            contacts.select_people_by_name(names[0])
         cdp.wait_for_page_load()
         # 点击消息进入单聊会话页面
         cdp.click_message_icon()
