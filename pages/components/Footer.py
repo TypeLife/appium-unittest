@@ -40,3 +40,28 @@ class FooterPage(BasePage):
     def open_contacts_page(self):
         """切换到标签页：通讯录"""
         self.click_element(self.__locators['通讯录'])
+
+    @TestLogger.log()
+    def message_icon_is_enabled(self):
+        """消息图标是否可点击"""
+        return self._is_enabled(self.__class__.__locators["消息"])
+
+    @TestLogger.log()
+    def call_icon_is_enabled(self):
+        """通话图标是否可点击"""
+        return self._is_enabled(self.__class__.__locators["通话"])
+
+    @TestLogger.log()
+    def workbench_icon_is_enabled(self):
+        """工作台图标是否可点击"""
+        return self._is_enabled(self.__class__.__locators["工作台"])
+
+    @TestLogger.log()
+    def contacts_icon_is_enabled(self):
+        """通讯录图标是否可点击"""
+        return self._is_enabled(self.__class__.__locators["通讯录"])
+
+    @TestLogger.log()
+    def me_icon_is_enabled(self):
+        """我图标是否可点击"""
+        return self._is_enabled(self.__class__.__locators["我"])
