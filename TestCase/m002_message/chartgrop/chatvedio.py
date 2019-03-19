@@ -1123,7 +1123,7 @@ class MsgGroupChatvedioTest(TestCase):
         self.assertEquals(gcp.is_send_gif(), True)
         gcp.click_cancel_gif()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @unittest.skip("断网后gif图片无法加载")
     def test_msg_group_chat_video_0062(self):
         """在群聊会话窗，断网情况下发送表情搜搜"""
         # 1.检验是否在当前聊天会话页
@@ -1719,7 +1719,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         cwp = ChatWindowPage()
         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @unittest.skip("断网后gif图片无法加载")
     def test_msg_group_chat_total_quantity_0042(self):
         """群聊会话页面，转发他人发送的图片到当前会话窗口时失败"""
 
@@ -1822,7 +1822,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 返回消息页
         gcp.click_back()
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @unittest.skip("断网后gif图片无法加载")
     def test_msg_group_chat_total_quantity_0045(self):
         """群聊会话页面，转发自己发送的图片到本地联系人时失败"""
 
@@ -1952,7 +1952,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 返回消息页
         gcp.click_back()
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @unittest.skip("断网后gif图片无法加载")
     def test_msg_group_chat_total_quantity_0051(self):
         """群聊会话页面，转发自己发送的图片到陌生人时失败"""
 
