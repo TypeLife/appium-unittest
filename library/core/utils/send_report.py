@@ -11,6 +11,11 @@ from email.mime.text import MIMEText
 import requests
 import settings
 
+SUBJECT = u'【持续集成】和飞信[%s]集成报告'
+HOST = 'smtp.139.com'
+PORT = 25
+FROM = '18373306417@139.com'
+PASSWORD = 'wang1234'
 
 # 报告路径
 UI_REPORT = settings.REPORT_HTML_PATH

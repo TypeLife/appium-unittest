@@ -396,3 +396,17 @@ class GroupChatPage(BaseChatPage):
         """返回上一级"""
         self.click_element(self.__class__.__locators["返回上一级"])
 
+    @TestLogger.log()
+    def get_height_of_msg_of_text(self):
+        """获取文本信息框的大小"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'))
+        rect = el.rect
+        return rect["height"]
+
+    @TestLogger.log()
+    def get_msg_of_text(self):
+        """获取文本信息框的信息"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'))
+        text = el.text
+        return text
+

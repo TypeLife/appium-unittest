@@ -237,7 +237,7 @@ class SelectLocalContactsPage(BasePage):
 
     @TestLogger.log()
     def selecting_local_contacts_by_name(self, name):
-        """选择一个本地联系人"""
+        """根据名字选择一个本地联系人"""
         locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text ="%s"]' % name)
         max_try = 10
         current = 0
@@ -245,18 +245,13 @@ class SelectLocalContactsPage(BasePage):
             if self._is_element_present(locator):
                 break
             current += 1
-            self.page_down()
+            self.page_up()
         self.click_element(locator)
-
-    @TestLogger.log("下一页")
-    def page_down(self):
-        self.wait_until(
-            condition=lambda d: self._is_element_present(self.__class__.__locators['容器列表'])
-        )
-        self.swipe_by_direction(self.__class__.__locators['容器列表'], 'up')
 
     @TestLogger.log()
     def is_search_result(self, msg):
         """搜索结果判断"""
         els = self.get_elements((MobileBy.XPATH,'//*[contains(@text, "%s")]' % msg))
         return len(els) > 1
+
+

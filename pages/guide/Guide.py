@@ -62,6 +62,7 @@ class GuidePage(BasePage):
         self.click_text("开始体验", True)
         return self
 
+    @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
         """等待页面进入引导页第一页（自动允许权限）"""
         try:

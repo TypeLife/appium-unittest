@@ -551,3 +551,8 @@ class BaseChatPage(BasePage):
     def delete_expression(self):
         """删除表情"""
         self.click_element(self.__locators["删除表情按钮"])
+
+    @TestLogger.log()
+    def is_audio_btn_exit(self):
+        """语音按钮是否存在"""
+        return self._is_element_present(self.__locators["语音按钮"])
