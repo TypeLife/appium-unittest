@@ -44,7 +44,7 @@ class SingleChatPage(BaseChatPage):
                   '语音消息体': (MobileBy.ID, 'com.chinasofti.rcs:id/img_audio_play_icon'),
                   '消息图片': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_image'),
                   '消息视频': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_video_time'),
-                  '选择照片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic')
+                  '选择照片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic'),
                   '短信发送按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_sms_send'),
                   '短信输入框': (MobileBy.ID, 'com.chinasofti.rcs:id/et_sms'),
                   '短信资费提醒': (MobileBy.XPATH, '//*[@text="资费提醒"]'),
