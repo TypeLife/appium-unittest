@@ -1175,3 +1175,42 @@ class MsgPrivateChatDialog(TestCase):
         chat.page_should_contains_element('关闭表情')
         chat.close_expression()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1279(self):
+        """ 表情列表按钮"""
+        # 1、进入一对一聊天界面
+        chat = SingleChatPage()
+        # 2、点击聊天界面右下角的表情选择按钮
+        if not chat.is_open_expression():
+            chat.open_expression()
+        time.sleep(1)
+        # 3、在单个表情列表中选择一个表情
+        emoji_texts = chat.select_expression(n=1)
+        input_msg = chat.get_input_message()
+        if input_msg not in emoji_texts:
+            raise AssertionError("选择表情后，消息输入框中未出现选中的表情")
+        chat.close_expression()
+        chat.input_message('')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1280(self):
+        """ 表情列表按钮"""
+        # 1、进入一对一聊天界面
+        chat = SingleChatPage()
+        # 2、点击聊天界面右下角的表情选择按钮
+        if not chat.is_open_expression():
+            chat.open_expression()
+        time.sleep(1)
+        # 3、在单个表情列表中选择一个表情
+        emoji_texts = chat.select_expression(n=1)
+        input_msg = chat.get_input_message()
+        if input_msg not in emoji_texts:
+            raise AssertionError("选择表情后，消息输入框中未出现选中的表情")
+        # 4、点击删除按钮
+        chat.delete_expression()
+        input_msg2 = chat.get_input_message()
+        if input_msg2 in emoji_texts:
+            raise AssertionError("删除选择表情后，消息输入框中的表情依然存在")
+        chat.close_expression()
+        chat.input_message('')
+
