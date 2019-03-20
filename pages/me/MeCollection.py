@@ -332,3 +332,8 @@ class MeCollectionPage(BasePage):
     def page_contain_element(self, locator):
         """检查该页面是否包含某元素"""
         return self.page_should_contain_element(self.__locators[locator])
+
+    @TestLogger.log()
+    def click_cancel_forward(self):
+        """点击取消"""
+        self.click_element(self.__class__.__locators["取消"])

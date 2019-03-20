@@ -3837,1139 +3837,1143 @@ class MsgCommonGroupTest(TestCase):
 
 
 
-class MsgCommonGroupAllTest(TestCase):
-    """
-            模块：消息-普通群
-
-            文件位置：1.1.3全量测试用例\113和飞信全量测试用例-肖秋.xlsx
-            表格：和飞信全量测试用例
-        """
-
-    @classmethod
-    def setUpClass(cls):
-        pass
-
-    def default_setUp(self):
-        """确保每个用例运行前在群聊聊天会话页面"""
-        Preconditions.select_mobile('Android-移动')
-        mess = MessagePage()
-        if mess.is_on_this_page():
-            Preconditions.enter_group_chat_page()
-            return
-        scp = GroupChatPage()
-        if scp.is_on_this_page():
-            current_mobile().hide_keyboard_if_display()
-            return
-        else:
-            current_mobile().reset_app()
-            Preconditions.enter_group_chat_page()
-
-    def default_tearDown(self):
-        pass
-        # current_mobile().disconnect_mobile()
-
-    @staticmethod
-    def setUp_test_msg_common_group_all_0001():
-
-        Preconditions.select_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        current_mobile().reset_app()
-        # current_mobile().connect_mobile()
-        Preconditions.make_already_in_message_page()
-
-    @tags('ALL','CMCC','group_chat','full')
-    def test_msg_common_group_all_0001(self):
-        """消息列表——发起群聊——选择已有群"""
-        # 1、点击右上角的+号，发起群聊
-        # 2、点击选择一个群，是否可以进入到群聊列表展示页面
-        # 3、中文模糊搜索，是否可以匹配展示搜索结果
-        # 先保证有特定名称的群
-        Preconditions.build_one_new_group("啊测测试试")
-        #先点击加号
-        mess = MessagePage()
-        mess.wait_for_page_load()
-        # 点击 +
-        mess.click_add_icon()
-        # 点击 发起群聊
-        mess.click_group_chat()
-        # 选择联系人界面，选择一个群
-        sc = SelectContactsPage()
-        sc.click_select_one_group()
-        sog = SelectOneGroupPage()
-        sog.wait_for_page_load()
-        sog.click_search_group()
-        sog.input_search_keyword("啊")
-        time.sleep(2)
-        els = sog.get_search_result_group()
-        if not els[0].get_attribute("text") == "啊测测试试":
-            raise AssertionError("无法中文模糊搜索")
-        sog.click_back_icon()
-        sog.click_back()
-        sc.click_back()
-
-    @staticmethod
-    def setUp_test_msg_common_group_all_0002():
-
-        Preconditions.select_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        mess = MessagePage()
-        if mess.is_on_this_page():
-            return
-        current_mobile().reset_app()
-        # current_mobile().connect_mobile()
-        Preconditions.make_already_in_message_page()
-
-    @tags('ALL', 'CMCC', 'group_chat','full')
-    def test_msg_common_group_all_0002(self):
-        """消息列表——发起群聊——选择已有群"""
-        # 先保证有特定名称的群
-        Preconditions.build_one_new_group("啊测测试试")
-        # 先点击加号
-        mess = MessagePage()
-        mess.wait_for_page_load()
-        # 点击 +
-        mess.click_add_icon()
-        # 点击 发起群聊
-        mess.click_group_chat()
-        # 选择联系人界面，选择一个群
-        sc = SelectContactsPage()
-        sc.click_select_one_group()
-        sog = SelectOneGroupPage()
-        sog.wait_for_page_load()
-        sog.click_search_group()
-        sog.input_search_keyword("啊啊测")
-        time.sleep(2)
-        if not sog.is_text_present("无搜索结果"):
-            raise AssertionError("没有提示 无搜索结果")
-        sog.click_back_icon()
-        sog.click_back()
-        sc.click_back()
-
-    @staticmethod
-    def setUp_test_msg_common_group_all_0003():
-
-        Preconditions.select_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        mess = MessagePage()
-        if mess.is_on_this_page():
-            return
-        current_mobile().reset_app()
-        # current_mobile().connect_mobile()
-        Preconditions.make_already_in_message_page()
-
-    @tags('ALL', 'CMCC', 'group_chat','full')
-    def test_msg_common_group_all_0003(self):
-        """群聊列表展示页面——中文精确搜索"""
-        # 先保证有特定名称的群
-        Preconditions.build_one_new_group("啊测测试试")
-        # 先点击加号
-        mess = MessagePage()
-        mess.wait_for_page_load()
-        # 点击 +
-        mess.click_add_icon()
-        # 点击 发起群聊
-        mess.click_group_chat()
-        # 选择联系人界面，选择一个群
-        sc = SelectContactsPage()
-        sc.click_select_one_group()
-        sog = SelectOneGroupPage()
-        sog.wait_for_page_load()
-        sog.click_search_group()
-        sog.input_search_keyword("啊测测试试")
-        time.sleep(2)
-        els = sog.get_search_result_group()
-        if not els[0].get_attribute("text") == "啊测测试试":
-            raise AssertionError("无法中文精确搜索")
-        sog.click_back_icon()
-        sog.click_back()
-        sc.click_back()
-
-    @staticmethod
-    def setUp_test_msg_common_group_all_0004():
-
-        Preconditions.select_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        mess = MessagePage()
-        if mess.is_on_this_page():
-            return
-        current_mobile().reset_app()
-        # current_mobile().connect_mobile()
-        Preconditions.make_already_in_message_page()
-
-    @tags('ALL', 'CMCC', 'group_chat','full')
-    def test_msg_common_group_all_0004(self):
-        """群聊列表展示页面——中文精确搜索"""
-        # 先保证有特定名称的群
-        Preconditions.build_one_new_group("啊测测试试")
-        # 先点击加号
-        mess = MessagePage()
-        mess.wait_for_page_load()
-        # 点击 +
-        mess.click_add_icon()
-        # 点击 发起群聊
-        mess.click_group_chat()
-        # 选择联系人界面，选择一个群
-        sc = SelectContactsPage()
-        sc.click_select_one_group()
-        sog = SelectOneGroupPage()
-        sog.wait_for_page_load()
-        sog.click_search_group()
-        sog.input_search_keyword("啊测测试试啊")
-        time.sleep(2)
-        if not sog.is_text_present("无搜索结果"):
-            raise AssertionError("没有提示 无搜索结果")
-        sog.click_back_icon()
-        sog.click_back()
-        sc.click_back()
-
-    @staticmethod
-    def setUp_test_msg_common_group_all_0005():
-
-        Preconditions.select_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        mess = MessagePage()
-        if mess.is_on_this_page():
-            return
-        current_mobile().reset_app()
-        # current_mobile().connect_mobile()
-        Preconditions.make_already_in_message_page()
-
-    @tags('ALL', 'CMCC', 'group_chat','full')
-    def test_msg_common_group_all_0005(self):
-        """群聊列表展示页面——英文精确搜索"""
-        # 先保证有特定名称的群
-        Preconditions.build_one_new_group("atteesstt")
-        # 先点击加号
-        mess = MessagePage()
-        mess.wait_for_page_load()
-        # 点击 +
-        mess.click_add_icon()
-        # 点击 发起群聊
-        mess.click_group_chat()
-        # 选择联系人界面，选择一个群
-        sc = SelectContactsPage()
-        sc.click_select_one_group()
-        sog = SelectOneGroupPage()
-        sog.wait_for_page_load()
-        sog.click_search_group()
-        sog.input_search_keyword("atteesstt")
-        time.sleep(2)
-        els = sog.get_search_result_group()
-        if not els[0].get_attribute("text") == "atteesstt":
-            raise AssertionError("无法英文精确搜索")
-        sog.click_back_icon()
-        sog.click_back()
-        sc.click_back()
-
-    @staticmethod
-    def setUp_test_msg_common_group_all_0006():
-
-        Preconditions.select_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        mess = MessagePage()
-        if mess.is_on_this_page():
-            return
-        current_mobile().reset_app()
-        # current_mobile().connect_mobile()
-        Preconditions.make_already_in_message_page()
-
-    @tags('ALL', 'CMCC', 'group_chat','full')
-    def test_msg_common_group_all_0006(self):
-        """群聊列表展示页面——英文精确搜索"""
-        # 先保证有特定名称的群
-        Preconditions.build_one_new_group("atteesstt")
-        # 先点击加号
-        mess = MessagePage()
-        mess.wait_for_page_load()
-        # 点击 +
-        mess.click_add_icon()
-        # 点击 发起群聊
-        mess.click_group_chat()
-        # 选择联系人界面，选择一个群
-        sc = SelectContactsPage()
-        sc.click_select_one_group()
-        sog = SelectOneGroupPage()
-        sog.wait_for_page_load()
-        sog.click_search_group()
-        sog.input_search_keyword("aatteesstt")
-        time.sleep(2)
-        if not sog.is_text_present("无搜索结果"):
-            raise AssertionError("没有提示 无搜索结果")
-        sog.click_back_icon()
-        sog.click_back()
-        sc.click_back()
-
-    # @staticmethod
-    # def setUp_test_msg_common_group_all_0007():
-    #
-    #     Preconditions.select_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     mess = MessagePage()
-    #     if mess.is_on_this_page():
-    #         return
-    #     current_mobile().reset_app()
-    #     # current_mobile().connect_mobile()
-    #     Preconditions.make_already_in_message_page()
-    #
-    # @tags('ALL', 'CMCC', 'group_chat','full')
-    # def test_msg_common_group_all_0007(self):
-    #     """群聊列表展示页面——空格精确搜索"""
-    #     # 先保证有特定名称的群
-    #     Preconditions.build_one_new_group("a a")
-    #     # 先点击加号
-    #     mess = MessagePage()
-    #     mess.wait_for_page_load()
-    #     # 点击 +
-    #     mess.click_add_icon()
-    #     # 点击 发起群聊
-    #     mess.click_group_chat()
-    #     # 选择联系人界面，选择一个群
-    #     sc = SelectContactsPage()
-    #     sc.click_select_one_group()
-    #     sog = SelectOneGroupPage()
-    #     sog.wait_for_page_load()
-    #     sog.click_search_group()
-    #     sog.input_search_keyword(" ")
-    #     time.sleep(2)
-    #     els = sog.get_search_result_group()
-    #     if not els[0].get_attribute("text") == "a a":
-    #         raise AssertionError("无法空格精确搜索")
-    #     sog.click_back_icon()
-    #     sog.click_back()
-    #     sc.click_back()
-    #
-    # @staticmethod
-    # def setUp_test_msg_common_group_all_0008():
-    #
-    #     Preconditions.select_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     mess = MessagePage()
-    #     if mess.is_on_this_page():
-    #         return
-    #     current_mobile().reset_app()
-    #     # current_mobile().connect_mobile()
-    #     Preconditions.make_already_in_message_page()
-    #
-    # @tags('ALL', 'CMCC', 'group_chat','full')
-    # def test_msg_common_group_all_0008(self):
-    #     """群聊列表展示页面——空格精确搜索"""
-    #     # 先保证有特定名称的群
-    #     Preconditions.build_one_new_group("a a")
-    #     # 先点击加号
-    #     mess = MessagePage()
-    #     mess.wait_for_page_load()
-    #     # 点击 +
-    #     mess.click_add_icon()
-    #     # 点击 发起群聊
-    #     mess.click_group_chat()
-    #     # 选择联系人界面，选择一个群
-    #     sc = SelectContactsPage()
-    #     sc.click_select_one_group()
-    #     sog = SelectOneGroupPage()
-    #     sog.wait_for_page_load()
-    #     sog.click_search_group()
-    #     sog.input_search_keyword("  ")
-    #     time.sleep(2)
-    #     if not sog.is_text_present("无搜索结果"):
-    #         raise AssertionError("没有提示 无搜索结果")
-    #     sog.click_back_icon()
-    #     sog.click_back()
-    #     sc.click_back()
-    #
-    # @staticmethod
-    # def setUp_test_msg_common_group_all_0009():
-    #
-    #     Preconditions.select_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     mess = MessagePage()
-    #     if mess.is_on_this_page():
-    #         return
-    #     current_mobile().reset_app()
-    #     # current_mobile().connect_mobile()
-    #     Preconditions.make_already_in_message_page()
-    #
-    # @tags('ALL', 'CMCC', 'group_chat','full')
-    # def test_msg_common_group_all_0009(self):
-    #     """群聊列表展示页面——数字精确搜索"""
-    #     # 先保证有特定名称的群
-    #     Preconditions.build_one_new_group("112233445566")
-    #     # 先点击加号
-    #     mess = MessagePage()
-    #     mess.wait_for_page_load()
-    #     # 点击 +
-    #     mess.click_add_icon()
-    #     # 点击 发起群聊
-    #     mess.click_group_chat()
-    #     # 选择联系人界面，选择一个群
-    #     sc = SelectContactsPage()
-    #     sc.click_select_one_group()
-    #     sog = SelectOneGroupPage()
-    #     sog.wait_for_page_load()
-    #     sog.click_search_group()
-    #     sog.input_search_keyword("112233445566")
-    #     time.sleep(2)
-    #     els = sog.get_search_result_group()
-    #     if not els[0].get_attribute("text") == "112233445566":
-    #         raise AssertionError("无法数字精确搜索")
-    #     sog.click_back_icon()
-    #     sog.click_back()
-    #     sc.click_back()
-    #
-    # @staticmethod
-    # def setUp_test_msg_common_group_all_0010():
-    #
-    #     Preconditions.select_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     mess = MessagePage()
-    #     if mess.is_on_this_page():
-    #         return
-    #     current_mobile().reset_app()
-    #     # current_mobile().connect_mobile()
-    #     Preconditions.make_already_in_message_page()
-    #
-    # @tags('ALL', 'CMCC', 'group_chat','full')
-    # def test_msg_common_group_all_0010(self):
-    #     """群聊列表展示页面——数字精确搜索"""
-    #     # 先保证有特定名称的群
-    #     Preconditions.build_one_new_group("112233445566")
-    #     # 先点击加号
-    #     mess = MessagePage()
-    #     mess.wait_for_page_load()
-    #     # 点击 +
-    #     mess.click_add_icon()
-    #     # 点击 发起群聊
-    #     mess.click_group_chat()
-    #     # 选择联系人界面，选择一个群
-    #     sc = SelectContactsPage()
-    #     sc.click_select_one_group()
-    #     sog = SelectOneGroupPage()
-    #     sog.wait_for_page_load()
-    #     sog.click_search_group()
-    #     sog.input_search_keyword("1112233445566")
-    #     time.sleep(2)
-    #     if not sog.is_text_present("无搜索结果"):
-    #         raise AssertionError("没有提示 无搜索结果")
-    #     sog.click_back_icon()
-    #     sog.click_back()
-    #     sc.click_back()
-    #
-    # @staticmethod
-    # def setUp_test_msg_common_group_all_0011():
-    #
-    #     Preconditions.select_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     mess = MessagePage()
-    #     if mess.is_on_this_page():
-    #         return
-    #     current_mobile().reset_app()
-    #     # current_mobile().connect_mobile()
-    #     Preconditions.make_already_in_message_page()
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    # def test_msg_common_group_all_0011(self):
-    #     """群聊列表展示页面——数字精确搜索"""
-    #     # 先保证有特定名称的群
-    #     Preconditions.build_one_new_group("112233445566")
-    #     # 先点击加号
-    #     mess = MessagePage()
-    #     mess.wait_for_page_load()
-    #     # 点击 +
-    #     mess.click_add_icon()
-    #     # 点击 发起群聊
-    #     mess.click_group_chat()
-    #     # 选择联系人界面，选择一个群
-    #     sc = SelectContactsPage()
-    #     sc.click_select_one_group()
-    #     sog = SelectOneGroupPage()
-    #     sog.wait_for_page_load()
-    #     sog.click_search_group()
-    #     sog.input_search_keyword("112233445566")
-    #     time.sleep(2)
-    #     els = sog.get_search_result_group()
-    #     if not els[0].get_attribute("text") == "112233445566":
-    #         raise AssertionError("无法数字精确搜索")
-    #     sog.click_back_icon()
-    #     sog.click_back()
-    #     sc.click_back()
-    #
-    # @staticmethod
-    # def setUp_test_msg_common_group_all_0012():
-    #
-    #     Preconditions.select_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     mess = MessagePage()
-    #     if mess.is_on_this_page():
-    #         return
-    #     current_mobile().reset_app()
-    #     # current_mobile().connect_mobile()
-    #     Preconditions.make_already_in_message_page()
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    # def test_msg_common_group_all_0012(self):
-    #     """群聊列表展示页面——数字精确搜索"""
-    #     # 先保证有特定名称的群
-    #     Preconditions.build_one_new_group("112233445566")
-    #     # 先点击加号
-    #     mess = MessagePage()
-    #     mess.wait_for_page_load()
-    #     # 点击 +
-    #     mess.click_add_icon()
-    #     # 点击 发起群聊
-    #     mess.click_group_chat()
-    #     # 选择联系人界面，选择一个群
-    #     sc = SelectContactsPage()
-    #     sc.click_select_one_group()
-    #     sog = SelectOneGroupPage()
-    #     sog.wait_for_page_load()
-    #     sog.click_search_group()
-    #     sog.input_search_keyword("1112233445566")
-    #     time.sleep(2)
-    #     if not sog.is_text_present("无搜索结果"):
-    #         raise AssertionError("没有提示 无搜索结果")
-    #     sog.click_back_icon()
-    #     sog.click_back()
-    #     sc.click_back()
-    #
-    # @staticmethod
-    # def setUp_test_msg_common_group_all_0013():
-    #
-    #     Preconditions.select_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     mess = MessagePage()
-    #     if mess.is_on_this_page():
-    #         return
-    #     current_mobile().reset_app()
-    #     # current_mobile().connect_mobile()
-    #     Preconditions.make_already_in_message_page()
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    # def test_msg_common_group_all_0013(self):
-    #     """群聊列表展示页面——字符精确搜索"""
-    #     # 先保证有特定名称的群
-    #     Preconditions.build_one_new_group("$$")
-    #     # 先点击加号
-    #     mess = MessagePage()
-    #     mess.wait_for_page_load()
-    #     # 点击 +
-    #     mess.click_add_icon()
-    #     # 点击 发起群聊
-    #     mess.click_group_chat()
-    #     # 选择联系人界面，选择一个群
-    #     sc = SelectContactsPage()
-    #     sc.click_select_one_group()
-    #     sog = SelectOneGroupPage()
-    #     sog.wait_for_page_load()
-    #     sog.click_search_group()
-    #     sog.input_search_keyword("$$")
-    #     time.sleep(2)
-    #     els = sog.get_search_result_group()
-    #     if not els[0].get_attribute("text") == "$$":
-    #         raise AssertionError("无法字符精确搜索")
-    #     sog.click_back_icon()
-    #     sog.click_back()
-    #     sc.click_back()
-    #
-    # @staticmethod
-    # def setUp_test_msg_common_group_all_0014():
-    #
-    #     Preconditions.select_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     mess = MessagePage()
-    #     if mess.is_on_this_page():
-    #         return
-    #     current_mobile().reset_app()
-    #     # current_mobile().connect_mobile()
-    #     Preconditions.make_already_in_message_page()
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    # def test_msg_common_group_all_0014(self):
-    #     """群聊列表展示页面——字符精确搜索"""
-    #     # 先保证有特定名称的群
-    #     Preconditions.build_one_new_group("$$")
-    #     # 先点击加号
-    #     mess = MessagePage()
-    #     mess.wait_for_page_load()
-    #     # 点击 +
-    #     mess.click_add_icon()
-    #     # 点击 发起群聊
-    #     mess.click_group_chat()
-    #     # 选择联系人界面，选择一个群
-    #     sc = SelectContactsPage()
-    #     sc.click_select_one_group()
-    #     sog = SelectOneGroupPage()
-    #     sog.wait_for_page_load()
-    #     sog.click_search_group()
-    #     sog.input_search_keyword("$$$")
-    #     time.sleep(2)
-    #     if not sog.is_text_present("无搜索结果"):
-    #         raise AssertionError("没有提示 无搜索结果")
-    #     sog.click_back_icon()
-    #     sog.click_back()
-    #     sc.click_back()
-    #
-    # @staticmethod
-    # def setUp_test_msg_common_group_all_0015():
-    #
-    #     Preconditions.select_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     mess = MessagePage()
-    #     if mess.is_on_this_page():
-    #         return
-    #     current_mobile().reset_app()
-    #     # current_mobile().connect_mobile()
-    #     Preconditions.make_already_in_message_page()
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    # def test_msg_common_group_all_0015(self):
-    #     """群聊列表展示页面——索引字母定位选择"""
-    #     # 先保证有特定名称的群
-    #     Preconditions.build_one_new_group("iiiiii")
-    #     # 先点击加号
-    #     mess = MessagePage()
-    #     mess.wait_for_page_load()
-    #     # 点击 +
-    #     mess.click_add_icon()
-    #     # 点击 发起群聊
-    #     mess.click_group_chat()
-    #     # 选择联系人界面，选择一个群
-    #     sc = SelectContactsPage()
-    #     sc.click_select_one_group()
-    #     sog = SelectOneGroupPage()
-    #     sog.wait_for_page_load()
-    #     sog.click_text("I")
-    #     time.sleep(2)
-    #     if not sog.is_text_present("iiiiii"):
-    #         raise AssertionError("索引字母不能进行定位")
-    #     sog.click_back()
-    #     sc.click_back()
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    # def test_msg_common_group_all_0017(self):
-    #     """在群聊天会话页面，发送一条字符长度等于：1的，文本消息"""
-    #     gcp = GroupChatPage()
-    #     # 输入信息
-    #     gcp.input_message("哈")
-    #     if gcp.is_audio_btn_exit():
-    #         raise AssertionError("右边的语音按钮不会自动变为发送按钮")
-    #     gcp.page_should_contain_send_btn()
-    #     # 点击发送
-    #     gcp.send_message()
-    #     # 验证是否发送成功
-    #     cwp = ChatWindowPage()
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-
-    # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    # def test_msg_common_group_all_0018(self):
-    #     """在群聊天会话页面，发送一条字符长度，大于1的文本消息"""
-    #     gcp = GroupChatPage()
-    #     Preconditions.delete_record_group_chat()
-    #     # 输入信息
-    #     mess="哈"*10
-    #     gcp.input_message(mess)
-    #     if gcp.is_audio_btn_exit():
-    #         raise AssertionError("右边的语音按钮不会自动变为发送按钮")
-    #     gcp.page_should_contain_send_btn()
-    #     # 点击发送
-    #     gcp.send_message()
-    #     # 验证是否发送成功
-    #     cwp = ChatWindowPage()
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    # def test_msg_common_group_all_0021(self):
-    #     """在群聊天会话页面，输入框中录入1个字符，使用缩小功能发送"""
-    #     gcp = GroupChatPage()
-    #     Preconditions.delete_record_group_chat()
-    #     # 获取文本信息正常的宽度
-    #     info = "哈"
-    #     gcp.input_message(info)
-    #     gcp.send_message()
-    #     # 验证是否发送成功
-    #     cwp = ChatWindowPage()
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #     width = gcp.get_width_of_msg_of_text()
-    #     Preconditions.delete_record_group_chat()
-    #     time.sleep(2)
-    #     # 再继续输入信息
-    #     info = "哈"
-    #     gcp.input_message(info)
-    #     # 长按发送按钮并滑动
-    #     gcp.press_and_move_down("发送按钮")
-    #     # 验证是否发送成功
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #     # 判断文本是否缩小,‘哈哈’文本框信息正常宽度为width
-    #     # if not gcp.get_width_of_msg_of_text() <= width:
-    #     #     raise AssertionError("文本消息没有缩小展示")
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    # def test_msg_common_group_all_0022(self):
-    #     """在群聊天会话页面，输入框中录入500个字符，使用缩小功能发送"""
-    #     gcp = GroupChatPage()
-    #     Preconditions.delete_record_group_chat()
-    #     # 获取文本信息正常的高度
-    #     info = "哈"*500
-    #     gcp.input_message(info)
-    #     gcp.send_message()
-    #     # 验证是否发送成功
-    #     cwp = ChatWindowPage()
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #     height= gcp.get_height_of_msg_of_text()
-    #     Preconditions.delete_record_group_chat()
-    #     time.sleep(2)
-    #     # 再继续输入信息
-    #     info = "哈"*500
-    #     gcp.input_message(info)
-    #     # 长按发送按钮并滑动
-    #     gcp.press_and_move_down("发送按钮")
-    #     # 验证是否发送成功
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #     # 判断文本是否缩小,文本框信息正常高度为height
-    #     if not gcp.get_height_of_msg_of_text() < height:
-    #         raise AssertionError("文本消息没有缩小展示")
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    # def test_msg_common_group_all_0023(self):
-    #     """在群聊天会话页面，输入框中录入5000个字符，使用缩小功能发送"""
-    #     gcp = GroupChatPage()
-    #     Preconditions.delete_record_group_chat()
-    #     # 获取文本信息正常的高度
-    #     info = "哈" * 5000
-    #     gcp.input_message(info)
-    #     gcp.send_message()
-    #     # 验证是否发送成功
-    #     cwp = ChatWindowPage()
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #     height = gcp.get_height_of_msg_of_text()
-    #     Preconditions.delete_record_group_chat()
-    #     time.sleep(2)
-    #     # 再继续输入信息
-    #     info = "哈" * 5000
-    #     gcp.input_message(info)
-    #     # 长按发送按钮并滑动
-    #     gcp.press_and_move_down("发送按钮")
-    #     # 验证是否发送成功
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #     # 判断文本是否缩小,文本框信息正常高度为height
-    #     # if not gcp.get_height_of_msg_of_text() <= height:
-    #     #     raise AssertionError("文本消息没有缩小展示")
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    # def test_msg_common_group_all_0024(self):
-    #     """在群聊天会话页面，输入框中录入1个字符，使用放大功能发送"""
-    #     gcp = GroupChatPage()
-    #     Preconditions.delete_record_group_chat()
-    #     # 获取文本信息正常的宽度
-    #     info = "哈"
-    #     gcp.input_message(info)
-    #     gcp.send_message()
-    #     # 验证是否发送成功
-    #     cwp = ChatWindowPage()
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #     width = gcp.get_width_of_msg_of_text()
-    #     Preconditions.delete_record_group_chat()
-    #     time.sleep(2)
-    #     # 再继续输入信息
-    #     info = "哈"
-    #     gcp.input_message(info)
-    #     # 长按发送按钮并滑动
-    #     gcp.press_and_move_up("发送按钮")
-    #     # 验证是否发送成功
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #     # 判断文本是否缩小,‘哈哈’文本框信息正常宽度为width
-    #     if not gcp.get_width_of_msg_of_text() > width:
-    #         raise AssertionError("文本消息没有放大展示")
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    # def test_msg_common_group_all_0025(self):
-    #     """在群聊天会话页面，输入框中录入500个字符，使用放大功能发送"""
-    #     gcp = GroupChatPage()
-    #     Preconditions.delete_record_group_chat()
-    #     # 获取文本信息正常的宽度
-    #     info = "哈"*500
-    #     gcp.input_message(info)
-    #     gcp.send_message()
-    #     # 验证是否发送成功
-    #     cwp = ChatWindowPage()
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #     width = gcp.get_width_of_msg_of_text()
-    #     Preconditions.delete_record_group_chat()
-    #     time.sleep(2)
-    #     # 再继续输入信息
-    #     info = "哈"*500
-    #     gcp.input_message(info)
-    #     # 长按发送按钮并滑动
-    #     gcp.press_and_move_up("发送按钮")
-    #     # 验证是否发送成功
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #     # 判断文本是否缩小,‘哈哈’文本框信息正常宽度为width
-    #     # if not gcp.get_width_of_msg_of_text() > width:
-    #     #     raise AssertionError("文本消息没有放大展示")
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    # def test_msg_common_group_all_0026(self):
-    #     """在群聊天会话页面，输入框中录入5000个字符，使用放大功能发送"""
-    #     gcp = GroupChatPage()
-    #     Preconditions.delete_record_group_chat()
-    #     # 获取文本信息正常的宽度
-    #     info = "哈" * 5000
-    #     gcp.input_message(info)
-    #     gcp.send_message()
-    #     # 验证是否发送成功
-    #     cwp = ChatWindowPage()
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #     width = gcp.get_width_of_msg_of_text()
-    #     Preconditions.delete_record_group_chat()
-    #     time.sleep(2)
-    #     # 再继续输入信息
-    #     info = "哈" * 5000
-    #     gcp.input_message(info)
-    #     # 长按发送按钮并滑动
-    #     gcp.press_and_move_up("发送按钮")
-    #     # 验证是否发送成功
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #         # 判断文本是否缩小,‘哈哈’文本框信息正常宽度为width
-    #         # if not gcp.get_width_of_msg_of_text() > width:
-    #         #     raise AssertionError("文本消息没有放大展示")
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
-    # def test_msg_common_group_all_0028(self):
-    #     """进入到群聊天会话页面，录入500个表情字符，缩小发送"""
-    #     gcp=GroupChatPage()
-    #     Preconditions.delete_record_group_chat()
-    #     # 点击表情按钮
-    #     gcp.click_expression_button()
-    #     time.sleep(2)
-    #     # 任意点击一个表情
-    #     els = gcp.get_expressions()
-    #     i=0
-    #     while i<500:
-    #         els[0].click()
-    #         i+=1
-    #     # inputText = gcp.get_input_box().get_attribute("text")
-    #     # if not inputText == els[0].get_attribute("text")*500:
-    #     #     raise AssertionError("被选中的表情不可以存放输入框展示")
-    #
-    #     # 长按发送按钮并滑动
-    #     gcp.press_and_move_down("发送按钮")
-    #     # 验证是否发送成功
-    #     cwp = ChatWindowPage()
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #     gcp.click_expression_page_close_button()
-    #     gcp.hide_keyboard()
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
-    # def test_msg_common_group_all_0032(self):
-    #     """进入到群聊天会话页面，录入500个表情字符，放大发送"""
-    #     gcp = GroupChatPage()
-    #     Preconditions.delete_record_group_chat()
-    #     # 点击表情按钮
-    #     gcp.click_expression_button()
-    #     time.sleep(2)
-    #     # 任意点击一个表情
-    #     els = gcp.get_expressions()
-    #     i = 0
-    #     while i < 500:
-    #         els[0].click()
-    #         i += 1
-    #     # inputText = gcp.get_input_box().get_attribute("text")
-    #     # if not inputText == els[0].get_attribute("text") * 500:
-    #     #     raise AssertionError("被选中的表情不可以存放输入框展示")
-    #
-    #     # 长按发送按钮并滑动
-    #     gcp.press_and_move_up("发送按钮")
-    #     # 验证是否发送成功
-    #     cwp = ChatWindowPage()
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #     gcp.click_expression_page_close_button()
-    #     gcp.hide_keyboard()
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
-    # def test_msg_common_group_all_0035(self):
-    #     """进入到群聊天会话页面，录入文字+表情字符，放大发送"""
-    #     gcp = GroupChatPage()
-    #     Preconditions.delete_record_group_chat()
-    #     # 获取信息正常的宽度
-    #     info = "哈"
-    #     gcp.input_message(info)
-    #     # 点击表情按钮
-    #     gcp.click_expression_button()
-    #     time.sleep(2)
-    #     # 任意点击一个表情
-    #     els = gcp.get_expressions()
-    #     els[0].click()
-    #     gcp.send_message()
-    #     # 验证是否发送成功
-    #     cwp = ChatWindowPage()
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #     width = gcp.get_width_of_msg_of_text()
-    #     Preconditions.delete_record_group_chat()
-    #     time.sleep(2)
-    #     # 再继续输入信息
-    #     gcp.input_message(info)
-    #     # 任意点击一个表情
-    #     els = gcp.get_expressions()
-    #     els[0].click()
-    #     # 长按发送按钮并滑动
-    #     gcp.press_and_move_up("发送按钮")
-    #     # 验证是否发送成功
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #     # 判断文本是否缩小,‘哈哈’文本框信息正常宽度为width
-    #     if not gcp.get_width_of_msg_of_text() > width:
-    #         raise AssertionError("文本消息没有放大展示")
-    #     gcp.click_expression_page_close_button()
-    #     gcp.hide_keyboard()
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
-    # def test_msg_common_group_all_0036(self):
-    #     """进入到群聊天会话页面，录入文字+表情字符，缩小发送"""
-    #     gcp = GroupChatPage()
-    #     Preconditions.delete_record_group_chat()
-    #     # 获取信息正常的宽度
-    #     info = "哈"
-    #     gcp.input_message(info)
-    #     # 点击表情按钮
-    #     gcp.click_expression_button()
-    #     time.sleep(2)
-    #     # 任意点击一个表情
-    #     els = gcp.get_expressions()
-    #     els[0].click()
-    #     gcp.send_message()
-    #     # 验证是否发送成功
-    #     cwp = ChatWindowPage()
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #     width = gcp.get_width_of_msg_of_text()
-    #     Preconditions.delete_record_group_chat()
-    #     time.sleep(2)
-    #     # 再继续输入信息
-    #     gcp.input_message(info)
-    #     # 任意点击一个表情
-    #     els = gcp.get_expressions()
-    #     els[0].click()
-    #     # 长按发送按钮并滑动
-    #     gcp.press_and_move_down("发送按钮")
-    #     # 验证是否发送成功
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #     # 判断文本是否缩小,‘哈哈’文本框信息正常宽度为width
-    #     if not gcp.get_width_of_msg_of_text() < width:
-    #         raise AssertionError("文本消息没有放大展示")
-    #     gcp.click_expression_page_close_button()
-    #     gcp.hide_keyboard()
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
-    # def test_msg_common_group_all_0037(self):
-    #     """在群聊天会话页面，长按消息体，点击收藏"""
-    #     gcp = GroupChatPage()
-    #     Preconditions.delete_record_group_chat()
-    #     #输入信息
-    #     info = "哈哈"
-    #     gcp.input_message(info)
-    #     gcp.send_message()
-    #     # 长按信息并点击收藏
-    #     gcp.press_file_to_do("哈哈", "收藏")
-    #     flag = gcp.is_toast_exist("已收藏")
-    #     self.assertTrue(flag)
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
-    # def test_msg_common_group_all_0038(self):
-    #     """我——收藏——收藏内容展示"""
-    #     gcp = GroupChatPage()
-    #     time.sleep(2)
-    #     gcp.click_back()
-    #     sogp = SelectOneGroupPage()
-    #     sogp.click_back()
-    #     sc = SelectContactsPage()
-    #     sc.click_back()
-    #     # 进入我页面
-    #     mess = MessagePage()
-    #     mess.open_me_page()
-    #     me = MePage()
-    #     me.click_collection()
-    #     time.sleep(1)
-    #     if not me.is_text_present("哈哈"):
-    #         raise AssertionError("收藏的消息内容不能正常展示出来")
-    #     mcp = MeCollectionPage()
-    #     mcp.page_contain_element("收藏时间")
-    #     mcp.page_contain_element("内容来源")
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
-    # def test_msg_common_group_all_0039(self):
-    #     """我——收藏——收藏内展示——点击收藏内容"""
-    #     gcp = GroupChatPage()
-    #     time.sleep(2)
-    #     gcp.click_back()
-    #     sogp = SelectOneGroupPage()
-    #     sogp.click_back()
-    #     sc = SelectContactsPage()
-    #     sc.click_back()
-    #     # 进入我页面
-    #     mess = MessagePage()
-    #     mess.open_me_page()
-    #     me = MePage()
-    #     me.click_collection()
-    #     time.sleep(1)
-    #     if not me.is_text_present("哈哈"):
-    #         raise AssertionError("收藏的消息内容不能正常展示出来")
-    #     mcp = MeCollectionPage()
-    #     mcp.click_text("哈哈")
-    #     time.sleep(1)
-    #     if not mcp.is_text_present("详情"):
-    #         raise AssertionError("不能进入到消息展示详情页面")
-    #     mcp.click_back()
-    #     time.sleep(2)
-    #     #验证可以返回到收藏列表页
-    #     if not mcp.is_text_present("收藏"):
-    #         raise AssertionError("不能返回到收藏列表页")
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
-    # def test_msg_common_group_all_0040(self):
-    #     """我——收藏——收藏内展示——点击收藏内容——点击播放收藏语音文件"""
-    #     gcp = GroupChatPage()
-    #     Preconditions.delete_record_group_chat()
-    #     gcp.click_audio_btn()
-    #     audio = ChatAudioPage()
-    #     if audio.wait_for_audio_type_select_page_load():
-    #         # 点击只发送语言模式
-    #         audio.click_only_voice()
-    #         audio.click_sure()
-    #     # 权限申请允许弹窗判断
-    #     time.sleep(1)
-    #     if gcp.is_text_present("允许"):
-    #         audio.click_allow()
-    #     time.sleep(3)
-    #     audio.click_send_bottom()
-    #     # 验证是否发送成功
-    #     cwp = ChatWindowPage()
-    #     try:
-    #         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
-    #     except TimeoutException:
-    #         raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-    #     audio.click_exit()
-    #     gcp.hide_keyboard()
-    #     time.sleep(1)
-    #     gcp.press_voice_message_to_do("收藏")
-    #     if not gcp.is_toast_exist("已收藏"):
-    #         raise AssertionError("收藏失败")
-    #     gcp.click_back()
-    #     sogp = SelectOneGroupPage()
-    #     sogp.click_back()
-    #     sc = SelectContactsPage()
-    #     sc.click_back()
-    #     # 进入我页面
-    #     mess = MessagePage()
-    #     mess.open_me_page()
-    #     me = MePage()
-    #     me.click_collection()
-    #     time.sleep(1)
-    #     if not me.is_text_present("秒"):
-    #         raise AssertionError("收藏的消息内容不能正常展示出来")
-    #     mcp = MeCollectionPage()
-    #     mcp.click_text("秒")
-    #     time.sleep(1)
-    #     if not mcp.is_text_present("详情"):
-    #         raise AssertionError("不能进入到消息展示详情页面")
-    #     # 播放语音消息
-    #     mcp.click_collection_voice_msg()
-    #     time.sleep(2)
-    #     # 暂停语音消息
-    #     mcp.click_collection_voice_msg()
-    #     mcp.click_back()
-    #     time.sleep(2)
-    #     mcp.click_back()
-    #     me.open_message_page()
-    #
-    # @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
-    # def test_msg_common_group_all_0041(self):
-    #     """我——收藏——收藏内展示——点击收藏内容——点击删除收藏内容"""
-    #     gcp = GroupChatPage()
-    #     time.sleep(2)
-    #     gcp.click_back()
-    #     sogp = SelectOneGroupPage()
-    #     sogp.click_back()
-    #     sc = SelectContactsPage()
-    #     sc.click_back()
-    #     # 进入我页面
-    #     mess = MessagePage()
-    #     mess.open_me_page()
-    #     me = MePage()
-    #     me.click_collection()
-    #     time.sleep(2)
-    #     # 左滑收藏消息体
-    #     mcp = MeCollectionPage()
-    #     mcp.press_and_move_left()
-    #     # 判断是否有删除按钮
-    #     if mcp.is_delete_element_present():
-    #         mcp.click_delete_collection()
-    #         #判断是否会弹出确认弹窗
-    #         if not mcp.is_text_present("是否删除"):
-    #             raise AssertionError("没有弹出确认窗口")
-    #         #点击取消
-    #
-    #         mcp.click_sure_forward()
-    #         time.sleep(2)
-    #         if not mcp.is_text_present("没有任何收藏"):
-    #             raise AssertionError("不可以删除收藏的消息体")
-    #     else:
-    #         raise AssertionError("没有删除按钮")
+# class MsgCommonGroupAllTest(TestCase):
+#     """
+#             模块：消息-普通群
+#
+#             文件位置：1.1.3全量测试用例\113和飞信全量测试用例-肖秋.xlsx
+#             表格：和飞信全量测试用例
+#         """
+#
+#     @classmethod
+#     def setUpClass(cls):
+#         pass
+#
+#     def default_setUp(self):
+#         """确保每个用例运行前在群聊聊天会话页面"""
+#         Preconditions.select_mobile('Android-移动')
+#         mess = MessagePage()
+#         if mess.is_on_this_page():
+#             Preconditions.enter_group_chat_page()
+#             return
+#         scp = GroupChatPage()
+#         if scp.is_on_this_page():
+#             current_mobile().hide_keyboard_if_display()
+#             return
+#         else:
+#             current_mobile().reset_app()
+#             Preconditions.enter_group_chat_page()
+#
+#     def default_tearDown(self):
+#         pass
+#         # current_mobile().disconnect_mobile()
+#
+#     @staticmethod
+#     def setUp_test_msg_common_group_all_0001():
+#
+#         Preconditions.select_mobile('Android-移动')
+#         current_mobile().hide_keyboard_if_display()
+#         current_mobile().reset_app()
+#         # current_mobile().connect_mobile()
+#         Preconditions.make_already_in_message_page()
+#
+#     @tags('ALL','CMCC','group_chat','full')
+#     def test_msg_common_group_all_0001(self):
+#         """消息列表——发起群聊——选择已有群"""
+#         # 1、点击右上角的+号，发起群聊
+#         # 2、点击选择一个群，是否可以进入到群聊列表展示页面
+#         # 3、中文模糊搜索，是否可以匹配展示搜索结果
+#         # 先保证有特定名称的群
+#         Preconditions.build_one_new_group("啊测测试试")
+#         #先点击加号
+#         mess = MessagePage()
+#         mess.wait_for_page_load()
+#         # 点击 +
+#         mess.click_add_icon()
+#         # 点击 发起群聊
+#         mess.click_group_chat()
+#         # 选择联系人界面，选择一个群
+#         sc = SelectContactsPage()
+#         sc.click_select_one_group()
+#         sog = SelectOneGroupPage()
+#         sog.wait_for_page_load()
+#         sog.click_search_group()
+#         sog.input_search_keyword("啊")
+#         time.sleep(2)
+#         els = sog.get_search_result_group()
+#         if not els[0].get_attribute("text") == "啊测测试试":
+#             raise AssertionError("无法中文模糊搜索")
+#         sog.click_back_icon()
+#         sog.click_back()
+#         sc.click_back()
+#
+#     @staticmethod
+#     def setUp_test_msg_common_group_all_0002():
+#
+#         Preconditions.select_mobile('Android-移动')
+#         current_mobile().hide_keyboard_if_display()
+#         mess = MessagePage()
+#         if mess.is_on_this_page():
+#             return
+#         current_mobile().reset_app()
+#         # current_mobile().connect_mobile()
+#         Preconditions.make_already_in_message_page()
+#
+#     @tags('ALL', 'CMCC', 'group_chat','full')
+#     def test_msg_common_group_all_0002(self):
+#         """消息列表——发起群聊——选择已有群"""
+#         # 先保证有特定名称的群
+#         Preconditions.build_one_new_group("啊测测试试")
+#         # 先点击加号
+#         mess = MessagePage()
+#         mess.wait_for_page_load()
+#         # 点击 +
+#         mess.click_add_icon()
+#         # 点击 发起群聊
+#         mess.click_group_chat()
+#         # 选择联系人界面，选择一个群
+#         sc = SelectContactsPage()
+#         sc.click_select_one_group()
+#         sog = SelectOneGroupPage()
+#         sog.wait_for_page_load()
+#         sog.click_search_group()
+#         sog.input_search_keyword("啊啊测")
+#         time.sleep(2)
+#         if not sog.is_text_present("无搜索结果"):
+#             raise AssertionError("没有提示 无搜索结果")
+#         sog.click_back_icon()
+#         sog.click_back()
+#         sc.click_back()
+#
+#     @staticmethod
+#     def setUp_test_msg_common_group_all_0003():
+#
+#         Preconditions.select_mobile('Android-移动')
+#         current_mobile().hide_keyboard_if_display()
+#         mess = MessagePage()
+#         if mess.is_on_this_page():
+#             return
+#         current_mobile().reset_app()
+#         # current_mobile().connect_mobile()
+#         Preconditions.make_already_in_message_page()
+#
+#     @tags('ALL', 'CMCC', 'group_chat','full')
+#     def test_msg_common_group_all_0003(self):
+#         """群聊列表展示页面——中文精确搜索"""
+#         # 先保证有特定名称的群
+#         Preconditions.build_one_new_group("啊测测试试")
+#         # 先点击加号
+#         mess = MessagePage()
+#         mess.wait_for_page_load()
+#         # 点击 +
+#         mess.click_add_icon()
+#         # 点击 发起群聊
+#         mess.click_group_chat()
+#         # 选择联系人界面，选择一个群
+#         sc = SelectContactsPage()
+#         sc.click_select_one_group()
+#         sog = SelectOneGroupPage()
+#         sog.wait_for_page_load()
+#         sog.click_search_group()
+#         sog.input_search_keyword("啊测测试试")
+#         time.sleep(2)
+#         els = sog.get_search_result_group()
+#         if not els[0].get_attribute("text") == "啊测测试试":
+#             raise AssertionError("无法中文精确搜索")
+#         sog.click_back_icon()
+#         sog.click_back()
+#         sc.click_back()
+#
+#     @staticmethod
+#     def setUp_test_msg_common_group_all_0004():
+#
+#         Preconditions.select_mobile('Android-移动')
+#         current_mobile().hide_keyboard_if_display()
+#         mess = MessagePage()
+#         if mess.is_on_this_page():
+#             return
+#         current_mobile().reset_app()
+#         # current_mobile().connect_mobile()
+#         Preconditions.make_already_in_message_page()
+#
+#     @tags('ALL', 'CMCC', 'group_chat','full')
+#     def test_msg_common_group_all_0004(self):
+#         """群聊列表展示页面——中文精确搜索"""
+#         # 先保证有特定名称的群
+#         Preconditions.build_one_new_group("啊测测试试")
+#         # 先点击加号
+#         mess = MessagePage()
+#         mess.wait_for_page_load()
+#         # 点击 +
+#         mess.click_add_icon()
+#         # 点击 发起群聊
+#         mess.click_group_chat()
+#         # 选择联系人界面，选择一个群
+#         sc = SelectContactsPage()
+#         sc.click_select_one_group()
+#         sog = SelectOneGroupPage()
+#         sog.wait_for_page_load()
+#         sog.click_search_group()
+#         sog.input_search_keyword("啊测测试试啊")
+#         time.sleep(2)
+#         if not sog.is_text_present("无搜索结果"):
+#             raise AssertionError("没有提示 无搜索结果")
+#         sog.click_back_icon()
+#         sog.click_back()
+#         sc.click_back()
+#
+#     @staticmethod
+#     def setUp_test_msg_common_group_all_0005():
+#
+#         Preconditions.select_mobile('Android-移动')
+#         current_mobile().hide_keyboard_if_display()
+#         mess = MessagePage()
+#         if mess.is_on_this_page():
+#             return
+#         current_mobile().reset_app()
+#         # current_mobile().connect_mobile()
+#         Preconditions.make_already_in_message_page()
+#
+#     @tags('ALL', 'CMCC', 'group_chat','full')
+#     def test_msg_common_group_all_0005(self):
+#         """群聊列表展示页面——英文精确搜索"""
+#         # 先保证有特定名称的群
+#         Preconditions.build_one_new_group("atteesstt")
+#         # 先点击加号
+#         mess = MessagePage()
+#         mess.wait_for_page_load()
+#         # 点击 +
+#         mess.click_add_icon()
+#         # 点击 发起群聊
+#         mess.click_group_chat()
+#         # 选择联系人界面，选择一个群
+#         sc = SelectContactsPage()
+#         sc.click_select_one_group()
+#         sog = SelectOneGroupPage()
+#         sog.wait_for_page_load()
+#         sog.click_search_group()
+#         sog.input_search_keyword("atteesstt")
+#         time.sleep(2)
+#         els = sog.get_search_result_group()
+#         if not els[0].get_attribute("text") == "atteesstt":
+#             raise AssertionError("无法英文精确搜索")
+#         sog.click_back_icon()
+#         sog.click_back()
+#         sc.click_back()
+#
+#     @staticmethod
+#     def setUp_test_msg_common_group_all_0006():
+#
+#         Preconditions.select_mobile('Android-移动')
+#         current_mobile().hide_keyboard_if_display()
+#         mess = MessagePage()
+#         if mess.is_on_this_page():
+#             return
+#         current_mobile().reset_app()
+#         # current_mobile().connect_mobile()
+#         Preconditions.make_already_in_message_page()
+#
+#     @tags('ALL', 'CMCC', 'group_chat','full')
+#     def test_msg_common_group_all_0006(self):
+#         """群聊列表展示页面——英文精确搜索"""
+#         # 先保证有特定名称的群
+#         Preconditions.build_one_new_group("atteesstt")
+#         # 先点击加号
+#         mess = MessagePage()
+#         mess.wait_for_page_load()
+#         # 点击 +
+#         mess.click_add_icon()
+#         # 点击 发起群聊
+#         mess.click_group_chat()
+#         # 选择联系人界面，选择一个群
+#         sc = SelectContactsPage()
+#         sc.click_select_one_group()
+#         sog = SelectOneGroupPage()
+#         sog.wait_for_page_load()
+#         sog.click_search_group()
+#         sog.input_search_keyword("aatteesstt")
+#         time.sleep(2)
+#         if not sog.is_text_present("无搜索结果"):
+#             raise AssertionError("没有提示 无搜索结果")
+#         sog.click_back_icon()
+#         sog.click_back()
+#         sc.click_back()
+#
+#     @staticmethod
+#     def setUp_test_msg_common_group_all_0007():
+#
+#         Preconditions.select_mobile('Android-移动')
+#         current_mobile().hide_keyboard_if_display()
+#         mess = MessagePage()
+#         if mess.is_on_this_page():
+#             return
+#         current_mobile().reset_app()
+#         # current_mobile().connect_mobile()
+#         Preconditions.make_already_in_message_page()
+#
+#     @tags('ALL', 'CMCC', 'group_chat','full')
+#     def test_msg_common_group_all_0007(self):
+#         """群聊列表展示页面——空格精确搜索"""
+#         # 先保证有特定名称的群
+#         Preconditions.build_one_new_group("a a")
+#         # 先点击加号
+#         mess = MessagePage()
+#         mess.wait_for_page_load()
+#         # 点击 +
+#         mess.click_add_icon()
+#         # 点击 发起群聊
+#         mess.click_group_chat()
+#         # 选择联系人界面，选择一个群
+#         sc = SelectContactsPage()
+#         sc.click_select_one_group()
+#         sog = SelectOneGroupPage()
+#         sog.wait_for_page_load()
+#         sog.click_search_group()
+#         sog.input_search_keyword(" ")
+#         time.sleep(2)
+#         els = sog.get_search_result_group()
+#         if not els[0].get_attribute("text") == "a a":
+#             raise AssertionError("无法空格精确搜索")
+#         sog.click_back_icon()
+#         sog.click_back()
+#         sc.click_back()
+#
+#     @staticmethod
+#     def setUp_test_msg_common_group_all_0008():
+#
+#         Preconditions.select_mobile('Android-移动')
+#         current_mobile().hide_keyboard_if_display()
+#         mess = MessagePage()
+#         if mess.is_on_this_page():
+#             return
+#         current_mobile().reset_app()
+#         # current_mobile().connect_mobile()
+#         Preconditions.make_already_in_message_page()
+#
+#     @tags('ALL', 'CMCC', 'group_chat','full')
+#     def test_msg_common_group_all_0008(self):
+#         """群聊列表展示页面——空格精确搜索"""
+#         # 先保证有特定名称的群
+#         Preconditions.build_one_new_group("a a")
+#         # 先点击加号
+#         mess = MessagePage()
+#         mess.wait_for_page_load()
+#         # 点击 +
+#         mess.click_add_icon()
+#         # 点击 发起群聊
+#         mess.click_group_chat()
+#         # 选择联系人界面，选择一个群
+#         sc = SelectContactsPage()
+#         sc.click_select_one_group()
+#         sog = SelectOneGroupPage()
+#         sog.wait_for_page_load()
+#         sog.click_search_group()
+#         sog.input_search_keyword("  ")
+#         time.sleep(2)
+#         if not sog.is_text_present("无搜索结果"):
+#             raise AssertionError("没有提示 无搜索结果")
+#         sog.click_back_icon()
+#         sog.click_back()
+#         sc.click_back()
+#
+#     @staticmethod
+#     def setUp_test_msg_common_group_all_0009():
+#
+#         Preconditions.select_mobile('Android-移动')
+#         current_mobile().hide_keyboard_if_display()
+#         mess = MessagePage()
+#         if mess.is_on_this_page():
+#             return
+#         current_mobile().reset_app()
+#         # current_mobile().connect_mobile()
+#         Preconditions.make_already_in_message_page()
+#
+#     @tags('ALL', 'CMCC', 'group_chat','full')
+#     def test_msg_common_group_all_0009(self):
+#         """群聊列表展示页面——数字精确搜索"""
+#         # 先保证有特定名称的群
+#         Preconditions.build_one_new_group("112233445566")
+#         # 先点击加号
+#         mess = MessagePage()
+#         mess.wait_for_page_load()
+#         # 点击 +
+#         mess.click_add_icon()
+#         # 点击 发起群聊
+#         mess.click_group_chat()
+#         # 选择联系人界面，选择一个群
+#         sc = SelectContactsPage()
+#         sc.click_select_one_group()
+#         sog = SelectOneGroupPage()
+#         sog.wait_for_page_load()
+#         sog.click_search_group()
+#         sog.input_search_keyword("112233445566")
+#         time.sleep(2)
+#         els = sog.get_search_result_group()
+#         if not els[0].get_attribute("text") == "112233445566":
+#             raise AssertionError("无法数字精确搜索")
+#         sog.click_back_icon()
+#         sog.click_back()
+#         sc.click_back()
+#
+#     @staticmethod
+#     def setUp_test_msg_common_group_all_0010():
+#
+#         Preconditions.select_mobile('Android-移动')
+#         current_mobile().hide_keyboard_if_display()
+#         mess = MessagePage()
+#         if mess.is_on_this_page():
+#             return
+#         current_mobile().reset_app()
+#         # current_mobile().connect_mobile()
+#         Preconditions.make_already_in_message_page()
+#
+#     @tags('ALL', 'CMCC', 'group_chat','full')
+#     def test_msg_common_group_all_0010(self):
+#         """群聊列表展示页面——数字精确搜索"""
+#         # 先保证有特定名称的群
+#         Preconditions.build_one_new_group("112233445566")
+#         # 先点击加号
+#         mess = MessagePage()
+#         mess.wait_for_page_load()
+#         # 点击 +
+#         mess.click_add_icon()
+#         # 点击 发起群聊
+#         mess.click_group_chat()
+#         # 选择联系人界面，选择一个群
+#         sc = SelectContactsPage()
+#         sc.click_select_one_group()
+#         sog = SelectOneGroupPage()
+#         sog.wait_for_page_load()
+#         sog.click_search_group()
+#         sog.input_search_keyword("1112233445566")
+#         time.sleep(2)
+#         if not sog.is_text_present("无搜索结果"):
+#             raise AssertionError("没有提示 无搜索结果")
+#         sog.click_back_icon()
+#         sog.click_back()
+#         sc.click_back()
+#
+#     @staticmethod
+#     def setUp_test_msg_common_group_all_0011():
+#
+#         Preconditions.select_mobile('Android-移动')
+#         current_mobile().hide_keyboard_if_display()
+#         mess = MessagePage()
+#         if mess.is_on_this_page():
+#             return
+#         current_mobile().reset_app()
+#         # current_mobile().connect_mobile()
+#         Preconditions.make_already_in_message_page()
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full')
+#     def test_msg_common_group_all_0011(self):
+#         """群聊列表展示页面——数字精确搜索"""
+#         # 先保证有特定名称的群
+#         Preconditions.build_one_new_group("112233445566")
+#         # 先点击加号
+#         mess = MessagePage()
+#         mess.wait_for_page_load()
+#         # 点击 +
+#         mess.click_add_icon()
+#         # 点击 发起群聊
+#         mess.click_group_chat()
+#         # 选择联系人界面，选择一个群
+#         sc = SelectContactsPage()
+#         sc.click_select_one_group()
+#         sog = SelectOneGroupPage()
+#         sog.wait_for_page_load()
+#         sog.click_search_group()
+#         sog.input_search_keyword("112233445566")
+#         time.sleep(2)
+#         els = sog.get_search_result_group()
+#         if not els[0].get_attribute("text") == "112233445566":
+#             raise AssertionError("无法数字精确搜索")
+#         sog.click_back_icon()
+#         sog.click_back()
+#         sc.click_back()
+#
+#     @staticmethod
+#     def setUp_test_msg_common_group_all_0012():
+#
+#         Preconditions.select_mobile('Android-移动')
+#         current_mobile().hide_keyboard_if_display()
+#         mess = MessagePage()
+#         if mess.is_on_this_page():
+#             return
+#         current_mobile().reset_app()
+#         # current_mobile().connect_mobile()
+#         Preconditions.make_already_in_message_page()
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full')
+#     def test_msg_common_group_all_0012(self):
+#         """群聊列表展示页面——数字精确搜索"""
+#         # 先保证有特定名称的群
+#         Preconditions.build_one_new_group("112233445566")
+#         # 先点击加号
+#         mess = MessagePage()
+#         mess.wait_for_page_load()
+#         # 点击 +
+#         mess.click_add_icon()
+#         # 点击 发起群聊
+#         mess.click_group_chat()
+#         # 选择联系人界面，选择一个群
+#         sc = SelectContactsPage()
+#         sc.click_select_one_group()
+#         sog = SelectOneGroupPage()
+#         sog.wait_for_page_load()
+#         sog.click_search_group()
+#         sog.input_search_keyword("1112233445566")
+#         time.sleep(2)
+#         if not sog.is_text_present("无搜索结果"):
+#             raise AssertionError("没有提示 无搜索结果")
+#         sog.click_back_icon()
+#         sog.click_back()
+#         sc.click_back()
+#
+#     @staticmethod
+#     def setUp_test_msg_common_group_all_0013():
+#
+#         Preconditions.select_mobile('Android-移动')
+#         current_mobile().hide_keyboard_if_display()
+#         mess = MessagePage()
+#         if mess.is_on_this_page():
+#             return
+#         current_mobile().reset_app()
+#         # current_mobile().connect_mobile()
+#         Preconditions.make_already_in_message_page()
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full')
+#     def test_msg_common_group_all_0013(self):
+#         """群聊列表展示页面——字符精确搜索"""
+#         # 先保证有特定名称的群
+#         Preconditions.build_one_new_group("$$")
+#         # 先点击加号
+#         mess = MessagePage()
+#         mess.wait_for_page_load()
+#         # 点击 +
+#         mess.click_add_icon()
+#         # 点击 发起群聊
+#         mess.click_group_chat()
+#         # 选择联系人界面，选择一个群
+#         sc = SelectContactsPage()
+#         sc.click_select_one_group()
+#         sog = SelectOneGroupPage()
+#         sog.wait_for_page_load()
+#         sog.click_search_group()
+#         sog.input_search_keyword("$$")
+#         time.sleep(2)
+#         els = sog.get_search_result_group()
+#         if not els[0].get_attribute("text") == "$$":
+#             raise AssertionError("无法字符精确搜索")
+#         sog.click_back_icon()
+#         sog.click_back()
+#         sc.click_back()
+#
+#     @staticmethod
+#     def setUp_test_msg_common_group_all_0014():
+#
+#         Preconditions.select_mobile('Android-移动')
+#         current_mobile().hide_keyboard_if_display()
+#         mess = MessagePage()
+#         if mess.is_on_this_page():
+#             return
+#         current_mobile().reset_app()
+#         # current_mobile().connect_mobile()
+#         Preconditions.make_already_in_message_page()
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full')
+#     def test_msg_common_group_all_0014(self):
+#         """群聊列表展示页面——字符精确搜索"""
+#         # 先保证有特定名称的群
+#         Preconditions.build_one_new_group("$$")
+#         # 先点击加号
+#         mess = MessagePage()
+#         mess.wait_for_page_load()
+#         # 点击 +
+#         mess.click_add_icon()
+#         # 点击 发起群聊
+#         mess.click_group_chat()
+#         # 选择联系人界面，选择一个群
+#         sc = SelectContactsPage()
+#         sc.click_select_one_group()
+#         sog = SelectOneGroupPage()
+#         sog.wait_for_page_load()
+#         sog.click_search_group()
+#         sog.input_search_keyword("$$$")
+#         time.sleep(2)
+#         if not sog.is_text_present("无搜索结果"):
+#             raise AssertionError("没有提示 无搜索结果")
+#         sog.click_back_icon()
+#         sog.click_back()
+#         sc.click_back()
+#
+#     @staticmethod
+#     def setUp_test_msg_common_group_all_0015():
+#
+#         Preconditions.select_mobile('Android-移动')
+#         current_mobile().hide_keyboard_if_display()
+#         mess = MessagePage()
+#         if mess.is_on_this_page():
+#             return
+#         current_mobile().reset_app()
+#         # current_mobile().connect_mobile()
+#         Preconditions.make_already_in_message_page()
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full')
+#     def test_msg_common_group_all_0015(self):
+#         """群聊列表展示页面——索引字母定位选择"""
+#         # 先保证有特定名称的群
+#         Preconditions.build_one_new_group("iiiiii")
+#         # 先点击加号
+#         mess = MessagePage()
+#         mess.wait_for_page_load()
+#         # 点击 +
+#         mess.click_add_icon()
+#         # 点击 发起群聊
+#         mess.click_group_chat()
+#         # 选择联系人界面，选择一个群
+#         sc = SelectContactsPage()
+#         sc.click_select_one_group()
+#         sog = SelectOneGroupPage()
+#         sog.wait_for_page_load()
+#         sog.click_text("I")
+#         time.sleep(2)
+#         if not sog.is_text_present("iiiiii"):
+#             raise AssertionError("索引字母不能进行定位")
+#         sog.click_back()
+#         sc.click_back()
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full')
+#     def test_msg_common_group_all_0017(self):
+#         """在群聊天会话页面，发送一条字符长度等于：1的，文本消息"""
+#         gcp = GroupChatPage()
+#         # 输入信息
+#         gcp.input_message("哈")
+#         if gcp.is_audio_btn_exit():
+#             raise AssertionError("右边的语音按钮不会自动变为发送按钮")
+#         gcp.page_should_contain_send_btn()
+#         # 点击发送
+#         gcp.send_message()
+#         # 验证是否发送成功
+#         cwp = ChatWindowPage()
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full')
+#     def test_msg_common_group_all_0018(self):
+#         """在群聊天会话页面，发送一条字符长度，大于1的文本消息"""
+#         gcp = GroupChatPage()
+#         Preconditions.delete_record_group_chat()
+#         # 输入信息
+#         mess="哈"*10
+#         gcp.input_message(mess)
+#         if gcp.is_audio_btn_exit():
+#             raise AssertionError("右边的语音按钮不会自动变为发送按钮")
+#         gcp.page_should_contain_send_btn()
+#         # 点击发送
+#         gcp.send_message()
+#         # 验证是否发送成功
+#         cwp = ChatWindowPage()
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full')
+#     def test_msg_common_group_all_0021(self):
+#         """在群聊天会话页面，输入框中录入1个字符，使用缩小功能发送"""
+#         gcp = GroupChatPage()
+#         Preconditions.delete_record_group_chat()
+#         # 获取文本信息正常的宽度
+#         info = "哈"
+#         gcp.input_message(info)
+#         gcp.send_message()
+#         # 验证是否发送成功
+#         cwp = ChatWindowPage()
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#         width = gcp.get_width_of_msg_of_text()
+#         Preconditions.delete_record_group_chat()
+#         time.sleep(2)
+#         # 再继续输入信息
+#         info = "哈"
+#         gcp.input_message(info)
+#         # 长按发送按钮并滑动
+#         gcp.press_and_move_down("发送按钮")
+#         # 验证是否发送成功
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#         # 判断文本是否缩小,‘哈哈’文本框信息正常宽度为width
+#         # if not gcp.get_width_of_msg_of_text() <= width:
+#         #     raise AssertionError("文本消息没有缩小展示")
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full')
+#     def test_msg_common_group_all_0022(self):
+#         """在群聊天会话页面，输入框中录入500个字符，使用缩小功能发送"""
+#         gcp = GroupChatPage()
+#         Preconditions.delete_record_group_chat()
+#         # 获取文本信息正常的高度
+#         info = "哈"*500
+#         gcp.input_message(info)
+#         gcp.send_message()
+#         # 验证是否发送成功
+#         cwp = ChatWindowPage()
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#         height= gcp.get_height_of_msg_of_text()
+#         Preconditions.delete_record_group_chat()
+#         time.sleep(2)
+#         # 再继续输入信息
+#         info = "哈"*500
+#         gcp.input_message(info)
+#         # 长按发送按钮并滑动
+#         gcp.press_and_move_down("发送按钮")
+#         # 验证是否发送成功
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#         # 判断文本是否缩小,文本框信息正常高度为height
+#         if not gcp.get_height_of_msg_of_text() < height:
+#             raise AssertionError("文本消息没有缩小展示")
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full')
+#     def test_msg_common_group_all_0023(self):
+#         """在群聊天会话页面，输入框中录入5000个字符，使用缩小功能发送"""
+#         gcp = GroupChatPage()
+#         Preconditions.delete_record_group_chat()
+#         # 获取文本信息正常的高度
+#         info = "哈" * 5000
+#         gcp.input_message(info)
+#         gcp.send_message()
+#         # 验证是否发送成功
+#         cwp = ChatWindowPage()
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#         height = gcp.get_height_of_msg_of_text()
+#         Preconditions.delete_record_group_chat()
+#         time.sleep(2)
+#         # 再继续输入信息
+#         info = "哈" * 5000
+#         gcp.input_message(info)
+#         # 长按发送按钮并滑动
+#         gcp.press_and_move_down("发送按钮")
+#         # 验证是否发送成功
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#         # 判断文本是否缩小,文本框信息正常高度为height
+#         # if not gcp.get_height_of_msg_of_text() <= height:
+#         #     raise AssertionError("文本消息没有缩小展示")
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full')
+#     def test_msg_common_group_all_0024(self):
+#         """在群聊天会话页面，输入框中录入1个字符，使用放大功能发送"""
+#         gcp = GroupChatPage()
+#         Preconditions.delete_record_group_chat()
+#         # 获取文本信息正常的宽度
+#         info = "哈"
+#         gcp.input_message(info)
+#         gcp.send_message()
+#         # 验证是否发送成功
+#         cwp = ChatWindowPage()
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#         width = gcp.get_width_of_msg_of_text()
+#         Preconditions.delete_record_group_chat()
+#         time.sleep(2)
+#         # 再继续输入信息
+#         info = "哈"
+#         gcp.input_message(info)
+#         # 长按发送按钮并滑动
+#         gcp.press_and_move_up("发送按钮")
+#         # 验证是否发送成功
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#         # 判断文本是否缩小,‘哈哈’文本框信息正常宽度为width
+#         if not gcp.get_width_of_msg_of_text() > width:
+#             raise AssertionError("文本消息没有放大展示")
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full')
+#     def test_msg_common_group_all_0025(self):
+#         """在群聊天会话页面，输入框中录入500个字符，使用放大功能发送"""
+#         gcp = GroupChatPage()
+#         Preconditions.delete_record_group_chat()
+#         # 获取文本信息正常的宽度
+#         info = "哈"*500
+#         gcp.input_message(info)
+#         gcp.send_message()
+#         # 验证是否发送成功
+#         cwp = ChatWindowPage()
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#         width = gcp.get_width_of_msg_of_text()
+#         Preconditions.delete_record_group_chat()
+#         time.sleep(2)
+#         # 再继续输入信息
+#         info = "哈"*500
+#         gcp.input_message(info)
+#         # 长按发送按钮并滑动
+#         gcp.press_and_move_up("发送按钮")
+#         # 验证是否发送成功
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#         # 判断文本是否缩小,‘哈哈’文本框信息正常宽度为width
+#         # if not gcp.get_width_of_msg_of_text() > width:
+#         #     raise AssertionError("文本消息没有放大展示")
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full')
+#     def test_msg_common_group_all_0026(self):
+#         """在群聊天会话页面，输入框中录入5000个字符，使用放大功能发送"""
+#         gcp = GroupChatPage()
+#         Preconditions.delete_record_group_chat()
+#         # 获取文本信息正常的宽度
+#         info = "哈" * 5000
+#         gcp.input_message(info)
+#         gcp.send_message()
+#         # 验证是否发送成功
+#         cwp = ChatWindowPage()
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#         width = gcp.get_width_of_msg_of_text()
+#         Preconditions.delete_record_group_chat()
+#         time.sleep(2)
+#         # 再继续输入信息
+#         info = "哈" * 5000
+#         gcp.input_message(info)
+#         # 长按发送按钮并滑动
+#         gcp.press_and_move_up("发送按钮")
+#         # 验证是否发送成功
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#             # 判断文本是否缩小,‘哈哈’文本框信息正常宽度为width
+#             # if not gcp.get_width_of_msg_of_text() > width:
+#             #     raise AssertionError("文本消息没有放大展示")
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+#     def test_msg_common_group_all_0028(self):
+#         """进入到群聊天会话页面，录入500个表情字符，缩小发送"""
+#         gcp=GroupChatPage()
+#         Preconditions.delete_record_group_chat()
+#         # 点击表情按钮
+#         gcp.click_expression_button()
+#         time.sleep(2)
+#         # 任意点击一个表情
+#         els = gcp.get_expressions()
+#         i=0
+#         while i<500:
+#             els[0].click()
+#             i+=1
+#         # inputText = gcp.get_input_box().get_attribute("text")
+#         # if not inputText == els[0].get_attribute("text")*500:
+#         #     raise AssertionError("被选中的表情不可以存放输入框展示")
+#
+#         # 长按发送按钮并滑动
+#         gcp.press_and_move_down("发送按钮")
+#         # 验证是否发送成功
+#         cwp = ChatWindowPage()
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#         gcp.click_expression_page_close_button()
+#         gcp.hide_keyboard()
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+#     def test_msg_common_group_all_0032(self):
+#         """进入到群聊天会话页面，录入500个表情字符，放大发送"""
+#         gcp = GroupChatPage()
+#         Preconditions.delete_record_group_chat()
+#         # 点击表情按钮
+#         gcp.click_expression_button()
+#         time.sleep(2)
+#         # 任意点击一个表情
+#         els = gcp.get_expressions()
+#         i = 0
+#         while i < 500:
+#             els[0].click()
+#             i += 1
+#         # inputText = gcp.get_input_box().get_attribute("text")
+#         # if not inputText == els[0].get_attribute("text") * 500:
+#         #     raise AssertionError("被选中的表情不可以存放输入框展示")
+#
+#         # 长按发送按钮并滑动
+#         gcp.press_and_move_up("发送按钮")
+#         # 验证是否发送成功
+#         cwp = ChatWindowPage()
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#         gcp.click_expression_page_close_button()
+#         gcp.hide_keyboard()
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+#     def test_msg_common_group_all_0035(self):
+#         """进入到群聊天会话页面，录入文字+表情字符，放大发送"""
+#         gcp = GroupChatPage()
+#         Preconditions.delete_record_group_chat()
+#         # 获取信息正常的宽度
+#         info = "哈"
+#         gcp.input_message(info)
+#         # 点击表情按钮
+#         gcp.click_expression_button()
+#         time.sleep(2)
+#         # 任意点击一个表情
+#         els = gcp.get_expressions()
+#         els[0].click()
+#         gcp.send_message()
+#         # 验证是否发送成功
+#         cwp = ChatWindowPage()
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#         width = gcp.get_width_of_msg_of_text()
+#         Preconditions.delete_record_group_chat()
+#         time.sleep(2)
+#         # 再继续输入信息
+#         gcp.input_message(info)
+#         # 任意点击一个表情
+#         els = gcp.get_expressions()
+#         els[0].click()
+#         # 长按发送按钮并滑动
+#         gcp.press_and_move_up("发送按钮")
+#         # 验证是否发送成功
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#         # 判断文本是否缩小,‘哈哈’文本框信息正常宽度为width
+#         if not gcp.get_width_of_msg_of_text() > width:
+#             raise AssertionError("文本消息没有放大展示")
+#         gcp.click_expression_page_close_button()
+#         gcp.hide_keyboard()
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+#     def test_msg_common_group_all_0036(self):
+#         """进入到群聊天会话页面，录入文字+表情字符，缩小发送"""
+#         gcp = GroupChatPage()
+#         Preconditions.delete_record_group_chat()
+#         # 获取信息正常的宽度
+#         info = "哈"
+#         gcp.input_message(info)
+#         # 点击表情按钮
+#         gcp.click_expression_button()
+#         time.sleep(2)
+#         # 任意点击一个表情
+#         els = gcp.get_expressions()
+#         els[0].click()
+#         gcp.send_message()
+#         # 验证是否发送成功
+#         cwp = ChatWindowPage()
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#         width = gcp.get_width_of_msg_of_text()
+#         Preconditions.delete_record_group_chat()
+#         time.sleep(2)
+#         # 再继续输入信息
+#         gcp.input_message(info)
+#         # 任意点击一个表情
+#         els = gcp.get_expressions()
+#         els[0].click()
+#         # 长按发送按钮并滑动
+#         gcp.press_and_move_down("发送按钮")
+#         # 验证是否发送成功
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#         # 判断文本是否缩小,‘哈哈’文本框信息正常宽度为width
+#         if not gcp.get_width_of_msg_of_text() < width:
+#             raise AssertionError("文本消息没有放大展示")
+#         gcp.click_expression_page_close_button()
+#         gcp.hide_keyboard()
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+#     def test_msg_common_group_all_0037(self):
+#         """在群聊天会话页面，长按消息体，点击收藏"""
+#         gcp = GroupChatPage()
+#         Preconditions.delete_record_group_chat()
+#         #输入信息
+#         info = "哈哈"
+#         gcp.input_message(info)
+#         gcp.send_message()
+#         # 长按信息并点击收藏
+#         gcp.press_file_to_do("哈哈", "收藏")
+#         flag = gcp.is_toast_exist("已收藏")
+#         self.assertTrue(flag)
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+#     def test_msg_common_group_all_0038(self):
+#         """我——收藏——收藏内容展示"""
+#         gcp = GroupChatPage()
+#         time.sleep(2)
+#         gcp.click_back()
+#         sogp = SelectOneGroupPage()
+#         sogp.click_back()
+#         sc = SelectContactsPage()
+#         sc.click_back()
+#         # 进入我页面
+#         mess = MessagePage()
+#         mess.open_me_page()
+#         me = MePage()
+#         me.click_collection()
+#         time.sleep(1)
+#         if not me.is_text_present("哈哈"):
+#             raise AssertionError("收藏的消息内容不能正常展示出来")
+#         mcp = MeCollectionPage()
+#         mcp.page_contain_element("收藏时间")
+#         mcp.page_contain_element("内容来源")
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+#     def test_msg_common_group_all_0039(self):
+#         """我——收藏——收藏内展示——点击收藏内容"""
+#         gcp = GroupChatPage()
+#         time.sleep(2)
+#         gcp.click_back()
+#         sogp = SelectOneGroupPage()
+#         sogp.click_back()
+#         sc = SelectContactsPage()
+#         sc.click_back()
+#         # 进入我页面
+#         mess = MessagePage()
+#         mess.open_me_page()
+#         me = MePage()
+#         me.click_collection()
+#         time.sleep(1)
+#         if not me.is_text_present("哈哈"):
+#             raise AssertionError("收藏的消息内容不能正常展示出来")
+#         mcp = MeCollectionPage()
+#         mcp.click_text("哈哈")
+#         time.sleep(1)
+#         if not mcp.is_text_present("详情"):
+#             raise AssertionError("不能进入到消息展示详情页面")
+#         mcp.click_back()
+#         time.sleep(2)
+#         #验证可以返回到收藏列表页
+#         if not mcp.is_text_present("收藏"):
+#             raise AssertionError("不能返回到收藏列表页")
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+#     def test_msg_common_group_all_0040(self):
+#         """我——收藏——收藏内展示——点击收藏内容——点击播放收藏语音文件"""
+#         gcp = GroupChatPage()
+#         Preconditions.delete_record_group_chat()
+#         gcp.click_audio_btn()
+#         audio = ChatAudioPage()
+#         if audio.wait_for_audio_type_select_page_load():
+#             # 点击只发送语言模式
+#             audio.click_only_voice()
+#             audio.click_sure()
+#         # 权限申请允许弹窗判断
+#         time.sleep(1)
+#         if gcp.is_text_present("允许"):
+#             audio.click_allow()
+#         time.sleep(3)
+#         audio.click_send_bottom()
+#         # 验证是否发送成功
+#         cwp = ChatWindowPage()
+#         try:
+#             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+#         except TimeoutException:
+#             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+#         audio.click_exit()
+#         gcp.hide_keyboard()
+#         time.sleep(1)
+#         gcp.press_voice_message_to_do("收藏")
+#         if not gcp.is_toast_exist("已收藏"):
+#             raise AssertionError("收藏失败")
+#         gcp.click_back()
+#         sogp = SelectOneGroupPage()
+#         sogp.click_back()
+#         sc = SelectContactsPage()
+#         sc.click_back()
+#         # 进入我页面
+#         mess = MessagePage()
+#         mess.open_me_page()
+#         me = MePage()
+#         me.click_collection()
+#         time.sleep(1)
+#         if not me.is_text_present("秒"):
+#             raise AssertionError("收藏的消息内容不能正常展示出来")
+#         mcp = MeCollectionPage()
+#         mcp.click_text("秒")
+#         time.sleep(1)
+#         if not mcp.is_text_present("详情"):
+#             raise AssertionError("不能进入到消息展示详情页面")
+#         # 播放语音消息
+#         mcp.click_collection_voice_msg()
+#         time.sleep(2)
+#         # 暂停语音消息
+#         mcp.click_collection_voice_msg()
+#         mcp.click_back()
+#         time.sleep(2)
+#         mcp.click_back()
+#         me.open_message_page()
+#
+#     @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+#     def test_msg_common_group_all_0041(self):
+#         """我——收藏——收藏内展示——点击收藏内容——点击删除收藏内容"""
+#         gcp = GroupChatPage()
+#         time.sleep(2)
+#         gcp.click_back()
+#         sogp = SelectOneGroupPage()
+#         sogp.click_back()
+#         sc = SelectContactsPage()
+#         sc.click_back()
+#         # 进入我页面
+#         mess = MessagePage()
+#         mess.open_me_page()
+#         me = MePage()
+#         me.click_collection()
+#         time.sleep(2)
+#         # 左滑收藏消息体
+#         mcp = MeCollectionPage()
+#         mcp.press_and_move_left()
+#         # 判断是否有删除按钮
+#         if mcp.is_delete_element_present():
+#             mcp.click_delete_collection()
+#             #判断是否会弹出确认弹窗
+#             if not mcp.is_text_present("是否删除?"):
+#                 raise AssertionError("没有弹出确认窗口")
+#             #点击取消
+#             mcp.click_cancel_forward()
+#             flag=mcp.is_delete_element_present()
+#             self.assertTrue(flag)
+#             time.sleep(1)
+#             mcp.click_delete_collection()
+#             mcp.click_sure_forward()
+#             time.sleep(2)
+#             if not mcp.is_toast_exist("取消收藏成功"):
+#                 raise AssertionError("不可以删除收藏的消息体")
+#         else:
+#             raise AssertionError("没有删除按钮")
 
 
 
