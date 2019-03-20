@@ -47,8 +47,12 @@ class MeCollectionPage(BasePage):
                   '收藏消息体': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_layout'),
                   "删除收藏": (MobileBy.ID, 'com.chinasofti.rcs:id/swipe_right'),
                   '确定': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
+                  '取消': (MobileBy.XPATH, "//*[contains(@text, '取消')]"),
                   '收藏语音消息体': (MobileBy.ID, 'com.chinasofti.rcs:id/linearlayout_msg_content'),
                   '视频时长': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_favorite_video_length'),
+                  '内容来源': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name'),
+                  '收藏时间': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_time'),
+                  '收藏内容': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_tv'),
                   }
 
     @TestLogger.log()
