@@ -1524,6 +1524,14 @@ class MeAllTest(TestCase):
         mup.click_back()
         mup.set_network_status(6)
 
+    @staticmethod
+    def tearDown_test_me_all_046():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep.set_network_status(6)
+
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_047(self):
         """“编辑资料” 姓名栏输入超长字符"""
@@ -1766,6 +1774,7 @@ class MeAllTest(TestCase):
         self.assertEquals(qr_code.is_text_present("二维码加载失败"), True)
         # 3.恢复网络后返回
         qr_code.click_back()
+        mep.set_network_status(6)
 
     @staticmethod
     def tearDown_test_me_all_056():
@@ -2666,6 +2675,14 @@ class MeAll(TestCase):
         mup.click_back()
         mup.set_network_status(6)
 
+    @staticmethod
+    def tearDown_test_me_all_page_028():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep.set_network_status(6)
+
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_029(self):
         """“编辑资料” 姓名栏输入超长字符"""
@@ -2878,6 +2895,14 @@ class MeAll(TestCase):
         # 3.恢复网络后返回
         mep.set_network_status(6)
         qr_code.click_back()
+
+    @staticmethod
+    def tearDown_test_me_all_page_038():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_page_039(self):
