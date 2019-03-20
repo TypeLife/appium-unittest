@@ -65,3 +65,28 @@ class FooterPage(BasePage):
     def me_icon_is_enabled(self):
         """我图标是否可点击"""
         return self._is_enabled(self.__class__.__locators["我"])
+
+    @TestLogger.log()
+    def is_exist_message_icon(self):
+        """是否存在消息图标"""
+        return self._is_element_present(self.__class__.__locators["消息"])
+
+    @TestLogger.log()
+    def is_exist_call_icon(self):
+        """是否存在通话图标"""
+        return self._is_element_present(self.__class__.__locators["通话"])
+
+    @TestLogger.log()
+    def is_exist_workbench_icon(self):
+        """是否存在工作台图标"""
+        return self._is_element_present(self.__class__.__locators["工作台"])
+
+    @TestLogger.log()
+    def is_exist_contacts_icon(self):
+        """是否存在通讯录图标"""
+        return self._is_element_present(self.__class__.__locators["通讯录"])
+
+    @TestLogger.log()
+    def is_exist_me_icon(self):
+        """是否存在我图标"""
+        return self._is_element_present(self.__class__.__locators["我"])

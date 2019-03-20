@@ -225,3 +225,21 @@ class ContactsPage(FooterPage):
     def click_forbidden(self):
         """点击禁止"""
         self.click_element(self.__class__.__locators['弹出框点击禁止'])
+
+    @TestLogger.log()
+    def is_exist_allow_button(self):
+        """是否存在始终允许"""
+        return self._is_element_present(self.__class__.__locators["弹出框点击允许"])
+
+    @TestLogger.log()
+    def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
+        """等待通讯录页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["群聊"])
+            )
+        except:
+            raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
+        return self

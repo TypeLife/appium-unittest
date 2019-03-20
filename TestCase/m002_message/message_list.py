@@ -1,6 +1,7 @@
 import unittest
 
 from library.core.utils.applicationcache import current_mobile
+from pages.call.Call import CallPage
 from pages.components import BaseChatPage
 from pages.contacts import OfficialAccountPage, SearchOfficialAccountPage
 from preconditions.BasePreconditions import LoginPreconditions
@@ -18,8 +19,6 @@ class Preconditions(LoginPreconditions):
     def enter_single_chat_page(name):
         """进入单聊聊天会话页面"""
 
-        # 进入消息页面
-        Preconditions.make_already_in_message_page()
         mp = MessagePage()
         mp.wait_for_page_load()
         # 点击 +
@@ -152,15 +151,15 @@ class MessageListTotalQuantityTest(TestCase):
         # 验证未读消息小红点标识是否消失
         self.assertEquals(mp.is_exist_unread_messages(), False)
 
-    @unittest.skip("用例描述有误，暂时跳过")
+    @unittest.skip("暂时难以实现,跳过")
     def test_message_list_total_quantity_0034(self):
         """消息列表订阅号红点显示"""
 
-        # 进入消息列表页面
+        # 进入消息页面
         Preconditions.make_already_in_message_page()
         mp = MessagePage()
-        # 等待消息列表页加载
-        mp.wait_for_message_list_load()
+        # 等待消息页加载
+        mp.wait_for_page_load()
         # 切换到标签页：通讯录
         mp.open_contacts_page()
         cp = ContactsPage()
