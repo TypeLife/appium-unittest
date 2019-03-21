@@ -480,7 +480,7 @@ class MessagePage(FooterPage):
                                                                             pointY).wait(3).release().perform()
 
     @TestLogger.log()
-    def wait_for_message_list_load(self, timeout=20, auto_accept_alerts=True):
+    def wait_for_message_list_load(self, timeout=60, auto_accept_alerts=True):
         """等待消息列表加载"""
 
         try:
@@ -535,7 +535,10 @@ class MessagePage(FooterPage):
         els = self.get_elements(self.__class__.__locators["消息名称"])
         title_name = els[1].text
         self.press(els[1])
-        self.click_element(self.__class__.__locators["置顶聊天"])
+        if self._is_element_present(self.__class__.__locators["置顶聊天"]):
+            self.click_element(self.__class__.__locators["置顶聊天"])
+        else:
+            self.tap_coordinate([(100, 20), (100, 60), (100,100)])
         return title_name
 
     @TestLogger.log()
