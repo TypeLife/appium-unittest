@@ -108,7 +108,8 @@ class MsgGroupChatTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        pass
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().launch_app()
 
     def default_setUp(self):
         """确保每个用例运行前在群聊聊天会话页面"""
@@ -122,7 +123,7 @@ class MsgGroupChatTest(TestCase):
             current_mobile().hide_keyboard_if_display()
             return
         else:
-            current_mobile().reset_app()
+            current_mobile().launch_app()
             Preconditions.enter_group_chat_page()
 
     def default_tearDown(self):
@@ -788,7 +789,7 @@ class MsgGroupChatTest(TestCase):
             current_mobile().disconnect_mobile()
             Preconditions.enter_group_chat_page(reset=True)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC_RESET', 'group_chat')
     def test_msg_group_chat_0420(self):
         """在群聊聊天会话页面，点击输入框右上角+，展示的隐藏功能图标，位置功能图标"""
         # 1.在当前聊天会话页面，点击输入框右上方的+号，展示隐藏功能图标后
@@ -815,7 +816,7 @@ class MsgGroupChatTest(TestCase):
             current_mobile().disconnect_mobile()
             Preconditions.enter_group_chat_page(reset=True)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC_RESET', 'group_chat')
     def test_msg_group_chat_0470(self):
         """在群聊聊天会话页面，点击输入框右边的语音按钮"""
         # 1.在当前聊天会话页面，点击输入框右边的语音按钮，在未获取录音权限时，是否会弹出权限申请允许弹窗
@@ -844,7 +845,7 @@ class MsgGroupChatTest(TestCase):
             current_mobile().disconnect_mobile()
             Preconditions.enter_group_chat_page(reset=True)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC_RESET', 'group_chat')
     def test_msg_group_chat_0480(self):
         """首次使用语音功能"""
         # 1、点击输入框右边的语音按钮，跳转到的页面是否是语音模式设置页面
@@ -873,7 +874,7 @@ class MsgGroupChatTest(TestCase):
             current_mobile().disconnect_mobile()
             Preconditions.enter_group_chat_page(reset=True)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC_RESET', 'group_chat')
     def test_msg_group_chat_0520(self):
         """在群聊聊天会话页面，点击输入框右边的语音按钮"""
         # 1.在当前聊天会话页面，点击输入框右边的语音按钮，进入到语音录制页面
@@ -906,7 +907,7 @@ class MsgGroupChatTest(TestCase):
             current_mobile().disconnect_mobile()
             Preconditions.enter_group_chat_page(reset=True)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC_RESET', 'group_chat')
     def test_msg_group_chat_0530(self):
         """在群聊聊天会话页面，点击输入框右边的语音按钮"""
         # 1.在当前聊天会话页面，点击输入框右边的语音按钮，进入到语音录制页面
