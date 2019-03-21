@@ -11,6 +11,7 @@ from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
+from pages.me.MeCallMulti import MeCallMultiPage
 from pages.me.MeCardName import MeCardNamePage
 from pages.me.MeEditUserProfile import MeEditUserProfilePage
 from pages.me.MeViewUserProfile import MeViewUserProfilePage
@@ -178,7 +179,7 @@ class Preconditions(object):
         mep1.input_name("公司", "中移科技有限公司")
         mep1.input_name("职位", "高级工程师123")
         mep1.swipe_up()
-        mep1.input_name("邮箱", "958535269@qq.com")
+        mep1.input_name("邮箱", "邮箱")
         time.sleep(1)
         mep1.click_save()
         if mep1.is_toast_save_success():
@@ -476,7 +477,7 @@ class MeAllTest(TestCase):
         mup.element_contain_text("电话", current_mobile().get_cards(CardType.CHINA_MOBILE)[0])
         mup.element_contain_text("公司", "中移科技有限公司")
         mup.element_contain_text("职位", "高级工程师")
-        mup.element_contain_text("邮箱", "958535269@qq.com")
+        mup.element_contain_text("邮箱", "邮箱")
         # 5.编辑个人信息
         mup.click_edit()
         mep1 = MeEditUserProfilePage()
@@ -1091,7 +1092,6 @@ class MeAllTest(TestCase):
             raise AssertionError("群名为空，请新建群聊")
         # 3.1输入已存在的群名，且可点进去
         sop.search_group(group_name)
-        sop.page_should_contain_text("群聊")
         sop.click_search_result()
         mnp = MeCardNamePage()
         mnp.wait_for_page_load()
@@ -1107,6 +1107,7 @@ class MeAllTest(TestCase):
         mup.click_back()
         mup.click_back()
         mup.click_back()
+        mep.open_message_page()
 
     @staticmethod
     def setUp_test_me_all_028():
@@ -2222,6 +2223,43 @@ class MeAllTest(TestCase):
         self.assertEquals(qr_code.is_toast_exist("已保存"), True)
         # 3.点击返回
         qr_code.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    def test_me_all_388(self):
+        """多方电话管理页面显示验证"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击我-多方电话卡片
+        mep.click_call_multiparty()
+        mmp = MeCallMultiPage()
+        mmp.wait_for_page_load()
+        # 2.校验多方管理入口
+        mmp.page_contain_ele("Q&A")
+        menu = {"当前剩余多方通话分钟数", "充值中心", "资费说明"}
+        mmp.page_contain_text(menu)
+        # 3.点击返回
+        mmp.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    def test_me_all_389(self):
+        """多方电话管理页面显示验证"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击我-多方电话卡片
+        mep.click_call_multiparty()
+        mmp = MeCallMultiPage()
+        mmp.wait_for_page_load()
+        # 2.点击多方电话FQA按钮
+        mmp.click_el_text("Q&A")
+        mmp.wait_for_page_load_call_questions()
+        mmp.click_back()
+        # 3.点击多方电话时长模块
+        mmp.click_el_text("当前剩余多方通话分钟数")
+        mmp.wait_for_page_load_call_details()
+        # 3.点击返回
+        mmp.click_back()
 
 
 @unittest.skip("112版用例跳过")
