@@ -4,7 +4,7 @@ from selenium.common.exceptions import NoSuchElementException
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
-
+import time
 class GroupListPage(BasePage):
     """群组列表"""
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.GroupChatListActivity2'
@@ -49,7 +49,13 @@ class GroupListPage(BasePage):
         '选择联系人':(MobileBy.ID,"com.chinasofti.rcs:id/title"),
         '选择和通讯录联系人':(MobileBy.ID,'com.chinasofti.rcs:id/text_hint'),
         '删除-搜索':(MobileBy.ID,'com.chinasofti.rcs:id/iv_delect'),
-        '联系人头像':(MobileBy.ID,'com.chinasofti.rcs:id/contact_icon')
+        '联系人头像':(MobileBy.ID,'com.chinasofti.rcs:id/contact_icon'),
+        '允许':(MobileBy.XPATH,'//*[@text="允许"]'),
+        '和飞信测试':(MobileBy.ID,'com.chinasofti.rcs:id/tv_title_department'),
+        '和通讯本人': (MobileBy.ID, '	com.chinasofti.rcs:id/tv_name_personal_contactlist'),
+        '中软国际科技服务有限公司':(MobileBy.XPATH,'//*[@text="中软国际科技服务有限公司"]'),
+        '广州': (MobileBy.XPATH, '//*[@text="	广州"]'),
+        '和通讯联系人':(MobileBy.ID,'	com.chinasofti.rcs:id/img_icon_contactlist'),
 
     }
 
@@ -149,6 +155,12 @@ class GroupListPage(BasePage):
     @TestLogger.log("点击确定")
     def click_sure_element(self):
         self.click_element(self.__class__.__locators['确定'])
+    @TestLogger.log("点击允许权限")
+    def click_allow_button(self):
+        time.sleep(2)
+        if self._is_element_present(self.__class__.__locators['允许']):
+            self.click_element(self.__class__.__locators['允许'])
+        return True
 
     @TestLogger.log("点击新建分组")
     def click_new_group(self):
@@ -188,7 +200,11 @@ class GroupListPage(BasePage):
     def delete_group(self,name='祝一路顺风幸福美满'):
         if self.is_text_present(name):
             self.click_text(name)
-            self.click_element(self.__class__.__locators['知道了'])
+            time.sleep(2)
+            flag=self._is_element_present(self.__class__.__locators['知道了'])
+            print("aaa",flag)
+            if flag:
+                self.click_element(self.__class__.__locators['知道了'])
             self.click_element(self.__class__.__locators['设置'])
             self.click_element(self.__class__.__locators['删除标签'])
             self.click_element(self.__class__.__locators['刪除按钮'])
@@ -243,3 +259,55 @@ class GroupListPage(BasePage):
         print("color = ",color)
         return color
 
+    @TestLogger.log("新建分组")
+    def new_group(self,name="aaa"):
+        time.sleep(1)
+        self.click_new_group()
+        time.sleep(1)
+        self.click_input_element()
+        time.sleep(1)
+        self.input_content(text='aaa')
+        time.sleep(1)
+        self.click_sure_element()
+        time.sleep(2)
+        self.click_back_button()
+        time.sleep(2)
+        self.click_back_button()
+        time.sleep(1)
+
+    @TestLogger.log("添加成员dalao2")
+    def add_member(self,name='dalao2',times=1):
+        time.sleep(1)
+        self.click_text('添加成员')
+        time.sleep(1)
+        self.click_search_box()
+        time.sleep(1)
+        self.input_search_text(name)
+        time.sleep(1)
+        self.hide_keyboard()
+        time.sleep(1)
+        if times==1:
+            self.click_text('大佬2')
+        else:
+            #time=2,点击2次
+            self.click_text('大佬2')
+            time.sleep(2)
+            self.click_text('大佬2')
+        flag=self.is_toast_exist("该联系人不可选择")
+        isExist=1  #为是第1次添加该联系人，为2是重复添加该联系人
+        if flag:
+            print("联系人不可选")
+            time.sleep(1)
+            self.click_back_button()
+            time.sleep(1)
+            isExist = 2
+
+        else:
+            time.sleep(1)
+            self.click_sure_element()
+            time.sleep(1)
+            self.click_allow_button()
+            time.sleep(1)
+            isExist = 1
+
+        return isExist

@@ -411,7 +411,7 @@ class LoginTest(TestCase):
         current_mobile().reset_app()
         Preconditions.make_already_in_sms_login_page()
 
-   # @tags('ALL', 'SMOKE', '移动-电信')
+    @tags('ALL', 'SMOKE', '移动-电信')
     def test_login_0008(self):
         """下线提醒"""
         # 切换到辅助机2，并用测试机的号码登录
