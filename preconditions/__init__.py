@@ -97,6 +97,12 @@ def terminate_app():
     current_mobile().termiate_app(app_id)
 
 
+def force_close_and_launch_app():
+    "强制关闭应用，然后重启"
+    current_mobile().terminate_app('com.chinasofti.rcs', timeout=2000)
+    current_mobile().launch_app()
+
+
 def background_app():
     """后台运行"""
     current_mobile().press_home_key()

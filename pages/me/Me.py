@@ -244,3 +244,16 @@ class MePage(FooterPage):
     def click_view_edit(self):
         """点击查看并编辑资料按钮"""
         self.click_element(self.__locators['查看并编辑个人资料'])
+
+    @TestLogger.log()
+    def wait_for_me_page_load(self, timeout=20, auto_accept_alerts=True):
+        """等待我页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["二维码入口"])
+            )
+        except:
+            raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
+        return self
