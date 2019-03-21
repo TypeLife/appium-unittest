@@ -448,7 +448,7 @@ class MeMsgSettingTest(TestCase):
     表格：我-消息设置
     """
 
-    @tags("ALL", "SMOKE", "CMCC")
+    @tags("ALL", "SMOKE", "CMCC_RESET")
     def test_me_msg_setting_0001(self):
         """接收139邮箱助手信息默认开启"""
         msg_setting = MessageNoticeSettingPage()
@@ -470,7 +470,7 @@ class MeMsgSettingTest(TestCase):
         setting_page = SettingPage()
         setting_page.click_menu("消息通知")
 
-    @tags("ALL", "SMOKE", "CMCC")
+    @tags("ALL", "SMOKE", "CMCC_RESET")
     def test_me_msg_setting_0002(self):
         """开启接收139邮箱助手信息"""
         msg_setting = MessageNoticeSettingPage()
@@ -510,7 +510,7 @@ class MeMsgSettingTest(TestCase):
         setting_page = SettingPage()
         setting_page.click_menu("消息通知")
 
-    @tags("ALL", "SMOKE", "CMCC")
+    @tags("ALL", "SMOKE", "CMCC_RESET")
     def test_me_msg_setting_0003(self):
         """关闭接收139邮箱助手信息"""
         msg_setting = MessageNoticeSettingPage()
@@ -541,7 +541,7 @@ class MeMsgSettingTest(TestCase):
         setting_page = SettingPage()
         setting_page.click_menu("消息通知")
 
-    @tags("ALL", "SMOKE", "CMCC")
+    @tags("ALL", "SMOKE", "CMCC_RESET")
     def test_me_msg_setting_0004(self):
         """接收OA消息默认开启"""
         msg_setting = MessageNoticeSettingPage()
@@ -563,7 +563,7 @@ class MeMsgSettingTest(TestCase):
         setting_page = SettingPage()
         setting_page.click_menu("消息通知")
 
-    @tags('ALL', 'SMOKE', "CMCC")
+    @tags('ALL', 'SMOKE', "CMCC_RESET")
     def test_me_msg_setting_0005(self):
         """开启接收OA消息(只验证开关，不验证消息接收)"""
         msg_setting = MessageNoticeSettingPage()
@@ -589,7 +589,7 @@ class MeMsgSettingTest(TestCase):
         msg_setting.turn_off('接收OA消息')
         msg_setting.assert_menu_item_has_been_turn_off('接收OA消息')
 
-    @tags('ALL', 'SMOKE', "CMCC")
+    @tags('ALL', 'SMOKE', "CMCC_RESET")
     def test_me_msg_setting_0006(self):
         """关闭接收OA消息(只验证开关，不验证消息接收)"""
         msg_setting = MessageNoticeSettingPage()
@@ -624,7 +624,7 @@ class MeSmsSettingTest(TestCase):
     表格：我-短信设置
     """
 
-    @tags("ALL", "SMOKE", "CMCC")
+    @tags("ALL", "SMOKE", "CMCC_RESET")
     def test_me_sms_setting_0001(self):
         """短信设置默认关闭状态"""
         sms_setting = SmsSettingPage()
@@ -645,7 +645,7 @@ class MeSmsSettingTest(TestCase):
         setting_page = SettingPage()
         setting_page.click_menu("短信设置")
 
-    @tags('ALL', 'SMOKE', "移动+XX")
+    @tags('ALL', 'SMOKE', "CMCC_RESET")
     def test_me_sms_setting_0002(self):
         """开启应用内收发短信"""
         sms_setting = SmsSettingPage()

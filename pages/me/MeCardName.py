@@ -51,7 +51,7 @@ class MeCardNamePage(BasePage):
     @TestLogger.log()
     def check_select_box(self, locator):
         """检查勾选框是否已勾选 """
-        return self.get_coordinate_color_of_element(self.__locators[locator], 19, 10, by_percent=True)
+        return self.get_coordinate_color_of_element(self.__locators[locator], 10, 10, by_percent=True)
 
     @TestLogger.log('获取名片信息')
     def get_name_cards_info(self):

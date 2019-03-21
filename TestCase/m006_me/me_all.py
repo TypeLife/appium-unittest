@@ -122,9 +122,11 @@ class Preconditions(object):
             mep.is_on_this_page()
             return
         # 进入一键登录页
-        Preconditions.make_already_in_message_page(reset=False)
-        mess.open_me_page()
-        time.sleep(1)
+        else:
+            current_mobile().launch_app()
+            Preconditions.make_already_in_message_page(reset=False)
+            mess.open_me_page()
+            time.sleep(1)
 
     @staticmethod
     def make_already_in_me_save_part_page():
@@ -269,6 +271,61 @@ class Preconditions(object):
         sog.click_back()
         sc.click_back()
         mess.open_me_page()
+
+    @staticmethod
+    def make_already_have_my_group(reset=False):
+        """确保有群，没有群则创建群名为mygroup+电话号码后4位的群"""
+        # 消息页面
+        Preconditions.make_already_in_message_page(reset)
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(2)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
+        sc.click_select_one_group()
+        # 群名
+        group_name = Preconditions.get_group_chat_name()
+        # 获取已有群名
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        group_names = sog.get_group_name()
+        # 有群返回，无群创建
+        if group_name in group_names:
+            return
+        sog.click_back()
+        # 从本地联系人中选择成员创建群
+        sc.click_local_contacts()
+        slc = SelectLocalContactsPage()
+        names = slc.get_contacts_name()
+        if not names:
+            raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        slc.click_sure()
+        # 创建群
+        cgnp = CreateGroupNamePage()
+        cgnp.input_group_name(group_name)
+        cgnp.click_sure()
+        # 等待群聊页面加载
+        GroupChatPage().wait_for_page_load()
 
 
 class MeAllTest(TestCase):
@@ -473,7 +530,7 @@ class MeAllTest(TestCase):
         scp.click_select_one_group()
         sop = SelectOneGroupPage()
         sop.wait_for_page_load()
-        group_name = sop.get_group_name()[2]
+        group_name = sop.get_group_name()[0]
         if not len(group_name) > 0:
             raise AssertionError("群名为空，请新建群聊")
         # 3.点击任意一群名称
@@ -491,7 +548,6 @@ class MeAllTest(TestCase):
         select1 = mnp.check_select_box("职位选框")
         # 5.点击已选中字段
         self.assertIsNot(select, select1)
-        mnp.click_el_text("邮箱")
         mnp.click_el_text("职位")
         select2 = mnp.check_select_box("职位选框")
         self.assertEquals(select, select2)
@@ -550,7 +606,6 @@ class MeAllTest(TestCase):
         select1 = mnp.check_select_box("职位选框")
         # 5.点击已选中字段
         self.assertIsNot(select, select1)
-        mnp.click_el_text("邮箱")
         mnp.click_el_text("职位")
         select2 = mnp.check_select_box("职位选框")
         self.assertEquals(select, select2)
@@ -607,7 +662,6 @@ class MeAllTest(TestCase):
         select1 = mnp.check_select_box("职位选框")
         # 5.点击已选中字段
         self.assertIsNot(select, select1)
-        mnp.click_el_text("邮箱")
         mnp.click_el_text("职位")
         select2 = mnp.check_select_box("职位选框")
         self.assertEquals(select, select2)
@@ -721,7 +775,6 @@ class MeAllTest(TestCase):
         select1 = mnp.check_select_box("职位选框")
         # 5.点击已选中字段
         self.assertIsNot(select, select1)
-        mnp.click_el_text("邮箱")
         mnp.click_el_text("职位")
         select2 = mnp.check_select_box("职位选框")
         self.assertEquals(select, select2)
@@ -771,7 +824,6 @@ class MeAllTest(TestCase):
         select1 = mnp.check_select_box("职位选框")
         # 6.点击已选中字段
         self.assertIsNot(select, select1)
-        mnp.click_el_text("邮箱")
         mnp.click_el_text("职位")
         select2 = mnp.check_select_box("职位选框")
         self.assertEquals(select, select2)
@@ -1062,7 +1114,7 @@ class MeAllTest(TestCase):
         Preconditions.make_already_in_message_page()
         Preconditions.make_already_delete_my_group()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me4')
     def test_me_all_028(self):
         """分享名片-选择一个群-用户未加入任何群聊"""
         # 0.检验是否跳转到我页面,点击进入查看并编辑资料
@@ -1084,8 +1136,16 @@ class MeAllTest(TestCase):
         mup.click_back()
         mup.click_back()
         mup.click_back()
+        mep.open_message_page()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    @staticmethod
+    def tearDown_test_me_all_028():
+        Preconditions.make_already_have_my_group()
+        mep = MePage()
+        mep.click_back()
+        mep.open_me_page()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me4')
     def test_me_all_029(self):
         """进入“编辑资料”界面信息"""
         Preconditions.make_already_in_me_save_all_page()
@@ -1894,7 +1954,7 @@ class MeAllTest(TestCase):
         scg.click_back()
         qr_code.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
     def test_me_all_061(self):
         """我的二维码分享-无本地结果且二次查询无结果"""
         # 0.检验是否跳转到我页面
@@ -1924,7 +1984,7 @@ class MeAllTest(TestCase):
         scg.click_back()
         qr_code.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
     def test_me_all_062(self):
         """我的二维码分享-搜索未保存在本地的手机号码"""
         # 0.检验是否跳转到我页面
@@ -1964,7 +2024,7 @@ class MeAllTest(TestCase):
         # 6.点击返回
         qr_code.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
     def test_me_all_066(self):
         """我的二维码分享-选择联系人页面搜索自己的用户名/手机号并选择自己"""
         # 0.检验是否跳转到我页面
@@ -1991,7 +2051,7 @@ class MeAllTest(TestCase):
         qr_code.click_back()
         time.sleep(30)
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
     def test_me_all_067(self):
         """我的二维码分享-选择本地联系人-选择自己"""
         # 0.检验是否跳转到我页面
@@ -2011,45 +2071,157 @@ class MeAllTest(TestCase):
         slc.wait_for_page_load()
         # 3.滑动通讯录找到自己的联系方式
         phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
-        slc.selecting_local_contacts_by_number(phone_number)
+        slc.swipe_select_one_member_by_name(phone_number)
         time.sleep(1)
         # 4.检验有未保存在本地的手机号码
-        scg.click_one_local_contacts()
         self.assertEquals(scg.is_toast_exist("该联系人不可选"), True)
         # 6.点击返回
         scg.click_back()
         slc.click_back()
         qr_code.click_back()
 
-    # @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    # def test_me_all_068(self):
-    #     """我的二维码分享-选择本地联系人通过用户名/手机号搜索并选择自己"""
-    #     # 0.检验是否跳转到我页面
-    #     mep = MePage()
-    #     mep.is_on_this_page()
-    #     # 0.点击个人二维码
-    #     mep.click_qr_code_icon()
-    #     qr_code = MyQRCodePage()
-    #     qr_code.wait_for_loading_animation_end()
-    #     # 1.点击“分享我的二维码”
-    #     qr_code.click_forward_qr_code()
-    #     scg = SelectContactsPage()
-    #     scg.wait_for_page_load()
-    #     # 2.点击本地联系人
-    #     scg.select_local_contacts()
-    #     slc = SelectLocalContactsPage()
-    #     slc.wait_for_page_load()
-    #     # 3.在搜索框输入信自己的手机号码搜索
-    #     phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
-    #     slc.search(phone_number)
-    #     time.sleep(1)
-    #     # 4.检验有未保存在本地的手机号码
-    #     scg.click_one_local_contacts()
-    #     self.assertEquals(scg.is_toast_exist("该联系人不可选"), True)
-    #     # 6.点击返回
-    #     scg.click_back()
-    #     slc.click_back()
-    #     qr_code.click_back()
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    def test_me_all_068(self):
+        """我的二维码分享-选择本地联系人通过用户名/手机号搜索并选择自己"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 0.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 1.点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        # 2.点击本地联系人
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        # 3.在搜索框输入信自己的手机号码搜索
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        slc.search_and_select_one_member_by_name(phone_number)
+        time.sleep(1)
+        # 4.检验有未保存在本地的手机号码
+        scg.click_local_contacts()
+        self.assertEquals(scg.is_toast_exist("该联系人不可选"), True)
+        # 6.点击返回
+        scg.click_back()
+        slc.click_back()
+        qr_code.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    def test_me_all_074(self):
+        """我的二维码分享-搜索群组有结果"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 0.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 1.点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        # 2.点击搜索框输入已有群聊名称
+        group_name = Preconditions.get_group_chat_name()
+        scg.input_search_keyword(group_name)
+        scg.page_should_contain_text("群聊")
+        # 3.点击任何一个结果
+        scg.select_one_group_by_name(group_name)
+        # 4.点击取消
+        scg.click_cancel_forward()
+        # 5.点击发送
+        scg.select_one_group_by_name(group_name)
+        scg.click_sure_forward()
+        if not scg.is_toast_exist("已转发"):
+            raise AssertionError("没有已转发的弹框提示")
+        # 6.点击返回
+        qr_code.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    def test_me_all_075(self):
+        """我的二维码分享-搜索群组无结果"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 0.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 1.点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        # 2.点击搜索框输入没有群聊名称
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        group_name = Preconditions.get_group_chat_name()
+        sog.input_search_keyword(group_name+"ss")
+        sog.page_should_contain_text("无搜索结果")
+        mep.click_back()
+        mep.click_back()
+        mep.click_back()
+        mep.click_back()
+
+    @staticmethod
+    def setUp_test_me_all_076():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        Preconditions.make_already_delete_my_group()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    def test_me_all_076(self):
+        """我的二维码分享-用户未加入或创建任何群组"""
+        # 0.检验是否跳转到我页面,点击进入查看并编辑资料
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 0.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 1.点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择一个群（当前无群组）
+        scp.click_select_one_group()
+        sop = SelectOneGroupPage()
+        sop.wait_for_page_load()
+        sop.page_should_contain_text("你还未加入任何普通群，立即建群畅享沟通")
+        sop.page_should_contain_text("创建群聊")
+        # 3.点击返回
+        mep.click_back()
+        mep.click_back()
+        mep.click_back()
+        mep.open_message_page()
+
+    @staticmethod
+    def tearDown_test_me_all_076():
+        Preconditions.make_already_have_my_group()
+        mep = MePage()
+        mep.click_back()
+        mep.open_me_page()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    def test_me_all_077(self):
+        """我的二维码-保存"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 2、点击“保存二维码图片”
+        qr_code.click_save_qr_code()
+        self.assertEquals(qr_code.is_toast_exist("已保存"), True)
+        # 3.点击返回
+        qr_code.click_back()
 
 
 @unittest.skip("112版用例跳过")
