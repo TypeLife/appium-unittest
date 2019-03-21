@@ -36,7 +36,8 @@ class MsgPrivateChatMsgList(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        pass
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().launch_app()
 
     def default_setUp(self):
         """确保每个用例运行前在消息页面"""
@@ -45,7 +46,7 @@ class MsgPrivateChatMsgList(TestCase):
         if mess.is_on_this_page():
             return
         else:
-            current_mobile().reset_app()
+            current_mobile().launch_app()
             Preconditions.enter_message_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
@@ -955,7 +956,8 @@ class MsgContactSelector(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        pass
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().launch_app()
 
     def default_setUp(self):
         """确保每个用例运行前在消息页面"""
@@ -964,7 +966,7 @@ class MsgContactSelector(TestCase):
         if mess.is_on_this_page():
             return
         else:
-            current_mobile().reset_app()
+            current_mobile().launch_app()
             Preconditions.enter_message_page()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
@@ -1134,7 +1136,8 @@ class MsgPrivateChatDialog(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        pass
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().launch_app()
 
     def default_setUp(self):
         """确保每个用例运行前在单聊会话页面"""
@@ -1148,7 +1151,7 @@ class MsgPrivateChatDialog(TestCase):
             current_mobile().hide_keyboard_if_display()
             return
         else:
-            current_mobile().reset_app()
+            current_mobile().launch_app()
             Preconditions.enter_private_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
@@ -1214,3 +1217,383 @@ class MsgPrivateChatDialog(TestCase):
         chat.close_expression()
         chat.input_message('')
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1282(self):
+        """ 表情列表按钮"""
+        # 1、进入一对一聊天界面
+        chat = SingleChatPage()
+        # 2、点击聊天界面右下角的表情选择按钮
+        if not chat.is_open_expression():
+            chat.open_expression()
+        time.sleep(1)
+        # 3、在单个表情列表中选择一个表情
+        chat.select_expression(n=1)
+        # 4、点击聊天输入框
+        chat.click_msg_input_box()
+        time.sleep(1)
+        flag = current_mobile().is_keyboard_shown()
+        if not flag:
+            raise AssertionError("点击聊天输入框键盘没有弹出！")
+        chat.input_message('')
+        current_mobile().hide_keyboard_if_display()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1301(self):
+        """发送超长内容处理"""
+        # 1、进入一对一聊天界面
+        chat = SingleChatPage()
+        # 2、在聊天输入框中输入一百个文字与表情
+        msg = "呵呵"*50 + '[可爱1]'
+        chat.input_message(msg)
+        # 3、点击发送
+        chat.send_message()
+        txt = chat.get_input_message()
+        if '说点什么...' != txt:
+            raise AssertionError("输入框文本不是 ‘说点什么...’")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1302(self):
+        """发送超长内容处理"""
+        # 1、进入一对一聊天界面
+        chat = SingleChatPage()
+        # 2、在聊天输入框中输入数十个表情、文字、空格与空行
+        msg = "呵呵"*10 + '[可爱1]'*10 + ' '*40 + "呵呵"*10
+        chat.input_message(msg)
+        # 3、点击发送
+        chat.send_message()
+        txt = chat.get_input_message()
+        if '说点什么...' != txt:
+            raise AssertionError("输入框文本不是 ‘说点什么...’")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1303(self):
+        """进入发送页面"""
+        # 1、进入一对一天界面
+        chat = SingleChatPage()
+        # 2、选择短信功能，进入短信发送模式
+        try:
+            chat.page_should_contain_text('退出短信')
+            chat.click_text("退出短信")
+        except:
+            pass
+        chat.click_sms()
+        try:
+            time.sleep(1)
+            chat.page_should_contain_text("欢迎使用免费短信")
+            chat.click_text("确定")
+            time.sleep(2)
+        except:
+            pass
+        chat.page_should_contain_text("发送短信")
+        chat.page_should_contain_text("退出短信")
+        chat.click_text("退出短信")
+
+    @staticmethod
+    def setUp_test_msg_1304():
+        """该账号未开启过和飞信短信功能"""
+        Preconditions.enter_private_chat_page(reset=True)
+
+    @tags('ALL', 'SMOKE', 'CMCC_RESET', 'DEBUG')
+    def test_msg_1304(self):
+        """进入发送页面"""
+        # 1、进入一对一天界面
+        chat = SingleChatPage()
+        # 2、选择短信功能，进入短信发送模式
+        chat.click_sms()
+        time.sleep(1)
+        chat.page_should_contain_text("欢迎使用免费短信")
+        chat.page_should_contain_text("免费给移动用户发送短信")
+        chat.page_should_contain_text("给非移动用户发短信将收取0.01元/条")
+        chat.page_should_contain_text("给港澳台等境外用户发短信将收取1元/条")
+
+    @staticmethod
+    def setUp_test_msg_1305():
+        """该账号未开启过和飞信短信功能"""
+        Preconditions.enter_private_chat_page(reset=True)
+
+    @tags('ALL', 'SMOKE', 'CMCC_RESET', 'DEBUG')
+    def test_msg_1305(self):
+        """进入发送页面"""
+        # 1、进入一对一天界面
+        chat = SingleChatPage()
+        # 2、选择短信功能，进入短信发送模式
+        chat.click_sms()
+        time.sleep(1)
+        chat.page_should_contain_text("欢迎使用免费短信")
+        chat.page_should_contain_text("免费给移动用户发送短信")
+        chat.page_should_contain_text("给非移动用户发短信将收取0.01元/条")
+        chat.page_should_contain_text("给港澳台等境外用户发短信将收取1元/条")
+        chat.driver.back()
+
+    @staticmethod
+    def setUp_test_msg_1306():
+        """该账号未开启过和飞信短信功能"""
+        Preconditions.enter_private_chat_page(reset=True)
+
+    @tags('ALL', 'SMOKE', 'CMCC_RESET', 'DEBUG')
+    def test_msg_1306(self):
+        """进入发送页面"""
+        # 1、进入一对一天界面
+        chat = SingleChatPage()
+        # 2、选择短信功能，进入短信发送模式
+        chat.click_sms()
+        time.sleep(1)
+        chat.page_should_contain_text("欢迎使用免费短信")
+        chat.page_should_contain_text("免费给移动用户发送短信")
+        chat.page_should_contain_text("给非移动用户发短信将收取0.01元/条")
+        chat.page_should_contain_text("给港澳台等境外用户发短信将收取1元/条")
+        chat.click_text("确定")
+        time.sleep(2)
+        chat.page_should_contain_text("发送短信")
+        chat.page_should_contain_text("您正在使用免费短信")
+        chat.page_should_contain_text("退出短信")
+        chat.click_text("退出短信")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1307(self):
+        """进入发送页面"""
+        # 1、进入一对一天界面
+        chat = SingleChatPage()
+        # 2、选择短信功能，进入短信发送模式
+        try:
+            chat.page_should_contain_text('退出短信')
+            chat.click_text("退出短信")
+        except:
+            pass
+        chat.click_sms()
+        try:
+            time.sleep(1)
+            chat.page_should_contain_text("欢迎使用免费短信")
+            chat.click_text("确定")
+            time.sleep(2)
+        except:
+            pass
+        chat.page_should_contain_text("发送短信")
+        flag = chat.is_enabled_sms_send_btn()
+        if flag:
+            raise AssertionError('未输入信息时，短信发送按钮应该不可点击')
+        chat.click_text("退出短信")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1308(self):
+        """发送机制"""
+        # 1、进入一对一天界面
+        chat = SingleChatPage()
+        # 2、选择短信功能，进入短信发送模式
+        try:
+            chat.page_should_contain_text('退出短信')
+            chat.click_text("退出短信")
+        except:
+            pass
+        chat.click_sms()
+        try:
+            time.sleep(1)
+            chat.page_should_contain_text("欢迎使用免费短信")
+            chat.click_text("确定")
+            time.sleep(2)
+        except:
+            pass
+        chat.page_should_contain_text("发送短信")
+        # 3、成功发送文字后，返回消息列表
+        chat.input_sms_message('hello')
+        chat.send_sms()
+        if chat.is_present_sms_fee_remind():
+            chat.click_text('发送',exact_match=True)
+        # 返回消息列表则看见本条消息提示为[短信]
+        chat.click_back()
+        ContactDetailsPage().click_back()
+        mess = MessagePage()
+        mess.open_message_page()
+        mess.wait_for_page_load()
+        mess.page_should_contain_text('[短信]')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1313(self):
+        """发送机制"""
+        # 1、进入一对一天界面
+        chat = SingleChatPage()
+        # 2、选择短信功能，进入短信发送模式
+        try:
+            chat.page_should_contain_text('退出短信')
+            chat.click_text("退出短信")
+        except:
+            pass
+        chat.click_sms()
+        try:
+            time.sleep(1)
+            chat.page_should_contain_text("欢迎使用免费短信")
+            chat.click_text("确定")
+            time.sleep(2)
+        except:
+            pass
+        chat.page_should_contain_text("发送短信")
+        chat.wait_for_page_load()
+        # 2、断开网络
+        current_mobile().set_network_status(0)
+        # 3、a终端使用客户端短信状态发送一条消息
+        chat.input_sms_message('hello')
+        chat.send_sms()
+        if chat.is_present_sms_fee_remind():
+            chat.click_text('发送', exact_match=True)
+        if not chat.is_msg_send_fail():
+            raise AssertionError('断网发送短信，无发送失败标志！')
+        chat.click_text("退出短信")
+
+    @staticmethod
+    def tearDown_test_msg_1313():
+        """恢复网络连接"""
+        current_mobile().set_network_status(6)
+
+    @staticmethod
+    def setUp_test_msg_1314():
+        """该账号未开启过和飞信短信功能"""
+        Preconditions.enter_private_chat_page(reset=True)
+
+    @tags('ALL', 'SMOKE', 'CMCC_RESET', 'DEBUG')
+    def test_msg_1314(self):
+        """发送机制"""
+        # 1、进入客户端通知类短信聊天窗口
+        chat = SingleChatPage()
+        chat.click_sms()
+        time.sleep(1)
+        chat.page_should_contain_text("欢迎使用免费短信")
+        chat.page_should_contain_text("免费给移动用户发送短信")
+        chat.page_should_contain_text("给非移动用户发短信将收取0.01元/条")
+        chat.page_should_contain_text("给港澳台等境外用户发短信将收取1元/条")
+        chat.click_text("确定")
+        time.sleep(2)
+        chat.page_should_contain_text("发送短信")
+        chat.page_should_contain_text("您正在使用免费短信")
+        chat.page_should_contain_text("退出短信")
+        # 2、使用短信状态发送一条聊天信息
+        chat.input_sms_message('hello')
+        chat.send_sms()
+        if chat.is_present_sms_fee_remind():
+            chat.click_text('发送', exact_match=True)
+            time.sleep(2)
+        chat.click_text("退出短信")
+        time.sleep(1)
+        chat.press_mess('hello')
+        chat.page_should_contain_text('复制')
+        chat.page_should_contain_text('删除')
+        chat.driver.back()
+
+    @staticmethod
+    def public_send_file(file_type):
+        # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
+        chat = SingleChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        # 2、点击本地文件
+        more_page = ChatMorePage()
+        more_page.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        # 3、选择任意文件，点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        flag = local_file.push_preset_file()
+        if flag:
+            local_file.click_back()
+            csf.click_local_file()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(file_type)
+        if file:
+            local_file.click_send()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1322(self):
+        """会话窗口中点击删除文本消息"""
+        self.public_send_file('.txt')
+        # 1.长按文本消息
+        chat = SingleChatPage()
+        msg = '.txt'
+        # 2.点击删除
+        chat.delete_mess(msg)
+        chat.page_should_not_contain_text(msg)
+
+    @staticmethod
+    def setUp_test_msg_1323():
+        """该账号未开启过和飞信短信功能"""
+        Preconditions.enter_private_chat_page(reset=True)
+
+    @tags('ALL', 'SMOKE', 'CMCC_RESET', 'DEBUG')
+    def test_msg_1323(self):
+        """会话窗口中首次点击撤回文本消息"""
+        self.public_send_file('.txt')
+        # 1.长按文本消息
+        chat = SingleChatPage()
+        msg = '.txt'
+        # 2.点击撤回
+        chat.recall_mess(msg)
+        chat.wait_until(
+            timeout=3,
+            auto_accept_permission_alert=True,
+            condition=lambda d: chat.is_text_present("知道了")
+        )
+        # 3.点击我知道了
+        if not chat.is_text_present("知道了"):
+            raise AssertionError('撤回文本消息，未弹出我知道了的提示')
+        chat.click_i_know()
+        chat.page_should_not_contain_text(msg)
+        chat.page_should_contain_text("你撤回了一条信息")
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1324(self):
+        """会话窗口中非首次点击撤回文本消息"""
+        self.public_send_file('.txt')
+        # 1.长按文本消息
+        chat = SingleChatPage()
+        msg = '.txt'
+        # 2.点击撤回
+        chat.recall_mess(msg)
+        time.sleep(1)
+        if chat.is_text_present("知道了"):
+            chat.click_i_know()
+        chat.page_should_not_contain_text(msg)
+        chat.page_should_contain_text("你撤回了一条信息")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1325(self):
+        """会话窗口中点击收藏文本消息"""
+        self.public_send_file('.txt')
+        # 1.长按文本消息
+        chat = SingleChatPage()
+        msg = '.txt'
+        # 2.点击收藏
+        chat.collection_file(msg)
+        if not chat.is_toast_exist("已收藏", timeout=10):
+            raise AssertionError("收藏文件无'已收藏'提示！")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1326(self):
+        """进入到单聊天会话页面，发送一条字符等于5000的文本消息"""
+        # 1、在输入框中输入5000个字符，右边的语音按钮是否自动变为发送按钮
+        chat = SingleChatPage()
+        info = "呵呵" * 2500
+        chat.input_message(info)
+        # 2、点击发送按钮，输入框中的内容是否可以成功发送出去
+        chat.page_should_contain_send_btn()
+        chat.send_message()
+        chat.page_should_contain_text("呵呵")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    def test_msg_1327(self):
+        """进入到单聊天会话页面，发送一条字符等于5001的文本消息"""
+        # 1、在输入框中输入5001个字符，是否可以可以输入此段字符
+        chat = SingleChatPage()
+        info = "呵呵" * 2501
+        chat.input_message(info)
+        chat.page_should_contain_send_btn()
+        info = chat.get_input_message()
+        if not len(info) == 5000:
+            raise AssertionError("输入框可以输入超过5000个字符")
+        chat.input_message('')
