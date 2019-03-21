@@ -167,7 +167,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "CMCC")
+    @tags('ALL', 'SMOKE', "CMCC_RESET")
     def test_msg_search_0003(self):
         """搜索关键字"""
         message_page = MessagePage()
@@ -1465,7 +1465,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "CMCC")
+    @tags('ALL', 'SMOKE', "CMCC_RESET")
     def test_msg_search_0022(self):
         """查看更多聊天记录"""
         key_message = '聊'
@@ -1562,7 +1562,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "CMCC")
+    @tags('ALL', 'SMOKE', "CMCC_RESET")
     def test_msg_search_0023(self):
         """查看更多聊天记录"""
         key_message = '聊'
@@ -1665,7 +1665,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "CMCC")
+    @tags('ALL', 'SMOKE', "CMCC_RESET")
     def test_msg_search_0024(self):
         """查看更多聊天记录"""
         key_message = '测试相同聊天记录大于一条'
@@ -1745,7 +1745,7 @@ class MessageSearchTest(TestCase):
         search_page = SearchPage()
         search_page.click_back_button()
 
-    @tags('ALL', 'SMOKE', "CMCC")
+    @tags('ALL', 'SMOKE', "CMCC_RESET")
     def test_msg_search_0025(self):
         """查看更多聊天记录"""
         key_message = '测试相同聊天记录大于一条'
