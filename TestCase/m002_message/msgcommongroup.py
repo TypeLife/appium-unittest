@@ -675,7 +675,7 @@ class MsgCommonGroupTest(TestCase):
         # current_mobile().connect_mobile()
         Preconditions.enter_group_chat_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC-RESET', 'group_chat')
     def test_msg_common_group_0010(self):
         """
         在聊天会话页面，转发5000字符的文本消息
@@ -745,7 +745,7 @@ class MsgCommonGroupTest(TestCase):
         # current_mobile().connect_mobile()
         Preconditions.enter_group_chat_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC-RESET', 'group_chat')
     def test_msg_common_group_0011(self):
         """
         在聊天会话页面，长按文本消息，使用转发功能，搜索选择转发对象
@@ -824,7 +824,7 @@ class MsgCommonGroupTest(TestCase):
             try:
                 raise AssertionError("没有重发按钮")
             except AssertionError as e:
-                print(e)
+                raise e
         #点击重发按钮
         gcp.click_msg_send_failed_button()
         #点击确定重发
