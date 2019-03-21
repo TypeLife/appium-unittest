@@ -12,6 +12,7 @@ class GroupListPage(BasePage):
     __locators = {
         '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
 
+
         '群聊': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         '新建群组': (MobileBy.ID, 'com.chinasofti.rcs:id/menu_add_btn'),
         '搜索群组': (MobileBy.XPATH, '//*[contains(@resource-id,"search")]'),
@@ -27,13 +28,28 @@ class GroupListPage(BasePage):
         '请输入标签分组名称': (MobileBy.ID, 'com.chinasofti.rcs:id/edit_group_name'),
         '通讯录': (MobileBy.ID, 'com.chinasofti.rcs:id/tvContact'),
         '标签分组': (MobileBy.ID, 'com.chinasofti.rcs:id/second_item'),
-        '新建分组':(MobileBy.ID,'com.chinasofti.rcs:id/group_name'),
+        '新建分组':(MobileBy.XPATH,'//*[@text="新建分组"]'),
         '知道了':(MobileBy.ID,'com.chinasofti.rcs:id/btn_cancel'),
         '设置':(MobileBy.ID,'com.chinasofti.rcs:id/iv_label_setting'),
         '删除标签':(MobileBy.XPATH,'//*[@text="删除标签"]'),
         '刪除按钮':(MobileBy.ID,'com.chinasofti.rcs:id/btn_ok'),
         'back_contact':(MobileBy.ID,'com.chinasofti.rcs:id/back'),
         'back_gouppage':(MobileBy.ID,'com.chinasofti.rcs:id/rl_label_left_back'),
+        #'back_newpage':(MobileBy.ID,' com.chinasofti.rcs:id/rl_label_left_back'),
+        'aaa':(MobileBy.XPATH,'//*[@text="aaa"]'),
+        'bbb': (MobileBy.XPATH, '//*[@text="bbb"]'),
+        '添加成员':(MobileBy.XPATH,'//*[@text="添加成员"]'),
+        '添加成员菜单': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_first_colum'),
+        '群发信息': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_second_colum'),
+        '多方电话': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_third_colum'),
+        '多方视频': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_fourth_colum'),
+        '大佬1': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
+        '大佬2': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
+        '搜索或输入手机号':(MobileBy.XPATH,"//*[@text='搜索或输入手机号']"),
+        '选择联系人':(MobileBy.ID,"com.chinasofti.rcs:id/title"),
+        '选择和通讯录联系人':(MobileBy.ID,'com.chinasofti.rcs:id/text_hint'),
+        '删除-搜索':(MobileBy.ID,'com.chinasofti.rcs:id/iv_delect'),
+        '联系人头像':(MobileBy.ID,'com.chinasofti.rcs:id/contact_icon')
 
     }
 
@@ -142,6 +158,18 @@ class GroupListPage(BasePage):
     def click_input_element(self):
         self.click_element(self.__class__.__locators['请输入标签分组名称'])
 
+    @TestLogger.log("点击搜索框")
+    def click_search_box(self,text='搜索或输入手机号'):
+        self.click_element(self.__class__.__locators[text])
+
+    @TestLogger.log("查看删除按钮是否存在")
+    def page_should_contain_element1(self, locator="删除-搜索"):
+        return self.page_should_contain_element(self.__locators[locator])
+
+    @TestLogger.log("输入搜索内容")
+    def input_search_text(self, text='dalao2'):
+        self.input_text(self.__class__.__locators['搜索或输入手机号'], text)
+
     @TestLogger.log("输入内容")
     def input_content(self,text='祝一路顺风幸福美满'):
         self.input_text(self.__class__.__locators['请输入标签分组名称'],text)
@@ -169,9 +197,49 @@ class GroupListPage(BasePage):
 
     @TestLogger.log('返回按钮')
     def click_back_button(self):
-        try:
+        if self._is_element_present(self.__class__.__locators['back_contact']):
             self.click_element(self.__class__.__locators['back_contact'])
-        except :
+        elif self._is_element_present(self.__class__.__locators['back_gouppage']):
+            self.click_element(self.__class__.__locators['back_gouppage'])
+        else:
             self.click_element(self.__class__.__locators['back_gouppage'])
 
+        # try:
+        #     self.click_element(self.__class__.__locators['back_contact'])
+        # except :
+        #     self.click_element(self.__class__.__locators['back_gouppage'])
+
+    @TestLogger.log('获取元素y坐标')
+    def get_element_text_y(self,text='新建分组'):
+        element=self.get_element(self.__locators[text])
+        y=element.location.get('y')
+
+        return  y
+
+    @TestLogger.log('获取元素y坐标')
+    def get_element_text_x(self, text='新建分组'):
+        element = self.get_element(self.__locators[text])
+        x = element.location.get('x')
+
+        return x
+
+    @TestLogger.log('判断元素是否存在')
+    def page_contain_element(self, locator='添加成员菜单'):
+        return self.page_should_contain_element(self.__class__.__locators[locator])
+
+    @TestLogger.log('判断元素不存在')
+    def page_not_contain_element(self, locator='添加成员菜单'):
+        return self.page_should_not_contain_element(self.__class__.__locators[locator])
+
+    @TestLogger.log('判断元素颜色')
+    def get_element_color(self, locator='选择联系人'):
+        element = self.get_element(self.__locators[locator])
+        x=self.get_element_text_x(text=locator)
+        y = self.get_element_text_y(text=locator)
+        print(x,y)
+        x=(x+1)/1440
+        y=(y+1)/2560
+        color=self.get_coordinate_color_of_element(element,x=x,y=y,by_percent=True)
+        print("color = ",color)
+        return color
 

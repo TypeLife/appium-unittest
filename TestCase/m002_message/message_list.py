@@ -1,6 +1,7 @@
 import unittest
 
 from library.core.utils.applicationcache import current_mobile
+from pages.call.Call import CallPage
 from pages.components import BaseChatPage
 from pages.contacts import OfficialAccountPage, SearchOfficialAccountPage
 from preconditions.BasePreconditions import LoginPreconditions
@@ -18,8 +19,6 @@ class Preconditions(LoginPreconditions):
     def enter_single_chat_page(name):
         """进入单聊聊天会话页面"""
 
-        # 进入消息页面
-        Preconditions.make_already_in_message_page()
         mp = MessagePage()
         mp.wait_for_page_load()
         # 点击 +
@@ -38,6 +37,19 @@ class Preconditions(LoginPreconditions):
         # 等待单聊会话页面加载
         scp.wait_for_page_load()
 
+    @staticmethod
+    def create_message_record(messages):
+        """创造消息记录"""
+
+        for title, text in messages:
+            Preconditions.enter_single_chat_page(title)
+            scp = SingleChatPage()
+            # 输入文本信息
+            scp.input_text_message(text)
+            time.sleep(2)
+            scp.send_text()
+            scp.click_back()
+
 class MessageListTotalQuantityTest(TestCase):
     """
     模块：消息列表
@@ -49,12 +61,9 @@ class MessageListTotalQuantityTest(TestCase):
         pass
 
     def default_tearDown(self):
-        """恢复网络"""
+        pass
 
-        mp = MessagePage()
-        mp.set_network_status(6)
-
-    @tags('ALL', 'CMCC')
+    @tags('ALL', 'CMCC', 'LXD')
     def test_message_list_total_quantity_0024(self):
         """消息列表进入"""
 
@@ -72,7 +81,7 @@ class MessageListTotalQuantityTest(TestCase):
         # 等待消息列表页面加载
         mp.wait_for_page_load()
 
-    @tags('ALL', 'CMCC')
+    @tags('ALL', 'CMCC', 'LXD')
     def test_message_list_total_quantity_0025(self):
         """登录之后消息列表进入"""
 
@@ -85,7 +94,7 @@ class MessageListTotalQuantityTest(TestCase):
         # 2.底部消息图标是否高亮显示
         self.assertEquals(mp.message_icon_is_enabled(), True)
 
-    @tags('ALL', 'CMCC')
+    @tags('ALL', 'CMCC', 'LXD')
     def test_message_list_total_quantity_0026(self):
         """消息列表载入"""
 
@@ -108,7 +117,14 @@ class MessageListTotalQuantityTest(TestCase):
         # 3.底部消息图标是否高亮显示
         self.assertEquals(mp.message_icon_is_enabled(), True)
 
-    @tags('ALL', 'CMCC')
+    @staticmethod
+    def tearDown_test_message_list_total_quantity_0026():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
     def test_message_list_total_quantity_0027(self):
         """消息列表进入到会话页面"""
 
@@ -133,7 +149,7 @@ class MessageListTotalQuantityTest(TestCase):
         # 返回消息页面
         scp.click_back()
 
-    @tags('ALL', 'CMCC')
+    @tags('ALL', 'CMCC_RESET', 'LXD')
     def test_message_list_total_quantity_0029(self):
         """消息列表未读消息清空"""
 
@@ -152,15 +168,15 @@ class MessageListTotalQuantityTest(TestCase):
         # 验证未读消息小红点标识是否消失
         self.assertEquals(mp.is_exist_unread_messages(), False)
 
-    @unittest.skip("用例描述有误，暂时跳过")
+    @unittest.skip("暂时难以实现,跳过")
     def test_message_list_total_quantity_0034(self):
         """消息列表订阅号红点显示"""
 
-        # 进入消息列表页面
+        # 进入消息页面
         Preconditions.make_already_in_message_page()
         mp = MessagePage()
-        # 等待消息列表页加载
-        mp.wait_for_message_list_load()
+        # 等待消息页加载
+        mp.wait_for_page_load()
         # 切换到标签页：通讯录
         mp.open_contacts_page()
         cp = ContactsPage()
@@ -176,7 +192,7 @@ class MessageListTotalQuantityTest(TestCase):
         name = "移周刊"
         soap.input_search_key(name)
 
-    @tags('ALL', 'CMCC')
+    @tags('ALL', 'CMCC', 'LXD')
     def test_message_list_total_quantity_0038(self):
         """消息列表网络异常显示"""
 
@@ -190,6 +206,13 @@ class MessageListTotalQuantityTest(TestCase):
         self.assertEquals(mp.is_exist_network_anomaly(), True)
         # 2.等待消息页面加载
         mp.wait_for_page_load()
+
+    @staticmethod
+    def tearDown_test_message_list_total_quantity_0038():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
 
 
 

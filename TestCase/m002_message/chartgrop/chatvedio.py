@@ -1675,12 +1675,9 @@ class MsgGroupChatTotalQuantityTest(TestCase):
             Preconditions.enter_group_chat_page()
 
     def default_tearDown(self):
-        """恢复网络"""
+        pass
 
-        gcp = GroupChatPage()
-        gcp.set_network_status(6)
-
-    @tags('ALL', 'CMCC', 'group_chat')
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0021(self):
         """群聊会话页面，打开拍照，立刻返回会话窗口"""
 
@@ -1697,7 +1694,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 等待群聊页面加载
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0041(self):
         """群聊会话页面,转发自己发送的图片到当前会话窗口"""
 
@@ -1724,7 +1721,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         cwp = ChatWindowPage()
         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
 
-    @unittest.skip("断网后gif图片无法加载")
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0042(self):
         """群聊会话页面，转发他人发送的图片到当前会话窗口时失败"""
 
@@ -1753,7 +1750,14 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 5.是否显示消息发送失败标识
         cwp.wait_for_msg_send_status_become_to('发送失败', 10)
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @staticmethod
+    def tearDown_test_msg_group_chat_total_quantity_0042():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0043(self):
         """群聊会话页面，转发自己发送的图片到当前会话窗口时点击取消转发"""
 
@@ -1778,7 +1782,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 返回群聊天页面
         scg.click_back()
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0044(self):
         """群聊会话页面，转发自己发送的图片给本地联系人"""
 
@@ -1807,9 +1811,10 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         gcp.wait_for_page_load()
         # 返回到消息页
         gcp.click_back()
-        time.sleep(2)
-        gcp.click_return()
-        time.sleep(2)
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_back()
+        scg.wait_for_page_load()
         scg.click_back()
         message = MessagePage()
         # 等待消息页面加载
@@ -1827,7 +1832,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 返回消息页
         gcp.click_back()
 
-    @unittest.skip("断网后gif图片无法加载")
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0045(self):
         """群聊会话页面，转发自己发送的图片到本地联系人时失败"""
 
@@ -1858,9 +1863,10 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         gcp.wait_for_page_load()
         # 返回到消息页
         gcp.click_back()
-        time.sleep(2)
-        gcp.click_return()
-        time.sleep(2)
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_back()
+        scg.wait_for_page_load()
         scg.click_back()
         message = MessagePage()
         # 等待消息页面加载
@@ -1878,7 +1884,14 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 返回消息页
         gcp.click_back()
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @staticmethod
+    def tearDown_test_msg_group_chat_total_quantity_0045():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0046(self):
         """群聊会话页面，转发自己发送的图片到本地联系人时点击取消转发"""
 
@@ -1909,7 +1922,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         scg.wait_for_page_load()
         scg.click_back()
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0050(self):
         """群聊会话页面，转发自己发送的图片给陌生人"""
 
@@ -1937,9 +1950,10 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         gcp.wait_for_page_load()
         # 返回到消息页
         gcp.click_back()
-        time.sleep(2)
-        gcp.click_return()
-        time.sleep(2)
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_back()
+        scg.wait_for_page_load()
         scg.click_back()
         message = MessagePage()
         # 等待消息页面加载
@@ -1957,7 +1971,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 返回消息页
         gcp.click_back()
 
-    @unittest.skip("断网后gif图片无法加载")
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0051(self):
         """群聊会话页面，转发自己发送的图片到陌生人时失败"""
 
@@ -1987,9 +2001,10 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         gcp.wait_for_page_load()
         # 返回到消息页
         gcp.click_back()
-        time.sleep(2)
-        gcp.click_return()
-        time.sleep(2)
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_back()
+        scg.wait_for_page_load()
         scg.click_back()
         message = MessagePage()
         # 等待消息页面加载
@@ -2007,7 +2022,14 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 返回消息页
         gcp.click_back()
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @staticmethod
+    def tearDown_test_msg_group_chat_total_quantity_0051():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0052(self):
         """群聊会话页面，转发自己发送的图片到陌生人时点击取消转发"""
 
@@ -2035,7 +2057,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 返回群聊天页面
         scg.click_back()
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0053(self):
         """群聊会话页面，转发自己发送的图片到普通群"""
 
@@ -2064,9 +2086,9 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         gcp.wait_for_page_load()
         # 返回到消息页
         gcp.click_back()
-        time.sleep(2)
-        gcp.click_return()
-        time.sleep(2)
+        sog.wait_for_page_load()
+        sog.click_back()
+        scg.wait_for_page_load()
         scg.click_back()
         message = MessagePage()
         # 等待消息页面加载
@@ -2080,7 +2102,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 返回消息页
         gcp.click_back()
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0054(self):
         """群聊会话页面，转发自己发送的图片到普通群时失败"""
 
@@ -2111,9 +2133,9 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         gcp.wait_for_page_load()
         # 返回到消息页
         gcp.click_back()
-        time.sleep(2)
-        gcp.click_return()
-        time.sleep(2)
+        sog.wait_for_page_load()
+        sog.click_back()
+        scg.wait_for_page_load()
         scg.click_back()
         message = MessagePage()
         # 等待消息页面加载
@@ -2127,7 +2149,14 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 返回消息页
         gcp.click_back()
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @staticmethod
+    def tearDown_test_msg_group_chat_total_quantity_0054():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0055(self):
         """群聊会话页面，转发自己发送的图片到普通群时点击取消转发"""
 
@@ -2159,7 +2188,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 返回群聊天页面
         scg.click_back()
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0069(self):
         """群聊会话页面，转发自己发送的视频给本地联系人"""
 
@@ -2187,9 +2216,10 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         gcp.wait_for_page_load()
         # 返回到消息页
         gcp.click_back()
-        time.sleep(2)
-        gcp.click_return()
-        time.sleep(2)
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_back()
+        scg.wait_for_page_load()
         scg.click_back()
         message = MessagePage()
         # 等待消息页面加载
@@ -2207,7 +2237,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 返回消息页
         gcp.click_back()
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0070(self):
         """群聊会话页面，转发自己发送的视频给本地联系人时失败"""
 
@@ -2237,9 +2267,10 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         gcp.wait_for_page_load()
         # 返回到消息页
         gcp.click_back()
-        time.sleep(2)
-        gcp.click_return()
-        time.sleep(2)
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_back()
+        scg.wait_for_page_load()
         scg.click_back()
         message = MessagePage()
         # 等待消息页面加载
@@ -2257,7 +2288,14 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         # 返回消息页
         gcp.click_back()
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @staticmethod
+    def tearDown_test_msg_group_chat_total_quantity_0070():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0071(self):
         """群聊会话页面，转发自己发送的视频给本地联系人时点击取消转发"""
 

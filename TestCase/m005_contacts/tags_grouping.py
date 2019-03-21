@@ -1,3 +1,4 @@
+import time
 import unittest
 import uuid
 
@@ -11,7 +12,6 @@ from pages.call.multipartycall import MultipartyCallPage
 from pages.call.mutivideo import MutiVideoPage
 from pages.components import ContactsSelector
 from pages.components.dialogs import SuspendedTips, MutiVideoTipsPage
-import time
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -577,7 +577,6 @@ class TagsGroupingTest(TestCase):
 
 class Tag_Group(TestCase):
 
-
     @staticmethod
     def setUp_test_contacts_0352():
         Preconditions.connect_mobile('Android-移动')
@@ -746,6 +745,265 @@ class Tag_Group(TestCase):
         GroupPage = GroupListPage()
         time.sleep(2)
         GroupPage.delete_group(name=self.message)
+
+    @staticmethod
+    def setUp_test_contacts_0368():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_0368(self):
+        """新建分组,已添加分组后标签分组列表展示"""
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.click_new_group()
+        GroupPage.click_input_element()
+        time.sleep(1)
+        GroupPage.input_content(text='aaa')
+        GroupPage.click_sure_element()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.input_content(text='bbb')
+        GroupPage.click_sure_element()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        y0=GroupPage.get_element_text_y()
+        y1=GroupPage.get_element_text_y(text='aaa')
+        y2=GroupPage.get_element_text_y(text='bbb')
+        self.assertTrue(y0<y1<y2)
+
+    def tearDown_test_contacts_0368(self):
+        GroupPage = GroupListPage()
+        time.sleep(2)
+        GroupPage.delete_group(name='aaa')
+        time.sleep(1)
+        GroupPage.delete_group(name='bbb')
+
+    @staticmethod
+    def setUp_test_contacts_0369():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_0369(self):
+        """新建分组,已添加分组后标签分组列表展示"""
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.click_new_group()
+        GroupPage.click_input_element()
+        time.sleep(1)
+        GroupPage.input_content(text='aaa')
+        GroupPage.click_sure_element()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.click_text('aaa')
+        time.sleep(1)
+        GroupPage.click_text('知道了')
+        time.sleep(1)
+        GroupPage.page_should_not_contain_text('知道了')
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.click_text('aaa')
+        time.sleep(1)
+        GroupPage.click_text('添加成员')
+        time.sleep(1)
+        GroupPage.page_should_contain_text('选择和通讯录联系人')
+
+    def tearDown_test_contacts_0369(self):
+        GroupPage = GroupListPage()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+
+
+    @staticmethod
+    def setUp_test_contacts_0370():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_0370(self):
+        """新建分组,分组详情操作界面"""
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.click_new_group()
+        GroupPage.click_input_element()
+        time.sleep(1)
+        GroupPage.input_content(text='aaa')
+        GroupPage.click_sure_element()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.click_text('aaa')
+        time.sleep(1)
+        GroupPage.click_text('知道了')
+        time.sleep(1)
+        GroupPage.page_contain_element()
+        GroupPage.page_contain_element('群发信息')
+        GroupPage.page_contain_element('多方电话')
+        GroupPage.page_contain_element('多方视频')
+        GroupPage.page_contain_element('设置')
+        GroupPage.page_contain_element('aaa')
+
+    def tearDown_test_contacts_0370(self):
+        GroupPage = GroupListPage()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+
+    @staticmethod
+    def setUp_test_contacts_0371():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_0371(self):
+        """新建分组,标签分组添加成员页面"""
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        GroupPage.click_new_group()
+        GroupPage.click_input_element()
+        time.sleep(1)
+        GroupPage.input_content(text='aaa')
+        GroupPage.click_sure_element()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.click_text('aaa')
+        time.sleep(1)
+        GroupPage.click_text('添加成员')
+        time.sleep(1)
+        GroupPage.page_contain_element('搜索或输入手机号')
+        GroupPage.page_contain_element('选择联系人')
+        GroupPage.page_contain_element('确定')
+        GroupPage.page_contain_element('选择和通讯录联系人')
+
+    def tearDown_test_contacts_0371(self):
+        GroupPage = GroupListPage()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+
+    @staticmethod
+    def setUp_test_contacts_0372():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_0372(self):
+        """新建分组,标签分组添加成员页面"""
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        GroupPage.click_new_group()
+        GroupPage.click_input_element()
+        time.sleep(1)
+        GroupPage.input_content(text='aaa')
+        GroupPage.click_sure_element()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.click_text('aaa')
+        time.sleep(1)
+        GroupPage.click_text('添加成员')
+        time.sleep(1)
+        GroupPage.click_search_box()
+        time.sleep(1)
+        GroupPage.input_search_text()
+        time.sleep(1)
+        GroupPage.page_should_contain_element1()
+        GroupPage.click_text('大佬2')
+        time.sleep(1)
+        GroupPage.page_contain_element('搜索或输入手机号')
+        GroupPage.page_contain_element('选择和通讯录联系人')
+
+    def tearDown_test_contacts_0372(self):
+        GroupPage = GroupListPage()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+
+    @staticmethod
+    def setUp_test_contacts_0373():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_0373(self):
+        """新建分组,标签分组添加成员页面"""
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        GroupPage.click_new_group()
+        GroupPage.click_input_element()
+        time.sleep(1)
+        GroupPage.input_content(text='aaa')
+        GroupPage.click_sure_element()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.click_text('aaa')
+        time.sleep(1)
+        GroupPage.click_text('添加成员')
+        time.sleep(1)
+        GroupPage.click_search_box()
+        time.sleep(1)
+        GroupPage.input_search_text(text='13802885230')
+        time.sleep(1)
+        GroupPage.page_not_contain_element('联系人头像')
+
+    def tearDown_test_contacts_0373(self):
+        GroupPage = GroupListPage()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
 
 
 if __name__ == '__main__':

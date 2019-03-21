@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as ec
 
 from library.core.TestLogger import TestLogger
 from pages.components.Footer import FooterPage
+import time
 
 
 class MessagePage(FooterPage):
@@ -59,7 +60,9 @@ class MessagePage(FooterPage):
         '位置': (MobileBy.XPATH, "//*[contains(@text, '位置')]"),
         '发送名片': (MobileBy.XPATH, "//*[contains(@text, '发送名片')]"),
         '名片': (MobileBy.XPATH, "//*[contains(@text, '名片')]"),
-        "未读消息气泡": (MobileBy.ID, "com.chinasofti.rcs:id/rnMessageBadge")
+        "未读消息气泡": (MobileBy.ID, "com.chinasofti.rcs:id/rnMessageBadge"),
+        '页面文案': (MobileBy.XPATH, "//*[contains(@text, '图文消息，一触即发')]"),
+        '置顶聊天': (MobileBy.XPATH, '//*[@text="置顶聊天"]'),
     }
 
     @TestLogger.log('检查顶部搜索框是否显示')
@@ -477,7 +480,7 @@ class MessagePage(FooterPage):
                                                                             pointY).wait(3).release().perform()
 
     @TestLogger.log()
-    def wait_for_message_list_load(self, timeout=20, auto_accept_alerts=True):
+    def wait_for_message_list_load(self, timeout=60, auto_accept_alerts=True):
         """等待消息列表加载"""
 
         try:
@@ -490,3 +493,57 @@ class MessagePage(FooterPage):
             raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
         return self
 
+    @TestLogger.log()
+    def clear_fail_in_send_message(self):
+        """清除发送失败消息记录"""
+        els = self.get_elements(self.__class__.__locators["消息发送失败感叹号"])
+        for el in els:
+            time.sleep(1)
+            self.press(el)
+            time.sleep(1)
+            self.click_element(self.__class__.__locators["删除聊天"])
+
+    @TestLogger.log()
+    def is_exist_search_box(self):
+        """是否存在消息搜索框"""
+        return self._is_element_present(self.__class__.__locators["搜索"])
+
+    @TestLogger.log()
+    def is_exist_add_icon(self):
+        """是否存在+号图标"""
+        return self._is_element_present(self.__class__.__locators["+号"])
+
+    @TestLogger.log()
+    def is_exist_words(self):
+        """是否存在页面文案"""
+        return self._is_element_present(self.__class__.__locators["页面文案"])
+
+    @TestLogger.log()
+    def slide_to_the_top(self):
+        """滑到消息记录顶端"""
+        max_try = 10
+        current = 0
+        while current < max_try:
+            if self._is_element_present(self.__class__.__locators["搜索"]):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 30, 50, 70, 800)
+
+    @TestLogger.log()
+    def top_message_recording(self):
+        """置顶非第一条消息记录"""
+        els = self.get_elements(self.__class__.__locators["消息名称"])
+        title_name = els[1].text
+        self.press(els[1])
+        if self._is_element_present(self.__class__.__locators["置顶聊天"]):
+            self.click_element(self.__class__.__locators["置顶聊天"])
+        else:
+            self.tap_coordinate([(100, 20), (100, 60), (100,100)])
+        return title_name
+
+    @TestLogger.log()
+    def get_the_first_message_title(self):
+        """获取第一条消息记录标题"""
+        els = self.get_elements(self.__class__.__locators["消息名称"])
+        title_name = els[0].text
+        return title_name

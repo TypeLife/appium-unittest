@@ -247,7 +247,8 @@ class MsgGroupChatFileLocationTest(TestCase):
             current_mobile().hide_keyboard_if_display()
             return
         else:
-            current_mobile().reset_app()
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
             Preconditions.enter_group_chat_page()
 
     def default_tearDown(self):

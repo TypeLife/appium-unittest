@@ -345,7 +345,8 @@ class MsgCommonGroupTest(TestCase):
             current_mobile().hide_keyboard_if_display()
             return
         else:
-            current_mobile().reset_app()
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
             Preconditions.enter_group_chat_page()
 
 
@@ -674,7 +675,7 @@ class MsgCommonGroupTest(TestCase):
         # current_mobile().connect_mobile()
         Preconditions.enter_group_chat_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC-RESET', 'group_chat')
     def test_msg_common_group_0010(self):
         """
         在聊天会话页面，转发5000字符的文本消息
@@ -744,7 +745,7 @@ class MsgCommonGroupTest(TestCase):
         # current_mobile().connect_mobile()
         Preconditions.enter_group_chat_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC-RESET', 'group_chat')
     def test_msg_common_group_0011(self):
         """
         在聊天会话页面，长按文本消息，使用转发功能，搜索选择转发对象
@@ -823,7 +824,7 @@ class MsgCommonGroupTest(TestCase):
             try:
                 raise AssertionError("没有重发按钮")
             except AssertionError as e:
-                print(e)
+                raise e
         #点击重发按钮
         gcp.click_msg_send_failed_button()
         #点击确定重发
@@ -888,7 +889,7 @@ class MsgCommonGroupTest(TestCase):
         # current_mobile().connect_mobile()
         Preconditions.enter_group_chat_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','yyx')
     def test_msg_common_group_0015(self):
         """在聊天会话页面，长按文本消息，使用转发功能，选择本地联系人作为转发对象"""
         gcp = GroupChatPage()
@@ -952,7 +953,7 @@ class MsgCommonGroupTest(TestCase):
             chat.click_back()
 
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','yyx')
     def test_msg_common_group_0016(self):
         """在聊天会话页面，长按文本消息，使用转发功能，选择最近聊天作为转发对象"""
         gcp = GroupChatPage()
@@ -1027,6 +1028,7 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(2)
         gcp.click_back()
         sogp = SelectOneGroupPage()
+        time.sleep(2)
         sogp.click_back()
         sc = SelectContactsPage()
         sc.click_back()
@@ -3861,7 +3863,8 @@ class MsgCommonGroupAllTest(TestCase):
             current_mobile().hide_keyboard_if_display()
             return
         else:
-            current_mobile().reset_app()
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
             Preconditions.enter_group_chat_page()
 
     def default_tearDown(self):
@@ -3873,7 +3876,8 @@ class MsgCommonGroupAllTest(TestCase):
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-        current_mobile().reset_app()
+        current_mobile().launch_app()
+        # current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
@@ -3915,7 +3919,8 @@ class MsgCommonGroupAllTest(TestCase):
         mess = MessagePage()
         if mess.is_on_this_page():
             return
-        current_mobile().reset_app()
+        current_mobile().launch_app()
+        # current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
@@ -3953,7 +3958,8 @@ class MsgCommonGroupAllTest(TestCase):
         mess = MessagePage()
         if mess.is_on_this_page():
             return
-        current_mobile().reset_app()
+        current_mobile().launch_app()
+        # current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
@@ -3992,7 +3998,8 @@ class MsgCommonGroupAllTest(TestCase):
         mess = MessagePage()
         if mess.is_on_this_page():
             return
-        current_mobile().reset_app()
+        current_mobile().launch_app()
+        # current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
@@ -4030,7 +4037,8 @@ class MsgCommonGroupAllTest(TestCase):
         mess = MessagePage()
         if mess.is_on_this_page():
             return
-        current_mobile().reset_app()
+        current_mobile().launch_app()
+        # current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
@@ -4069,7 +4077,8 @@ class MsgCommonGroupAllTest(TestCase):
         mess = MessagePage()
         if mess.is_on_this_page():
             return
-        current_mobile().reset_app()
+        current_mobile().launch_app()
+        # current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
@@ -4107,7 +4116,8 @@ class MsgCommonGroupAllTest(TestCase):
         mess = MessagePage()
         if mess.is_on_this_page():
             return
-        current_mobile().reset_app()
+        current_mobile().launch_app()
+        # current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
@@ -4146,7 +4156,8 @@ class MsgCommonGroupAllTest(TestCase):
         mess = MessagePage()
         if mess.is_on_this_page():
             return
-        current_mobile().reset_app()
+        current_mobile().launch_app()
+        # current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
@@ -4184,7 +4195,8 @@ class MsgCommonGroupAllTest(TestCase):
         mess = MessagePage()
         if mess.is_on_this_page():
             return
-        current_mobile().reset_app()
+        current_mobile().launch_app()
+        # current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
@@ -4223,7 +4235,8 @@ class MsgCommonGroupAllTest(TestCase):
         mess = MessagePage()
         if mess.is_on_this_page():
             return
-        current_mobile().reset_app()
+        current_mobile().launch_app()
+        # current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
@@ -4261,7 +4274,8 @@ class MsgCommonGroupAllTest(TestCase):
         mess = MessagePage()
         if mess.is_on_this_page():
             return
-        current_mobile().reset_app()
+        current_mobile().launch_app()
+        # current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
@@ -4300,7 +4314,8 @@ class MsgCommonGroupAllTest(TestCase):
         mess = MessagePage()
         if mess.is_on_this_page():
             return
-        current_mobile().reset_app()
+        current_mobile().launch_app()
+        # current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
@@ -4338,7 +4353,8 @@ class MsgCommonGroupAllTest(TestCase):
         mess = MessagePage()
         if mess.is_on_this_page():
             return
-        current_mobile().reset_app()
+        current_mobile().launch_app()
+        # current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
@@ -4377,7 +4393,8 @@ class MsgCommonGroupAllTest(TestCase):
         mess = MessagePage()
         if mess.is_on_this_page():
             return
-        current_mobile().reset_app()
+        current_mobile().launch_app()
+        # current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
@@ -4415,7 +4432,8 @@ class MsgCommonGroupAllTest(TestCase):
         mess = MessagePage()
         if mess.is_on_this_page():
             return
-        current_mobile().reset_app()
+        current_mobile().launch_app()
+        # current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.make_already_in_message_page()
 
@@ -4440,6 +4458,9 @@ class MsgCommonGroupAllTest(TestCase):
         time.sleep(2)
         if not sog.is_text_present("iiiiii"):
             raise AssertionError("索引字母不能进行定位")
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            gcp.click_back()
         sog.click_back()
         sc.click_back()
 
@@ -4481,7 +4502,7 @@ class MsgCommonGroupAllTest(TestCase):
         except TimeoutException:
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
     def test_msg_common_group_all_0021(self):
         """在群聊天会话页面，输入框中录入1个字符，使用缩小功能发送"""
         gcp = GroupChatPage()
@@ -4513,7 +4534,7 @@ class MsgCommonGroupAllTest(TestCase):
         # if not gcp.get_width_of_msg_of_text() <= width:
         #     raise AssertionError("文本消息没有缩小展示")
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
     def test_msg_common_group_all_0022(self):
         """在群聊天会话页面，输入框中录入500个字符，使用缩小功能发送"""
         gcp = GroupChatPage()
@@ -4545,7 +4566,7 @@ class MsgCommonGroupAllTest(TestCase):
         if not gcp.get_height_of_msg_of_text() < height:
             raise AssertionError("文本消息没有缩小展示")
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
     def test_msg_common_group_all_0023(self):
         """在群聊天会话页面，输入框中录入5000个字符，使用缩小功能发送"""
         gcp = GroupChatPage()
@@ -4577,7 +4598,7 @@ class MsgCommonGroupAllTest(TestCase):
         # if not gcp.get_height_of_msg_of_text() <= height:
         #     raise AssertionError("文本消息没有缩小展示")
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
     def test_msg_common_group_all_0024(self):
         """在群聊天会话页面，输入框中录入1个字符，使用放大功能发送"""
         gcp = GroupChatPage()
@@ -4609,7 +4630,7 @@ class MsgCommonGroupAllTest(TestCase):
         if not gcp.get_width_of_msg_of_text() > width:
             raise AssertionError("文本消息没有放大展示")
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
     def test_msg_common_group_all_0025(self):
         """在群聊天会话页面，输入框中录入500个字符，使用放大功能发送"""
         gcp = GroupChatPage()
@@ -4641,7 +4662,7 @@ class MsgCommonGroupAllTest(TestCase):
         # if not gcp.get_width_of_msg_of_text() > width:
         #     raise AssertionError("文本消息没有放大展示")
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
     def test_msg_common_group_all_0026(self):
         """在群聊天会话页面，输入框中录入5000个字符，使用放大功能发送"""
         gcp = GroupChatPage()
@@ -4673,7 +4694,8 @@ class MsgCommonGroupAllTest(TestCase):
             # if not gcp.get_width_of_msg_of_text() > width:
             #     raise AssertionError("文本消息没有放大展示")
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+    # @tags('ALL', 'CMCC', 'group_chat', 'full')
+    @unittest.skip("过")
     def test_msg_common_group_all_0028(self):
         """进入到群聊天会话页面，录入500个表情字符，缩小发送"""
         gcp=GroupChatPage()
@@ -4702,7 +4724,8 @@ class MsgCommonGroupAllTest(TestCase):
         gcp.click_expression_page_close_button()
         gcp.hide_keyboard()
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+    # @tags('ALL', 'CMCC', 'group_chat', 'full')
+    @unittest.skip("过")
     def test_msg_common_group_all_0032(self):
         """进入到群聊天会话页面，录入500个表情字符，放大发送"""
         gcp = GroupChatPage()
@@ -4814,5 +4837,174 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("文本消息没有放大展示")
         gcp.click_expression_page_close_button()
         gcp.hide_keyboard()
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+    def test_msg_common_group_all_0037(self):
+        """在群聊天会话页面，长按消息体，点击收藏"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        #输入信息
+        info = "哈哈"
+        gcp.input_message(info)
+        gcp.send_message()
+        # 长按信息并点击收藏
+        time.sleep(2)
+        gcp.press_file_to_do("哈哈", "收藏")
+        flag = gcp.is_toast_exist("已收藏")
+        self.assertTrue(flag)
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_common_group_all_0038(self):
+        """我——收藏——收藏内容展示"""
+        gcp = GroupChatPage()
+        time.sleep(2)
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc = SelectContactsPage()
+        sc.click_back()
+        # 进入我页面
+        mess = MessagePage()
+        mess.open_me_page()
+        me = MePage()
+        me.click_collection()
+        time.sleep(1)
+        if not me.is_text_present("哈哈"):
+            raise AssertionError("收藏的消息内容不能正常展示出来")
+        mcp = MeCollectionPage()
+        mcp.page_contain_element("收藏时间")
+        mcp.page_contain_element("内容来源")
+        mcp.click_back()
+        me.open_message_page()
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_common_group_all_0039(self):
+        """我——收藏——收藏内展示——点击收藏内容"""
+        gcp = GroupChatPage()
+        time.sleep(2)
+        if gcp.is_on_this_page():
+            gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc = SelectContactsPage()
+        sc.click_back()
+        # 进入我页面
+        mess = MessagePage()
+        mess.open_me_page()
+        me = MePage()
+        me.click_collection()
+        time.sleep(1)
+        if not me.is_text_present("哈哈"):
+            raise AssertionError("收藏的消息内容不能正常展示出来")
+        mcp = MeCollectionPage()
+        mcp.click_text("哈哈")
+        time.sleep(1)
+        if not mcp.is_text_present("详情"):
+            raise AssertionError("不能进入到消息展示详情页面")
+        mcp.click_back()
+        time.sleep(2)
+        #验证可以返回到收藏列表页
+        if not mcp.is_text_present("收藏"):
+            raise AssertionError("不能返回到收藏列表页")
+        mcp.click_back()
+        me.open_message_page()
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_common_group_all_0040(self):
+        """我——收藏——收藏内展示——点击收藏内容——点击播放收藏语音文件"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        gcp.hide_keyboard()
+        time.sleep(1)
+        gcp.press_voice_message_to_do("收藏")
+        if not gcp.is_toast_exist("已收藏"):
+            raise AssertionError("收藏失败")
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc = SelectContactsPage()
+        sc.click_back()
+        # 进入我页面
+        mess = MessagePage()
+        mess.open_me_page()
+        me = MePage()
+        me.click_collection()
+        time.sleep(1)
+        if not me.is_text_present("秒"):
+            raise AssertionError("收藏的消息内容不能正常展示出来")
+        mcp = MeCollectionPage()
+        mcp.click_text("秒")
+        time.sleep(1)
+        if not mcp.is_text_present("详情"):
+            raise AssertionError("不能进入到消息展示详情页面")
+        # 播放语音消息
+        mcp.click_collection_voice_msg()
+        time.sleep(2)
+        # 暂停语音消息
+        mcp.click_collection_voice_msg()
+        mcp.click_back()
+        time.sleep(2)
+        mcp.click_back()
+        me.open_message_page()
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_common_group_all_0041(self):
+        """我——收藏——收藏内展示——点击收藏内容——点击删除收藏内容"""
+        gcp = GroupChatPage()
+        time.sleep(2)
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc = SelectContactsPage()
+        sc.click_back()
+        # 进入我页面
+        mess = MessagePage()
+        mess.open_me_page()
+        me = MePage()
+        me.click_collection()
+        time.sleep(2)
+        # 左滑收藏消息体
+        mcp = MeCollectionPage()
+        mcp.press_and_move_left()
+        # 判断是否有删除按钮
+        if mcp.is_delete_element_present():
+            mcp.click_delete_collection()
+            time.sleep(2)
+            #判断是否会弹出确认弹窗
+            if not mcp.is_text_present("确定"):
+                raise AssertionError("没有弹出确认窗口")
+            #点击取消
+            mcp.click_cancel_forward()
+            flag=mcp.is_delete_element_present()
+            self.assertTrue(flag)
+            time.sleep(1)
+            mcp.click_delete_collection()
+            mcp.click_sure_forward()
+            time.sleep(2)
+            if not mcp.is_toast_exist("取消收藏成功"):
+                raise AssertionError("不可以删除收藏的消息体")
+        else:
+            raise AssertionError("没有删除按钮")
+        mcp.click_back()
+        me.open_message_page()
 
 

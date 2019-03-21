@@ -400,14 +400,14 @@ DEVICES_CONFIG_LXD = {
             "deviceName": "7XB4C18907018917",
             "udid": "7XB4C18907018917",
             "automationName": "UiAutomator2",
-            "newCommandTimeout": 600,
+            "newCommandTimeout": 6000,
             "appPackage": "com.chinasofti.rcs",
             "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
         },
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '13875897636'
+                'CARD_NUMBER': '19874361585'
             },
         ]
     },

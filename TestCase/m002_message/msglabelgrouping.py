@@ -85,7 +85,8 @@ class MsgLabelGroupingTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        pass
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().launch_app()
 
     def default_setUp(self):
         """确保每个用例运行前在标签分组会话页面"""
@@ -99,7 +100,7 @@ class MsgLabelGroupingTest(TestCase):
         if chat.is_on_this_page():
             return
         else:
-            current_mobile().reset_app()
+            current_mobile().launch_app()
             Preconditions.enter_label_grouping_chat_page()
 
     def default_tearDown(self):

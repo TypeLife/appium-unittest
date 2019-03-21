@@ -143,7 +143,7 @@ class CorporateNewsTest(TestCase):
 
         pass
 
-    @tags('ALL', 'workbench')
+    @tags('ALL', 'workbench', 'LXD')
     def test_QYXW_0005(self):
         """保存新闻"""
 
@@ -168,7 +168,7 @@ class CorporateNewsTest(TestCase):
         self.assertEquals(cnp.is_exist_save_successfully(), True)
         cnp.wait_for_page_load()
 
-    @tags('ALL', 'workbench')
+    @tags('ALL', 'workbench', 'LXD')
     def test_QYXW_0007(self):
         """验证删除未发新闻是否正确"""
 
