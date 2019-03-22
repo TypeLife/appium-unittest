@@ -176,3 +176,7 @@ class SettingPage(BasePage):
         self.execute_shell_command('adb shell "am start -n  com.android.providers.settings/.SettingsProvider"')
         self.is_current_activity_match_this_page()
 
+    @TestLogger.log('点击拨号设置')
+    def click_dial_setting(self):
+        self.click_element(self.__locators['拨号设置'])
+
