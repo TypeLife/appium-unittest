@@ -3,6 +3,7 @@ import unittest
 
 from selenium.common.exceptions import TimeoutException
 
+import preconditions
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
@@ -101,6 +102,7 @@ class Preconditions(object):
             else:
                 break
             n = n + 1
+        time.sleep(3)
         sc.click_select_one_group()
         # 群名
         group_name = Preconditions.get_group_chat_name()
@@ -345,7 +347,7 @@ class MsgCommonGroupTest(TestCase):
             current_mobile().hide_keyboard_if_display()
             return
         else:
-            current_mobile().launch_app()
+            preconditions.force_close_and_launch_app()
             # current_mobile().reset_app()
             Preconditions.enter_group_chat_page()
 
@@ -659,7 +661,9 @@ class MsgCommonGroupTest(TestCase):
             self.assertTrue(mess.is_text_present("和飞信电话"))
             mess.click_element_by_text("和飞信电话")
             chat = SingleChatPage()
+            time.sleep(2)
             chat.click_i_have_read()
+            time.sleep(2)
             chat.wait_for_page_load()
             try:
                 cwp.wait_for_msg_send_status_become_to('发送成功', 10)
@@ -889,7 +893,7 @@ class MsgCommonGroupTest(TestCase):
         # current_mobile().connect_mobile()
         Preconditions.enter_group_chat_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','yyx')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0015(self):
         """在聊天会话页面，长按文本消息，使用转发功能，选择本地联系人作为转发对象"""
         gcp = GroupChatPage()
@@ -953,7 +957,7 @@ class MsgCommonGroupTest(TestCase):
             chat.click_back()
 
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','yyx')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0016(self):
         """在聊天会话页面，长按文本消息，使用转发功能，选择最近聊天作为转发对象"""
         gcp = GroupChatPage()
@@ -1119,7 +1123,7 @@ class MsgCommonGroupTest(TestCase):
             mcp.click_delete_collection()
             mcp.click_sure_forward()
             time.sleep(2)
-            if not mcp.is_text_present("没有任何收藏"):
+            if not mcp.is_toast_exist("取消收藏成功"):
                 raise AssertionError("不可以删除收藏的消息体")
 
     @staticmethod
@@ -1341,7 +1345,7 @@ class MsgCommonGroupTest(TestCase):
             except AssertionError as e:
                 raise e
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','yyx')
     def test_msg_common_group_0040(self):
         """缩小发送文本消息"""
         gcp = GroupChatPage()
@@ -1372,7 +1376,7 @@ class MsgCommonGroupTest(TestCase):
         if not gcp.get_width_of_msg_of_text() < width:
             raise AssertionError("文本消息没有缩小展示")
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','yyx')
     def test_msg_common_group_0041(self):
         """发送一串号码到聊天会话页面"""
         gcp = GroupChatPage()
@@ -1387,7 +1391,7 @@ class MsgCommonGroupTest(TestCase):
         except TimeoutException:
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','yyx')
     def test_msg_common_group_0042(self):
         """点击聊天会话页面中的一组号码数字"""
         gcp = GroupChatPage()
@@ -1406,7 +1410,7 @@ class MsgCommonGroupTest(TestCase):
         #点击结束呼叫按钮
         gcp.click_end_call_button()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','yyx')
     def test_msg_common_group_0043(self):
         """发送一组数字：12345678900，发送成功后，是否会被识别为号码"""
         gcp = GroupChatPage()
@@ -1454,7 +1458,7 @@ class MsgCommonGroupTest(TestCase):
             except AssertionError as e:
                 raise e
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','yyx')
     def test_msg_common_group_0044(self):
         """发送一组数字：123456，发送成功后，是否会被识别为号码"""
         gcp = GroupChatPage()
@@ -4502,7 +4506,7 @@ class MsgCommonGroupAllTest(TestCase):
         except TimeoutException:
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0021(self):
         """在群聊天会话页面，输入框中录入1个字符，使用缩小功能发送"""
         gcp = GroupChatPage()
@@ -4534,7 +4538,7 @@ class MsgCommonGroupAllTest(TestCase):
         # if not gcp.get_width_of_msg_of_text() <= width:
         #     raise AssertionError("文本消息没有缩小展示")
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0022(self):
         """在群聊天会话页面，输入框中录入500个字符，使用缩小功能发送"""
         gcp = GroupChatPage()
@@ -4566,7 +4570,7 @@ class MsgCommonGroupAllTest(TestCase):
         if not gcp.get_height_of_msg_of_text() < height:
             raise AssertionError("文本消息没有缩小展示")
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0023(self):
         """在群聊天会话页面，输入框中录入5000个字符，使用缩小功能发送"""
         gcp = GroupChatPage()
@@ -4598,7 +4602,7 @@ class MsgCommonGroupAllTest(TestCase):
         # if not gcp.get_height_of_msg_of_text() <= height:
         #     raise AssertionError("文本消息没有缩小展示")
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0024(self):
         """在群聊天会话页面，输入框中录入1个字符，使用放大功能发送"""
         gcp = GroupChatPage()
@@ -4630,7 +4634,7 @@ class MsgCommonGroupAllTest(TestCase):
         if not gcp.get_width_of_msg_of_text() > width:
             raise AssertionError("文本消息没有放大展示")
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0025(self):
         """在群聊天会话页面，输入框中录入500个字符，使用放大功能发送"""
         gcp = GroupChatPage()
@@ -4662,7 +4666,7 @@ class MsgCommonGroupAllTest(TestCase):
         # if not gcp.get_width_of_msg_of_text() > width:
         #     raise AssertionError("文本消息没有放大展示")
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0026(self):
         """在群聊天会话页面，输入框中录入5000个字符，使用放大功能发送"""
         gcp = GroupChatPage()

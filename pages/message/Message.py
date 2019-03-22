@@ -84,7 +84,7 @@ class MessagePage(FooterPage):
         """当前页面是否在消息页"""
         try:
             self.wait_until(
-                timeout=8,
+                timeout=15,
                 auto_accept_permission_alert=True,
                 condition=lambda d: self._is_element_present(self.__class__.__locators["+号"])
             )

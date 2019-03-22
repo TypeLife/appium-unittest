@@ -114,7 +114,7 @@ class ChatAudioPage(BasePage):
         return self
 
     @TestLogger.log()
-    def wait_for_audio_type_select_page_load(self, timeout=4, auto_accept_alerts=False):
+    def wait_for_audio_type_select_page_load(self, timeout=2, auto_accept_alerts=False):
         """等待语音发送模式选择页面加载 """
         try:
             self.wait_until(
