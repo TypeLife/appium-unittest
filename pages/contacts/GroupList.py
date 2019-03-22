@@ -1,19 +1,30 @@
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.common.exceptions import NoSuchElementException
-
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
-
+#import preconditions
 import time
+# from pages import *
+
 class GroupListPage(BasePage):
     """群组列表"""
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.GroupChatListActivity2'
 
     __locators = {
-        "多方电话提示框": (MobileBy.ID, "com.chinasofti.rcs:id/mutil_btnFreeCall"),
-        "多方视频图标": (MobileBy.ID, "com.chinasofti.rcs:id/ivMultipartyVideo"),
-        '多方通话':(MobileBy.ID,'com.chinasofti.rcs:id/action_multicall'),
+        "电话号码":(MobileBy.ID,'com.chinasofti.rcs:id/tv_phone'),
+        "语音通话": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_voice_call'),
+        "视频通话": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_video_call'),
+        "分享名片": (MobileBy.ID, 'com.chinasofti.rcs:id/btn_share_card'),
+        "邀请使用": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_invitation_to_use'),
+        "发送_邀请":(MobileBy.ID,'com.android.mms:id/right_btn'),
+        "信息邀请":(MobileBy.ID,'com.android.mms:id/msg_content'),
+
+
+        "多方电话提示框": (MobileBy.XPATH, "//*[@text='多方电话']"),
+        "多方视频图标": (MobileBy.XPATH, "//*[@text='多方视频']"),
+        '多方通话_图标':(MobileBy.ID,'com.chinasofti.rcs:id/action_multicall'),
         '分组联系人':(MobileBy.ID,'com.chinasofti.rcs:id/action_setting'),
+        '分组联系人_标题':(MobileBy.ID,'com.chinasofti.rcs:id/title'),
         '富媒体面板': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_rich_panel'),
         '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
 
@@ -77,13 +88,23 @@ class GroupListPage(BasePage):
 
     }
 
-    @TestLogger.log("点击多方通话")
+    @TestLogger.log("点击群发信息")
+    def click_send_message_to_group(self):
+        time.sleep(1)
+        self.click_element(self.__locators['群发信息'])
+        time.sleep(1)
+
+    @TestLogger.log("多方通话_图标")
     def click_mult_call_icon(self):
         time.sleep(1)
-        self.click_element(self.__locators['多方电话'])
+        self.click_element(self.__locators['多方通话_图标'])
         time.sleep(1)
 
-
+    @TestLogger.log("点击分组_图标")
+    def click_divide_group_icon(self):
+        time.sleep(1)
+        self.click_element(self.__locators['分组联系人'])
+        time.sleep(1)
 
     @TestLogger.log('返回')
     def click_back(self):
@@ -195,6 +216,41 @@ class GroupListPage(BasePage):
     @TestLogger.log("点击输入框")
     def click_input_element(self):
         self.click_element(self.__class__.__locators['请输入标签分组名称'])
+
+    @TestLogger.log("分享名片")
+    def click_share_button(self):
+        time.sleep(1)
+        self.click_element(self.__class__.__locators['分享名片'])
+        time.sleep(1)
+
+    @TestLogger.log("邀请使用")
+    def click_innvation_button(self):
+        time.sleep(1)
+        if self._is_element_present(self.__class__.__locators['邀请使用']):
+            self.click_element(self.__class__.__locators['邀请使用'])
+            time.sleep(1)
+            self.click_element(self.__class__.__locators['发送_邀请'])
+            time.sleep(2)
+            if self._is_element_present(self.__class__.__locators['信息邀请']):
+                preconditions.background_app()
+                time.sleep(1)
+                preconditions.launch_app()
+                time.sleep(1)
+                return True
+            else:
+                return False
+        return True
+
+
+
+    @TestLogger.log("发送_邀请")
+    def click_send_innvation_button(self):
+        time.sleep(1)
+        self.click_element(self.__class__.__locators['发送_邀请'])
+        time.sleep(1)
+
+
+
 
     @TestLogger.log("点击搜索框")
     def click_search_box(self,text='搜索或输入手机号'):
