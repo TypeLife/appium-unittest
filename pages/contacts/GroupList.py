@@ -10,6 +10,8 @@ class GroupListPage(BasePage):
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.GroupChatListActivity2'
 
     __locators = {
+        "多方电话提示框": (MobileBy.ID, "com.chinasofti.rcs:id/mutil_btnFreeCall"),
+        "多方视频图标": (MobileBy.ID, "com.chinasofti.rcs:id/ivMultipartyVideo"),
         '多方通话':(MobileBy.ID,'com.chinasofti.rcs:id/action_multicall'),
         '分组联系人':(MobileBy.ID,'com.chinasofti.rcs:id/action_setting'),
         '富媒体面板': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_rich_panel'),
@@ -74,6 +76,13 @@ class GroupListPage(BasePage):
 
 
     }
+
+    @TestLogger.log("点击多方通话")
+    def click_mult_call_icon(self):
+        time.sleep(1)
+        self.click_element(self.__locators['多方电话'])
+        time.sleep(1)
+
 
 
     @TestLogger.log('返回')

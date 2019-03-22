@@ -1074,6 +1074,39 @@ class Tag_Group(TestCase):
         GroupPage.click_back_button(times=2)
         GroupPage.delete_group(name='aaa')
 
+    @staticmethod
+    def setUp_test_contacts_0390():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_0390(self):
+        """分组详情操作界面-群发消息-多方通话图标"""
+
+    GroupPage = GroupListPage()
+    GroupPage.open_contacts_page()
+    GroupPage.click_label_grouping()
+    time.sleep(1)
+    GroupPage.delete_group(name='aaa')
+    GroupPage.new_group(name='aaa')
+    GroupPage.click_text('aaa')
+    time.sleep(1)
+    GroupPage.add_member(name='dalao2')
+    GroupPage.add_member(name='dalao1')
+    time.sleep(1)
+    GroupPage.click_element("群发信息")
+    GroupPage.click_mult_call_icon()
+    time.sleep(1)
+    GroupPage.page_contain_element(locator='多方电话提示框')
+    GroupPage.page_contain_element(locator='多方视频图标')
+
+
+    def tearDown_test_contacts_0390(self):
+        GroupPage = GroupListPage()
+        GroupPage.click_back_button(times=2)
+        GroupPage.delete_group(name='aaa')
+
 
 if __name__ == '__main__':
     unittest.main()
