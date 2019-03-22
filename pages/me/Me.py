@@ -257,3 +257,11 @@ class MePage(FooterPage):
         except:
             raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
         return self
+
+    @TestLogger.log()
+    def click_call_multiparty(self, timeout=60):
+        """点击帮助与反馈菜单"""
+        self.wait_until(
+            timeout=timeout,
+            condition=lambda d: self.get_element(self.__locators['多方电话'])
+        ).click()

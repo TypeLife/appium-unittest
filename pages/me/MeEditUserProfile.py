@@ -138,8 +138,9 @@ class MeEditUserProfilePage(BasePage):
 
     @TestLogger.log('往下滑动')
     def swipe_up(self):
-        for i in range(12):
-            self.swipe_by_direction(self.__locators["公司"], "up")
+        # for i in range(12):
+        #     self.swipe_by_direction(self.__locators["公司"], "up")
+        self.page_up()
 
     @TestLogger.log('点击公司')
     def click_company(self):

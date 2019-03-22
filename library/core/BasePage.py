@@ -530,3 +530,8 @@ class BasePage(object):
     def page_down(self):
         """向下滑动"""
         self.swipe_by_percent_on_screen(50, 30, 50, 70, 800)
+
+    @TestLogger.log('挂断电话')
+    def hang_up_the_call(self):
+        """判断键盘是否弹起"""
+        return self.mobile.hang_up_the_call()

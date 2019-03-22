@@ -263,7 +263,7 @@ class Preconditions(object):
         login_num = Preconditions.login_by_one_key_login()
         return login_num
 
-
+@unittest.skip("一键登录先不执行")
 class LoginTest(TestCase):
     """Login 模块"""
 
@@ -286,7 +286,7 @@ class LoginTest(TestCase):
         # 检查电话号码
         phone_numbers = current_mobile().get_cards(CardType.CHINA_MOBILE)
         oklp.assert_phone_number_equals_to(phone_numbers[0])
-        # 检查 服务协议
+        # 检查 服务协议等待页面进入引导页第一页（自动允许权限）
         oklp.page_should_contain_text("服务条款")
         # 登录
         # oklp.check_the_agreement()
@@ -307,7 +307,7 @@ class LoginTest(TestCase):
         # 3、退出后台
         current_mobile().press_home_key()
 
-    @tags('ALL', 'SMOKE', 'CMCC')
+    @tags('ALL', 'SMOKE', 'CMCC_RESET')
     def test_login_0002(self):
         """已登录状态后，退出后台"""
         current_mobile().activate_app('com.chinasofti.rcs')
@@ -386,7 +386,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC')
+    @tags('ALL', 'SMOKE', 'CMCC_RESET')
     def test_login_0007(self):
         """服务条款检查"""
         oklp = OneKeyLoginPage()
@@ -411,7 +411,7 @@ class LoginTest(TestCase):
         current_mobile().reset_app()
         Preconditions.make_already_in_sms_login_page()
 
-   # @tags('ALL', 'SMOKE', '移动-电信')
+    @tags('ALL', 'SMOKE', '移动-电信')
     def test_login_0008(self):
         """下线提醒"""
         # 切换到辅助机2，并用测试机的号码登录
@@ -455,7 +455,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC')
+    @tags('ALL', 'SMOKE', 'CMCC_RESET')
     def test_login_0009(self):
         """登录页面检查"""
         oklp = OneKeyLoginPage()
@@ -846,7 +846,7 @@ class LoginTest(TestCase):
     @staticmethod
     def setUp_test_login_0052():
         Preconditions.select_mobile('Android-移动')
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
@@ -977,7 +977,7 @@ class LoginTest(TestCase):
         Preconditions.select_mobile('Android-移动')
         oklp = OneKeyLoginPage()
         oklp.set_network_status(1)
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'Login', 'CMCC')
@@ -1007,7 +1007,7 @@ class LoginTest(TestCase):
             current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
                                          replace=True)
 
-    @tags('ALL', 'Login', 'CMCC')
+    @tags('ALL', 'Login', 'CMCC_RESET')
     def test_login_0074(self):
         """ 先卸载后安装"""
         # 卸载和飞信
@@ -1031,7 +1031,7 @@ class LoginTest(TestCase):
             current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
                                          replace=True)
 
-    @tags('ALL', 'Login', 'CMCC')
+    @tags('ALL', 'Login', 'CMCC_RESET')
     def test_login_0075(self):
         """ 先卸载后安装"""
         # 卸载和飞信
@@ -1051,7 +1051,7 @@ class LoginTest(TestCase):
         Preconditions.select_mobile('Android-移动')
         oklp = OneKeyLoginPage()
         oklp.set_network_status(1)
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'Login', "移动")
@@ -1084,7 +1084,7 @@ class LoginTest(TestCase):
     @staticmethod
     def setUp_test_login_0113():
         Preconditions.select_mobile('Android-移动')
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'Login', 'CMCC')
@@ -1116,7 +1116,7 @@ class LoginTest(TestCase):
     @staticmethod
     def setUp_test_login_0114():
         Preconditions.select_mobile('Android-移动')
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'Login', 'CMCC')
@@ -1133,7 +1133,7 @@ class LoginTest(TestCase):
     @staticmethod
     def setUp_test_login_0116():
         Preconditions.select_mobile('Android-移动')
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'Login', 'CMCC')
@@ -1160,10 +1160,10 @@ class LoginTest(TestCase):
     @staticmethod
     def setUp_test_login_0117():
         Preconditions.select_mobile('Android-移动')
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL', 'Login', 'CMCC')
+    @tags('ALL', 'Login', 'CMCC_RESET')
     def test_login_0117(self):
         """ 老版用户更新后登录"""
         oklp = OneKeyLoginPage()
@@ -1197,7 +1197,7 @@ class LoginTest(TestCase):
         Preconditions.select_mobile('Android-移动')
         oklp = OneKeyLoginPage()
         oklp.set_network_status(1)
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'Login', "移动")
@@ -1233,7 +1233,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0135():
         """进入一键登录页"""
         Preconditions.select_mobile('Android-移动')
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'Login', "移动")
@@ -1265,7 +1265,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0122():
         """进入一键登录页"""
         Preconditions.select_mobile('Android-移动')
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'Login', "移动")
@@ -1276,5 +1276,4 @@ class LoginTest(TestCase):
         phone_numbers = current_mobile().get_cards(CardType.CHINA_MOBILE)
         print(phone_numbers)
         oklp.assert_phone_number_equals_to(phone_numbers[0])
-        oklp.press_home_key(2)
-
+        oklp.press_home_key(times=2)

@@ -1,13 +1,13 @@
 from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
-
+from library.core.TestLogger import TestLogger
 
 class MeSetDialPage(BasePage):
     """我-》设置-》拨号设置"""
     ACTIVITY = 'com.cmicc.module_aboutme.ui.activity.OutGoingCallSettingActivity'
 
-    locators = {'': (MobileBy.ID, ''),
+    __locators = {'': (MobileBy.ID, ''),
                 'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
                 'android:id/content': (MobileBy.ID, 'android:id/content'),
                 'com.chinasofti.rcs:id/id_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/id_toolbar'),
@@ -19,4 +19,9 @@ class MeSetDialPage(BasePage):
                 '总是询问': (MobileBy.ID, 'com.chinasofti.rcs:id/call_type_text'),
                 'android:id/statusBarBackground': (MobileBy.ID, 'android:id/statusBarBackground'),
                 'android:id/navigationBarBackground': (MobileBy.ID, 'android:id/navigationBarBackground')
-                }
+    }
+
+    @TestLogger.log('点击拨号方式')
+    def click_dial_mode(self):
+        self.click_element(self.__locators['拨号方式'])
+

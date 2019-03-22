@@ -1,15 +1,31 @@
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.common.exceptions import NoSuchElementException
-
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
-
+#import preconditions
+import time
+# from pages import *
 
 class GroupListPage(BasePage):
     """群组列表"""
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.GroupChatListActivity2'
 
     __locators = {
+        "电话号码":(MobileBy.ID,'com.chinasofti.rcs:id/tv_phone'),
+        "语音通话": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_voice_call'),
+        "视频通话": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_video_call'),
+        "分享名片": (MobileBy.ID, 'com.chinasofti.rcs:id/btn_share_card'),
+        "邀请使用": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_invitation_to_use'),
+        "发送_邀请":(MobileBy.ID,'com.android.mms:id/right_btn'),
+        "信息邀请":(MobileBy.ID,'com.android.mms:id/msg_content'),
+
+
+        "多方电话提示框": (MobileBy.XPATH, "//*[@text='多方电话']"),
+        "多方视频图标": (MobileBy.XPATH, "//*[@text='多方视频']"),
+        '多方通话_图标':(MobileBy.ID,'com.chinasofti.rcs:id/action_multicall'),
+        '分组联系人':(MobileBy.ID,'com.chinasofti.rcs:id/action_setting'),
+        '分组联系人_标题':(MobileBy.ID,'com.chinasofti.rcs:id/title'),
+        '富媒体面板': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_rich_panel'),
         '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
 
 
@@ -44,15 +60,51 @@ class GroupListPage(BasePage):
         '多方电话': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_third_colum'),
         '多方视频': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_fourth_colum'),
         '大佬1': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
-        '大佬2': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
+        '大佬2': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
         '搜索或输入手机号':(MobileBy.XPATH,"//*[@text='搜索或输入手机号']"),
         '选择联系人':(MobileBy.ID,"com.chinasofti.rcs:id/title"),
         '选择和通讯录联系人':(MobileBy.ID,'com.chinasofti.rcs:id/text_hint'),
         '删除-搜索':(MobileBy.ID,'com.chinasofti.rcs:id/iv_delect'),
-        '联系人头像':(MobileBy.ID,'com.chinasofti.rcs:id/contact_icon')
+        '联系人头像':(MobileBy.ID,'com.chinasofti.rcs:id/contact_icon'),
+        '允许':(MobileBy.XPATH,'//*[@text="允许"]'),
+        '和飞信测试':(MobileBy.ID,'com.chinasofti.rcs:id/tv_title_department'),
+        '和通讯本人': (MobileBy.ID, '	com.chinasofti.rcs:id/tv_name_personal_contactlist'),
+        '中软国际科技服务有限公司':(MobileBy.XPATH,'//*[@text="中软国际科技服务有限公司"]'),
+        '广州': (MobileBy.XPATH, '//*[@text="	广州"]'),
+        '和通讯联系人':(MobileBy.ID,'com.chinasofti.rcs:id/img_icon_contactlist'),
+        '我已阅读':(MobileBy.ID,'com.chinasofti.rcs:id/btn_check'),
+        '已阅读_确定':(MobileBy.ID,'com.chinasofti.rcs:id/dialog_btn_ok'),
+        '群发_输入框':(MobileBy.ID,'com.chinasofti.rcs:id/et_message'),
+        '发送':(MobileBy.ID,'com.chinasofti.rcs:id/ib_send'),
+
+        '表情按钮':(MobileBy.ID,"com.chinasofti.rcs:id/ib_expression"),
+        '表情_微笑':(MobileBy.XPATH,'//*[@text="[微笑1]"]'),
+        '已转短信送达':(MobileBy.XPATH,'//*[@text="已转短信送达"]'),
+        '添加图片':(MobileBy.ID,'com.chinasofti.rcs:id/ib_pic'),
+        '选择图片':(MobileBy.ID,'com.chinasofti.rcs:id/iv_select'),
+        '图片发送':(MobileBy.ID,'com.chinasofti.rcs:id/button_send'),
+        '发送失败':(MobileBy.ID,'com.chinasofti.rcs:id/imageview_msg_send_failed'),
+
 
     }
 
+    @TestLogger.log("点击群发信息")
+    def click_send_message_to_group(self):
+        time.sleep(1)
+        self.click_element(self.__locators['群发信息'])
+        time.sleep(1)
+
+    @TestLogger.log("多方通话_图标")
+    def click_mult_call_icon(self):
+        time.sleep(1)
+        self.click_element(self.__locators['多方通话_图标'])
+        time.sleep(1)
+
+    @TestLogger.log("点击分组_图标")
+    def click_divide_group_icon(self):
+        time.sleep(1)
+        self.click_element(self.__locators['分组联系人'])
+        time.sleep(1)
 
     @TestLogger.log('返回')
     def click_back(self):
@@ -150,6 +202,13 @@ class GroupListPage(BasePage):
     def click_sure_element(self):
         self.click_element(self.__class__.__locators['确定'])
 
+    @TestLogger.log("点击允许权限")
+    def click_allow_button(self):
+        time.sleep(2)
+        if self._is_element_present(self.__class__.__locators['允许']):
+            self.click_element(self.__class__.__locators['允许'])
+        return True
+
     @TestLogger.log("点击新建分组")
     def click_new_group(self):
         self.click_element(self.__class__.__locators['新建分组'])
@@ -157,6 +216,41 @@ class GroupListPage(BasePage):
     @TestLogger.log("点击输入框")
     def click_input_element(self):
         self.click_element(self.__class__.__locators['请输入标签分组名称'])
+
+    @TestLogger.log("分享名片")
+    def click_share_button(self):
+        time.sleep(1)
+        self.click_element(self.__class__.__locators['分享名片'])
+        time.sleep(1)
+
+    @TestLogger.log("邀请使用")
+    def click_innvation_button(self):
+        time.sleep(1)
+        if self._is_element_present(self.__class__.__locators['邀请使用']):
+            self.click_element(self.__class__.__locators['邀请使用'])
+            time.sleep(1)
+            self.click_element(self.__class__.__locators['发送_邀请'])
+            time.sleep(2)
+            if self._is_element_present(self.__class__.__locators['信息邀请']):
+                preconditions.background_app()
+                time.sleep(1)
+                preconditions.launch_app()
+                time.sleep(1)
+                return True
+            else:
+                return False
+        return True
+
+
+
+    @TestLogger.log("发送_邀请")
+    def click_send_innvation_button(self):
+        time.sleep(1)
+        self.click_element(self.__class__.__locators['发送_邀请'])
+        time.sleep(1)
+
+
+
 
     @TestLogger.log("点击搜索框")
     def click_search_box(self,text='搜索或输入手机号'):
@@ -188,26 +282,38 @@ class GroupListPage(BasePage):
     def delete_group(self,name='祝一路顺风幸福美满'):
         if self.is_text_present(name):
             self.click_text(name)
-            self.click_element(self.__class__.__locators['知道了'])
+            time.sleep(2)
+            flag=self._is_element_present(self.__class__.__locators['知道了'])
+            print("aaa",flag)
+            if flag:
+                self.click_element(self.__class__.__locators['知道了'])
             self.click_element(self.__class__.__locators['设置'])
             self.click_element(self.__class__.__locators['删除标签'])
             self.click_element(self.__class__.__locators['刪除按钮'])
+            time.sleep(2)
+            if self._is_element_present(self.__class__.__locators['允许']):
+                self.click_element(self.__class__.__locators['允许'])
+            time.sleep(2)
+
         else:
             print('标签不存在')
 
     @TestLogger.log('返回按钮')
-    def click_back_button(self):
-        if self._is_element_present(self.__class__.__locators['back_contact']):
-            self.click_element(self.__class__.__locators['back_contact'])
-        elif self._is_element_present(self.__class__.__locators['back_gouppage']):
-            self.click_element(self.__class__.__locators['back_gouppage'])
-        else:
-            self.click_element(self.__class__.__locators['back_gouppage'])
+    def click_back_button(self,times=1):
+        for i in range(times):
+            time.sleep(2)
+            if self._is_element_present(self.__class__.__locators['back_contact']):
+                self.click_element(self.__class__.__locators['back_contact'])
+            elif self._is_element_present(self.__class__.__locators['back_gouppage']):
+                self.click_element(self.__class__.__locators['back_gouppage'])
+            else:
+                self.click_element(self.__class__.__locators['back_gouppage'])
+            time.sleep(1)
 
-        # try:
-        #     self.click_element(self.__class__.__locators['back_contact'])
-        # except :
-        #     self.click_element(self.__class__.__locators['back_gouppage'])
+            # try:
+            #     self.click_element(self.__class__.__locators['back_contact'])
+            # except :
+            #     self.click_element(self.__class__.__locators['back_gouppage'])
 
     @TestLogger.log('获取元素y坐标')
     def get_element_text_y(self,text='新建分组'):
@@ -243,3 +349,116 @@ class GroupListPage(BasePage):
         print("color = ",color)
         return color
 
+    @TestLogger.log("新建分组")
+    def new_group(self,name="aaa"):
+        time.sleep(1)
+        self.click_new_group()
+        time.sleep(1)
+        self.click_input_element()
+        time.sleep(1)
+        self.input_content(text=name)
+        time.sleep(1)
+        self.click_sure_element()
+        time.sleep(2)
+        self.click_allow_button()
+        time.sleep(1)
+        self.click_back_button()
+        time.sleep(2)
+        self.click_back_button()
+        time.sleep(2)
+
+    @TestLogger.log("添加成员dalao2")
+    def add_member(self,name='dalao2',times=1):
+        member='大佬2'
+        time.sleep(1)
+        self.click_text('添加成员')
+        time.sleep(1)
+        self.click_search_box()
+        time.sleep(1)
+        self.input_search_text(name)
+        time.sleep(1)
+        self.hide_keyboard()
+        time.sleep(1)
+        if name is 'dalao1':
+            member='大佬1'
+        if times==1:
+            self.click_text(member)
+        else:
+            #time=2,点击2次
+            self.click_text(member)
+            time.sleep(2)
+            self.click_text(member)
+        flag=self.is_toast_exist("该联系人不可选择")
+        isExist=1  #为是第1次添加该联系人，为2是重复添加该联系人
+        if flag:
+            print("联系人不可选")
+            time.sleep(1)
+            self.click_back_button()
+            time.sleep(1)
+            isExist = 2
+
+        else:
+            time.sleep(1)
+            self.click_sure_element()
+            time.sleep(1)
+            self.click_allow_button()
+            time.sleep(1)
+            isExist = 1
+
+        return isExist
+
+    @TestLogger.log("群发信息")
+    def send_message_to_group(self,message='aaaa'):
+        time.sleep(1)
+        self.click_element(self.__class__.__locators["群发信息"])
+        time.sleep(2)
+        flag= self._is_element_present(self.__class__.__locators['我已阅读'])
+        if flag:
+            self.click_element(self.__class__.__locators['我已阅读'])
+            time.sleep(1)
+            self.click_element(self.__class__.__locators['已阅读_确定'])
+            time.sleep(1)
+
+        self.click_element(self.__class__.__locators["群发_输入框"])
+        time.sleep(1)
+        self.input_text(self.__class__.__locators["群发_输入框"],message)
+        time.sleep(1)
+        self.click_element(self.__class__.__locators["发送"])
+        time.sleep(2)
+
+    @TestLogger.log("发送表情")
+    def send_express_to_group(self, message='aaaa'):
+        time.sleep(1)
+        self.click_element(self.__class__.__locators["群发信息"])
+        time.sleep(2)
+        flag = self._is_element_present(self.__class__.__locators['我已阅读'])
+        if flag:
+            self.click_element(self.__class__.__locators['我已阅读'])
+            time.sleep(1)
+            self.click_element(self.__class__.__locators['已阅读_确定'])
+            time.sleep(1)
+
+        self.click_element(self.__class__.__locators["表情按钮"])
+        time.sleep(1)
+        self.click_element(self.__class__.__locators["表情_微笑"])
+        time.sleep(1)
+        self.click_element(self.__class__.__locators["发送"])
+        time.sleep(2)
+
+    @TestLogger.log("发送图片")
+    def send_picture_to_group(self, message='aaaa'):
+        time.sleep(1)
+        self.click_element(self.__class__.__locators["群发信息"])
+        time.sleep(2)
+        flag = self._is_element_present(self.__class__.__locators['我已阅读'])
+        if flag:
+            self.click_element(self.__class__.__locators['我已阅读'])
+            time.sleep(1)
+            self.click_element(self.__class__.__locators['已阅读_确定'])
+            time.sleep(1)
+        self.click_element(self.__class__.__locators["添加图片"])
+        time.sleep(1)
+        self.click_element(self.__class__.__locators["选择图片"])
+        time.sleep(1)
+        self.click_element(self.__class__.__locators["图片发送"])
+        time.sleep(15)

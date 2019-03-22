@@ -435,3 +435,26 @@ DEVICES_CONFIG_YMS = {
         ]
     },
 }
+
+DEVICES_CONFIG_MATES = {
+    'M960BDQN229CH': {
+        "MODEL": SupportedModel.HUAWEI_P20,
+        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
+        "DEFAULT_CAPABILITY": {
+            "platformName": "Android",
+            "platformVersion": "7.0.0",
+            "deviceName": "71BQADSJFM8XS",
+            "udid": "71BQADSJFM8XS",
+            "automationName": "UiAutomator2",
+            "newCommandTimeout": 600,
+            "appPackage": "com.chinasofti.rcs",
+            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+        },
+        'CARDS': [
+            {
+                'TYPE': CardType.CHINA_MOBILE,
+                'CARD_NUMBER': '18373306417'
+            },
+        ]
+    },
+}
