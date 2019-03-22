@@ -84,3 +84,19 @@ class MeCallMultiPage(BasePage):
                 message
             )
         return self
+
+    @TestLogger.log()
+    def wait_for_page_load_charge_center(self, timeout=8, auto_accept_alerts=True):
+        """等待多方电话时长详情页面弹框加载 """
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("充值套餐")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(timeout)
+            raise AssertionError(
+                message
+            )
+        return self
