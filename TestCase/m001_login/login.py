@@ -286,7 +286,7 @@ class LoginTest(TestCase):
         # 检查电话号码
         phone_numbers = current_mobile().get_cards(CardType.CHINA_MOBILE)
         oklp.assert_phone_number_equals_to(phone_numbers[0])
-        # 检查 服务协议
+        # 检查 服务协议等待页面进入引导页第一页（自动允许权限）
         oklp.page_should_contain_text("服务条款")
         # 登录
         # oklp.check_the_agreement()
