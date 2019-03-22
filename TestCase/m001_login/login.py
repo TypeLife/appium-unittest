@@ -307,7 +307,7 @@ class LoginTest(TestCase):
         # 3、退出后台
         current_mobile().press_home_key()
 
-    @tags('ALL', 'SMOKE', 'CMCC')
+    @tags('ALL', 'SMOKE', 'CMCC_RESET')
     def test_login_0002(self):
         """已登录状态后，退出后台"""
         current_mobile().activate_app('com.chinasofti.rcs')
@@ -386,7 +386,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC')
+    @tags('ALL', 'SMOKE', 'CMCC_RESET')
     def test_login_0007(self):
         """服务条款检查"""
         oklp = OneKeyLoginPage()
@@ -455,7 +455,7 @@ class LoginTest(TestCase):
         Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC')
+    @tags('ALL', 'SMOKE', 'CMCC_RESET')
     def test_login_0009(self):
         """登录页面检查"""
         oklp = OneKeyLoginPage()
@@ -1007,7 +1007,7 @@ class LoginTest(TestCase):
             current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
                                          replace=True)
 
-    @tags('ALL', 'Login', 'CMCC')
+    @tags('ALL', 'Login', 'CMCC_RESET')
     def test_login_0074(self):
         """ 先卸载后安装"""
         # 卸载和飞信
@@ -1031,7 +1031,7 @@ class LoginTest(TestCase):
             current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
                                          replace=True)
 
-    @tags('ALL', 'Login', 'CMCC')
+    @tags('ALL', 'Login', 'CMCC_RESET')
     def test_login_0075(self):
         """ 先卸载后安装"""
         # 卸载和飞信
@@ -1163,7 +1163,7 @@ class LoginTest(TestCase):
         preconditions.force_close_and_launch_app()
         Preconditions.make_already_in_one_key_login_page()
 
-    @tags('ALL', 'Login', 'CMCC')
+    @tags('ALL', 'Login', 'CMCC_RESET')
     def test_login_0117(self):
         """ 老版用户更新后登录"""
         oklp = OneKeyLoginPage()
