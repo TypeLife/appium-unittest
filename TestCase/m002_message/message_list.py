@@ -1,5 +1,6 @@
 import unittest
 
+import preconditions
 from library.core.utils.applicationcache import current_mobile
 from pages.call.Call import CallPage
 from pages.components import BaseChatPage
@@ -58,7 +59,14 @@ class MessageListTotalQuantityTest(TestCase):
     """
 
     def default_setUp(self):
-        pass
+
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        else:
+            preconditions.force_close_and_launch_app()
+            mess.wait_for_page_load()
 
     def default_tearDown(self):
         pass
@@ -67,27 +75,24 @@ class MessageListTotalQuantityTest(TestCase):
     def test_message_list_total_quantity_0024(self):
         """消息列表进入"""
 
-        Preconditions.make_already_in_message_page()
         mp = MessagePage()
         mp.wait_for_page_load()
         # 确保当前页面不在消息列表模块
-        if mp.is_on_this_page():
-            mp.open_me_page()
-        else:
-            current_mobile().launch_app()
+        mp.open_me_page()
+        me_page = MePage()
+        me_page.wait_for_me_page_load()
         time.sleep(2)
         # 进入消息列表
         mp.open_message_page()
-        # 等待消息列表页面加载
+        # 1.等待消息列表页面加载
         mp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
     def test_message_list_total_quantity_0025(self):
         """登录之后消息列表进入"""
 
-        Preconditions.make_already_in_message_page()
         # 重启客户端
-        current_mobile().launch_app()
+        preconditions.force_close_and_launch_app()
         mp = MessagePage()
         # 1.登录客户端,等待消息列表页面加载
         mp.wait_for_page_load()
@@ -98,12 +103,11 @@ class MessageListTotalQuantityTest(TestCase):
     def test_message_list_total_quantity_0026(self):
         """消息列表载入"""
 
-        Preconditions.make_already_in_message_page()
         mp = MessagePage()
         # 设置手机网络断开
         mp.set_network_status(0)
         # 1.重启客户端,等待消息列表页加载,验证页面搜索,底部tab,右上角+是否可点击
-        current_mobile().launch_app()
+        preconditions.force_close_and_launch_app()
         mp.wait_for_page_load()
         self.assertEquals(mp.search_box_is_enabled(), True)
         self.assertEquals(mp.message_icon_is_enabled(), True)
@@ -128,8 +132,6 @@ class MessageListTotalQuantityTest(TestCase):
     def test_message_list_total_quantity_0027(self):
         """消息列表进入到会话页面"""
 
-        # 进入消息列表页面
-        Preconditions.make_already_in_message_page()
         mp = MessagePage()
         # 等待消息列表页加载
         mp.wait_for_page_load()
@@ -137,16 +139,16 @@ class MessageListTotalQuantityTest(TestCase):
         name = "大佬1"
         Preconditions.enter_single_chat_page(name)
         scp = SingleChatPage()
-        text = "123"
+        text = "111"
         scp.input_text_message(text)
         time.sleep(2)
         scp.send_text()
         scp.click_back()
         mp.wait_for_page_load()
-        # 进入到会话页面
+        # 1.进入到会话页面
         mp.choose_chat_by_name(name)
         scp.wait_for_page_load()
-        # 返回消息页面
+        # 返回消息列表页
         scp.click_back()
 
     @tags('ALL', 'CMCC_RESET', 'LXD')
@@ -154,8 +156,6 @@ class MessageListTotalQuantityTest(TestCase):
         """消息列表未读消息清空"""
 
         # 重置当前app
-        LoginPreconditions.select_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
         current_mobile().reset_app()
         LoginPreconditions.make_already_in_one_key_login_page()
         LoginPreconditions.login_by_one_key_login()
@@ -165,15 +165,13 @@ class MessageListTotalQuantityTest(TestCase):
         self.assertEquals(mp.is_exist_unread_messages(), True)
         # 清空未读消息
         mp.clear_up_unread_messages()
-        # 验证未读消息小红点标识是否消失
+        # 1.验证未读消息小红点标识是否消失
         self.assertEquals(mp.is_exist_unread_messages(), False)
 
     @unittest.skip("暂时难以实现,跳过")
     def test_message_list_total_quantity_0034(self):
         """消息列表订阅号红点显示"""
 
-        # 进入消息页面
-        Preconditions.make_already_in_message_page()
         mp = MessagePage()
         # 等待消息页加载
         mp.wait_for_page_load()
@@ -196,8 +194,6 @@ class MessageListTotalQuantityTest(TestCase):
     def test_message_list_total_quantity_0038(self):
         """消息列表网络异常显示"""
 
-        # 进入消息列表页面
-        Preconditions.make_already_in_message_page()
         mp = MessagePage()
         # 设置手机网络断开
         mp.set_network_status(0)

@@ -63,6 +63,7 @@ class MessagePage(FooterPage):
         "未读消息气泡": (MobileBy.ID, "com.chinasofti.rcs:id/rnMessageBadge"),
         '页面文案': (MobileBy.XPATH, "//*[contains(@text, '图文消息，一触即发')]"),
         '置顶聊天': (MobileBy.XPATH, '//*[@text="置顶聊天"]'),
+        '取消置顶': (MobileBy.XPATH, '//*[@text="取消置顶"]'),
     }
 
     @TestLogger.log('检查顶部搜索框是否显示')
@@ -434,7 +435,7 @@ class MessagePage(FooterPage):
     def choose_chat_by_name(self, name):
         """通过名字选择一个聊天"""
         locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % name)
-        max_try = 10
+        max_try = 20
         current = 0
         while current < max_try:
             if self._is_element_present(locator):
@@ -521,7 +522,7 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def slide_to_the_top(self):
         """滑到消息记录顶端"""
-        max_try = 10
+        max_try = 20
         current = 0
         while current < max_try:
             if self._is_element_present(self.__class__.__locators["搜索"]):
@@ -530,20 +531,78 @@ class MessagePage(FooterPage):
             self.swipe_by_percent_on_screen(50, 30, 50, 70, 800)
 
     @TestLogger.log()
-    def top_message_recording(self):
-        """置顶非第一条消息记录"""
+    def top_message_recording_by_number(self, number):
+        """置顶消息记录"""
         els = self.get_elements(self.__class__.__locators["消息名称"])
-        title_name = els[1].text
-        self.press(els[1])
+        name = els[number].text
+        self.press(els[number])
         if self._is_element_present(self.__class__.__locators["置顶聊天"]):
             self.click_element(self.__class__.__locators["置顶聊天"])
         else:
-            self.tap_coordinate([(100, 20), (100, 60), (100,100)])
-        return title_name
+            self.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+        return name
 
     @TestLogger.log()
-    def get_the_first_message_title(self):
-        """获取第一条消息记录标题"""
+    def cancel_stick_message_recording_by_number(self, number):
+        """取消置顶消息记录"""
         els = self.get_elements(self.__class__.__locators["消息名称"])
-        title_name = els[0].text
-        return title_name
+        name = els[number].text
+        self.press(els[number])
+        if self._is_element_present(self.__class__.__locators["取消置顶"]):
+            self.click_element(self.__class__.__locators["取消置顶"])
+        else:
+            self.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+        return name
+
+    @TestLogger.log()
+    def get_message_name_by_number(self, number):
+        """获取消息名称"""
+        els = self.get_elements(self.__class__.__locators["消息名称"])
+        name = els[number].text
+        return name
+
+    @TestLogger.log()
+    def is_exist_message_name(self):
+        """是否存在消息名称"""
+        return self._is_element_present(self.__class__.__locators["消息名称"])
+
+    @TestLogger.log()
+    def is_exist_message_record(self):
+        """是否存在消息记录"""
+        return self._is_element_present(self.__class__.__locators["消息项"])
+
+    @TestLogger.log()
+    def is_exist_message_img(self):
+        """是否存在消息头像"""
+        return self._is_element_present(self.__class__.__locators["消息头像"])
+
+    @TestLogger.log()
+    def is_exist_message_time(self):
+        """是否存在消息时间"""
+        return self._is_element_present(self.__class__.__locators["消息时间"])
+
+    @TestLogger.log()
+    def is_exist_message_content(self):
+        """是否存在消息内容"""
+        return self._is_element_present(self.__class__.__locators["消息简要内容"])
+
+    @TestLogger.log()
+    def cancel_stick_and_clear_message_record(self):
+        """取消置顶,清空消息记录"""
+        els = self.get_elements(self.__class__.__locators["消息名称"])
+        for el in els:
+            self.press(el)
+            if self._is_element_present(self.__class__.__locators["取消置顶"]):
+                self.click_element(self.__class__.__locators["取消置顶"])
+            else:
+                self.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+            time.sleep(1)
+            self.press(el)
+            time.sleep(1)
+            self.click_element(self.__class__.__locators["删除聊天"])
+
+    @TestLogger.log()
+    def is_slide_message_list(self):
+        """验证消息列表是否可滑动"""
+        self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        return self._is_element_present(self.__class__.__locators["搜索"])

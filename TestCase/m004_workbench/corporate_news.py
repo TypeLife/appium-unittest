@@ -1,3 +1,4 @@
+import preconditions
 from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.utils.testcasefilter import tags
@@ -129,15 +130,14 @@ class CorporateNewsTest(TestCase):
         mess = MessagePage()
         if cnp.is_on_corporate_news_page():
             return
-        if mess.is_on_this_page():
-            mess.click_workbench()
-            wbp.wait_for_workbench_page_load()
-            wbp.click_company_news()
-        else:
-            current_mobile().launch_app()
-            Preconditions.make_already_in_one_key_login_page()
-            Preconditions.login_by_one_key_login()
-            Preconditions.enter_corporate_news_page()
+        if not mess.is_on_this_page():
+            preconditions.force_close_and_launch_app()
+            mess.wait_for_page_load()
+        mess.click_workbench()
+        wbp.wait_for_page_load()
+        wbp.click_company_news()
+        cnp.wait_for_page_load()
+
 
     def default_tearDown(self):
 
