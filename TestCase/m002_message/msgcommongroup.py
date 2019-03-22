@@ -662,13 +662,15 @@ class MsgCommonGroupTest(TestCase):
             mess.click_element_by_text("和飞信电话")
             chat = SingleChatPage()
             time.sleep(2)
-            chat.click_i_have_read()
+            if gcp.is_text_present("1元/条"):
+                chat.click_i_have_read()
             time.sleep(2)
             chat.wait_for_page_load()
             try:
                 cwp.wait_for_msg_send_status_become_to('发送成功', 10)
             except TimeoutException:
                 raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            chat.click_back()
 
     @staticmethod
     def setUp_test_msg_common_group_0010():
@@ -839,6 +841,11 @@ class MsgCommonGroupTest(TestCase):
         except TimeoutException:
             raise AssertionError('消息未在 {}s 内发送成功'.format(10))
 
+    def tearDown_test_msg_common_group_0012(self):
+        #重新连接网络
+        scp = GroupChatPage()
+        scp.set_network_status(6)
+
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0013(self):
         """在聊天会话页面，长按文本消息，使用转发功能，选择一个群作为转发对象"""
@@ -884,19 +891,20 @@ class MsgCommonGroupTest(TestCase):
             except TimeoutException:
                 raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
 
-    @staticmethod
-    def setUp_test_msg_common_group_0015():
-
-        Preconditions.select_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        current_mobile().reset_app()
-        # current_mobile().connect_mobile()
-        Preconditions.enter_group_chat_page()
+    # @staticmethod
+    # def setUp_test_msg_common_group_0015():
+    #
+    #     Preconditions.select_mobile('Android-移动')
+    #     current_mobile().hide_keyboard_if_display()
+    #     current_mobile().reset_app()
+    #     # current_mobile().connect_mobile()
+    #     Preconditions.enter_group_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0015(self):
         """在聊天会话页面，长按文本消息，使用转发功能，选择本地联系人作为转发对象"""
         gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
         # 输入信息
         gcp.input_message("哈哈")
         # 点击发送
@@ -935,9 +943,11 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(2)
         # 返回消息页面
         gcp.click_back()
+        time.sleep(2)
         sogp = SelectOneGroupPage()
-        sogp.click_back()
-        sc.click_back()
+        if sogp.is_on_this_page():
+            sogp.click_back()
+            sc.click_back()
         time.sleep(1)
         # 判断消息页面有新的会话窗口
         mess = MessagePage()
@@ -945,7 +955,9 @@ class MsgCommonGroupTest(TestCase):
             self.assertTrue(mess.is_text_present("和飞信电话"))
             mess.click_element_by_text("和飞信电话")
             chat = SingleChatPage()
-            chat.click_i_have_read()
+            time.sleep(2)
+            if gcp.is_text_present("1元/条"):
+                chat.click_i_have_read()
             chat.wait_for_page_load()
             try:
                 cwp.wait_for_msg_send_status_become_to('发送成功', 10)
@@ -972,6 +984,7 @@ class MsgCommonGroupTest(TestCase):
         except TimeoutException:
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
         # 长按信息并点击转发
+        time.sleep(2)
         gcp.press_file_to_do("哈哈", "转发")
         sc = SelectContactsPage()
         sc.wait_for_page_local_contact_load()
@@ -1125,6 +1138,8 @@ class MsgCommonGroupTest(TestCase):
             time.sleep(2)
             if not mcp.is_toast_exist("取消收藏成功"):
                 raise AssertionError("不可以删除收藏的消息体")
+        mcp.click_back()
+        mess.open_message_page()
 
     @staticmethod
     def setUp_test_msg_common_group_0019():
@@ -1135,7 +1150,7 @@ class MsgCommonGroupTest(TestCase):
         # current_mobile().connect_mobile()
         Preconditions.enter_group_chat_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC-RESET', 'group_chat')
     def test_msg_common_group_0019(self):
         """未获取权限时，点击输入框右边的语音按钮，检查是否会弹出提示权限"""
         gcp = GroupChatPage()
@@ -1395,6 +1410,17 @@ class MsgCommonGroupTest(TestCase):
     def test_msg_common_group_0042(self):
         """点击聊天会话页面中的一组号码数字"""
         gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 输入信息
+        info = "123456"
+        gcp.input_message(info)
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
         gcp.click_text("123456")
         if not gcp.is_text_present("呼叫"):
             raise AssertionError("不会弹出呼叫，复制号码窗体")
@@ -1408,7 +1434,7 @@ class MsgCommonGroupTest(TestCase):
             raise AssertionError("不可以发起呼叫")
         time.sleep(1)
         #点击结束呼叫按钮
-        gcp.click_end_call_button()
+        gcp.hang_up_the_call()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','yyx')
     def test_msg_common_group_0043(self):
@@ -2901,7 +2927,7 @@ class MsgCommonGroupTest(TestCase):
                 except AssertionError as e:
                     raise e
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX',"aa")
     def test_msg_common_group_0109(self):
         """转发默认选中项（1条）—取消删除"""
         gcp = GroupChatPage()
@@ -2932,7 +2958,7 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(1)
         gcp.click_multiple_selection_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX',"aa")
     def test_msg_common_group_0110(self):
         """取消默认选中项"""
         gcp = GroupChatPage()
@@ -2953,7 +2979,7 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(1)
         gcp.click_multiple_selection_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX',"aa")
     def test_msg_common_group_0111(self):
         """选择多条消息体"""
         gcp = GroupChatPage()
@@ -2980,7 +3006,7 @@ class MsgCommonGroupTest(TestCase):
         # current_mobile().connect_mobile()
         Preconditions.enter_group_chat_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    @tags('ALL', 'SMOKE', 'CMCC-RESET', 'group_chat', 'DEBUG_YYX1')
     def test_msg_common_group_0112(self):
         """当转发的消息体中包含不支持转发的类型：①未下载的图片/视频/文件  ②语音、红包、卡券等特殊消息体——网络正常"""
         gcp = GroupChatPage()
@@ -3082,34 +3108,34 @@ class MsgCommonGroupTest(TestCase):
             time.sleep(2)
             mess.press_file_to_do("和飞信电话","删除聊天")
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'DEBUG_YYX1',"aa")
     def test_msg_common_group_0113(self):
         """当转发的消息体中包含不支持转发的类型：①未下载的图片/视频/文件  ②语音、红包、卡券等特殊消息体——网络异常"""
         gcp = GroupChatPage()
         #断开网络
         gcp.set_network_status(0)
-        time.sleep(2)
+        time.sleep(5)
         gcp.press_file_to_do("哈哈0", "多选")
         # 点击其他复选框
         els = gcp.get_multiple_selection_select_box()
         if els:
             els[1].click()
             els[2].click()
-            els[3].click()
+            # els[3].click()
         else:
             raise AssertionError("没有找到复选框")
         time.sleep(1)
         # 点击转发
-        gcp.click_multiple_selection_forward()
+        # gcp.click_multiple_selection_forward()
         # 点击取消
-        gcp.click_cancel_repeat_msg()
+        # gcp.click_cancel_repeat_msg()
         # 验证停留在批量选择器页面
-        if not gcp.is_text_present("已选择"):
-            raise AssertionError("点击取消没有停留在批量选择器页面")
+        # if not gcp.is_text_present("已选择"):
+        #     raise AssertionError("点击取消没有停留在批量选择器页面")
         # 点击转发
         gcp.click_multiple_selection_forward()
         # 点击确定
-        gcp.click_sure_repeat_msg()
+        # gcp.click_sure_repeat_msg()
         sc = SelectContactsPage()
         sc.wait_for_page_local_contact_load()
         sc.select_local_contacts()

@@ -3,6 +3,8 @@ import re
 import time
 import unittest
 import uuid
+
+import preconditions
 from preconditions.BasePreconditions import LoginPreconditions
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
@@ -123,7 +125,7 @@ class MsgGroupChatTest(TestCase):
             current_mobile().hide_keyboard_if_display()
             return
         else:
-            current_mobile().launch_app()
+            preconditions.force_close_and_launch_app()
             Preconditions.enter_group_chat_page()
 
     def default_tearDown(self):
