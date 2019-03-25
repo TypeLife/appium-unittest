@@ -1,3 +1,5 @@
+import time
+
 from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
@@ -19,12 +21,19 @@ class MeCallMultiPage(BasePage):
                   '当前剩余多方通话分钟数': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_recharge_name'),
                   '100': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_remainder_duration'),
                   '分钟': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_min'),
+                  # 打开当前剩余多方电话分钟
+                  '充值': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_recharge_button'),
+                  # 打开充值中心页面
+                  '查看充值记录': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_recharge_record'),
+                  '充值套餐': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_recharge_package'),
+                  '返回1': (MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn'),
                   }
 
     @TestLogger.log()
-    def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
+    def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
         """等待卡片页面弹框加载 """
         try:
+            time.sleep(5)
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
@@ -54,7 +63,7 @@ class MeCallMultiPage(BasePage):
         self.page_should_contain_element(self.__locators[locator])
 
     @TestLogger.log()
-    def wait_for_page_load_call_questions(self, timeout=8, auto_accept_alerts=True):
+    def wait_for_page_load_call_questions(self, timeout=20, auto_accept_alerts=True):
         """等待多方电话FQA页面弹框加载 """
         try:
             self.wait_until(
@@ -70,7 +79,7 @@ class MeCallMultiPage(BasePage):
         return self
 
     @TestLogger.log()
-    def wait_for_page_load_call_details(self, timeout=8, auto_accept_alerts=True):
+    def wait_for_page_load_call_details(self, timeout=20, auto_accept_alerts=True):
         """等待多方电话时长详情页面弹框加载 """
         try:
             self.wait_until(
@@ -84,3 +93,41 @@ class MeCallMultiPage(BasePage):
                 message
             )
         return self
+
+    @TestLogger.log()
+    def wait_for_page_load_call_details_charge(self, text, timeout=20, auto_accept_alerts=True,):
+        """等待多方电话时长详情页面弹框加载 """
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present(text)
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(timeout)
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def wait_for_page_load_charge_center(self, timeout=8, auto_accept_alerts=True):
+        """等待多方电话时长详情页面弹框加载 """
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("充值套餐")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(timeout)
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def ele_is_click(self, locator):
+        """点击字段选项 """
+        self.element_should_be_enabled(self.__locators[locator])
+
