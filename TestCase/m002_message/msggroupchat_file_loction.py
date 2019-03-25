@@ -474,7 +474,7 @@ class MsgGroupChatFileLocationTest(TestCase):
             try:
                 raise AssertionError("没有返回到群聊页面，无法删除记录")
             except AssertionError as e:
-                print(e)
+                raise e
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0007(self):
