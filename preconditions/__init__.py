@@ -1,10 +1,8 @@
 """通用预置条件封装方法"""
 
 from selenium.common.exceptions import TimeoutException
-
 from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
 from pages import *
-
 
 def connect_mobile(category):
     """选择手机手机"""
@@ -106,6 +104,10 @@ def force_close_and_launch_app():
 def background_app():
     """后台运行"""
     current_mobile().press_home_key()
+
+# def launch_app():
+#     """ 启动应用"""
+#     current_mobile().launch_app()
 
 
 def make_already_in_message_page(reset_required=False):

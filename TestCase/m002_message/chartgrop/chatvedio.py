@@ -6,6 +6,7 @@ import uuid
 
 from appium.webdriver.common.mobileby import MobileBy
 
+import preconditions
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
@@ -1669,9 +1670,8 @@ class MsgGroupChatTotalQuantityTest(TestCase):
         scp = GroupChatPage()
         if scp.is_on_this_page():
             current_mobile().hide_keyboard_if_display()
-            return
         else:
-            current_mobile().launch_app()
+            preconditions.force_close_and_launch_app()
             Preconditions.enter_group_chat_page()
 
     def default_tearDown(self):
@@ -1698,9 +1698,16 @@ class MsgGroupChatTotalQuantityTest(TestCase):
     def test_msg_group_chat_total_quantity_0041(self):
         """群聊会话页面,转发自己发送的图片到当前会话窗口"""
 
-        # 确保当前群聊页面已有图片
-        Preconditions.make_already_have_my_picture()
+        # 给当前会话页面发送一张图片,确保最近聊天中有记录
         gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        time.sleep(2)
+        gcp.click_picture()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_pic_fk(1)
+        cpg.click_send()
+        time.sleep(5)
         # 等待群聊页面加载
         gcp.wait_for_page_load()
         # 1.长按自己发送的图片并转发
@@ -1725,9 +1732,16 @@ class MsgGroupChatTotalQuantityTest(TestCase):
     def test_msg_group_chat_total_quantity_0042(self):
         """群聊会话页面，转发他人发送的图片到当前会话窗口时失败"""
 
-        # 确保当前群聊页面已有图片
-        Preconditions.make_already_have_my_picture()
+        # 给当前会话页面发送一张图片,确保最近聊天中有记录
         gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        time.sleep(2)
+        gcp.click_picture()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_pic_fk(1)
+        cpg.click_send()
+        time.sleep(5)
         # 等待群聊页面加载
         gcp.wait_for_page_load()
         # 设置手机网络断开
@@ -1761,9 +1775,16 @@ class MsgGroupChatTotalQuantityTest(TestCase):
     def test_msg_group_chat_total_quantity_0043(self):
         """群聊会话页面，转发自己发送的图片到当前会话窗口时点击取消转发"""
 
-        # 确保当前群聊页面已有图片
-        Preconditions.make_already_have_my_picture()
+        # 给当前会话页面发送一张图片,确保最近聊天中有记录
         gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        time.sleep(2)
+        gcp.click_picture()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_pic_fk(1)
+        cpg.click_send()
+        time.sleep(5)
         # 等待群聊页面加载
         gcp.wait_for_page_load()
         # 1.长按自己发送的图片并转发
@@ -2194,6 +2215,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
 
         # 确保当前群聊页面已有视频
         Preconditions.make_already_have_my_videos()
+        time.sleep(5)
         gcp = GroupChatPage()
         # 等待群聊页面加载
         gcp.wait_for_page_load()
@@ -2243,6 +2265,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
 
         # 确保当前群聊页面已有视频
         Preconditions.make_already_have_my_videos()
+        time.sleep(5)
         gcp = GroupChatPage()
         # 等待群聊页面加载
         gcp.wait_for_page_load()
@@ -2301,6 +2324,7 @@ class MsgGroupChatTotalQuantityTest(TestCase):
 
         # 确保当前群聊页面已有视频
         Preconditions.make_already_have_my_videos()
+        time.sleep(5)
         gcp = GroupChatPage()
         # 等待群聊页面加载
         gcp.wait_for_page_load()

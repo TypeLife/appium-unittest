@@ -1,6 +1,8 @@
 import random
 import time
 import re
+
+import preconditions
 from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile
 from pages.components import BaseChatPage
@@ -13,7 +15,7 @@ class Preconditions(LoginPreconditions):
     """前置条件"""
 
     @staticmethod
-    def enter_single_chat_page():
+    def enter_single_chat_page(name):
         """进入单聊聊天会话页面"""
 
         # 进入消息页面
@@ -26,7 +28,6 @@ class Preconditions(LoginPreconditions):
         mp.click_new_message()
         slc = SelectLocalContactsPage()
         slc.wait_for_page_load()
-        name = "大佬1"
         # 进入单聊会话页面
         slc.selecting_local_contacts_by_name(name)
         bcp = BaseChatPage()

@@ -77,7 +77,7 @@ class HuaweiP20(MobileDriver):
         params = 'am start -a android.settings.WIFI_SETTINGS'.split(' ')
         self.execute_shell_command(*params)
         switch_locator = [MobileBy.XPATH, '//android.widget.Switch']
-        if self.get_element_attribute(switch_locator, 'checked', 3) == 'false':
+        if self.get_element_attribute(switch_locator, 'checked', 5) == 'false':
             self.click_element(switch_locator, auto_accept_permission_alert=False)
         try:
             self.wait_until(
@@ -112,7 +112,7 @@ class HuaweiP20(MobileDriver):
         params = 'am start -a android.settings.WIFI_SETTINGS'.split(' ')
         self.execute_shell_command(*params)
         switch_locator = [MobileBy.XPATH, '//android.widget.Switch']
-        if self.get_element_attribute(switch_locator, 'checked', 3) == 'true':
+        if self.get_element_attribute(switch_locator, 'checked', 5) == 'true':
             self.click_element(switch_locator, auto_accept_permission_alert=False)
         try:
             self.wait_until(

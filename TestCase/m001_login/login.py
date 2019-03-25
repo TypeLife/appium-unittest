@@ -263,8 +263,7 @@ class Preconditions(object):
         login_num = Preconditions.login_by_one_key_login()
         return login_num
 
-
-@unittest.skip("ww")
+@unittest.skip("一键登录先不执行")
 class LoginTest(TestCase):
     """Login 模块"""
 
@@ -847,7 +846,7 @@ class LoginTest(TestCase):
     @staticmethod
     def setUp_test_login_0052():
         Preconditions.select_mobile('Android-移动')
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
@@ -978,7 +977,7 @@ class LoginTest(TestCase):
         Preconditions.select_mobile('Android-移动')
         oklp = OneKeyLoginPage()
         oklp.set_network_status(1)
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'Login', 'CMCC')
@@ -1052,7 +1051,7 @@ class LoginTest(TestCase):
         Preconditions.select_mobile('Android-移动')
         oklp = OneKeyLoginPage()
         oklp.set_network_status(1)
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'Login', "移动")
@@ -1085,7 +1084,7 @@ class LoginTest(TestCase):
     @staticmethod
     def setUp_test_login_0113():
         Preconditions.select_mobile('Android-移动')
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'Login', 'CMCC')
@@ -1117,7 +1116,7 @@ class LoginTest(TestCase):
     @staticmethod
     def setUp_test_login_0114():
         Preconditions.select_mobile('Android-移动')
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'Login', 'CMCC')
@@ -1134,7 +1133,7 @@ class LoginTest(TestCase):
     @staticmethod
     def setUp_test_login_0116():
         Preconditions.select_mobile('Android-移动')
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'Login', 'CMCC')
@@ -1161,7 +1160,7 @@ class LoginTest(TestCase):
     @staticmethod
     def setUp_test_login_0117():
         Preconditions.select_mobile('Android-移动')
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'Login', 'CMCC_RESET')
@@ -1198,7 +1197,7 @@ class LoginTest(TestCase):
         Preconditions.select_mobile('Android-移动')
         oklp = OneKeyLoginPage()
         oklp.set_network_status(1)
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'Login', "移动")
@@ -1234,7 +1233,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0135():
         """进入一键登录页"""
         Preconditions.select_mobile('Android-移动')
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'Login', "移动")
@@ -1266,7 +1265,7 @@ class LoginTest(TestCase):
     def setUp_test_login_0122():
         """进入一键登录页"""
         Preconditions.select_mobile('Android-移动')
-        preconditions.force_close_and_launch_app()
+        Preconditions.app_start_for_the_first_time()
         Preconditions.make_already_in_one_key_login_page()
 
     @tags('ALL', 'Login', "移动")
@@ -1277,5 +1276,4 @@ class LoginTest(TestCase):
         phone_numbers = current_mobile().get_cards(CardType.CHINA_MOBILE)
         print(phone_numbers)
         oklp.assert_phone_number_equals_to(phone_numbers[0])
-        oklp.press_home_key(2)
-
+        oklp.press_home_key(times=2)
