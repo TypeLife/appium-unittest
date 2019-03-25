@@ -23,6 +23,7 @@ class SingleChatSetPage(BasePage):
                   '置订聊天按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/chat_set_to_top_switch'),
                   '置顶聊天': (MobileBy.XPATH, '//*[@text="置顶聊天"]'),
                   '查找聊天内容': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_serarch_chat_record'),
+                  "消息免打扰开关": (MobileBy.ID, "com.chinasofti.rcs:id/switch_undisturb"),
                   }
 
     @TestLogger.log()
@@ -84,3 +85,13 @@ class SingleChatSetPage(BasePage):
     def get_name(self):
         """获取聊天人的人名"""
         return self.get_element(self.__class__.__locators['axz']).text
+
+    @TestLogger.log()
+    def is_selected_no_disturb(self):
+        """消息免打扰是否开启"""
+        return self.is_selected(self.__class__.__locators["消息免打扰开关"])
+
+    @TestLogger.log()
+    def click_no_disturb(self):
+        """点击 消息免打扰开关"""
+        self.click_element(self.__class__.__locators['消息免打扰开关'])
