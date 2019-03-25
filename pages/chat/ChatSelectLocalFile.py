@@ -149,7 +149,7 @@ class ChatSelectLocalFilePage(BasePage):
             el.click()
             return el
         else:
-            print("在SD卡 无%s类型的文件，请预置相应类型文件" % file_type)
+            raise AssertionError("在SD卡 无%s类型的文件，请预置相应类型文件" % file_type)
 
     @TestLogger.log()
     def select_file2(self, file_type):
@@ -159,7 +159,7 @@ class ChatSelectLocalFilePage(BasePage):
             els[0].click()
             return els[0]
         else:
-            print("在SD卡 无%s类型的文件 或者 页面未加载出来。" % file_type)
+            raise AssertionError("在SD卡 无%s类型的文件 或者 页面未加载出来。" % file_type)
 
     @TestLogger.log()
     def click_preset_file_dir(self):
