@@ -264,6 +264,7 @@ class Preconditions(object):
         return login_num
 
 
+@unittest.skip("ww")
 class LoginTest(TestCase):
     """Login 模块"""
 

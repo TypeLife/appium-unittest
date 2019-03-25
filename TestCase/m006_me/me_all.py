@@ -2167,6 +2167,7 @@ class MeAllTest(TestCase):
         mep.click_back()
         mep.click_back()
         mep.click_back()
+        mep.open_message_page()
 
     @staticmethod
     def setUp_test_me_all_076():
@@ -2239,7 +2240,7 @@ class MeAllTest(TestCase):
         menu = {"当前剩余多方通话分钟数", "充值中心", "资费说明"}
         mmp.page_contain_text(menu)
         # 3.点击返回
-        mmp.click_back()
+        mmp.click_el_text("返回1")
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
     def test_me_all_389(self):
@@ -2260,10 +2261,9 @@ class MeAllTest(TestCase):
         mmp.wait_for_page_load_call_details()
         # 3.点击返回
         mmp.click_back()
-        mmp.click_back()
-        time.sleep(20)
+        mmp.click_el_text("返回1")
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
     def test_me_all_390(self):
         """多方电话管理-充值中心页面验证"""
         # 0.检验是否跳转到我页面
@@ -2279,11 +2279,11 @@ class MeAllTest(TestCase):
         mmp.page_should_contain_text("暂无套餐列表")
         # 3.点击返回
         mmp.click_back()
-        mmp.click_back()
+        mmp.click_el_text("返回1")
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
     def test_me_all_391(self):
-        """多方电话管理-充值中心页面验证"""
+        """多方电话管理-资费说明跳转验证"""
         # 0.检验是否跳转到我页面
         mep = MePage()
         mep.is_on_this_page()
@@ -2297,11 +2297,11 @@ class MeAllTest(TestCase):
         mmp.page_should_contain_text("暂无套餐列表")
         # 3.点击返回
         mmp.click_back()
-        mmp.click_back()
+        mmp.click_el_text("返回1")
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
     def test_me_all_392(self):
-        """多方电话管理-充值中心页面验证"""
+        """多方电话时长详情"""
         # 0.检验是否跳转到我页面
         mep = MePage()
         mep.is_on_this_page()
@@ -2312,14 +2312,13 @@ class MeAllTest(TestCase):
         # 2.点击点击充值中心,无套餐
         mmp.click_el_text("当前剩余多方通话分钟数")
         mmp.wait_for_page_load_call_details()
-        menu = {"总时长", "可 用", "有"}
+        menu = {"总时长", "可    用", "有效期", "充值"}
         mmp.page_contain_text(menu)
-        time.sleep(20)
-
-        # mmp.page_should_contain_text("暂无套餐列表")
-        # # 3.点击返回
-        # mmp.click_back()
-        # mmp.click_back()
+        # 3.检查充值入口
+        mmp.ele_is_click("充值")
+        # 4.点击返回
+        mep.click_back()
+        mmp.click_el_text("返回1")
 
 
 @unittest.skip("112版用例跳过")
