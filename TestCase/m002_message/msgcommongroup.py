@@ -5104,6 +5104,281 @@ class MsgCommonGroupAllTest(TestCase):
         me.open_message_page()
 
 
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    def test_msg_common_group_all_0050(self):
+        """发送一组数字：95533，发送失败的状态展示"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.set_network_status(0)
+        # 输入信息
+        info = "95533"
+        gcp.input_message(info)
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送失败'.format(10))
+        # 判断是否会展示重新发送按钮
+        if not gcp.is_exist_msg_send_failed_button():
+            try:
+                raise AssertionError("没有重发按钮")
+            except AssertionError as e:
+                raise e
+        time.sleep(2)
+        gcp.click_back()
+        sogp = SelectOneGroupPage()
+        sogp.click_back()
+        sc = SelectContactsPage()
+        sc.click_back()
+        time.sleep(1)
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            # 判断是否有“！”
+            if not mess.is_iv_fail_status_present():
+                try:
+                    raise AssertionError("没有消息发送失败“！”标致")
+                except AssertionError as e:
+                    raise e
+            # 进入新消息窗口判断消息是否发送失败
+            mess.click_text("95533")
+            gcp.wait_for_page_load()
+            gcp.set_network_status(6)
+            time.sleep(2)
+            # 点击重发按钮
+            gcp.click_msg_send_failed_button()
+            # 点击确定重发
+            gcp.click_resend_confirm()
+            # 判断信息发送状态
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息未在 {}s 内发送成功'.format(10))
+
+    def tearDown_msg_common_group_all_0050(self):
+        #重连网络
+        gcp = GroupChatPage()
+        gcp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_common_group_all_0072(self):
+        """仅语音模式，录制时长等于1秒时，点击发送按钮"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+            if gcp.is_text_present("允许"):
+                audio.click_allow()
+            time.sleep(1)
+            audio.click_send_bottom()
+            # 验证是否发送成功
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            audio.click_exit()
+            gcp.hide_keyboard()
+        else:
+            audio.click_send_bottom()
+            audio.click_setting_bottom()
+            if audio.wait_for_audio_type_select_page_load():
+                # 点击只发送语言模式
+                audio.click_only_voice()
+                audio.click_sure()
+                audio.click_send_bottom()
+                # 验证是否发送成功
+                cwp = ChatWindowPage()
+                try:
+                    cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+                except TimeoutException:
+                    raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+                audio.click_exit()
+                gcp.hide_keyboard()
+            else:
+                raise AssertionError("语音模式选择页面加载失败")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_common_group_all_0073(self):
+        """仅语音模式，发送录制时长大于1秒的语音"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+            if gcp.is_text_present("允许"):
+                audio.click_allow()
+            time.sleep(2)
+            audio.click_send_bottom()
+            # 验证是否发送成功
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            audio.click_exit()
+            gcp.hide_keyboard()
+        else:
+            audio.click_send_bottom()
+            audio.click_setting_bottom()
+            if audio.wait_for_audio_type_select_page_load():
+                # 点击只发送语言模式
+                audio.click_only_voice()
+                audio.click_sure()
+                time.sleep(2)
+                audio.click_send_bottom()
+                # 验证是否发送成功
+                cwp = ChatWindowPage()
+                try:
+                    cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+                except TimeoutException:
+                    raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+                audio.click_exit()
+                gcp.hide_keyboard()
+            else:
+                raise AssertionError("语音模式选择页面加载失败")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_common_group_all_0074(self):
+        """仅语音模式，录制时长大于10秒——发送"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+            if gcp.is_text_present("允许"):
+                audio.click_allow()
+            time.sleep(11)
+            audio.click_exit()
+            time.sleep(1)
+            if gcp.is_text_present("语音录制中"):
+                raise AssertionError("退出语音录制模式失败")
+            gcp.hide_keyboard()
+        else:
+            audio.click_send_bottom()
+            audio.click_setting_bottom()
+            if audio.wait_for_audio_type_select_page_load():
+                # 点击只发送语言模式
+                audio.click_only_voice()
+                audio.click_sure()
+                time.sleep(11)
+                audio.click_exit()
+                time.sleep(1)
+                if gcp.is_text_present("语音录制中"):
+                    raise AssertionError("退出语音录制模式失败")
+                gcp.hide_keyboard()
+            else:
+                raise AssertionError("语音模式选择页面加载失败")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_common_group_all_0075(self):
+        """仅语音模式，录制时长等于60秒—自动发送"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+            if gcp.is_text_present("允许"):
+                audio.click_allow()
+            time.sleep(60)
+            # 验证是否发送成功
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            audio.click_exit()
+            gcp.hide_keyboard()
+        else:
+            audio.click_send_bottom()
+            audio.click_setting_bottom()
+            if audio.wait_for_audio_type_select_page_load():
+                # 点击只发送语言模式
+                audio.click_only_voice()
+                audio.click_sure()
+                time.sleep(1)
+                audio.click_exit()
+                Preconditions.delete_record_group_chat()
+                gcp.click_audio_btn()
+                time.sleep(60)
+                # 验证是否发送成功
+                cwp = ChatWindowPage()
+                try:
+                    cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+                except TimeoutException:
+                    raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+                audio.click_exit()
+                gcp.hide_keyboard()
+            else:
+                raise AssertionError("语音模式选择页面加载失败")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_common_group_all_0076(self):
+        """仅语音模式，录制时长超过60秒"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+            if gcp.is_text_present("允许"):
+                audio.click_allow()
+            time.sleep(65)
+            if gcp.is_text_present("语音录制中"):
+                raise AssertionError("录制时长可以超过60秒")
+            audio.click_exit()
+            gcp.hide_keyboard()
+        else:
+            audio.click_send_bottom()
+            audio.click_setting_bottom()
+            if audio.wait_for_audio_type_select_page_load():
+                # 点击只发送语言模式
+                audio.click_only_voice()
+                audio.click_sure()
+                time.sleep(65)
+                if gcp.is_text_present("语音录制中"):
+                    raise AssertionError("录制时长可以超过60秒")
+                audio.click_exit()
+                gcp.hide_keyboard()
+            else:
+                raise AssertionError("语音模式选择页面加载失败")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_common_group_all_0085(self):
+        """在聊天会话页面——点击语音ICON"""
+        gcp = GroupChatPage()
+        #断网
+        gcp.set_network_status(0)
+        time.sleep(2)
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        time.sleep(3)
+        if not gcp.is_text_present("网络不可用，请检查网络设置"):
+            raise AssertionError("没有出现网络不可用提示")
+        audio = ChatAudioPage()
+        audio.click_exit()
+        gcp.hide_keyboard()
+
+    def tearDown_test_msg_common_group_all_0085(self):
+        #重连网络
+        gcp = GroupChatPage()
+        gcp.set_network_status(6)
 
 
 
