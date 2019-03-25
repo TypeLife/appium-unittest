@@ -407,7 +407,7 @@ DEVICES_CONFIG_LXD = {
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '15875537278'
+                'CARD_NUMBER': '19874361585'
             },
         ]
     },
