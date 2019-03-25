@@ -1430,7 +1430,7 @@ class MsgCommonGroupTest(TestCase):
             gcp.click_text("始终允许")
         time.sleep(2)
         #判断是否可以发起呼叫
-        if not gcp.is_call_page_load():
+        if not gcp.is_phone_in_calling_state():
             raise AssertionError("不可以发起呼叫")
         time.sleep(1)
         #点击结束呼叫按钮
@@ -2773,9 +2773,12 @@ class MsgCommonGroupTest(TestCase):
         gcp.click_text(groupName)
         time.sleep(1)
         gcp.press_file_to_do("哈哈26", "多选")
-        gcp.page_down()
+        a=0
+        while a<3:
+            gcp.page_down()
+            a+=1
         time.sleep(2)
-        if not gcp.is_text_present("哈哈9"):
+        if not gcp.is_text_present("跳转到最新消息"):
             raise AssertionError("下滑加载历史信息不成功")
         gcp.click_multiple_selection_back()
 
@@ -2840,6 +2843,21 @@ class MsgCommonGroupTest(TestCase):
     def test_msg_common_group_0104(self):
         """转发默认选中项（1条）—如下消息体是不支持转发的类型（①未下载的图片/视频/文件  ②语音、红包、卡券等特殊消息体）"""
         gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 输入信息
+        dex = 0
+        while dex < 3:
+            messgage = "哈哈" + str(dex)
+            gcp.input_message(messgage)
+            # 点击发送
+            gcp.send_message()
+            # 验证是否发送成功
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            dex += 1
         time.sleep(1)
         gcp.press_file_to_do("哈哈0", "多选")
         gcp.click_text("转发")
@@ -2854,6 +2872,21 @@ class MsgCommonGroupTest(TestCase):
     def test_msg_common_group_0105(self):
         """转发默认选中项（1条）—如下消息体是不支持转发的类型（①未下载的图片/视频/文件  ②语音、红包、卡券等特殊消息体）"""
         gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 输入信息
+        dex = 0
+        while dex < 3:
+            messgage = "哈哈" + str(dex)
+            gcp.input_message(messgage)
+            # 点击发送
+            gcp.send_message()
+            # 验证是否发送成功
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            dex += 1
         time.sleep(1)
         gcp.press_file_to_do("哈哈0", "多选")
         time.sleep(1)
@@ -2874,6 +2907,21 @@ class MsgCommonGroupTest(TestCase):
     def test_msg_common_group_0106(self):
         """转发默认选中项（1条）—当消息体是支持转发的类型——网络正常转发"""
         gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 输入信息
+        dex = 0
+        while dex < 3:
+            messgage = "哈哈" + str(dex)
+            gcp.input_message(messgage)
+            # 点击发送
+            gcp.send_message()
+            # 验证是否发送成功
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            dex += 1
         gcp.press_file_to_do("哈哈0", "多选")
         time.sleep(1)
         gcp.click_text("转发")
@@ -2891,6 +2939,21 @@ class MsgCommonGroupTest(TestCase):
     def test_msg_common_group_0108(self):
         """转发默认选中项（1条）—删除"""
         gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 输入信息
+        dex = 0
+        while dex < 3:
+            messgage = "哈哈" + str(dex)
+            gcp.input_message(messgage)
+            # 点击发送
+            gcp.send_message()
+            # 验证是否发送成功
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            dex += 1
         gcp.press_file_to_do("哈哈0", "多选")
         time.sleep(1)
         #点击删除
@@ -4784,7 +4847,7 @@ class MsgCommonGroupAllTest(TestCase):
         gcp.click_expression_page_close_button()
         gcp.hide_keyboard()
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0035(self):
         """进入到群聊天会话页面，录入文字+表情字符，放大发送"""
         gcp = GroupChatPage()
@@ -4826,7 +4889,7 @@ class MsgCommonGroupAllTest(TestCase):
         gcp.click_expression_page_close_button()
         gcp.hide_keyboard()
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0036(self):
         """进入到群聊天会话页面，录入文字+表情字符，缩小发送"""
         gcp = GroupChatPage()
@@ -4868,7 +4931,7 @@ class MsgCommonGroupAllTest(TestCase):
         gcp.click_expression_page_close_button()
         gcp.hide_keyboard()
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full','full-yyx')
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0037(self):
         """在群聊天会话页面，长按消息体，点击收藏"""
         gcp = GroupChatPage()
@@ -4883,18 +4946,21 @@ class MsgCommonGroupAllTest(TestCase):
         flag = gcp.is_toast_exist("已收藏")
         self.assertTrue(flag)
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0038(self):
         """我——收藏——收藏内容展示"""
         gcp = GroupChatPage()
         time.sleep(2)
         gcp.click_back()
+        time.sleep(2)
         sogp = SelectOneGroupPage()
-        sogp.click_back()
-        sc = SelectContactsPage()
-        sc.click_back()
+        if sogp.is_on_this_page():
+            sogp.click_back()
+            sc = SelectContactsPage()
+            sc.click_back()
         # 进入我页面
         mess = MessagePage()
+        time.sleep(2)
         mess.open_me_page()
         me = MePage()
         me.click_collection()
@@ -4907,7 +4973,7 @@ class MsgCommonGroupAllTest(TestCase):
         mcp.click_back()
         me.open_message_page()
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0039(self):
         """我——收藏——收藏内展示——点击收藏内容"""
         gcp = GroupChatPage()
@@ -4939,7 +5005,7 @@ class MsgCommonGroupAllTest(TestCase):
         mcp.click_back()
         me.open_message_page()
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0040(self):
         """我——收藏——收藏内展示——点击收藏内容——点击播放收藏语音文件"""
         gcp = GroupChatPage()
@@ -4996,7 +5062,7 @@ class MsgCommonGroupAllTest(TestCase):
         mcp.click_back()
         me.open_message_page()
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0041(self):
         """我——收藏——收藏内展示——点击收藏内容——点击删除收藏内容"""
         gcp = GroupChatPage()
@@ -5036,5 +5102,8 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("没有删除按钮")
         mcp.click_back()
         me.open_message_page()
+
+
+
 
 

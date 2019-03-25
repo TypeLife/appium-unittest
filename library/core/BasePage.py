@@ -533,5 +533,10 @@ class BasePage(object):
 
     @TestLogger.log('挂断电话')
     def hang_up_the_call(self):
-        """判断键盘是否弹起"""
+        """挂断电话"""
         return self.mobile.hang_up_the_call()
+
+    @TestLogger.log('判断是否在通话界面')
+    def is_phone_in_calling_state(self):
+        """判断是否在通话界面"""
+        return self.mobile.is_phone_in_calling_state()
