@@ -267,7 +267,9 @@ class Preconditions(object):
 class LoginWorkBench(TestCase):
     """
     文件位置：20190313工作台全量用例整理.xlsx
-    表格：登录"""
+    表格：登录
+    author：杨育鑫
+    """
 
     @staticmethod
     def setUp_test_DL_0001():
@@ -292,5 +294,18 @@ class LoginWorkBench(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC_RESET')
     def test_DL_0002(self):
         """ 双卡移动号码一键登录"""
+        Preconditions.login_by_one_key_login()
+        Preconditions.take_logout_operation_if_already_login()
+
+    @staticmethod
+    def setUp_test_DL_0004():
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.app_start_for_the_first_time()
+        Preconditions.make_already_in_one_key_login_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC_RESET')
+    def test_DL_0004(self):
+        """ 移动号码一键登录"""
         Preconditions.login_by_one_key_login()
         Preconditions.take_logout_operation_if_already_login()

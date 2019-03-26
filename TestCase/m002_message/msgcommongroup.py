@@ -5368,17 +5368,158 @@ class MsgCommonGroupAllTest(TestCase):
         time.sleep(2)
         Preconditions.delete_record_group_chat()
         gcp.click_audio_btn()
-        time.sleep(3)
-        if not gcp.is_text_present("网络不可用，请检查网络设置"):
-            raise AssertionError("没有出现网络不可用提示")
         audio = ChatAudioPage()
-        audio.click_exit()
-        gcp.hide_keyboard()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+            if gcp.is_text_present("允许"):
+                audio.click_allow()
+            time.sleep(3)
+            if not gcp.is_text_present("网络不可用，请检查网络设置"):
+                raise AssertionError("没有出现网络不可用提示")
+            audio.click_exit()
+            gcp.hide_keyboard()
+        else:
+            time.sleep(3)
+            if not gcp.is_text_present("网络不可用，请检查网络设置"):
+                raise AssertionError("没有出现网络不可用提示")
+            audio.click_exit()
+            gcp.hide_keyboard()
 
     def tearDown_test_msg_common_group_all_0085(self):
         #重连网络
         gcp = GroupChatPage()
         gcp.set_network_status(6)
 
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_common_group_all_0088(self):
+        """进入到语音录制页——网络异常"""
+        gcp = GroupChatPage()
+        # 断网
+        gcp.set_network_status(0)
+        time.sleep(2)
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+            if gcp.is_text_present("允许"):
+                audio.click_allow()
+            time.sleep(3)
+            if not gcp.is_text_present("网络不可用，请检查网络设置"):
+                raise AssertionError("没有出现网络不可用提示")
+            audio.click_exit()
+            gcp.hide_keyboard()
+        else:
+            time.sleep(3)
+            if not gcp.is_text_present("网络不可用，请检查网络设置"):
+                raise AssertionError("没有出现网络不可用提示")
+            audio.click_exit()
+            gcp.hide_keyboard()
 
+    def tearDown_test_msg_common_group_all_0088(self):
+        #重连网络
+        gcp = GroupChatPage()
+        gcp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_common_group_all_0089(self):
+        """语音录制中途——网络异常"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+            if gcp.is_text_present("允许"):
+                audio.click_allow()
+            time.sleep(5)
+            # 断网
+            gcp.set_network_status(0)
+            time.sleep(3)
+            if not gcp.is_text_present("语音录制中"):
+                raise AssertionError("录制会被中断")
+            audio.click_exit()
+            gcp.hide_keyboard()
+        else:
+            audio.click_send_bottom()
+            audio.click_setting_bottom()
+            if audio.wait_for_audio_type_select_page_load():
+                # 点击只发送语言模式
+                audio.click_only_voice()
+                audio.click_sure()
+                time.sleep(5)
+                # 断网
+                gcp.set_network_status(0)
+                time.sleep(3)
+                if not gcp.is_text_present("语音录制中"):
+                    raise AssertionError("录制会被中断")
+                audio.click_exit()
+                gcp.hide_keyboard()
+            else:
+                raise AssertionError("语音模式选择页面加载失败")
+
+    def tearDown_test_msg_common_group_all_0089(self):
+        #重连网络
+        gcp = GroupChatPage()
+        gcp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_common_group_all_0090(self):
+        """语音录制完成——网络异常"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+            if gcp.is_text_present("允许"):
+                audio.click_allow()
+            time.sleep(5)
+            # 断网
+            gcp.set_network_status(0)
+            time.sleep(3)
+            audio.click_send_bottom()
+            # 验证是否发送失败
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送失败'.format(10))
+            audio.click_exit()
+            gcp.hide_keyboard()
+        else:
+            audio.click_send_bottom()
+            audio.click_setting_bottom()
+            if audio.wait_for_audio_type_select_page_load():
+                # 点击只发送语言模式
+                audio.click_only_voice()
+                audio.click_sure()
+                time.sleep(5)
+                # 断网
+                gcp.set_network_status(0)
+                time.sleep(3)
+                audio.click_send_bottom()
+                # 验证是否发送失败
+                cwp = ChatWindowPage()
+                try:
+                    cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+                except TimeoutException:
+                    raise AssertionError('消息在 {}s 内没有发送失败'.format(10))
+                audio.click_exit()
+                gcp.hide_keyboard()
+            else:
+                raise AssertionError("语音模式选择页面加载失败")
+
+    def tearDown_test_msg_common_group_all_0090(self):
+        #重连网络
+        gcp = GroupChatPage()
+        gcp.set_network_status(6)
 
