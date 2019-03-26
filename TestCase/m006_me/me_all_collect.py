@@ -176,6 +176,7 @@ class Preconditions(object):
             else:
                 break
             n = n + 1
+        time.sleep(3)
         sc.click_select_one_group()
         # 群名
         group_name = Preconditions.get_group_chat_name()
@@ -189,10 +190,22 @@ class Preconditions(object):
         sog.click_back()
         # 从本地联系人中选择成员创建群
         sc.click_local_contacts()
+        time.sleep(2)
         slc = SelectLocalContactsPage()
-        names = slc.get_contacts_name()
-        if not names:
-            raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
+        a = 0
+        names = {}
+        while a < 3:
+            names = slc.get_contacts_name()
+            num = len(names)
+            if not names:
+                raise AssertionError("No contacts, please add contacts in address book.")
+            if num == 1:
+                sog.page_up()
+                a += 1
+                if a == 3:
+                    raise AssertionError("联系人只有一个，请再添加多个不同名字联系人组成群聊")
+            else:
+                break
         # 选择成员
         for name in names:
             slc.select_one_member_by_name(name)
