@@ -61,3 +61,7 @@ class ContactListSearchPage(BasePage):
         self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and ' +
                             '@text="{}"]'.format(name)))
 
+    @TestLogger.log()
+    def is_exist_contacts(self):
+        """是否存在联系人"""
+        return self._is_element_present(self.__class__.__locators["联系人名"])

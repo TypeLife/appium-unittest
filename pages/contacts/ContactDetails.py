@@ -183,3 +183,4 @@ class ContactDetailsPage(BasePage):
     def page_should_contain_element_first_letter(self):
         """页面应该包含首字母"""
         return self.page_should_contain_element("名片首字母")
+
