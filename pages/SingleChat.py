@@ -49,7 +49,8 @@ class SingleChatPage(BaseChatPage):
                   '短信输入框': (MobileBy.ID, 'com.chinasofti.rcs:id/et_sms'),
                   '短信资费提醒': (MobileBy.XPATH, '//*[@text="资费提醒"]'),
                   "文本输入框": (MobileBy.ID, "com.chinasofti.rcs:id/et_message"),
-                  "文本发送按钮": (MobileBy.ID, "com.chinasofti.rcs:id/ib_send")
+                  "文本发送按钮": (MobileBy.ID, "com.chinasofti.rcs:id/ib_send"),
+                  "消息免打扰图标": (MobileBy.ID, "com.chinasofti.rcs:id/iv_slient"),
                   }
 
     @TestLogger.log()
@@ -163,3 +164,8 @@ class SingleChatPage(BaseChatPage):
         """发送文本"""
         self.click_element(self.__class__.__locators["文本发送按钮"])
         time.sleep(1)
+
+    @TestLogger.log()
+    def is_exist_no_disturb_icon(self):
+        """是否存在消息免打扰图标"""
+        return self._is_element_present(self.__class__.__locators["消息免打扰图标"])

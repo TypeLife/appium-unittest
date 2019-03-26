@@ -39,6 +39,40 @@ class Preconditions(LoginPreconditions):
         scp.wait_for_page_load()
 
     @staticmethod
+    def enter_group_chat_page(name):
+        """进入群聊聊天会话页面"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 点击 +
+        mp.click_add_icon()
+        # 点击发起群聊
+        mp.click_group_chat()
+        scg = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            # 等待选择联系人页面加载
+            flag = scg.wait_for_page_load()
+            if not flag:
+                scg.click_back()
+                time.sleep(2)
+                mp.click_add_icon()
+                mp.click_group_chat()
+            else:
+                break
+            n = n + 1
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        # 选择一个普通群
+        sog.selecting_one_group_by_name(name)
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+
+    @staticmethod
     def create_message_record(messages):
         """创造消息记录"""
 
@@ -50,6 +84,38 @@ class Preconditions(LoginPreconditions):
             time.sleep(2)
             scp.send_text()
             scp.click_back()
+
+    @staticmethod
+    def create_contacts_by_name(name, number):
+        """检查是否存在指定联系人，没有则创建"""
+
+        mp = MessagePage()
+        mp.open_contacts_page()
+        ctp = ContactsPage()
+        ctp.wait_for_page_load()
+        ctp.click_search_box()
+        cls = ContactListSearchPage()
+        cls.wait_for_page_load()
+        cls.input_search_keyword(name)
+        time.sleep(2)
+        if cls.is_exist_contacts():
+            cls.click_back()
+        else:
+            cls.click_back()
+            ctp.wait_for_page_load()
+            ctp.click_add()
+            ccp = CreateContactPage()
+            ccp.wait_for_page_load()
+            ccp.input_name(name)
+            time.sleep(2)
+            ccp.input_number(number)
+            ccp.save_contact()
+            cdp = ContactDetailsPage()
+            cdp.wait_for_page_load()
+            cdp.click_back_icon()
+        ctp.wait_for_page_load()
+        mp.open_message_page()
+        mp.wait_for_page_load()
 
 class MessageListTotalQuantityTest(TestCase):
     """
@@ -209,13 +275,6 @@ class MessageListTotalQuantityTest(TestCase):
 
         mp = MessagePage()
         mp.set_network_status(6)
-
-
-
-
-
-
-
 
 
 

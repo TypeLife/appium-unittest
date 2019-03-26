@@ -61,3 +61,20 @@ class ContactListSearchPage(BasePage):
         self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and ' +
                             '@text="{}"]'.format(name)))
 
+    @TestLogger.log()
+    def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
+        """等待搜索联系人页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["本地通讯录"])
+            )
+        except:
+            raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
+        return self
+
+    @TestLogger.log()
+    def is_exist_contacts(self):
+        """是否存在联系人"""
+        return self._is_element_present(self.__class__.__locators["联系人名"])
