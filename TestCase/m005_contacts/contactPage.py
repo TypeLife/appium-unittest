@@ -748,11 +748,15 @@ class ContactPage(TestCase):
     def test_contacts_0209(self):
         """选择最近聊天中的群,可分享名片"""
         select_contacts = SelectContactsPage()
-        select_contacts.select_one_recently_contact_by_name('给个红包1')
+        time.sleep(1)
+        select_contacts.click_select_one_group()
+        time.sleep(2)
+        select_contacts.click_text("给个红包1")
         time.sleep(1)
         select_contacts.page_should_contain_text('发送名片')
         select_contacts.click_share_card()
         #返回通讯录页面
+        time.sleep(1)
         ContactDetailsPage().click_back_icon()
         ContactListSearchPage().click_back()
 

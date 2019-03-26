@@ -256,4 +256,14 @@ class SelectLocalContactsPage(BasePage):
         els = self.get_elements((MobileBy.XPATH,'//*[contains(@text, "%s")]' % msg))
         return len(els) > 1
 
+    @TestLogger.log()
+    def select_local_contacts(self, n):
+        """选择n个本地联系人"""
+
+        els = self.get_elements(self.__class__.__locators["联系人名"])
+        current = 0
+        while current < n:
+            els[current].click()
+            current += 1
+
 

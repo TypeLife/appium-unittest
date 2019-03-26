@@ -117,11 +117,57 @@ class Preconditions(LoginPreconditions):
         mp.open_message_page()
         mp.wait_for_page_load()
 
+    @staticmethod
+    def create_system_message():
+        """创造系统消息"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 点击 +
+        mp.click_add_icon()
+        # 点击发起群聊
+        mp.click_group_chat()
+        scg = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            # 等待选择联系人页面加载
+            flag = scg.wait_for_page_load()
+            if not flag:
+                scg.click_back()
+                time.sleep(2)
+                mp.click_add_icon()
+                mp.click_group_chat()
+            else:
+                break
+            n = n + 1
+        scg.click_local_contacts()
+        slc = SelectLocalContactsPage()
+        # 等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        slc.select_local_contacts(2)
+        slc.click_sure()
+        # 创建群
+        cgnp = CreateGroupNamePage()
+        cgnp.input_group_name("群聊999")
+        cgnp.click_sure()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_delete_and_exit()
+        gcsp.click_sure()
+        mp.wait_for_message_list_load()
+
+
 class MessageListTotalQuantityTest(TestCase):
     """
     模块：消息列表
     文件位置：1.1.3全量测试用例->113全量用例--肖立平.xlsx
     表格：消息列表
+    Author:刘晓东
     """
 
     def default_setUp(self):
@@ -275,7 +321,6 @@ class MessageListTotalQuantityTest(TestCase):
 
         mp = MessagePage()
         mp.set_network_status(6)
-
 
 
 
