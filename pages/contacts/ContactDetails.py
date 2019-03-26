@@ -2,13 +2,15 @@ from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
-
+import time
 
 class ContactDetailsPage(BasePage):
     """个人详情"""
     ACTIVITY = 'com.cmicc.module_contact.activitys.ContactDetailActivity'
 
     __locators = {
+        '编辑2':(MobileBy.XPATH,"//*[@text='编辑']"),
+        '星标图标':(MobileBy.ID,'com.chinasofti.rcs:id/iv_star'),
         '返回上一页': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_back'),
         '名片标题': (MobileBy.ID, 'com.chinasofti.rcs:id/profile_name'),
         '星标': (MobileBy.ID, 'com.chinasofti.rcs:id/star'),
@@ -33,17 +35,63 @@ class ContactDetailsPage(BasePage):
         'com.chinasofti.rcs:id/btn_share_card_line': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_share_card_line'),
         '邀请使用': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_invitation_to_use'),
         '大图': (MobileBy.ID, 'com.chinasofti.rcs:id/img_smooth'),
+        '电话号码': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/et" and @text="13800138005"]'),
+        "确定":(MobileBy.ID,'com.chinasofti.rcs:id/tv_save_or_sure'),
+        "确定删除": (MobileBy.ID, 'com.chinasofti.rcs:id/bt_button2'),
+        "删除联系人":(MobileBy.ID,"com.chinasofti.rcs:id/tv_delete_contact"),
+        "呼叫(1/8)":(MobileBy.ID,"com.chinasofti.rcs:id/tv_sure"),
+        "暂不开启":(MobileBy.ID,"android:id/button2"),
+        "挂断电话":(MobileBy.ID,"com.chinasofti.rcs:id/ivDecline"),
+        "视频通话呼叫中":(MobileBy.XPATH,"//*[@text='	视频通话呼叫中']"),
+        "挂断视频通话": (MobileBy.ID, "com.chinasofti.rcs:id/iv_out_Cancel")
     }
+
+    @TestLogger.log("更改手机号码")
+    def change_mobile_number(self):
+        self.input_text(self.__locators["电话号码"],"13800138006")
+
+    @TestLogger.log("点击呼叫")
+    def send_call_number(self):
+        time.sleep(1)
+        self.click_element(self.__locators["呼叫(1/8)"])
+        time.sleep(1)
+
+    @TestLogger.log("设置授权窗口")
+    def cancel_permission(self):
+        time.sleep(3)
+        self.click_element(self.__locators["暂不开启"])
+
+    @TestLogger.log("挂断通话")
+    def cancel_call(self):
+        time.sleep(6)
+        self.click_element(self.__locators["挂断电话"])
+
+
+    @TestLogger.log("删除联系人")
+    def change_delete_number(self):
+        time.sleep(1)
+        self.click_element(self.__locators['删除联系人'])
 
     @TestLogger.log("点击返回按钮")
     def click_back_icon(self):
         """点击返回"""
         self.click_element(self.__locators['返回上一页'])
 
+    @TestLogger.log("点击确定")
+    def click_sure_icon(self):
+        """点击返回"""
+        self.click_element(self.__locators['确定'])
+
+    @TestLogger.log("确定删除")
+    def click_sure_delete(self):
+        """点击返回"""
+        time.sleep(3)
+        self.click_element(self.__locators['确定删除'])
+
     @TestLogger.log("点击编辑")
     def click_edit_contact(self):
         """点击编辑按钮"""
-        self.click_element(self.__locators['编辑'])
+        self.click_element(self.__locators['编辑2'])
 
 
     @TestLogger.log("获取名片名称")
@@ -121,6 +169,10 @@ class ContactDetailsPage(BasePage):
     def video_call_btn_is_clickable(self):
         """视频通话按钮状态是否可点击"""
         return self._is_clickable(self.__class__.__locators["视频通话"])
+
+    @TestLogger.log("挂断视频通话")
+    def end_video_call(self):
+        self.click_element(self.__locators["挂断视频通话"])
 
     @TestLogger.log()
     def hefeixin_call_btn_is_clickable(self):

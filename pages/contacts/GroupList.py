@@ -11,6 +11,8 @@ class GroupListPage(BasePage):
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.GroupChatListActivity2'
 
     __locators = {
+        '星标图标': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_star'),
+        '星标': (MobileBy.ID, 'com.chinasofti.rcs:id/star'),
         "电话号码":(MobileBy.ID,'com.chinasofti.rcs:id/tv_phone'),
         "语音通话": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_voice_call'),
         "视频通话": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_video_call'),
@@ -50,8 +52,10 @@ class GroupListPage(BasePage):
         '删除标签':(MobileBy.XPATH,'//*[@text="删除标签"]'),
         '刪除按钮':(MobileBy.ID,'com.chinasofti.rcs:id/btn_ok'),
         'back_contact':(MobileBy.ID,'com.chinasofti.rcs:id/back'),
+
         'back_gouppage':(MobileBy.ID,'com.chinasofti.rcs:id/rl_label_left_back'),
-        #'back_newpage':(MobileBy.ID,' com.chinasofti.rcs:id/rl_label_left_back'),
+        "back_contact2":(MobileBy.ID,'com.chinasofti.rcs:id/label_group_left_back'),
+        'back_newpage':(MobileBy.ID,'com.chinasofti.rcs:id/iv_back'),
         'aaa':(MobileBy.XPATH,'//*[@text="aaa"]'),
         'bbb': (MobileBy.XPATH, '//*[@text="bbb"]'),
         '添加成员':(MobileBy.XPATH,'//*[@text="添加成员"]'),
@@ -213,6 +217,14 @@ class GroupListPage(BasePage):
     def click_new_group(self):
         self.click_element(self.__class__.__locators['新建分组'])
 
+    @TestLogger.log("点击星标")
+    def click_star_icon(self):
+        self.click_element(self.__class__.__locators['星标图标'])
+
+    @TestLogger.log("点击通讯录星标")
+    def click_contact_star_icon(self):
+        self.click_element(self.__class__.__locators['星标'])
+
     @TestLogger.log("点击输入框")
     def click_input_element(self):
         self.click_element(self.__class__.__locators['请输入标签分组名称'])
@@ -232,9 +244,9 @@ class GroupListPage(BasePage):
             self.click_element(self.__class__.__locators['发送_邀请'])
             time.sleep(2)
             if self._is_element_present(self.__class__.__locators['信息邀请']):
-                preconditions.background_app()
+                self.driver.background_app()
                 time.sleep(1)
-                preconditions.launch_app()
+                self.driver.launch_app()
                 time.sleep(1)
                 return True
             else:
@@ -306,14 +318,12 @@ class GroupListPage(BasePage):
                 self.click_element(self.__class__.__locators['back_contact'])
             elif self._is_element_present(self.__class__.__locators['back_gouppage']):
                 self.click_element(self.__class__.__locators['back_gouppage'])
+            elif self._is_element_present(self.__class__.__locators['back_contact2']):
+                self.click_element(self.__class__.__locators['back_contact2'])
             else:
-                self.click_element(self.__class__.__locators['back_gouppage'])
+                self.click_element(self.__class__.__locators['back_newpage'])
             time.sleep(1)
 
-            # try:
-            #     self.click_element(self.__class__.__locators['back_contact'])
-            # except :
-            #     self.click_element(self.__class__.__locators['back_gouppage'])
 
     @TestLogger.log('获取元素y坐标')
     def get_element_text_y(self,text='新建分组'):
@@ -367,7 +377,7 @@ class GroupListPage(BasePage):
         self.click_back_button()
         time.sleep(2)
 
-    @TestLogger.log("添加成员dalao2")
+    @TestLogger.log("添加成员dalao")
     def add_member(self,name='dalao2',times=1):
         member='大佬2'
         time.sleep(1)
@@ -381,6 +391,8 @@ class GroupListPage(BasePage):
         time.sleep(1)
         if name is 'dalao1':
             member='大佬1'
+        elif name is 'dalao3':
+            member='大佬3'
         if times==1:
             self.click_text(member)
         else:
@@ -462,3 +474,26 @@ class GroupListPage(BasePage):
         time.sleep(1)
         self.click_element(self.__class__.__locators["图片发送"])
         time.sleep(15)
+
+    @TestLogger.log("群发信息")
+    def enter_group_message(self, message='aaaa'):
+        time.sleep(1)
+        self.click_element(self.__class__.__locators["群发信息"])
+        time.sleep(2)
+        flag = self._is_element_present(self.__class__.__locators['我已阅读'])
+        if flag:
+            self.click_element(self.__class__.__locators['我已阅读'])
+            time.sleep(1)
+            self.click_element(self.__class__.__locators['已阅读_确定'])
+            time.sleep(1)
+        time.sleep(1)
+
+    @TestLogger.log("多方电话")
+    def enter_mutil_call(self, message='aaaa'):
+        time.sleep(1)
+        self.click_element(self.__class__.__locators["多方电话"])
+
+    @TestLogger.log("多方视频")
+    def enter_mutil_video_call(self, message='aaaa'):
+        time.sleep(1)
+        self.click_element(self.__class__.__locators["多方视频"])
