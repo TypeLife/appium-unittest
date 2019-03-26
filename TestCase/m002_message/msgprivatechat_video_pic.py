@@ -1527,3 +1527,520 @@ class MsgPrivateChatVideoPicTest(TestCase):
         set_page.click_back()
         chat.wait_for_page_load()
 
+class MsgPrivateChatVideoPicTotalQuantityTest(TestCase):
+    """
+    模块：单聊-图片、视频、GIF
+    文件位置：1.1.3全量测试用例->113全量用例--肖立平.xlsx
+    表格：单聊-图片、视频、GIF
+    Author:刘晓东
+    """
+
+    def default_setUp(self):
+        """
+        1、成功登录和飞信
+        2.确保每个用例运行前在单聊会话页面
+        """
+
+        Preconditions.select_mobile('Android-移动')
+        name = "大佬1"
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_single_chat_page(name)
+            return
+        chat = SingleChatPage()
+        if chat.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            preconditions.force_close_and_launch_app()
+            Preconditions.enter_single_chat_page(name)
+
+    def default_tearDown(self):
+        pass
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_privateChat_videoPic_total_quantity_0041(self):
+        """单聊会话页面，转发自己发送的图片到当前会话窗口"""
+
+        # 给当前会话页面发送一张图片,确保最近聊天中有记录
+        scp = SingleChatPage()
+        cpp = ChatPicPage()
+        time.sleep(2)
+        scp.click_picture()
+        cpp.wait_for_page_load()
+        cpp.select_pic_fk(1)
+        cpp.click_send()
+        time.sleep(5)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1.长按自己发送的图片并转发
+        scp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        name = "大佬1"
+        # 3.选择最近聊天中的当前会话窗口
+        scg.select_recent_chat_by_name(name)
+        # 确定转发
+        scg.click_sure_forward()
+        # 4.是否提示已转发,等待单聊页面加载
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+        # 5.验证是否发送成功
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_privateChat_videoPic_total_quantity_0042(self):
+        """单聊会话页面，转发自己发送的图片到当前会话窗口时失败"""
+
+        # 给当前会话页面发送一张图片,确保最近聊天中有记录
+        scp = SingleChatPage()
+        cpp = ChatPicPage()
+        time.sleep(2)
+        scp.click_picture()
+        cpp.wait_for_page_load()
+        cpp.select_pic_fk(1)
+        cpp.click_send()
+        time.sleep(5)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 设置手机网络断开
+        scp.set_network_status(0)
+        # 1.长按自己发送的图片并转发
+        scp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        name = "大佬1"
+        # 3.选择最近聊天中的当前会话窗口
+        scg.select_recent_chat_by_name(name)
+        # 确定转发
+        scg.click_sure_forward()
+        # 4.是否提示已转发,等待单聊页面加载
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+        cwp = ChatWindowPage()
+        # 5.是否显示消息发送失败标识
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+
+    @staticmethod
+    def tearDown_test_msg_privateChat_videoPic_total_quantity_0042():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_privateChat_videoPic_total_quantity_0043(self):
+        """单聊会话页面，转发自己发送的图片到当前会话窗口时点击取消转发"""
+
+        # 给当前会话页面发送一张图片,确保最近聊天中有记录
+        scp = SingleChatPage()
+        cpp = ChatPicPage()
+        time.sleep(2)
+        scp.click_picture()
+        cpp.wait_for_page_load()
+        cpp.select_pic_fk(1)
+        cpp.click_send()
+        time.sleep(5)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1.长按自己发送的图片并转发
+        scp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        name = "大佬1"
+        # 3.选择最近聊天中的当前会话窗口
+        scg.select_recent_chat_by_name(name)
+        # 取消转发
+        scg.click_cancel_forward()
+        # 4.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 返回单聊会话页面
+        scg.click_back()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_privateChat_videoPic_total_quantity_0044(self):
+        """单聊会话页面，转发自己发送的图片给本地联系人"""
+
+        # 确保当前聊天页面已有图片
+        Preconditions.make_already_have_my_picture()
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1.长按自己发送的图片并转发
+        scp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 点击“选择本地联系人”菜单
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        # 等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        name = "大佬2"
+        # 3.选择一个本地联系人
+        slc.selecting_local_contacts_by_name(name)
+        # 确定转发
+        slc.click_sure_forward()
+        # 4.是否提示已转发,等待单聊页面加载
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+        # 返回到消息页
+        scp.click_back()
+        time.sleep(2)
+        mp = MessagePage()
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+        # 选择刚发送消息的聊天页
+        mp.choose_chat_by_name(name)
+        time.sleep(2)
+        bcp = BaseChatPage()
+        if bcp.is_exist_dialog():
+            # 点击我已阅读
+            bcp.click_i_have_read()
+        # 5.验证是否发送成功
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        # 返回消息页
+        scp.click_back()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_privateChat_videoPic_total_quantity_0045(self):
+        """单聊会话页面，转发自己发送的图片到本地联系人时失败"""
+
+        # 确保当前聊天页面已有图片
+        Preconditions.make_already_have_my_picture()
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 设置手机网络断开
+        scp.set_network_status(0)
+        # 1.长按自己发送的图片并转发
+        scp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 点击“选择本地联系人”菜单
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        # 等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        name = "大佬2"
+        # 3.选择一个本地联系人
+        slc.selecting_local_contacts_by_name(name)
+        # 确定转发
+        slc.click_sure_forward()
+        # 4.是否提示已转发,等待单聊页面加载
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+        # 返回到消息页
+        scp.click_back()
+        time.sleep(2)
+        mp = MessagePage()
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+        # 选择刚发送消息的聊天页
+        mp.choose_chat_by_name(name)
+        time.sleep(2)
+        bcp = BaseChatPage()
+        if bcp.is_exist_dialog():
+            # 点击我已阅读
+            bcp.click_i_have_read()
+        # 5.是否显示消息发送失败标识
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        # 返回消息页
+        scp.click_back()
+
+    @staticmethod
+    def tearDown_test_msg_privateChat_videoPic_total_quantity_0045():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_privateChat_videoPic_total_quantity_0046(self):
+        """单聊会话页面，转发自己发送的图片到本地联系人时点击取消转发"""
+
+        # 确保当前聊天页面已有图片
+        Preconditions.make_already_have_my_picture()
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1.长按自己发送的图片并转发
+        scp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 点击“选择本地联系人”菜单
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        # 等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        name = "大佬2"
+        # 3.选择一个本地联系人
+        slc.selecting_local_contacts_by_name(name)
+        # 取消转发
+        slc.click_cancel_forward()
+        # 4.等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        # 返回单聊会话页面
+        slc.click_back()
+        scg.wait_for_page_load()
+        scg.click_back()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_privateChat_videoPic_total_quantity_0050(self):
+        """单聊会话页面，转发自己发送的图片给陌生人"""
+
+        # 确保当前聊天页面已有图片
+        Preconditions.make_already_have_my_picture()
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1.长按自己发送的图片并转发
+        scp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        number = "13855558888"
+        # 输入陌生手机号码
+        scg.input_search_keyword(number)
+        time.sleep(2)
+        current_mobile().hide_keyboard_if_display()
+        # 3.选择陌生号码转发
+        scg.click_unknown_member()
+        # 确定转发
+        scg.click_sure_forward()
+        # 4.是否提示已转发,等待单聊页面加载
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+        # 返回到消息页
+        scp.click_back()
+        time.sleep(2)
+        mp = MessagePage()
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+        # 选择刚发送消息的陌生联系人
+        mp.choose_chat_by_name(number)
+        time.sleep(2)
+        bcp = BaseChatPage()
+        if bcp.is_exist_dialog():
+            # 点击我已阅读
+            bcp.click_i_have_read()
+        # 5.验证是否发送成功
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        # 返回消息页
+        scp.click_back()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_privateChat_videoPic_total_quantity_0051(self):
+        """单聊会话页面，转发自己发送的图片到陌生人时失败"""
+
+        # 确保当前聊天页面已有图片
+        Preconditions.make_already_have_my_picture()
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 设置手机网络断开
+        scp.set_network_status(0)
+        # 1.长按自己发送的图片并转发
+        scp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        number = "13855558888"
+        # 输入陌生手机号码
+        scg.input_search_keyword(number)
+        time.sleep(2)
+        current_mobile().hide_keyboard_if_display()
+        # 3.选择陌生号码转发
+        scg.click_unknown_member()
+        # 确定转发
+        scg.click_sure_forward()
+        # 4.是否提示已转发,等待单聊页面加载
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+        # 返回到消息页
+        scp.click_back()
+        time.sleep(2)
+        mp = MessagePage()
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+        # 选择刚发送消息的陌生联系人
+        mp.choose_chat_by_name(number)
+        time.sleep(2)
+        bcp = BaseChatPage()
+        if bcp.is_exist_dialog():
+            # 点击我已阅读
+            bcp.click_i_have_read()
+        # 5.是否显示消息发送失败标识
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        # 返回消息页
+        scp.click_back()
+
+    @staticmethod
+    def tearDown_test_msg_privateChat_videoPic_total_quantity_0051():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_privateChat_videoPic_total_quantity_0052(self):
+        """单聊会话页面，转发自己发送的图片到陌生人时点击取消转发"""
+
+        # 确保当前聊天页面已有图片
+        Preconditions.make_already_have_my_picture()
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1.长按自己发送的图片并转发
+        scp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        number = "13855558888"
+        # 输入陌生手机号码
+        scg.input_search_keyword(number)
+        time.sleep(2)
+        current_mobile().hide_keyboard_if_display()
+        # 3.选择陌生号码转发
+        scg.click_unknown_member()
+        # 取消转发
+        scg.click_cancel_forward()
+        # 4.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 返回单聊会话页面
+        scg.click_back()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_privateChat_videoPic_total_quantity_0053(self):
+        """单聊会话页面，转发自己发送的图片到普通群"""
+
+        # 确保当前聊天页面已有图片
+        Preconditions.make_already_have_my_picture()
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1.长按自己发送的图片并转发
+        scp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 点击“选择一个群”菜单
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        name = "群聊1"
+        # 3.选择一个普通群
+        sog.selecting_one_group_by_name(name)
+        # 确定转发
+        sog.click_sure_forward()
+        # 4.是否提示已转发,等待单聊页面加载
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+        # 返回到消息页
+        scp.click_back()
+        time.sleep(2)
+        mp = MessagePage()
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+        # 选择刚发送消息的聊天页
+        mp.choose_chat_by_name(name)
+        time.sleep(2)
+        # 5.验证是否发送成功
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        # 返回消息页
+        scp.click_back()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_privateChat_videoPic_total_quantity_0054(self):
+        """单聊会话页面，转发自己发送的图片到普通群时失败"""
+
+        # 确保当前聊天页面已有图片
+        Preconditions.make_already_have_my_picture()
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 设置手机网络断开
+        scp.set_network_status(0)
+        # 1.长按自己发送的图片并转发
+        scp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 点击“选择一个群”菜单
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        name = "群聊1"
+        # 3.选择一个普通群
+        sog.selecting_one_group_by_name(name)
+        # 确定转发
+        sog.click_sure_forward()
+        # 4.是否提示已转发,等待单聊页面加载
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+        # 返回到消息页
+        scp.click_back()
+        time.sleep(2)
+        mp = MessagePage()
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+        # 选择刚发送消息的聊天页
+        mp.choose_chat_by_name(name)
+        time.sleep(2)
+        # 5.是否显示消息发送失败标识
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        # 返回消息页
+        scp.click_back()
+
+    @staticmethod
+    def tearDown_test_msg_privateChat_videoPic_total_quantity_0054():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_privateChat_videoPic_total_quantity_0055(self):
+        """单聊会话页面，转发自己发送的图片到普通群时点击取消转发"""
+
+        # 确保当前聊天页面已有图片
+        Preconditions.make_already_have_my_picture()
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1.长按自己发送的图片并转发
+        scp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 点击“选择一个群”菜单
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        name = "群聊1"
+        # 3.选择一个普通群
+        sog.selecting_one_group_by_name(name)
+        # 取消转发
+        sog.click_cancel_forward()
+        # 4.等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        sog.click_back()
+        # 等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 返回单聊会话页面
+        scg.click_back()

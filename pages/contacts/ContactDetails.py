@@ -132,15 +132,3 @@ class ContactDetailsPage(BasePage):
         """页面应该包含首字母"""
         return self.page_should_contain_element("名片首字母")
 
-    @TestLogger.log()
-    def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
-        """等待个人详情页面加载"""
-        try:
-            self.wait_until(
-                timeout=timeout,
-                auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_element_present(self.__class__.__locators["邀请使用"])
-            )
-        except:
-            raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
-        return self
