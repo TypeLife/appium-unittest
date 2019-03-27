@@ -151,6 +151,7 @@ class WorkbenchPreconditions(LoginPreconditions):
     def get_team_name():
         """获取团队"""
         phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        # str=time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
         team_name = "ateam" + phone_number[-4:]
         return team_name
 
@@ -167,6 +168,7 @@ class WorkbenchPreconditions(LoginPreconditions):
         # 立即创建团队
         team.click_immediately_create_team()
         # 点击完成设置工作台
+        team.wait_for_setting_workbench_page_load()
         team.click_finish_setting_workbench()
         team.wait_for_create_team_success_page_load()
         # 进入工作台

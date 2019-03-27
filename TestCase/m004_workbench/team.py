@@ -41,7 +41,7 @@ class TeamTest(TestCase):
     def default_tearDown(self):
         pass
 
-    @tags('ALL', 'workbench')
+    @tags('ALL',"CMCC", 'workbench')
     def test_TDCJ_0001(self):
         """检查创建团队界面是否正确返回到工作台主界面"""
         # 1、点击最底部的“创建团队”
@@ -53,7 +53,7 @@ class TeamTest(TestCase):
         workbench.click_create_team()
         team.wait_for_page_load()
 
-    @tags('ALL', 'workbench')
+    @tags('ALL',"CMCC",'workbench')
     def test_TDCJ_0002(self):
         """创建团队"""
         team = CreateTeamPage()
@@ -79,7 +79,7 @@ class TeamTest(TestCase):
         workbench.click_create_team()
         team.wait_for_page_load()
 
-    @tags('ALL', 'workbench')
+    @tags('ALL',"CMCC", 'workbench')
     def test_TDCJ_0003(self):
         """创建团队-团队名称为空"""
         team = CreateTeamPage()
@@ -98,7 +98,7 @@ class TeamTest(TestCase):
         workbench.click_create_team()
         team.wait_for_page_load()
 
-    @tags('ALL', 'workbench')
+    @tags('ALL',"CMCC", 'workbench')
     def test_TDCJ_0004(self):
         """创建团建-所在地为空"""
         team = CreateTeamPage()
@@ -117,7 +117,7 @@ class TeamTest(TestCase):
         workbench.click_create_team()
         team.wait_for_page_load()
 
-    @tags('ALL', 'workbench')
+    @tags('ALL',"CMCC", 'workbench')
     def test_TDCJ_0005(self):
         """创建团建-行业为空"""
         team = CreateTeamPage()
@@ -136,7 +136,7 @@ class TeamTest(TestCase):
         workbench.click_create_team()
         team.wait_for_page_load()
 
-    @tags('ALL', 'workbench')
+    @tags('ALL',"CMCC", 'workbench')
     def test_TDCJ_0006(self):
         """创建团建-姓名为空"""
         team = CreateTeamPage()
@@ -155,7 +155,7 @@ class TeamTest(TestCase):
         workbench.click_create_team()
         team.wait_for_page_load()
 
-    @tags('ALL', 'workbench')
+    @tags('ALL',"CMCC", 'workbench')
     def test_TDCJ_0007(self):
         """创建团建-邮箱为空"""
         team = CreateTeamPage()
@@ -198,7 +198,7 @@ class WorkbenchGGXXTest(TestCase):
         pg.create_team_message("天气预报","晴天转多云")
         time.sleep(1)
 
-    @tags('ALL', 'Login', "workbench")
+    @tags('ALL',"CMCC", 'Login', "workbench")
     def test_workbench_GGXX_0005(self):
         '验证公告信息首页搜索是否正确'
         pg = CreateTeamPage()
@@ -227,7 +227,7 @@ class WorkbenchGGXXTest(TestCase):
         pg.save_team__message("天气预报", "晴天转多云,风云多变")
         time.sleep(1)
 
-    @tags('ALL', 'Login', "workbench")
+    @tags('ALL',"CMCC", 'Login', "workbench")
     def test_workbench_GGXX_0006(self):
         '验证未发公告页搜索是否正确'
         pg = CreateTeamPage()
@@ -257,7 +257,7 @@ class WorkbenchGGXXTest(TestCase):
         pg.create_team_message("天气预报", "晴天转多云,风云多变")
         time.sleep(1)
 
-    @tags('ALL', 'Login', "workbench")
+    @tags('ALL',"CMCC", 'Login', "workbench")
     def test_workbench_GGXX_0007(self):
         '已发布公告下线'
         pg = CreateTeamPage()
@@ -286,7 +286,7 @@ class WorkbenchGGXXTest(TestCase):
         pg.save_team__message("天气预报", "晴天转多云,风云多变")
         time.sleep(1)
 
-    @tags('ALL', 'Login', "workbench")
+    @tags('ALL',"CMCC", 'Login', "workbench")
     def test_workbench_GGXX_0008(self):
         '公告存草稿'
         pg = CreateTeamPage()
@@ -315,7 +315,7 @@ class WorkbenchGGXXTest(TestCase):
         pg.save_team__message("天气预报", "晴天转多云,风云多变")
         time.sleep(1)
 
-    @tags('ALL', 'Login', "workbench")
+    @tags('ALL',"CMCC", 'Login', "workbench")
     def test_workbench_GGXX_0009(self):
         """
         发布未发布中公告
@@ -352,7 +352,7 @@ class WorkbenchGGXXTest(TestCase):
         pg.save_team__message("天气预报", "晴天转多云,风云多变")
         time.sleep(1)
 
-    @tags('ALL', 'Login', "workbench")
+    @tags('ALL', "CMCC",'Login', "workbench")
     def test_workbench_GGXX_00010(self):
         """
         删除,公告中草稿
@@ -401,7 +401,7 @@ class TeamTestAll(TestCase):
     def default_tearDown(self):
         pass
 
-    @tags('ALL', 'workbench')
+    @tags('ALL',"CMCC", 'workbench','CJTD')
     def test_CJTD_0002(self):
         """企业名称少于3个字"""
         # 1.在移动端创建团队页面，企业名称输入少于3个字，点【提交注册】
@@ -421,3 +421,117 @@ class TeamTestAll(TestCase):
         workbench.wait_for_page_load()
         workbench.click_create_team()
         team.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    def test_CJTD_0003(self):
+        """企业名称长度在3-50个字之间"""
+        team = CreateTeamPage()
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        # 有默认的团队，就不创建
+        default_team_name = Preconditions.get_team_name()
+        workbench.click_enterprise_name_triangle()
+        time.sleep(1)
+        teams = workbench.get_team_names()
+        current_mobile().back()
+        if default_team_name in teams:
+            print("当前已有团队:" + default_team_name + ",未再创建！")
+            workbench.click_create_team()
+            team.wait_for_page_load()
+            return
+        # 点击最底部的“创建团队”
+        workbench.click_create_team()
+        team.wait_for_page_load()
+        Preconditions.create_team()
+        # 回到创建团队页面
+        workbench.click_create_team()
+        team.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    def test_CJTD_0004(self):
+        """企业名称大于50个字"""
+        # 1.在移动端创建团队页面，企业名称输入大于50个字点【提交注册】
+        team = CreateTeamPage()
+        name="我"*51
+        team.input_team_name(name)
+        team.choose_location()
+        team.choose_industry()
+        team.input_real_name('admin')
+        # 立即创建团队
+        team.click_immediately_create_team()
+        time.sleep(1)
+        team.page_should_contain_text("团队名称不能超过50个字")
+        team.click_sure()
+        # 清除输入数据
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        workbench.click_create_team()
+        team.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    def test_CJTD_0006(self):
+        """地区只选择省，不选择市"""
+        #1.在移动端创建团队页面，其他信息填写完成，地区只选择省，不选择市，点【提交注册】
+        team = CreateTeamPage()
+        team.input_team_name("我我我")
+        team.choose_industry()
+        team.input_real_name('admin')
+        # 立即创建团队
+        team.click_immediately_create_team()
+        team.page_should_contain_text("请选择所在地")
+        team.click_sure()
+        # 清除输入数据
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        workbench.click_create_team()
+        team.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    def test_CJTD_0007(self):
+        """地区选择完成"""
+        team = CreateTeamPage()
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        # 有默认的团队，就不创建
+        default_team_name = Preconditions.get_team_name()
+        workbench.click_enterprise_name_triangle()
+        time.sleep(1)
+        teams = workbench.get_team_names()
+        current_mobile().back()
+        if default_team_name in teams:
+            print("当前已有团队:" + default_team_name + ",未再创建！")
+            workbench.click_create_team()
+            team.wait_for_page_load()
+            return
+        # 点击最底部的“创建团队”
+        workbench.click_create_team()
+        team.wait_for_page_load()
+        Preconditions.create_team()
+        # 回到创建团队页面
+        workbench.click_create_team()
+        team.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    def test_CJTD_0009(self):
+        """地区只选一级行业，不选二级行业"""
+        #1.在移动端创建团队页面，其他信息填写完成，地区只选一级行业，不选二级行业，点【提交注册】
+        team = CreateTeamPage()
+        team.input_team_name("我我我")
+        team.choose_location()
+        team.input_real_name('admin')
+        # 立即创建团队
+        team.click_immediately_create_team()
+        time.sleep(2)
+        team.page_should_contain_text("请选择行业")
+        team.click_sure()
+        # 清除输入数据
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        workbench.click_create_team()
+        team.wait_for_page_load()
+

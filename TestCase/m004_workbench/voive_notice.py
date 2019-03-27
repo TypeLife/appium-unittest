@@ -129,7 +129,8 @@ class VoiceNoticeTest(TestCase):
         if wbp.is_on_this_page():
             return
         else:
-            current_mobile().reset_app()
+            # current_mobile().reset_app()
+            current_mobile().launch_app()
             Preconditions.make_already_in_message_page()
             mess.open_workbench_page()
 

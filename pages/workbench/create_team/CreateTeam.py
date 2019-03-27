@@ -18,19 +18,19 @@ class CreateTeamPage(BasePage):
         '创建团队': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_actionbar'),
         '请输入团队名称': (MobileBy.XPATH,'//*[@resource-id="qy_name"]'),
         # '请输入团队名称': (MobileBy.XPATH, '//*[@text="请输入团队名称"  or @content-desc="请输入团队名称"]'),
-        '选择行业': (MobileBy.XPATH, '//*[@text="选择行业"]'),
-        '选择所在地': (MobileBy.XPATH, '//*[@text="选择所在地"]'),
+        '选择行业': (MobileBy.XPATH, '//*[@resource-id="xzhy"]'),
+        '选择所在地': (MobileBy.XPATH, '//*[@resource-id="xzszd"]'),
         '请务必填写真实姓名': (MobileBy.XPATH,'//*[@resource-id="gly_name"]'),
         # '请务必填写真实姓名': (MobileBy.XPATH, '//*[@text="请务必填写真实姓名" or @content-desc="请务必填写真实姓名" ]'),
         # '14775290489@139.com': (MobileBy.ID, 'gly_email'),
         '邮箱': (MobileBy.XPATH, '//*[contains(@text, "@139.com")]'),
         '立即创建团队': (MobileBy.XPATH, '//*[@text="立即创建团队"]'),
         # 点击创建团队后，设置工作台
-        '完成设置工作台': (MobileBy.XPATH, '//*[@content-desc="完成设置工作台"]'),
+        '完成设置工作台': (MobileBy.XPATH, '//*[@text="完成设置工作台"]'),
         # 创建成功后页面
         '创建成功': (MobileBy.XPATH, '//*[@content-desc="创建成功"]'),
         '登录后台可体验更全面的管理功能': (MobileBy.XPATH, '//*[@content-desc="登录后台可体验更全面的管理功能"]'),
-        '进入工作台': (MobileBy.XPATH, '//*[@content-desc="进入工作台"]'),
+        '进入工作台': (MobileBy.XPATH, '//*[@text="进入工作台"]'),
         # 未输入姓名时的弹窗提示
         '请输入管理员姓名': (MobileBy.XPATH, '//*[@content-desc="请输入管理员姓名"]'),
         '确定': (MobileBy.XPATH, '//*[@text="确定"]'),
@@ -259,5 +259,29 @@ class CreateTeamPage(BasePage):
     @TestLogger.log('发布')
     def click_publish(self):
         self.click_element(self.__class__.__locators['发布'])
+
+    @TestLogger.log()
+    def wait_for_setting_workbench_page_load(self):
+        """当前页面是否在设置工作台页面"""
+        try:
+            self.wait_until(
+                timeout=15,
+                auto_accept_permission_alert=True,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["完成设置工作台"])
+            )
+            return True
+        except:
+            return False
+
+    @TestLogger.log()
+    def choose_location_without_city(self, province="河北省"):
+        """选择所在地"""
+        self.click_element(self.__class__.__locators['选择所在地'])
+        try:
+            self.click_element((MobileBy.XPATH, '//*[@text="%s"]' % province))
+        except:
+            self.click_element((MobileBy.XPATH, '//*[@text="选择地区"]/../android.view.View/android.view.View[1]'))
+
+
 
 
