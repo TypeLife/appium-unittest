@@ -6,6 +6,11 @@ from pages import *
 from pages.workbench.corporate_news.CorporateNews import CorporateNewsPage
 import time
 
+from pages.workbench.corporate_news.CorporateNewsDetails import CorporateNewsDetailsPage
+from pages.workbench.corporate_news.CorporateNewsImageText import CorporateNewsImageTextPage
+from pages.workbench.corporate_news.CorporateNewsLink import CorporateNewsLinkPage
+from pages.workbench.corporate_news.CorporateNewsNoNews import CorporateNewsNoNewsPage
+
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
     # 'Android-移动': 'single_mobile',
@@ -32,52 +37,6 @@ class Preconditions(object):
         return client
 
     @staticmethod
-    def make_already_in_one_key_login_page():
-        """已经进入一键登录页"""
-
-        # 如果当前页面已经是一键登录页，不做任何操作
-        one_key = OneKeyLoginPage()
-        if one_key.is_on_this_page():
-            return
-
-        # 如果当前页不是引导页第一页，重新启动app
-        guide_page = GuidePage()
-        if not guide_page.is_on_the_first_guide_page():
-            # current_mobile().launch_app()
-            current_mobile().reset_app()
-            guide_page.wait_for_page_load(20)
-
-        # 跳过引导页
-        guide_page.wait_for_page_load(30)
-        guide_page.swipe_to_the_second_banner()
-        guide_page.swipe_to_the_third_banner()
-        current_mobile().hide_keyboard_if_display()
-        guide_page.click_start_the_experience()
-
-        # 点击权限列表页面的确定按钮
-        permission_list = PermissionListPage()
-        permission_list.click_submit_button()
-        one_key.wait_for_page_load(30)
-
-    @staticmethod
-    def login_by_one_key_login():
-        """从一键登录页面登录"""
-
-        # 等待号码加载完成后，点击一键登录
-        one_key = OneKeyLoginPage()
-        one_key.wait_for_tell_number_load(60)
-        one_key.click_one_key_login()
-        one_key.click_read_agreement_detail()
-
-        # 同意协议
-        agreement = AgreementDetailPage()
-        agreement.click_agree_button()
-
-        # 等待消息页
-        message_page = MessagePage()
-        message_page.wait_login_success(60)
-
-    @staticmethod
     def enter_corporate_news_page():
         """进入企业新闻首页"""
 
@@ -89,32 +48,55 @@ class Preconditions(object):
         wbp.click_company_news()
 
     @staticmethod
-    def create_unpublished_news():
-        """创建未发新闻"""
+    def create_unpublished_image_news(news):
+        """创建未发新闻(图文新闻)"""
 
         cnp = CorporateNewsPage()
         cnp.wait_for_page_load()
-        # 点击发布新闻
-        cnp.click_release_news()
-        time.sleep(10)
-        # 点击链接发布
-        cnp.click_link_publishing()
-        time.sleep(2)
-        # 输入新闻标题
-        cnp.input_news_title("test_news")
-        # 输入链接新闻
-        cnp.input_link_news("https://10086.com")
-        # 点击保存
-        cnp.click_save()
-        # 点击确定
-        cnp.click_sure()
+        for title, content in news:
+            # 点击发布新闻
+            cnp.click_release_news()
+            cnitp = CorporateNewsImageTextPage()
+            cnitp.wait_for_page_load()
+            time.sleep(2)
+            # 输入图文新闻标题
+            cnitp.input_news_title(title)
+            # 输入图文新闻内容
+            cnitp.input_news_content(content)
+            # 点击保存
+            cnitp.click_save()
+            # 点击确定
+            cnitp.click_sure()
+            cnp.wait_for_page_load()
+
+    @staticmethod
+    def release_corporate_image_news(titles):
+        """发布企业新闻(图文新闻)"""
+
+        cnp = CorporateNewsPage()
         cnp.wait_for_page_load()
+        for title in titles:
+            # 点击发布新闻
+            cnp.click_release_news()
+            cnitp = CorporateNewsImageTextPage()
+            cnitp.wait_for_page_load()
+            time.sleep(2)
+            # 输入图文新闻标题
+            cnitp.input_news_title(title)
+            # 输入图文新闻内容
+            cnitp.input_news_content("123")
+            # 点击发布
+            cnitp.click_release()
+            # 点击确定
+            cnitp.click_sure()
+            cnp.wait_for_page_load()
 
 class CorporateNewsTest(TestCase):
     """
     模块：工作台->企业新闻
     文件位置：移动端自动化用例整理20190304(工作台部分).xlsx
     表格：工作台->企业新闻
+    Author：刘晓东
     """
 
     def default_setUp(self):
@@ -122,28 +104,22 @@ class CorporateNewsTest(TestCase):
         1、成功登录和飞信
         2、当前页面在企业新闻应用首页
         """
-
         Preconditions.select_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        wbp = WorkbenchPage()
-        cnp = CorporateNewsPage()
         mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_corporate_news_page()
+            return
+        cnp = CorporateNewsPage()
         if cnp.is_on_corporate_news_page():
             return
-        if not mess.is_on_this_page():
+        else:
             preconditions.force_close_and_launch_app()
-            mess.wait_for_page_load()
-        mess.click_workbench()
-        wbp.wait_for_page_load()
-        wbp.click_company_news()
-        cnp.wait_for_page_load()
-
+            Preconditions.enter_corporate_news_page()
 
     def default_tearDown(self):
-
         pass
 
-    @tags('ALL', 'workbench', 'LXD')
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
     def test_QYXW_0005(self):
         """保存新闻"""
 
@@ -152,23 +128,26 @@ class CorporateNewsTest(TestCase):
         cnp.wait_for_page_load()
         # 点击发布新闻
         cnp.click_release_news()
-        time.sleep(10)
+        cnitp = CorporateNewsImageTextPage()
+        cnitp.wait_for_page_load()
         # 点击链接发布
-        cnp.click_link_publishing()
+        cnitp.click_link_publishing()
+        cnlp = CorporateNewsLinkPage()
+        cnlp.wait_for_page_load()
         time.sleep(2)
-        # 输入新闻标题
-        cnp.input_news_title("test_news")
-        # 输入链接新闻
-        cnp.input_link_news("https://10086.com")
+        # 输入链接新闻标题
+        cnlp.input_news_title("测试新闻0005")
+        # 输入链接新闻网址
+        cnlp.input_link_url("https://10086.com")
         # 点击保存
-        cnp.click_save()
+        cnlp.click_save()
         # 点击确定
-        cnp.click_sure()
-        # 是否提示保存成功,等待企业新闻首页加载
-        self.assertEquals(cnp.is_exist_save_successfully(), True)
+        cnlp.click_sure()
+        # 1.是否提示保存成功,等待企业新闻首页加载
+        self.assertEquals(cnlp.is_exist_save_successfully(), True)
         cnp.wait_for_page_load()
 
-    @tags('ALL', 'workbench', 'LXD')
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
     def test_QYXW_0007(self):
         """验证删除未发新闻是否正确"""
 
@@ -177,28 +156,191 @@ class CorporateNewsTest(TestCase):
         cnp.wait_for_page_load()
         # 点击未发新闻
         cnp.click_no_news()
-        time.sleep(2)
+        cnnp = CorporateNewsNoNewsPage()
+        cnnp.wait_for_page_load()
+        cnnp.clear_no_news()
         # 确保未发新闻列表存在数据
-        if not cnp.is_exist_no_news():
-            cnp.click_back()
-            Preconditions.create_unpublished_news()
-            cnp.click_no_news()
-            time.sleep(2)
-        title = cnp.get_first_news_title()
-        # 点击一条未发新闻
-        cnp.click_first_news()
-        time.sleep(2)
+        news = [("测试新闻0007", "测试内容0007")]
+        cnnp.click_close()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_company_news()
+        Preconditions.create_unpublished_image_news(news)
+        cnp.click_no_news()
+        cnnp.wait_for_page_load()
+        # 点击未发新闻
+        title = cnnp.click_no_news_by_number(0)
+        cndp = CorporateNewsDetailsPage()
+        cndp.wait_for_page_load()
         # 点击删除
-        cnp.click_delete()
+        cndp.click_delete()
         # 点击确定
-        cnp.click_sure()
+        cndp.click_sure()
         # 1.是否提示删除成功,等待未发新闻页面加载
-        self.assertEquals(cnp.is_exist_delete_successfully(), True)
-        cnp.wait_for_page_load()
+        self.assertEquals(cndp.is_exist_delete_successfully(), True)
+        cnnp.wait_for_page_load()
         # 2.验证未发新闻列表是否存在该记录信息
-        self.assertEquals(cnp.is_exist_news_by_name(title), False)
+        self.assertEquals(cnnp.is_exist_no_news_by_name(title), False)
 
+class CorporateNewsAllTest(TestCase):
+    """
+    模块：工作台->企业新闻
+    文件位置：20190313工作台全量用例整理.xlsx
+    表格：工作台->企业新闻
+    Author：刘晓东
+    """
 
+    def default_setUp(self):
+        """
+        1、成功登录和飞信
+        2、当前页面在企业新闻应用首页
+        """
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_corporate_news_page()
+            return
+        cnp = CorporateNewsPage()
+        if cnp.is_on_corporate_news_page():
+            return
+        else:
+            preconditions.force_close_and_launch_app()
+            Preconditions.enter_corporate_news_page()
 
+    def default_tearDown(self):
+        pass
 
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QYXW_0001(self):
+        """检查企业新闻入口是否正确进入企业新闻首页"""
 
+        cnp = CorporateNewsPage()
+        # 1、2.等待企业新闻首页加载
+        cnp.wait_for_page_load()
+        # 确保企业新闻首页不存在新闻
+        cnp.clear_corporate_news()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QYXW_0002(self):
+        """检查点击返回按钮控件【<】"""
+
+        cnp = CorporateNewsPage()
+        # 1、2.等待企业新闻首页加载
+        cnp.wait_for_page_load()
+        wbp = WorkbenchPage()
+        if cnp.is_exist_close_button():
+            cnp.click_close()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_company_news()
+            cnp.wait_for_page_load()
+        # 点击【<】
+        cnp.click_back()
+        # 3.等待工作台页面加载
+        wbp.wait_for_workbench_page_load()
+        wbp.click_company_news()
+        cnp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QYXW_0003(self):
+        """检查点击关闭按钮控件【X】"""
+
+        cnp = CorporateNewsPage()
+        # 1、2.等待企业新闻首页加载
+        cnp.wait_for_page_load()
+        # 确保有控件【X】
+        cnp.click_no_news()
+        cnnp = CorporateNewsNoNewsPage()
+        cnnp.wait_for_page_load()
+        # 点击【X】
+        cnnp.click_close()
+        # 3.等待工作台页面加载
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_company_news()
+        cnp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QYXW_0004(self):
+        """管理员进入企业新闻初始页，检查页面元素"""
+
+        cnp = CorporateNewsPage()
+        # 1、2.等待企业新闻首页加载
+        cnp.wait_for_page_load()
+        # 确保企业新闻首页不存在新闻
+        cnp.clear_corporate_news()
+        # 3.是否存在提示语,“发布新闻”、“未发新闻”按钮
+        self.assertEquals(cnp.is_exist_words(), True)
+        self.assertEquals(cnp.is_exist_release_news_button(), True)
+        self.assertEquals(cnp.is_exist_no_news_button(), True)
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QYXW_0005(self):
+        """管理员进入企业新闻页，新闻列表按发布时间倒序排序"""
+
+        cnp = CorporateNewsPage()
+        # 1、2.等待企业新闻首页加载
+        cnp.wait_for_page_load()
+        cnp.clear_corporate_news()
+        # 发布多条企业新闻
+        titles = ["测试新闻1", "测试新闻2", "测试新闻3", "测试新闻4"]
+        Preconditions.release_corporate_image_news(titles)
+        time.sleep(3)
+        # 3.企业新闻列表是否按发布时间倒序排序
+        self.assertEquals(cnp.get_corporate_news_titles(), titles)
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QYXW_0017(self):
+        """管理员发布新闻成功"""
+
+        cnp = CorporateNewsPage()
+        # 1、2.等待企业新闻首页加载
+        cnp.wait_for_page_load()
+        # 点击发布新闻
+        cnp.click_release_news()
+        cnitp = CorporateNewsImageTextPage()
+        # 3.等待发布新闻-图文发布页加载
+        cnitp.wait_for_page_load()
+        # 4.点击链接发布
+        cnitp.click_link_publishing()
+        cnlp = CorporateNewsLinkPage()
+        cnlp.wait_for_page_load()
+        time.sleep(2)
+        # 5.输入链接新闻标题、内容
+        cnlp.input_news_title("测试新闻0017")
+        cnlp.input_link_url("https://10086.com")
+        # 6.点击发布
+        cnlp.click_release()
+        # 点击确定
+        cnlp.click_sure()
+        # 7.是否提示发布成功
+        self.assertEquals(cnlp.is_exist_release_successfully(), True)
+        # 等待企业新闻首页加载
+        cnp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QYXW_0018(self):
+        """管理员取消发布新闻成功"""
+
+        cnp = CorporateNewsPage()
+        # 1、2.等待企业新闻首页加载
+        cnp.wait_for_page_load()
+        # 点击发布新闻
+        cnp.click_release_news()
+        cnitp = CorporateNewsImageTextPage()
+        # 3.等待发布新闻-图文发布页加载
+        cnitp.wait_for_page_load()
+        # 4.点击链接发布
+        cnitp.click_link_publishing()
+        cnlp = CorporateNewsLinkPage()
+        cnlp.wait_for_page_load()
+        time.sleep(2)
+        # 5.输入链接新闻标题、内容
+        cnlp.input_news_title("测试新闻0018")
+        cnlp.input_link_url("https://10086.com")
+        # 6.点击发布
+        cnlp.click_release()
+        # 7.取消发布新闻
+        cnlp.click_cancel()
+        cnlp.click_back()
+        # 等待企业新闻首页加载
+        cnp.wait_for_page_load()

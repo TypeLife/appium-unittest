@@ -1615,7 +1615,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcs.click_back()
 
 
-class MsgGroupChatTotalQuantityTest(TestCase):
+class MsgGroupChatVideoPicTotalQuantityTest(TestCase):
     """
     模块：群聊-图片视频-GIF
     文件位置：1.1.3全量测试用例->113全量用例--肖立平.xlsx
