@@ -9,6 +9,9 @@ class ContactDetailsPage(BasePage):
     ACTIVITY = 'com.cmicc.module_contact.activitys.ContactDetailActivity'
 
     __locators = {
+        '联系人列表':(MobileBy.ID,'com.chinasofti.rcs:id/rl_group_list_item'),
+        '通讯录': (MobileBy.ID, 'com.chinasofti.rcs:id/tvContact'),
+        "联系人头像":(MobileBy.ID,'com.chinasofti.rcs:id/head_tv'),
         '编辑2':(MobileBy.XPATH,"//*[@text='编辑']"),
         '星标图标':(MobileBy.ID,'com.chinasofti.rcs:id/iv_star'),
         '返回上一页': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_back'),
@@ -71,6 +74,35 @@ class ContactDetailsPage(BasePage):
     def change_delete_number(self):
         time.sleep(1)
         self.click_element(self.__locators['删除联系人'])
+
+    @TestLogger.log()
+    def open_contacts_page(self):
+        """切换到标签页：通讯录"""
+        self.click_element(self.__locators['通讯录'])
+
+    @TestLogger.log("删除所有的联系人")
+    def delete_all_contact(self):
+        """使用此方法前，app进入消息界面"""
+        self.open_contacts_page()
+        flag=True
+        while flag:
+            time.sleep(2)
+            elements=self.get_elements(self.__locators['联系人列表'])
+            if elements:
+                elements[0].click()
+                self.click_edit_contact()
+                time.sleep(1)
+                self.hide_keyboard()
+                time.sleep(1)
+                self.page_up()
+                self.change_delete_number()
+                time.sleep(1)
+                self.click_sure_delete()
+            else:
+                self.take_screen_out()
+                print("无可删除联系人")
+                flag=False
+
 
     @TestLogger.log("点击返回按钮")
     def click_back_icon(self):
@@ -184,3 +216,17 @@ class ContactDetailsPage(BasePage):
         """页面应该包含首字母"""
         return self.page_should_contain_element("名片首字母")
 
+    @TestLogger.log("截图")
+    def take_screen_out(self):
+        import os
+        path = os.getcwd() + "/screenshot"
+        print(path)
+        timestamp = time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime(time.time()))
+        os.popen("adb wait-for-device")
+        time.sleep(1)
+        os.popen("adb shell screencap -p /data/local/tmp/tmp.png")
+        time.sleep(1)
+        if not os.path.isdir(os.getcwd() + "/screenshot"):
+            os.makedirs(path)
+        os.popen("adb pull /data/local/tmp/tmp.png " + path + "/" + timestamp + ".png")
+        os.popen("adb shell rm /data/local/tmp/tmp.png")

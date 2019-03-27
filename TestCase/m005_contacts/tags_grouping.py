@@ -182,7 +182,7 @@ class Preconditions(object):
             detail_page.wait_for_page_load()
             detail_page.click_back_icon()
 
-@unittest.skip("先不执行")
+unittest.skip("先不执行")
 class TagsGroupingTest(TestCase):
     """通讯录 - 标签分组"""
 
@@ -574,6 +574,13 @@ class TagsGroupingTest(TestCase):
             lg.delete_all_label()
         except:
             import traceback
+            traceback.print_exc()
+        try:
+            current_mobile().hide_keyboard_if_display()
+            Preconditions.make_already_in_message_page()
+            cdp=ContactDetailsPage()
+            cdp.delete_all_contact()
+        except:
             traceback.print_exc()
 
 class Tag_Group(TestCase):
@@ -1086,7 +1093,7 @@ class Tag_Group(TestCase):
         Preconditions.make_already_in_message_page()
 
 
-    @tags('ALL', 'CONTACT_debug', 'CMCC')
+    @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_0394(self):
         """分组详情操作界面-群发消息-分组联系人图标"""
         GroupPage = GroupListPage()
@@ -1134,7 +1141,7 @@ class Tag_Group(TestCase):
         Preconditions.make_already_in_message_page()
 
 
-    @tags('ALL', 'CONTACT_debug', 'CMCC')
+    @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_0395(self):
         """分组详情操作界面-群发消息-分组联系人图标"""
         GroupPage = GroupListPage()
@@ -1177,7 +1184,7 @@ class Tag_Group(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL', 'CONTACT_debug', 'CMCC')
+    @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_0396(self):
         """分组联系人进入Profile页-编辑-删除联系人"""
         GroupPage = GroupListPage()
@@ -1219,7 +1226,7 @@ class Tag_Group(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL', 'CONTACT_debug', 'CMCC')
+    @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_0397(self):
         """“分组详情操作”界面-多方电话"""
         GroupPage = GroupListPage()
@@ -1254,7 +1261,7 @@ class Tag_Group(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL', 'CONTACT_debug', 'CMCC')
+    @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_0398(self):
         """“分组详情操作”界面-多方视频"""
         GroupPage = GroupListPage()
@@ -1282,6 +1289,7 @@ class Tag_Group(TestCase):
         GroupPage = GroupListPage()
         GroupPage.click_back_button()
         GroupPage.delete_group(name='aaa')
+
 
 
 if __name__ == '__main__':
