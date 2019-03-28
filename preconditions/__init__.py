@@ -3,6 +3,7 @@
 from selenium.common.exceptions import TimeoutException
 from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
 from pages import *
+import time
 
 def connect_mobile(category):
     """选择手机手机"""
@@ -97,7 +98,8 @@ def terminate_app():
 
 def force_close_and_launch_app():
     "强制关闭应用，然后重启"
-    current_mobile().terminate_app('com.chinasofti.rcs', timeout=5000)
+    current_mobile().terminate_app('com.chinasofti.rcs', timeout=2000)
+    time.sleep(3)
     current_mobile().launch_app()
 
 

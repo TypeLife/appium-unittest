@@ -11,6 +11,9 @@ class GroupListPage(BasePage):
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.GroupChatListActivity2'
 
     __locators = {
+        '移除成员_标题':(MobileBy.ID,'com.chinasofti.rcs:id/title'),
+        '搜索标签分组成员':(MobileBy.ID,'com.chinasofti.rcs:id/contact_search_bar'),
+        '刪除_标签名':(MobileBy.ID,'com.chinasofti.rcs:id/ib_label_del'),
         '星标图标': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_star'),
         '星标': (MobileBy.ID, 'com.chinasofti.rcs:id/star'),
         "电话号码":(MobileBy.ID,'com.chinasofti.rcs:id/tv_phone'),
@@ -97,7 +100,8 @@ class GroupListPage(BasePage):
         '选择图片':(MobileBy.ID,'com.chinasofti.rcs:id/iv_select'),
         '图片发送':(MobileBy.ID,'com.chinasofti.rcs:id/button_send'),
         '发送失败':(MobileBy.ID,'com.chinasofti.rcs:id/imageview_msg_send_failed'),
-
+        '成员头像':(MobileBy.ID,'com.chinasofti.rcs:id/avator'),
+        "确定_可用":(MobileBy.XPATH,'//*[@text="确定(1/1)"]')
 
     }
 
@@ -112,6 +116,24 @@ class GroupListPage(BasePage):
         self.input_text(self.__locators['标签名称框'],name)
         time.sleep(1)
         self.click_sure_element()
+        time.sleep(1)
+
+    @TestLogger.log("移除按钮")
+    def click_move_label(self):
+        time.sleep(1)
+        self.click_element(self.__locators['移除成员'])
+        time.sleep(1)
+
+    @TestLogger.log("删除输入标签名称")
+    def delete_label_name(self, name='bbb'):
+        time.sleep(1)
+        self.click_element(self.__locators['标签名称'])
+        time.sleep(1)
+        self.click_element(self.__locators['标签名称框'])
+        time.sleep(1)
+        self.input_text(self.__locators['标签名称框'], name)
+        time.sleep(1)
+        self.click_element(self.__locators['刪除_标签名'])
         time.sleep(1)
 
     @TestLogger.log("标签名称")

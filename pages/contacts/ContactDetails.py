@@ -46,7 +46,8 @@ class ContactDetailsPage(BasePage):
         "暂不开启":(MobileBy.ID,"android:id/button2"),
         "挂断电话":(MobileBy.ID,"com.chinasofti.rcs:id/ivDecline"),
         "视频通话呼叫中":(MobileBy.XPATH,"//*[@text='	视频通话呼叫中']"),
-        "挂断视频通话": (MobileBy.ID, "com.chinasofti.rcs:id/iv_out_Cancel")
+        "挂断视频通话": (MobileBy.ID, "com.chinasofti.rcs:id/iv_out_Cancel"),
+        "取消拨打":(MobileBy.XPATH,"//*[@text='取消拨打']")
     }
 
     @TestLogger.log("更改手机号码")
@@ -66,7 +67,7 @@ class ContactDetailsPage(BasePage):
 
     @TestLogger.log("挂断通话")
     def cancel_call(self):
-        time.sleep(6)
+        time.sleep(7)
         self.click_element(self.__locators["挂断电话"])
 
 
@@ -204,7 +205,8 @@ class ContactDetailsPage(BasePage):
 
     @TestLogger.log("挂断视频通话")
     def end_video_call(self):
-        self.click_element(self.__locators["挂断视频通话"])
+        time.sleep(1)
+        self.click_element(self.__locators["取消拨打"])
 
     @TestLogger.log()
     def hefeixin_call_btn_is_clickable(self):
