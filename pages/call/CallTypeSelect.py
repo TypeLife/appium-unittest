@@ -66,18 +66,14 @@ class CallTypeSelectPage(BasePage):
     @TestLogger.log()
     def click_sure(self):
         """点击允许"""
-        try:
+        if self._is_element_present(self.__class__.__locators["允许"]):
             self.click_element(self.__locators["允许"])
-        except:
-            pass
 
     @TestLogger.log()
     def click_i_know(self):
         """点击选择知道了"""
-        try:
+        if self._is_element_present(self.__class__.__locators["知道了"]):
             self.click_element(self.__locators["知道了"])
-        except:
-            pass
 
     @TestLogger.log()
     def click_app_call_end(self):
