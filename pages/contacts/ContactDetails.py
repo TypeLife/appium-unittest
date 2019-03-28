@@ -3,7 +3,7 @@ from appium.webdriver.common.mobileby import MobileBy
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 import time
-
+import os
 class ContactDetailsPage(BasePage):
     """个人详情"""
     ACTIVITY = 'com.cmicc.module_contact.activitys.ContactDetailActivity'
@@ -218,7 +218,7 @@ class ContactDetailsPage(BasePage):
 
     @TestLogger.log("截图")
     def take_screen_out(self):
-        import os
+
         path = os.getcwd() + "/screenshot"
         print(path)
         timestamp = time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime(time.time()))
@@ -230,3 +230,23 @@ class ContactDetailsPage(BasePage):
             os.makedirs(path)
         os.popen("adb pull /data/local/tmp/tmp.png " + path + "/" + timestamp + ".png")
         os.popen("adb shell rm /data/local/tmp/tmp.png")
+
+def add(func):
+    def wrapper(*args):
+        try:
+            func(*args)
+        except:  # 等待AssertionError
+            path = os.getcwd() + "/screenshot"
+            print(path)
+            timestamp = time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime(time.time()))
+            os.popen("adb wait-for-device")
+            time.sleep(0.5)
+            os.popen("adb shell screencap -p /data/local/tmp/tmp.png")
+            time.sleep(0.5)
+            if not os.path.isdir(os.getcwd() + "/screenshot"):
+                os.makedirs(path)
+            os.popen("adb pull /data/local/tmp/tmp.png " + path + "/" + timestamp + ".png")
+            os.popen("adb shell rm /data/local/tmp/tmp.png")
+            #raise ArithmeticError
+
+    return wrapper

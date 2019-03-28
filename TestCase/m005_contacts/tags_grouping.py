@@ -13,6 +13,7 @@ from pages.components import ContactsSelector
 from pages.components.dialogs import SuspendedTips, MutiVideoTipsPage
 import preconditions
 from pages.contacts.ContactDetails import ContactDetailsPage
+from pages.contacts.ContactDetails import add
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -1289,6 +1290,7 @@ class Tag_Group(TestCase):
         GroupPage = GroupListPage()
         GroupPage.click_back_button()
         GroupPage.delete_group(name='aaa')
+
 
 
 
