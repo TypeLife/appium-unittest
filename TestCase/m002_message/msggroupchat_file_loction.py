@@ -795,7 +795,8 @@ class MsgGroupChatFileLocationTest(TestCase):
         sc.wait_for_page_load()
         sc.select_local_contacts()
         time.sleep(2)
-        sc.click_one_local_contacts()
+        sc.click_one_contact("和飞信电话")
+        # sc.click_one_local_contacts()
         # 点击取消按钮
         sc.click_cancel_forward()
         # 确保选择联系人页面加载
