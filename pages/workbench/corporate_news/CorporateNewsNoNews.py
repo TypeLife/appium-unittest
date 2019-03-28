@@ -49,7 +49,7 @@ class CorporateNewsNoNewsPage(BasePage):
 
     @TestLogger.log()
     def click_no_news_by_number(self, number):
-        """点击某一条未发新闻"""
+        """点击某一条未发新闻,返回标题"""
         if self._is_element_present(self.__class__.__locators["新闻名称"]):
             els = self.get_elements(self.__class__.__locators["新闻名称"])
             title = els[number].text

@@ -173,12 +173,13 @@ class MessageListTotalQuantityTest(TestCase):
     def default_setUp(self):
 
         Preconditions.select_mobile('Android-移动')
-        mess = MessagePage()
-        if mess.is_on_this_page():
+        mp = MessagePage()
+        if mp.is_on_this_page():
             return
         else:
-            preconditions.force_close_and_launch_app()
-            mess.wait_for_page_load()
+            current_mobile().launch_app()
+            # preconditions.force_close_and_launch_app()
+            Preconditions.make_already_in_message_page()
 
     def default_tearDown(self):
         pass

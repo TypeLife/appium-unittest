@@ -50,7 +50,7 @@ class SelectContactsPage(BasePage):
         '左侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/index_text"]'),
         '查看更多': (MobileBy.XPATH, '//*[@text ="查看更多"]'),
         '和通讯录返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back'),
-
+        "最近聊天消息名称": (MobileBy.ID, "com.chinasofti.rcs:id/tv_name")
     }
 
     @TestLogger.log()
@@ -339,14 +339,8 @@ class SelectContactsPage(BasePage):
         return arrs == letters
 
     @TestLogger.log()
-    def select_recent_chat_by_name(self, name):
-        """根据名字选择最近聊天会话窗口"""
-        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text ="%s"]' % name)
-        max_try = 20
-        current = 0
-        while current < max_try:
-            if self._is_element_present(locator):
-                break
-            current += 1
-            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
-        self.click_element(locator)
+    def select_recent_chat_by_number(self, number):
+        """选择某一条最近聊天记录"""
+        if self._is_element_present(self.__class__.__locators["最近聊天消息名称"]):
+            els = self.get_elements(self.__class__.__locators["最近聊天消息名称"])
+            els[number].click()

@@ -1,3 +1,5 @@
+import unittest
+
 import preconditions
 from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
@@ -10,6 +12,7 @@ from pages.workbench.corporate_news.CorporateNewsDetails import CorporateNewsDet
 from pages.workbench.corporate_news.CorporateNewsImageText import CorporateNewsImageTextPage
 from pages.workbench.corporate_news.CorporateNewsLink import CorporateNewsLinkPage
 from pages.workbench.corporate_news.CorporateNewsNoNews import CorporateNewsNoNewsPage
+from preconditions.BasePreconditions import LoginPreconditions
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -23,7 +26,7 @@ REQUIRED_MOBILES = {
     'Android-XX-XX': 'others_double',
 }
 
-class Preconditions(object):
+class Preconditions(LoginPreconditions):
     """前置条件"""
 
     @staticmethod
@@ -40,9 +43,9 @@ class Preconditions(object):
     def enter_corporate_news_page():
         """进入企业新闻首页"""
 
-        message_page = MessagePage()
-        message_page.wait_for_page_load()
-        message_page.click_workbench()
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.click_workbench()
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
         wbp.click_company_news()
@@ -104,16 +107,19 @@ class CorporateNewsTest(TestCase):
         1、成功登录和飞信
         2、当前页面在企业新闻应用首页
         """
+
         Preconditions.select_mobile('Android-移动')
-        mess = MessagePage()
-        if mess.is_on_this_page():
+        mp = MessagePage()
+        if mp.is_on_this_page():
             Preconditions.enter_corporate_news_page()
             return
         cnp = CorporateNewsPage()
         if cnp.is_on_corporate_news_page():
-            return
+            current_mobile().hide_keyboard_if_display()
         else:
-            preconditions.force_close_and_launch_app()
+            current_mobile().launch_app()
+            # preconditions.force_close_and_launch_app()
+            Preconditions.make_already_in_message_page()
             Preconditions.enter_corporate_news_page()
 
     def default_tearDown(self):
@@ -195,16 +201,19 @@ class CorporateNewsAllTest(TestCase):
         1、成功登录和飞信
         2、当前页面在企业新闻应用首页
         """
+
         Preconditions.select_mobile('Android-移动')
-        mess = MessagePage()
-        if mess.is_on_this_page():
+        mp = MessagePage()
+        if mp.is_on_this_page():
             Preconditions.enter_corporate_news_page()
             return
         cnp = CorporateNewsPage()
         if cnp.is_on_corporate_news_page():
-            return
+            current_mobile().hide_keyboard_if_display()
         else:
-            preconditions.force_close_and_launch_app()
+            current_mobile().launch_app()
+            # preconditions.force_close_and_launch_app()
+            Preconditions.make_already_in_message_page()
             Preconditions.enter_corporate_news_page()
 
     def default_tearDown(self):
@@ -281,12 +290,28 @@ class CorporateNewsAllTest(TestCase):
         # 1、2.等待企业新闻首页加载
         cnp.wait_for_page_load()
         cnp.clear_corporate_news()
-        # 发布多条企业新闻
-        titles = ["测试新闻1", "测试新闻2", "测试新闻3", "测试新闻4"]
+        # 确保存在多条已发布的企业新闻
+        titles = ["测试新闻00051", "测试新闻00052", "测试新闻00053", "测试新闻00054"]
         Preconditions.release_corporate_image_news(titles)
         time.sleep(3)
         # 3.企业新闻列表是否按发布时间倒序排序
         self.assertEquals(cnp.get_corporate_news_titles(), titles)
+
+    @unittest.skip("暂时难以实现,跳过")
+    def test_QYXW_0008(self):
+        """管理员按英文搜索企业新闻"""
+
+        cnp = CorporateNewsPage()
+        # 1、2.等待企业新闻首页加载
+        cnp.wait_for_page_load()
+        cnp.clear_corporate_news()
+        # 确保存在多条已发布的企业新闻
+        titles = ["testnews", "测试新闻0008", "news"]
+        Preconditions.release_corporate_image_news(titles)
+        cnp.click_search_icon()
+        cnp.input_search_content("testnews")
+        cnp.click_search_button()
+        self.assertEquals(cnp.get_current_corporate_news_number(), len(titles) + 1)
 
     @tags('ALL', 'CMCC', 'workbench', 'LXD')
     def test_QYXW_0017(self):
@@ -344,3 +369,27 @@ class CorporateNewsAllTest(TestCase):
         cnlp.click_back()
         # 等待企业新闻首页加载
         cnp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QYXW_0030(self):
+        """检验统计新闻浏览人数功能是否正确"""
+
+        cnp = CorporateNewsPage()
+        # 1、2.等待企业新闻首页加载
+        cnp.wait_for_page_load()
+        # 确保存在多条已发布的企业新闻
+        titles = ["测试新闻00301", "测试新闻00302"]
+        Preconditions.release_corporate_image_news(titles)
+        number = 0
+        # 访问前的浏览量
+        amount = cnp.get_corporate_news_page_view_by_number(number)
+        # 3.进入新闻详情页
+        cnp.click_corporate_news_by_number(number)
+        cndp = CorporateNewsDetailsPage()
+        cndp.wait_for_page_load()
+        cndp.click_back()
+        cnp.wait_for_page_load()
+        # 访问后的浏览量
+        news_amount = cnp.get_corporate_news_page_view_by_number(number)
+        # 4.验证每次用户查看新闻详情再返回到列表之后，浏览数量是否+1
+        self.assertEquals(amount + 1, news_amount)

@@ -238,6 +238,40 @@ class Preconditions(object):
             cpg.click_send()
             time.sleep(5)
 
+    @staticmethod
+    def get_into_group_chat_page(name):
+        """进入群聊聊天会话页面"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 点击 +
+        mp.click_add_icon()
+        # 点击发起群聊
+        mp.click_group_chat()
+        scg = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            # 等待选择联系人页面加载
+            flag = scg.wait_for_page_load()
+            if not flag:
+                scg.click_back()
+                time.sleep(2)
+                mp.click_add_icon()
+                mp.click_group_chat()
+            else:
+                break
+            n = n + 1
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        # 选择一个普通群
+        sog.selecting_one_group_by_name(name)
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+
 
 class MsgGroupChatvedioTest(TestCase):
     """
@@ -1636,39 +1670,39 @@ class MsgGroupChatVideoPicTotalQuantityTest(TestCase):
     Author:刘晓东
     """
 
-    # @classmethod
-    # def setUpClass(cls):
-    #
-    #     # 创建联系人
-    #     fail_time = 0
-    #     import dataproviders
-    #     while fail_time < 3:
-    #         try:
-    #             required_contacts = dataproviders.get_preset_contacts()
-    #             conts = ContactsPage()
-    #             Preconditions.connect_mobile('Android-移动')
-    #             current_mobile().hide_keyboard_if_display()
-    #             for name, number in required_contacts:
-    #                 Preconditions.make_already_in_message_page()
-    #                 conts.open_contacts_page()
-    #                 conts.create_contacts_if_not_exits(name, number)
-    #
-    #             # 创建群
-    #             required_group_chats = dataproviders.get_preset_group_chats()
-    #
-    #             conts.open_group_chat_list()
-    #             group_list = GroupListPage()
-    #             for group_name, members in required_group_chats:
-    #                 group_list.wait_for_page_load()
-    #                 group_list.create_group_chats_if_not_exits(group_name, members)
-    #             group_list.click_back()
-    #             conts.open_message_page()
-    #             return
-    #         except:
-    #             fail_time += 1
-    #             import traceback
-    #             msg = traceback.format_exc()
-    #             print(msg)
+    @classmethod
+    def setUpClass(cls):
+
+        # 创建联系人
+        fail_time = 0
+        import dataproviders
+        while fail_time < 3:
+            try:
+                required_contacts = dataproviders.get_preset_contacts()
+                conts = ContactsPage()
+                Preconditions.connect_mobile('Android-移动')
+                current_mobile().hide_keyboard_if_display()
+                for name, number in required_contacts:
+                    Preconditions.make_already_in_message_page()
+                    conts.open_contacts_page()
+                    conts.create_contacts_if_not_exits(name, number)
+
+                # 创建群
+                required_group_chats = dataproviders.get_preset_group_chats()
+
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
+                return
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
 
     def default_setUp(self):
         """
@@ -1677,16 +1711,19 @@ class MsgGroupChatVideoPicTotalQuantityTest(TestCase):
         """
 
         Preconditions.select_mobile('Android-移动')
-        mess = MessagePage()
-        if mess.is_on_this_page():
-            Preconditions.enter_group_chat_page()
+        mp = MessagePage()
+        name = "群聊1"
+        if mp.is_on_this_page():
+            Preconditions.get_into_group_chat_page(name)
             return
-        scp = GroupChatPage()
-        if scp.is_on_this_page():
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
             current_mobile().hide_keyboard_if_display()
         else:
-            preconditions.force_close_and_launch_app()
-            Preconditions.enter_group_chat_page()
+            current_mobile().launch_app()
+            # preconditions.force_close_and_launch_app()
+            Preconditions.make_already_in_message_page()
+            Preconditions.get_into_group_chat_page(name)
 
     def default_tearDown(self):
         pass
@@ -1729,10 +1766,8 @@ class MsgGroupChatVideoPicTotalQuantityTest(TestCase):
         scg = SelectContactsPage()
         # 2.等待选择联系人页面加载
         scg.wait_for_page_load()
-        # 获取当前会话窗口群名
-        group_name = Preconditions.get_group_chat_name()
         # 3.选择最近聊天中的当前会话窗口
-        scg.select_recent_chat_by_name(group_name)
+        scg.select_recent_chat_by_number(0)
         # 确定转发
         scg.click_sure_forward()
         # 4.是否提示已转发,等待群聊页面加载
@@ -1765,10 +1800,8 @@ class MsgGroupChatVideoPicTotalQuantityTest(TestCase):
         scg = SelectContactsPage()
         # 2.等待选择联系人页面加载
         scg.wait_for_page_load()
-        # 获取当前会话窗口群名
-        group_name = Preconditions.get_group_chat_name()
         # 3.选择最近聊天中的当前会话窗口
-        scg.select_recent_chat_by_name(group_name)
+        scg.select_recent_chat_by_number(0)
         # 确定转发
         scg.click_sure_forward()
         # 4.是否提示已转发,等待群聊页面加载
@@ -1806,10 +1839,8 @@ class MsgGroupChatVideoPicTotalQuantityTest(TestCase):
         scg = SelectContactsPage()
         # 2.等待选择联系人页面加载
         scg.wait_for_page_load()
-        # 获取当前会话窗口群名
-        group_name = Preconditions.get_group_chat_name()
         # 3.选择最近聊天中的当前会话窗口
-        scg.select_recent_chat_by_name(group_name)
+        scg.select_recent_chat_by_number(0)
         # 取消转发
         scg.click_cancel_forward()
         # 4.等待选择联系人页面加载

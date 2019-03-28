@@ -17,7 +17,11 @@ class CorporateNewsPage(BasePage):
         '新闻名称': (MobileBy.XPATH, '//*[@resource-id="news_title"]'),
         '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back_actionbar'),
         '关闭': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_close_actionbar'),
-        '提示语': (MobileBy.XPATH, "//*[contains(@text, '向团队所有成员发出第一条新闻')]")
+        '提示语': (MobileBy.XPATH, "//*[contains(@text, '向团队所有成员发出第一条新闻')]"),
+        '右上角搜索图标': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_right1'),
+        '搜索框': (MobileBy.XPATH, '//*[@resource-id="cNewsTitle"]'),
+        '搜索': (MobileBy.XPATH, '//*[@text="搜索"]'),
+        '浏览量': (MobileBy.XPATH, '//*[@resource-id="news_traffic"]')
     }
 
     @TestLogger.log()
@@ -121,3 +125,39 @@ class CorporateNewsPage(BasePage):
     def is_exist_close_button(self):
         """是否存在关闭按钮"""
         return self._is_element_present(self.__class__.__locators["关闭"])
+
+    @TestLogger.log()
+    def click_search_icon(self):
+        """点击右上角搜索图标"""
+        self.click_element(self.__class__.__locators["右上角搜索图标"])
+
+    @TestLogger.log()
+    def input_search_content(self, content):
+        """输入搜索内容"""
+        self.input_text(self.__class__.__locators["搜索框"], content)
+
+    @TestLogger.log()
+    def click_search_button(self):
+        """点击搜索按钮"""
+        self.click_element(self.__class__.__locators["搜索"])
+
+    @TestLogger.log()
+    def get_current_corporate_news_number(self):
+        """获取当前企业新闻数"""
+        els = self.get_elements(self.__class__.__locators["新闻名称"])
+        return len(els)
+
+    @TestLogger.log()
+    def click_corporate_news_by_number(self, number):
+        """点击某一条企业新闻"""
+        if self._is_element_present(self.__class__.__locators["浏览量"]):
+            els = self.get_elements(self.__class__.__locators["浏览量"])
+            els[number].click()
+
+    @TestLogger.log()
+    def get_corporate_news_page_view_by_number(self, number):
+        """返回某一条企业新闻浏览量"""
+        if self._is_element_present(self.__class__.__locators["浏览量"]):
+            els = self.get_elements(self.__class__.__locators["浏览量"])
+            amount = els[number].text
+            return int(amount)

@@ -18,8 +18,6 @@ class Preconditions(LoginPreconditions):
     def enter_single_chat_page(name):
         """进入单聊聊天会话页面"""
 
-        # 进入消息页面
-        Preconditions.make_already_in_message_page()
         mp = MessagePage()
         mp.wait_for_page_load()
         # 点击 +
@@ -1543,16 +1541,17 @@ class MsgPrivateChatVideoPicTotalQuantityTest(TestCase):
 
         Preconditions.select_mobile('Android-移动')
         name = "大佬1"
-        mess = MessagePage()
-        if mess.is_on_this_page():
+        mp = MessagePage()
+        if mp.is_on_this_page():
             Preconditions.enter_single_chat_page(name)
             return
-        chat = SingleChatPage()
-        if chat.is_on_this_page():
+        scp = SingleChatPage()
+        if scp.is_on_this_page():
             current_mobile().hide_keyboard_if_display()
-            return
         else:
-            preconditions.force_close_and_launch_app()
+            current_mobile().launch_app()
+            # preconditions.force_close_and_launch_app()
+            Preconditions.make_already_in_message_page()
             Preconditions.enter_single_chat_page(name)
 
     def default_tearDown(self):
@@ -1578,9 +1577,8 @@ class MsgPrivateChatVideoPicTotalQuantityTest(TestCase):
         scg = SelectContactsPage()
         # 2.等待选择联系人页面加载
         scg.wait_for_page_load()
-        name = "大佬1"
         # 3.选择最近聊天中的当前会话窗口
-        scg.select_recent_chat_by_name(name)
+        scg.select_recent_chat_by_number(0)
         # 确定转发
         scg.click_sure_forward()
         # 4.是否提示已转发,等待单聊页面加载
@@ -1612,9 +1610,8 @@ class MsgPrivateChatVideoPicTotalQuantityTest(TestCase):
         scg = SelectContactsPage()
         # 2.等待选择联系人页面加载
         scg.wait_for_page_load()
-        name = "大佬1"
         # 3.选择最近聊天中的当前会话窗口
-        scg.select_recent_chat_by_name(name)
+        scg.select_recent_chat_by_number(0)
         # 确定转发
         scg.click_sure_forward()
         # 4.是否提示已转发,等待单聊页面加载
@@ -1651,9 +1648,8 @@ class MsgPrivateChatVideoPicTotalQuantityTest(TestCase):
         scg = SelectContactsPage()
         # 2.等待选择联系人页面加载
         scg.wait_for_page_load()
-        name = "大佬1"
         # 3.选择最近聊天中的当前会话窗口
-        scg.select_recent_chat_by_name(name)
+        scg.select_recent_chat_by_number(0)
         # 取消转发
         scg.click_cancel_forward()
         # 4.等待选择联系人页面加载
