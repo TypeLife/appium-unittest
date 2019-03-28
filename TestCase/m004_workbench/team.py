@@ -535,3 +535,109 @@ class TeamTestAll(TestCase):
         workbench.click_create_team()
         team.wait_for_page_load()
 
+    @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    def test_CJTD_0010(self):
+        """行业类型选择完成"""
+        team = CreateTeamPage()
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        # 有默认的团队，就不创建
+        default_team_name = Preconditions.get_team_name()
+        workbench.click_enterprise_name_triangle()
+        time.sleep(1)
+        teams = workbench.get_team_names()
+        current_mobile().back()
+        if default_team_name in teams:
+            print("当前已有团队:" + default_team_name + ",未再创建！")
+            workbench.click_create_team()
+            team.wait_for_page_load()
+            return
+        # 点击最底部的“创建团队”
+        workbench.click_create_team()
+        team.wait_for_page_load()
+        Preconditions.create_team()
+        # 回到创建团队页面
+        workbench.click_create_team()
+        team.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    def test_CJTD_0012(self):
+        """管理员姓名少于2位"""
+        team = CreateTeamPage()
+        team.input_team_name("我我我")
+        team.choose_location()
+        team.choose_industry()
+        team.input_real_name('a')
+        # 立即创建团队
+        team.click_immediately_create_team()
+        team.page_should_contain_text("管理员姓名不得少于2位")
+        team.click_sure()
+        # 清除输入数据
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        workbench.click_create_team()
+        team.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    def test_CJTD_0013(self):
+        """管理员姓名超过20个汉字"""
+        team = CreateTeamPage()
+        team.input_team_name("我我我")
+        team.choose_location()
+        team.choose_industry()
+        name="好"*21
+        team.input_real_name(name)
+        # 立即创建团队
+        team.click_immediately_create_team()
+        team.page_should_contain_text("姓名不能超过20个汉字或60个字母")
+        team.click_sure()
+        # 清除输入数据
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        workbench.click_create_team()
+        team.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    def test_CJTD_0014(self):
+        """管理员姓名超过60个字母"""
+        #1.在移动端创建团队页面，其他信息填写完成，管理员姓名输入超过60个字母，点【提交注册】
+        team = CreateTeamPage()
+        team.input_team_name("我我我")
+        team.choose_location()
+        team.choose_industry()
+        name = "a" * 61
+        team.input_real_name(name)
+        # 立即创建团队
+        team.click_immediately_create_team()
+        team.page_should_contain_text("姓名不能超过20个汉字或60个字母")
+        team.click_sure()
+        # 清除输入数据
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        workbench.click_create_team()
+        team.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    def test_CJTD_0015(self):
+        """管理员姓名输入非法字符"""
+        #1.在移动端创建团队页面，其他信息填写完成，管理员姓名输入非汉字、字母数字和空格，点【提交注册】
+        team = CreateTeamPage()
+        team.input_team_name("我我我")
+        team.choose_location()
+        team.choose_industry()
+        name = "*" * 3
+        team.input_real_name(name)
+        # 立即创建团队
+        team.click_immediately_create_team()
+        team.page_should_contain_text("只许输入中文、字母、数字或空格")
+        team.click_sure()
+        # 清除输入数据
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        workbench.click_create_team()
+        team.wait_for_page_load()

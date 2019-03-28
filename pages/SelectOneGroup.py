@@ -2,7 +2,7 @@ from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
-
+import time
 
 class SelectOneGroupPage(BasePage):
     """选择一个群页面"""
@@ -39,7 +39,7 @@ class SelectOneGroupPage(BasePage):
                   '发送给': (MobileBy.XPATH, "//*[contains(@text, '发送给')]"),
                   '取消': (MobileBy.XPATH, "//*[contains(@text, '取消')]"),
                   '确定': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
-                  '分享名片': (MobileBy.ID, 'com.chinasofti.rcs:id/send_tv'),
+                  '分享名片': (MobileBy.ID,'com.chinasofti.rcs:id/send_tv'),
                   '群-搜索': (MobileBy.ID, 'com.chinasofti.rcs:id/edit_query'),
                   '搜索-返回': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_back'),
                   '搜索结果展示': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
@@ -79,7 +79,23 @@ class SelectOneGroupPage(BasePage):
     @TestLogger.log("点击分享名片")
     def click_share_business_card(self):
         """点击分享名片"""
+        time.sleep(2)
         self.click_element(self.__locators['分享名片'])
+        time.sleep(1)
+        els=self.get_elements(self.__locators['分享名片'])
+        if els:
+            print("控件点击失败")
+            self.tap_coordinate([(50,50)])
+
+    @TestLogger.log()
+    def click_back_by_android(self, times=1):
+        """
+        点击返回，通过android返回键
+        """
+        # times 返回次数
+        for i in range(times):
+            self.driver.back()
+            time.sleep(1)
 
     @TestLogger.log('点击联系人')
     def click_contact(self, name):

@@ -3,7 +3,7 @@ from appium.webdriver.common.mobileby import MobileBy
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 import time
-
+import os
 class ContactDetailsPage(BasePage):
     """个人详情"""
     ACTIVITY = 'com.cmicc.module_contact.activitys.ContactDetailActivity'
@@ -46,7 +46,8 @@ class ContactDetailsPage(BasePage):
         "暂不开启":(MobileBy.ID,"android:id/button2"),
         "挂断电话":(MobileBy.ID,"com.chinasofti.rcs:id/ivDecline"),
         "视频通话呼叫中":(MobileBy.XPATH,"//*[@text='	视频通话呼叫中']"),
-        "挂断视频通话": (MobileBy.ID, "com.chinasofti.rcs:id/iv_out_Cancel")
+        "挂断视频通话": (MobileBy.ID, "com.chinasofti.rcs:id/iv_out_Cancel"),
+        "取消拨打":(MobileBy.XPATH,"//*[@text='取消拨打']")
     }
 
     @TestLogger.log("更改手机号码")
@@ -66,7 +67,7 @@ class ContactDetailsPage(BasePage):
 
     @TestLogger.log("挂断通话")
     def cancel_call(self):
-        time.sleep(6)
+        time.sleep(7)
         self.click_element(self.__locators["挂断电话"])
 
 
@@ -204,7 +205,8 @@ class ContactDetailsPage(BasePage):
 
     @TestLogger.log("挂断视频通话")
     def end_video_call(self):
-        self.click_element(self.__locators["挂断视频通话"])
+        time.sleep(1)
+        self.click_element(self.__locators["取消拨打"])
 
     @TestLogger.log()
     def hefeixin_call_btn_is_clickable(self):
@@ -218,7 +220,7 @@ class ContactDetailsPage(BasePage):
 
     @TestLogger.log("截图")
     def take_screen_out(self):
-        import os
+
         path = os.getcwd() + "/screenshot"
         print(path)
         timestamp = time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime(time.time()))
@@ -230,3 +232,23 @@ class ContactDetailsPage(BasePage):
             os.makedirs(path)
         os.popen("adb pull /data/local/tmp/tmp.png " + path + "/" + timestamp + ".png")
         os.popen("adb shell rm /data/local/tmp/tmp.png")
+
+def add(func):
+    def wrapper(*args):
+        try:
+            func(*args)
+        except:  # 等待AssertionError
+            path = os.getcwd() + "/screenshot"
+            print(path)
+            timestamp = time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime(time.time()))
+            os.popen("adb wait-for-device")
+            time.sleep(0.5)
+            os.popen("adb shell screencap -p /data/local/tmp/tmp.png")
+            time.sleep(0.5)
+            if not os.path.isdir(os.getcwd() + "/screenshot"):
+                os.makedirs(path)
+            os.popen("adb pull /data/local/tmp/tmp.png " + path + "/" + timestamp + ".png")
+            os.popen("adb shell rm /data/local/tmp/tmp.png")
+            #raise ArithmeticError
+
+    return wrapper
