@@ -6,7 +6,7 @@ from library.core.TestLogger import TestLogger
 
 class SelectCompanyContactsPage(BasePage):
     """群发信使-》短信群发页面-》新建短信收件人选择页面"""
-    ACTIVITY = ''
+    ACTIVITY = 'com.cmicc.module_enterprise.ui.activity.EnterPriseContactSelectActivity'
 
     __locators = {
         '新建短信': (MobileBy.XPATH, '//*[@text="新建短信"]'),
@@ -15,11 +15,16 @@ class SelectCompanyContactsPage(BasePage):
         '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_sure'),
         '搜索框左边头像': (MobileBy.ID, 'com.chinasofti.rcs:id/avator'),
         '全选复选框': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_check_all'),
+        '联系人名': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name_personal_contactlist'),
+        '联系人号码': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_number_personal_contactlist'),
+        '已选人名': (MobileBy.ID, 'com.chinasofti.rcs:id/image_text'),
+        '已选头像': (MobileBy.ID, 'com.chinasofti.rcs:id/avator'),
+        '确定按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/imagebutton_choose_file_cancel')
     }
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
-        """等待 页面加载"""
+        """等待群发信使->新建短信->选择联系人页面加载"""
         try:
             self.wait_until(
                 timeout=timeout,
@@ -98,3 +103,94 @@ class SelectCompanyContactsPage(BasePage):
         """获取全选复选框"""
         el = self.get_element(self.__class__.__locators['全选复选框'])
         return el
+
+    @TestLogger.log()
+    def is_exist_text(self):
+        """是否存在文本"""
+        return self.is_text_present("无搜索结果")
+
+    @TestLogger.log()
+    def is_search_contacts_number_full_match(self, number):
+        """搜索联系人号码是否精准匹配"""
+        els = self.get_elements(self.__class__.__locators["联系人号码"])
+        texts = []
+        for el in els:
+            text = el.text
+            if text:
+                texts.append(text)
+        for t in texts:
+            if number == t:
+                return True
+        raise AssertionError('搜索结果"{}"没有找到与关键字"{}"完全匹配的号码'.format(texts, number))
+
+    @TestLogger.log()
+    def is_search_contacts_number_match(self, number):
+        """搜索联系人号码是否模糊匹配"""
+        els = self.get_elements(self.__class__.__locators["联系人号码"])
+        texts = []
+        for el in els:
+            text = el.text
+            if text:
+                texts.append(text)
+        for t in texts:
+            if number in t:
+                return True
+        raise AssertionError('搜索结果"{}"没有找到包含关键字"{}"的号码'.format(texts, number))
+
+    @TestLogger.log()
+    def is_search_contacts_name_full_match(self, name):
+        """搜索联系人名是否精准匹配"""
+        els = self.get_elements(self.__class__.__locators["联系人名"])
+        texts = []
+        for el in els:
+            text = el.text
+            if text:
+                texts.append(text)
+        for t in texts:
+            if name == t:
+                return True
+        raise AssertionError('搜索结果"{}"没有找到与关键字"{}"完全匹配的文本'.format(texts, name))
+
+    @TestLogger.log()
+    def is_search_contacts_name_match(self, name):
+        """搜索联系人名是否模糊匹配"""
+        els = self.get_elements(self.__class__.__locators["联系人名"])
+        texts = []
+        for el in els:
+            text = el.text
+            if text:
+                texts.append(text)
+        for t in texts:
+            if name in t:
+                return True
+        raise AssertionError('搜索结果"{}"没有找到包含关键字"{}"的文本'.format(texts, name))
+
+    @TestLogger.log()
+    def click_contacts_by_number(self, number):
+        """选择某一个联系人"""
+        if self._is_element_present(self.__class__.__locators['联系人名']):
+            els = self.get_elements(self.__class__.__locators['联系人名'])
+            els[number].click()
+
+    @TestLogger.log()
+    def sure_button_is_enabled(self):
+        """确定按钮是否可点击"""
+        return self._is_enabled(self.__class__.__locators["确定按钮"])
+
+    @TestLogger.log()
+    def is_clear_search_box(self, content):
+        """输入框是否自动清空"""
+        text = self.get_element(self.__class__.__locators["搜索框"]).text
+        if not text == content:
+            return True
+        return False
+
+    @TestLogger.log()
+    def is_exist_select_contacts_name(self):
+        """是否存在已选联系人名"""
+        return self._is_element_present(self.__class__.__locators['已选人名'])
+
+    @TestLogger.log()
+    def is_exist_select_contacts_image(self):
+        """是否存在已选联系人头像"""
+        return self._is_element_present(self.__class__.__locators['已选头像'])

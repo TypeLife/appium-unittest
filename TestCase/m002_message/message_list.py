@@ -210,7 +210,7 @@ class MessageListTotalQuantityTest(TestCase):
         # 1.登录客户端,等待消息列表页面加载
         mp.wait_for_page_load()
         # 2.底部消息图标是否高亮显示
-        self.assertEquals(mp.message_icon_is_enabled(), True)
+        self.assertEquals(mp.message_icon_is_selected(), True)
 
     @tags('ALL', 'CMCC', 'LXD')
     def test_message_list_total_quantity_0026(self):
@@ -232,7 +232,7 @@ class MessageListTotalQuantityTest(TestCase):
         # 2.搜索框下方提示当前网络不可用，请检查网络设置或稍后重试
         self.assertEquals(mp.is_exist_network_anomaly(), True)
         # 3.底部消息图标是否高亮显示
-        self.assertEquals(mp.message_icon_is_enabled(), True)
+        self.assertEquals(mp.message_icon_is_selected(), True)
 
     @staticmethod
     def tearDown_test_message_list_total_quantity_0026():
