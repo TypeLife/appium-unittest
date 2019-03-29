@@ -232,6 +232,7 @@ class MsgGroupChatvedioTest(TestCase):
 
     文件位置：冒烟/冒烟测试用例-V20181225.01.xlsx
     表格：消息-群聊图片&视频
+    作者：方康
 
     """
 
