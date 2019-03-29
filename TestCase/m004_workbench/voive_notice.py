@@ -138,7 +138,7 @@ class VoiceNoticeTest(TestCase):
         pass
         # current_mobile().disconnect_mobile()
 
-    @tags('ALL',  'CMCC', 'workbench', 'debug_fk')
+    @tags('ALL', 'workbench', 'debug_fk')
     def test_YYTZ_0001(self):
         """正常查看使用该指引"""
         # 0.进入语音通知页面
@@ -158,7 +158,7 @@ class VoiceNoticeTest(TestCase):
         vnp.click_back()
         vnp.click_back()
 
-    @tags('ALL', 'CMCC', 'workbench', 'debug_fk')
+    @tags('ALL',  'workbench', 'debug_fk')
     def test_YYTZ_0015(self):
         """点击顶部关闭按钮"""
         # 0.进入语音通知页面
@@ -173,7 +173,7 @@ class VoiceNoticeTest(TestCase):
         vnp.click_close_more()
         self.assertEquals(wbp.is_on_this_page(), True)
 
-    @tags('ALL',  'CMCC', 'workbench', 'debug_fk')
+    @tags('ALL', 'workbench', 'debug_fk')
     def test_CJHY_0001(self):
         """查看超级会议使用说明"""
         # 0.进入超级会议页面页面
@@ -193,7 +193,7 @@ class VoiceNoticeTest(TestCase):
         vnp.click_back()
         vnp.click_back()
 
-    @tags('ALL',  'CMCC', 'workbench', 'debug_fk')
+    @tags('ALL',  'workbench', 'debug_fk')
     def test_TCTD_0002(self):
         """主管理员-工作台团队列表退出团队"""
         mess = MessagePage()

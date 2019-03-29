@@ -28,7 +28,7 @@ class CallPage(BasePage):
         '删除X': (MobileBy.ID, 'com.chinasofti.rcs:id/ivDelete'),
         '拨号盘收缩删除X': (MobileBy.ID, 'com.chinasofti.rcs:id/ivDeleteHide'),
         '拨打电话按键': (MobileBy.ID, 'com.chinasofti.rcs:id/ivVoiceCall'),
-        '通话界面高清显示图片': (MobileBy.ID, 'com.chinasofti.rcs:id/ivNoRecords'),
+        '通话界面高清显示图片': (MobileBy.ID, 'com.chinasofti.rcs:id/ivNoentrys'),
         '直接拨号或开始搜索': (MobileBy.ID, 'com.chinasofti.rcs:id/edt_t9_keyboard'),
         '新建联系人': (MobileBy.XPATH, "//*[contains(@text, '新建联系人')]"),
         '发送消息': (MobileBy.XPATH, "//*[contains(@text, '发送消息')]"),
@@ -46,7 +46,9 @@ class CallPage(BasePage):
         "指定提示": (MobileBy.XPATH, "//*[contains(@text, '点击按钮发起电话')]"),
         '知道了': (MobileBy.XPATH, '//*[@text="知道了"]'),
         '始终允许': (MobileBy.ID, "com.android.packageinstaller:id/permission_allow_button"),
-        "多方视频图标": (MobileBy.ID, "com.chinasofti.rcs:id/ivMultipartyVideo")
+        "多方视频图标": (MobileBy.ID, "com.chinasofti.rcs:id/ivMultipartyVideo"),
+        "通话时间": (MobileBy.ID, "com.chinasofti.rcs:id/tvCallTime"),
+        "profileName": (MobileBy.ID, "com.chinasofti.rcs:id/tv_profile_name"),
     }
 
 
@@ -74,7 +76,7 @@ class CallPage(BasePage):
     def is_on_the_call_page(self):
         """判断当前页是否通话界面"""
         flag = False
-        element = self.get_elements(self.__locators["多方通话"])
+        element = self.get_elements(self.__locators["视频图片"])
         if len(element) > 0:
             flag = True
         return flag
@@ -270,9 +272,7 @@ class CallPage(BasePage):
 
     @TestLogger.log()
     def click_back_by_android(self, times=1):
-        """
-        点击返回，通过android返回键
-        """
+        """通过android键返回"""
         # times 返回次数
         for i in range(times):
             self.driver.back()
@@ -343,23 +343,44 @@ class CallPage(BasePage):
         self.input_text(self.__locators["直接拨号或开始搜索"], text)
 
     @TestLogger.log()
-    def press_delete_record(self):
+    def press_delete_entry(self):
         """长按删除通话记录"""
         el = self.get_element(self.__locators["通话记录"])
         self.press(el)
 
     @TestLogger.log()
-    def click_delete_record(self):
+    def click_delete_entry(self):
         """删除通话记录"""
         self.click_element(self.__locators["删除通话记录"])
 
     @TestLogger.log()
-    def check_delete_record(self):
-        """判断是否删除通话记录"""
+    def check_delete_entry(self):
+        """判断是否删除通话记录弹框"""
         return self._is_element_present(self.__locators["删除通话记录"])
 
+    @TestLogger.log("清空通话记录")
+    def delete_all_call_entry(self):
+        """前置条件：当前已进入call界面"""
+        flag = True
+        ret = True
+        if self.check_video_image():
+            while flag:
+                el = self.get_elements(self.__locators["通话记录"])
+                if len(el) > 0:
+                    self.press(el[0])
+                    self.click_delete_entry()
+                    if ret:
+                        if self.is_text_present("始终允许"):
+                            self.click_allow_button()
+                        ret = False
+                else:
+                    print("已清空联系人")
+                    flag = False
+        else:
+            raise AttributeError
+
     @TestLogger.log()
-    def get_call_record_color_of_element(self):
+    def get_call_entry_color_of_element(self):
         """获取通话记录控件坐标颜色"""
         return self.get_coordinate_color_of_element(element=self.__locators["通话记录"], x=50, y=50, by_percent=True, mode='RGBA')
 
@@ -405,6 +426,11 @@ class CallPage(BasePage):
         return self._is_element_present(self.__class__.__locators["始终允许"])
 
     @TestLogger.log()
+    def click_allow_button(self):
+        """点击允许"""
+        self.click_element(self.__class__.__locators["始终允许"])
+
+    @TestLogger.log()
     def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
         """等待通话页面加载"""
         try:
@@ -417,3 +443,17 @@ class CallPage(BasePage):
             raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
         return self
 
+    @TestLogger.log()
+    def click_call_time(self):
+        """点击通话时间"""
+        self.click_element(self.__class__.__locators["通话时间"])
+
+    @TestLogger.log()
+    def is_exist_profile_name(self):
+        """判断是否存在profile_name"""
+        return self._is_element_present(self.__locators["profileName"])
+
+    @TestLogger.log()
+    def get_profile_name(self):
+        """获取profile_name"""
+        return self.get_text(self.__locators["profileName"])

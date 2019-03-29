@@ -24,7 +24,7 @@ class CalllogBannerPage(BasePage):
 
     @TestLogger.log()
     def is_on_the_calllog_banner_page(self):
-        """判断当前页是否在引导页第一页"""
+        """判断当前页是否在多方通话引导页"""
         time.sleep(2)
         flag = self.is_text_present("点击按钮发起电话")
         return flag
