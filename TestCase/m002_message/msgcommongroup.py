@@ -4977,7 +4977,7 @@ class MsgCommonGroupAllTest(TestCase):
         gcp.click_expression_page_close_button()
         gcp.hide_keyboard()
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    @tags('ALL', 'CMCC', 'group_chat', 'full','a')
     def test_msg_common_group_all_0037(self):
         """在群聊天会话页面，长按消息体，点击收藏"""
         gcp = GroupChatPage()
@@ -4992,7 +4992,7 @@ class MsgCommonGroupAllTest(TestCase):
         flag = gcp.is_toast_exist("已收藏")
         self.assertTrue(flag)
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    @tags('ALL', 'CMCC', 'group_chat', 'full','a')
     def test_msg_common_group_all_0038(self):
         """我——收藏——收藏内容展示"""
         gcp = GroupChatPage()
@@ -5019,7 +5019,7 @@ class MsgCommonGroupAllTest(TestCase):
         mcp.click_back()
         me.open_message_page()
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    @tags('ALL', 'CMCC', 'group_chat', 'full','a')
     def test_msg_common_group_all_0039(self):
         """我——收藏——收藏内展示——点击收藏内容"""
         gcp = GroupChatPage()
@@ -5051,7 +5051,7 @@ class MsgCommonGroupAllTest(TestCase):
         mcp.click_back()
         me.open_message_page()
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    @tags('ALL', 'CMCC', 'group_chat', 'full','a')
     def test_msg_common_group_all_0040(self):
         """我——收藏——收藏内展示——点击收藏内容——点击播放收藏语音文件"""
         gcp = GroupChatPage()
@@ -5108,7 +5108,7 @@ class MsgCommonGroupAllTest(TestCase):
         mcp.click_back()
         me.open_message_page()
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    @tags('ALL', 'CMCC', 'group_chat', 'full','a')
     def test_msg_common_group_all_0041(self):
         """我——收藏——收藏内展示——点击收藏内容——点击删除收藏内容"""
         gcp = GroupChatPage()
@@ -5150,7 +5150,7 @@ class MsgCommonGroupAllTest(TestCase):
         me.open_message_page()
 
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    @tags('ALL', 'CMCC', 'group_chat', 'full','a')
     def test_msg_common_group_all_0050(self):
         """发送一组数字：95533，发送失败的状态展示"""
         gcp = GroupChatPage()

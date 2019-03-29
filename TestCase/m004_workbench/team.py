@@ -480,6 +480,7 @@ class TeamTestAll(TestCase):
         team.input_real_name('admin')
         # 立即创建团队
         team.click_immediately_create_team()
+        time.sleep(2)
         team.page_should_contain_text("请选择所在地")
         team.click_sure()
         # 清除输入数据
@@ -571,6 +572,7 @@ class TeamTestAll(TestCase):
         team.input_real_name('a')
         # 立即创建团队
         team.click_immediately_create_team()
+        time.sleep(2)
         team.page_should_contain_text("管理员姓名不得少于2位")
         team.click_sure()
         # 清除输入数据
@@ -591,6 +593,7 @@ class TeamTestAll(TestCase):
         team.input_real_name(name)
         # 立即创建团队
         team.click_immediately_create_team()
+        time.sleep(2)
         team.page_should_contain_text("姓名不能超过20个汉字或60个字母")
         team.click_sure()
         # 清除输入数据
@@ -612,6 +615,7 @@ class TeamTestAll(TestCase):
         team.input_real_name(name)
         # 立即创建团队
         team.click_immediately_create_team()
+        time.sleep(2)
         team.page_should_contain_text("姓名不能超过20个汉字或60个字母")
         team.click_sure()
         # 清除输入数据
@@ -633,11 +637,186 @@ class TeamTestAll(TestCase):
         team.input_real_name(name)
         # 立即创建团队
         team.click_immediately_create_team()
+        time.sleep(2)
         team.page_should_contain_text("只许输入中文、字母、数字或空格")
         team.click_sure()
         # 清除输入数据
         team.click_back()
         workbench = WorkbenchPage()
         workbench.wait_for_page_load()
+        workbench.click_create_team()
+        team.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    def test_CJTD_0016(self):
+        """管理员姓名输入1位+空格"""
+        #1.在移动端创建团队页面，其他信息填写完成，管理员姓名输入管理员姓名输入1位+空格，点【提交注册】
+        team = CreateTeamPage()
+        team.input_team_name("我我我")
+        team.choose_location()
+        team.choose_industry()
+        name = "a "
+        team.input_real_name(name)
+        # 立即创建团队
+        team.click_immediately_create_team()
+        time.sleep(2)
+        team.page_should_contain_text("管理员姓名不得少于2位")
+        team.click_sure()
+        # 清除输入数据
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        workbench.click_create_team()
+        team.wait_for_page_load()
+
+    # @tags('ALL', "CMCC", 'workbench')
+    @unittest.skip("过")
+    def test_CJTD_0017(self):
+        """管理员姓名输入2位+空格"""
+        team = CreateTeamPage()
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        # 有默认的团队，就不创建
+        default_team_name = "CJTD_0017"
+        workbench.click_enterprise_name_triangle()
+        time.sleep(1)
+        teams = workbench.get_team_names()
+        current_mobile().back()
+        if default_team_name in teams:
+            print("当前已有团队:" + default_team_name + ",未再创建！")
+            workbench.click_create_team()
+            team.wait_for_page_load()
+            return
+        # 点击最底部的“创建团队”
+        workbench.click_create_team()
+        team.wait_for_page_load()
+        Preconditions.create_team(default_team_name,user_name="aa ")
+        # 回到创建团队页面
+        workbench.click_create_team()
+        team.wait_for_page_load()
+
+    #@tags('ALL', "CMCC", 'workbench')
+    @unittest.skip("过")
+    def test_CJTD_0018(self):
+        """管理员姓名输入20个汉字或60个字母"""
+        team = CreateTeamPage()
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        # 有默认的团队，就不创建
+        default_team_name = "CJTD_0018"
+        workbench.click_enterprise_name_triangle()
+        time.sleep(1)
+        teams = workbench.get_team_names()
+        current_mobile().back()
+        if default_team_name in teams:
+            print("当前已有团队:" + default_team_name + ",未再创建！")
+            workbench.click_create_team()
+            team.wait_for_page_load()
+            return
+        # 点击最底部的“创建团队”
+        workbench.click_create_team()
+        team.wait_for_page_load()
+        user_name="哈"*20
+        Preconditions.create_team(default_team_name, user_name)
+        # 回到创建团队页面
+        workbench.click_create_team()
+        team.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    def test_CJTD_0019(self):
+        """账号为大陆手机号邮箱地址自动填写"""
+        team = CreateTeamPage()
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        # 有默认的团队，就不创建
+        default_team_name = Preconditions.get_team_name()
+        workbench.click_enterprise_name_triangle()
+        time.sleep(1)
+        teams = workbench.get_team_names()
+        current_mobile().back()
+        if default_team_name in teams:
+            print("当前已有团队:" + default_team_name + ",未再创建！")
+            workbench.click_create_team()
+            team.wait_for_page_load()
+            return
+        # 点击最底部的“创建团队”
+        workbench.click_create_team()
+        team.wait_for_page_load()
+        # user_name = "哈" * 20
+        # Preconditions.create_team(default_team_name, user_name)
+        email=team.get_email_text()
+        a = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        b=a+"@139.com"
+        if not email==b:
+            raise AssertionError("邮箱地址没有自动填写")
+        #创建团队
+        team = CreateTeamPage()
+        team.input_team_name(default_team_name)
+        team.choose_location()
+        team.choose_industry()
+        team.input_real_name("admin")
+        # 立即创建团队
+        team.click_immediately_create_team()
+        # 点击完成设置工作台
+        team.wait_for_setting_workbench_page_load()
+        team.click_finish_setting_workbench()
+        team.wait_for_create_team_success_page_load()
+        # 进入工作台
+        team.click_enter_workbench()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        # 回到创建团队页面
+        workbench.click_create_team()
+        team.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    def test_CJTD_0021(self):
+        """输入无效的邮箱地址格式"""
+        team = CreateTeamPage()
+        team.input_team_name("我我我")
+        team.choose_location()
+        team.choose_industry()
+        name = "admin"
+        team.input_real_name(name)
+        team.input_email("123456")
+        # 立即创建团队
+        team.click_immediately_create_team()
+        time.sleep(2)
+        team.page_should_contain_text("请输入正确的邮箱地址")
+        team.click_sure()
+        # 清除输入数据
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        workbench.click_create_team()
+        team.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    def test_CJTD_0022(self):
+        """输入正确的邮箱地址"""
+        #1.在移动端创建团队页面，其他信息填写完成，输入正确的邮箱地址，点【提交注册】
+        team = CreateTeamPage()
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        # 有默认的团队，就不创建
+        default_team_name = Preconditions.get_team_name()
+        workbench.click_enterprise_name_triangle()
+        time.sleep(1)
+        teams = workbench.get_team_names()
+        current_mobile().back()
+        if default_team_name in teams:
+            print("当前已有团队:" + default_team_name + ",未再创建！")
+            workbench.click_create_team()
+            team.wait_for_page_load()
+            return
+        # 点击最底部的“创建团队”
+        workbench.click_create_team()
+        team.wait_for_page_load()
+        Preconditions.create_team()
+        # 回到创建团队页面
         workbench.click_create_team()
         team.wait_for_page_load()
