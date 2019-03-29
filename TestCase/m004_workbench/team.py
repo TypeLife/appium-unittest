@@ -669,7 +669,8 @@ class TeamTestAll(TestCase):
         workbench.click_create_team()
         team.wait_for_page_load()
 
-    @tags('ALL', "CMCC", 'workbench')
+    # @tags('ALL', "CMCC", 'workbench')
+    @unittest.skip("过")
     def test_CJTD_0017(self):
         """管理员姓名输入2位+空格"""
         team = CreateTeamPage()
@@ -695,7 +696,8 @@ class TeamTestAll(TestCase):
         workbench.click_create_team()
         team.wait_for_page_load()
 
-    @tags('ALL', "CMCC", 'workbench')
+    #@tags('ALL', "CMCC", 'workbench')
+    @unittest.skip("过")
     def test_CJTD_0018(self):
         """管理员姓名输入20个汉字或60个字母"""
         team = CreateTeamPage()
