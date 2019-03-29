@@ -59,6 +59,7 @@ class SelectLocalContactsPage(BasePage):
                   '发送给': (MobileBy.XPATH, "//*[contains(@text, '发送给')]"),
                   '取消转发': (MobileBy.XPATH, "//*[contains(@text, '取消')]"),
                   '确定转发': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
+                  '被选中的联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/avator'),
                   }
 
     @TestLogger.log()
@@ -94,7 +95,8 @@ class SelectLocalContactsPage(BasePage):
         if els:
             for el in els:
                 contacts_name.append(el.text)
-        return contacts_name
+        b=set(contacts_name)
+        return b
 
     @TestLogger.log()
     def click_back(self):
@@ -253,5 +255,15 @@ class SelectLocalContactsPage(BasePage):
         """搜索结果判断"""
         els = self.get_elements((MobileBy.XPATH,'//*[contains(@text, "%s")]' % msg))
         return len(els) > 1
+
+    @TestLogger.log()
+    def select_local_contacts(self, n):
+        """选择n个本地联系人"""
+
+        els = self.get_elements(self.__class__.__locators["联系人名"])
+        current = 0
+        while current < n:
+            els[current].click()
+            current += 1
 
 

@@ -64,6 +64,8 @@ class MessagePage(FooterPage):
         '页面文案': (MobileBy.XPATH, "//*[contains(@text, '图文消息，一触即发')]"),
         '置顶聊天': (MobileBy.XPATH, '//*[@text="置顶聊天"]'),
         '取消置顶': (MobileBy.XPATH, '//*[@text="取消置顶"]'),
+        "消息免打扰图标": (MobileBy.ID, "com.chinasofti.rcs:id/iv_conv_slient"),
+        "消息红点": (MobileBy.ID, "com.chinasofti.rcs:id/red_dot_silent"),
     }
 
     @TestLogger.log('检查顶部搜索框是否显示')
@@ -532,7 +534,7 @@ class MessagePage(FooterPage):
 
     @TestLogger.log()
     def top_message_recording_by_number(self, number):
-        """置顶消息记录"""
+        """置顶某一条消息记录"""
         els = self.get_elements(self.__class__.__locators["消息名称"])
         name = els[number].text
         self.press(els[number])
@@ -544,7 +546,7 @@ class MessagePage(FooterPage):
 
     @TestLogger.log()
     def cancel_stick_message_recording_by_number(self, number):
-        """取消置顶消息记录"""
+        """取消置顶某一条消息记录"""
         els = self.get_elements(self.__class__.__locators["消息名称"])
         name = els[number].text
         self.press(els[number])
@@ -587,8 +589,8 @@ class MessagePage(FooterPage):
         return self._is_element_present(self.__class__.__locators["消息简要内容"])
 
     @TestLogger.log()
-    def cancel_stick_and_clear_message_record(self):
-        """取消置顶,清空消息记录"""
+    def cancel_message_record_stick(self):
+        """取消当前页消息记录所有已置顶"""
         els = self.get_elements(self.__class__.__locators["消息名称"])
         for el in els:
             self.press(el)
@@ -596,13 +598,78 @@ class MessagePage(FooterPage):
                 self.click_element(self.__class__.__locators["取消置顶"])
             else:
                 self.tap_coordinate([(100, 20), (100, 60), (100, 100)])
-            time.sleep(1)
-            self.press(el)
-            time.sleep(1)
-            self.click_element(self.__class__.__locators["删除聊天"])
+
+    @TestLogger.log()
+    def clear_message_record(self):
+        """清空消息列表聊天记录"""
+        current = 0
+        while self._is_element_present(self.__class__.__locators["消息名称"]):
+            current += 1
+            if current > 5:
+                return
+            els = self.get_elements(self.__class__.__locators["消息名称"])
+            for el in els:
+                self.press(el)
+                if self._is_element_present(self.__class__.__locators["删除聊天"]):
+                    self.click_element(self.__class__.__locators["删除聊天"])
+                else:
+                    self.tap_coordinate([(100, 20), (100, 60), (100, 100)])
 
     @TestLogger.log()
     def is_slide_message_list(self):
         """验证消息列表是否可滑动"""
         self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         return self._is_element_present(self.__class__.__locators["搜索"])
+
+    @TestLogger.log()
+    def message_list_is_exist_name(self, name):
+        """消息列表是否存在指定人名称"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % name)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                return True
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        return False
+
+    @TestLogger.log()
+    def delete_message_record_by_name(self, name):
+        """删除指定消息记录"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % name)
+        el = self.get_element(locator)
+        self.press(el)
+        self.click_element(self.__class__.__locators['删除聊天'])
+
+    @TestLogger.log()
+    def current_message_list_is_exist_name(self, name):
+        """当前消息列表是否存在指定人名称"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % name)
+        return self._is_element_present(locator)
+
+    @TestLogger.log()
+    def is_exist_no_disturb_icon(self):
+        """是否存在消息免打扰图标"""
+        return self._is_element_present(self.__class__.__locators["消息免打扰图标"])
+
+    @TestLogger.log()
+    def is_clear_no_disturb_icon(self):
+        """拖拽后免打扰图标是否消除"""
+        self.swipe_by_direction(self.__class__.__locators["消息免打扰图标"], "up", 800)
+        if self._is_element_present(self.__class__.__locators["消息免打扰图标"]):
+            return False
+        return True
+
+    @TestLogger.log()
+    def is_exist_news_red_dot(self):
+        """是否存在消息红点"""
+        return self._is_element_present(self.__class__.__locators["消息红点"])
+
+    @TestLogger.log()
+    def is_clear_news_red_dot(self):
+        """拖拽后消息红点是否消除"""
+        self.swipe_by_direction(self.__class__.__locators["消息红点"], "up", 800)
+        if self._is_element_present(self.__class__.__locators["消息红点"]):
+            return False
+        return True

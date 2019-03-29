@@ -1,6 +1,7 @@
 from appium.webdriver.common.mobileby import MobileBy
 from library.core.TestLogger import TestLogger
 from pages.components.BaseChat import BaseChatPage
+import time
 
 
 class GroupChatPage(BaseChatPage):
@@ -63,7 +64,9 @@ class GroupChatPage(BaseChatPage):
                   '多选转发': (MobileBy.ID, 'com.chinasofti.rcs:id/multi_btn_forward'),
                   '删除已选信息': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
                   '取消删除已选信息': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
-                  "返回上一级": (MobileBy.ID, "com.chinasofti.rcs:id/left_back")
+                  "返回上一级": (MobileBy.ID, "com.chinasofti.rcs:id/left_back"),
+                  "文本发送按钮": (MobileBy.ID, "com.chinasofti.rcs:id/ib_send"),
+                  "小红点": (MobileBy.ID, "com.chinasofti.rcs:id/ib_record_red_dot"),
                   }
 
     def is_exist_msg_videos(self):
@@ -410,3 +413,19 @@ class GroupChatPage(BaseChatPage):
         text = el.text
         return text
 
+    @TestLogger.log()
+    def input_text_message(self, message):
+        """输入文本信息"""
+        self.input_text(self.__class__.__locators["输入框"], message)
+        return self
+
+    @TestLogger.log()
+    def send_text(self):
+        """发送文本"""
+        self.click_element(self.__class__.__locators["文本发送按钮"])
+        time.sleep(1)
+
+    @TestLogger.log()
+    def is_exist_red_dot(self):
+        """是否存在小红点"""
+        return self._is_element_present(self.__class__.__locators["小红点"])

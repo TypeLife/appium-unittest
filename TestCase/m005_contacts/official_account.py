@@ -8,6 +8,7 @@ from library.core.utils.testcasefilter import tags
 from pages import *
 from pages.contacts import OfficialAccountPage, SearchOfficialAccountPage
 import time
+import preconditions
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
 }
@@ -399,7 +400,7 @@ class OfficialAccountTest(TestCase):
     def setUp_test_contacts_0331():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-
+        preconditions.force_close_and_launch_app()
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
@@ -418,12 +419,12 @@ class OfficialAccountTest(TestCase):
         official.page_contain_element('功能介绍')
         official.page_contain_element('更多')
         official.page_contain_element('公众号头像')
+        time.sleep(1)
 
     @staticmethod
     def tearDown_test_contacts_0331():
         # 初始化,恢复app到默认状态
-        conts_page = ContactsPage()
-        Preconditions.reset_and_relaunch_app()
+        preconditions.force_close_and_launch_app()
 
 if __name__ == '__main__':
     unittest.main()

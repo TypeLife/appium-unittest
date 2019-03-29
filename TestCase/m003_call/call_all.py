@@ -1,5 +1,6 @@
 import preconditions
 from library.core.TestCase import TestCase
+from selenium.common.exceptions import TimeoutException
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile, current_driver
 from library.core.utils.testcasefilter import tags
 from pages import *
@@ -24,109 +25,51 @@ REQUIRED_MOBILES = {
 class Preconditions(object):
     """前置条件"""
 
-    @classmethod
-    def setUpClass(cls):
-        # 创建联系人
-        fail_time = 0
-        import dataproviders
-        while fail_time < 3:
-            try:
-                required_contacts = dataproviders.get_preset_contacts()
-                conts = ContactsPage()
-                preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
-                current_mobile().hide_keyboard_if_display()
-                for name, number in required_contacts:
-                    preconditions.make_already_in_message_page()
-                    conts.open_contacts_page()
-                    conts.create_contacts_if_not_exits(name, number)
-
-                # 创建群
-                required_group_chats = dataproviders.get_preset_group_chats()
-
-                conts.open_group_chat_list()
-                group_list = GroupListPage()
-                for group_name, members in required_group_chats:
-                    group_list.wait_for_page_load()
-                    group_list.create_group_chats_if_not_exits(group_name, members)
-                group_list.click_back()
-                conts.open_message_page()
-                return
-            except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
+    @staticmethod
+    def make_already_in_call():
+        """进入通话界面"""
+        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
+        current_mobile().hide_keyboard_if_display()
+        cpg = CallPage()
+        message_page = MessagePage()
+        if message_page.is_on_this_page():
+            cpg.click_call()
+            return
+        if cpg.is_on_the_call_page():
+            return
+        try:
+            current_mobile().terminate_app('com.chinasofti.rcs', timeout=2000)
+        except:
+            pass
+        current_mobile().launch_app()
+        try:
+            message_page.wait_until(
+                condition=lambda d: message_page.is_on_this_page(),
+                timeout=15
+            )
+            cpg.click_call()
+            return
+        except TimeoutException:
+            pass
+        preconditions.reset_and_relaunch_app()
+        preconditions.make_already_in_one_key_login_page()
+        preconditions.login_by_one_key_login()
+        cpg.click_call()
 
     @staticmethod
     def skip_multiparty_call():
-        """
-        1、当前已经进入登录app
-        2、在通话界面，跳过多方通话引导页面
-        """
-        calllog_banner = CalllogBannerPage()
-        """判断是否存在多方通话引导界面"""
-        if calllog_banner.is_on_the_calllog_banner_page():
-            calllog_banner.multiparty_call()
-            GrantPemissionsPage().allow_contacts_permission()
-
-    @staticmethod
-    def connect_mobile(category):
-        """选择手机手机"""
-        client = switch_to_mobile(REQUIRED_MOBILES[category])
-        client.connect_mobile()
-        return client
-
-    @staticmethod
-    def select_mobile(category, reset=False):
-        """选择手机"""
-        client = switch_to_mobile(REQUIRED_MOBILES[category])
-        client.connect_mobile()
-        if reset:
-            current_mobile().reset_app()
-        return client
-
-    @staticmethod
-    def make_already_in_message_page(reset=False):
-        """确保应用在消息页面"""
-        Preconditions.select_mobile('Android-移动', reset)
-        current_mobile().hide_keyboard_if_display()
-        time.sleep(1)
-        # 如果在消息页，不做任何操作
-        mess = MessagePage()
-        if mess.is_on_this_page():
-            return
-        # 进入一键登录页
-        preconditions.make_already_in_one_key_login_page()
-        #  从一键登录页面登录
-        preconditions.login_by_one_key_login()
-
-    @staticmethod
-    def make_already_in_me_all_page():
-        """确保应用在我的页面"""
-        # 如果在消息页，不做任何操作
-        mess = MessagePage()
-        mep = MePage()
-        cpg = CallPage()
-        time.sleep(2)
-        if cpg.is_on_the_call_page():
-            mess.open_me_page()
-            mep.is_on_this_page()
-            return
-        if mep.is_on_this_page():
-            return
-        if mess.is_on_this_page():
-            mess.open_me_page()
-            mep.is_on_this_page()
-            return
-        # 进入一键登录页
-        Preconditions.make_already_in_message_page(reset=False)
-        mess.open_me_page()
-        time.sleep(1)
+        """跳过多方通话引导页面"""
+        cbg = CalllogBannerPage()
+        if cbg.is_on_the_calllog_banner_page():
+            cbg.multiparty_call()
+            if cbg.is_text_present("始终允许"):
+                CallPage().click_allow_button()
 
     @staticmethod
     def select_dial_mode():
         """进入拨号方式选择"""
-        Preconditions.make_already_in_me_all_page()
+        Preconditions.make_already_in_call()
+        MessagePage().open_me_page()
         MePage().click_setting_menu()
         SettingPage().click_dial_setting()
         MeSetDialPage().click_dial_mode()
@@ -146,30 +89,54 @@ class CallAll(TestCase):
     文件位置：全量/ 7.通话（拨号盘、多方视频-非RCS、视频通话、语音通话）全量测试用例-申丽思.xlsx
     表格：通话（拨号盘、多方视频-非RCS、视频通话、语音通话）
     """
-    def default_setUp(self):
-        """
-        1、进入Call页面
-        2、跳过多方通话引导页，并赋予通讯录权限
-        """
-        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
+
+    @classmethod
+    def setUpClass(cls):
+        # 创建联系人
+        fail_time = 0
+        import dataproviders
+        while fail_time < 3:
+            try:
+                required_contacts = dataproviders.get_preset_contacts()
+                conts = ContactsPage()
+                preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
+                current_mobile().hide_keyboard_if_display()
+                for name, number in required_contacts:
+                    preconditions.make_already_in_message_page()
+                    conts.open_contacts_page()
+                    if conts.is_text_present("显示"):
+                        conts.click_text("不显示")
+                    conts.create_contacts_if_not_exits(name, number)
+
+                # 创建群
+                # required_group_chats = dataproviders.get_preset_group_chats()
+                #
+                # conts.open_group_chat_list()
+                # group_list = GroupListPage()
+                # for group_name, members in required_group_chats:
+                #     group_list.wait_for_page_load()
+                #     group_list.create_group_chats_if_not_exits(group_name, members)
+                # group_list.click_back()
+                # conts.open_message_page()
+                return
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
+
+    @classmethod
+    def tearDownClass(cls):
         current_mobile().hide_keyboard_if_display()
-        cpg = CallPage()
-        mess = MessagePage()
-        if cpg.is_on_the_call_page():
-            Preconditions.skip_multiparty_call()
-            return self
-        if cpg.check_call_phone():
-            cpg.click_call()
-            return self
-        if mess.is_on_this_page():
-            cpg.click_call()
-            Preconditions.skip_multiparty_call()
-            return self
-        preconditions.force_close_and_launch_app()
-        preconditions.make_already_in_one_key_login_page()
-        preconditions.login_by_one_key_login()
-        cpg.click_call()
+        preconditions.make_already_in_message_page()
+        cdp = ContactDetailsPage()
+        cdp.delete_all_contact()
+
+    def default_setUp(self):
+        """进入Call页面,清空通话记录"""
+        Preconditions.make_already_in_call()
         Preconditions.skip_multiparty_call()
+        CallPage().delete_all_call_entry()
 
     # def default_tearDown(self):
     #     pass
@@ -183,7 +150,6 @@ class CallAll(TestCase):
         # CheckPoint:1.拨号盘展示，输入框提示“直接拨号或者开始搜索”，菜单栏被隐藏
         cpg.page_should_contain_text('直接拨号或开始搜索')
         cpg.page_should_not_contain_text('多方通话')
-
         cpg.click_back_by_android()
 
     @tags('ALL', 'CMCC', 'Call')
@@ -453,7 +419,7 @@ class CallAll(TestCase):
         cpg.dial_number("13800138001")
         # CheckPoint:2.可匹配出符合条件的联系人，匹配的结果高亮
         cpg.page_should_contain_text("给个红包2")
-        # ret = cpg.get_call_record_color_of_element()
+        # ret = cpg.get_call_entry_color_of_element()
         # self.assertEqual(ret, (133, 128, 95, 255))
         # Step:3.点击匹配出的联系人右侧的时间节点
         cpg.click_call_profile()
@@ -868,3 +834,132 @@ class CallAll(TestCase):
         cpg.click_back_by_android()
         cpg.press_delete()
         cpg.click_call()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_0315(self):
+        """检查本地联系人通话profile左上角显示名称"""
+        # 1.已登录和飞信：通话tab
+        # 2.已存在与陌生联系人的通话记录M
+        # Step:1.点击记录M的时间节点
+        cpg = CallPage()
+        cpg.click_call()
+        cpg.dial_number("0731210086")
+        cpg.click_call_phone()
+        # CallTypeSelectPage().click_call_by_general()
+        GrantPemissionsPage().allow_contacts_permission()
+        time.sleep(2)
+        cpg.click_call_end()
+        time.sleep(2)
+        cpg.click_call_time()
+        # CheckPoint:1.进入到M的通话profile界面
+        time.sleep(1)
+        self.assertTrue(cpg.is_exist_profile_name())
+        # Step:2.查看左上角的名称
+        ret = cpg.get_profile_name()
+        # CheckPoint:2.左上角<按钮。以及M名称
+        self.assertEqual(ret, "0731210086")
+        # Step:3.点击<按钮>
+        cpg.click_back()
+        time.sleep(1)
+        # CheckPoint:3.返回到上一个界面
+        self.assertTrue(cpg.is_on_the_call_page())
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_0316(self):
+        """检查通话profile界面物理返回按钮"""
+        # 1.已登录和飞信：通话tab
+        # 2.已进入到联系人通话profile
+        # Step:1.点击手机的物理“返回”按钮
+        cpg = CallPage()
+        cpg.click_call()
+        cpg.dial_number("0731210086")
+        cpg.click_call_phone()
+        GrantPemissionsPage().allow_contacts_permission()
+        time.sleep(2)
+        cpg.click_call_end()
+        time.sleep(2)
+        cpg.click_call_time()
+        time.sleep(1)
+        self.assertTrue(cpg.is_exist_profile_name())
+        cpg.click_back_by_android()
+        time.sleep(1)
+        # CheckPoint:1.返回值通话记录列表页面
+        self.assertTrue(cpg.is_on_the_call_page())
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_0319(self):
+        """检查通话profile界面可进入到消息会话窗口"""
+        # 1.已登录和飞信：通话tab
+        # 2.已进入到联系人通话profile
+        #本地联系人
+        cpg = CallPage()
+        cpg.click_call()
+        cpg.dial_number("13800138001")
+        cpg.click_call_phone()
+        GrantPemissionsPage().allow_contacts_permission()
+        time.sleep(2)
+        CallTypeSelectPage().click_call_by_general()
+        time.sleep(2)
+        cpg.click_call_end()
+        time.sleep(2)
+        cpg.click_call_time()
+        time.sleep(1)
+        self.assertTrue(cpg.is_exist_profile_name())
+        # Step:1.点击消息按钮
+        CallContactDetailPage().click_normal_message()
+
+        # CheckPoint:1.进入到与该联系人的消息会话框。本地联系人左上角显示名称。陌生联系人，左上角显示手机号
+        chatpage = BaseChatPage()
+        flag = chatpage.is_exist_dialog()
+        if flag:
+            chatpage.click_i_have_read()
+        cpg.page_should_contain_text("说点什么...")
+        cpg.page_should_contain_text("给个红包2")
+        cpg.click_back_by_android(3)
+
+        #陌生联系人
+        cpg.click_call()
+        cpg.dial_number("0731210086")
+        cpg.click_call_phone()
+        GrantPemissionsPage().allow_contacts_permission()
+        time.sleep(2)
+        cpg.click_call_end()
+        time.sleep(2)
+        cpg.click_call_time()
+        time.sleep(1)
+        self.assertTrue(cpg.is_exist_profile_name())
+        # Step:1.点击消息按钮
+        CallContactDetailPage().click_normal_message()
+        # CheckPoint:1.进入到与该联系人的消息会话框。本地联系人左上角显示名称。陌生联系人，左上角显示手机号
+        chatpage = BaseChatPage()
+        flag = chatpage.is_exist_dialog()
+        if flag:
+            chatpage.click_i_have_read()
+        cpg.page_should_contain_text("说点什么...")
+        cpg.page_should_contain_text("0731210086")
+        cpg.click_back_by_android(3)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_0320(self):
+        """检查通话profile界面发起普通电话"""
+        # 1.已登录和飞信：通话tab
+        # 2.已进入到联系人通话profile
+        # 3.有效手机号
+        # Step:1.点击电话按钮
+        cpg = CallPage()
+        cpg.click_call()
+        cpg.dial_number("13800138001")
+        cpg.click_call_phone()
+        GrantPemissionsPage().allow_contacts_permission()
+        time.sleep(2)
+        CallTypeSelectPage().click_call_by_general()
+        cpg.click_call_end()
+        cpg.click_call_time()
+        CallContactDetailPage().click_normal_call()
+        time.sleep(1)
+        # CheckPoint:1.调起系统电话后
+        flag = cpg.is_phone_in_calling_state()
+        self.assertTrue(flag)
+        cpg.hang_up_the_call()
+        cpg.click_back_by_android(2)
+

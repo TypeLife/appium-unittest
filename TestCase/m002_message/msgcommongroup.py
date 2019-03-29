@@ -116,10 +116,22 @@ class Preconditions(object):
         sog.click_back()
         # 从本地联系人中选择成员创建群
         sc.click_local_contacts()
+        time.sleep(2)
         slc = SelectLocalContactsPage()
-        names = slc.get_contacts_name()
-        if not names:
-            raise AssertionError("No contacts, please add contacts in address book.")
+        a=0
+        names={}
+        while a<3:
+            names = slc.get_contacts_name()
+            num=len(names)
+            if not names:
+                raise AssertionError("No contacts, please add contacts in address book.")
+            if num==1:
+                sog.page_up()
+                a+=1
+                if a==3:
+                    raise AssertionError("联系人只有一个，请再添加多个不同名字联系人组成群聊")
+            else:
+                break
         # 选择成员
         for name in names:
             slc.select_one_member_by_name(name)
@@ -304,10 +316,22 @@ class Preconditions(object):
         sog.click_back()
         # 从本地联系人中选择成员创建群
         sc.click_local_contacts()
+        time.sleep(2)
         slc = SelectLocalContactsPage()
-        names = slc.get_contacts_name()
-        if not names:
-            raise AssertionError("No contacts, please add contacts in address book.")
+        a = 0
+        names = {}
+        while a < 3:
+            names = slc.get_contacts_name()
+            num = len(names)
+            if not names:
+                raise AssertionError("No contacts, please add contacts in address book.")
+            if num == 1:
+                sog.page_up()
+                a += 1
+                if a == 3:
+                    raise AssertionError("联系人只有一个，请再添加多个不同名字联系人组成群聊")
+            else:
+                break
         # 选择成员
         for name in names:
             slc.select_one_member_by_name(name)
@@ -1658,17 +1682,19 @@ class MsgCommonGroupTest(TestCase):
         gcsp.click_add_member()
         time.sleep(2)
         cgacp=ChatGroupAddContactsPage()
-        contactNnames=cgacp.get_contacts_name()
-        if contactNnames:
-            #选择一个联系人
-            cgacp.select_one_member_by_name(contactNnames[0])
-        else:
-            raise AssertionError("通讯录没有联系人，请添加")
+        # contactNnames=cgacp.get_contacts_name()
+        # if contactNnames:
+        #     #选择一个联系人
+        #     cgacp.select_one_member_by_name(contactNnames[0])
+        # else:
+        #     raise AssertionError("通讯录没有联系人，请添加")
+        cgacp.click_one_contact("和飞信电话")
+        time.sleep(1)
         if not cgacp.sure_btn_is_enabled():
             raise AssertionError("右上角的确定按钮不能高亮展示")
         cgacp.click_sure()
         time.sleep(2)
-        gcp.is_toast_exist("发出群邀请")
+        gcp.page_should_contain_text("发出群邀请")
 
     def tearDown_test_msg_common_group_0052(self):
         #删除聊天记录
@@ -2758,7 +2784,9 @@ class MsgCommonGroupTest(TestCase):
         while dex < 30:
             messgage = "哈哈" + str(dex)
             gcp.input_message(messgage)
+            current_mobile().hide_keyboard_if_display()
             # 点击发送
+            time.sleep(1)
             gcp.send_message()
             # 验证是否发送成功
             cwp = ChatWindowPage()
@@ -3175,6 +3203,21 @@ class MsgCommonGroupTest(TestCase):
     def test_msg_common_group_0113(self):
         """当转发的消息体中包含不支持转发的类型：①未下载的图片/视频/文件  ②语音、红包、卡券等特殊消息体——网络异常"""
         gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 输入信息
+        dex = 0
+        while dex < 3:
+            messgage = "哈哈" + str(dex)
+            gcp.input_message(messgage)
+            # 点击发送
+            gcp.send_message()
+            # 验证是否发送成功
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            dex += 1
         #断开网络
         gcp.set_network_status(0)
         time.sleep(5)
@@ -3219,8 +3262,9 @@ class MsgCommonGroupTest(TestCase):
         gcp.click_back()
         sogp = SelectOneGroupPage()
         time.sleep(2)
-        sogp.click_back()
-        sc.click_back()
+        if sogp.is_on_this_page():
+            sogp.click_back()
+            sc.click_back()
         time.sleep(2)
         # 判断消息页面有新的会话窗口
         mess = MessagePage()
@@ -3228,6 +3272,7 @@ class MsgCommonGroupTest(TestCase):
             self.assertTrue(mess.is_text_present("和飞信电话"))
             mess.click_element_by_text("和飞信电话")
             chat = SingleChatPage()
+            time.sleep(3)
             if chat.is_text_present("用户须知"):
                 chat.click_i_have_read()
             chat.wait_for_page_load()
@@ -3552,6 +3597,7 @@ class MsgCommonGroupTest(TestCase):
             message = "哈哈" + str(dex)
             gcp.input_message(message)
             # 点击发送
+            time.sleep(1)
             gcp.send_message()
             # 验证是否发送成功
             cwp = ChatWindowPage()
@@ -5368,17 +5414,187 @@ class MsgCommonGroupAllTest(TestCase):
         time.sleep(2)
         Preconditions.delete_record_group_chat()
         gcp.click_audio_btn()
-        time.sleep(3)
-        if not gcp.is_text_present("网络不可用，请检查网络设置"):
-            raise AssertionError("没有出现网络不可用提示")
         audio = ChatAudioPage()
-        audio.click_exit()
-        gcp.hide_keyboard()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+            if gcp.is_text_present("允许"):
+                audio.click_allow()
+            time.sleep(3)
+            if not gcp.is_text_present("网络不可用，请检查网络设置"):
+                raise AssertionError("没有出现网络不可用提示")
+            audio.click_exit()
+            gcp.hide_keyboard()
+        else:
+            time.sleep(3)
+            if not gcp.is_text_present("网络不可用，请检查网络设置"):
+                raise AssertionError("没有出现网络不可用提示")
+            audio.click_exit()
+            gcp.hide_keyboard()
 
     def tearDown_test_msg_common_group_all_0085(self):
         #重连网络
         gcp = GroupChatPage()
         gcp.set_network_status(6)
 
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_common_group_all_0088(self):
+        """进入到语音录制页——网络异常"""
+        gcp = GroupChatPage()
+        # 断网
+        gcp.set_network_status(0)
+        time.sleep(2)
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+            if gcp.is_text_present("允许"):
+                audio.click_allow()
+            time.sleep(3)
+            if not gcp.is_text_present("网络不可用，请检查网络设置"):
+                raise AssertionError("没有出现网络不可用提示")
+            audio.click_exit()
+            gcp.hide_keyboard()
+        else:
+            time.sleep(3)
+            if not gcp.is_text_present("网络不可用，请检查网络设置"):
+                raise AssertionError("没有出现网络不可用提示")
+            audio.click_exit()
+            gcp.hide_keyboard()
 
+    def tearDown_test_msg_common_group_all_0088(self):
+        #重连网络
+        gcp = GroupChatPage()
+        gcp.set_network_status(6)
 
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_common_group_all_0089(self):
+        """语音录制中途——网络异常"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+            if gcp.is_text_present("允许"):
+                audio.click_allow()
+            time.sleep(5)
+            # 断网
+            gcp.set_network_status(0)
+            time.sleep(3)
+            if not gcp.is_text_present("语音录制中"):
+                raise AssertionError("录制会被中断")
+            audio.click_exit()
+            gcp.hide_keyboard()
+        else:
+            audio.click_send_bottom()
+            audio.click_setting_bottom()
+            if audio.wait_for_audio_type_select_page_load():
+                # 点击只发送语言模式
+                audio.click_only_voice()
+                audio.click_sure()
+                time.sleep(5)
+                # 断网
+                gcp.set_network_status(0)
+                time.sleep(3)
+                if not gcp.is_text_present("语音录制中"):
+                    raise AssertionError("录制会被中断")
+                audio.click_exit()
+                # gcp.hide_keyboard()
+                current_mobile().hide_keyboard_if_display()
+                time.sleep(3)
+            else:
+                raise AssertionError("语音模式选择页面加载失败")
+
+    def tearDown_test_msg_common_group_all_0089(self):
+        #重连网络
+        gcp = GroupChatPage()
+        gcp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_common_group_all_0090(self):
+        """语音录制完成——网络异常"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+            if gcp.is_text_present("允许"):
+                audio.click_allow()
+            time.sleep(5)
+            # 断网
+            gcp.set_network_status(0)
+            time.sleep(3)
+            audio.click_send_bottom()
+            # 验证是否发送失败
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送失败'.format(10))
+            audio.click_exit()
+            gcp.hide_keyboard()
+        else:
+            audio.click_send_bottom()
+            audio.click_setting_bottom()
+            if audio.wait_for_audio_type_select_page_load():
+                # 点击只发送语言模式
+                audio.click_only_voice()
+                audio.click_sure()
+                time.sleep(5)
+                # 断网
+                gcp.set_network_status(0)
+                time.sleep(3)
+                audio.click_send_bottom()
+                # 验证是否发送失败
+                cwp = ChatWindowPage()
+                try:
+                    cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+                except TimeoutException:
+                    raise AssertionError('消息在 {}s 内没有发送失败'.format(10))
+                audio.click_exit()
+                gcp.hide_keyboard()
+            else:
+                raise AssertionError("语音模式选择页面加载失败")
+
+    def tearDown_test_msg_common_group_all_0090(self):
+        #重连网络
+        gcp = GroupChatPage()
+        gcp.set_network_status(6)
+
+    @staticmethod
+    def setUp_test_msg_common_group_all_0095():
+        Preconditions.select_mobile('Android-移动')
+        # current_mobile().launch_app()
+        current_mobile().reset_app()
+        Preconditions.enter_group_chat_page()
+
+    # @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    @unittest.skip("跳过")
+    def test_msg_common_group_all_0095(self):
+        """当前版本，消息语音icon上红点展示后，清除数据重新登录"""
+        gcp = GroupChatPage()
+        gcp.click_more()
+        time.sleep(2)
+        gcp.click_more()
+        time.sleep(2)
+        if not gcp.is_exist_red_dot():
+            raise AssertionError("清除数据重新登陆,语音icon不存在红点提示")
+        time.sleep(2)
+        current_mobile().reset_app()
+        Preconditions.enter_group_chat_page()
+        gcp.click_more()
+        time.sleep(2)
+        gcp.click_more()
+        time.sleep(2)
+        if not gcp.is_exist_red_dot():
+            raise AssertionError("清除数据重新登陆,语音icon不存在红点提示")

@@ -219,12 +219,14 @@ class ContactsPage(FooterPage):
     @TestLogger.log()
     def click_always_allowed(self):
         """获取通讯录权限点击始终允许"""
-        self.click_element(self.__class__.__locators['弹出框点击允许'])
+        if self.get_elements(self.__class__.__locators['弹出框点击允许']):
+            self.click_element(self.__class__.__locators['弹出框点击允许'])
 
     @TestLogger.log()
     def click_forbidden(self):
         """点击禁止"""
-        self.click_element(self.__class__.__locators['弹出框点击禁止'])
+        if self.get_elements(self.__class__.__locators['弹出框点击禁止']):
+            self.click_element(self.__class__.__locators['弹出框点击禁止'])
 
     @TestLogger.log()
     def is_exist_allow_button(self):
