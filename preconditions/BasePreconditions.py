@@ -3,6 +3,7 @@ from pages import *
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 import random
 from library.core.common.simcardtype import CardType
+from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -175,3 +176,20 @@ class WorkbenchPreconditions(LoginPreconditions):
         team.click_enter_workbench()
         workbench = WorkbenchPage()
         workbench.wait_for_page_load()
+
+    @staticmethod
+    def enter_organization_page(reset=False):
+        """从消息进入组织架构页面"""
+        # 登录进入消息页面
+        LoginPreconditions.make_already_in_message_page(reset)
+        mess = MessagePage()
+        # 从消息进入创建团队页面
+        mess.open_workbench_page()
+        workbench = WorkbenchPage()
+        if workbench.is_on_welcome_page():
+            workbench.click_now_create_team()
+        else:
+            workbench.wait_for_page_load()
+            workbench.click_organization()
+        osp = OrganizationStructurePage()
+        osp.wait_for_page_load()
