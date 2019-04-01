@@ -17,6 +17,7 @@ class SelectCompanyContactsPage(BasePage):
         '全选复选框': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_check_all'),
         '联系人名': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name_personal_contactlist'),
         '联系人号码': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_number_personal_contactlist'),
+        '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/img_icon_contactlist'),
         '已选人名': (MobileBy.ID, 'com.chinasofti.rcs:id/image_text'),
         '已选头像': (MobileBy.ID, 'com.chinasofti.rcs:id/avator'),
         '确定按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/imagebutton_choose_file_cancel')
@@ -194,3 +195,14 @@ class SelectCompanyContactsPage(BasePage):
     def is_exist_select_contacts_image(self):
         """是否存在已选联系人头像"""
         return self._is_element_present(self.__class__.__locators['已选头像'])
+
+    @TestLogger.log()
+    def click_contacts_image(self):
+        """点击联系人头像"""
+        self.click_element(self.__class__.__locators["联系人头像"])
+
+    @TestLogger.log()
+    def click_sure_button(self):
+        """点击确定按钮"""
+        self.click_element(self.__class__.__locators["确定按钮"])
+
