@@ -183,7 +183,7 @@ class WorkbenchPreconditions(LoginPreconditions):
         # 登录进入消息页面
         LoginPreconditions.make_already_in_message_page(reset)
         mess = MessagePage()
-        # 从消息进入创建团队页面
+        # 从消息进入组织架构页面
         mess.open_workbench_page()
         workbench = WorkbenchPage()
         if workbench.is_on_welcome_page():

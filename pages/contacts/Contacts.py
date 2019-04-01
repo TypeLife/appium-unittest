@@ -56,7 +56,10 @@ class ContactsPage(FooterPage):
         '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMe'),
         '弹出框点击允许': (MobileBy.ID, 'com.android.packageinstaller:id/permission_allow_button'),
         '弹出框点击禁止': (MobileBy.ID, 'com.android.packageinstaller:id/permission_deny_button'),
-
+        '始终允许': (MobileBy.XPATH, "//*[contains(@text, '始终允许')]"),
+        '和通讯录联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_department'),
+        '和通讯录更多': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_more'),
+        '团队管理': (MobileBy.ID, 'com.chinasofti.rcs:id/quit_confirm_tv'),
     }
 
     @TestLogger.log("获取所有联系人名")
@@ -245,3 +248,23 @@ class ContactsPage(FooterPage):
         except:
             raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
         return self
+
+    @TestLogger.log()
+    def click_allow(self):
+        """点击始终允许"""
+        self.click_element(self.__class__.__locators['始终允许'])
+
+    @TestLogger.log()
+    def click_one_he_contacts(self):
+        """获取和通讯录联系人"""
+        els=self.get_elements(self.__class__.__locators['和通讯录联系人'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("和通迅录没有联系人，请添加")
+
+    @TestLogger.log()
+    def click_he_more(self):
+        """点击和通讯录联系人更多"""
+        self.click_element(self.__class__.__locators['和通讯录更多'])
+
