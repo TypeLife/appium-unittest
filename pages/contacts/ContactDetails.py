@@ -242,9 +242,9 @@ def add(func):
             print(path)
             timestamp = time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime(time.time()))
             os.popen("adb wait-for-device")
-            time.sleep(0.5)
+            time.sleep(2)
             os.popen("adb shell screencap -p /data/local/tmp/tmp.png")
-            time.sleep(0.5)
+            time.sleep(2)
             if not os.path.isdir(os.getcwd() + "/screenshot"):
                 os.makedirs(path)
             os.popen("adb pull /data/local/tmp/tmp.png " + path + "/" + timestamp + ".png")
