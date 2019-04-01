@@ -820,3 +820,62 @@ class TeamTestAll(TestCase):
         # 回到创建团队页面
         workbench.click_create_team()
         team.wait_for_page_load()
+
+    # @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    @unittest.skip("过")
+    def test_CJTD_0024(self):
+        """同一个账号一天内注册三家企业"""
+        #1.在移动端创建团队页面，同一个账号一天内注册三家企业
+        #前提是在这一天内没有创建过其他团队和已经创建的团队数量没有达到上限
+        a=0
+        while a<3:
+            team = CreateTeamPage()
+            team.click_back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            # 有默认的团队，就不创建
+            param="aa"+str(a)
+            default_team_name = param
+            workbench.click_enterprise_name_triangle()
+            time.sleep(1)
+            teams = workbench.get_team_names()
+            current_mobile().back()
+            if default_team_name in teams:
+                print("当前已有团队:" + default_team_name + ",未再创建！")
+                workbench.click_create_team()
+                team.wait_for_page_load()
+                return
+            # 点击最底部的“创建团队”
+            workbench.click_create_team()
+            team.wait_for_page_load()
+            Preconditions.create_team(default_team_name, user_name=param)
+            # 回到创建团队页面
+            workbench.click_create_team()
+            team.wait_for_page_load()
+            a+=1
+            time.sleep(2)
+
+    # @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    @unittest.skip("过")
+    def test_CJTD_0025(self):
+        """同一个账号一天内注册第四家企业"""
+        #1.在移动端创建团队页面，同一个账号一天内注册第四家企业
+        #前提是当天已经创建了3家企业
+        team = CreateTeamPage()
+        team.input_team_name("我我我")
+        team.choose_location()
+        team.choose_industry()
+        name = "admin"
+        team.input_real_name(name)
+        # team.input_email("123456")
+        # 立即创建团队
+        team.click_immediately_create_team()
+        time.sleep(2)
+        team.page_should_contain_text("您今天创建的团队已达上限")
+        team.click_sure()
+        # 清除输入数据
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        workbench.click_create_team()
+        team.wait_for_page_load()

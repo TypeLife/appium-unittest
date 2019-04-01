@@ -165,7 +165,7 @@ class OneKeyLoginPage(BasePage):
 
     @TestLogger.log('关闭应用')
     def kill_flyme_app(self):
-        self.execute_shell_command('adb shell am force-stop com.chinasofti.rcs')
+        self.execute_shell_command('am','force','-stop','com.chinasofti.rcs')
 
     @TestLogger.log('点按手机Home键')
     def press_home_key(self,times=1):

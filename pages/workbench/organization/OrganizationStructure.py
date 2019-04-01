@@ -10,7 +10,8 @@ class OrganizationStructurePage(BasePage):
 
     __locators = {
         '组织架构': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title_actionbar" and @text ="组织架构"]'),
-        '返回': (MobileBy.ID, "com.chinasofti.rcs:id/btn_back_actionbar")
+        '返回': (MobileBy.ID, "com.chinasofti.rcs:id/btn_back_actionbar"),
+        '添加子部门': (MobileBy.XPATH, '//*[@text ="添加子部门"]'),
     }
 
     @TestLogger.log()
@@ -43,3 +44,11 @@ class OrganizationStructurePage(BasePage):
     def click_back(self):
         """点击返回"""
         self.click_element(self.__class__.__locators["返回"])
+
+    @TestLogger.log()
+    def is_on_this_page(self):
+        """当前页面是否在组织架构页"""
+        el = self.get_elements(self.__class__.__locators['添加子部门'])
+        if len(el) > 0:
+            return True
+        return False

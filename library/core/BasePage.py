@@ -540,3 +540,27 @@ class BasePage(object):
     def is_phone_in_calling_state(self):
         """判断是否在通话界面"""
         return self.mobile.is_phone_in_calling_state()
+
+    @TestLogger.log()
+    def find_element_by_swipe(self, locator, times=10):
+        """找不到元素就滑动"""
+        if self._is_element_present(locator):
+            return self.get_element(locator)
+        else:
+            c = 0
+            while c < times:
+                self.page_up()
+                if self._is_element_present(locator):
+                    return self.get_element(locator)
+                c += 1
+            return None
+
+    @TestLogger.log()
+    def click_one_contact(self, contactName):
+        """选择特定联系人"""
+        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[@text="%s"]' % contactName))
+        if el:
+            el.click()
+            return el
+        else:
+            print("本地联系人中无%s ，请添加此联系人再操作" % contactName)

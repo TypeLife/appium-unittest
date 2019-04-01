@@ -11,6 +11,7 @@ class GroupListPage(BasePage):
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.GroupChatListActivity2'
 
     __locators = {
+
         '移除成员_标题':(MobileBy.ID,'com.chinasofti.rcs:id/title'),
         '搜索标签分组成员':(MobileBy.ID,'com.chinasofti.rcs:id/contact_search_bar'),
         '刪除_标签名':(MobileBy.ID,'com.chinasofti.rcs:id/ib_label_del'),
@@ -304,8 +305,7 @@ class GroupListPage(BasePage):
             self.click_element(self.__class__.__locators['发送_邀请'])
             time.sleep(2)
             if self._is_element_present(self.__class__.__locators['信息邀请']):
-                self.driver.background_app()
-                time.sleep(1)
+                self.driver.background_app(seconds=10)
                 self.driver.launch_app()
                 time.sleep(1)
                 return True
@@ -333,8 +333,12 @@ class GroupListPage(BasePage):
         return self.page_should_contain_element(self.__locators[locator])
 
     @TestLogger.log("输入搜索内容")
-    def input_search_text(self, text='dalao2'):
+    def input_search_text(self,text='dalao2'):
         self.input_text(self.__class__.__locators['搜索或输入手机号'], text)
+
+    @TestLogger.log("搜索分组成员")
+    def search_menber_text(self,text='dalao2'):
+        self.input_text(self.__class__.__locators['搜索标签分组成员'], text)
 
     @TestLogger.log("输入内容")
     def input_content(self,text='祝一路顺风幸福美满'):

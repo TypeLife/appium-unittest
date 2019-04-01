@@ -85,7 +85,7 @@ class SelectOneGroupPage(BasePage):
         els=self.get_elements(self.__locators['分享名片'])
         if els:
             print("控件点击失败")
-            self.tap_coordinate([(50,50)])
+            self.tap_coordinate([(700,1900)])
 
     @TestLogger.log()
     def click_back_by_android(self, times=1):
