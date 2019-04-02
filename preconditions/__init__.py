@@ -98,8 +98,8 @@ def terminate_app():
 
 def force_close_and_launch_app():
     "强制关闭应用，然后重启"
-    current_mobile().terminate_app('com.chinasofti.rcs', timeout=2000)
-    time.sleep(3)
+    terminate_app()
+    time.sleep(10)
     current_mobile().launch_app()
 
 

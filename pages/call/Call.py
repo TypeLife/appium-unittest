@@ -2,6 +2,9 @@ from appium.webdriver.common.mobileby import MobileBy
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 import time
+from pages import MessagePage, MePage, SettingPage, MeSetDialPage, MeSetDialWayPage
+from pages.call.CallTypeSelect import CallTypeSelectPage
+
 
 class CallPage(BasePage):
     """主界面-通话tab页"""
@@ -28,7 +31,7 @@ class CallPage(BasePage):
         '删除X': (MobileBy.ID, 'com.chinasofti.rcs:id/ivDelete'),
         '拨号盘收缩删除X': (MobileBy.ID, 'com.chinasofti.rcs:id/ivDeleteHide'),
         '拨打电话按键': (MobileBy.ID, 'com.chinasofti.rcs:id/ivVoiceCall'),
-        '通话界面高清显示图片': (MobileBy.ID, 'com.chinasofti.rcs:id/ivNoentrys'),
+        '通话界面高清显示图片': (MobileBy.ID, 'com.chinasofti.rcs:id/ivNoRecords'),
         '直接拨号或开始搜索': (MobileBy.ID, 'com.chinasofti.rcs:id/edt_t9_keyboard'),
         '新建联系人': (MobileBy.XPATH, "//*[contains(@text, '新建联系人')]"),
         '发送消息': (MobileBy.XPATH, "//*[contains(@text, '发送消息')]"),
@@ -47,7 +50,7 @@ class CallPage(BasePage):
         '知道了': (MobileBy.XPATH, '//*[@text="知道了"]'),
         '始终允许': (MobileBy.ID, "com.android.packageinstaller:id/permission_allow_button"),
         "多方视频图标": (MobileBy.ID, "com.chinasofti.rcs:id/ivMultipartyVideo"),
-        "通话时间": (MobileBy.ID, "com.chinasofti.rcs:id/tvCallTime"),
+        "通话记录时间": (MobileBy.ID, "com.chinasofti.rcs:id/tvCallTime"),
         "profileName": (MobileBy.ID, "com.chinasofti.rcs:id/tv_profile_name"),
     }
 
@@ -204,7 +207,7 @@ class CallPage(BasePage):
 
     @TestLogger.log()
     def check_call_image(self):
-        """检查拨打电话图片"""
+        """检查通话界面高清图片"""
         flag = False
         element = self.get_elements(self.__locators["通话界面高清显示图片"])
         if len(element) > 0:
@@ -312,13 +315,8 @@ class CallPage(BasePage):
 
     @TestLogger.log()
     def check_video_image(self):
-        """判断是否存在视频图片"""
+        """判断是否存在视频图片来检查是否在通话界面"""
         return self._is_element_present(self.__locators["视频图片"])
-
-    @TestLogger.log()
-    def check_call_display(self):
-        """判断是否存在通话显示"""
-        return self._is_element_present(self.__locators["通话显示"])
 
     @TestLogger.log()
     def check_call_display(self):
@@ -339,7 +337,8 @@ class CallPage(BasePage):
         except:
             raise IndexError("元素超出索引")
 
-    def dial_number(self, text=""):
+    def dial_number(self, text):
+        """输入拨打号码"""
         self.input_text(self.__locators["直接拨号或开始搜索"], text)
 
     @TestLogger.log()
@@ -370,8 +369,8 @@ class CallPage(BasePage):
                     self.press(el[0])
                     self.click_delete_entry()
                     if ret:
-                        if self.is_text_present("始终允许"):
-                            self.click_allow_button()
+                        if self.is_exist_allow_button():
+                            self.click_allow_button(auto_accept_permission_alert=False)
                         ret = False
                 else:
                     print("已清空联系人")
@@ -426,9 +425,9 @@ class CallPage(BasePage):
         return self._is_element_present(self.__class__.__locators["始终允许"])
 
     @TestLogger.log()
-    def click_allow_button(self):
+    def click_allow_button(self, auto_accept_permission_alert=True):
         """点击允许"""
-        self.click_element(self.__class__.__locators["始终允许"])
+        self.click_element(self.__class__.__locators["始终允许"], auto_accept_permission_alert=auto_accept_permission_alert)
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
@@ -445,8 +444,8 @@ class CallPage(BasePage):
 
     @TestLogger.log()
     def click_call_time(self):
-        """点击通话时间"""
-        self.click_element(self.__class__.__locators["通话时间"])
+        """点击通话记录时间"""
+        self.click_element(self.__class__.__locators["通话记录时间"])
 
     @TestLogger.log()
     def is_exist_profile_name(self):
@@ -457,3 +456,33 @@ class CallPage(BasePage):
     def get_profile_name(self):
         """获取profile_name"""
         return self.get_text(self.__locators["profileName"])
+
+    @TestLogger.log()
+    def select_dial_mode(self):
+        """进入拨号方式选择"""
+        MessagePage().open_me_page()
+        MePage().click_setting_menu()
+        SettingPage().click_dial_setting()
+        MeSetDialPage().click_dial_mode()
+
+    @TestLogger.log()
+    def setting_dial_mode_and_go_back_call(self):
+        """设置拨号方式为总是询问，并返回call界面"""
+        self.select_dial_mode()
+        MeSetDialWayPage().click_call_type_alaways_ask()
+        self.click_back_by_android(times=3)
+        self.click_call()
+
+    @TestLogger.log()
+    def create_call_entry(self, text):
+        """当前界面已在call界面，创建通话记录，并返回call界面"""
+        self.click_call()
+        self.dial_number(text)
+        self.click_call_phone()
+        time.sleep(2)
+        if CallTypeSelectPage().is_select_call():
+            CallTypeSelectPage().click_call_by_general()
+        self.click_call_end()
+        time.sleep(1)
+        if not self.is_on_the_call_page():
+            self.click_call()

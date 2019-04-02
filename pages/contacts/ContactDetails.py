@@ -4,16 +4,18 @@ from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 import time
 import os
+
+
 class ContactDetailsPage(BasePage):
     """个人详情"""
     ACTIVITY = 'com.cmicc.module_contact.activitys.ContactDetailActivity'
 
     __locators = {
-        '联系人列表':(MobileBy.ID,'com.chinasofti.rcs:id/rl_group_list_item'),
+        '联系人列表': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_group_list_item'),
         '通讯录': (MobileBy.ID, 'com.chinasofti.rcs:id/tvContact'),
-        "联系人头像":(MobileBy.ID,'com.chinasofti.rcs:id/head_tv'),
-        '编辑2':(MobileBy.XPATH,"//*[@text='编辑']"),
-        '星标图标':(MobileBy.ID,'com.chinasofti.rcs:id/iv_star'),
+        "联系人头像": (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
+        '编辑2': (MobileBy.XPATH, "//*[@text='编辑']"),
+        '星标图标': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_star'),
         '返回上一页': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_back'),
         '名片标题': (MobileBy.ID, 'com.chinasofti.rcs:id/profile_name'),
         '星标': (MobileBy.ID, 'com.chinasofti.rcs:id/star'),
@@ -39,20 +41,21 @@ class ContactDetailsPage(BasePage):
         '邀请使用': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_invitation_to_use'),
         '大图': (MobileBy.ID, 'com.chinasofti.rcs:id/img_smooth'),
         '电话号码': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/et" and @text="13800138005"]'),
-        "确定":(MobileBy.ID,'com.chinasofti.rcs:id/tv_save_or_sure'),
+        "确定": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_save_or_sure'),
         "确定删除": (MobileBy.ID, 'com.chinasofti.rcs:id/bt_button2'),
-        "删除联系人":(MobileBy.ID,"com.chinasofti.rcs:id/tv_delete_contact"),
-        "呼叫(1/8)":(MobileBy.ID,"com.chinasofti.rcs:id/tv_sure"),
-        "暂不开启":(MobileBy.ID,"android:id/button2"),
-        "挂断电话":(MobileBy.ID,"com.chinasofti.rcs:id/ivDecline"),
-        "视频通话呼叫中":(MobileBy.XPATH,"//*[@text='	视频通话呼叫中']"),
+        "删除联系人": (MobileBy.ID, "com.chinasofti.rcs:id/tv_delete_contact"),
+        "呼叫(1/8)": (MobileBy.ID, "com.chinasofti.rcs:id/tv_sure"),
+        "暂不开启": (MobileBy.ID, "android:id/button2"),
+        "挂断电话": (MobileBy.ID, "com.chinasofti.rcs:id/ivDecline"),
+        "视频通话呼叫中": (MobileBy.XPATH, "//*[@text='	视频通话呼叫中']"),
         "挂断视频通话": (MobileBy.ID, "com.chinasofti.rcs:id/iv_out_Cancel"),
-        "取消拨打":(MobileBy.XPATH,"//*[@text='取消拨打']")
+        "取消拨打": (MobileBy.XPATH, "//*[@text='取消拨打']"),
+        "联系人名称": (MobileBy.ID, "com.chinasofti.rcs:id/contact_name")
     }
 
     @TestLogger.log("更改手机号码")
     def change_mobile_number(self):
-        self.input_text(self.__locators["电话号码"],"13800138006")
+        self.input_text(self.__locators["电话号码"], "13800138006")
 
     @TestLogger.log("点击呼叫")
     def send_call_number(self):
@@ -70,7 +73,6 @@ class ContactDetailsPage(BasePage):
         time.sleep(7)
         self.click_element(self.__locators["挂断电话"])
 
-
     @TestLogger.log("删除联系人")
     def change_delete_number(self):
         time.sleep(1)
@@ -85,10 +87,10 @@ class ContactDetailsPage(BasePage):
     def delete_all_contact(self):
         """使用此方法前，app进入消息界面"""
         self.open_contacts_page()
-        flag=True
+        flag = True
         while flag:
             time.sleep(2)
-            elements=self.get_elements(self.__locators['联系人列表'])
+            elements = self.get_elements(self.__locators['联系人列表'])
             if elements:
                 elements[0].click()
                 self.click_edit_contact()
@@ -102,8 +104,27 @@ class ContactDetailsPage(BasePage):
             else:
                 self.take_screen_out()
                 print("无可删除联系人")
-                flag=False
+                flag = False
 
+    @TestLogger.log("通过Name删除指定联系人")
+    def delete_contact(self, text):
+        """使用此方法前，app进入消息界面"""
+        self.open_contacts_page()
+        for i in range(10):
+            time.sleep(2)
+            if self.is_text_present(text):
+                self.click_text(text)
+                self.click_edit_contact()
+                time.sleep(1)
+                self.hide_keyboard()
+                self.page_up()
+                self.change_delete_number()
+                self.click_sure_delete()
+                break
+            else:
+                self.page_up()
+                if i == 9:
+                    print("未找到联系人")
 
     @TestLogger.log("点击返回按钮")
     def click_back_icon(self):
@@ -125,7 +146,6 @@ class ContactDetailsPage(BasePage):
     def click_edit_contact(self):
         """点击编辑按钮"""
         self.click_element(self.__locators['编辑2'])
-
 
     @TestLogger.log("获取名片名称")
     def get_contact_name(self, wait_time=0):
@@ -233,6 +253,7 @@ class ContactDetailsPage(BasePage):
         os.popen("adb pull /data/local/tmp/tmp.png " + path + "/" + timestamp + ".png")
         os.popen("adb shell rm /data/local/tmp/tmp.png")
 
+
 def add(func):
     def wrapper(*args):
         try:
@@ -242,13 +263,13 @@ def add(func):
             print(path)
             timestamp = time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime(time.time()))
             os.popen("adb wait-for-device")
-            time.sleep(0.5)
+            time.sleep(2)
             os.popen("adb shell screencap -p /data/local/tmp/tmp.png")
-            time.sleep(0.5)
+            time.sleep(2)
             if not os.path.isdir(os.getcwd() + "/screenshot"):
                 os.makedirs(path)
             os.popen("adb pull /data/local/tmp/tmp.png " + path + "/" + timestamp + ".png")
             os.popen("adb shell rm /data/local/tmp/tmp.png")
-            #raise ArithmeticError
+            # raise ArithmeticError
 
     return wrapper

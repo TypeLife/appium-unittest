@@ -47,6 +47,14 @@ class FooterPage(BasePage):
         return self._is_enabled(self.__class__.__locators["消息"])
 
     @TestLogger.log()
+    def message_icon_is_selected(self):
+        """消息图标是否被选中"""
+        result = self.get_element_attribute(self.__class__.__locators["消息"], "selected")
+        if result.lower() == "true":
+            return True
+        return False
+
+    @TestLogger.log()
     def call_icon_is_enabled(self):
         """通话图标是否可点击"""
         return self._is_enabled(self.__class__.__locators["通话"])

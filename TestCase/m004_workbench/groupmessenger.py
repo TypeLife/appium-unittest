@@ -6,15 +6,19 @@ from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import switch_to_mobile, current_mobile
 from library.core.utils.testcasefilter import tags
-from pages import AgreementDetailPage
+from pages import AgreementDetailPage, SelectLocalContactsPage
 from pages import GuidePage
 from pages import MessagePage
 from pages import OneKeyLoginPage
 from pages import PermissionListPage
 from pages.workbench.Workbench import WorkbenchPage
+from pages.workbench.group_messenger.GroupMessenger import GroupMessengerPage
+from pages.workbench.group_messenger.HelpCenter import HelpCenterPage
 from pages.workbench.group_messenger.MessageGroup import MessageGroupPage
+from pages.workbench.group_messenger.NewMessage import NewMessagePage
 from pages.workbench.group_messenger.Organization import Organization
 from pages.workbench.group_messenger.SelectCompanyContacts import SelectCompanyContactsPage
+from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -100,6 +104,54 @@ class Preconditions(object):
         message_page = MessagePage()
         message_page.wait_login_success(60)
 
+    @staticmethod
+    def make_already_in_message_page(reset=False):
+        """确保应用在消息页面"""
+        Preconditions.select_mobile('Android-移动', reset)
+        current_mobile().hide_keyboard_if_display()
+        time.sleep(1)
+        # 如果在消息页，不做任何操作
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        # 进入一键登录页
+        Preconditions.make_already_in_one_key_login_page()
+        #  从一键登录页面登录
+        Preconditions.login_by_one_key_login()
+
+    @staticmethod
+    def enter_group_messenger_page():
+        """进入群发信使首页"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.click_workbench()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_group_messenger()
+
+    @staticmethod
+    def create_he_contacts(names):
+        """选择本地联系人创建为和通讯录联系人"""
+
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_organization()
+        osp = OrganizationStructurePage()
+        osp.wait_for_page_load()
+        for name in names:
+            if not osp.is_exist_specify_element_by_name(name):
+                osp.click_specify_element_by_name("添加联系人")
+                time.sleep(2)
+                osp.click_specify_element_by_name("从手机通讯录添加")
+                slc = SelectLocalContactsPage()
+                # 等待选择联系人页面加载
+                slc.wait_for_page_load()
+                slc.selecting_local_contacts_by_name(name)
+                slc.click_sure()
+                osp.wait_for_page_load()
+        osp.click_back()
+        wbp.wait_for_workbench_page_load()
 
 # @unittest.skip
 class MassMessengerTest(TestCase):
@@ -261,3 +313,218 @@ class MassMessengerTest(TestCase):
         sccp.click_back()
         mgp.wait_for_edit_message_page_load()
         mgp.click_close()
+
+class MassMessengerAllTest(TestCase):
+    """
+    模块：工作台->群发信使
+    文件位置：20190313工作台全量用例整理.xlsx
+    表格：工作台->群发信使
+    Author：刘晓东
+    """
+
+    def default_setUp(self):
+        """
+        1、成功登录和飞信
+        2、当前页面在群发信使首页
+        """
+
+        Preconditions.select_mobile('Android-移动')
+        mp = MessagePage()
+        if mp.is_on_this_page():
+            Preconditions.enter_group_messenger_page()
+            return
+        gmp = GroupMessengerPage()
+        if gmp.is_on_group_messenger_page():
+            current_mobile().hide_keyboard_if_display()
+        else:
+            current_mobile().launch_app()
+            # preconditions.force_close_and_launch_app()
+            Preconditions.make_already_in_message_page()
+            Preconditions.enter_group_messenger_page()
+
+    def default_tearDown(self):
+        pass
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QFXS_0001(self):
+        """可以正常查看帮助中心内容"""
+
+        gmp = GroupMessengerPage()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+        gmp.click_help_icon()
+        hcp = HelpCenterPage()
+        # 等待等待群发信使->帮助中心页面加载
+        hcp.wait_for_page_load()
+        # 1.查看应用简介
+        hcp.click_introduction()
+        hcp.wait_for_introduction_page_load()
+        hcp.click_back()
+        hcp.wait_for_page_load()
+        # 查看操作指引
+        hcp.click_guide()
+        hcp.wait_for_guide_page_load()
+        hcp.click_back()
+        hcp.wait_for_page_load()
+        # 查看资费说明
+        hcp.click_explain()
+        hcp.wait_for_explain_page_load()
+        hcp.click_back()
+        hcp.wait_for_page_load()
+        # 查看常见问题
+        hcp.click_problem()
+        hcp.wait_for_problem_page_load()
+        hcp.click_back()
+        hcp.wait_for_page_load()
+        hcp.click_back()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QFXS_0005(self):
+        """添加搜索出的联系人"""
+
+        gmp = GroupMessengerPage()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+        # 确保和通讯录有联系人可供搜索
+        gmp.click_back()
+        names = ["大佬1", "大佬2"]
+        Preconditions.create_he_contacts(names)
+        wbp = WorkbenchPage()
+        wbp.click_group_messenger()
+        gmp.wait_for_page_load()
+        gmp.click_new_message()
+        nmp = NewMessagePage()
+        # 等待群发信使->新建短信页面加载
+        nmp.wait_for_page_load()
+        nmp.click_add_icon()
+        sccp = SelectCompanyContactsPage()
+        # 等待群发信使->新建短信->选择联系人页面加载
+        sccp.wait_for_page_load()
+        search_name = "大佬1"
+        # 输入查找信息
+        sccp.input_search_message(search_name)
+        time.sleep(2)
+        # 点击勾选搜索出的联系人头像
+        sccp.click_contacts_image()
+        # 点击确定
+        sccp.click_sure_button()
+        nmp.wait_for_page_load()
+        # 1.搜索出的联系人是否被选择
+        self.assertEquals(nmp.is_exist_text(search_name), True)
+        nmp.click_back()
+        nmp.click_no()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QFXS_0016(self):
+        """搜索“我的电脑”"""
+
+        gmp = GroupMessengerPage()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+        gmp.click_new_message()
+        nmp = NewMessagePage()
+        # 等待群发信使->新建短信页面加载
+        nmp.wait_for_page_load()
+        nmp.click_add_icon()
+        sccp = SelectCompanyContactsPage()
+        # 等待群发信使->新建短信->选择联系人页面加载
+        sccp.wait_for_page_load()
+        time.sleep(2)
+        sccp.input_search_message("我的电脑")
+        time.sleep(2)
+        # 1.是否显示“无搜索结果”
+        self.assertEquals(sccp.is_exist_text(), True)
+        sccp.click_back()
+        time.sleep(2)
+        sccp.click_back()
+        nmp.wait_for_page_load()
+        nmp.click_back()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QFXS_0017(self):
+        """11位号码精准搜索"""
+
+        gmp = GroupMessengerPage()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+        # 确保和通讯录有联系人可供搜索
+        gmp.click_back()
+        names = ["大佬1", "大佬2"]
+        Preconditions.create_he_contacts(names)
+        wbp = WorkbenchPage()
+        wbp.click_group_messenger()
+        gmp.wait_for_page_load()
+        gmp.click_new_message()
+        nmp = NewMessagePage()
+        # 等待群发信使->新建短信页面加载
+        nmp.wait_for_page_load()
+        nmp.click_add_icon()
+        sccp = SelectCompanyContactsPage()
+        # 等待群发信使->新建短信->选择联系人页面加载
+        sccp.wait_for_page_load()
+        search_number = "13800138005"
+        # 输入查找信息
+        sccp.input_search_message(search_number)
+        time.sleep(2)
+        # 1.检查搜索结果是否完全匹配关键字
+        self.assertEquals(sccp.is_search_contacts_number_full_match(search_number), True)
+        # 选择搜索结果
+        sccp.click_contacts_by_number(0)
+        # 2.是否成功选中，输入框是否自动清空
+        self.assertEquals(sccp.is_exist_select_contacts_name(), True)
+        self.assertEquals(sccp.is_clear_search_box(search_number), True)
+        sccp.click_back()
+        time.sleep(2)
+        sccp.click_back()
+        nmp.wait_for_page_load()
+        nmp.click_back()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QFXS_0018(self):
+        """6-10位数字可支持模糊搜索匹配结果"""
+
+        gmp = GroupMessengerPage()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+        # 确保和通讯录有联系人可供搜索
+        gmp.click_back()
+        names = ["大佬1", "大佬2"]
+        Preconditions.create_he_contacts(names)
+        wbp = WorkbenchPage()
+        wbp.click_group_messenger()
+        gmp.wait_for_page_load()
+        gmp.click_new_message()
+        nmp = NewMessagePage()
+        # 等待群发信使->新建短信页面加载
+        nmp.wait_for_page_load()
+        nmp.click_add_icon()
+        sccp = SelectCompanyContactsPage()
+        # 等待群发信使->新建短信->选择联系人页面加载
+        sccp.wait_for_page_load()
+        search_number = "13800138"
+        # 输入查找信息
+        sccp.input_search_message(search_number)
+        time.sleep(2)
+        # 1.检查搜索结果是否模糊匹配关键字
+        self.assertEquals(sccp.is_search_contacts_number_match(search_number), True)
+        # 选择搜索结果
+        sccp.click_contacts_by_number(0)
+        # 2.是否成功选中，输入框是否自动清空
+        self.assertEquals(sccp.is_exist_select_contacts_name(), True)
+        self.assertEquals(sccp.is_clear_search_box(search_number), True)
+        sccp.click_back()
+        time.sleep(2)
+        sccp.click_back()
+        nmp.wait_for_page_load()
+        nmp.click_back()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()

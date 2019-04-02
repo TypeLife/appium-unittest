@@ -23,7 +23,7 @@ class CreateTeamPage(BasePage):
         '请务必填写真实姓名': (MobileBy.XPATH,'//*[@resource-id="gly_name"]'),
         # '请务必填写真实姓名': (MobileBy.XPATH, '//*[@text="请务必填写真实姓名" or @content-desc="请务必填写真实姓名" ]'),
         # '14775290489@139.com': (MobileBy.ID, 'gly_email'),
-        '邮箱': (MobileBy.XPATH, '//*[contains(@text, "@139.com")]'),
+        '邮箱': (MobileBy.XPATH, '//*[@resource-id="gly_email"]'),
         '立即创建团队': (MobileBy.XPATH, '//*[@text="立即创建团队"]'),
         # 点击创建团队后，设置工作台
         '完成设置工作台': (MobileBy.XPATH, '//*[@text="完成设置工作台"]'),
@@ -156,7 +156,7 @@ class CreateTeamPage(BasePage):
 
     @TestLogger.log()
     def input_email(self, email):
-        """输入团队名字"""
+        """输入邮箱名字"""
         self.input_text(self.__class__.__locators["邮箱"], email)
 
     @TestLogger.log()
@@ -282,6 +282,9 @@ class CreateTeamPage(BasePage):
         except:
             self.click_element((MobileBy.XPATH, '//*[@text="选择地区"]/../android.view.View/android.view.View[1]'))
 
-
-
+    @TestLogger.log()
+    def get_email_text(self):
+        """获取团队名字"""
+        el=self.get_element(self.__class__.__locators["邮箱"])
+        return el.text
 
