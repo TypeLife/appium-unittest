@@ -3,6 +3,7 @@ from appium.webdriver.common.mobileby import MobileBy
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 import time
+from pages.call.Call import CallPage
 
 
 class CalllogBannerPage(BasePage):
@@ -33,6 +34,11 @@ class CalllogBannerPage(BasePage):
     def click_i_know(self):
         """点击知道了"""
         self.click_element(self.__locators["知道了"])
+
+    @TestLogger.log()
+    def input_telephone(self, text):
+        """输入电话号码"""
+        self.input_text(self.__locators["搜索或输入号码"], text)
 
     @TestLogger.log()
     def press_contact_search_bar(self):
@@ -66,4 +72,3 @@ class CalllogBannerPage(BasePage):
             if CallPage().is_exist_allow_button():
                 CallPage().click_allow_button(auto_accept_permission_alert=False)
         time.sleep(1)
-
