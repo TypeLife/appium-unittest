@@ -15,6 +15,7 @@ from pages.me.MeCallMulti import MeCallMultiPage
 from pages.me.MeCardName import MeCardNamePage
 from pages.me.MeEditUserProfile import MeEditUserProfilePage
 from pages.me.MeViewUserProfile import MeViewUserProfilePage
+from pages.me.MeWefare import MeSetWefarePage
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -2174,7 +2175,7 @@ class MeAllTest(TestCase):
         sog.wait_for_page_load()
         sog.click_search_group()
         group_name = Preconditions.get_group_chat_name()
-        sog.input_search_keyword(group_name+"ss")
+        sog.input_search_keyword(group_name + "ss")
         sog.page_should_contain_text("无搜索结果")
         mep.click_back()
         mep.click_back()
@@ -2335,6 +2336,292 @@ class MeAllTest(TestCase):
         # 4.点击返回
         mep.click_back()
         mmp.click_el_text("返回1")
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
+    def test_me_all_393(self):
+        """多方电话充值中心"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击我-多方电话卡片
+        mep.click_call_multiparty()
+        mmp = MeCallMultiPage()
+        mmp.wait_for_page_load()
+        # 2.点击点击充值中心,无套餐
+        mmp.click_el_text("当前剩余多方通话分钟数")
+        mmp.wait_for_page_load_call_details()
+        menu = {"总时长", "可    用", "有效期", "充值"}
+        mmp.page_contain_text(menu)
+        # 3.点击进入充值入口
+        mmp.click_el_text("充值")
+        mmp.wait_for_page_load_call_details_charge("充值套餐")
+        time.sleep(3)
+        menu = {"充值套餐", "查看充值记录"}
+        mmp.page_contain_text(menu)
+        # 4.点击返回
+        mep.click_back()
+        mep.click_back()
+        mep.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
+    def test_me_all_394(self):
+        """多方电话充值中心—充值记录"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击我-多方电话卡片
+        mep.click_call_multiparty()
+        mmp = MeCallMultiPage()
+        mmp.wait_for_page_load()
+        # 2.点击点击充值中心,无套餐
+        mmp.click_el_text("当前剩余多方通话分钟数")
+        mmp.wait_for_page_load_call_details()
+        menu = {"总时长", "可    用", "有效期", "充值"}
+        mmp.page_contain_text(menu)
+        # 3.点击进入充值入口
+        mmp.click_el_text("充值")
+        mmp.wait_for_page_load_call_details_charge("充值套餐")
+        time.sleep(3)
+        menu = {"充值套餐", "查看充值记录"}
+        mmp.page_contain_text(menu)
+        # 4.点击查看充值记录
+        mmp.click_el_text("查看充值记录")
+        mmp.wait_for_page_load_call_details_charge("充值记录")
+        mmp.page_should_contain_text("暂无充值记录")
+        # 5.点击返回
+        mep.click_back()
+        mep.click_back()
+        mep.click_back()
+        mep.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
+    def test_me_all_395(self):
+        """多方电话网络异常展示"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击我-多方电话卡片
+        mep.set_network_status(0)
+        mep.click_call_multiparty()
+        mmp = MeCallMultiPage()
+        mmp.wait_for_page_load()
+        # 2.点击点击充值中心,无套餐
+        menu = {"--", "分钟"}
+        mmp.page_contain_text(menu)
+        # 5.点击返回
+        mep.click_back()
+
+    @staticmethod
+    def tearDown_test_me_all_395():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
+    def test_me_all_396(self):
+        """多方电话网络异常展示"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击我-多方电话卡片
+        mep.set_network_status(0)
+        mep.click_call_multiparty()
+        mmp = MeCallMultiPage()
+        mmp.wait_for_page_load()
+        # 2.点击点击充值中心,无套餐
+        mmp.click_el_text("Q&A")
+        time.sleep(3)
+        mmp.page_should_contain_text("出错了")
+        mmp.page_should_contain_text("网络异常，请检查网络设置")
+        # 5.点击返回
+        mep.click_back()
+        mmp.click_el_text("返回1")
+
+    @staticmethod
+    def tearDown_test_me_all_396():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
+    def test_me_all_399(self):
+        """多方电话网络异常展示"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击我-多方电话卡片
+        mep.set_network_status(0)
+        mep.click_call_multiparty()
+        mmp = MeCallMultiPage()
+        mmp.wait_for_page_load()
+        # 2.点击点击充值中心,无套餐
+        mmp.click_el_text("资费说明")
+        time.sleep(3)
+        mmp.page_should_contain_text("网页无法打开")
+        mmp.page_should_contain_text("网络出错，轻触屏幕重新加载")
+        # 5.点击返回
+        mep.click_back()
+        mmp.click_el_text("返回1")
+
+    @staticmethod
+    def tearDown_test_me_all_399():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
+    def test_me_all_414(self):
+        """有活动-福利页面验证"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击我-点击福利
+        mep.click_welfare()
+        mwp = MeSetWefarePage()
+        # 2.等待福利页面跳转
+        mwp.wait_for_page_load()
+        mwp.page_should_contain_text("免费领取每月10G")
+        mwp.click_back()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
+    def test_me_all_416(self):
+        """有活动-福利页面验证"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.set_network_status(0)
+        # 1.点击我-点击福利
+        mep.click_welfare()
+        mwp = MeSetWefarePage()
+        # 2.等待福利页面跳转
+        mwp.wait_for_page_load()
+        mwp.page_should_contain_text("网页无法打开")
+        mwp.page_should_contain_text("网络出错")
+        mwp.click_back()
+
+    @staticmethod
+    def tearDown_test_me_all_416():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
+    def test_me_all_418(self):
+        """福利-活动详情页跳转验证"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击我-点击福利
+        mep.click_welfare()
+        mwp = MeSetWefarePage()
+        # 2.等待福利页面跳转
+        mwp.wait_for_page_load()
+        # 3.点击任意一个福利活动
+        mwp.click_welfare_activities()
+        mwp.wait_for_page_load_welfare_activities()
+        mwp.page_should_contain_text("流量包亮点")
+        mwp.click_close_welfare_activities()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
+    def test_me_all_419(self):
+        """福利-活动详情页跳转验证"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击我-点击福利
+        mep.click_welfare()
+        mwp = MeSetWefarePage()
+        # 2.等待福利页面跳转
+        mwp.wait_for_page_load()
+        mwp.set_network_status(0)
+        # 3.点击任意一个福利活动
+        mwp.click_welfare_activities()
+        mwp.wait_for_page_load_welfare_activities()
+        mwp.page_should_contain_text("网页无法打开")
+        mwp.page_should_contain_text("网络出错")
+        mwp.click_close_welfare_activities()
+
+    @staticmethod
+    def tearDown_test_me_all_419():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
+    def test_me_all_421(self):
+        """福利-活动分享-转发给朋友"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击我-点击福利
+        mep.click_welfare()
+        mwp = MeSetWefarePage()
+        # 2.等待福利页面跳转
+        mwp.wait_for_page_load()
+        # 3.点击任意一个福利活动
+        mwp.click_welfare_activities()
+        mwp.wait_for_page_load_welfare_activities()
+        mwp.page_should_contain_text("流量包亮点")
+        # 4.点击右上角…分享入口
+        mwp.click_more()
+        mwp.click_more_share()
+        # 5.跳转到联系人页面,选择联系人，取消
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        menu = {"选择联系人", "选择一个群", "选择和通讯录联系人", "选择本地联系人", "搜索或输入手机号"}
+        self.assertEquals(scp.is_page_more_text(menu), True)
+        scp.select_local_contacts()
+        slp = SelectLocalContactsPage()
+        slp.wait_for_page_load()
+        slp.selecting_local_contacts_by_name("和飞信电话")
+        slp.click_cancel_forward()
+        # 6.选择联系人，确定
+        slp.selecting_local_contacts_by_name("和飞信电话")
+        slp.click_sure_forward()
+        self.assertEquals(slp.is_toast_exist("已转发"), True)
+        mwp.wait_for_page_load_welfare_activities()
+        mwp.page_should_contain_text("流量包亮点")
+        # 7.点击返回
+        mwp.click_close_welfare_activities()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
+    def test_me_all_422(self):
+        """福利-活动分享-转发给朋友-选择联系人页面返回"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击我-点击福利
+        mep.click_welfare()
+        mwp = MeSetWefarePage()
+        # 2.等待福利页面跳转
+        mwp.wait_for_page_load()
+        # 3.点击任意一个福利活动
+        mwp.click_welfare_activities()
+        mwp.wait_for_page_load_welfare_activities()
+        mwp.page_should_contain_text("流量包亮点")
+        # 4.点击右上角…分享入口
+        mwp.click_more()
+        mwp.click_more_share()
+        # 5.跳转到联系人页面,选择联系人，取消
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        menu = {"选择联系人", "选择一个群", "选择和通讯录联系人", "选择本地联系人", "搜索或输入手机号"}
+        self.assertEquals(scp.is_page_more_text(menu), True)
+        # 6.选择返回
+        scp.click_back()
+        mwp.wait_for_page_load_welfare_activities()
+        mwp.page_should_contain_text("流量包亮点")
+        mwp.click_close_welfare_activities()
 
 
 @unittest.skip("112版用例跳过")

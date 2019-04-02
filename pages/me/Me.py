@@ -265,3 +265,8 @@ class MePage(FooterPage):
             timeout=timeout,
             condition=lambda d: self.get_element(self.__locators['多方电话'])
         ).click()
+
+    @TestLogger.log()
+    def click_welfare(self):
+        """点击收藏按钮"""
+        self.click_element(self.__locators['福利'])
