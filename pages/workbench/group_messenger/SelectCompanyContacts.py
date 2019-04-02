@@ -20,7 +20,8 @@ class SelectCompanyContactsPage(BasePage):
         '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/img_icon_contactlist'),
         '已选人名': (MobileBy.ID, 'com.chinasofti.rcs:id/image_text'),
         '已选头像': (MobileBy.ID, 'com.chinasofti.rcs:id/avator'),
-        '确定按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/imagebutton_choose_file_cancel')
+        '确定按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/imagebutton_choose_file_cancel'),
+        '企业层级': (MobileBy.ID, "android:id/title")
     }
 
     @TestLogger.log()
@@ -144,7 +145,7 @@ class SelectCompanyContactsPage(BasePage):
         els = self.get_elements(self.__class__.__locators["联系人名"])
         texts = []
         for el in els:
-            text = el.text
+            text = el.text.strip()
             if text:
                 texts.append(text)
         for t in texts:
@@ -206,3 +207,12 @@ class SelectCompanyContactsPage(BasePage):
         """点击确定按钮"""
         self.click_element(self.__class__.__locators["确定按钮"])
 
+    @TestLogger.log()
+    def is_exist_select_and_all(self, text):
+        """是否展示已选人数/上限人数"""
+        return self._is_element_present((MobileBy.XPATH, "//*[contains(@text, '%s/49')]" % text))
+
+    @TestLogger.log()
+    def is_exist_corporate_grade(self):
+        """是否存在企业层级"""
+        return self._is_element_present(self.__class__.__locators['企业层级'])
