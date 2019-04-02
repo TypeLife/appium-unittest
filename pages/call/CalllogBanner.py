@@ -58,3 +58,12 @@ class CalllogBannerPage(BasePage):
         self.click_back()
         time.sleep(1)
 
+    @TestLogger.log()
+    def skip_multiparty_call(self):
+        """跳过多方通话引导页面"""
+        if self.is_on_the_calllog_banner_page():
+            self.multiparty_call()
+            if CallPage().is_exist_allow_button():
+                CallPage().click_allow_button(auto_accept_permission_alert=False)
+        time.sleep(1)
+

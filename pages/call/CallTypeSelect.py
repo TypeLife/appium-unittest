@@ -48,10 +48,8 @@ class CallTypeSelectPage(BasePage):
 
     @TestLogger.log()
     def is_select_call(self):
-        """
-        当前是否存在选择通话菜单
-        """
-        return self._is_element_present(self.__locators["普通通话"])
+        """当前是否存在选择通话菜单"""
+        return self._is_element_present(self.__locators["普通电话"])
 
     @TestLogger.log()
     def click_call_by_voice(self):
@@ -99,4 +97,6 @@ class CallTypeSelectPage(BasePage):
     def click_setting(self):
         """点击设置"""
         self.click_element(self.__locators["设置"])
+
+
 
