@@ -46,7 +46,8 @@ class SelectContactsPage(BasePage):
         'local联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         '分享名片': (MobileBy.ID, 'com.chinasofti.rcs:id/send_tv'),
         '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
-        '右侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView'),
+        '右侧字母索引': (MobileBy.XPATH,
+                   '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView'),
         '左侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/index_text"]'),
         '查看更多': (MobileBy.XPATH, '//*[@text ="查看更多"]'),
         '和通讯录返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back'),
@@ -110,7 +111,6 @@ class SelectContactsPage(BasePage):
     def click_he_back(self):
         """点击 和通讯录返回"""
         self.click_element(self.__class__.__locators["和通讯录返回"])
-
 
     @TestLogger.log('点击分享名片')
     def click_share_card(self):
@@ -255,13 +255,13 @@ class SelectContactsPage(BasePage):
     @TestLogger.log('检验搜索名称')
     def get_element_text_net_name(self, locator):
         text = self.get_text(self.__locators["搜索或输入手机号"])
-        text = text+"(未知号码)"
+        text = text + "(未知号码)"
         return self.element_should_contain_text(self.__locators[locator], text)
 
     @TestLogger.log('检验搜索号码')
     def get_element_text_net_number(self, locator):
         text = self.get_text(self.__locators["搜索或输入手机号"])
-        text = "tel: +86"+text
+        text = "tel: +86" + text
         return self.element_should_contain_text(self.__locators[locator], text)
 
     @TestLogger.log('获取元素文本内容')
@@ -344,3 +344,10 @@ class SelectContactsPage(BasePage):
         if self._is_element_present(self.__class__.__locators["最近聊天消息名称"]):
             els = self.get_elements(self.__class__.__locators["最近聊天消息名称"])
             els[number].click()
+
+    @TestLogger.log()
+    def is_page_more_text(self, menu):
+        """选择某一条最近聊天记录"""
+        for text in menu:
+            self.is_text_present(text)
+        return True
