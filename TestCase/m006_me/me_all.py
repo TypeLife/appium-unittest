@@ -275,6 +275,24 @@ class Preconditions(object):
         mess.open_me_page()
 
     @staticmethod
+    def enter_group_chat_page(reset=False):
+        """进入群聊聊天会话页面"""
+        # 确保已有群
+        Preconditions.make_already_have_my_group(reset)
+        # 如果有群，会在选择一个群页面，没有创建群后会在群聊页面
+        scp = GroupChatPage()
+        sogp = SelectOneGroupPage()
+        if sogp.is_on_this_page():
+            group_name = Preconditions.get_group_chat_name()
+            # 点击群名，进入群聊页面
+            sogp.select_one_group_by_name(group_name)
+            scp.wait_for_page_load()
+        if scp.is_on_this_page():
+            return
+        else:
+            raise AssertionError("Failure to enter group chat session page.")
+
+    @staticmethod
     def make_already_have_my_group(reset=False):
         """确保有群，没有群则创建群名为mygroup+电话号码后4位的群"""
         # 消息页面
@@ -2310,6 +2328,7 @@ class MeAllTest(TestCase):
         # 2.点击点击充值中心,无套餐
         mmp.click_el_text("充值中心")
         mmp.wait_for_page_load_charge_center()
+        time.sleep(2.8)
         mmp.page_should_contain_text("暂无套餐列表")
         # 3.点击返回
         mmp.click_back()
@@ -2622,6 +2641,109 @@ class MeAllTest(TestCase):
         mwp.wait_for_page_load_welfare_activities()
         mwp.page_should_contain_text("流量包亮点")
         mwp.click_close_welfare_activities()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
+    def test_me_all_435(self):
+        """福利-活动分享-在系统浏览器中打开（安卓）"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击我-点击福利
+        mep.click_welfare()
+        mwp = MeSetWefarePage()
+        # 2.等待福利页面跳转
+        mwp.wait_for_page_load()
+        # 3.点击任意一个福利活动
+        mwp.click_welfare_activities()
+        mwp.wait_for_page_load_welfare_activities()
+        mwp.page_should_contain_text("流量包亮点")
+        # 4.点击右上角…分享入口，点击浏览器打开
+        mwp.click_more()
+        mwp.click_open_browser()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
+    def test_me_all_436(self):
+        """福利-活动分享-复制链接"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击我-点击福利
+        mep.click_welfare()
+        mwp = MeSetWefarePage()
+        # 2.等待福利页面跳转
+        mwp.wait_for_page_load()
+        # 3.点击任意一个福利活动
+        mwp.click_welfare_activities()
+        mwp.wait_for_page_load_welfare_activities()
+        mwp.page_should_contain_text("流量包亮点")
+        # 4.点击右上角…分享入口，点击复制
+        mwp.click_more()
+        mwp.click_copy_link()
+        mwp.wait_for_page_load_welfare_activities()
+        mwp.page_should_contain_text("流量包亮点")
+        self.assertEquals(mwp.is_toast_exist("内容已经复制到剪贴板"), True)
+        mwp.click_close_welfare_activities()
+        mep.open_message_page()
+        # 5.将复制内容转发到群里面
+        Preconditions.enter_group_chat_page()
+        gcp = GroupChatPage()
+        gcp.click_long_copy_message()
+        gcp.send_text()
+        gcp.click_long_message()
+        mwp.wait_for_page_load_welfare_activities_open()
+        mwp.page_should_contain_text("流量包亮点")
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
+    def test_me_all_437(self):
+        """福利-活动分享-刷新"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击我-点击福利
+        mep.click_welfare()
+        mwp = MeSetWefarePage()
+        # 2.等待福利页面跳转
+        mwp.wait_for_page_load()
+        # 3.点击任意一个福利活动
+        mwp.click_welfare_activities()
+        mwp.wait_for_page_load_welfare_activities()
+        mwp.page_should_contain_text("流量包亮点")
+        # 4.点击右上角…分享入口，点击刷新
+        mwp.click_more()
+        mwp.click_refurbish()
+        mwp.wait_for_page_load_welfare_activities()
+        mwp.page_should_contain_text("流量包亮点")
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
+    def test_me_all_438(self):
+        """福利-活动分享-在系统浏览器中打开（安卓）"""
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击我-点击福利
+        mep.click_welfare()
+        mwp = MeSetWefarePage()
+        # 2.等待福利页面跳转
+        mwp.wait_for_page_load()
+        # 3.点击任意一个福利活动
+        mwp.click_welfare_activities()
+        mwp.wait_for_page_load_welfare_activities()
+        mwp.page_should_contain_text("流量包亮点")
+        mwp.set_network_status(0)
+        # 4.点击右上角…分享入口
+        mwp.click_more()
+        mwp.click_refurbish()
+        mwp.wait_for_page_load_welfare_activities()
+        mwp.page_should_contain_text("网页无法打开")
+        mwp.page_should_contain_text("网络出错")
+
+    @staticmethod
+    def tearDown_test_me_all_438():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep.set_network_status(6)
 
 
 @unittest.skip("112版用例跳过")
