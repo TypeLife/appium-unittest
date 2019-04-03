@@ -1688,6 +1688,12 @@ class MsgPrivateChatVideoPicTotalQuantityTest(TestCase):
         scp.click_back()
         time.sleep(2)
         mp = MessagePage()
+        if not mp.is_on_this_page():
+            cdp = ContactDetailsPage()
+            cdp.click_back_icon()
+            cp = ContactsPage()
+            cp.wait_for_page_load()
+            cp.open_message_page()
         # 等待消息页面加载
         mp.wait_for_page_load()
         # 选择刚发送消息的聊天页
