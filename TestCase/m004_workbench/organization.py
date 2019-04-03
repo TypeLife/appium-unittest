@@ -36,7 +36,7 @@ class OrganizationTest(TestCase):
             current_mobile().hide_keyboard_if_display()
             return
         else:
-            preconditions.force_close_and_launch_app()
+            current_mobile().launch_app()
             Preconditions.enter_organization_page()
 
     def default_tearDown(self):
@@ -263,4 +263,119 @@ class OrganizationTest(TestCase):
             osp.wait_for_page_load()
         else:
             osp.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'ZZJG')
+    def test_ZZJG_0010(self):
+        """从部门进入扫码审核"""
+        # 1、点击“更多”
+        # 2、点击“扫码审核”
+        # 3、查看页面
+        osp = OrganizationStructurePage()
+        osp.wait_for_page_load()
+        osp.click_text("更多")
+        time.sleep(1)
+        osp.click_text("扫码审核")
+        time.sleep(3)
+        if not osp.is_text_present("扫码加入企业"):
+            raise AssertionError("无法正常跳转到待审核页面")
+        current_mobile().back()
+        osp.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'ZZJG')
+    def test_ZZJG_0011(self):
+        """成功批量删除部门中成员信息"""
+        # 1、点击“更多”
+        # 2、点击“批量删除成员”
+        # 3、勾选需要删除的成员
+        # 4、点击“确定”
+        osp = OrganizationStructurePage()
+        osp.wait_for_page_load()
+        osp.click_text("更多")
+        time.sleep(1)
+        osp.click_text("批量删除成员")
+        osp.wait_for_delete_contacts_page_load()
+        els=osp.get_contacts_in_organization()
+        if els:
+            for el in els:
+                el.click()
+        else:
+            raise AssertionError("当前组织没有成员，请添加")
+        time.sleep(1)
+        osp.click_text("确定")
+        if not osp.is_toast_exist("成功"):
+            raise AssertionError("没有删除成功")
+        current_mobile().back()
+        osp.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'ZZJG')
+    def test_ZZJG_0014(self):
+        """查看已审核列表"""
+        # 1、点击“组织架构”应用
+        # 2、点击“更多”
+        # 3、点击“扫码审核”，切换到已审核列表
+        osp = OrganizationStructurePage()
+        osp.wait_for_page_load()
+        osp.click_text("更多")
+        time.sleep(1)
+        osp.click_text("扫码审核")
+        time.sleep(2)
+        if not osp.is_text_present("扫码加入企业"):
+            raise AssertionError("无法正常跳转到审核页面")
+        osp.click_text("已审核")
+        time.sleep(2)
+        current_mobile().back()
+        osp.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'ZZJG')
+    def test_ZZJG_0017(self):
+        """当前页面无成员"""
+        # 1、点击“更多”
+        # 2、点击“批量删除成员”
+        osp = OrganizationStructurePage()
+        osp.wait_for_page_load()
+        osp.click_text("更多")
+        time.sleep(1)
+        osp.click_text("批量删除成员")
+        osp.wait_for_delete_contacts_page_load()
+        els = osp.get_contacts_in_organization()
+        if els:
+            raise AssertionError("当前组织有成员")
+        current_mobile().back()
+        osp.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'ZZJG')
+    def test_ZZJG_0018(self):
+        """搜索已经存在的成员姓名"""
+        # 1、点击“组织架构”应用
+        # 2、搜索已存在成员姓名
+        osp = OrganizationStructurePage()
+        time.sleep(2)
+        osp.wait_for_page_load()
+        slc = SelectLocalContactsPage()
+        if osp.is_text_present("和飞信电话"):
+            pass
+        else:
+            osp.click_text("添加联系人")
+            time.sleep(1)
+            osp.click_text("从手机通讯录添加")
+            time.sleep(2)
+            sc = SelectContactsPage()
+            # 搜索联系人
+            sc.input_search_contact_message("和飞信")
+            # 选择“和飞信电话”联系人进行转发
+            sc.click_one_contact("和飞信电话")
+            # slc.click_one_contact("和飞信电话")
+            slc.click_sure()
+            if not slc.is_toast_exist("操作成功"):
+                raise AssertionError("操作不成功")
+            time.sleep(2)
+            if not osp.is_on_this_page():
+                raise AssertionError("没有返回上一级")
+        osp.input_search_box("和飞信")
+        time.sleep(2)
+        if not osp.is_text_present("和飞信电话"):
+            raise AssertionError("搜索失败")
+
+
+
 
