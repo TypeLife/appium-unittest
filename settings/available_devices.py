@@ -39,7 +39,7 @@ AVAILABLE_DEVICES = {
 AVAILABLE_DEVICES_DEV = {
     'M960BDQN229CH': {
         "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
-        "SERVER_URL": 'http://192.168.200.106:4723/wd/hub',
+        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0.1",
@@ -53,18 +53,19 @@ AVAILABLE_DEVICES_DEV = {
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '13480860547'
+                'CARD_NUMBER': '13410559632'
             },
         ]
     },
 
-    'M960BDQN229CH-BACK': {
+    'M960BDQN229CK': {
         "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
-        "SERVER_URL": 'http://127.0.0.1:5000/wd/hub',
+        "SERVER_URL": 'http://127.0.0.1:4727/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
-            "platformVersion": "6.0",
-            "deviceName": "95AQACPMGJP5L",
+            "platformVersion": "7.0",
+            "deviceName": "79BQSDTCWQ7R7",
+            "udid": "79BQSDTCWQ7R7",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
@@ -73,7 +74,7 @@ AVAILABLE_DEVICES_DEV = {
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '14775970982'
+                'CARD_NUMBER': '13480860547'
             },
             None
         ]
