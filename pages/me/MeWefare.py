@@ -18,6 +18,9 @@ class MeSetWefarePage(BasePage):
                   '关闭流量活动': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_close_actionbar'),
                   '更多': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_more'),
                   '转发给朋友': (MobileBy.XPATH, "//*[contains(@text, '转发给朋友')]"),
+                  '在系统浏览器中打开': (MobileBy.XPATH, "//*[contains(@text, '在系统浏览器中打开')]"),
+                  '复制链接': (MobileBy.XPATH, "//*[contains(@text, '复制链接')]"),
+                  '刷新': (MobileBy.XPATH, "//*[contains(@text, '刷新')]"),
                   }
 
     @TestLogger.log()
@@ -45,6 +48,21 @@ class MeSetWefarePage(BasePage):
         """点击转发给朋友"""
         self.click_element(self.__locators["转发给朋友"])
 
+    @TestLogger.log()
+    def click_open_browser(self):
+        """点击在浏览器中打开"""
+        self.click_element(self.__locators["在系统浏览器中打开"])
+
+    @TestLogger.log()
+    def click_copy_link(self):
+        """点击在浏览器中打开"""
+        self.click_element(self.__locators["复制链接"])
+
+    @TestLogger.log()
+    def click_refurbish(self):
+        """点击在浏览器中打开"""
+        self.click_element(self.__locators["刷新"])
+
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
         """等待设置语言页面加载"""
         try:
@@ -70,6 +88,21 @@ class MeSetWefarePage(BasePage):
             )
         except:
             message = "我的福利：{}s内没有加载完毕，或者没有包含文本：设置语言".format(timeout)
+            raise AssertionError(
+                message
+            )
+        return self
+
+    def wait_for_page_load_welfare_activities_open(self, timeout=20, auto_accept_alerts=True):
+        """等待设置语言页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("每月10G订购首页")
+            )
+        except:
+            message = "我的福利连接没有打开：{}s内没有加载完毕，或者没有包含文本：".format(timeout)
             raise AssertionError(
                 message
             )

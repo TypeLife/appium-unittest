@@ -103,9 +103,15 @@ class Preconditions(object):
         if mess.is_on_this_page():
             return
         # 进入一键登录页
-        Preconditions.make_already_in_one_key_login_page()
-        #  从一键登录页面登录
-        Preconditions.login_by_one_key_login()
+        else:
+            try:
+                current_mobile().launch_app()
+                mess.wait_for_page_load()
+            except:
+                # 进入一键登录页
+                Preconditions.make_already_in_one_key_login_page()
+                #  从一键登录页面登录
+                Preconditions.login_by_one_key_login()
 
     @staticmethod
     def make_already_in_me_all_page():
@@ -120,9 +126,10 @@ class Preconditions(object):
             mess.open_me_page()
             mep.is_on_this_page()
             return
-        # 进入一键登录页
-        Preconditions.make_already_in_message_page(reset=False)
-        mess.open_me_page()
+        else:
+            current_mobile().launch_app()
+            Preconditions.make_already_in_message_page(reset=False)
+            mess.open_me_page()
 
     @staticmethod
     def make_already_set_message():
@@ -1361,7 +1368,7 @@ class MeAllCollect(TestCase):
         mfp.click_back()
         mess.open_message_page()
 
-    @unittest.skip("该模块不稳定")
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     def test_me_all_page_448(self):
         """常见问题列表信息跳转到详情页验证"""
         # 1.点击跳转到我的页面
@@ -1387,7 +1394,7 @@ class MeAllCollect(TestCase):
         mfp.click_back()
         mess.open_message_page()
 
-    @unittest.skip("该模块不稳定")
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     def test_me_all_page_449(self):
         """常见问题更多跳转功能验证"""
         # 1.点击跳转到我的页面
@@ -1410,7 +1417,7 @@ class MeAllCollect(TestCase):
         mfp.click_back()
         mess.open_message_page()
 
-    @unittest.skip("该模块不稳定")
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     def test_me_all_page_450(self):
         """常见问题更多页面显示验证"""
         # 1.点击跳转到我的页面
@@ -1433,7 +1440,7 @@ class MeAllCollect(TestCase):
         mfp.click_back()
         mess.open_message_page()
 
-    @unittest.skip("该模块不稳定")
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     def test_me_all_page_451(self):
         """常见问题列表信息跳转到详情页验证"""
         # 1.点击跳转到我的页面
@@ -1462,7 +1469,7 @@ class MeAllCollect(TestCase):
         mfp.click_text_button("X")
         mess.open_message_page()
 
-    @unittest.skip("该模块不稳定")
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     def test_me_all_page_452(self):
         """常见问题页面问题分类功能验证"""
         # 1.点击跳转到我的页面
@@ -1494,7 +1501,7 @@ class MeAllCollect(TestCase):
         mfp.click_text_button("X")
         mess.open_message_page()
 
-    @unittest.skip("该模块不稳定")
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     def test_me_all_page_453(self):
         """在线咨询跳转功能验证"""
         # 1.点击跳转到我的页面
@@ -1517,7 +1524,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     # @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    @unittest.skip("该模块不稳定")
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     def test_me_all_page_455(self):
         """企业专家服务跳转功能验证"""
         # 1.点击跳转到我的页面
@@ -1540,7 +1547,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     # @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    @unittest.skip("该模块不稳定")
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     def test_me_all_page_456(self):
         """论坛互动跳转功能验证"""
         # 1.点击跳转到我的页面
@@ -1563,7 +1570,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     # @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    @unittest.skip("该模块不稳定")
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     def test_me_all_page_457(self):
         """意见反馈页面显示验证"""
         # 1.点击跳转到我的页面
@@ -1587,7 +1594,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     # @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    @unittest.skip("该模块不稳定")
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     def test_me_all_page_460(self):
         """关于和飞信入口"""
         # 1.点击跳转到我的页面
@@ -1608,7 +1615,7 @@ class MeAllCollect(TestCase):
         mcp.click_back()
         mess.open_message_page()
 
-    # @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     @unittest.skip("该模块不稳定")
     def test_me_all_page_461(self):
         """已是最新版本-检查更新弹窗"""

@@ -288,7 +288,7 @@ class MsgGroupChatvedioTest(TestCase):
     # @classmethod
     # def setUpClass(cls):
     #
-    #     # 创建联系人
+    #     # 创建联系
     #     fail_time = 0
     #     import dataproviders
     #     while fail_time < 3:
@@ -323,6 +323,14 @@ class MsgGroupChatvedioTest(TestCase):
     #             import traceback
     #             msg = traceback.format_exc()
     #             print(msg)
+
+    # @classmethod
+    # def setUpClass(cls):
+    #     Preconditions.connect_mobile('Android-移动')
+    #     current_mobile().hide_keyboard_if_display()
+    #     local_file = ChatSelectLocalFilePage()
+    #     # 没有预置文件，则上传
+    #     local_file.push_preset_file()
 
     def default_setUp(self):
         """确保每个用例运行前在群聊聊天会话页面"""

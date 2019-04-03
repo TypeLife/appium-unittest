@@ -725,6 +725,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         chat_file = ChatFilePage()
         chat_file.wait_for_page_load()
         # 长按转发
+        time.sleep(3)
         chat_file.forward_file(".html")
         # 选择联系人界面，选择一个本地联系人
         sc = SelectContactsPage()
@@ -855,6 +856,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         chat_file = ChatFilePage()
         chat_file.wait_for_page_load()
         # 长按收藏指定类型的文件
+        time.sleep(3)
         chat_file.collection_file(".html")
         if not chat_file.is_toast_exist("已收藏"):
             raise AssertionError("收藏验证失败")
@@ -917,6 +919,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         chat_file = ChatFilePage()
         chat_file.wait_for_page_load()
         # 长按收藏指定类型的文件
+        time.sleep(3)
         chat_file.collection_file(".html")
         chat_file.is_toast_exist("已收藏")
         # 返回到消息页面
@@ -994,9 +997,10 @@ class MsgGroupChatFileLocationTest(TestCase):
         Preconditions.public_send_file(".html")
         gcp = GroupChatPage()
         # 长按刚刚发送的文件删除
+        time.sleep(3)
         gcp.press_file_to_do(".html", "删除")
         # 验证删除成功
-        time.sleep(2)
+        time.sleep(3)
         if gcp.is_text_present(".html"):
             raise AssertionError("删除失败")
 
