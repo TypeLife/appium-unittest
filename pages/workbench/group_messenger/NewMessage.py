@@ -47,4 +47,5 @@ class NewMessagePage(BasePage):
     @TestLogger.log()
     def click_no(self):
         """点击否"""
-        self.click_element(self.__class__.__locators["否"])
+        if self._is_element_present(self.__class__.__locators["否"]):
+            self.click_element(self.__class__.__locators["否"])

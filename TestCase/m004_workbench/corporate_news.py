@@ -178,6 +178,7 @@ class CorporateNewsTest(TestCase):
         cnnp.wait_for_page_load()
         # 点击未发新闻
         title = cnnp.click_no_news_by_number(0)
+        time.sleep(2)
         cndp = CorporateNewsDetailsPage()
         cndp.wait_for_page_load()
         # 点击删除

@@ -35,7 +35,7 @@ class TeamTest(TestCase):
             current_mobile().hide_keyboard_if_display()
             return
         else:
-            preconditions.force_close_and_launch_app()
+            current_mobile().launch_app()
             Preconditions.enter_create_team_page()
 
     def default_tearDown(self):
@@ -395,7 +395,7 @@ class TeamTestAll(TestCase):
             current_mobile().hide_keyboard_if_display()
             return
         else:
-            preconditions.force_close_and_launch_app()
+            current_mobile().launch_app()
             Preconditions.enter_create_team_page()
 
     def default_tearDown(self):

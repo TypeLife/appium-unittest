@@ -371,7 +371,7 @@ class MsgCommonGroupTest(TestCase):
             current_mobile().hide_keyboard_if_display()
             return
         else:
-            preconditions.force_close_and_launch_app()
+            current_mobile().launch_app()
             # current_mobile().reset_app()
             Preconditions.enter_group_chat_page()
 
@@ -1240,10 +1240,11 @@ class MsgCommonGroupTest(TestCase):
         audio = ChatAudioPage()
         if audio.is_text_present("我知道了"):
             audio.click_i_know()
+        time.sleep(2)
         if not audio.is_text_present("网络不可用，请检查网络设置"):
             audio.click_exit()
             raise AssertionError("不会提示‘网络不可用，请检查网络设置’")
-
+        audio.click_exit()
 
     def tearDown_test_msg_common_group_0022(self):
         #重新连接网络
@@ -3220,7 +3221,7 @@ class MsgCommonGroupTest(TestCase):
             dex += 1
         #断开网络
         gcp.set_network_status(0)
-        time.sleep(5)
+        time.sleep(8)
         gcp.press_file_to_do("哈哈0", "多选")
         # 点击其他复选框
         els = gcp.get_multiple_selection_select_box()
@@ -5411,7 +5412,7 @@ class MsgCommonGroupAllTest(TestCase):
         gcp = GroupChatPage()
         #断网
         gcp.set_network_status(0)
-        time.sleep(2)
+        time.sleep(8)
         Preconditions.delete_record_group_chat()
         gcp.click_audio_btn()
         audio = ChatAudioPage()
