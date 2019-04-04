@@ -2,7 +2,6 @@ import random
 import time
 import re
 
-import preconditions
 from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile
 from pages.components import BaseChatPage
@@ -1525,7 +1524,8 @@ class MsgPrivateChatVideoPicTest(TestCase):
         set_page.click_back()
         chat.wait_for_page_load()
 
-class MsgPrivateChatVideoPicTotalQuantityTest(TestCase):
+
+class MsgPrivateChatVideoPicAllTest(TestCase):
     """
     模块：单聊-图片、视频、GIF
     文件位置：1.1.3全量测试用例->113全量用例--肖立平.xlsx
