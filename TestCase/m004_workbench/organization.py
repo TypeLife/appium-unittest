@@ -219,6 +219,7 @@ class OrganizationTest(TestCase):
         time.sleep(2)
         if not osp.is_text_present("加入企业后仅可见自己"):
             raise AssertionError("访客模式开关不可用")
+        time.sleep(2)
         osp.click_invite_save()
         if not osp.is_toast_exist("保存图片成功"):
             raise AssertionError("保存二维码按钮不可用")
@@ -375,7 +376,3 @@ class OrganizationTest(TestCase):
         time.sleep(2)
         if not osp.is_text_present("和飞信电话"):
             raise AssertionError("搜索失败")
-
-
-
-
