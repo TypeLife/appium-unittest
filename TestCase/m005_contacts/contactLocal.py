@@ -85,6 +85,35 @@ class Preconditions(object):
         return login_number
 
     @staticmethod
+    def create_contacts(name, number):
+        """
+        导入联系人数据
+        :param name:
+        :param number:
+        :return:
+        """
+        contacts_page = ContactsPage()
+        detail_page = ContactDetailsPage()
+        try:
+            contacts_page.wait_for_page_load()
+            contacts_page.open_contacts_page()
+        except:
+            Preconditions.make_already_in_message_page(reset_required=False)
+            contacts_page.open_contacts_page()
+        # 创建联系人
+        contacts_page.click_search_box()
+        contact_search = ContactListSearchPage()
+        contact_search.wait_for_page_load()
+        contact_search.input_search_keyword(name)
+        contact_search.click_back()
+        contacts_page.click_add()
+        create_page = CreateContactPage()
+        create_page.hide_keyboard_if_display()
+        create_page.create_contact(name, number)
+        detail_page.wait_for_page_load()
+        detail_page.click_back_icon()
+
+    @staticmethod
     def take_logout_operation_if_already_login():
         """已登录状态，执行登出操作"""
         message_page = MessagePage()
@@ -178,7 +207,8 @@ class Preconditions(object):
         Preconditions.make_already_in_one_key_login_page()
         login_num = Preconditions.login_by_one_key_login()
         return login_num
-@unittest.skip("本地调试不执行")
+
+@unittest.skip("本地不执行")
 class ContactLocal2(TestCase):
     '''
     通讯录测试记录-陈计祥
@@ -199,7 +229,7 @@ class ContactLocal2(TestCase):
                 current_mobile().hide_keyboard_if_display()
                 # 导入数据
                 for name, number in required_contacts:
-                    Preconditions.create_contacts_if_not_exits(name, number)
+                    Preconditions.create_contacts(name, number)
 
                 # 推送resource文件到手机
                 dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
@@ -654,5 +684,279 @@ class ContactLocal(TestCase):
         lcontact = localContactPage()
         lcontact.swich_sim_contact(flag=True)
         lcontact.click_back_by_android(times=2)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0018(self):
+        '''
+       测试sim单卡测试，无联系人，手机系统设置关闭“显示SIM联系人”，和飞信开启“显示sim卡联系人”，是否能搜索到本地联系人
+        auther:yanshunhua
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("dalao")
+        time.sleep(1)
+        lcontact.hide_keyboard()
+        time.sleep(3)
+        els = lcontact.get_element_number()
+        self.assertTrue(len(els) > 1)
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0023():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+        time.sleep(1)
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.click_menu('设置')
+        me_page.click_menu('联系人管理')
+        lcontact = localContactPage()
+        lcontact.swich_sim_contact(flag=False)
+        lcontact.click_back_by_android(times=2)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0023(self):
+        '''
+       测试sim单卡，有联系人，手机系统设置关闭“显示SIM联系人”，和飞信关闭“显示sim卡联系人”，是否能搜索到sim联系人
+        auther:yanshunhua
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("xiaomi")
+        time.sleep(1)
+        lcontact.hide_keyboard()
+        time.sleep(3)
+        time.sleep(1)
+        lcontact.hide_keyboard()
+        time.sleep(1)
+        lcontact.is_text_present("无该本地联系人")
+
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0024():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+        time.sleep(1)
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.click_menu('设置')
+        me_page.click_menu('联系人管理')
+        lcontact = localContactPage()
+        lcontact.swich_sim_contact(flag=False)
+        lcontact.click_back_by_android(times=2)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0024(self):
+        '''
+       测试sim双卡，卡1有联系人，卡2无联系人，已开启“显示sim卡联系人”，分别搜索卡1、卡2、本地通讯录、和通讯录
+        auther:yanshunhua
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("xiaomi")
+        time.sleep(1)
+        lcontact.hide_keyboard()
+        time.sleep(3)
+        time.sleep(1)
+        lcontact.hide_keyboard()
+        time.sleep(1)
+        lcontact.is_text_present("无该本地联系人")
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0030():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+        time.sleep(1)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0030(self):
+        '''
+       测试搜索结果点击后跳转到profile页面
+        auther:yanshunhua
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        time.sleep(3)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("dalao4")
+        time.sleep(1)
+        lcontact.hide_keyboard()
+        lcontact.click_text("大佬4")
+        time.sleep(2)
+        els=lcontact.get_element_number(text="dalao4")
+        self.assertTrue(len(els)>0)
+        lcontact.click_back_by_android(times=2)
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0031():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+        time.sleep(1)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0031(self):
+        '''
+       测试系统通讯录联系人拥有多个手机号码，手机号码不一致的情况，通过名称搜索
+        auther:yanshunhua
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        time.sleep(3)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("xili")
+        lcontact.hide_keyboard()
+        time.sleep(2)
+        els=lcontact.get_element_number()
+        self.assertTrue(len(els)>0)
+        lcontact.click_back_by_android(times=1)
+        lcontact.is_text_present("13410669632")
+        lcontact.is_text_present("13410669625")
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0032():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+        time.sleep(1)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0032(self):
+        '''
+       测试系统通讯录联系人拥有多个手机号码，手机号码不一致的情况，通过手机号码搜索
+        auther:yanshunhua
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        time.sleep(3)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("13410669632")
+        lcontact.hide_keyboard()
+        time.sleep(2)
+        lcontact.is_text_present("xili")
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0033():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+        time.sleep(1)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0033(self):
+        '''
+       测试系统通讯录联系人拥有多个手机号码，手机号码一致的情况，通过名称搜索
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        time.sleep(3)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("13410669616")
+        lcontact.hide_keyboard()
+        time.sleep(2)
+        els = lcontact.get_element_number()
+        self.assertTrue(len(els) > 0)
+        lcontact.click_back_by_android()
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0035():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+        time.sleep(1)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0035(self):
+        '''
+       测试系统通讯录存在多个联系人，名称相同，手机号码不一致，通过名称搜索
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        time.sleep(3)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("xili")
+        lcontact.hide_keyboard()
+        time.sleep(2)
+        els = lcontact.get_element_number()
+        self.assertTrue(len(els) > 0)
+        lcontact.is_text_present("13410669632")
+        lcontact.is_text_present("13410669625")
+        lcontact.click_back_by_android()
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0036():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+        time.sleep(1)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0036(self):
+        '''
+       测试系统通讯录存在多个联系人，名称相同，手机号码不一致，通过手机号码搜索
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        time.sleep(3)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("13410669632")
+        lcontact.hide_keyboard()
+        time.sleep(2)
+        lcontact.is_text_present("xili")
+        els = lcontact.get_element_number()
+        self.assertTrue(len(els) > 0)
+        lcontact.click_back_by_android()
+
+
+
+
 
 

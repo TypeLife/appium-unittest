@@ -68,6 +68,7 @@ class localContactPage(BasePage):
         "同意按钮": (MobileBy.ID, "com.chinasofti.rcs:id/btn_check"),
         "确定按钮": (MobileBy.ID, "com.chinasofti.rcs:id/dialog_btn_ok"),
         "信息编辑": (MobileBy.ID, "com.chinasofti.rcs:id/et_message"),
+        "dalao4": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_profile_name'),
 
         "信息发送按钮": (MobileBy.ID, "com.chinasofti.rcs:id/ib_send"),
         "aaa":(MobileBy.XPATH,"//*[@text='aaa']"),

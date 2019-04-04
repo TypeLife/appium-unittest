@@ -383,6 +383,16 @@ class GroupListPage(BasePage):
         else:
             print('标签不存在')
 
+    @TestLogger.log()
+    def click_back_by_android(self, times=1):
+        """
+        点击返回，通过android返回键
+        """
+        # times 返回次数
+        for i in range(times):
+            self.driver.back()
+            time.sleep(1)
+
     @TestLogger.log('返回按钮')
     def click_back_button(self,times=1):
         for i in range(times):
@@ -453,8 +463,8 @@ class GroupListPage(BasePage):
         time.sleep(2)
 
     @TestLogger.log("添加成员dalao")
-    def add_member(self,name='dalao2',times=1):
-        member='大佬2'
+    def add_member(self,name='dalao5',times=1):
+        member='大佬5'
         time.sleep(1)
         self.click_text('添加成员')
         time.sleep(1)
@@ -464,10 +474,16 @@ class GroupListPage(BasePage):
         time.sleep(1)
         self.hide_keyboard()
         time.sleep(1)
-        if name is 'dalao1':
-            member='大佬1'
+        if name is 'dalao6':
+            member='大佬6'
+        elif name is 'dalao7':
+            member='大佬7'
+        elif name is 'dalao1':
+            member = '大佬1'
+        elif name is 'dalao2':
+            member = '大佬2'
         elif name is 'dalao3':
-            member='大佬3'
+            member = '大佬3'
         if times==1:
             self.click_text(member)
         else:
