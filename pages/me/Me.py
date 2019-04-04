@@ -73,6 +73,7 @@ class MePage(FooterPage):
         '设置': (MobileBy.ID, 'com.chinasofti.rcs:id/setting_app_text'),
         '移动营业厅': (MobileBy.ID, 'com.chinasofti.rcs:id/onlinehall_text'),
         '姓名': (MobileBy.ID, 'com.chinasofti.rcs:id/card_name'),
+        "联系人管理":("com.chinasofti.rcs:id/manage_contact_text")
     }
 
     @TestLogger.log('点击个人名片头像')
