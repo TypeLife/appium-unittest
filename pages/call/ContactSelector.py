@@ -2,7 +2,6 @@ from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
-from pages.components.dialogs import SuspendedTips
 
 
 class ContactSecltorPage(BasePage):

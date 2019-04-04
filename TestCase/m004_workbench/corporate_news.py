@@ -68,6 +68,7 @@ class Preconditions(LoginPreconditions):
             cnitp.input_news_content(content)
             # 点击保存
             cnitp.click_save()
+            time.sleep(2)
             # 点击确定
             cnitp.click_sure()
             cnp.wait_for_page_load()
@@ -90,6 +91,7 @@ class Preconditions(LoginPreconditions):
             cnitp.input_news_content("123")
             # 点击发布
             cnitp.click_release()
+            time.sleep(2)
             # 点击确定
             cnitp.click_sure()
             cnp.wait_for_page_load()
@@ -176,6 +178,7 @@ class CorporateNewsTest(TestCase):
         cnnp.wait_for_page_load()
         # 点击未发新闻
         title = cnnp.click_no_news_by_number(0)
+        time.sleep(2)
         cndp = CorporateNewsDetailsPage()
         cndp.wait_for_page_load()
         # 点击删除
@@ -297,6 +300,30 @@ class CorporateNewsAllTest(TestCase):
         # 3.企业新闻列表是否按发布时间倒序排序
         self.assertEquals(cnp.get_corporate_news_titles(), titles)
 
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QYXW_0006(self):
+        """管理员下线自己发布的企业新闻，下线成功"""
+
+        cnp = CorporateNewsPage()
+        # 1、2.等待企业新闻首页加载
+        cnp.wait_for_page_load()
+        # 确保存在已发布的企业新闻
+        if not cnp.is_exist_corporate_news():
+            titles = ["测试新闻0006"]
+            Preconditions.release_corporate_image_news(titles)
+        # 3.选择一条企业新闻
+        cnp.click_corporate_news_by_number(0)
+        cndp = CorporateNewsDetailsPage()
+        # 等待企业新闻详情页加载
+        cndp.wait_for_page_load()
+        # 4.点击下线
+        cndp.click_offline()
+        # 5.点击确定，是否提示下线成功
+        cndp.click_sure()
+        self.assertEquals(cndp.is_exist_offline_successfully(), True)
+        # 等待企业新闻首页加载
+        cnp.wait_for_page_load()
+
     @unittest.skip("暂时难以实现,跳过")
     def test_QYXW_0008(self):
         """管理员按英文搜索企业新闻"""
@@ -311,7 +338,6 @@ class CorporateNewsAllTest(TestCase):
         cnp.click_search_icon()
         cnp.input_search_content("testnews")
         cnp.click_search_button()
-        self.assertEquals(cnp.get_current_corporate_news_number(), len(titles) + 1)
 
     @tags('ALL', 'CMCC', 'workbench', 'LXD')
     def test_QYXW_0017(self):
@@ -367,6 +393,39 @@ class CorporateNewsAllTest(TestCase):
         # 7.取消发布新闻
         cnlp.click_cancel()
         cnlp.click_back()
+        # 等待企业新闻首页加载
+        cnp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QYXW_0020(self):
+        """管理员发布未发布新闻，发布成功"""
+
+        cnp = CorporateNewsPage()
+        # 1、2.等待企业新闻首页加载
+        cnp.wait_for_page_load()
+        # 点击未发新闻
+        cnp.click_no_news()
+        cnnp = CorporateNewsNoNewsPage()
+        # 3.等待未发新闻页加载
+        cnnp.wait_for_page_load()
+        # 确保存在未发布的企业新闻
+        if not cnnp.is_exist_no_news():
+            cnnp.click_back()
+            cnp.wait_for_page_load()
+            news = [("测试新闻0020", "测试内容0020")]
+            Preconditions.create_unpublished_image_news(news)
+            cnp.click_no_news()
+            cnnp.wait_for_page_load()
+        # 点击一条未发新闻
+        cnnp.click_no_news_by_number(0)
+        cndp = CorporateNewsDetailsPage()
+        # 4.等待企业新闻详情页加载
+        cndp.wait_for_page_load()
+        # 5.点击发布
+        cndp.click_release()
+        # 6.点击确定，是否提示发布成功
+        cndp.click_sure()
+        self.assertEquals(cndp.is_exist_release_successfully(), True)
         # 等待企业新闻首页加载
         cnp.wait_for_page_load()
 

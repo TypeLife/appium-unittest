@@ -39,6 +39,16 @@ class CorporateNewsDetailsPage(BasePage):
         return self.is_toast_exist("删除成功")
 
     @TestLogger.log()
+    def is_exist_offline_successfully(self):
+        """是否存在下线成功"""
+        return self.is_toast_exist("下线成功")
+
+    @TestLogger.log()
+    def is_exist_release_successfully(self):
+        """是否存在发布成功"""
+        return self.is_toast_exist("发布成功")
+
+    @TestLogger.log()
     def click_delete(self):
         """点击删除"""
         self.click_element(self.__class__.__locators["删除"])
@@ -47,6 +57,11 @@ class CorporateNewsDetailsPage(BasePage):
     def click_offline(self):
         """点击下线"""
         self.click_element(self.__class__.__locators["下线"])
+
+    @TestLogger.log()
+    def click_release(self):
+        """点击发布"""
+        self.click_element(self.__class__.__locators["发布"])
 
     @TestLogger.log()
     def click_back(self):

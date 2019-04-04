@@ -205,7 +205,7 @@ class MessageListTotalQuantityTest(TestCase):
         """登录之后消息列表进入"""
 
         # 重启客户端
-        preconditions.force_close_and_launch_app()
+        current_mobile().launch_app()
         mp = MessagePage()
         # 1.登录客户端,等待消息列表页面加载
         mp.wait_for_page_load()
@@ -220,7 +220,7 @@ class MessageListTotalQuantityTest(TestCase):
         # 设置手机网络断开
         mp.set_network_status(0)
         # 1.重启客户端,等待消息列表页加载,验证页面搜索,底部tab,右上角+是否可点击
-        preconditions.force_close_and_launch_app()
+        current_mobile().launch_app()
         mp.wait_for_page_load()
         self.assertEquals(mp.search_box_is_enabled(), True)
         self.assertEquals(mp.message_icon_is_enabled(), True)
