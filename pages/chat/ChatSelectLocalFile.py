@@ -60,6 +60,10 @@ class ChatSelectLocalFilePage(BasePage):
                   '照片': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_file_name'),
                   # 音乐选择页面
                   '音乐': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_file_name'),
+                  # 每月10G免流特权弹窗
+                  '继续发送按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/continue_call'),
+                  '订购免流特权': (MobileBy.ID, 'com.chinasofti.rcs:id/get_mian_liu_permission'),
+                  '以后不再提示': (MobileBy.ID, 'com.chinasofti.rcs:id/pop_window_not_pop_btn')
                   }
 
     @TestLogger.log()
@@ -197,3 +201,17 @@ class ChatSelectLocalFilePage(BasePage):
             self.click_element(self.__class__.__locators['继续发送'])
         time.sleep(timeout)
 
+    @TestLogger.log()
+    def is_exist_continue_send(self):
+        """是否存在继续发送"""
+        return self._is_element_present(self.__class__.__locators["继续发送按钮"])
+
+    @TestLogger.log()
+    def is_exist_free_flow_privilege(self):
+        """是否存在免流特权"""
+        return self._is_element_present(self.__class__.__locators["订购免流特权"])
+
+    @TestLogger.log()
+    def is_exist_no_longer_prompt(self):
+        """是否存在不再提示"""
+        return self._is_element_present(self.__class__.__locators["以后不再提示"])
