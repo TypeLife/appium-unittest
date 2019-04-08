@@ -85,6 +85,9 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def is_on_this_page(self):
         """当前页面是否在消息页"""
+        # locator = (MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/btn_cancel" and @text ="以后再说"]')
+        # if self._is_element_present(locator):
+        #     self.click_element(locator)
         try:
             self.wait_until(
                 timeout=15,
@@ -183,6 +186,9 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
         """等待消息页面加载（自动允许权限）"""
+        # locator = (MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/btn_cancel" and @text ="以后再说"]')
+        # if self._is_element_present(locator):
+        #     self.click_element(locator)
         try:
             self.wait_until(
                 timeout=timeout,
@@ -199,6 +205,10 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def wait_login_success(self, timeout=8, auto_accept_alerts=True):
         """等待消息页面加载（自动允许权限）"""
+        # time.sleep(5)
+        # locator = (MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/btn_cancel" and @text ="以后再说"]')
+        # if self._is_element_present(locator):
+        #     self.click_element(locator)
         self.__unexpected_info = None
 
         def unexpected():
@@ -485,7 +495,9 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def wait_for_message_list_load(self, timeout=60, auto_accept_alerts=True):
         """等待消息列表加载"""
-
+        locator = (MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/btn_cancel" and @text ="以后再说"]')
+        if self._is_element_present(locator):
+            self.click_element(locator)
         try:
             self.wait_until(
                 timeout=timeout,
@@ -678,3 +690,21 @@ class MessagePage(FooterPage):
         if self._is_element_present(self.__class__.__locators["消息红点"]):
             return False
         return True
+
+    @TestLogger.log()
+    def is_message_content_match_file_name(self, file_name):
+        """查看刚刚发送消息的窗口消息内容是否显示文件+文件名"""
+        els = self.get_elements(self.__class__.__locators["消息简要内容"])
+        text = els[0].text
+        if "[文件]%s" % file_name in text:
+            return True
+        return False
+
+    @TestLogger.log()
+    def is_message_content_match_image(self):
+        """查看刚刚发送消息的窗口消息内容是否显示图片"""
+        els = self.get_elements(self.__class__.__locators["消息简要内容"])
+        text = els[0].text
+        if "[图片]" in text:
+            return True
+        return False
