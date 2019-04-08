@@ -2,6 +2,7 @@ import random
 import time
 from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile
+from pages.components import BaseChatPage
 from preconditions.BasePreconditions import LoginPreconditions
 from library.core.utils.testcasefilter import tags
 from pages import *
@@ -9,7 +10,60 @@ from pages import *
 
 class Preconditions(LoginPreconditions):
     """前置条件"""
-    pass
+
+    @staticmethod
+    def enter_single_chat_page(name):
+        """进入单聊聊天会话页面"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 点击 +
+        mp.click_add_icon()
+        # 点击“新建消息”
+        mp.click_new_message()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        # 进入单聊会话页面
+        slc.selecting_local_contacts_by_name(name)
+        bcp = BaseChatPage()
+        if bcp.is_exist_dialog():
+            # 点击我已阅读
+            bcp.click_i_have_read()
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+
+    @staticmethod
+    def send_file_by_type(file_type):
+        """发送指定类型文件"""
+
+        # 在当前聊天会话页面，点击更多富媒体的文件按钮
+        scp = SingleChatPage()
+        scp.wait_for_page_load()
+        scp.click_more()
+        # 点击本地文件
+        cmp = ChatMorePage()
+        cmp.click_file()
+        csfp = ChatSelectFilePage()
+        csfp.wait_for_page_load()
+        csfp.click_local_file()
+        # 选择任意文件，点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        flag = local_file.push_preset_file()
+        if flag:
+            local_file.click_back()
+            csfp.click_local_file()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(file_type)
+        if file:
+            local_file.click_send()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csfp.click_back()
+        scp.wait_for_page_load()
 
 
 class MsgPrivateChatFileLocationTest(TestCase):
@@ -586,3 +640,4 @@ class MsgPrivateChatFileLocationTest(TestCase):
     def test_msg_private_chat_file_location_0058(self):
         """单聊天会话页面，点击自己发送格式为txt的文件"""
         self.click_open_file(".txt")
+

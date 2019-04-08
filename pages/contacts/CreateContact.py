@@ -17,7 +17,7 @@ class CreateContactPage(Keyboard, BasePage):
         '姓名': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/item_name"]//android.widget.TextView'),
         '输入姓名': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/item_name"]//android.widget.EditText'),
 
-        '电话': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/item_number"]//android.widget.TextView'),
+        '电话': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/item_nu mber"]//android.widget.TextView'),
         '输入号码': (MobileBy.XPATH,'//*[@resource-id="com.chinasofti.rcs:id/item_number"]//android.widget.EditText'),
 
         '公司': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/item_company"]//android.widget.TextView'),
@@ -51,6 +51,10 @@ class CreateContactPage(Keyboard, BasePage):
         self.input_text(self.__locators['输入号码'], name)
 
     @TestLogger.log('输入公司')
+    def input_company(self, name):
+        self.input_text(self.__locators['输入公司'], name)
+
+    @TestLogger.log('输入公司号码')
     def input_company(self, name):
         self.input_text(self.__locators['输入公司'], name)
 

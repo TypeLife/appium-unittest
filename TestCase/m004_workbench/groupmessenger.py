@@ -31,6 +31,8 @@ REQUIRED_MOBILES = {
     'Android-移动-移动': 'double_mobile',
     'Android-XX-XX': 'others_double',
 }
+
+
 class Preconditions(object):
     """前置条件"""
     @staticmethod
@@ -152,6 +154,7 @@ class Preconditions(object):
                 osp.wait_for_page_load()
         osp.click_back()
         wbp.wait_for_workbench_page_load()
+
 
 # @unittest.skip
 class MassMessengerTest(TestCase):
@@ -314,6 +317,7 @@ class MassMessengerTest(TestCase):
         mgp.wait_for_edit_message_page_load()
         mgp.click_close()
 
+
 class MassMessengerAllTest(TestCase):
     """
     模块：工作台->群发信使
@@ -412,8 +416,9 @@ class MassMessengerAllTest(TestCase):
         sccp.click_sure_button()
         nmp.wait_for_page_load()
         # 1.搜索出的联系人是否被选择
-        self.assertEquals(nmp.is_exist_text(search_name), True)
+        self.assertEquals(nmp.is_exist_text(names[0]), True)
         nmp.click_back()
+        time.sleep(2)
         nmp.click_no()
         # 等待群发信使首页加载
         gmp.wait_for_page_load()
@@ -476,9 +481,9 @@ class MassMessengerAllTest(TestCase):
         # 1.检查搜索结果是否完全匹配关键字
         self.assertEquals(sccp.is_search_contacts_number_full_match(search_number), True)
         # 选择搜索结果
-        sccp.click_contacts_by_number(0)
+        sccp.click_contacts_by_name(names[0])
         # 2.是否成功选中，输入框是否自动清空
-        self.assertEquals(sccp.is_exist_select_contacts_name(), True)
+        self.assertEquals(sccp.is_exist_select_contacts_name("佬1"), True)
         self.assertEquals(sccp.is_clear_search_box(search_number), True)
         sccp.click_back()
         time.sleep(2)
@@ -517,9 +522,9 @@ class MassMessengerAllTest(TestCase):
         # 1.检查搜索结果是否模糊匹配关键字
         self.assertEquals(sccp.is_search_contacts_number_match(search_number), True)
         # 选择搜索结果
-        sccp.click_contacts_by_number(0)
+        sccp.click_contacts_by_name(names[0])
         # 2.是否成功选中，输入框是否自动清空
-        self.assertEquals(sccp.is_exist_select_contacts_name(), True)
+        self.assertEquals(sccp.is_exist_select_contacts_name("佬1"), True)
         self.assertEquals(sccp.is_clear_search_box(search_number), True)
         sccp.click_back()
         time.sleep(2)
@@ -558,10 +563,10 @@ class MassMessengerAllTest(TestCase):
         # 1.检查搜索结果是否精准匹配关键字
         self.assertEquals(sccp.is_search_contacts_name_full_match(search_name), True)
         # 选择搜索结果
-        sccp.click_contacts_by_number(0)
+        sccp.click_contacts_by_name(names[0])
         # 2.搜索栏是否清空，是否出现已选人名和头像，是否展示已选人数/上限人数
         self.assertEquals(sccp.is_clear_search_box(search_name), True)
-        self.assertEquals(sccp.is_exist_select_contacts_name(), True)
+        self.assertEquals(sccp.is_exist_select_contacts_name("佬1"), True)
         self.assertEquals(sccp.is_exist_select_contacts_image(), True)
         self.assertEquals(sccp.is_exist_select_and_all("1"), True)
         sccp.click_back()
@@ -601,10 +606,10 @@ class MassMessengerAllTest(TestCase):
         # 1.检查搜索结果是否模糊匹配关键字
         self.assertEquals(sccp.is_search_contacts_name_match(search_name), True)
         # 选择搜索结果
-        sccp.click_contacts_by_number(0)
+        sccp.click_contacts_by_name(names[0])
         # 2.搜索栏是否清空，是否出现已选人名和头像，是否展示已选人数/上限人数
         self.assertEquals(sccp.is_clear_search_box(search_name), True)
-        self.assertEquals(sccp.is_exist_select_contacts_name(), True)
+        self.assertEquals(sccp.is_exist_select_contacts_name("佬1"), True)
         self.assertEquals(sccp.is_exist_select_contacts_image(), True)
         self.assertEquals(sccp.is_exist_select_and_all("1"), True)
         sccp.click_back()
@@ -643,6 +648,90 @@ class MassMessengerAllTest(TestCase):
         time.sleep(2)
         # 1.纯空格键不支持搜索匹配
         self.assertEquals(sccp.is_exist_corporate_grade(), True)
+        sccp.click_back()
+        time.sleep(2)
+        sccp.click_back()
+        nmp.wait_for_page_load()
+        nmp.click_back()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QFXS_0030(self):
+        """字母+汉字组合可精准搜索"""
+
+        gmp = GroupMessengerPage()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+        # 确保和通讯录有联系人可供搜索
+        gmp.click_back()
+        names = ["b测算", "大佬1", "大佬2"]
+        Preconditions.create_he_contacts(names)
+        wbp = WorkbenchPage()
+        wbp.click_group_messenger()
+        gmp.wait_for_page_load()
+        gmp.click_new_message()
+        nmp = NewMessagePage()
+        # 等待群发信使->新建短信页面加载
+        nmp.wait_for_page_load()
+        nmp.click_add_icon()
+        sccp = SelectCompanyContactsPage()
+        # 等待群发信使->新建短信->选择联系人页面加载
+        sccp.wait_for_page_load()
+        search_name = "b测算"
+        # 1.输入查找信息，检查搜索结果是否精准匹配关键字
+        sccp.input_search_message(search_name)
+        time.sleep(2)
+        self.assertEquals(sccp.is_search_contacts_name_full_match(search_name), True)
+        # 选择搜索结果
+        sccp.click_contacts_by_name(names[0])
+        # 2.搜索栏是否清空，是否出现已选人名和头像，是否展示已选人数/上限人数
+        self.assertEquals(sccp.is_clear_search_box(search_name), True)
+        self.assertEquals(sccp.is_exist_select_contacts_name("测算"), True)
+        self.assertEquals(sccp.is_exist_select_contacts_image(), True)
+        self.assertEquals(sccp.is_exist_select_and_all("1"), True)
+        sccp.click_back()
+        time.sleep(2)
+        sccp.click_back()
+        nmp.wait_for_page_load()
+        nmp.click_back()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QFXS_0031(self):
+        """字母+汉字+数字 组合可精准搜索"""
+
+        gmp = GroupMessengerPage()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+        # 确保和通讯录有联系人可供搜索
+        gmp.click_back()
+        names = ["c平5", "大佬1", "大佬2"]
+        Preconditions.create_he_contacts(names)
+        wbp = WorkbenchPage()
+        wbp.click_group_messenger()
+        gmp.wait_for_page_load()
+        gmp.click_new_message()
+        nmp = NewMessagePage()
+        # 等待群发信使->新建短信页面加载
+        nmp.wait_for_page_load()
+        nmp.click_add_icon()
+        sccp = SelectCompanyContactsPage()
+        # 等待群发信使->新建短信->选择联系人页面加载
+        sccp.wait_for_page_load()
+        search_name = "c平5"
+        # 1.输入查找信息，检查搜索结果是否精准匹配关键字
+        sccp.input_search_message(search_name)
+        time.sleep(2)
+        self.assertEquals(sccp.is_search_contacts_name_full_match(search_name), True)
+        # 选择搜索结果
+        sccp.click_contacts_by_name(names[0])
+        # 2.搜索栏是否清空，是否出现已选人名和头像，是否展示已选人数/上限人数
+        self.assertEquals(sccp.is_clear_search_box(search_name), True)
+        self.assertEquals(sccp.is_exist_select_contacts_name("平5"), True)
+        self.assertEquals(sccp.is_exist_select_contacts_image(), True)
+        self.assertEquals(sccp.is_exist_select_and_all("1"), True)
         sccp.click_back()
         time.sleep(2)
         sccp.click_back()
@@ -709,7 +798,7 @@ class MassMessengerAllTest(TestCase):
         # 点击勾选搜索出的联系人头像
         sccp.click_contacts_image()
         # 1.是否出现已选人名和头像，是否展示已选人数/上限人数
-        self.assertEquals(sccp.is_exist_select_contacts_name(), True)
+        self.assertEquals(sccp.is_exist_select_contacts_name("佬1"), True)
         self.assertEquals(sccp.is_exist_select_contacts_image(), True)
         self.assertEquals(sccp.is_exist_select_and_all("1"), True)
         sccp.click_back()
@@ -717,5 +806,134 @@ class MassMessengerAllTest(TestCase):
         sccp.click_back()
         nmp.wait_for_page_load()
         nmp.click_back()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QFXS_0035(self):
+        """多选-任意选择多位联系人"""
+
+        gmp = GroupMessengerPage()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+        # 确保和通讯录有联系人
+        gmp.click_back()
+        names = ["大佬1", "大佬2", "大佬3"]
+        Preconditions.create_he_contacts(names)
+        wbp = WorkbenchPage()
+        wbp.click_group_messenger()
+        gmp.wait_for_page_load()
+        gmp.click_new_message()
+        nmp = NewMessagePage()
+        # 等待群发信使->新建短信页面加载
+        nmp.wait_for_page_load()
+        nmp.click_add_icon()
+        sccp = SelectCompanyContactsPage()
+        # 等待群发信使->新建短信->选择联系人页面加载
+        sccp.wait_for_page_load()
+        # 选择三位联系人
+        sccp.click_contacts_by_name(names[0])
+        sccp.click_contacts_by_name(names[1])
+        sccp.click_contacts_by_name(names[2])
+        time.sleep(2)
+        # 联系人是否为已选中状态
+        self.assertEquals(sccp.is_exist_select_contacts_name("佬1"), True)
+        self.assertEquals(sccp.is_exist_select_contacts_name("佬2"), True)
+        self.assertEquals(sccp.is_exist_select_contacts_name("佬3"), True)
+        # 是否展示已选人数/上限人数
+        self.assertEquals(sccp.is_exist_select_and_all("3"), True)
+        # 取消已选联系人
+        sccp.click_contacts_by_name(names[0])
+        time.sleep(2)
+        # 1.被取消联系人是否被移除，已选人数/上限人数是否改变
+        self.assertEquals(sccp.is_exist_select_contacts_name("佬1"), False)
+        self.assertEquals(sccp.is_exist_select_and_all("2"), True)
+        sccp.click_back()
+        time.sleep(2)
+        sccp.click_back()
+        nmp.wait_for_page_load()
+        nmp.click_back()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QFXS_0039(self):
+        """直接添加接收人后再次点击'+'"""
+
+        gmp = GroupMessengerPage()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+        # 确保和通讯录有联系人
+        gmp.click_back()
+        names = ["大佬1", "大佬2", "大佬3"]
+        Preconditions.create_he_contacts(names)
+        wbp = WorkbenchPage()
+        wbp.click_group_messenger()
+        gmp.wait_for_page_load()
+        gmp.click_new_message()
+        nmp = NewMessagePage()
+        # 等待群发信使->新建短信页面加载
+        nmp.wait_for_page_load()
+        nmp.click_add_icon()
+        sccp = SelectCompanyContactsPage()
+        # 等待群发信使->新建短信->选择联系人页面加载
+        sccp.wait_for_page_load()
+        # 选择两位联系人
+        sccp.click_contacts_by_name(names[0])
+        sccp.click_contacts_by_name(names[1])
+        # 点击确定
+        sccp.click_sure_button()
+        nmp.wait_for_page_load()
+        nmp.click_add_icon()
+        sccp.wait_for_page_load()
+        # 1.跳转联系人选择器后，上次添加的联系人是否为已选中状态
+        self.assertEquals(sccp.is_exist_select_contacts_name("佬1"), True)
+        self.assertEquals(sccp.is_exist_select_contacts_name("佬2"), True)
+        sccp.click_contacts_by_name(names[2])
+        sccp.click_sure_button()
+        nmp.wait_for_page_load()
+        # 2.是否添加成功，已添加与新添加用户均展示正常
+        self.assertEquals(nmp.is_exist_text(names[0]), True)
+        self.assertEquals(nmp.is_exist_text(names[1]), True)
+        self.assertEquals(nmp.is_exist_text(names[2]), True)
+        nmp.click_back()
+        time.sleep(2)
+        nmp.click_no()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QFXS_0042(self):
+        """点击返回键返回上一级页面"""
+
+        gmp = GroupMessengerPage()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+        gmp.click_new_message()
+        nmp = NewMessagePage()
+        # 等待群发信使->新建短信页面加载
+        nmp.wait_for_page_load()
+        # 返回上一级
+        nmp.click_back()
+        # 1.等待群发信使首页加载
+        gmp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QFXS_0043(self):
+        """点击顶部关闭按钮退出到工作台页面"""
+
+        gmp = GroupMessengerPage()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+        # 确保有【x】控件可点击
+        gmp.click_new_message()
+        nmp = NewMessagePage()
+        # 等待群发信使->新建短信页面加载
+        nmp.wait_for_page_load()
+        nmp.click_close()
+        wbp = WorkbenchPage()
+        # 1.等待工作台页面加载
+        wbp.wait_for_workbench_page_load()
+        wbp.click_group_messenger()
         # 等待群发信使首页加载
         gmp.wait_for_page_load()

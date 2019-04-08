@@ -1561,7 +1561,7 @@ class MsgPrivateChatDialog(TestCase):
         chat.page_should_not_contain_text(msg)
         chat.page_should_contain_text("你撤回了一条信息")
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG_1')
     def test_msg_1325(self):
         """会话窗口中点击收藏文本消息"""
         self.public_send_file('.txt')
@@ -1573,7 +1573,7 @@ class MsgPrivateChatDialog(TestCase):
         if not chat.is_toast_exist("已收藏", timeout=10):
             raise AssertionError("收藏文件无'已收藏'提示！")
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG_1')
     def test_msg_1326(self):
         """进入到单聊天会话页面，发送一条字符等于5000的文本消息"""
         # 1、在输入框中输入5000个字符，右边的语音按钮是否自动变为发送按钮
@@ -1585,7 +1585,7 @@ class MsgPrivateChatDialog(TestCase):
         chat.send_message()
         chat.page_should_contain_text("呵呵")
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
+    @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG_1')
     def test_msg_1327(self):
         """进入到单聊天会话页面，发送一条字符等于5001的文本消息"""
         # 1、在输入框中输入5001个字符，是否可以可以输入此段字符

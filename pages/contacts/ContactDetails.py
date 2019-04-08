@@ -225,8 +225,12 @@ class ContactDetailsPage(BasePage):
 
     @TestLogger.log("挂断视频通话")
     def end_video_call(self):
-        time.sleep(1)
-        self.click_element(self.__locators["取消拨打"])
+        time.sleep(2)
+
+        if self.get_elements(self.__locators["挂断视频通话"]):
+            self.click_element(self.__locators["挂断视频通话"])
+        else:
+            self.click_element(self.__locators["取消拨打"])
 
     @TestLogger.log()
     def hefeixin_call_btn_is_clickable(self):

@@ -175,6 +175,21 @@ class SelectCompanyContactsPage(BasePage):
             els[number].click()
 
     @TestLogger.log()
+    def click_contacts_by_name(self, name):
+        """选择指定联系人"""
+        locator = (
+            MobileBy.XPATH,
+            '//*[@resource-id="com.chinasofti.rcs:id/tv_name_personal_contactlist" and contains(@text,"%s")]' % name)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        self.click_element(locator)
+
+    @TestLogger.log()
     def sure_button_is_enabled(self):
         """确定按钮是否可点击"""
         return self._is_enabled(self.__class__.__locators["确定按钮"])
@@ -188,9 +203,11 @@ class SelectCompanyContactsPage(BasePage):
         return False
 
     @TestLogger.log()
-    def is_exist_select_contacts_name(self):
+    def is_exist_select_contacts_name(self, name):
         """是否存在已选联系人名"""
-        return self._is_element_present(self.__class__.__locators['已选人名'])
+        locator = (
+            MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/image_text" and contains(@text,"%s")]' % name)
+        return self._is_element_present(locator)
 
     @TestLogger.log()
     def is_exist_select_contacts_image(self):

@@ -219,6 +219,7 @@ class OrganizationTest(TestCase):
         time.sleep(2)
         if not osp.is_text_present("加入企业后仅可见自己"):
             raise AssertionError("访客模式开关不可用")
+        time.sleep(2)
         osp.click_invite_save()
         if not osp.is_toast_exist("保存图片成功"):
             raise AssertionError("保存二维码按钮不可用")
@@ -294,6 +295,7 @@ class OrganizationTest(TestCase):
         time.sleep(1)
         osp.click_text("批量删除成员")
         osp.wait_for_delete_contacts_page_load()
+        time.sleep(3)
         els=osp.get_contacts_in_organization()
         if els:
             for el in els:
@@ -376,6 +378,96 @@ class OrganizationTest(TestCase):
         if not osp.is_text_present("和飞信电话"):
             raise AssertionError("搜索失败")
 
+    @tags('ALL', "CMCC", 'workbench', 'ZZJG')
+    def test_ZZJG_0019(self):
+        """搜索已经存在的成员电话（最少输入电话号码前6位）"""
+        # 1、点击“组织架构”应用
+        # 2、搜索已存在成员电话号码（最少输入电话号码前6位）
+        osp = OrganizationStructurePage()
+        time.sleep(2)
+        osp.wait_for_page_load()
+        number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        osp.input_search_box(number[0:6])
+        time.sleep(3)
+        if not osp.is_text_present(number):
+            raise AssertionError("搜索失败")
 
+    @tags('ALL', "CMCC", 'workbench', 'ZZJG')
+    def test_ZZJG_0020(self):
+        """搜索不经存在的成员姓名"""
+        # 1、点击“组织架构”应用
+        # 2、搜索不存在成员姓名
+        osp = OrganizationStructurePage()
+        time.sleep(2)
+        osp.wait_for_page_load()
+        osp.input_search_box("不存在")
+        time.sleep(3)
+        if not osp.is_text_present("暂无成员"):
+            raise AssertionError("搜索失败")
 
+    @tags('ALL', "CMCC", 'workbench', 'ZZJG')
+    def test_ZZJG_0021(self):
+        """搜索不存在的成员电话（最少输入电话号码前6位）"""
+        # 1、点击“组织架构”应用
+        # 2、搜索不存在成员电话号码（最少输入电话号码前6位）
+        osp = OrganizationStructurePage()
+        time.sleep(2)
+        osp.wait_for_page_load()
+        osp.input_search_box("111111")
+        time.sleep(3)
+        if not osp.is_text_present("暂无成员"):
+            raise AssertionError("搜索失败")
 
+    @tags('ALL', "CMCC", 'workbench', 'ZZJG')
+    def test_ZZJG_0022(self):
+        """点击顶部返回键，返回到上一级页面"""
+        # 1、点击“组织架构”应用
+        # 2、点击顶部返回键【 < 】
+        osp = OrganizationStructurePage()
+        time.sleep(2)
+        osp.wait_for_page_load()
+        osp.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'ZZJG')
+    def test_ZZJG_0023(self):
+        """断网提示"""
+        # 1、打开客户端
+        # 2、进入工作台组织架构”图标
+        # 4、断开网络
+        # 5、点击其他元素
+        osp = OrganizationStructurePage()
+        time.sleep(2)
+        osp.wait_for_page_load()
+        current_mobile().back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        workbench.set_network_status(0)
+        time.sleep(8)
+        workbench.click_organization()
+        time.sleep(2)
+        if not osp.is_text_present("网络出错，轻触屏幕重新加载"):
+            raise AssertionError("没有出现‘网络出错，轻触屏幕重新加载’")
+        osp.click_text("网络出错，轻触屏幕重新加载")
+        if not osp.is_toast_exist("网络不可用，请检查网络设置"):
+            raise AssertionError("没有出现‘网络不可用，请检查网络设置’toast提示")
+        time.sleep(2)
+        current_mobile().back()
+        workbench.set_network_status(6)
+        time.sleep(8)
+        workbench.click_organization()
+        time.sleep(2)
+        osp.wait_for_page_load()
+        workbench.set_network_status(0)
+        time.sleep(8)
+        osp.click_text("添加联系人")
+        time.sleep(1)
+        osp.click_text("手动输入添加")
+        if not osp.is_toast_exist("无网络，请稍候重试"):
+            raise AssertionError("没有‘无网络，请稍候重试’toast提示")
+
+    def tearDown_test_ZZJG_0023(self):
+        # 重连网络
+        gcp = GroupChatPage()
+        gcp.set_network_status(6)

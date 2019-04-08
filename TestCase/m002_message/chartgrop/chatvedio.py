@@ -1671,7 +1671,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcs.click_back()
 
 
-class MsgGroupChatVideoPicTotalQuantityTest(TestCase):
+class MsgGroupChatVideoPicAllTest(TestCase):
     """
     模块：群聊-图片视频-GIF
     文件位置：1.1.3全量测试用例->113全量用例--肖立平.xlsx
@@ -1684,6 +1684,7 @@ class MsgGroupChatVideoPicTotalQuantityTest(TestCase):
 
         # 创建联系人
         fail_time = 0
+        flag = False
         import dataproviders
         while fail_time < 3:
             try:
@@ -1706,12 +1707,36 @@ class MsgGroupChatVideoPicTotalQuantityTest(TestCase):
                     group_list.create_group_chats_if_not_exits(group_name, members)
                 group_list.click_back()
                 conts.open_message_page()
-                return
+                flag = True
             except:
                 fail_time += 1
                 import traceback
                 msg = traceback.format_exc()
                 print(msg)
+            if flag:
+                break
+
+        # 确保测试手机有resource文件夹
+        name = "群聊1"
+        Preconditions.get_into_group_chat_page(name)
+        # 在当前聊天会话页面，点击更多富媒体的文件按钮
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_more()
+        # 点击本地文件
+        cmp = ChatMorePage()
+        cmp.click_file()
+        csfp = ChatSelectFilePage()
+        csfp.wait_for_page_load()
+        csfp.click_local_file()
+        # 3、选择任意文件，点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        local_file.push_preset_file()
+        local_file.click_back()
+        csfp.wait_for_page_load()
+        csfp.click_back()
+        gcp.wait_for_page_load()
 
     def default_setUp(self):
         """

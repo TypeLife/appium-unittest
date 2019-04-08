@@ -12,7 +12,6 @@ from pages import *
 import time
 
 
-
 class Preconditions(LoginPreconditions):
     """前置条件"""
 
@@ -162,7 +161,7 @@ class Preconditions(LoginPreconditions):
         mp.wait_for_message_list_load()
 
 
-class MessageListTotalQuantityTest(TestCase):
+class MessageListAllTest(TestCase):
     """
     模块：消息列表
     文件位置：1.1.3全量测试用例->113全量用例--肖立平.xlsx
@@ -322,11 +321,6 @@ class MessageListTotalQuantityTest(TestCase):
 
         mp = MessagePage()
         mp.set_network_status(6)
-
-
-
-
-
 
 
 

@@ -477,10 +477,10 @@ class MessagePage(FooterPage):
         """清空未读消息"""
         els = self.get_elements(self.__class__.__locators["未读消息气泡"])
         rect = els[-1].rect
-        pointX = int(rect["x"]) + int(rect["width"]) / 2
-        pointY = -(int(rect["y"]) - 20)
-        TouchAction(self.driver).long_press(els[-1], duration=3000).move_to(els[-1], pointX,
-                                                                            pointY).wait(3).release().perform()
+        x = int(rect["x"]) + int(rect["width"]) / 2
+        y = -(int(rect["y"]) - 20)
+        TouchAction(self.driver).long_press(els[-1], duration=3000).move_to(els[-1], x,
+                                                                            y).wait(3).release().perform()
 
     @TestLogger.log()
     def wait_for_message_list_load(self, timeout=60, auto_accept_alerts=True):
@@ -499,12 +499,17 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def clear_fail_in_send_message(self):
         """清除发送失败消息记录"""
-        els = self.get_elements(self.__class__.__locators["消息发送失败感叹号"])
-        for el in els:
-            time.sleep(1)
-            self.press(el)
-            time.sleep(1)
-            self.click_element(self.__class__.__locators["删除聊天"])
+        current = 0
+        while self._is_element_present(self.__class__.__locators["消息发送失败感叹号"]):
+            current += 1
+            if current > 5:
+                return
+            els = self.get_elements(self.__class__.__locators["消息发送失败感叹号"])
+            for el in els:
+                time.sleep(1)
+                self.press(el)
+                time.sleep(1)
+                self.click_element(self.__class__.__locators["删除聊天"])
 
     @TestLogger.log()
     def is_exist_search_box(self):
