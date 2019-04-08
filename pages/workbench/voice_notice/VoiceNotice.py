@@ -25,6 +25,11 @@ class VoiceNoticePage(BasePage):
         # 超级会议页面
         '超级会议': (MobileBy.XPATH, '//*[@text="超级会议"]'),
         '会场管理': (MobileBy.XPATH, "//*[contains(@text,'4、会场管理')]"),
+        # '通知内容输入框': (MobileBy.XPATH, "//*[@resourceId='b'undefined--undefined-63883'']"),
+        '通知内容输入框': (MobileBy.XPATH, "//*[@class='android.widget.EditText']"),
+        '+号': (MobileBy.XPATH, "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]/android.view.View/android.view.View/android.view.View[3]"),
+        '发送语音通知': (MobileBy.XPATH, "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]/android.view.View/android.view.View/android.view.View[10]/android.view.View"),
+
     }
 
     @TestLogger.log()
@@ -76,6 +81,26 @@ class VoiceNoticePage(BasePage):
         if len(el) > 0:
             return True
         return False
+
+    @TestLogger.log()
+    def input_notice_text(self, name):
+        """输入通知信息"""
+        self.input_text(self.__class__.__locators["通知内容输入框"], name)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+        return self
+
+    @TestLogger.log()
+    def click_add(self):
+        """点击加号"""
+        self.click_element(self.__class__.__locators['+号'])
+
+    @TestLogger.log()
+    def click_send(self):
+        """点击发送"""
+        self.click_element(self.__class__.__locators['发送语音通知'])
 
 
 

@@ -86,4 +86,35 @@ class VoiceAnnouncementTest(TestCase):
         gcp.set_network_status(6)
         time.sleep(8)
 
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0003(self):
+        """剩余条数显示正确"""
+        # 1、查看本月剩余通知条数
+        # 2、发送一条语音通知，选择1个成员
+        # 3、查看本月剩余通知条数权益是否正常减去已发送的数量
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        time.sleep(2)
+        if vnp.is_text_present("本月剩余通知 50 条"):
+            #创建语音通知
+            vnp.click_text("创建语音通知")
+            time.sleep(2)
+            vnp.input_notice_text("哈哈")
+            time.sleep(2)
+            vnp.click_add()
+            sc = SelectContactsPage()
+            sc.click_local_contacts()
+            sc.click_one_contact("和飞信电话")
+            time.sleep(2)
+            sc.click_sure_bottom()
+            time.sleep(2)
+            vnp.click_send()
+            vnp = VoiceNoticePage()
+            vnp.wait_for_page_loads()
+            if not vnp.is_text_present("本月剩余通知 49 条"):
+                raise AssertionError("剩余条数无法正常减1")
+        else:
+            print("已创建通知")
+
+
 
