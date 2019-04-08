@@ -261,7 +261,7 @@ class MePage(FooterPage):
 
     @TestLogger.log()
     def click_call_multiparty(self, timeout=60):
-        """点击帮助与反馈菜单"""
+        """点击多方电话"""
         self.wait_until(
             timeout=timeout,
             condition=lambda d: self.get_element(self.__locators['多方电话'])
@@ -271,3 +271,20 @@ class MePage(FooterPage):
     def click_welfare(self):
         """点击收藏按钮"""
         self.click_element(self.__locators['福利'])
+
+    @TestLogger.log()
+    def _find_text_menu(self, locator):
+        if not self.is_text_present(locator):
+            # 找不到就翻页找到菜单再点击，
+            self.scroll_to_top()
+            if self.is_text_present(locator):
+                return True
+            max_try = 5
+            current = 0
+            while current < max_try:
+                current += 1
+                self.page_down()
+                if self.is_text_present(locator):
+                    return True
+                if self._is_on_the_end_of_menu_view():
+                    return False
