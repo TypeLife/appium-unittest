@@ -28,7 +28,7 @@ class VoiceNoticePage(BasePage):
     }
 
     @TestLogger.log()
-    def wait_for_page_loads(self, text, timeout=60):
+    def wait_for_page_loads(self, text="创建语音通知", timeout=60):
         """等待 语音通知页面加载"""
         try:
             self.wait_until(
@@ -68,6 +68,14 @@ class VoiceNoticePage(BasePage):
             return True
         else:
             raise AssertionError("该页面没有定位到该元素")
+
+    @TestLogger.log()
+    def is_on_this_page(self):
+        """当前页面是否在语音通知页"""
+        el = self.get_elements(self.__class__.__locators['？'])
+        if len(el) > 0:
+            return True
+        return False
 
 
 
