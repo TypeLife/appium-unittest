@@ -11,10 +11,12 @@ class MeRecommentdClienPage(BasePage):
     __locators = {
         '推荐和飞信': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_actionbar'),
         '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back_actionbar'),
+        # 推荐和飞信短信发送
+        '发送': (MobileBy.ID, 'com.android.mms:id/send_button_sms'),
     }
 
     @TestLogger.log("等待推荐和飞信页面加载")
-    def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
+    def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
         try:
             self.wait_until(
                 timeout=timeout,
@@ -37,3 +39,7 @@ class MeRecommentdClienPage(BasePage):
         for text in menu:
             self.is_text_present(text)
         return True
+
+    @TestLogger.log('点击发送')
+    def click_send(self):
+        self.click_element(self.__locators["发送"])
