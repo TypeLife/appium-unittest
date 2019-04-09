@@ -66,6 +66,9 @@ class MessagePage(FooterPage):
         '取消置顶': (MobileBy.XPATH, '//*[@text="取消置顶"]'),
         "消息免打扰图标": (MobileBy.ID, "com.chinasofti.rcs:id/iv_conv_slient"),
         "消息红点": (MobileBy.ID, "com.chinasofti.rcs:id/red_dot_silent"),
+        "版本更新": (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_title'),
+        "以后再说": (MobileBy.ID, "com.chinasofti.rcs:id/btn_cancel"),
+        '立即更新': (MobileBy.ID, "com.chinasofti.rcs:id/btn_ok"),
     }
 
     @TestLogger.log('检查顶部搜索框是否显示')
@@ -85,6 +88,13 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def is_on_this_page(self):
         """当前页面是否在消息页"""
+        mark=60
+        while mark>0:
+            time.sleep(1)
+            if (self._is_element_present(self.__class__.__locators["版本更新"])):
+                self.click_element(self.__class__.__locators["以后再说"])
+                break
+            mark-=1
         try:
             self.wait_until(
                 timeout=15,
@@ -183,6 +193,14 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
         """等待消息页面加载（自动允许权限）"""
+        mark=60
+        while mark>0:
+            time.sleep(1)
+            if (self._is_element_present(self.__class__.__locators["版本更新"])):
+                self.click_element(self.__class__.__locators["以后再说"])
+                break
+            mark-=1
+
         try:
             self.wait_until(
                 timeout=timeout,
@@ -213,6 +231,14 @@ class MessagePage(FooterPage):
                  ']'])
             self.__unexpected_info = result
             return result
+
+        mark = 60
+        while mark > 0:
+            time.sleep(1)
+            if (self._is_element_present(self.__class__.__locators["版本更新"])):
+                self.click_element(self.__class__.__locators["以后再说"])
+                break
+            mark -= 1
 
         try:
             self.wait_condition_and_listen_unexpected(

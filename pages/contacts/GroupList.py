@@ -102,7 +102,10 @@ class GroupListPage(BasePage):
         '图片发送':(MobileBy.ID,'com.chinasofti.rcs:id/button_send'),
         '发送失败':(MobileBy.ID,'com.chinasofti.rcs:id/imageview_msg_send_failed'),
         '成员头像':(MobileBy.ID,'com.chinasofti.rcs:id/avator'),
-        "确定_可用":(MobileBy.XPATH,'//*[@text="确定(1/1)"]')
+        "确定_可用":(MobileBy.XPATH,'//*[@text="确定(1/1)"]'),
+        "版本更新":(MobileBy.ID,'com.chinasofti.rcs:id/dialog_title'),
+        "以后再说":(MobileBy.ID,"com.chinasofti.rcs:id/btn_cancel"),
+        '立即更新':(MobileBy.ID,"com.chinasofti.rcs:id/btn_ok"),
 
     }
 

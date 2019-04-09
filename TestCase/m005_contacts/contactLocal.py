@@ -208,7 +208,7 @@ class Preconditions(object):
         login_num = Preconditions.login_by_one_key_login()
         return login_num
 
-@unittest.skip("本地不执行")
+#@unittest.skip("本地不执行")
 class ContactLocal2(TestCase):
     '''
     通讯录测试记录-陈计祥
