@@ -27,7 +27,7 @@ class WorkBenchManagerPage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self.is_text_present("javascript:addAppInBench('5532142','BBFBA0F5E0DC504A15184A91B2D99257','122090198');")
+                condition=lambda d: self.is_text_present("公告信息")
             )
         except:
             message = "页面在{}s内，没有加载成功".format(str(timeout))
