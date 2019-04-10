@@ -351,3 +351,8 @@ class SelectContactsPage(BasePage):
         for text in menu:
             self.is_text_present(text)
         return True
+
+    @TestLogger.log()
+    def click_sure_bottom(self):
+        """点击确定"""
+        self.click_element(self.__class__.__locators['确定'])

@@ -1,6 +1,5 @@
 import unittest
 
-import preconditions
 from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.utils.testcasefilter import tags
@@ -25,6 +24,7 @@ REQUIRED_MOBILES = {
     'Android-移动-移动': 'double_mobile',
     'Android-XX-XX': 'others_double',
 }
+
 
 class Preconditions(LoginPreconditions):
     """前置条件"""
@@ -95,6 +95,7 @@ class Preconditions(LoginPreconditions):
             # 点击确定
             cnitp.click_sure()
             cnp.wait_for_page_load()
+
 
 class CorporateNewsTest(TestCase):
     """
@@ -190,6 +191,7 @@ class CorporateNewsTest(TestCase):
         cnnp.wait_for_page_load()
         # 2.验证未发新闻列表是否存在该记录信息
         self.assertEquals(cnnp.is_exist_no_news_by_name(title), False)
+
 
 class CorporateNewsAllTest(TestCase):
     """

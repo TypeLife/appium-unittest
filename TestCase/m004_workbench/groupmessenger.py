@@ -31,6 +31,8 @@ REQUIRED_MOBILES = {
     'Android-移动-移动': 'double_mobile',
     'Android-XX-XX': 'others_double',
 }
+
+
 class Preconditions(object):
     """前置条件"""
     @staticmethod
@@ -152,6 +154,7 @@ class Preconditions(object):
                 osp.wait_for_page_load()
         osp.click_back()
         wbp.wait_for_workbench_page_load()
+
 
 # @unittest.skip
 class MassMessengerTest(TestCase):
@@ -313,6 +316,7 @@ class MassMessengerTest(TestCase):
         sccp.click_back()
         mgp.wait_for_edit_message_page_load()
         mgp.click_close()
+
 
 class MassMessengerAllTest(TestCase):
     """

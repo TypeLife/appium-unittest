@@ -12,7 +12,6 @@ from pages import *
 import time
 
 
-
 class Preconditions(LoginPreconditions):
     """前置条件"""
 
@@ -162,7 +161,7 @@ class Preconditions(LoginPreconditions):
         mp.wait_for_message_list_load()
 
 
-class MessageListTotalQuantityTest(TestCase):
+class MessageListAllTest(TestCase):
     """
     模块：消息列表
     文件位置：1.1.3全量测试用例->113全量用例--肖立平.xlsx
@@ -273,6 +272,7 @@ class MessageListTotalQuantityTest(TestCase):
         LoginPreconditions.make_already_in_one_key_login_page()
         LoginPreconditions.login_by_one_key_login()
         mp = MessagePage()
+        time.sleep(5)
         mp.wait_for_message_list_load()
         # 确保消息列表有未读消息
         self.assertEquals(mp.is_exist_unread_messages(), True)
@@ -322,11 +322,6 @@ class MessageListTotalQuantityTest(TestCase):
 
         mp = MessagePage()
         mp.set_network_status(6)
-
-
-
-
-
 
 
 
