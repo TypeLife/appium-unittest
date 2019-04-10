@@ -3897,6 +3897,7 @@ class MsgCommonGroupTest(TestCase):
             print("{}分钟".format(a))
             a += 1
         gcp.press_voice_message_to_do("撤回")
+        time.sleep(2)
         if not gcp.is_text_present("你撤回了一条信息"):
             raise AssertionError("没有成功撤回信息")
 
@@ -5203,10 +5204,11 @@ class MsgCommonGroupAllTest(TestCase):
             except TimeoutException:
                 raise AssertionError('消息未在 {}s 内发送成功'.format(10))
 
-    def tearDown_msg_common_group_all_0050(self):
+    def tearDown_test_msg_common_group_all_0050(self):
         #重连网络
         gcp = GroupChatPage()
         gcp.set_network_status(6)
+        time.sleep(5)
 
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
     def test_msg_common_group_all_0072(self):

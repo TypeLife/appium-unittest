@@ -208,7 +208,7 @@ class VoiceAnnouncementTest(TestCase):
         workbench.wait_for_page_load()
 
     @tags('ALL', "CMCC", 'workbench', 'YYTZ')
-    def test_YYTZ_00012(self):
+    def test_YYTZ_0012(self):
         """无号码或自己等于100，成员等于20的时候成员不可勾选"""
         # 1、点击“+”
         # 2、选择无号码或自己等级 = 100
@@ -232,7 +232,7 @@ class VoiceAnnouncementTest(TestCase):
         vnp.wait_for_page_loads()
 
     @tags('ALL', "CMCC", 'workbench', 'YYTZ')
-    def test_YYTZ_00014(self):
+    def test_YYTZ_0014(self):
         """语音时长小于1s"""
         # 1、点击“创建语音通知”
         # 2、点击话筒icon录制语音
