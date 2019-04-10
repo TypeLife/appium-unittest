@@ -272,6 +272,7 @@ class MessageListAllTest(TestCase):
         LoginPreconditions.make_already_in_one_key_login_page()
         LoginPreconditions.login_by_one_key_login()
         mp = MessagePage()
+        time.sleep(5)
         mp.wait_for_message_list_load()
         # 确保消息列表有未读消息
         self.assertEquals(mp.is_exist_unread_messages(), True)

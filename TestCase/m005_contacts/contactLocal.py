@@ -20,7 +20,7 @@ import preconditions
 
 REQUIRED_MOBILES = {
     'Android-移动':'M960BDQN229CH',
-    'Android-移动2':'M960BDQN229CK',
+    'Android-移动2':'M960BDQN229CK_20',
     'Android-XX': ''  # 用来发短信
 }
 class Preconditions(object):
@@ -208,7 +208,7 @@ class Preconditions(object):
         login_num = Preconditions.login_by_one_key_login()
         return login_num
 
-@unittest.skip("本地不执行")
+#@unittest.skip("本地不执行")
 class ContactLocal2(TestCase):
     '''
     通讯录测试记录-陈计祥
@@ -933,7 +933,6 @@ class ContactLocal(TestCase):
         Preconditions.background_app()
         time.sleep(3)
         preconditions.launch_app()
-        time.sleep(1)
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0036(self):
@@ -941,10 +940,12 @@ class ContactLocal(TestCase):
        测试系统通讯录存在多个联系人，名称相同，手机号码不一致，通过手机号码搜索
         :return:
         '''
+
         lcontact = localContactPage()
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
         time.sleep(3)
+        GroupPage.open_contacts_page()
+        time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
         lcontact.input_search_text("13410669632")
@@ -956,7 +957,362 @@ class ContactLocal(TestCase):
         lcontact.click_back_by_android()
 
 
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0039():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+
+    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    def test_contacts_chenjixiang_0039(self):
+        '''
+       测试系统通讯录存在多个联系人，名称不一致，手机号码相同，通过名称搜索
+        :return:
+        '''
+
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        time.sleep(3)
+        GroupPage.open_contacts_page()
+        time.sleep(1)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("xihua")
+        lcontact.hide_keyboard()
+        time.sleep(1)
+        lcontact.is_text_present("xihua")
+        time.sleep(1)
+        lcontact.click_text("xihua")
+        time.sleep(1)
+        lcontact.is_text_present("xihua")
+        lcontact.is_text_present("134 1066 9616")
+        lcontact.click_back_by_android(times=2)
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0040():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+
+    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    def test_contacts_chenjixiang_0040(self):
+        '''
+       测试系统通讯录存在多个联系人，名称不一致，手机号码相同，通过手机号码搜索
+        :return:
+        '''
+
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        time.sleep(3)
+        GroupPage.open_contacts_page()
+        time.sleep(1)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("13410669616")
+        lcontact.hide_keyboard()
+        time.sleep(1)
+        lcontact.is_text_present("xihua")
+        time.sleep(1)
+        lcontact.click_text("xihua")
+        time.sleep(1)
+        lcontact.is_text_present("xihua")
+        lcontact.is_text_present("134 1066 9616")
+        lcontact.click_back_by_android(times=2)
+
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0041():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+
+    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    def test_contacts_chenjixiang_0041(self):
+        '''
+       测试系统通讯录存在多个联系人，名称和手机号码不一致，通过名称搜索
+        :return:
+        '''
+
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        time.sleep(3)
+        GroupPage.open_contacts_page()
+        time.sleep(1)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("1-a")
+        lcontact.hide_keyboard()
+        time.sleep(1)
+        lcontact.is_text_present("1-a")
+        time.sleep(1)
+        lcontact.click_text("1-a")
+        time.sleep(1)
+        lcontact.is_text_present("1-a")
+        lcontact.is_text_present("6765 6004")
+        lcontact.click_back_by_android(times=2)
 
 
 
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0042():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
 
+    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    def test_contacts_chenjixiang_0042(self):
+        '''
+       测试系统通讯录存在多个联系人，名称和手机号码不一致，通过手机号码搜索
+        :return:
+        '''
+
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        time.sleep(3)
+        GroupPage.open_contacts_page()
+        time.sleep(1)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("67656004")
+        lcontact.hide_keyboard()
+        time.sleep(1)
+        lcontact.is_text_present("1-a")
+        time.sleep(1)
+        lcontact.click_text("1-a")
+        time.sleep(1)
+        lcontact.is_text_present("1-a")
+        lcontact.is_text_present("6765 6004")
+        lcontact.click_back_by_android(times=2)
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0043():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+
+    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    def test_contacts_chenjixiang_0043(self):
+        '''
+      测试+86的手机号码，通过名称搜索
+        :return:
+        '''
+
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        time.sleep(3)
+        GroupPage.open_contacts_page()
+        time.sleep(1)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("xika")
+        lcontact.hide_keyboard()
+        time.sleep(1)
+        lcontact.is_text_present("xika")
+        time.sleep(1)
+        lcontact.click_text("xika")
+        time.sleep(1)
+        lcontact.is_text_present("xika")
+        lcontact.is_text_present("861 3410 5596 55")
+        lcontact.click_back_by_android(times=2)
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0044():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+
+    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    def test_contacts_chenjixiang_0044(self):
+        '''
+      测试+86的手机号码，通过手机号码搜索
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        time.sleep(3)
+        GroupPage.open_contacts_page()
+        time.sleep(1)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("+8613410559655")
+        lcontact.hide_keyboard()
+        time.sleep(1)
+        lcontact.is_text_present("xika")
+        time.sleep(1)
+        lcontact.click_text("xika")
+        time.sleep(1)
+        lcontact.is_text_present("xika")
+        lcontact.is_text_present("+86 134 1055 9655")
+        lcontact.click_back_by_android(times=2)
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0045():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+
+    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    def test_contacts_chenjixiang_0045(self):
+        '''
+      测试+86的手机号码，通过+搜索
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        time.sleep(3)
+        GroupPage.open_contacts_page()
+        time.sleep(1)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("+")
+        lcontact.hide_keyboard()
+        time.sleep(1)
+        lcontact.is_text_present("xika")
+        time.sleep(1)
+        lcontact.click_text("xika")
+        time.sleep(1)
+        lcontact.is_text_present("xika")
+        lcontact.is_text_present("+86 134 1055 9655")
+        lcontact.click_back_by_android(times=2)
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0046():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+
+    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    def test_contacts_chenjixiang_0046(self):
+        '''
+      测试+86的手机号码，通过+搜索
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        time.sleep(3)
+        GroupPage.open_contacts_page()
+        time.sleep(1)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("+86")
+        lcontact.hide_keyboard()
+        time.sleep(1)
+        lcontact.is_text_present("xika")
+        time.sleep(1)
+        lcontact.click_text("xika")
+        time.sleep(1)
+        lcontact.is_text_present("xika")
+        lcontact.is_text_present("+86 134 1055 9655")
+        lcontact.click_back_by_android(times=2)
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0047():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+
+    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    def test_contacts_chenjixiang_0047(self):
+        '''
+      测试+86的手机号码，通过区号和手机号码前几个字符一起搜索（+8613512345123，搜索输入613等）
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        time.sleep(3)
+        GroupPage.open_contacts_page()
+        time.sleep(1)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("613")
+        lcontact.hide_keyboard()
+        time.sleep(1)
+        lcontact.is_text_present("xika")
+        time.sleep(1)
+        lcontact.click_text("xika")
+        time.sleep(1)
+        lcontact.is_text_present("xika")
+        lcontact.is_text_present("+86 134 1055 9655")
+        lcontact.click_back_by_android(times=2)
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0048():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+
+    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    def test_contacts_chenjixiang_0048(self):
+        '''
+      测试+86的手机号码，通过输入前10位手机号码进行匹配搜索
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        time.sleep(3)
+        GroupPage.open_contacts_page()
+        time.sleep(1)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("1341055965")
+        lcontact.hide_keyboard()
+        time.sleep(1)
+        lcontact.is_text_present("xika")
+        time.sleep(1)
+        lcontact.click_text("xika")
+        time.sleep(1)
+        lcontact.is_text_present("xika")
+        lcontact.is_text_present("+86 134 1055 9655")
+        lcontact.click_back_by_android(times=2)
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0049():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+
+    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    def test_contacts_chenjixiang_0049(self):
+        '''
+        测试+86的手机号码，通过输入11位手机号码进行全匹配搜索
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        time.sleep(3)
+        GroupPage.open_contacts_page()
+        time.sleep(1)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("13410559655")
+        lcontact.hide_keyboard()
+        time.sleep(1)
+        lcontact.is_text_present("xika")
+        time.sleep(1)
+        lcontact.click_text("xika")
+        time.sleep(1)
+        lcontact.is_text_present("xika")
+        lcontact.is_text_present("+86 134 1055 9655")
+        lcontact.click_back_by_android(times=2)

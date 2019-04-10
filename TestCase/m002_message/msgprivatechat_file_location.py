@@ -34,8 +34,8 @@ class Preconditions(LoginPreconditions):
         scp.wait_for_page_load()
 
     @staticmethod
-    def send_file_by_type(file_type):
-        """发送指定类型文件"""
+    def enter_preset_file_dir():
+        """进入预置文件目录"""
 
         # 在当前聊天会话页面，点击更多富媒体的文件按钮
         scp = SingleChatPage()
@@ -47,23 +47,85 @@ class Preconditions(LoginPreconditions):
         csfp = ChatSelectFilePage()
         csfp.wait_for_page_load()
         csfp.click_local_file()
-        # 选择任意文件，点击发送按钮
         local_file = ChatSelectLocalFilePage()
         # 没有预置文件，则上传
         flag = local_file.push_preset_file()
         if flag:
             local_file.click_back()
             csfp.click_local_file()
-        # 进入预置文件目录，选择文件发送
+        # 进入预置文件目录
         local_file.click_preset_file_dir()
-        file = local_file.select_file(file_type)
-        if file:
-            local_file.click_send()
-        else:
+
+    @staticmethod
+    def send_file_by_type(file_type):
+        """发送指定类型文件"""
+
+        # 进入预置文件目录
+        Preconditions.enter_preset_file_dir()
+        local_file = ChatSelectLocalFilePage()
+        # 发送指定类型文件
+        local_file.select_file(file_type)
+        local_file.click_send_button()
+
+    @staticmethod
+    def send_large_file():
+        """发送大型文件"""
+
+        # 进入预置文件目录
+        Preconditions.enter_preset_file_dir()
+        local_file = ChatSelectLocalFilePage()
+        # 发送大型文件
+        flag = local_file.click_large_file()
+        if not flag:
+            local_file.push_preset_file()
             local_file.click_back()
-            local_file.click_back()
-            csfp.click_back()
+            local_file.click_preset_file_dir()
+            local_file.click_large_file()
+        local_file.click_send_button()
+
+    @staticmethod
+    def enter_local_picture():
+        """进入本地照片目录"""
+
+        # 在当前聊天会话页面，点击更多富媒体的文件按钮
+        scp = SingleChatPage()
         scp.wait_for_page_load()
+        scp.click_more()
+        cmp = ChatMorePage()
+        cmp.click_file()
+        csfp = ChatSelectFilePage()
+        # 等待选择文件页面加载
+        csfp.wait_for_page_load()
+        # 点击本地照片
+        csfp.click_pic()
+
+    @staticmethod
+    def send_local_picture():
+        """发送本地图片"""
+
+        # 进入本地照片目录
+        Preconditions.enter_local_picture()
+        local_file = ChatSelectLocalFilePage()
+        # 发送本地照片
+        local_file.click_picture()
+        local_file.click_send_button()
+
+    @staticmethod
+    def send_large_picture_file():
+        """发送大型图片文件"""
+
+        # 进入本地照片目录
+        Preconditions.enter_local_picture()
+        local_file = ChatSelectLocalFilePage()
+        # 发送大型图片文件
+        flag = local_file.click_large_file()
+        if not flag:
+            local_file.push_preset_file()
+            local_file.click_back()
+            csfp = ChatSelectFilePage()
+            csfp.click_pic()
+            local_file.click_large_file()
+        local_file.click_send_button()
 
 
 class MsgPrivateChatFileLocationTest(TestCase):
