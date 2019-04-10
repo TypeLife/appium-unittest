@@ -29,6 +29,14 @@ class VoiceNoticePage(BasePage):
         '通知内容输入框': (MobileBy.XPATH, "//*[@class='android.widget.EditText']"),
         '+号': (MobileBy.XPATH, "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]/android.view.View/android.view.View/android.view.View[3]"),
         '发送语音通知': (MobileBy.XPATH, "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]/android.view.View/android.view.View/android.view.View[10]/android.view.View"),
+        '上三角': (MobileBy.XPATH, "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]/android.view.View/android.view.View/android.view.View[1]/android.view.View/android.view.View[8]"),
+        '如何申请认证X号': (MobileBy.XPATH, '//*[@text="javascript:closeTips();"]'),
+        '语音话筒按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/record_audio'),
+        '语音按钮': (MobileBy.XPATH, "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]/android.view.View/android.view.View/android.view.View[1]/android.view.View[5]/android.widget.Image"),
+        '已录制的语音': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]/android.view.View/android.view.View/android.view.View[1]/android.view.View[1]'),
+        '已录制语音删除按钮': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]/android.view.View/android.view.View/android.view.View[1]/android.view.View[1]/android.view.View[3]/android.widget.Image'),
+        '语音话筒删除': (MobileBy.ID, 'com.chinasofti.rcs:id/image_cancel'),
+        '键盘': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]/android.view.View/android.view.View/android.view.View[1]/android.view.View[2]/android.widget.Image'),
 
     }
 
@@ -101,6 +109,23 @@ class VoiceNoticePage(BasePage):
     def click_send(self):
         """点击发送"""
         self.click_element(self.__class__.__locators['发送语音通知'])
+
+    @TestLogger.log()
+    def click_element_(self,text):
+        """点击元素"""
+        self.click_element(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def press_element_(self, text,times):
+        """点击元素"""
+        el=self.get_element(self.__class__.__locators[text])
+        self.press(el,times)
+
+    @TestLogger.log()
+    def is_element_exit(self, text):
+        """指定元素是否存在"""
+        return self._is_element_present(self.__class__.__locators[text])
+
 
 
 

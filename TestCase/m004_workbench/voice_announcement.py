@@ -116,5 +116,142 @@ class VoiceAnnouncementTest(TestCase):
         else:
             print("已创建通知")
 
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0005(self):
+        """正常展开收起权益"""
+        # 1、点击本月剩余通知条数旁边的下三角
+        # 2、点击展开页面的上三角
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_text("本月剩余通知")
+        time.sleep(2)
+        if not vnp.is_text_present("企业认证"):
+            raise AssertionError("不可正常展开")
+        vnp.click_element_("上三角")
+        time.sleep(2)
+        if vnp.is_text_present("企业认证"):
+            raise AssertionError("不可正常收起")
 
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0006(self):
+        """跳转企业认证"""
+        # 1、点击本月剩余通知条数旁边的下三角
+        # 2、点击“企业认证”
+        # 3、点击“马上去认证”
+        # 4、点击复制地址
+        # 5、点击【x】
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_text("本月剩余通知")
+        time.sleep(2)
+        vnp.click_text("企业认证")
+        time.sleep(3)
+        if not vnp.is_text_present("马上去认证"):
+            raise AssertionError("不可正常进入企业认证详情页")
+        vnp.click_text("马上去认证")
+        time.sleep(2)
+        if not vnp.is_text_present("如何申请认证"):
+            raise AssertionError("没有弹出‘如何申请认证’弹窗")
+        vnp.click_text("复制地址")
+        if not vnp.is_toast_exist("复制成功"):
+            raise AssertionError("没有弹出复制成功toast提示")
+        time.sleep(3)
+        vnp.click_text("马上去认证")
+        time.sleep(2)
+        vnp.click_element_("如何申请认证X号")
+        time.sleep(1)
+        if vnp.is_text_present("如何申请认证"):
+            raise AssertionError("不可关闭弹窗")
+        current_mobile().back()
+        vnp.wait_for_page_loads()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0007(self):
+        """可正常跳转到充值页面"""
+        # 1、点击本月剩余通知条数旁边的下三角
+        # 2、点击“充值”
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_text("本月剩余通知")
+        time.sleep(2)
+        vnp.click_text("充值")
+        time.sleep(5)
+        if not vnp.is_text_present("和飞信套餐"):
+            raise AssertionError("不可正常跳转到充值页面")
+        current_mobile().back()
+        vnp.wait_for_page_loads()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0008(self):
+        """添加搜索出的成员"""
+        # 1、点击“+”
+        # 2、搜索关键词
+        # 3、点击搜索结果中的成员
+        # 4、点击“确定”
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        time.sleep(2)
+        vnp.click_text("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        sc = SelectContactsPage()
+        sc.input_search_keyword("和")
+        time.sleep(2)
+        vnp.click_text("和飞信电话")
+        time.sleep(2)
+        sc.click_sure_bottom()
+        time.sleep(2)
+        if not vnp.is_text_present("和飞信电话"):
+            raise AssertionError("成员列表不能显示已勾选成员信息")
+        vnp.click_close_more()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0012(self):
+        """无号码或自己等于100，成员等于20的时候成员不可勾选"""
+        # 1、点击“+”
+        # 2、选择无号码或自己等级 = 100
+        # 时，成员等级等于20的用户
+        # 3、点击“确定”
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        time.sleep(2)
+        vnp.click_text("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        sc = SelectContactsPage()
+        sc.click_local_contacts()
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        sc.click_one_contact(phone_number)
+        if not vnp.is_toast_exist("该联系人不可选择"):
+            raise AssertionError("没有提示“该联系人不可选”")
+        current_mobile().back()
+        current_mobile().back()
+        current_mobile().back()
+        vnp.wait_for_page_loads()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0014(self):
+        """语音时长小于1s"""
+        # 1、点击“创建语音通知”
+        # 2、点击话筒icon录制语音
+        # 3、按住话筒录制小于1s语音就松手
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        time.sleep(2)
+        vnp.click_text("创建语音通知")
+        time.sleep(2)
+        vnp.click_element_("语音按钮")
+        time.sleep(2)
+        vnp.click_element_("语音话筒按钮")
+        if vnp.is_text_present("始终允许"):
+            vnp.click_text("始终允许")
+            time.sleep(2)
+            vnp.click_element_("语音话筒按钮")
+        if not vnp.is_toast_exist("时间太短"):
+            raise AssertionError("没有提示时间太短")
+        current_mobile().back()
+        current_mobile().back()
+        vnp.wait_for_page_loads()
 
