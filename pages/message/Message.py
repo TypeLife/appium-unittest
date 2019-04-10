@@ -88,7 +88,7 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def is_on_this_page(self):
         """当前页面是否在消息页"""
-<<<<<<< HEAD
+
         mark=10
         while mark>0:
             time.sleep(1)
@@ -96,11 +96,10 @@ class MessagePage(FooterPage):
                 self.click_element(self.__class__.__locators["以后再说"])
                 break
             mark-=1
-=======
         # locator = (MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/btn_cancel" and @text ="以后再说"]')
         # if self._is_element_present(locator):
         #     self.click_element(locator)
->>>>>>> d8fe7554be625fd291e9a5b78a97a18136b79fa3
+
         try:
             self.wait_until(
                 timeout=15,
@@ -199,7 +198,7 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
         """等待消息页面加载（自动允许权限）"""
-<<<<<<< HEAD
+
         mark=10
         while mark>0:
             time.sleep(1)
@@ -208,11 +207,11 @@ class MessagePage(FooterPage):
                 break
             mark-=1
 
-=======
+
         # locator = (MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/btn_cancel" and @text ="以后再说"]')
         # if self._is_element_present(locator):
         #     self.click_element(locator)
->>>>>>> d8fe7554be625fd291e9a5b78a97a18136b79fa3
+
         try:
             self.wait_until(
                 timeout=timeout,
