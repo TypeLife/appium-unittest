@@ -1484,29 +1484,259 @@ class MeAllCollect(TestCase):
         mrp.click_back()
         mess.open_message_page()
 
-    # @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    # def test_me_all_page_527(self):
-    #     """通用版本-短信入口-搜索结果界面"""
-    #     # 1.点击跳转到我的页面
-    #     mess = MessagePage()
-    #     mess.wait_for_page_load()
-    #     # 2.点击我的推荐和飞信-点击短信
-    #     mess.open_me_page()
-    #     mep = MePage()
-    #     mep.is_on_this_page()
-    #     mep.click_menu("推荐和飞信")
-    #     mrp = MeRecommentdClienPage()
-    #     mrp.wait_for_page_load()
-    #     time.sleep(1.8)
-    #     mrp.click_text("短信")
-    #     # 3.选择本地联系人
-    #     scp = SelectContactsPage()
-    #     scp.wait_for_page_local_contact_load()
-    #     phoneNumber = "12560"
-    #     scp.input_search_contact_message(phoneNumber)
-    #     info = "搜索和通讯录联系人 ："+phoneNumber
-    #     scp.page_should_contain_text(info)
-    #     scp.page_should_contain_text("本地联系人")
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_527(self):
+        """通用版本-短信入口-搜索结果界面"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的推荐和飞信-点击短信
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_menu("推荐和飞信")
+        mrp = MeRecommentdClienPage()
+        mrp.wait_for_page_load()
+        time.sleep(1.8)
+        mrp.click_text("短信")
+        # 3.选择本地联系人
+        scp = SelectContactsPage()
+        scp.wait_for_page_local_contact_load()
+        phoneNumber = "12560"
+        scp.input_search_contact_message(phoneNumber)
+        info = "搜索和通讯录联系人 : " + phoneNumber
+        scp.page_should_contain_text(info)
+        scp.page_should_contain_text("本地联系人")
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_528(self):
+        """通用版本-短信入口-搜索结果大于3条"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的推荐和飞信-点击短信
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_menu("推荐和飞信")
+        mrp = MeRecommentdClienPage()
+        mrp.wait_for_page_load()
+        time.sleep(1.8)
+        mrp.click_text("短信")
+        # 3.选择本地联系人
+        scp = SelectContactsPage()
+        scp.wait_for_page_local_contact_load()
+        phoneNumber = "1"
+        scp.search(phoneNumber)
+        info = "搜索和通讯录联系人 : " + phoneNumber
+        scp.page_should_contain_text(info)
+        scp.page_should_contain_text("本地联系人")
+        self.assertEquals(scp.result_is_more_tree(), True)
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_529(self):
+        """通用版本-短信入口-搜索手机号"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的推荐和飞信-点击短信
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_menu("推荐和飞信")
+        mrp = MeRecommentdClienPage()
+        mrp.wait_for_page_load()
+        time.sleep(0.8)
+        mrp.click_text("短信")
+        # 3.选择本地联系人
+        scp = SelectContactsPage()
+        scp.wait_for_page_local_contact_load()
+        phoneNumber = "12560"
+        scp.input_search_contact_message(phoneNumber)
+        scp.click_one_local_contacts()
+        # 4.点击发送
+        mrp.click_send()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_530(self):
+        """通用版本-短信入口-搜索姓名"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的推荐和飞信-点击短信
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_menu("推荐和飞信")
+        mrp = MeRecommentdClienPage()
+        mrp.wait_for_page_load()
+        time.sleep(0.8)
+        mrp.click_text("短信")
+        # 3.选择本地联系人
+        scp = SelectContactsPage()
+        scp.wait_for_page_local_contact_load()
+        phoneNumber = "和飞信电话"
+        scp.input_search_contact_message(phoneNumber)
+        scp.click_one_local_contacts()
+        time.sleep(0.5)
+        scp.page_should_contain_text("免费短信省钱省心，多方通话一呼八应，邀请你一起畅享沟通，立即体验")
+        # 4.点击发送
+        mrp.click_send()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_531(self):
+        """通用版本-短信入口-搜索姓名"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的推荐和飞信-点击短信
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_menu("推荐和飞信")
+        mrp = MeRecommentdClienPage()
+        mrp.wait_for_page_load()
+        time.sleep(0.8)
+        mrp.click_text("短信")
+        # 3.选择本地联系人
+        scp = SelectContactsPage()
+        scp.wait_for_page_local_contact_load()
+        phoneNumber = "xili"
+        scp.input_search_contact_message(phoneNumber)
+        scp.click_one_local_contacts()
+        time.sleep(0.5)
+        scp.page_should_contain_text("免费短信省钱省心，多方通话一呼八应，邀请你一起畅享沟通，立即体验")
+        # 4.点击发送
+        mrp.click_send()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_532(self):
+        """通用版本-短信入口-搜索姓名"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的推荐和飞信-点击短信
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_menu("推荐和飞信")
+        mrp = MeRecommentdClienPage()
+        mrp.wait_for_page_load()
+        time.sleep(0.8)
+        mrp.click_text("短信")
+        # 3.选择本地联系人
+        scp = SelectContactsPage()
+        scp.wait_for_page_local_contact_load()
+        phoneNumber = "xili"
+        scp.input_search_contact_message(phoneNumber)
+        scp.click_one_local_contacts()
+        time.sleep(0.5)
+        scp.page_should_contain_text("免费短信省钱省心，多方通话一呼八应，邀请你一起畅享沟通，立即体验")
+        # 4.点击发送
+        mrp.click_send()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_533(self):
+        """通用版本-短信入口-搜索特殊符号"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的推荐和飞信-点击短信
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_menu("推荐和飞信")
+        mrp = MeRecommentdClienPage()
+        mrp.wait_for_page_load()
+        time.sleep(0.8)
+        mrp.click_text("短信")
+        # 3.选择本地联系人
+        scp = SelectContactsPage()
+        scp.wait_for_page_local_contact_load()
+        phoneNumber = "wa ss"
+        scp.input_search_contact_message(phoneNumber)
+        scp.click_one_local_contacts()
+        time.sleep(0.5)
+        scp.page_should_contain_text("免费短信省钱省心，多方通话一呼八应，邀请你一起畅享沟通，立即体验")
+        # 4.点击发送
+        mrp.click_send()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_534(self):
+        """通用版本-短信入口-搜索+852开头"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的推荐和飞信-点击短信
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_menu("推荐和飞信")
+        mrp = MeRecommentdClienPage()
+        mrp.wait_for_page_load()
+        time.sleep(0.8)
+        mrp.click_text("短信")
+        # 3.选择本地联系人
+        scp = SelectContactsPage()
+        scp.wait_for_page_local_contact_load()
+        phoneNumber = "+85267656001"
+        scp.input_search_contact_message(phoneNumber)
+        scp.click_one_local_contacts()
+        time.sleep(0.5)
+        scp.page_should_contain_text("免费短信省钱省心，多方通话一呼八应，邀请你一起畅享沟通，立即体验")
+        # 4.点击发送
+        mrp.click_send()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_535(self):
+        """通用版本-短信入口-搜索无本地联系人且为手机号"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的推荐和飞信-点击短信
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_menu("推荐和飞信")
+        mrp = MeRecommentdClienPage()
+        mrp.wait_for_page_load()
+        time.sleep(0.8)
+        mrp.click_text("短信")
+        # 3.选择本地联系人
+        scp = SelectContactsPage()
+        scp.wait_for_page_local_contact_load()
+        phoneNumber = "13537795364"
+        scp.input_search_contact_message(phoneNumber)
+        scp.click_one_local_contacts()
+        time.sleep(0.5)
+        scp.page_should_contain_text("免费短信省钱省心，多方通话一呼八应，邀请你一起畅享沟通，立即体验")
+        # 4.点击发送
+        mrp.click_send()
+
+    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
+    def test_me_all_page_536(self):
+        """通用版本-短信入口-1期"""
+        # 1.点击跳转到我的页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 2.点击我的推荐和飞信-点击短信
+        mess.open_me_page()
+        mep = MePage()
+        mep.is_on_this_page()
+        mep.click_menu("推荐和飞信")
+        mrp = MeRecommentdClienPage()
+        mrp.wait_for_page_load()
+        time.sleep(0.8)
+        mrp.click_text("短信")
+        # 3.选择本地联系人
+        scp = SelectContactsPage()
+        scp.wait_for_page_local_contact_load()
+        # 4.点击返回
+        scp.click_back()
+        mrp.wait_for_page_load()
+        mrp.click_back()
+        mess.open_message_page()
+
     # @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     # def test_me_all_page_439(self):
     #     """设置页面显示验证"""

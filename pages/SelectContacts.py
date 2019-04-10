@@ -356,3 +356,12 @@ class SelectContactsPage(BasePage):
     def click_sure_bottom(self):
         """点击确定"""
         self.click_element(self.__class__.__locators['确定'])
+
+    @TestLogger.log()
+    def result_is_more_tree(self):
+        """点击确定"""
+        els = self.get_elements(self.__class__.__locators["local联系人"])
+        if len(els) > 3:
+            return True
+        else:
+            return False
