@@ -255,3 +255,193 @@ class VoiceAnnouncementTest(TestCase):
         current_mobile().back()
         vnp.wait_for_page_loads()
 
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0015(self):
+        """录制语音时长为59s"""
+        # 1、点击“创建语音通知”
+        # 2、点击话筒icon录制语音
+        # 3、按住话筒录制59s语音就松手
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        time.sleep(2)
+        vnp.click_text("创建语音通知")
+        time.sleep(2)
+        vnp.click_element_("语音按钮")
+        time.sleep(2)
+        vnp.press_element_("语音话筒按钮", 59000)
+        time.sleep(2)
+        if not vnp.is_text_present('59"'):
+            raise AssertionError("没有显示时长")
+        if not vnp.is_element_exit("已录制的语音"):
+            raise AssertionError("不存在已录制的语音")
+        if not vnp.is_element_exit("已录制语音删除按钮"):
+            raise AssertionError("不存在已录制语音删除按钮")
+        vnp.click_close_more()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0016(self):
+        """录制语音时长为60s"""
+        # 1、点击“创建语音通知”
+        # 2、点击话筒icon录制语音
+        # 3、按住话筒录制为60s语音就松手
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        time.sleep(2)
+        vnp.click_text("创建语音通知")
+        time.sleep(2)
+        vnp.click_element_("语音按钮")
+        time.sleep(2)
+        vnp.press_element_("语音话筒按钮", 60000)
+        time.sleep(2)
+        if not vnp.is_text_present('60"'):
+            raise AssertionError("没有显示时长")
+        if not vnp.is_element_exit("已录制的语音"):
+            raise AssertionError("不存在已录制的语音")
+        if not vnp.is_element_exit("已录制语音删除按钮"):
+            raise AssertionError("不存在已录制语音删除按钮")
+        vnp.click_close_more()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0017(self):
+        """录制语音时长大于60s"""
+        # 1、点击“创建语音通知”
+        # 2、点击话筒icon录制语音
+        # 3、按住话筒录制大于60s语音就松手
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        time.sleep(2)
+        vnp.click_text("创建语音通知")
+        time.sleep(2)
+        vnp.click_element_("语音按钮")
+        time.sleep(2)
+        vnp.press_element_("语音话筒按钮", 63000)
+        time.sleep(2)
+        if not vnp.is_text_present('60"'):
+            raise AssertionError("没有显示时长")
+        if not vnp.is_element_exit("已录制的语音"):
+            raise AssertionError("不存在已录制的语音")
+        if not vnp.is_element_exit("已录制语音删除按钮"):
+            raise AssertionError("不存在已录制语音删除按钮")
+        vnp.click_close_more()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0020(self):
+        """录制后点击录音后边的删除按钮"""
+        # 1、点击“创建语音通知”
+        # 2、点击话筒icon录制语音
+        # 3、录制成功之后，点击录音后边的删除按钮
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        time.sleep(2)
+        vnp.click_text("创建语音通知")
+        time.sleep(2)
+        vnp.click_element_("语音按钮")
+        time.sleep(2)
+        vnp.press_element_("语音话筒按钮", 3000)
+        time.sleep(2)
+        vnp.click_element_("已录制语音删除按钮")
+        time.sleep(2)
+        if not vnp.is_text_present("点击此处录入语音"):
+            raise AssertionError("录制内容删除不成功")
+        if not vnp.is_text_present("创建语音通知"):
+            raise AssertionError("不在当前页面")
+        vnp.click_close_more()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0021(self):
+        """录制后点击小键盘，切换到输入模式"""
+        # 1、点击“创建语音通知”
+        # 2、点击话筒icon录制语音
+        # 3、录制成功之后，点击录音右下角的小键盘icon
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        time.sleep(2)
+        vnp.click_text("创建语音通知")
+        time.sleep(2)
+        vnp.click_element_("语音按钮")
+        time.sleep(2)
+        vnp.press_element_("语音话筒按钮", 3000)
+        time.sleep(2)
+        vnp.click_element_("键盘")
+        time.sleep(2)
+        if not vnp.is_text_present("请输入通知内容"):
+            raise AssertionError("切换到输入模式失败")
+        vnp.click_close_more()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0024(self):
+        """成功创建一条语音通知，输入内容，设置定时，添加按键反馈"""
+        # 1、点击“创建语音通知”
+        # 2、输入通知内容
+        # 3、添加接收人
+        # 4、设置定时时间，设置反馈按键信息
+        # 5、点击“发送”
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_text("创建语音通知")
+        time.sleep(2)
+        vnp.click_element_("语音按钮")
+        time.sleep(2)
+        vnp.press_element_("语音话筒按钮", 2000)
+        time.sleep(2)
+        vnp.click_add()
+        sc = SelectContactsPage()
+        sc.click_local_contacts()
+        sc.click_one_contact("和飞信电话")
+        time.sleep(2)
+        sc.click_sure_bottom()
+        time.sleep(2)
+        vnp.click_send()
+        vnp.wait_for_page_loads()
+
+    # @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    # def test_YYTZ_0025(self):
+    #     """删除发送成功的语音通知"""
+    #     # 1、点击一条发送成功的语音通知
+    #     # 2、点击“更多”-“删除”
+    #     # 3、点击“确定”
+    #     vnp = VoiceNoticePage()
+    #     vnp.wait_for_page_loads()
+    #     time.sleep(2)
+    #     vnp.click_element_("创建通知语音")
+    #     time.sleep(2)
+    #     vnp.click_text("更多")
+    #     time.sleep(1)
+    #     vnp.click_text("删除")
+    #     time.sleep(2)
+    #     vnp.click_text("确定")
+    #     vnp.wait_for_page_loads()
+    #     time.sleep(2)
+    #     if vnp.is_text_present('2"'):
+    #         raise AssertionError("我创建的列表中被删除的通知信息没有被移除")
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0029(self):
+        """用户不在任何部门下"""
+        # 1.点击“+”添加联系人
+        # 2.点击返回或者面包屑中的企业通讯录
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_text("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        time.sleep(2)
+        vnp.click_text("企业通讯录")
+        time.sleep(2)
+        if not vnp.is_text_present("当前组织"):
+            raise AssertionError("没有跳转到企业层级")
+        current_mobile().back()
+        current_mobile().back()
+        current_mobile().back()
+        current_mobile().back()
+        vnp.wait_for_page_loads()
