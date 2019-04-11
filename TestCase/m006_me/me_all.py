@@ -1901,12 +1901,15 @@ class MeAllTest(TestCase):
         scg.select_local_contacts()
         slp = SelectLocalContactsPage()
         slp.wait_for_page_load()
-        name = slp.get_contacts_name()[1]
-        slp.select_one_member_by_name(name)
+        # name = slp.get_contacts_name()
+        # name1 = [name]
+        # name = name1[1]
+        name = "和飞信电话"
+        slp.swipe_select_one_member_by_name(name)
         # 4.点击取消
         slp.click_cancel_forward()
         # 5.点击确定转发
-        slp.select_one_member_by_name(name)
+        slp.swipe_select_one_member_by_name(name)
         slp.click_sure_forward()
         self.assertEquals(slp.is_toast_exist("已转发"), True)
         # 3.点击返回
