@@ -247,7 +247,7 @@ class Preconditions(object):
     def get_group_chat_name():
         """获取群名"""
         phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
-        group_name = "chargourp" + phone_number[-4:]
+        group_name = "c" + phone_number[-4:]
         return group_name
 
     @staticmethod

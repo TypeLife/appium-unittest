@@ -222,7 +222,7 @@ class Preconditions(object):
     def get_group_chat_name():
         """获取群名"""
         phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
-        group_name = "chargourp" + phone_number[-4:]
+        group_name = "c" + phone_number[-4:]
         return group_name
 
     @staticmethod
@@ -1387,7 +1387,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcv.click_back()
         gcf.click_back()
         gcs.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-        gcp.click_back()
+        gcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
         sog = SelectOneGroupPage()
         sog.click_back()
         sct = SelectContactsPage()
