@@ -228,7 +228,7 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def wait_login_success(self, timeout=8, auto_accept_alerts=True):
         """等待消息页面加载（自动允许权限）"""
-        # time.sleep(5)
+        # time.sleep(15)
         # locator = (MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/btn_cancel" and @text ="以后再说"]')
         # if self._is_element_present(locator):
         #     self.click_element(locator)
@@ -733,10 +733,19 @@ class MessagePage(FooterPage):
         return False
 
     @TestLogger.log()
-    def is_message_content_match_image(self):
+    def is_message_content_match_picture(self):
         """查看刚刚发送消息的窗口消息内容是否显示图片"""
         els = self.get_elements(self.__class__.__locators["消息简要内容"])
         text = els[0].text
         if "[图片]" in text:
+            return True
+        return False
+
+    @TestLogger.log()
+    def is_message_content_match_video(self):
+        """查看刚刚发送消息的窗口消息内容是否显示视频"""
+        els = self.get_elements(self.__class__.__locators["消息简要内容"])
+        text = els[0].text
+        if "[视频]" in text:
             return True
         return False
