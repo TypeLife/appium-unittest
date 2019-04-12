@@ -38,7 +38,6 @@ class CallPage(BasePage):
         '结束通话': (MobileBy.ID, 'com.android.incallui:id/endButton'),
         '呼叫中': (MobileBy.ID, 'com.chinasofti.rcs:id/ivAvatar'),
         '挂断语音通话': (MobileBy.ID, 'com.chinasofti.rcs:id/smart_call_out_term'),
-        '视频图片': (MobileBy.ID, 'com.chinasofti.rcs:id/ivMultipartyVideo'),
         '通话显示': (MobileBy.ID, 'com.chinasofti.rcs:id/tvTitle'),
         '通话记录': (MobileBy.ID, 'com.chinasofti.rcs:id/tvName'),
         '0731210086': (MobileBy.XPATH, "//*[contains(@text, '0731210086')]"),
@@ -52,11 +51,11 @@ class CallPage(BasePage):
         "多方视频图标": (MobileBy.ID, "com.chinasofti.rcs:id/ivMultipartyVideo"),
         "通话记录时间": (MobileBy.ID, "com.chinasofti.rcs:id/tvCallTime"),
         "profileName": (MobileBy.ID, "com.chinasofti.rcs:id/tv_profile_name"),
+        "+号": (MobileBy.ID, 'com.chinasofti.rcs:id/action_add'),
     }
 
-
     @TestLogger.log()
-    def click_multiparty_call_by_home(self):
+    def click_free_call(self):
         """点击多方通话"""
         self.click_element(self.__locators["多方通话"])
 
@@ -79,7 +78,7 @@ class CallPage(BasePage):
     def is_on_the_call_page(self):
         """判断当前页是否通话界面"""
         flag = False
-        element = self.get_elements(self.__locators["视频图片"])
+        element = self.get_elements(self.__locators["多方视频图标"])
         if len(element) > 0:
             flag = True
         return flag
@@ -219,7 +218,7 @@ class CallPage(BasePage):
         """检查拨号输入框文本内容与输入相同
         value：输入的文本内容：电话号码，str
         """
-        callText=self.get_text(self.__locators["直接拨号或开始搜索"])
+        callText = self.get_text(self.__locators["直接拨号或开始搜索"])
         flag = False
         if callText == val:
             flag = True
@@ -300,7 +299,6 @@ class CallPage(BasePage):
         """点击结束语音通话"""
         self.click_element(self.__locators["挂断语音通话"])
 
-
     @TestLogger.log()
     def is_phone_in_calling_state(self):
         """判断是否在通话界面"""
@@ -314,9 +312,9 @@ class CallPage(BasePage):
             return self.execute_shell_command(command)
 
     @TestLogger.log()
-    def check_video_image(self):
+    def check_multiparty_video(self):
         """判断是否存在视频图片来检查是否在通话界面"""
-        return self._is_element_present(self.__locators["视频图片"])
+        return self._is_element_present(self.__locators["多方视频图标"])
 
     @TestLogger.log()
     def check_call_display(self):
@@ -362,7 +360,7 @@ class CallPage(BasePage):
         """前置条件：当前已进入call界面"""
         flag = True
         ret = True
-        if self.check_video_image():
+        if self.check_multiparty_video():
             while flag:
                 el = self.get_elements(self.__locators["通话记录"])
                 if len(el) > 0:
@@ -381,7 +379,8 @@ class CallPage(BasePage):
     @TestLogger.log()
     def get_call_entry_color_of_element(self):
         """获取通话记录控件坐标颜色"""
-        return self.get_coordinate_color_of_element(element=self.__locators["通话记录"], x=50, y=50, by_percent=True, mode='RGBA')
+        return self.get_coordinate_color_of_element(element=self.__locators["通话记录"], x=50, y=50, by_percent=True,
+                                                    mode='RGBA')
 
     @TestLogger.log()
     def click_call_profile(self):
@@ -448,6 +447,11 @@ class CallPage(BasePage):
         self.click_element(self.__class__.__locators["通话记录时间"])
 
     @TestLogger.log()
+    def is_exist_call_time(self):
+        """判断是否存在通话记录时间"""
+        return self._is_element_present(self.__locators["通话记录时间"])
+
+    @TestLogger.log()
     def is_exist_profile_name(self):
         """判断是否存在profile_name"""
         return self._is_element_present(self.__locators["profileName"])
@@ -477,6 +481,7 @@ class CallPage(BasePage):
     def create_call_entry(self, text):
         """当前界面已在call界面，创建通话记录，并返回call界面"""
         self.click_call()
+        time.sleep(1)
         self.dial_number(text)
         self.click_call_phone()
         time.sleep(2)
@@ -486,3 +491,40 @@ class CallPage(BasePage):
         time.sleep(1)
         if not self.is_on_the_call_page():
             self.click_call()
+
+    @TestLogger.log()
+    def click_multi_party_video(self):
+        """点击多方视频"""
+        self.click_element(self.__class__.__locators["多方视频图标"])
+
+    @TestLogger.log()
+    def select_type_start_call(self, text, calltype):
+        """在call界面，输入号码选择拨打电话类型并拨打电话"""
+        if not self.is_on_the_dial_pad():
+            self.click_call()
+        self.dial_number(text)
+        self.click_call_phone()
+        time.sleep(2)
+        if CallTypeSelectPage().is_select_call():
+            if calltype == 2:
+                CallTypeSelectPage().click_call_by_general()
+            if calltype == 1:
+                CallTypeSelectPage().click_call_by_voice()
+            if calltype == 0:
+                CallTypeSelectPage().click_call_by_app()
+        time.sleep(1)
+
+    @TestLogger.log()
+    def is_on_this_messagepage(self):
+        """当前页面是否在消息页"""
+        try:
+            self.wait_until(
+                timeout=30,
+                auto_accept_permission_alert=True,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["+号"])
+            )
+            return True
+        except:
+            return False
+
+
