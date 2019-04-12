@@ -51,7 +51,9 @@ class SelectContactsPage(BasePage):
         '左侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/index_text"]'),
         '查看更多': (MobileBy.XPATH, '//*[@text ="查看更多"]'),
         '和通讯录返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back'),
-        "最近聊天消息名称": (MobileBy.ID, "com.chinasofti.rcs:id/tv_name")
+        "最近聊天消息名称": (MobileBy.ID, "com.chinasofti.rcs:id/tv_name"),
+        "联系人横框": (MobileBy.ID, "com.chinasofti.rcs:id/contact_list_item"),
+        "搜索框左边选中联系人": (MobileBy.ID, "com.chinasofti.rcs:id/image"),
     }
 
     @TestLogger.log()
@@ -362,6 +364,20 @@ class SelectContactsPage(BasePage):
         """点击确定"""
         els = self.get_elements(self.__class__.__locators["local联系人"])
         if len(els) > 3:
+            return True
+        else:
+            return False
+
+    @TestLogger.log()
+    def is_element_present_by_locator(self,text):
+        """判断指定元素是否存在"""
+        return self._is_element_present(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def swipe_and_find_element(self, text):
+        """滑动并查找特定元素"""
+        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[@text="%s"]' % text))
+        if el:
             return True
         else:
             return False
