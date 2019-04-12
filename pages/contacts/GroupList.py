@@ -254,8 +254,10 @@ class GroupListPage(BasePage):
 
     @TestLogger.log()
     def open_contacts_page(self):
+        from pages.contacts.Contacts import ContactsPage
         """切换到标签页：通讯录"""
         self.click_element(self.__locators['通讯录'])
+        ContactsPage().click_sim_contact()
 
     @TestLogger.log()
     def check_if_contains_element(self,text="确定"):

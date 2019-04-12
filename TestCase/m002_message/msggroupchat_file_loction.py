@@ -139,7 +139,7 @@ class Preconditions(object):
     def get_group_chat_name():
         """获取群名"""
         phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
-        group_name = "agroup" + phone_number[-4:]
+        group_name = "ag" + phone_number[-4:]
         return group_name
 
     @staticmethod
@@ -1040,6 +1040,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         if gcp.is_text_present("撤回"):
             raise AssertionError("超过十分钟可以撤回")
         time.sleep(2)
+        gcp.tap_coordinate([(100, 20), (100, 60), (100,100)])
 
     def tearDown_test_msg_group_chat_file_location_0042(self):
         # 删除聊天记录
@@ -1064,7 +1065,7 @@ class MsgGroupChatFileLocationTest(TestCase):
             try:
                 raise AssertionError("没有返回到群聊页面,无法删除记录")
             except AssertionError as e:
-                print(e)
+                raise e
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0043(self):

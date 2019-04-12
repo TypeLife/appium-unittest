@@ -68,6 +68,7 @@ class GroupChatPage(BaseChatPage):
                   "文本发送按钮": (MobileBy.ID, "com.chinasofti.rcs:id/ib_send"),
                   "小红点": (MobileBy.ID, "com.chinasofti.rcs:id/ib_record_red_dot"),
                   "粘贴": (MobileBy.ID, "com.chinasofti.rcs:id/ib_pic"),
+                  "照片选择框": (MobileBy.ID, "com.chinasofti.rcs:id/iv_select"),
 
                   }
 
@@ -447,3 +448,13 @@ class GroupChatPage(BaseChatPage):
         el = self.get_elements(self.__locators["呵呵"])
         el = el[-1]
         el.click()
+
+    @TestLogger.log()
+    def click_mutilcall(self):
+        """点击多方通话"""
+        self.click_element(self.__class__.__locators["多方通话"])
+
+    @TestLogger.log()
+    def select_picture(self):
+        """选择照片"""
+        self.click_element(self.__class__.__locators["照片选择框"])
