@@ -147,7 +147,7 @@ class Preconditions(object):
     def get_group_chat_name():
         """获取群名"""
         phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
-        group_name = "agroup" + phone_number[-4:]
+        group_name = "ag" + phone_number[-4:]
         return group_name
 
     @staticmethod
@@ -1221,41 +1221,46 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(10)
         audio = ChatAudioPage()
         if not audio.is_text_present("无法识别，请重试"):
-            audio.click_exit()
+            audio.click_text("说点什么...")
+            time.sleep(2)
+            audio.hide_keyboard()
             raise AssertionError("不会提示‘无法识别，请重试’")
-        gcp.click_back()
-        sogp = SelectOneGroupPage()
-        sogp.click_back()
-        sc = SelectContactsPage()
-        sc.click_back()
+        audio.click_text("说点什么...")
+        time.sleep(2)
+        audio.hide_keyboard()
+
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0022(self):
         """语音+文字模式下，发送消息"""
         gcp = GroupChatPage()
-        gcp.click_audio_btn()
-        #断开网络
-        gcp.set_network_status(1)
+        # 断开网络
+        gcp.set_network_status(0)
         time.sleep(10)
+        gcp.click_audio_btn()
         audio = ChatAudioPage()
+        if gcp.is_text_present("请选择您偏好的语音发送模式:"):
+            audio.click_text("确定")
+            time.sleep(2)
+            audio.click_text("始终允许")
+            time.sleep(2)
         if audio.is_text_present("我知道了"):
             audio.click_i_know()
         time.sleep(2)
         if not audio.is_text_present("网络不可用，请检查网络设置"):
-            audio.click_exit()
+            audio.click_text("说点什么...")
+            time.sleep(2)
+            audio.hide_keyboard()
             raise AssertionError("不会提示‘网络不可用，请检查网络设置’")
-        audio.click_exit()
+        audio.click_text("说点什么...")
+        time.sleep(2)
+        audio.hide_keyboard()
+        time.sleep(2)
 
     def tearDown_test_msg_common_group_0022(self):
         #重新连接网络
         gcp = GroupChatPage()
         gcp.set_network_status(6)
-        time.sleep(2)
-        gcp.click_back()
-        sogp = SelectOneGroupPage()
-        sogp.click_back()
-        sc = SelectContactsPage()
-        sc.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0023(self):
@@ -1265,13 +1270,13 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(10)
         audio = ChatAudioPage()
         if not audio.is_text_present("无法识别，请重试"):
-            audio.click_exit()
+            audio.click_text("说点什么...")
+            time.sleep(2)
+            audio.hide_keyboard()
             raise AssertionError("不会提示‘无法识别，请重试’")
-        gcp.click_back()
-        sogp = SelectOneGroupPage()
-        sogp.click_back()
-        sc = SelectContactsPage()
-        sc.click_back()
+        audio.click_text("说点什么...")
+        time.sleep(2)
+        audio.hide_keyboard()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0028(self):
@@ -1297,13 +1302,13 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(10)
         audio = ChatAudioPage()
         if not audio.is_text_present("无法识别，请重试"):
-            audio.click_exit()
+            audio.click_text("说点什么...")
+            time.sleep(2)
+            audio.hide_keyboard()
             raise AssertionError("不会提示‘无法识别，请重试’")
-        gcp.click_back()
-        sogp = SelectOneGroupPage()
-        sogp.click_back()
-        sc = SelectContactsPage()
-        sc.click_back()
+        audio.click_text("说点什么...")
+        time.sleep(2)
+        audio.hide_keyboard()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0031(self):
@@ -1313,13 +1318,13 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(10)
         audio = ChatAudioPage()
         if not audio.is_text_present("无法识别，请重试"):
-            audio.click_exit()
+            audio.click_text("说点什么...")
+            time.sleep(2)
+            audio.hide_keyboard()
             raise AssertionError("不会提示‘无法识别，请重试’")
-        gcp.click_back()
-        sogp = SelectOneGroupPage()
-        sogp.click_back()
-        sc = SelectContactsPage()
-        sc.click_back()
+        audio.click_text("说点什么...")
+        time.sleep(2)
+        audio.hide_keyboard()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0036(self):
@@ -1451,7 +1456,7 @@ class MsgCommonGroupTest(TestCase):
             raise AssertionError("不会弹出呼叫，复制号码窗体")
         gcp.click_text("呼叫")
         time.sleep(2)
-        if gcp.is_text_present('需要使用电话权限，您是否允许？'):
+        if gcp.is_text_present('始终允许'):
             gcp.click_text("始终允许")
         time.sleep(2)
         #判断是否可以发起呼叫
@@ -1833,7 +1838,7 @@ class MsgCommonGroupTest(TestCase):
         gcsp.clear_group_name()
         time.sleep(1)
         #录入新群名
-        gcsp.input_new_group_name("new_group_name")
+        gcsp.input_new_group_name("NGN")
         time.sleep(1)
         if not gcsp.is_enabled_of_group_name_save_button():
             raise AssertionError("页面右上角的确定按钮没有高亮展示")
@@ -5601,3 +5606,38 @@ class MsgCommonGroupAllTest(TestCase):
         time.sleep(2)
         if not gcp.is_exist_red_dot():
             raise AssertionError("清除数据重新登陆,语音icon不存在红点提示")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_common_group_all_0098(self):
+        """在群聊会话窗口，点击页面顶部的通话按钮"""
+        # 1、点击页面顶部的通话按钮，是否会调起通话选择项弹窗
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_mutilcall()
+        time.sleep(2)
+        if not gcp.is_text_present("多方视频"):
+            raise AssertionError("不会调起通话选择项弹窗")
+        gcp.tap_coordinate([(100, 20), (100, 60), (100,100)])
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_common_group_all_0101(self):
+        """在群聊会话窗口，点击输入框上方的图片ICON，进入到图片展示列表"""
+        # 1、点击输入框上方的图片ICON，是否可以进入到相册列表页
+        # 2、任意选中一张照片，点击右下角的发送按钮，是否可以发送成功
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        Preconditions.delete_record_group_chat()
+        gcp.click_picture()
+        time.sleep(2)
+        if not gcp.is_text_present("原图"):
+            raise AssertionError("不可以进入到相册列表页")
+        gcp.select_picture()
+        time.sleep(2)
+        gcp.click_text("发送")
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+
