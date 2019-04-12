@@ -755,12 +755,14 @@ class MsgGroupChatvedioTest(TestCase):
         cpg.select_pic_fk(n=2)
         cpg.click_preview()
         cpp = ChatPicPreviewPage()
-        # 4.校验预览页面中隐藏"编辑"按钮的提示
+        # 4.校验预览页面中隐藏"编辑"按钮的提示/6.2.9版本有改变
         cpp.wait_for_page_load()
         cpp.click_edit()
-        fla = cpp.edit_btn_is_toast()
-        self.assertEqual(fla, True)
+        # fla = cpp.edit_btn_is_toast()
+        # self.assertEqual(fla, True)
         # 5.点击返回
+        cpe = ChatPicEditPage()
+        cpe.click_cancle()
         cpp.click_back()
         cpg.click_back()
 
@@ -933,7 +935,7 @@ class MsgGroupChatvedioTest(TestCase):
         slc = SelectLocalContactsPage()
         slc.wait_for_page_load()
         # 4.选择第一个本地联系人发送
-        slc.swipe_select_one_member_by_name("给个红包3")
+        slc.swipe_select_one_member_by_name("和飞信电话")
         slc.click_sure_forward()
         # 5.校验是否在消息聊天页面，是否提示已转发
         gcp.is_on_this_page()
@@ -989,9 +991,10 @@ class MsgGroupChatvedioTest(TestCase):
         gcp.is_on_this_page()
         self.assertEquals(gcp.is_exist_collection(), True)
         # 4.返回到消息主页
+        # 6.2.9版本有改动
         gcp.click_back()
-        SelectOneGroupPage().click_back()
-        SelectContactsPage().click_back()
+        # SelectOneGroupPage().click_back()
+        # SelectContactsPage().click_back()
         from pages.components.Footer import FooterPage
         # 5.进入我的-收藏页面
         fp = FooterPage()
@@ -1079,8 +1082,8 @@ class MsgGroupChatvedioTest(TestCase):
         self.assertEquals(gcp.is_exist_collection(), True)
         # 4.返回到消息主页
         gcp.click_back()
-        SelectOneGroupPage().click_back()
-        SelectContactsPage().click_back()
+        # SelectOneGroupPage().click_back()
+        # SelectContactsPage().click_back()
         from pages.components.Footer import FooterPage
         # 5.进入我的-收藏页面
         fp = FooterPage()
@@ -1175,8 +1178,9 @@ class MsgGroupChatvedioTest(TestCase):
         cpg.click_preview()
         time.sleep(1)
         self.assertEquals(cpg.pre_video_btn_is_enabled(), True)
+        cpp = ChatPicPreviewPage()
+        cpp.click_back()
         cpg.click_back()
-        cpg.click_back_back()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
     def test_msg_group_chat_video_0060(self):
@@ -1383,15 +1387,15 @@ class MsgGroupChatvedioTest(TestCase):
         scp.click_one_contact("大佬2")
         scp.click_sure_forward()
         self.assertEquals(gcv.is_toast_exist_zf(), True)
-        # 6.点击返回到群聊页面
+        # 6.点击返回到群聊页面//6.2.9版本有改动
         gcv.click_back()
         gcf.click_back()
         gcs.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-        gcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
-        sog = SelectOneGroupPage()
-        sog.click_back()
-        sct = SelectContactsPage()
-        sct.click_back()
+        # gcp.click_element([MobileBy.XPATH, "//*[contains(@resource-id,'back')]"], 15)
+        # sog = SelectOneGroupPage()
+        # sog.click_back()
+        # sct = SelectContactsPage()
+        gcp.click_back()
         scp.click_one_contact("大佬2")
         if gcp.is_exist_dialog():
             gcp.click_i_have_read()
@@ -1493,14 +1497,14 @@ class MsgGroupChatvedioTest(TestCase):
         gcv.click_back()
         time.sleep(1)
         gcf.click_back()
-        time.sleep(1)
+        time.sleep(2)
         gcs.click_back()
         time.sleep(1)
         gcp.click_back()
-        sog = SelectOneGroupPage()
-        sog.click_back()
-        sct = SelectContactsPage()
-        sct.click_back()
+        # sog = SelectOneGroupPage()
+        # sog.click_back()
+        # sct = SelectContactsPage()
+        # sct.click_back()
         scp.click_one_contact("大佬3")
         time.sleep(1)
         self.assertEquals(gcp.is_exist_msg_videos(), True)
@@ -1534,10 +1538,10 @@ class MsgGroupChatvedioTest(TestCase):
         gcf.click_back()
         gcs.click_back()
         gcp.click_back()
-        sog = SelectOneGroupPage()
-        sog.click_back()
-        sct = SelectContactsPage()
-        sct.click_back()
+        # sog = SelectOneGroupPage()
+        # sog.click_back()
+        # sct = SelectContactsPage()
+        # sct.click_back()
         from pages.components.Footer import FooterPage
         # 6.进入我的-收藏页面
         fp = FooterPage()
