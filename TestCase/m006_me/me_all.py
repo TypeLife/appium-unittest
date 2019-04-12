@@ -106,9 +106,15 @@ class Preconditions(object):
         if mess.is_on_this_page():
             return
         # 进入一键登录页
-        Preconditions.make_already_in_one_key_login_page()
-        #  从一键登录页面登录
-        Preconditions.login_by_one_key_login()
+        else:
+            try:
+                current_mobile().launch_app()
+                mess.wait_for_page_load()
+            except:
+                # 进入一键登录页
+                Preconditions.make_already_in_one_key_login_page()
+                #  从一键登录页面登录
+                Preconditions.login_by_one_key_login()
 
     @staticmethod
     def make_already_in_me_all_page():
@@ -221,7 +227,7 @@ class Preconditions(object):
     def get_group_chat_name():
         """获取群名"""
         phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
-        group_name = "chargourp" + phone_number[-4:]
+        group_name = "c" + phone_number[-4:]
         return group_name
 
     @staticmethod
@@ -1895,12 +1901,15 @@ class MeAllTest(TestCase):
         scg.select_local_contacts()
         slp = SelectLocalContactsPage()
         slp.wait_for_page_load()
-        name = slp.get_contacts_name()[1]
-        slp.select_one_member_by_name(name)
+        # name = slp.get_contacts_name()
+        # name1 = [name]
+        # name = name1[1]
+        name = "和飞信电话"
+        slp.swipe_select_one_member_by_name(name)
         # 4.点击取消
         slp.click_cancel_forward()
         # 5.点击确定转发
-        slp.select_one_member_by_name(name)
+        slp.swipe_select_one_member_by_name(name)
         slp.click_sure_forward()
         self.assertEquals(slp.is_toast_exist("已转发"), True)
         # 3.点击返回

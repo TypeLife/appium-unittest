@@ -1,7 +1,9 @@
 import unittest
 
+from selenium.common.exceptions import TimeoutException
+
 import preconditions
-from library.core.utils.applicationcache import current_mobile
+from library.core.utils.applicationcache import current_mobile, current_driver
 from pages.call.Call import CallPage
 from pages.components import BaseChatPage
 from pages.contacts import OfficialAccountPage, SearchOfficialAccountPage
@@ -160,6 +162,41 @@ class Preconditions(LoginPreconditions):
         gcsp.click_sure()
         mp.wait_for_message_list_load()
 
+    @staticmethod
+    def make_already_in_message_page(reset_required=False):
+        """确保应用在消息页面"""
+
+        if not reset_required:
+            message_page = MessagePage()
+            if message_page.is_on_this_page():
+                return
+            else:
+                try:
+                    current_mobile().terminate_app('com.chinasofti.rcs', timeout=2000)
+                except:
+                    pass
+                current_mobile().launch_app()
+            try:
+                message_page.wait_until(
+                    condition=lambda d: message_page.is_on_this_page(),
+                    timeout=3
+                )
+                return
+            except TimeoutException:
+                pass
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_one_key_login_page()
+        login_num = Preconditions.login_by_one_key_login()
+        return login_num
+
+    @staticmethod
+    def reset_and_relaunch_app():
+        """首次启动APP（使用重置APP代替）"""
+
+        app_package = 'com.chinasofti.rcs'
+        current_driver().activate_app(app_package)
+        current_mobile().reset_app()
+
 
 class MessageListAllTest(TestCase):
     """
@@ -268,11 +305,8 @@ class MessageListAllTest(TestCase):
         """消息列表未读消息清空"""
 
         # 重置当前app
-        current_mobile().reset_app()
-        LoginPreconditions.make_already_in_one_key_login_page()
-        LoginPreconditions.login_by_one_key_login()
+        Preconditions.make_already_in_message_page(True)
         mp = MessagePage()
-        time.sleep(5)
         mp.wait_for_message_list_load()
         # 确保消息列表有未读消息
         self.assertEquals(mp.is_exist_unread_messages(), True)

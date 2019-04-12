@@ -1,3 +1,4 @@
+import unittest
 import uuid
 
 import preconditions
@@ -17,6 +18,7 @@ REQUIRED_MOBILES = {
 }
 
 
+@unittest.skip("我的二维码模块先不执行")
 class MeTest(TestCase):
     """
     模块：我 - 我的二维码

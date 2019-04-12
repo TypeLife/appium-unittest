@@ -2,9 +2,11 @@ import unittest
 
 import time
 
+from selenium.common.exceptions import TimeoutException
+
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
-from library.core.utils.applicationcache import switch_to_mobile, current_mobile
+from library.core.utils.applicationcache import switch_to_mobile, current_mobile, current_driver
 from library.core.utils.testcasefilter import tags
 from pages import AgreementDetailPage, SelectLocalContactsPage
 from pages import GuidePage
@@ -107,19 +109,39 @@ class Preconditions(object):
         message_page.wait_login_success(60)
 
     @staticmethod
-    def make_already_in_message_page(reset=False):
+    def make_already_in_message_page(reset_required=False):
         """确保应用在消息页面"""
-        Preconditions.select_mobile('Android-移动', reset)
-        current_mobile().hide_keyboard_if_display()
-        time.sleep(1)
-        # 如果在消息页，不做任何操作
-        mess = MessagePage()
-        if mess.is_on_this_page():
-            return
-        # 进入一键登录页
+
+        if not reset_required:
+            message_page = MessagePage()
+            if message_page.is_on_this_page():
+                return
+            else:
+                try:
+                    current_mobile().terminate_app('com.chinasofti.rcs', timeout=2000)
+                except:
+                    pass
+                current_mobile().launch_app()
+            try:
+                message_page.wait_until(
+                    condition=lambda d: message_page.is_on_this_page(),
+                    timeout=3
+                )
+                return
+            except TimeoutException:
+                pass
+        Preconditions.reset_and_relaunch_app()
         Preconditions.make_already_in_one_key_login_page()
-        #  从一键登录页面登录
-        Preconditions.login_by_one_key_login()
+        login_num = Preconditions.login_by_one_key_login()
+        return login_num
+
+    @staticmethod
+    def reset_and_relaunch_app():
+        """首次启动APP（使用重置APP代替）"""
+
+        app_package = 'com.chinasofti.rcs'
+        current_driver().activate_app(app_package)
+        current_mobile().reset_app()
 
     @staticmethod
     def enter_group_messenger_page():

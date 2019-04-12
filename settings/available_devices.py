@@ -334,7 +334,7 @@ DEVICES_CONFIG_YYX = {
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
-            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
         },
         'CARDS': [
             {
@@ -357,8 +357,9 @@ DEVICES_P20 = {
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
-            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
         },
+
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
@@ -409,8 +410,8 @@ DEVICES_CONFIG_LXD = {
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                # 'CARD_NUMBER': '19874361585'
-                'CARD_NUMBER': '15875537278'
+                'CARD_NUMBER': '19874361585'
+                # 'CARD_NUMBER': '15875537278'
             },
         ]
     },
