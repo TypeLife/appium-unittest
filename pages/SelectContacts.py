@@ -34,7 +34,7 @@ class SelectContactsPage(BasePage):
         'X': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect'),
         '聊天电话': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),
         # 分享二维码的选择联系人页面
-        '选择本地联系人': (MobileBy.XPATH, '//*[@text ="选择本地联系人"]'),
+        '选择手机联系人': (MobileBy.XPATH, '//*[@text ="选择手机联系人"]'),
         'tel:+86': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_number"]'),
 
         # 未知号码
@@ -162,8 +162,8 @@ class SelectContactsPage(BasePage):
 
     @TestLogger.log()
     def select_local_contacts(self):
-        """选择本地联系人"""
-        self.click_element(self.__class__.__locators["选择本地联系人"])
+        """选择本地联系人/选择手机联系人"""
+        self.click_element(self.__class__.__locators["选择手机联系人"])
 
     @TestLogger.log()
     def click_one_local_contacts(self):

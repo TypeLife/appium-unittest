@@ -13,11 +13,11 @@ class ChatPicPreviewPage(BasePage):
                   'android:id/content': (MobileBy.ID, 'android:id/content'),
                   'com.chinasofti.rcs:id/select_picture_custom_toolbar': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar'),
-                  '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
+                  '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/quit'),
                   'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn'),
-                  '预览(1/2)': (MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_title_text'),
-                  '编辑': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_editimage'),
+                  '预览(1/2)': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
+                  '编辑': (MobileBy.ID, 'com.chinasofti.rcs:id/edit'),
                   'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
                   'com.chinasofti.rcs:id/vp_preview': (MobileBy.ID, 'com.chinasofti.rcs:id/vp_preview'),
                   'com.chinasofti.rcs:id/pv_item': (MobileBy.ID, 'com.chinasofti.rcs:id/pv_item'),

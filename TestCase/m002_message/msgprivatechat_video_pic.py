@@ -2,8 +2,10 @@ import random
 import time
 import re
 
+from selenium.common.exceptions import TimeoutException
+
 from library.core.TestCase import TestCase
-from library.core.utils.applicationcache import current_mobile
+from library.core.utils.applicationcache import current_mobile, current_driver
 from pages.components import BaseChatPage
 from preconditions.BasePreconditions import LoginPreconditions
 from library.core.utils.testcasefilter import tags
@@ -54,6 +56,41 @@ class Preconditions(LoginPreconditions):
             cpp.select_pic_fk(1)
             cpp.click_send()
             time.sleep(5)
+
+    @staticmethod
+    def make_already_in_message_page(reset_required=False):
+        """确保应用在消息页面"""
+
+        if not reset_required:
+            message_page = MessagePage()
+            if message_page.is_on_this_page():
+                return
+            else:
+                try:
+                    current_mobile().terminate_app('com.chinasofti.rcs', timeout=2000)
+                except:
+                    pass
+                current_mobile().launch_app()
+            try:
+                message_page.wait_until(
+                    condition=lambda d: message_page.is_on_this_page(),
+                    timeout=3
+                )
+                return
+            except TimeoutException:
+                pass
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_one_key_login_page()
+        login_num = Preconditions.login_by_one_key_login()
+        return login_num
+
+    @staticmethod
+    def reset_and_relaunch_app():
+        """首次启动APP（使用重置APP代替）"""
+
+        app_package = 'com.chinasofti.rcs'
+        current_driver().activate_app(app_package)
+        current_mobile().reset_app()
 
 
 class MsgPrivateChatVideoPicTest(TestCase):
