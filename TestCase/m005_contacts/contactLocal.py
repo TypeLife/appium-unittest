@@ -345,6 +345,144 @@ class ContactLocal(TestCase):
         lcontact.page_contain_element(text='联系人名字')
 
     @staticmethod
+    def setUp_test_contacts_chenjixiang_0019():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+        time.sleep(1)
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.click_menu('设置')
+        me_page.click_menu('联系人管理')
+        lcontact = localContactPage()
+        lcontact.swich_sim_contact(flag=False)
+        lcontact.click_back_by_android(times=2)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0019(self):
+        '''
+       测试sim单卡测试，无联系人，手机系统设置关闭“显示SIM联系人”，和飞信关闭“显示sim卡联系人”，是否能搜索到本地联系人
+        auther:yanshunhua
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("张无忌")
+        time.sleep(1)
+        lcontact.hide_keyboard()
+        time.sleep(1)
+        lcontact.is_text_present("无该本地联系人")
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0020():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+        time.sleep(1)
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.click_menu('设置')
+        me_page.click_menu('联系人管理')
+        lcontact = localContactPage()
+        lcontact.swich_sim_contact(flag=True)
+        lcontact.click_back_by_android(times=2)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0020(self):
+        '''
+       测试sim单卡测试，有联系人，手机系统设置开启“显示SIM联系人”，和飞信开启“显示sim卡联系人”，是否能搜索到sim联系人
+        auther:yanshunhua
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("ximi")
+        time.sleep(1)
+        lcontact.hide_keyboard()
+        time.sleep(3)
+        els = lcontact.get_element_number()
+        self.assertTrue(len(els) > 0)
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0021():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+        time.sleep(1)
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.click_menu('设置')
+        me_page.click_menu('联系人管理')
+        lcontact = localContactPage()
+        lcontact.swich_sim_contact(flag=False)
+        lcontact.click_back_by_android(times=2)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0021(self):
+        '''
+       测试sim单卡测试，有联系人，手机系统设置开启“显示SIM联系人”，和飞信关闭“显示sim卡联系人”，是否能搜索到sim联系人
+        auther:yanshunhua
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("ximi")
+        time.sleep(1)
+        lcontact.hide_keyboard()
+        time.sleep(3)
+        lcontact.is_text_present("无该本地联系人")
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0022():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.background_app()
+        time.sleep(3)
+        preconditions.launch_app()
+        time.sleep(1)
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.click_menu('设置')
+        me_page.click_menu('联系人管理')
+        lcontact = localContactPage()
+        lcontact.swich_sim_contact(flag=True)
+        lcontact.click_back_by_android(times=2)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0022(self):
+        '''
+       测试sim单卡，有联系人，手机系统设置关闭“显示SIM联系人”，和飞信开启“显示sim卡联系人”，是否能搜索到sim联系人
+        auther:yanshunhua
+        :return:
+        '''
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("ximi")
+        time.sleep(1)
+        lcontact.hide_keyboard()
+        time.sleep(3)
+        els = lcontact.get_element_number()
+        self.assertTrue(len(els) > 0)
+
+    @staticmethod
     def setUp_test_contacts_chenjixiang_0005():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -1486,7 +1624,7 @@ class ContactLocal(TestCase):
         time.sleep(3)
         preconditions.launch_app()
 
-    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0055(self):
         '''
         测试+852的手机号码，通过输入前7位手机号码进行匹配搜索
@@ -1514,7 +1652,7 @@ class ContactLocal(TestCase):
         time.sleep(3)
         preconditions.launch_app()
 
-    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0056(self):
         '''
         测试+852的手机号码，通过输入前8位手机号码进行匹配搜索
@@ -1543,7 +1681,7 @@ class ContactLocal(TestCase):
         time.sleep(3)
         preconditions.launch_app()
 
-    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0057(self):
         '''
         测试搜索内地固话，通过手机号码搜索
@@ -1571,7 +1709,7 @@ class ContactLocal(TestCase):
         time.sleep(3)
         preconditions.launch_app()
 
-    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0058(self):
         '''
         测试搜索香港固话，通过手机号码搜索
@@ -1601,7 +1739,7 @@ class ContactLocal(TestCase):
         preconditions.launch_app()
 
 
-    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0059(self):
         '''
         测试断网情况下，是否能读取本地联系人和搜索
@@ -1631,7 +1769,7 @@ class ContactLocal(TestCase):
         time.sleep(3)
         preconditions.launch_app()
 
-    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0060(self):
         '''
         测试通过名称搜索无号码的联系人
@@ -1661,7 +1799,7 @@ class ContactLocal(TestCase):
         preconditions.launch_app()
 
 
-    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0061(self):
         '''
         测试搜索一个超长姓名和号码的联系人，搜索结果列表显示超长使用…
@@ -1690,7 +1828,7 @@ class ContactLocal(TestCase):
         preconditions.launch_app()
 
 
-    @tags('ALL', 'CONTACTS_debug', 'CMCC')
+    @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0063(self):
         '''
         测试已经被过滤掉空格的联系人，通过空格搜索
@@ -1709,6 +1847,8 @@ class ContactLocal(TestCase):
         els = lcontact.get_element_number()
         self.assertTrue(len(els)==0)
         lcontact.click_back_by_android()
+        
+        
 
 if __name__=="__main__":
     unittest.main()
