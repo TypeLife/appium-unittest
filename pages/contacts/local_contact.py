@@ -181,3 +181,12 @@ class localContactPage(BasePage):
         time.sleep(0.5)
         lcontact.click_element_button("信息发送按钮")
         time.sleep(1)
+
+    @TestLogger.log("查看关键字是否存在")
+    def check_keyword_if_exist(self,text="xiaowen"):
+        flag=True
+        while flag:
+            if self.is_text_present(text=text):
+                return True
+            else:
+                self.page_up()

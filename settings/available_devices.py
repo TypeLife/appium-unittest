@@ -48,7 +48,7 @@ AVAILABLE_DEVICES_DEV = {
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
-            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
         },
         'CARDS': [
             {
