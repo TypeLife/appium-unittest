@@ -114,6 +114,11 @@ class Preconditions(object):
         if group_name in group_names:
             return
         sog.click_back()
+        time.sleep(2)
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
         # 从本地联系人中选择成员创建群
         sc.click_local_contacts()
         time.sleep(2)
@@ -308,7 +313,6 @@ class Preconditions(object):
             # 有群返回，无群创建
             if group_name in group_names:
                 sog.click_back()
-                sc.click_back()
                 return
             a+=1
             sog.page_up()
@@ -385,6 +389,7 @@ class MsgCommonGroupTest(TestCase):
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
+        # current_mobile().launch_app()
         current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.enter_group_chat_page()
@@ -666,19 +671,20 @@ class MsgCommonGroupTest(TestCase):
         sc.wait_for_page_local_contact_load()
         #搜索联系人
         sc.input_search_contact_message("和飞信")
+        time.sleep(2)
         #选择“和飞信电话”联系人进行转发
-        sc.click_one_contact("和飞信电话")
+        sc.click_text("和飞信电话")
         sc.click_sure_forward()
         flag=sc.is_toast_exist("已转发")
         self.assertTrue(flag)
         time.sleep(1)
         #返回消息页面
         gcp.click_back()
-        sogp = SelectOneGroupPage()
-        time.sleep(2)
-        sogp.click_back()
-        sc.click_back()
-        time.sleep(2)
+        # sogp = SelectOneGroupPage()
+        # time.sleep(2)
+        # sogp.click_back()
+        # sc.click_back()
+        # time.sleep(2)
         #判断消息页面有新的会话窗口
         mess = MessagePage()
         if mess.is_on_this_page():
@@ -4055,7 +4061,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("无法中文模糊搜索")
         sog.click_back_icon()
         sog.click_back()
-        sc.click_back()
+        # sc.click_back()
 
     @staticmethod
     def setUp_test_msg_common_group_all_0002():
@@ -4094,7 +4100,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("没有提示 无搜索结果")
         sog.click_back_icon()
         sog.click_back()
-        sc.click_back()
+        # sc.click_back()
 
     @staticmethod
     def setUp_test_msg_common_group_all_0003():
@@ -4134,7 +4140,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("无法中文精确搜索")
         sog.click_back_icon()
         sog.click_back()
-        sc.click_back()
+        # sc.click_back()
 
     @staticmethod
     def setUp_test_msg_common_group_all_0004():
@@ -4173,7 +4179,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("没有提示 无搜索结果")
         sog.click_back_icon()
         sog.click_back()
-        sc.click_back()
+        # sc.click_back()
 
     @staticmethod
     def setUp_test_msg_common_group_all_0005():
@@ -4213,7 +4219,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("无法英文精确搜索")
         sog.click_back_icon()
         sog.click_back()
-        sc.click_back()
+        # sc.click_back()
 
     @staticmethod
     def setUp_test_msg_common_group_all_0006():
@@ -4252,7 +4258,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("没有提示 无搜索结果")
         sog.click_back_icon()
         sog.click_back()
-        sc.click_back()
+        # sc.click_back()
 
     @staticmethod
     def setUp_test_msg_common_group_all_0007():
@@ -4292,7 +4298,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("无法空格精确搜索")
         sog.click_back_icon()
         sog.click_back()
-        sc.click_back()
+        # sc.click_back()
 
     @staticmethod
     def setUp_test_msg_common_group_all_0008():
@@ -4331,7 +4337,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("没有提示 无搜索结果")
         sog.click_back_icon()
         sog.click_back()
-        sc.click_back()
+        # sc.click_back()
 
     @staticmethod
     def setUp_test_msg_common_group_all_0009():
@@ -4371,7 +4377,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("无法数字精确搜索")
         sog.click_back_icon()
         sog.click_back()
-        sc.click_back()
+        # sc.click_back()
 
     @staticmethod
     def setUp_test_msg_common_group_all_0010():
@@ -4410,7 +4416,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("没有提示 无搜索结果")
         sog.click_back_icon()
         sog.click_back()
-        sc.click_back()
+        # sc.click_back()
 
     @staticmethod
     def setUp_test_msg_common_group_all_0011():
@@ -4450,7 +4456,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("无法数字精确搜索")
         sog.click_back_icon()
         sog.click_back()
-        sc.click_back()
+        # sc.click_back()
 
     @staticmethod
     def setUp_test_msg_common_group_all_0012():
@@ -4489,7 +4495,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("没有提示 无搜索结果")
         sog.click_back_icon()
         sog.click_back()
-        sc.click_back()
+        # sc.click_back()
 
     @staticmethod
     def setUp_test_msg_common_group_all_0013():
@@ -4529,7 +4535,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("无法字符精确搜索")
         sog.click_back_icon()
         sog.click_back()
-        sc.click_back()
+        # sc.click_back()
 
     @staticmethod
     def setUp_test_msg_common_group_all_0014():
@@ -4568,7 +4574,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("没有提示 无搜索结果")
         sog.click_back_icon()
         sog.click_back()
-        sc.click_back()
+        # sc.click_back()
 
     @staticmethod
     def setUp_test_msg_common_group_all_0015():
@@ -4608,7 +4614,7 @@ class MsgCommonGroupAllTest(TestCase):
         if gcp.is_on_this_page():
             gcp.click_back()
         sog.click_back()
-        sc.click_back()
+        # sc.click_back()
 
     @tags('ALL', 'CMCC', 'group_chat', 'full')
     def test_msg_common_group_all_0017(self):
@@ -5033,10 +5039,10 @@ class MsgCommonGroupAllTest(TestCase):
         time.sleep(2)
         if gcp.is_on_this_page():
             gcp.click_back()
-        sogp = SelectOneGroupPage()
-        sogp.click_back()
-        sc = SelectContactsPage()
-        sc.click_back()
+        # sogp = SelectOneGroupPage()
+        # sogp.click_back()
+        # sc = SelectContactsPage()
+        # sc.click_back()
         # 进入我页面
         mess = MessagePage()
         mess.open_me_page()
@@ -5088,10 +5094,10 @@ class MsgCommonGroupAllTest(TestCase):
         if not gcp.is_toast_exist("已收藏"):
             raise AssertionError("收藏失败")
         gcp.click_back()
-        sogp = SelectOneGroupPage()
-        sogp.click_back()
-        sc = SelectContactsPage()
-        sc.click_back()
+        # sogp = SelectOneGroupPage()
+        # sogp.click_back()
+        # sc = SelectContactsPage()
+        # sc.click_back()
         # 进入我页面
         mess = MessagePage()
         mess.open_me_page()
@@ -5121,10 +5127,10 @@ class MsgCommonGroupAllTest(TestCase):
         gcp = GroupChatPage()
         time.sleep(2)
         gcp.click_back()
-        sogp = SelectOneGroupPage()
-        sogp.click_back()
-        sc = SelectContactsPage()
-        sc.click_back()
+        # sogp = SelectOneGroupPage()
+        # sogp.click_back()
+        # sc = SelectContactsPage()
+        # sc.click_back()
         # 进入我页面
         mess = MessagePage()
         mess.open_me_page()
@@ -5181,11 +5187,11 @@ class MsgCommonGroupAllTest(TestCase):
                 raise e
         time.sleep(2)
         gcp.click_back()
-        sogp = SelectOneGroupPage()
-        sogp.click_back()
-        sc = SelectContactsPage()
-        sc.click_back()
-        time.sleep(1)
+        # sogp = SelectOneGroupPage()
+        # sogp.click_back()
+        # sc = SelectContactsPage()
+        # sc.click_back()
+        # time.sleep(1)
         mess = MessagePage()
         if mess.is_on_this_page():
             # 判断是否有“！”
@@ -5262,6 +5268,7 @@ class MsgCommonGroupAllTest(TestCase):
         """仅语音模式，发送录制时长大于1秒的语音"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
+        gcp.hide_keyboard()
         gcp.click_audio_btn()
         audio = ChatAudioPage()
         if audio.wait_for_audio_type_select_page_load():
@@ -5305,6 +5312,7 @@ class MsgCommonGroupAllTest(TestCase):
         """仅语音模式，录制时长大于10秒——发送"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
+        gcp.hide_keyboard()
         gcp.click_audio_btn()
         audio = ChatAudioPage()
         if audio.wait_for_audio_type_select_page_load():
@@ -5340,6 +5348,7 @@ class MsgCommonGroupAllTest(TestCase):
         """仅语音模式，录制时长等于60秒—自动发送"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
+        gcp.hide_keyboard()
         gcp.click_audio_btn()
         audio = ChatAudioPage()
         if audio.wait_for_audio_type_select_page_load():
@@ -5385,6 +5394,7 @@ class MsgCommonGroupAllTest(TestCase):
         """仅语音模式，录制时长超过60秒"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
+        gcp.hide_keyboard()
         gcp.click_audio_btn()
         audio = ChatAudioPage()
         if audio.wait_for_audio_type_select_page_load():
@@ -5421,6 +5431,7 @@ class MsgCommonGroupAllTest(TestCase):
         gcp.set_network_status(0)
         time.sleep(8)
         Preconditions.delete_record_group_chat()
+        gcp.hide_keyboard()
         gcp.click_audio_btn()
         audio = ChatAudioPage()
         if audio.wait_for_audio_type_select_page_load():
@@ -5454,6 +5465,7 @@ class MsgCommonGroupAllTest(TestCase):
         gcp.set_network_status(0)
         time.sleep(2)
         Preconditions.delete_record_group_chat()
+        gcp.hide_keyboard()
         gcp.click_audio_btn()
         audio = ChatAudioPage()
         if audio.wait_for_audio_type_select_page_load():
@@ -5484,6 +5496,7 @@ class MsgCommonGroupAllTest(TestCase):
         """语音录制中途——网络异常"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
+        gcp.hide_keyboard()
         gcp.click_audio_btn()
         audio = ChatAudioPage()
         if audio.wait_for_audio_type_select_page_load():
@@ -5530,6 +5543,7 @@ class MsgCommonGroupAllTest(TestCase):
         """语音录制完成——网络异常"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
+        gcp.hide_keyboard()
         gcp.click_audio_btn()
         audio = ChatAudioPage()
         if audio.wait_for_audio_type_select_page_load():
