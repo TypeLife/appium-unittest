@@ -29,7 +29,7 @@ class SelectContactsPage(BasePage):
         '选择一个群': (MobileBy.XPATH, '//*[@text ="选择一个群"]'),
         'com.chinasofti.rcs:id/arrow_right': (MobileBy.ID, 'com.chinasofti.rcs:id/arrow_right'),
         '选择团队联系人': (MobileBy.XPATH, '//*[@text ="选择团队联系人"]'),
-        '本地联系人': (MobileBy.XPATH, '//*[@text ="本地联系人"]'),
+        '本地联系人': (MobileBy.XPATH, '//*[@text ="选择手机联系人"]'),
         '最近聊天': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint'),
         'X': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect'),
         '聊天电话': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),

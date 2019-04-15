@@ -323,3 +323,19 @@ class ChatSelectLocalFilePage(BasePage):
     def click_music(self):
         """点击音乐"""
         self.click_element(self.__class__.__locators["音乐"])
+
+    @TestLogger.log()
+    def wait_for_page_loads(self, timeout=60):
+        """等待 页面加载"""
+        try:
+            self.wait_until(
+                auto_accept_permission_alert=True,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["照片"]),
+                timeout=timeout
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
