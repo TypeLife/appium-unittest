@@ -1013,7 +1013,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 先发送一个指定类型的文件
         Preconditions.public_send_file(".html")
         gcp = GroupChatPage()
-        time.sleep(2)
+        time.sleep(1)
         # 长按刚刚发送的文件撤回
         gcp.press_file_to_do(".html", "撤回")
         time.sleep(2)

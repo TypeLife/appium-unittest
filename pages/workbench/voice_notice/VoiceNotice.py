@@ -14,7 +14,7 @@ class VoiceNoticePage(BasePage):
         '？': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_right1'),
         'X': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_close_actionbar'),
         '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back_actionbar'),
-        '创建语音通知': (MobileBy.XPATH, '//*[@text="创建语音通知"]'),
+        '创建语音通知': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]/android.view.View/android.view.View/android.view.View[5]/android.view.View'),
         '我创建的': (MobileBy.XPATH, '//*[@text="我创建的"]'),
         '我接受的': (MobileBy.XPATH, '//*[@text="我接受的"]'),
         # 打开语音通知使用指引页面
