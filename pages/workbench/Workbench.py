@@ -1,6 +1,8 @@
 from appium.webdriver.common.mobileby import MobileBy
 from library.core.TestLogger import TestLogger
 from pages.components.Footer import FooterPage
+from pages.workbench.manager_console.WorkbenchManagerPage import WorkBenchManagerPage
+import time
 
 
 class WorkbenchPage(FooterPage):
@@ -393,6 +395,38 @@ class WorkbenchPage(FooterPage):
             )
         return self
 
+    @TestLogger.log()
+    def click_corporate_news(self):
+        """点击企业新闻"""
+        els = self.find_els(self.__class__.__locators['企业新闻'])
+        if els:
+            els[0].click()
+        else:
+            self.click_app_store()
+            wbmp = WorkBenchManagerPage()
+            wbmp.wait_for_store_page_load()
+            wbmp.click_search_store()
+            wbmp.input_store_name("企业新闻")
+            wbmp.click_search()
+            time.sleep(5)
+            wbp = WorkbenchPage()
+            if not wbmp.is_exist_join():
+                wbmp.click_close()
+                wbp.wait_for_workbench_page_load()
+                self.click_app_store()
+                wbmp.wait_for_store_page_load()
+                wbmp.click_search_store()
+                wbmp.input_store_name("企业新闻")
+                wbmp.click_search()
+                time.sleep(5)
+            wbmp.click_join()
+            time.sleep(2)
+            wbmp.click_add_app()
+            time.sleep(2)
+            wbmp.click_close()
+            wbp.wait_for_workbench_page_load()
+            time.sleep(2)
+            wbp.click_corporate_news()
 
 
 

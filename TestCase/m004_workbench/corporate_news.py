@@ -85,7 +85,7 @@ class Preconditions(LoginPreconditions):
         mp.click_workbench()
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
-        wbp.click_company_news()
+        wbp.click_corporate_news()
 
     @staticmethod
     def create_unpublished_image_news(news):
