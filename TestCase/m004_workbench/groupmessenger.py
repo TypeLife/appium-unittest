@@ -152,7 +152,10 @@ class Preconditions(object):
         mp.click_workbench()
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
-        wbp.click_group_messenger()
+        wbp.click_messenger_group()
+        # 解决工作台不稳定问题
+        if wbp.is_on_workbench_page():
+            wbp.click_group_messenger()
 
     @staticmethod
     def create_he_contacts(names):
@@ -163,6 +166,7 @@ class Preconditions(object):
         wbp.click_organization()
         osp = OrganizationStructurePage()
         osp.wait_for_page_load()
+        time.sleep(2)
         for name in names:
             if not osp.is_exist_specify_element_by_name(name):
                 osp.click_specify_element_by_name("添加联系人")
