@@ -229,7 +229,7 @@ class WorkbenchPreconditions(LoginPreconditions):
             while a<10:
                 workbench.wait_for_page_load()
                 workbench.click_voice_notice()
-                time.sleep(3)
+                time.sleep(5)
                 if workbench.is_text_present("认证失败"):
                     current_mobile().back()
                     a+=1
