@@ -152,7 +152,7 @@ class Preconditions(object):
         mp.click_workbench()
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
-        wbp.click_messenger_group()
+        wbp.click_add_group_messenger()
         # 解决工作台不稳定问题
         if wbp.is_on_workbench_page():
             wbp.click_group_messenger()
@@ -167,6 +167,17 @@ class Preconditions(object):
         osp = OrganizationStructurePage()
         osp.wait_for_page_load()
         time.sleep(2)
+        n = 1
+        # 解决工作台不稳定问题
+        while osp.is_text_present("账号认证失败"):
+            osp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_organization()
+            osp.wait_for_page_load()
+            time.sleep(2)
+            n += 1
+            if n > 10:
+                break
         for name in names:
             if not osp.is_exist_specify_element_by_name(name):
                 osp.click_specify_element_by_name("添加联系人")
