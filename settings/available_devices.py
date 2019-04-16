@@ -460,3 +460,26 @@ DEVICES_CONFIG_MATES = {
         ]
     },
 }
+
+DEVICES_CONFIG_nova3 = {
+    'M960BDQN229CH': {
+        "MODEL": SupportedModel.HUAWEI_P20,
+        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
+        "DEFAULT_CAPABILITY": {
+            "platformName": "Android",
+            "platformVersion": "8.1.0",
+            "deviceName": "DRB5T18721004015",
+            "udid": "DRB5T18721004015",
+            "automationName": "UiAutomator2",
+            "newCommandTimeout": 600,
+            "appPackage": "com.chinasofti.rcs",
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
+        },
+        'CARDS': [
+            {
+                'TYPE': CardType.CHINA_MOBILE,
+                'CARD_NUMBER': '19876463625'
+            },
+        ]
+    },
+}

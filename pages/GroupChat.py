@@ -429,3 +429,23 @@ class GroupChatPage(BaseChatPage):
     def is_exist_red_dot(self):
         """是否存在小红点"""
         return self._is_element_present(self.__class__.__locators["小红点"])
+
+    @TestLogger.log("文件是否发送成功")
+    def check_message_resend_success(self):
+        return self._is_element_present(self.__class__.__locators['文件发送成功标志'])
+
+
+    @TestLogger.log("当前页面是否有发文件消息")
+    def is_exist_msg_file(self):
+        el = self.get_elements(('id', 'com.chinasofti.rcs:id/ll_msg'))
+        return len(el) > 0
+
+    @TestLogger.log("删除当前群聊发送的文件")
+    def delete_group_all_file(self):
+        msg_file = self.get_elements(('id', 'com.chinasofti.rcs:id/ll_msg'))
+        if msg_file:
+            for file in msg_file:
+                self.press(file)
+                self.click_element(self.__class__.__locators['删除'])
+        else:
+            raise AssertionError('当前窗口没有可以删除的消息')
