@@ -51,6 +51,10 @@ class SingleChatPage(BaseChatPage):
                   "文本输入框": (MobileBy.ID, "com.chinasofti.rcs:id/et_message"),
                   "文本发送按钮": (MobileBy.ID, "com.chinasofti.rcs:id/ib_send"),
                   "消息免打扰图标": (MobileBy.ID, "com.chinasofti.rcs:id/iv_slient"),
+                  '重发按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
+                  '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
+                  '取消': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
+                  '文件名称': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_name')
                   }
 
     @TestLogger.log()
@@ -169,3 +173,40 @@ class SingleChatPage(BaseChatPage):
     def is_exist_no_disturb_icon(self):
         """是否存在消息免打扰图标"""
         return self._is_element_present(self.__class__.__locators["消息免打扰图标"])
+
+    @TestLogger.log()
+    def is_exist_file_by_type(self, file_type):
+        """是否存在指定类型文件"""
+        locator = (
+            MobileBy.XPATH,
+            '//*[@resource-id="com.chinasofti.rcs:id/textview_file_name" and contains(@text,"%s")]' % file_type)
+        return self._is_element_present(locator)
+
+    @TestLogger.log()
+    def is_exist_msg_send_failed_button(self):
+        """是否存在重发按钮"""
+        return self._is_element_present(self.__class__.__locators["重发按钮"])
+
+    @TestLogger.log()
+    def click_msg_send_failed_button(self, number):
+        """点击重发按钮"""
+        if self._is_element_present(self.__class__.__locators['重发按钮']):
+            els = self.get_elements(self.__class__.__locators["重发按钮"])
+            els[number].click()
+
+    @TestLogger.log()
+    def click_sure(self):
+        """点击确定"""
+        self.click_element(self.__class__.__locators["确定"])
+
+    @TestLogger.log()
+    def click_cancel(self):
+        """点击取消"""
+        self.click_element(self.__class__.__locators["取消"])
+
+    @TestLogger.log()
+    def get_current_file_name(self):
+        """获取刚刚发送的文件名称"""
+        els = self.get_elements(self.__class__.__locators["文件名称"])
+        file_name = els[-1].text
+        return file_name

@@ -67,6 +67,9 @@ class GroupChatPage(BaseChatPage):
                   "返回上一级": (MobileBy.ID, "com.chinasofti.rcs:id/left_back"),
                   "文本发送按钮": (MobileBy.ID, "com.chinasofti.rcs:id/ib_send"),
                   "小红点": (MobileBy.ID, "com.chinasofti.rcs:id/ib_record_red_dot"),
+                  "粘贴": (MobileBy.ID, "com.chinasofti.rcs:id/ib_pic"),
+                  "照片选择框": (MobileBy.ID, "com.chinasofti.rcs:id/iv_select"),
+
                   }
 
     def is_exist_msg_videos(self):
@@ -429,6 +432,33 @@ class GroupChatPage(BaseChatPage):
     def is_exist_red_dot(self):
         """是否存在小红点"""
         return self._is_element_present(self.__class__.__locators["小红点"])
+
+    @TestLogger.log()
+    def click_long_copy_message(self):
+        """输入文本信息"""
+        self.click_element(self.__locators["输入框"])
+        el = self.get_element(self.__locators["输入框"])
+        self.press(el)
+        time.sleep(1.8)
+        self.click_element(self.__locators["粘贴"])
+
+    @TestLogger.log()
+    def click_long_message(self):
+        """输入文本信息"""
+        el = self.get_elements(self.__locators["呵呵"])
+        el = el[-1]
+        el.click()
+
+    @TestLogger.log()
+    def click_mutilcall(self):
+        """点击多方通话"""
+        self.click_element(self.__class__.__locators["多方通话"])
+
+    @TestLogger.log()
+    def select_picture(self):
+        """选择照片"""
+        self.click_element(self.__class__.__locators["照片选择框"])
+
 
     @TestLogger.log("文件是否发送成功")
     def check_message_resend_success(self):

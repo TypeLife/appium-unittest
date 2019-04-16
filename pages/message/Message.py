@@ -66,6 +66,9 @@ class MessagePage(FooterPage):
         '取消置顶': (MobileBy.XPATH, '//*[@text="取消置顶"]'),
         "消息免打扰图标": (MobileBy.ID, "com.chinasofti.rcs:id/iv_conv_slient"),
         "消息红点": (MobileBy.ID, "com.chinasofti.rcs:id/red_dot_silent"),
+        "版本更新": (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_title'),
+        "以后再说": (MobileBy.ID, "com.chinasofti.rcs:id/btn_cancel"),
+        '立即更新': (MobileBy.ID, "com.chinasofti.rcs:id/btn_ok"),
     }
 
     @TestLogger.log('检查顶部搜索框是否显示')
@@ -85,6 +88,18 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def is_on_this_page(self):
         """当前页面是否在消息页"""
+
+        # mark=10
+        # while mark>0:
+        #     time.sleep(1)
+        #     if (self._is_element_present(self.__class__.__locators["版本更新"])):
+        #         self.click_element(self.__class__.__locators["以后再说"])
+        #         break
+        #     mark-=1
+        # locator = (MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/btn_cancel" and @text ="以后再说"]')
+        # if self._is_element_present(locator):
+        #     self.click_element(locator)
+
         try:
             self.wait_until(
                 timeout=15,
@@ -183,6 +198,20 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
         """等待消息页面加载（自动允许权限）"""
+
+        # mark=10
+        # while mark>0:
+        #     time.sleep(1)
+        #     if (self._is_element_present(self.__class__.__locators["版本更新"])):
+        #         self.click_element(self.__class__.__locators["以后再说"])
+        #         break
+        #     mark-=1
+
+
+        # locator = (MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/btn_cancel" and @text ="以后再说"]')
+        # if self._is_element_present(locator):
+        #     self.click_element(locator)
+
         try:
             self.wait_until(
                 timeout=timeout,
@@ -199,6 +228,10 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def wait_login_success(self, timeout=8, auto_accept_alerts=True):
         """等待消息页面加载（自动允许权限）"""
+        # time.sleep(15)
+        # locator = (MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/btn_cancel" and @text ="以后再说"]')
+        # if self._is_element_present(locator):
+        #     self.click_element(locator)
         self.__unexpected_info = None
 
         def unexpected():
@@ -208,10 +241,19 @@ class MessagePage(FooterPage):
                  ' @text="服务器繁忙或加载超时,请耐心等待" or' +
                  ' contains(@text,"一键登录暂时无法使用") or' +
                  ' contains(@text,"登录失败") or' +
-                 ' @text="网络连接超时(102102)，请使用短信验证码登录"' +
+                 ' @text="网络连接超时(102102)，请使用短信验证码登录" or' +
+                 ' @text="立即更新" or' +
                  ']'])
             self.__unexpected_info = result
             return result
+
+        # mark = 10
+        # while mark > 0:
+        #     time.sleep(1)
+        #     if (self._is_element_present(self.__class__.__locators["版本更新"])):
+        #         self.click_element(self.__class__.__locators["以后再说"])
+        #         break
+        #     mark -= 1
 
         try:
             self.wait_condition_and_listen_unexpected(
@@ -477,15 +519,17 @@ class MessagePage(FooterPage):
         """清空未读消息"""
         els = self.get_elements(self.__class__.__locators["未读消息气泡"])
         rect = els[-1].rect
-        pointX = int(rect["x"]) + int(rect["width"]) / 2
-        pointY = -(int(rect["y"]) - 20)
-        TouchAction(self.driver).long_press(els[-1], duration=3000).move_to(els[-1], pointX,
-                                                                            pointY).wait(3).release().perform()
+        x = int(rect["x"]) + int(rect["width"]) / 2
+        y = -(int(rect["y"]) - 20)
+        TouchAction(self.driver).long_press(els[-1], duration=3000).move_to(els[-1], x,
+                                                                            y).wait(3).release().perform()
 
     @TestLogger.log()
     def wait_for_message_list_load(self, timeout=60, auto_accept_alerts=True):
         """等待消息列表加载"""
-
+        # locator = (MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/btn_cancel" and @text ="以后再说"]')
+        # if self._is_element_present(locator):
+        #     self.click_element(locator)
         try:
             self.wait_until(
                 timeout=timeout,
@@ -499,12 +543,17 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def clear_fail_in_send_message(self):
         """清除发送失败消息记录"""
-        els = self.get_elements(self.__class__.__locators["消息发送失败感叹号"])
-        for el in els:
-            time.sleep(1)
-            self.press(el)
-            time.sleep(1)
-            self.click_element(self.__class__.__locators["删除聊天"])
+        current = 0
+        while self._is_element_present(self.__class__.__locators["消息发送失败感叹号"]):
+            current += 1
+            if current > 5:
+                return
+            els = self.get_elements(self.__class__.__locators["消息发送失败感叹号"])
+            for el in els:
+                time.sleep(1)
+                self.press(el)
+                time.sleep(1)
+                self.click_element(self.__class__.__locators["删除聊天"])
 
     @TestLogger.log()
     def is_exist_search_box(self):
@@ -673,3 +722,30 @@ class MessagePage(FooterPage):
         if self._is_element_present(self.__class__.__locators["消息红点"]):
             return False
         return True
+
+    @TestLogger.log()
+    def is_message_content_match_file_name(self, file_name):
+        """查看刚刚发送消息的窗口消息内容是否显示文件+文件名"""
+        els = self.get_elements(self.__class__.__locators["消息简要内容"])
+        text = els[0].text
+        if "[文件]%s" % file_name in text:
+            return True
+        return False
+
+    @TestLogger.log()
+    def is_message_content_match_picture(self):
+        """查看刚刚发送消息的窗口消息内容是否显示图片"""
+        els = self.get_elements(self.__class__.__locators["消息简要内容"])
+        text = els[0].text
+        if "[图片]" in text:
+            return True
+        return False
+
+    @TestLogger.log()
+    def is_message_content_match_video(self):
+        """查看刚刚发送消息的窗口消息内容是否显示视频"""
+        els = self.get_elements(self.__class__.__locators["消息简要内容"])
+        text = els[0].text
+        if "[视频]" in text:
+            return True
+        return False

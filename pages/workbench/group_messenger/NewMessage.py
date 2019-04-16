@@ -12,7 +12,8 @@ class NewMessagePage(BasePage):
         '发送': (MobileBy.XPATH, '//*[@text="发送"]'),
         '返回': (MobileBy.ID, "com.chinasofti.rcs:id/btn_back_actionbar"),
         '+号图标': (MobileBy.XPATH, '//*[@text="javascript:void(0)"]'),
-        '否': (MobileBy.XPATH, '//*[@text="否"]')
+        '否': (MobileBy.XPATH, '//*[@text="否"]'),
+        '关闭': (MobileBy.ID, "com.chinasofti.rcs:id/btn_close_actionbar")
     }
 
     @TestLogger.log()
@@ -40,6 +41,11 @@ class NewMessagePage(BasePage):
         self.click_element(self.__class__.__locators["返回"])
 
     @TestLogger.log()
+    def click_close(self):
+        """点击关闭"""
+        self.click_element(self.__class__.__locators["关闭"])
+
+    @TestLogger.log()
     def is_exist_text(self, text):
         """是否存在文本"""
         return self.is_text_present(text)
@@ -47,4 +53,5 @@ class NewMessagePage(BasePage):
     @TestLogger.log()
     def click_no(self):
         """点击否"""
-        self.click_element(self.__class__.__locators["否"])
+        if self._is_element_present(self.__class__.__locators["否"]):
+            self.click_element(self.__class__.__locators["否"])

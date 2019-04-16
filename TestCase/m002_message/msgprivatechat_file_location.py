@@ -1,7 +1,11 @@
 import random
 import time
+
+from selenium.common.exceptions import TimeoutException
+
 from library.core.TestCase import TestCase
-from library.core.utils.applicationcache import current_mobile
+from library.core.utils.applicationcache import current_mobile, current_driver
+from pages.components import BaseChatPage
 from preconditions.BasePreconditions import LoginPreconditions
 from library.core.utils.testcasefilter import tags
 from pages import *
@@ -9,7 +13,272 @@ from pages import *
 
 class Preconditions(LoginPreconditions):
     """前置条件"""
-    pass
+
+    @staticmethod
+    def make_already_in_message_page(reset_required=False):
+        """确保应用在消息页面"""
+
+        if not reset_required:
+            message_page = MessagePage()
+            if message_page.is_on_this_page():
+                return
+            else:
+                try:
+                    current_mobile().terminate_app('com.chinasofti.rcs', timeout=2000)
+                except:
+                    pass
+                current_mobile().launch_app()
+            try:
+                message_page.wait_until(
+                    condition=lambda d: message_page.is_on_this_page(),
+                    timeout=3
+                )
+                return
+            except TimeoutException:
+                pass
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_one_key_login_page()
+        login_num = Preconditions.login_by_one_key_login()
+        return login_num
+
+    @staticmethod
+    def reset_and_relaunch_app():
+        """首次启动APP（使用重置APP代替）"""
+
+        app_package = 'com.chinasofti.rcs'
+        current_driver().activate_app(app_package)
+        current_mobile().reset_app()
+
+    @staticmethod
+    def enter_single_chat_page(name):
+        """进入单聊聊天会话页面"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 点击 +
+        mp.click_add_icon()
+        # 点击“新建消息”
+        mp.click_new_message()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        # 进入单聊会话页面
+        slc.selecting_local_contacts_by_name(name)
+        bcp = BaseChatPage()
+        if bcp.is_exist_dialog():
+            # 点击我已阅读
+            bcp.click_i_have_read()
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+
+    @staticmethod
+    def enter_preset_file_catalog():
+        """进入预置文件目录"""
+
+        # 在当前聊天会话页面，点击更多富媒体的文件按钮
+        scp = SingleChatPage()
+        scp.wait_for_page_load()
+        scp.click_more()
+        # 点击本地文件
+        cmp = ChatMorePage()
+        cmp.click_file()
+        csfp = ChatSelectFilePage()
+        csfp.wait_for_page_load()
+        csfp.click_local_file()
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        flag = local_file.push_preset_file()
+        if flag:
+            local_file.click_back()
+            csfp.click_local_file()
+        # 进入预置文件目录
+        local_file.click_preset_file_dir()
+
+    @staticmethod
+    def send_file_by_type(file_type):
+        """发送指定类型文件"""
+
+        # 进入预置文件目录
+        Preconditions.enter_preset_file_catalog()
+        local_file = ChatSelectLocalFilePage()
+        # 发送指定类型文件
+        local_file.select_file(file_type)
+        local_file.click_send_button()
+
+    @staticmethod
+    def send_large_file():
+        """发送大型文件"""
+
+        # 进入预置文件目录
+        Preconditions.enter_preset_file_catalog()
+        local_file = ChatSelectLocalFilePage()
+        # 发送大型文件
+        flag = local_file.click_large_file()
+        if not flag:
+            local_file.push_preset_file()
+            local_file.click_back()
+            local_file.click_preset_file_dir()
+            local_file.click_large_file()
+        local_file.click_send_button()
+
+    @staticmethod
+    def enter_local_picture_catalog():
+        """进入本地照片目录"""
+
+        # 在当前聊天会话页面，点击更多富媒体的文件按钮
+        scp = SingleChatPage()
+        scp.wait_for_page_load()
+        scp.click_more()
+        cmp = ChatMorePage()
+        cmp.click_file()
+        csfp = ChatSelectFilePage()
+        # 等待选择文件页面加载
+        csfp.wait_for_page_load()
+        # 点击本地照片
+        csfp.click_pic()
+
+    @staticmethod
+    def send_local_picture():
+        """发送本地图片"""
+
+        # 进入本地照片目录
+        Preconditions.enter_local_picture_catalog()
+        local_file = ChatSelectLocalFilePage()
+        # 发送本地照片
+        local_file.click_picture()
+        local_file.click_send_button()
+
+    @staticmethod
+    def send_large_picture_file():
+        """发送大型图片文件"""
+
+        # 进入本地照片目录
+        Preconditions.enter_local_picture_catalog()
+        local_file = ChatSelectLocalFilePage()
+        # 发送大型图片文件
+        flag = local_file.click_large_file()
+        if not flag:
+            local_file.push_preset_file()
+            local_file.click_back()
+            csfp = ChatSelectFilePage()
+            csfp.click_pic()
+            local_file.click_large_file()
+        local_file.click_send_button()
+
+    @staticmethod
+    def enter_local_video_catalog():
+        """进入本地视频目录"""
+
+        # 在当前聊天会话页面，点击更多富媒体的文件按钮
+        scp = SingleChatPage()
+        scp.wait_for_page_load()
+        scp.click_more()
+        cmp = ChatMorePage()
+        cmp.click_file()
+        csfp = ChatSelectFilePage()
+        # 等待选择文件页面加载
+        csfp.wait_for_page_load()
+        # 点击本地视频
+        csfp.click_video()
+
+    @staticmethod
+    def send_local_video():
+        """发送本地视频"""
+
+        # 进入本地视频目录
+        Preconditions.enter_local_video_catalog()
+        local_file = ChatSelectLocalFilePage()
+        # 发送本地视频
+        local_file.click_video()
+        local_file.click_send_button()
+
+    @staticmethod
+    def send_large_video_file():
+        """发送大型视频文件"""
+
+        # 进入本地视频目录
+        Preconditions.enter_local_video_catalog()
+        local_file = ChatSelectLocalFilePage()
+        # 发送大型视频文件
+        flag = local_file.click_large_file()
+        if not flag:
+            local_file.push_preset_file()
+            local_file.click_back()
+            csfp = ChatSelectFilePage()
+            csfp.click_video()
+            local_file.click_large_file()
+        local_file.click_send_button()
+
+    @staticmethod
+    def enter_local_music_catalog():
+        """进入本地音乐目录"""
+
+        # 在当前聊天会话页面，点击更多富媒体的文件按钮
+        scp = SingleChatPage()
+        scp.wait_for_page_load()
+        scp.click_more()
+        cmp = ChatMorePage()
+        cmp.click_file()
+        csfp = ChatSelectFilePage()
+        # 等待选择文件页面加载
+        csfp.wait_for_page_load()
+        # 点击本地音乐
+        csfp.click_music()
+
+    @staticmethod
+    def send_local_music():
+        """发送本地音乐"""
+
+        # 进入本地音乐目录
+        Preconditions.enter_local_music_catalog()
+        local_file = ChatSelectLocalFilePage()
+        # 发送本地音乐
+        local_file.click_music()
+        local_file.click_send_button()
+
+    @staticmethod
+    def send_large_music_file():
+        """发送大型音乐文件"""
+
+        # 进入本地音乐目录
+        Preconditions.enter_local_music_catalog()
+        local_file = ChatSelectLocalFilePage()
+        # 发送大型音乐文件
+        flag = local_file.click_large_file()
+        if not flag:
+            local_file.push_preset_file()
+            local_file.click_back()
+            csfp = ChatSelectFilePage()
+            csfp.click_music()
+            local_file.click_large_file()
+        local_file.click_send_button()
+
+    @staticmethod
+    def make_no_retransmission_button(name):
+        """确保当前单聊会话页面没有重发按钮影响验证结果"""
+
+        scp = SingleChatPage()
+        if scp.is_exist_msg_send_failed_button():
+            scp.click_back()
+            mp = MessagePage()
+            mp.wait_for_page_load()
+            mp.delete_message_record_by_name(name)
+            Preconditions.enter_single_chat_page(name)
+
+    @staticmethod
+    def make_no_message_send_failed_status(name):
+        """确保当前消息列表没有消息发送失败的标识影响验证结果"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        scp.click_back()
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 确保当前消息列表没有消息发送失败的标识影响验证结果
+        if mp.is_iv_fail_status_present():
+            mp.clear_fail_in_send_message()
+        Preconditions.enter_single_chat_page(name)
 
 
 class MsgPrivateChatFileLocationTest(TestCase):
@@ -586,3 +855,6 @@ class MsgPrivateChatFileLocationTest(TestCase):
     def test_msg_private_chat_file_location_0058(self):
         """单聊天会话页面，点击自己发送格式为txt的文件"""
         self.click_open_file(".txt")
+
+
+

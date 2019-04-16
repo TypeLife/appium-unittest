@@ -1,11 +1,13 @@
 from appium.webdriver.common.mobileby import MobileBy
 from library.core.TestLogger import TestLogger
 from pages.components.Footer import FooterPage
+from pages.workbench.manager_console.WorkbenchManagerPage import WorkBenchManagerPage
+import time
 
 
 class WorkbenchPage(FooterPage):
     """工作台主页"""
-    ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.HomeActivity'
+    ACTIVITY = 'com.cmic.module_main.ui.activity.HomeActivity'
 
     __locators = {
                   'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
@@ -393,6 +395,68 @@ class WorkbenchPage(FooterPage):
             )
         return self
 
+    @TestLogger.log()
+    def is_on_workbench_page(self, timeout=10, auto_accept_alerts=True):
+        """当前页面是否在工作台首页"""
+
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.driver.current_activity == self.ACTIVITY
+            )
+            return True
+        except:
+            return False
+
+    @TestLogger.log()
+    def click_corporate_news(self):
+        """点击企业新闻"""
+        els = self.find_els(self.__class__.__locators['企业新闻'])
+        if els:
+            els[0].click()
+        else:
+            self.add_workbench_app("企业新闻")
+            time.sleep(2)
+            self.click_company_news()
+
+    @TestLogger.log()
+    def click_messenger_group(self):
+        """点击群发信使"""
+        els = self.find_els(self.__class__.__locators['群发信使'])
+        if els:
+            els[0].click()
+        else:
+            self.add_workbench_app("群发信使")
+            time.sleep(2)
+            self.click_group_messenger()
+
+    @TestLogger.log()
+    def add_workbench_app(self, name):
+        """添加工作台里的应用"""
+        self.wait_for_workbench_page_load()
+        self.click_app_store()
+        wbmp = WorkBenchManagerPage()
+        wbmp.wait_for_store_page_load()
+        wbmp.click_search_store()
+        wbmp.input_store_name(name)
+        wbmp.click_search()
+        time.sleep(5)
+        if not wbmp.is_exist_join():
+            wbmp.click_close()
+            self.wait_for_workbench_page_load()
+            self.click_app_store()
+            wbmp.wait_for_store_page_load()
+            wbmp.click_search_store()
+            wbmp.input_store_name(name)
+            wbmp.click_search()
+            time.sleep(5)
+        wbmp.click_join()
+        time.sleep(2)
+        wbmp.click_add_app()
+        time.sleep(2)
+        wbmp.click_close()
+        self.wait_for_workbench_page_load()
 
 
 

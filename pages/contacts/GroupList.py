@@ -102,7 +102,10 @@ class GroupListPage(BasePage):
         '图片发送':(MobileBy.ID,'com.chinasofti.rcs:id/button_send'),
         '发送失败':(MobileBy.ID,'com.chinasofti.rcs:id/imageview_msg_send_failed'),
         '成员头像':(MobileBy.ID,'com.chinasofti.rcs:id/avator'),
-        "确定_可用":(MobileBy.XPATH,'//*[@text="确定(1/1)"]')
+        "确定_可用":(MobileBy.XPATH,'//*[@text="确定(1/1)"]'),
+        "版本更新":(MobileBy.ID,'com.chinasofti.rcs:id/dialog_title'),
+        "以后再说":(MobileBy.ID,"com.chinasofti.rcs:id/btn_cancel"),
+        '立即更新':(MobileBy.ID,"com.chinasofti.rcs:id/btn_ok"),
 
     }
 
@@ -251,8 +254,10 @@ class GroupListPage(BasePage):
 
     @TestLogger.log()
     def open_contacts_page(self):
+        from pages.contacts.Contacts import ContactsPage
         """切换到标签页：通讯录"""
         self.click_element(self.__locators['通讯录'])
+        ContactsPage().click_sim_contact()
 
     @TestLogger.log()
     def check_if_contains_element(self,text="确定"):
@@ -383,6 +388,16 @@ class GroupListPage(BasePage):
         else:
             print('标签不存在')
 
+    @TestLogger.log()
+    def click_back_by_android(self, times=1):
+        """
+        点击返回，通过android返回键
+        """
+        # times 返回次数
+        for i in range(times):
+            self.driver.back()
+            time.sleep(1)
+
     @TestLogger.log('返回按钮')
     def click_back_button(self,times=1):
         for i in range(times):
@@ -453,8 +468,8 @@ class GroupListPage(BasePage):
         time.sleep(2)
 
     @TestLogger.log("添加成员dalao")
-    def add_member(self,name='dalao2',times=1):
-        member='大佬2'
+    def add_member(self,name='dalao5',times=1):
+        member='大佬5'
         time.sleep(1)
         self.click_text('添加成员')
         time.sleep(1)
@@ -464,10 +479,16 @@ class GroupListPage(BasePage):
         time.sleep(1)
         self.hide_keyboard()
         time.sleep(1)
-        if name is 'dalao1':
-            member='大佬1'
+        if name is 'dalao6':
+            member='大佬6'
+        elif name is 'dalao7':
+            member='大佬7'
+        elif name is 'dalao1':
+            member = '大佬1'
+        elif name is 'dalao2':
+            member = '大佬2'
         elif name is 'dalao3':
-            member='大佬3'
+            member = '大佬3'
         if times==1:
             self.click_text(member)
         else:

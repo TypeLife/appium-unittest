@@ -2,8 +2,6 @@ from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
-
-
 class FooterPage(BasePage):
     """主页页脚标签栏"""
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.HomeActivity'
@@ -39,7 +37,12 @@ class FooterPage(BasePage):
     @TestLogger.log()
     def open_contacts_page(self):
         """切换到标签页：通讯录"""
+        from pages.contacts.Contacts import ContactsPage
+
         self.click_element(self.__locators['通讯录'])
+        ContactsPage().click_sim_contact()
+
+
 
     @TestLogger.log()
     def message_icon_is_enabled(self):

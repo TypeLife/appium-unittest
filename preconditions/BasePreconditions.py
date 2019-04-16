@@ -3,7 +3,9 @@ from pages import *
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 import random
 from library.core.common.simcardtype import CardType
+from pages.workbench.manager_console.WorkbenchManagerPage import WorkBenchManagerPage
 from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
+from pages.workbench.voice_notice.VoiceNotice import VoiceNoticePage
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -193,3 +195,45 @@ class WorkbenchPreconditions(LoginPreconditions):
             workbench.click_organization()
         osp = OrganizationStructurePage()
         osp.wait_for_page_load()
+
+    @staticmethod
+    def enter_workbench_manager_page(reset=False):
+        """从消息进入工作台管理页面"""
+        # 登录进入消息页面
+        LoginPreconditions.make_already_in_message_page(reset)
+        mess = MessagePage()
+        # 从消息进入组织架构页面
+        mess.open_workbench_page()
+        workbench = WorkbenchPage()
+        if workbench.is_on_welcome_page():
+            workbench.click_now_create_team()
+        else:
+            workbench.wait_for_page_load()
+            workbench.click_workbench_manage()
+        wmp = WorkBenchManagerPage()
+        wmp.wait_for_page_load()
+
+    @staticmethod
+    def enter_voice_announcement_page(reset=False):
+        """从消息进入语音通知页面"""
+        # 登录进入消息页面
+        LoginPreconditions.make_already_in_message_page(reset)
+        mess = MessagePage()
+        # 从消息进入组织架构页面
+        mess.open_workbench_page()
+        workbench = WorkbenchPage()
+        if workbench.is_on_welcome_page():
+            workbench.click_now_create_team()
+        else:
+            a=0
+            while a<10:
+                workbench.wait_for_page_load()
+                workbench.click_voice_notice()
+                time.sleep(5)
+                if workbench.is_text_present("认证失败"):
+                    current_mobile().back()
+                    a+=1
+                else:
+                    break
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()

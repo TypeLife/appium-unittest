@@ -5,6 +5,7 @@ __all__ = [
     'ContactSecltorPage',
     'GrantPemissionsPage',
     'CallContactDetailPage',
+    'NewOrEditContactPage',
 ]
 
 from .Call import CallPage
@@ -13,3 +14,4 @@ from .CallTypeSelect import CallTypeSelectPage
 from .ContactSelector import ContactSecltorPage
 from .GrantPermissions import GrantPemissionsPage
 from .CallContactDetail import CallContactDetailPage
+from .NewOrEditContact import NewOrEditContactPage

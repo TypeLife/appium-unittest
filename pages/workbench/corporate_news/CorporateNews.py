@@ -1,3 +1,4 @@
+import time
 from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
@@ -11,7 +12,7 @@ class CorporateNewsPage(BasePage):
     ACTIVITY = 'com.cmicc.module_enterprise.ui.activity.EnterpriseH5ProcessActivity'
 
     __locators = {
-        '企业新闻': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title_actionbar" and @text ="企业新闻"]'),
+        '企业新闻': (MobileBy.ID, "com.chinasofti.rcs:id/tv_title_actionbar"),
         '发布新闻': (MobileBy.XPATH, '//*[@resource-id="publishNews" and @text ="发布新闻"]'),
         '未发新闻': (MobileBy.XPATH, '//*[@resource-id="toPublish" and @text ="未发新闻"]'),
         '新闻名称': (MobileBy.XPATH, '//*[@resource-id="news_title"]'),
@@ -32,7 +33,7 @@ class CorporateNewsPage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_element_present(self.__class__.__locators["企业新闻"])
+                condition=lambda d: self._is_element_present(self.__class__.__locators["发布新闻"])
             )
             return True
         except:
@@ -46,7 +47,7 @@ class CorporateNewsPage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_element_present(self.__class__.__locators["企业新闻"])
+                condition=lambda d: self._is_element_present(self.__class__.__locators["发布新闻"])
             )
         except:
             raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
@@ -93,6 +94,7 @@ class CorporateNewsPage(BasePage):
                 cndp.wait_for_page_load()
                 cndp.click_offline()
                 cndp.click_sure()
+                time.sleep(2)
                 self.wait_for_page_load()
 
     @TestLogger.log()

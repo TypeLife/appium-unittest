@@ -11,7 +11,7 @@ from . import ChatSelectFilePage
 
 class ChatSelectLocalFilePage(BasePage):
     """选择本地文件页面聊天"""
-    ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.ChooseLocalFileActivity'
+    ACTIVITY = 'com.cmicc.module_message.ui.activity.ChooseLocalFileActivity'
 
     __locators = {'': (MobileBy.ID, ''),
                   'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
@@ -61,6 +61,11 @@ class ChatSelectLocalFilePage(BasePage):
                   '照片': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_file_name'),
                   # 音乐选择页面
                   '音乐': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_file_name'),
+                  # 每月10G免流特权弹窗
+                  '继续发送按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/continue_call'),
+                  '订购免流特权': (MobileBy.ID, 'com.chinasofti.rcs:id/get_mian_liu_permission'),
+                  '以后不再提示': (MobileBy.ID, 'com.chinasofti.rcs:id/pop_window_not_pop_btn'),
+                  '返回上一级': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back_actionbar')
                   }
 
     @TestLogger.log()
@@ -105,6 +110,7 @@ class ChatSelectLocalFilePage(BasePage):
                         return el
         c = 0
         while c < times:
+            # self.page_down()
             self.page_up()
             if self._is_element_present(locator):
                 els = self.get_elements(locator)
@@ -115,6 +121,7 @@ class ChatSelectLocalFilePage(BasePage):
             c += 1
         c = 0
         while c < times:
+            # self.page_up()
             self.page_down()
             if self._is_element_present(locator):
                 els = self.get_elements(locator)
@@ -198,6 +205,141 @@ class ChatSelectLocalFilePage(BasePage):
             self.click_element(self.__class__.__locators['继续发送'])
         time.sleep(timeout)
 
+    @TestLogger.log()
+    def is_exist_continue_send(self):
+        """是否存在继续发送"""
+        return self._is_element_present(self.__class__.__locators["继续发送按钮"])
+
+    @TestLogger.log()
+    def is_exist_free_flow_privilege(self):
+        """是否存在免流特权"""
+        return self._is_element_present(self.__class__.__locators["订购免流特权"])
+
+    @TestLogger.log()
+    def is_exist_no_longer_prompt(self):
+        """是否存在不再提示"""
+        return self._is_element_present(self.__class__.__locators["以后不再提示"])
+
+    @TestLogger.log()
+    def click_large_file(self):
+        """点击大型文件"""
+        locator = self.__class__.__locators["文件大小"]
+        if self._is_element_present(locator):
+            els = self.get_elements(locator)
+            for el in els:
+                text = el.text
+                if "M" in text:
+                    if float(text[0:-1]) > 3:
+                        el.click()
+                        return True
+        times = 10
+        c = 0
+        while c < times:
+            self.page_down()
+            if self._is_element_present(locator):
+                els = self.get_elements(locator)
+                for el in els:
+                    text = el.text
+                    if "M" in text:
+                        if float(text[0:-1]) > 3:
+                            el.click()
+                            return True
+            c += 1
+        c = 0
+        while c < times:
+            self.page_up()
+            if self._is_element_present(locator):
+                els = self.get_elements(locator)
+                for el in els:
+                    text = el.text
+                    if "M" in text:
+                        if float(text[0:-1]) > 3:
+                            el.click()
+                            return True
+            c += 1
+        return False
+
+    @TestLogger.log()
+    def click_send_button(self):
+        """点击发送"""
+        self.click_element(self.__class__.__locators["发送"])
+
+    @TestLogger.log()
+    def click_continue_send(self):
+        """点击继续发送"""
+        self.click_element(self.__class__.__locators["继续发送按钮"])
+
+    @TestLogger.log()
+    def click_free_flow_privilege(self):
+        """点击订购免流特权"""
+        self.click_element(self.__class__.__locators["订购免流特权"])
+
+    @TestLogger.log()
+    def click_no_longer_prompt(self):
+        """点击不再提示"""
+        self.click_element(self.__class__.__locators["以后不再提示"])
+
+    @TestLogger.log()
+    def wait_for_free_flow_privilege_page_load(self, timeout=30, auto_accept_alerts=True):
+        """等待免流订购页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("0元订购")
+            )
+        except:
+            raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
+        return self
+
+    @TestLogger.log()
+    def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
+        """等待 选择本地文件页面聊天 页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["发送"])
+            )
+        except:
+            raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
+        return self
+
+    @TestLogger.log()
+    def click_return(self):
+        """点击返回上一级"""
+        self.click_element(self.__class__.__locators["返回上一级"])
+
+    @TestLogger.log()
+    def click_picture(self):
+        """点击照片"""
+        self.click_element(self.__class__.__locators["照片"])
+
+    @TestLogger.log()
+    def click_video(self):
+        """点击视频"""
+        self.click_element(self.__class__.__locators["视频"])
+
+    @TestLogger.log()
+    def click_music(self):
+        """点击音乐"""
+        self.click_element(self.__class__.__locators["音乐"])
+
+    @TestLogger.log()
+    def wait_for_page_loads(self, timeout=60):
+        """等待 页面加载"""
+        try:
+            self.wait_until(
+                auto_accept_permission_alert=True,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["照片"]),
+                timeout=timeout
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
     @TestLogger.log("进入预置文件的目录")
     def enter_preset_file_dir(self):
         base_dir = os.path.basename(settings.RESOURCE_FILE_PATH)

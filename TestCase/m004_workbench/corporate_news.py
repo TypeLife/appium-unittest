@@ -1,8 +1,9 @@
 import unittest
 
-import preconditions
+from selenium.common.exceptions import TimeoutException
+
 from library.core.TestCase import TestCase
-from library.core.utils.applicationcache import current_mobile, switch_to_mobile
+from library.core.utils.applicationcache import current_mobile, switch_to_mobile, current_driver
 from library.core.utils.testcasefilter import tags
 from pages import *
 from pages.workbench.corporate_news.CorporateNews import CorporateNewsPage
@@ -26,6 +27,7 @@ REQUIRED_MOBILES = {
     'Android-XX-XX': 'others_double',
 }
 
+
 class Preconditions(LoginPreconditions):
     """前置条件"""
 
@@ -40,6 +42,41 @@ class Preconditions(LoginPreconditions):
         return client
 
     @staticmethod
+    def make_already_in_message_page(reset_required=False):
+        """确保应用在消息页面"""
+
+        if not reset_required:
+            message_page = MessagePage()
+            if message_page.is_on_this_page():
+                return
+            else:
+                try:
+                    current_mobile().terminate_app('com.chinasofti.rcs', timeout=2000)
+                except:
+                    pass
+                current_mobile().launch_app()
+            try:
+                message_page.wait_until(
+                    condition=lambda d: message_page.is_on_this_page(),
+                    timeout=3
+                )
+                return
+            except TimeoutException:
+                pass
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_one_key_login_page()
+        login_num = Preconditions.login_by_one_key_login()
+        return login_num
+
+    @staticmethod
+    def reset_and_relaunch_app():
+        """首次启动APP（使用重置APP代替）"""
+
+        app_package = 'com.chinasofti.rcs'
+        current_driver().activate_app(app_package)
+        current_mobile().reset_app()
+
+    @staticmethod
     def enter_corporate_news_page():
         """进入企业新闻首页"""
 
@@ -48,7 +85,7 @@ class Preconditions(LoginPreconditions):
         mp.click_workbench()
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
-        wbp.click_company_news()
+        wbp.click_corporate_news()
 
     @staticmethod
     def create_unpublished_image_news(news):
@@ -95,6 +132,7 @@ class Preconditions(LoginPreconditions):
             # 点击确定
             cnitp.click_sure()
             cnp.wait_for_page_load()
+
 
 class CorporateNewsTest(TestCase):
     """
@@ -178,6 +216,7 @@ class CorporateNewsTest(TestCase):
         cnnp.wait_for_page_load()
         # 点击未发新闻
         title = cnnp.click_no_news_by_number(0)
+        time.sleep(2)
         cndp = CorporateNewsDetailsPage()
         cndp.wait_for_page_load()
         # 点击删除
@@ -189,6 +228,7 @@ class CorporateNewsTest(TestCase):
         cnnp.wait_for_page_load()
         # 2.验证未发新闻列表是否存在该记录信息
         self.assertEquals(cnnp.is_exist_no_news_by_name(title), False)
+
 
 class CorporateNewsAllTest(TestCase):
     """
@@ -352,9 +392,9 @@ class CorporateNewsAllTest(TestCase):
         cnitp.wait_for_page_load()
         # 4.点击链接发布
         cnitp.click_link_publishing()
+        time.sleep(2)
         cnlp = CorporateNewsLinkPage()
         cnlp.wait_for_page_load()
-        time.sleep(2)
         # 5.输入链接新闻标题、内容
         cnlp.input_news_title("测试新闻0017")
         cnlp.input_link_url("https://10086.com")

@@ -4,7 +4,6 @@ from selenium.common.exceptions import TimeoutException
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile, current_driver
 from library.core.utils.testcasefilter import tags
 from pages import *
-from pages.call import *
 from pages.components.BaseChat import BaseChatPage
 import time
 import unittest
@@ -27,7 +26,7 @@ class Preconditions(object):
 
     @staticmethod
     def make_already_in_call():
-        """进入通话界面"""
+        """确保进入通话界面"""
         preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
         current_mobile().hide_keyboard_if_display()
         cpg = CallPage()
@@ -56,38 +55,12 @@ class Preconditions(object):
         preconditions.login_by_one_key_login()
         cpg.click_call()
 
-    @staticmethod
-    def skip_multiparty_call():
-        """跳过多方通话引导页面"""
-        cbg = CalllogBannerPage()
-        if cbg.is_on_the_calllog_banner_page():
-            cbg.multiparty_call()
-            if cbg.is_text_present("始终允许"):
-                CallPage().click_allow_button()
-
-    @staticmethod
-    def select_dial_mode():
-        """进入拨号方式选择"""
-        Preconditions.make_already_in_call()
-        MessagePage().open_me_page()
-        MePage().click_setting_menu()
-        SettingPage().click_dial_setting()
-        MeSetDialPage().click_dial_mode()
-
-    @staticmethod
-    def setting_dial_mode_and_go_back_call():
-        """设置拨号方式为总是询问，并返回call界面"""
-        cpg = CallPage()
-        Preconditions.select_dial_mode()
-        MeSetDialWayPage().click_call_type_alaways_ask()
-        cpg.click_back_by_android(times=3)
-        cpg.click_call()
-
 class CallAll(TestCase):
     """
     模块：通话
     文件位置：全量/ 7.通话（拨号盘、多方视频-非RCS、视频通话、语音通话）全量测试用例-申丽思.xlsx
     表格：通话（拨号盘、多方视频-非RCS、视频通话、语音通话）
+    Author:wangquansheng
     """
 
     @classmethod
@@ -135,7 +108,7 @@ class CallAll(TestCase):
     def default_setUp(self):
         """进入Call页面,清空通话记录"""
         Preconditions.make_already_in_call()
-        Preconditions.skip_multiparty_call()
+        CalllogBannerPage().skip_multiparty_call()
         CallPage().delete_all_call_entry()
 
     # def default_tearDown(self):
@@ -408,7 +381,7 @@ class CallAll(TestCase):
         # 1.用户已登录和飞信：通话记录列表页面
         # 2.拨号盘输入的内陆号本地已保存
         cpg = CallPage()
-        Preconditions.setting_dial_mode_and_go_back_call()
+        cpg.setting_dial_mode_and_go_back_call()
         # Step:1.点击“拨号盘”
         cpg.click_call()
         time.sleep(1)
@@ -445,7 +418,7 @@ class CallAll(TestCase):
         # 2.拨号盘输入的内陆号本地未保存
         # Step:1.点击“拨号盘”
         cpg = CallPage()
-        Preconditions.setting_dial_mode_and_go_back_call()
+        cpg.setting_dial_mode_and_go_back_call()
         cpg.click_call()
         time.sleep(1)
         # CheckPoint:1.弹出拨号盘界面
@@ -570,7 +543,7 @@ class CallAll(TestCase):
         # CheckPoint:1弹出拨号方式依次显示“和飞信电话（免费）、语音通话（免流量）、普通电话”
         cpg = CallPage()
         callselect = CallTypeSelectPage()
-        Preconditions.setting_dial_mode_and_go_back_call()
+        cpg.setting_dial_mode_and_go_back_call()
         cpg.click_call()
         # （本网号：13662498503
         cpg.dial_number(text="13662498503")
@@ -699,7 +672,7 @@ class CallAll(TestCase):
         cpg.page_should_contain_text("自动推荐")
         cpg.click_back_by_android(2)
 
-        #香港号码
+        # 香港号码
         cpg.click_call()
         cpg.dial_number("92662789")
         cpg.click_call_phone()
@@ -836,20 +809,44 @@ class CallAll(TestCase):
         cpg.click_call()
 
     @tags('ALL', 'CMCC', 'Call')
-    def test_call_0315(self):
+    def test_call_0294(self):
+        """检查无副号时通话记录列表页面"""
+        # 1.用户已登录和飞信通话记录列表页面
+        # 2.无副号
+        cpg = CallPage()
+        time.sleep(1)
+        # Step:1，查看界面
+        # CheckPoint:1.左上角显示“通话”，右边显示“视频”按钮，中间显示通话记录，右下方显示“多方电话”悬浮
+        self.assertTrue(cpg.check_call_display())
+        self.assertTrue(cpg.check_video_image())
+        self.assertTrue(cpg.check_free_call())
+        # Step:2.点击拨号盘
+        cpg.click_call()
+        # CheckPoint:2.弹出拨号盘，顶部栏被遮挡
+        self.assertFalse(cpg.check_call_display())
+        self.assertFalse(cpg.check_video_image())
+        cpg.click_call()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_0296(self):
+        """检查通通话列表为空"""
+        # 1.用户已登录和飞信通话记录列表页面
+        # 2.通讯录为空
+        cpg = CallPage()
+        time.sleep(1)
+        # Step:1，查看界面
+        # CheckPoint:1.界面logo提示“给你的好友打个电话吧”
+        self.assertTrue(cpg.check_call_image())
+        cpg.page_should_contain_text("高清通话，高效沟通")
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_0314(self):
         """检查本地联系人通话profile左上角显示名称"""
         # 1.已登录和飞信：通话tab
-        # 2.已存在与陌生联系人的通话记录M
+        # 2.已存在与本地联系人的通话记录M
         # Step:1.点击记录M的时间节点
         cpg = CallPage()
-        cpg.click_call()
-        cpg.dial_number("0731210086")
-        cpg.click_call_phone()
-        # CallTypeSelectPage().click_call_by_general()
-        GrantPemissionsPage().allow_contacts_permission()
-        time.sleep(2)
-        cpg.click_call_end()
-        time.sleep(2)
+        cpg.create_call_entry("13800138001")
         cpg.click_call_time()
         # CheckPoint:1.进入到M的通话profile界面
         time.sleep(1)
@@ -857,10 +854,32 @@ class CallAll(TestCase):
         # Step:2.查看左上角的名称
         ret = cpg.get_profile_name()
         # CheckPoint:2.左上角<按钮。以及M名称
+        self.assertEqual(ret, "给个红包2")
+        # Step:3.点击<按钮>
+        CallContactDetailPage().click_back()
+        time.sleep(2)
+        # CheckPoint:3.返回到上一个界面
+        self.assertTrue(cpg.is_on_the_call_page())
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_0315(self):
+        """检查陌生联系人通话profile左上角显示手机号"""
+        # 1.已登录和飞信：通话tab
+        # 2.已存在与陌生联系人的通话记录M
+        # Step:1.点击记录M的时间节点
+        cpg = CallPage()
+        cpg.create_call_entry("0731210086")
+        cpg.click_call_time()
+        # CheckPoint:1.进入到M的通话profile界面
+        time.sleep(1)
+        self.assertTrue(cpg.is_exist_profile_name())
+        # Step:2.查看左上角的名称
+        ret = cpg.get_profile_name()
+        # CheckPoint:2.左上角<按钮。以及N的手机号
         self.assertEqual(ret, "0731210086")
         # Step:3.点击<按钮>
-        cpg.click_back()
-        time.sleep(1)
+        CallContactDetailPage().click_back()
+        time.sleep(2)
         # CheckPoint:3.返回到上一个界面
         self.assertTrue(cpg.is_on_the_call_page())
 
@@ -871,15 +890,9 @@ class CallAll(TestCase):
         # 2.已进入到联系人通话profile
         # Step:1.点击手机的物理“返回”按钮
         cpg = CallPage()
-        cpg.click_call()
-        cpg.dial_number("0731210086")
-        cpg.click_call_phone()
-        GrantPemissionsPage().allow_contacts_permission()
-        time.sleep(2)
-        cpg.click_call_end()
-        time.sleep(2)
+        cpg.create_call_entry("0731210086")
         cpg.click_call_time()
-        time.sleep(1)
+        time.sleep(2)
         self.assertTrue(cpg.is_exist_profile_name())
         cpg.click_back_by_android()
         time.sleep(1)
@@ -891,17 +904,9 @@ class CallAll(TestCase):
         """检查通话profile界面可进入到消息会话窗口"""
         # 1.已登录和飞信：通话tab
         # 2.已进入到联系人通话profile
-        #本地联系人
+        # 本地联系人
         cpg = CallPage()
-        cpg.click_call()
-        cpg.dial_number("13800138001")
-        cpg.click_call_phone()
-        GrantPemissionsPage().allow_contacts_permission()
-        time.sleep(2)
-        CallTypeSelectPage().click_call_by_general()
-        time.sleep(2)
-        cpg.click_call_end()
-        time.sleep(2)
+        cpg.create_call_entry("13800138001")
         cpg.click_call_time()
         time.sleep(1)
         self.assertTrue(cpg.is_exist_profile_name())
@@ -915,16 +920,11 @@ class CallAll(TestCase):
             chatpage.click_i_have_read()
         cpg.page_should_contain_text("说点什么...")
         cpg.page_should_contain_text("给个红包2")
-        cpg.click_back_by_android(3)
+        cpg.click_back_by_android(2)
 
-        #陌生联系人
+        # 陌生联系人
         cpg.click_call()
-        cpg.dial_number("0731210086")
-        cpg.click_call_phone()
-        GrantPemissionsPage().allow_contacts_permission()
-        time.sleep(2)
-        cpg.click_call_end()
-        time.sleep(2)
+        cpg.create_call_entry("0731210086")
         cpg.click_call_time()
         time.sleep(1)
         self.assertTrue(cpg.is_exist_profile_name())
@@ -937,7 +937,7 @@ class CallAll(TestCase):
             chatpage.click_i_have_read()
         cpg.page_should_contain_text("说点什么...")
         cpg.page_should_contain_text("0731210086")
-        cpg.click_back_by_android(3)
+        cpg.click_back_by_android(2)
 
     @tags('ALL', 'CMCC', 'Call')
     def test_call_0320(self):
@@ -947,13 +947,7 @@ class CallAll(TestCase):
         # 3.有效手机号
         # Step:1.点击电话按钮
         cpg = CallPage()
-        cpg.click_call()
-        cpg.dial_number("13800138001")
-        cpg.click_call_phone()
-        GrantPemissionsPage().allow_contacts_permission()
-        time.sleep(2)
-        CallTypeSelectPage().click_call_by_general()
-        cpg.click_call_end()
+        cpg.create_call_entry("13800138001")
         cpg.click_call_time()
         CallContactDetailPage().click_normal_call()
         time.sleep(1)
@@ -963,3 +957,260 @@ class CallAll(TestCase):
         cpg.hang_up_the_call()
         cpg.click_back_by_android(2)
 
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_0321(self):
+        """检查通话profile界面发起语音通话"""
+        # 1.已登录和飞信：通话tab
+        # 2.已进入到联系人通话profile
+        # 3.有效手机号
+        # Step:1.点击语音通话按钮
+        cpg = CallPage()
+        cpg.create_call_entry("13800138001")
+        cpg.click_call_time()
+        CallContactDetailPage().click_voice_call()
+        time.sleep(1)
+        if cpg.is_text_present("继续拨打"):
+            cpg.click_text("继续拨打")
+        GrantPemissionsPage().allow_contacts_permission()
+        time.sleep(2)
+        if cpg.is_text_present("暂不开启"):
+            cpg.click_text("暂不开启")
+        # CheckPoint:1.发起1v1语音呼叫
+        flag = cpg.page_should_contain_text("正在呼叫")
+        self.assertTrue(flag)
+        CallContactDetailPage().wait_for_profile_name()
+        cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_0322(self):
+        """检查通话profile界面发起视频通话"""
+        # 1.已登录和飞信：通话tab
+        # 2.已进入到联系人通话profile
+        # 3.有效手机号
+        # Step:1.点击视频通话
+        cpg = CallPage()
+        cpg.create_call_entry("13800138001")
+        cpg.click_call_time()
+        CallContactDetailPage().click_video_call()
+        time.sleep(1)
+        if cpg.is_text_present("继续拨打"):
+            cpg.click_text("继续拨打")
+        GrantPemissionsPage().allow_contacts_permission()
+        time.sleep(2)
+        if cpg.is_text_present("暂不开启"):
+            cpg.click_text("暂不开启")
+        # CheckPoint:1.发起1v1视频呼叫
+        flag = cpg.page_should_contain_text("视频通话呼叫中")
+        self.assertTrue(flag)
+        CallContactDetailPage().wait_for_profile_name()
+        cpg.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_0323(self):
+        """检查通话profile发起和飞信电话"""
+        # 1.已登录和飞信：通话tab
+        # 2.已进入到联系人通话profile
+        # 3.有效手机号
+        # Step:1.点击和飞信电话
+        cpg = CallPage()
+        cpg.create_call_entry("13800138001")
+        cpg.click_call_time()
+        CallContactDetailPage().click_dial_hefeixin()
+        time.sleep(2)
+        if cpg.is_exist_know():
+            cpg.click_know()
+        time.sleep(1)
+        if cpg.is_text_present("暂不开启"):
+            cpg.click_text("暂不开启")
+        cpg.wait_until(timeout=15, auto_accept_permission_alert=True, condition=lambda d: cpg.is_text_present("和飞信电话"))
+        # CheckPoint:1，发起和飞信电话，可收到本机回呼
+        flag = cpg.is_phone_in_calling_state()
+        self.assertTrue(flag)
+        cpg.page_should_contain_text("和飞信电话")
+        cpg.hang_up_the_call()
+        CallContactDetailPage().wait_for_profile_name()
+        cpg.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_0331(self):
+        """检查检查内陆固话profile发起语音通话提示号码无效"""
+        # 1.已登录和飞信
+        # 2.进入到内陆固号通话profile界面
+        cpg = CallPage()
+        cpg.create_call_entry("0731210086")
+        cpg.click_call_time()
+        # Step:1.点击语音通话
+        ccdp = CallContactDetailPage()
+        ccdp.click_voice_call()
+        time.sleep(1)
+        if cpg.is_text_present("继续拨打"):
+            cpg.click_text("继续拨打")
+        # CheckPoint:1.提示“号码有误”
+        flag = cpg.is_toast_exist("号码有误")
+        self.assertTrue(flag)
+        # Step:2.点击视频通话
+        ccdp.click_video_call()
+        time.sleep(1)
+        if cpg.is_text_present("继续拨打"):
+            cpg.click_text("继续拨打")
+        # CheckPoint:2.提示“号码有误”
+        flag = cpg.is_toast_exist("号码有误")
+        self.assertTrue(flag)
+        cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_0334(self):
+        """检查新建联系人功能--修改手机号"""
+        # 1.已登录和飞信
+        # 2.进入到陌生人通话profile
+        cpg = CallPage()
+        cpg.create_call_entry("0731210086")
+        cpg.click_call_time()
+        # Step:1.点击保存到本地通讯录按钮
+        CallContactDetailPage().click_share_card()
+        time.sleep(1)
+        # CheckPoint:1.进入新建联系人界面
+        cpg.page_should_contain_text("新建联系人")
+        ncpg = NewOrEditContactPage()
+        ncpg.hide_keyboard()
+        # Step:2.编辑基础数据，修改手机号
+        ncpg.input_name("中国移动")
+        ncpg.input_contact_info(1, "13800138110")
+        ncpg.input_contact_info(2, "中软国际")
+        ncpg.input_contact_info(3, "自动化开发")
+        # Step:3.点击右上角的保存按钮
+        ncpg.click_save_or_sure()
+        cpg.wait_until(timeout=15, auto_accept_permission_alert=True, condition=lambda d: cpg.is_text_present("和飞信电话"))
+        # CheckPoint::3：跳转到联系人profile
+        self.assertTrue(cpg.is_exist_profile_name())
+        # Step:4.点击返回
+        cpg.click_back_by_android()
+        time.sleep(1)
+        # CheckPoint:4：返回到通话记录列表
+        self.assertTrue(cpg.check_video_image())
+
+    def tearDown_test_call_0334(self):
+        """删除指定联系人"""
+        ContactDetailsPage().delete_contact("中国移动")
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_0335(self):
+        """检查新建联系人功能--不修改手机号"""
+        # 1.已登录和飞信
+        # 2.进入到陌生人通话profile
+        cpg = CallPage()
+        cpg.create_call_entry("0731210086")
+        cpg.click_call_time()
+        # Step:1.点击保存到本地通讯录按钮
+        CallContactDetailPage().click_share_card()
+        time.sleep(2)
+        # CheckPoint:1.进入新建联系人界面
+        cpg.page_should_contain_text("新建联系人")
+        ncpg = NewOrEditContactPage()
+        ncpg.hide_keyboard()
+        # Step:2.编辑基础数据，不修改手机号
+        ncpg.input_name("中国移动")
+        ncpg.input_contact_info(2, "中软国际")
+        ncpg.input_contact_info(3, "自动化开发")
+
+        # Step:3.点击右上角的保存按钮
+        ncpg.click_save_or_sure()
+        cpg.wait_until(timeout=15, auto_accept_permission_alert=True, condition=lambda d: cpg.is_text_present("和飞信电话"))
+        # CheckPoint::3：跳转到联系人profile
+        self.assertTrue(cpg.is_exist_profile_name())
+        # Step:4.点击返回
+        cpg.click_back_by_android()
+        time.sleep(1)
+        # CheckPoint:4：返回到通话记录列表，更新通话记录，更新与该联系人通话记录的名称
+        self.assertTrue(cpg.check_video_image())
+        cpg.page_should_contain_text("中国移动")
+
+    def tearDown_test_call_0335(self):
+        """删除指定联系人"""
+        ContactDetailsPage().delete_contact("中国移动")
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_0336(self):
+        """检查编辑本地联系人-修改手机号"""
+        # 1.已登录和飞信
+        # 2.进入到本地联系人通话profile
+        cpg = CallPage()
+        cpg.create_call_entry("13800138008")
+        cpg.click_call_time()
+        # Step:1.点击编辑按钮
+        CallContactDetailPage().click_call_detail_edit()
+        time.sleep(1)
+        ncpg = NewOrEditContactPage()
+        ncpg.hide_keyboard()
+        # CheckPoint:1.进入编辑联系人界面
+        self.assertTrue(ncpg.is_text_present("编辑联系人"))
+        # Step:2.编辑基础数据，修改手机号
+        ncpg.input_contact_info(1, "13800138009")
+        ncpg.input_contact_info(2, "中软国际")
+        ncpg.input_contact_info(3, "自动化开发")
+        time.sleep(1)
+        # Step:3.点击右上角的保存按钮
+        ncpg.click_save_or_sure()
+        cpg.wait_until(timeout=15, auto_accept_permission_alert=True, condition=lambda d: cpg.is_text_present("和飞信电话"))
+        # CheckPoint3：跳转到联系人profile
+        self.assertTrue(cpg.is_exist_profile_name())
+        # Step:4.点击返回
+        cpg.click_back_by_android()
+        time.sleep(1)
+        # CheckPoint4：返回到通话记录列表
+        self.assertTrue(cpg.check_video_image())
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_0337(self):
+        """检查编辑本地联系人-修改名称、公司、职位、邮箱字段"""
+        # 1.已登录和飞信
+        # 2.进入到本地联系人通话profile
+        cpg = CallPage()
+        cpg.create_call_entry(text="13800138007")
+        cpg.click_call_time()
+        # 1.点击编辑按钮
+        CallContactDetailPage().click_call_detail_edit()
+        time.sleep(1)
+        ncpg = NewOrEditContactPage()
+        ncpg.hide_keyboard()
+        # 1.进入编辑系人界面
+        self.assertTrue(ncpg.is_text_present("编辑联系人"))
+        # 2.编辑基础数据，不修改手机号
+        ncpg.input_name("中软国际")
+        ncpg.input_contact_info(2, "中软国际")
+        ncpg.input_contact_info(3, "自动化开发")
+        time.sleep(1)
+        # 3.点击右上角的保存按钮
+        ncpg.click_save_or_sure()
+        cpg.wait_until(timeout=15, auto_accept_permission_alert=True, condition=lambda d: cpg.is_text_present("和飞信电话"))
+        # 3：跳转到联系人通话profile
+        self.assertTrue(cpg.is_exist_profile_name())
+        # 4.点击返回
+        cpg.click_back_by_android()
+        time.sleep(1)
+        # 4：返回到通话记录列表，更新通话记录，更新与该联系人通话记录的名称
+        self.assertTrue(cpg.check_video_image())
+        cpg.page_should_contain_text("中软国际")
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_0338(self):
+        """检查编辑联系人界面-删除功能"""
+        # 1.已登录和飞信
+        # 2.进入到编辑联系人界面
+        cpg = CallPage()
+        cpg.create_call_entry("13800138006")
+        cpg.click_call_time()
+        CallContactDetailPage().click_call_detail_edit()
+        time.sleep(1)
+        ncpg = NewOrEditContactPage()
+        ncpg.hide_keyboard()
+        # 1.点击删除联系人按钮
+        ncpg.click_delete_number()
+        ncpg.click_sure_delete()
+        # 1.提示删除成功，跳转到通话记录列表，同时更新列表，被删除的联系人通话记录显示手机号
+        time.sleep(1)
+        flag = cpg.is_toast_exist("删除成功")
+        self.assertTrue(flag)
+        time.sleep(2)
+        self.assertTrue(cpg.check_video_image())
+        cpg.page_should_contain_text("13800138006")

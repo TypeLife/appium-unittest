@@ -1,9 +1,13 @@
+import time
+
 from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
-import time
-import preconditions
+from pages.message.Message import MessagePage
+from pages.search.Search import SearchPage
+
+
 class localContactPage(BasePage):
     """contacl_local"""
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.HomeActivity'
@@ -54,8 +58,69 @@ class localContactPage(BasePage):
         'android:id/statusBarBackground': (MobileBy.ID, 'android:id/statusBarBackground'),
         '联系人头像':(MobileBy.ID,'com.chinasofti.rcs:id/iv_head'),
         "联系人名字":(MobileBy.ID,'com.chinasofti.rcs:id/tv_name'),
-        "联系人电话":(MobileBy.ID,'com.chinasofti.rcs:id/tv_phone')
+        "联系人电话":(MobileBy.ID,'com.chinasofti.rcs:id/tv_phone'),
+        "删除":(MobileBy.ID,'com.chinasofti.rcs:id/iv_delect01'),
+        "无该本地联系人":(MobileBy.ID,"com.chinasofti.rcs:id/no_result_tip"),
+        '显示SIM卡联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/switch_show_sim_contact'),
+        "开关按钮":(MobileBy.ID,"com.chinasofti.rcs:id/switch_show_sim_contact"),
+        "联系人ID":(MobileBy.ID,"com.chinasofti.rcs:id/tv_name"),
+        "短信按钮": (MobileBy.ID, "com.chinasofti.rcs:id/tv_normal_message"),
+        "同意按钮": (MobileBy.ID, "com.chinasofti.rcs:id/btn_check"),
+        "确定按钮": (MobileBy.ID, "com.chinasofti.rcs:id/dialog_btn_ok"),
+        "信息编辑": (MobileBy.ID, "com.chinasofti.rcs:id/et_message"),
+        "dalao4": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_profile_name'),
+
+        "信息发送按钮": (MobileBy.ID, "com.chinasofti.rcs:id/ib_send"),
+        "aaa":(MobileBy.XPATH,"//*[@text='aaa']"),
+        "ccc":(MobileBy.XPATH,"//*[@text='ccc']"),
+
+
+
     }
+    @TestLogger.log("点击新信息")
+    def click_new_message(self,text='aaa'):
+        self.click_element(self.__locators[text],default_timeout=30)
+
+
+    @TestLogger.log("点击某控件")
+    def click_element_button(self,text='删除'):
+        time.sleep(1)
+        flag=self.get_elements(self.__locators[text])
+        if flag:
+            self.click_element(self.__locators[text])
+            time.sleep(1)
+
+    @TestLogger.log("输入内容")
+    def click_input_button(self, text='信息编辑',text2='aaa'):
+        time.sleep(1)
+        self.input_text(self.__locators[text],text2)
+
+
+
+
+
+    TestLogger.log("开启或关闭")
+    def swich_sim_contact(self,flag=True):
+        time.sleep(1)
+        bool=self.is_selected(self.__locators["开关按钮"])
+        if not bool and flag:
+            #打开
+            self.click_element(self.__locators["开关按钮"])
+        elif bool and  not flag:
+            #关闭
+            self.click_element(self.__locators["开关按钮"])
+        else:
+            print(bool)
+            print("找不到开关")
+
+
+
+
+    @TestLogger.log("删除按钮")
+    def click_delete_button(self):
+        time.sleep(1)
+        self.click_element(self.__locators["删除"])
+        time.sleep(1)
 
     @TestLogger.log("获取元素个数")
     def get_element_number(self,text="联系人头像"):
@@ -85,3 +150,43 @@ class localContactPage(BasePage):
         for i in range(times):
             self.driver.back()
             time.sleep(1)
+
+    @TestLogger.log("长按")
+    def press_mess(self, mess):
+        """长按消息"""
+        el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % mess))
+        self.press(el)
+
+    @TestLogger.log("发送短信")
+    def send_message(self,contact='xk',text='aaa'):
+        message_page = MessagePage()
+        message_page.click_search()
+        search_page = SearchPage()
+        lcontact = localContactPage()
+        search_key = contact
+        search_page.input_search_keyword(search_key)
+        search_page.hide_keyboard_if_display()
+        time.sleep(0.5)
+        lcontact.click_element_button("联系人ID")
+        time.sleep(0.5)
+        lcontact.click_element_button("短信按钮")
+        time.sleep(0.5)
+        lcontact.click_element_button("同意按钮")
+        time.sleep(0.5)
+        lcontact.click_element_button("确定按钮")
+        time.sleep(0.5)
+        lcontact.click_element_button("信息编辑")
+        time.sleep(0.5)
+        lcontact.click_input_button(text2=text)
+        time.sleep(0.5)
+        lcontact.click_element_button("信息发送按钮")
+        time.sleep(1)
+
+    @TestLogger.log("查看关键字是否存在")
+    def check_keyword_if_exist(self,text="xiaowen"):
+        flag=True
+        while flag:
+            if self.is_text_present(text=text):
+                return True
+            else:
+                self.page_up()

@@ -39,7 +39,7 @@ AVAILABLE_DEVICES = {
 AVAILABLE_DEVICES_DEV = {
     'M960BDQN229CH': {
         "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
-        "SERVER_URL": 'http://192.168.200.106:4723/wd/hub',
+        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "6.0.1",
@@ -48,23 +48,24 @@ AVAILABLE_DEVICES_DEV = {
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
-            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
         },
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '13480860547'
+                'CARD_NUMBER': '13410559632'
             },
         ]
     },
 
-    'M960BDQN229CH-BACK': {
-        "MODEL": SupportedModel.MEIZU_PRO_6_PLUS,
-        "SERVER_URL": 'http://127.0.0.1:5000/wd/hub',
+    'M960BDQN229CK_20': {
+        "MODEL": SupportedModel.HUAWEI_P20,
+        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
-            "platformVersion": "6.0",
-            "deviceName": "95AQACPMGJP5L",
+            "platformVersion": "9.0",
+            "deviceName": "DWT7N18614014715",
+            "udid": "DWT7N18614014715",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
@@ -73,7 +74,7 @@ AVAILABLE_DEVICES_DEV = {
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '14775970982'
+                'CARD_NUMBER': '18875905984'
             },
             None
         ]
@@ -333,7 +334,7 @@ DEVICES_CONFIG_YYX = {
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
-            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
         },
         'CARDS': [
             {
@@ -356,8 +357,9 @@ DEVICES_P20 = {
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
-            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
         },
+
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
@@ -403,13 +405,13 @@ DEVICES_CONFIG_LXD = {
             "automationName": "UiAutomator2",
             "newCommandTimeout": 6000,
             "appPackage": "com.chinasofti.rcs",
-            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
         },
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                # 'CARD_NUMBER': '19874361585'
-                'CARD_NUMBER': '15875537278'
+                'CARD_NUMBER': '19874361585'
+                # 'CARD_NUMBER': '15875537278'
             },
         ]
     },

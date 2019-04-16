@@ -11,7 +11,7 @@ class CorporateNewsNoNewsPage(BasePage):
     ACTIVITY = 'com.cmicc.module_enterprise.ui.activity.EnterpriseH5ProcessActivity'
 
     __locators = {
-        '未发新闻': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title_actionbar" and @text ="未发新闻"]'),
+        '未发新闻': (MobileBy.ID, "com.chinasofti.rcs:id/tv_title_actionbar"),
         '新闻名称': (MobileBy.XPATH, '//*[@resource-id="news_title"]'),
         '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back_actionbar'),
         '关闭': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_close_actionbar')
