@@ -85,7 +85,7 @@ class Preconditions(LoginPreconditions):
         mp.click_workbench()
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
-        wbp.click_corporate_news()
+        wbp.click_add_corporate_news()
 
     @staticmethod
     def create_unpublished_image_news(news):
@@ -204,6 +204,7 @@ class CorporateNewsTest(TestCase):
         cnp.click_no_news()
         cnnp = CorporateNewsNoNewsPage()
         cnnp.wait_for_page_load()
+        time.sleep(2)
         cnnp.clear_no_news()
         # 确保未发新闻列表存在数据
         news = [("测试新闻0007", "测试内容0007")]
@@ -219,6 +220,7 @@ class CorporateNewsTest(TestCase):
         time.sleep(2)
         cndp = CorporateNewsDetailsPage()
         cndp.wait_for_page_load()
+        time.sleep(2)
         # 点击删除
         cndp.click_delete()
         # 点击确定
