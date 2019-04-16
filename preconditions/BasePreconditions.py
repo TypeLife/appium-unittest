@@ -225,7 +225,15 @@ class WorkbenchPreconditions(LoginPreconditions):
         if workbench.is_on_welcome_page():
             workbench.click_now_create_team()
         else:
-            workbench.wait_for_page_load()
-            workbench.click_voice_notice()
+            a=0
+            while a<10:
+                workbench.wait_for_page_load()
+                workbench.click_voice_notice()
+                time.sleep(3)
+                if workbench.is_text_present("认证失败"):
+                    current_mobile().back()
+                    a+=1
+                else:
+                    break
         vnp = VoiceNoticePage()
         vnp.wait_for_page_loads()

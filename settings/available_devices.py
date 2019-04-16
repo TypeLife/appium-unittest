@@ -405,7 +405,7 @@ DEVICES_CONFIG_LXD = {
             "automationName": "UiAutomator2",
             "newCommandTimeout": 6000,
             "appPackage": "com.chinasofti.rcs",
-            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
         },
         'CARDS': [
             {

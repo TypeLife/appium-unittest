@@ -18,7 +18,7 @@ class ContactsPage(FooterPage):
             MobileBy.ID, 'com.chinasofti.rcs:id/constraintLayout_home_tab'),
         'com.chinasofti.rcs:id/viewPager': (MobileBy.ID, 'com.chinasofti.rcs:id/viewPager'),
         '通讯录': (MobileBy.ID, 'com.chinasofti.rcs:id/tvContact'),
-        '+号': (MobileBy.ID, 'com.chinasofti.rcs:id/action_add'),
+        '+号': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_add'),
         '搜索': (MobileBy.ID, 'com.chinasofti.rcs:id/et_search'),
         'com.chinasofti.rcs:id/recyclerView_contactList': (
             MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView_contactList'),
