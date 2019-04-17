@@ -24,12 +24,15 @@ AVAILABLE_DEVICES = {
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
-            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+            #  6.2.8
+            # "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+            #  6.2.9
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
         },
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '14775970982'
+                'CARD_NUMBER': '18875905984'
             },
         ]
     },

@@ -2,6 +2,7 @@ from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
+import time
 
 
 class CallContactDetailPage(BasePage):
@@ -14,7 +15,7 @@ class CallContactDetailPage(BasePage):
                   'com.chinasofti.rcs:id/pop_10g_window_drop_view': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/pop_10g_window_drop_view'),
                   'profileName': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_profile_name'),
-                  'com.chinasofti.rcs:id/iv_star': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_star'),
+                  '星标': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_star'),
                   '编辑': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_call_detail_edit'),
                   '好久不见~打个招呼吧': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_recent_contact_hint'),
                   '138 0013 8001': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_phone'),
@@ -48,7 +49,11 @@ class CallContactDetailPage(BasePage):
                   'com.chinasofti.rcs:id/call_detail_divide_line_twof592dde0-a29f-40d1-aa34-e22b5c501be0': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/call_detail_divide_line_two'),
                   'com.chinasofti.rcs:id/ll_share_card': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_share_card'),
-                  '分享名片/保存到通讯录': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_share_card')
+                  '分享名片/保存到通讯录': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_share_card'),
+                  '视频缩放按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_switch'),
+                  '语音缩放按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/smart_voice_hide'),
+                  '正在视频通话': (MobileBy.XPATH, "//*[contains(@text, '视频通话')]"),
+                  '正在语音通话': (MobileBy.XPATH, "//*[contains(@text, '语音通话')]"),
                   }
 
     @TestLogger.log()
@@ -103,3 +108,52 @@ class CallContactDetailPage(BasePage):
     def click_call_detail_edit(self):
         """点击编辑"""
         self.click_element(self.__locators["编辑"])
+
+    @TestLogger.log()
+    def is_exist_star(self):
+        """是否存在星标"""
+        flag = False
+        el = self.get_elements(self.__locators["星标"])
+        if len(el) > 0:
+            flag = True
+        return flag
+
+    @TestLogger.log()
+    def click_switch(self):
+        """点击视频缩放按钮"""
+        self.click_element(self.__locators["视频缩放按钮"])
+
+    @TestLogger.log()
+    def click_smart_voice_hide(self):
+        """点击语音缩放按钮"""
+        self.click_element(self.__locators["语音缩放按钮"])
+
+    @TestLogger.log()
+    def click_video_call_status(self):
+        """点击正在视频通话"""
+        self.click_element(self.__locators["正在视频通话"])
+
+    @TestLogger.log()
+    def click_voice_call_status(self):
+        """点击正在语音通话"""
+        self.click_element(self.__locators["正在语音通话"])
+
+    @TestLogger.log()
+    def is_exist_video_call(self):
+        """等待视频通话消失"""
+        mark = 30
+        while mark > 0:
+            time.sleep(1)
+            if not self._is_element_present(self.__class__.__locators["正在视频通话"]):
+                break
+            mark -= 1
+
+    @TestLogger.log()
+    def is_exist_voice_call(self):
+        """等待语音通话消失"""
+        mark = 30
+        while mark > 0:
+            time.sleep(1)
+            if not self._is_element_present(self.__class__.__locators["正在语音通话"]):
+                break
+            mark -= 1
