@@ -4002,7 +4002,124 @@ class MsgCommonGroupTest(TestCase):
         if gcp.is_toast_exist("你撤回了一条信息"):
             raise AssertionError("消息超过十秒可以撤回")
 
+class MsgCommonGroupPriorityTest(TestCase):
+    """
+        模块：消息-普通群
 
+        文件位置：1.1.4和飞信APP全量测试用例-优先编写用例 .xlsx
+        表格：消息-普通群
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        pass
+
+    def default_setUp(self):
+        """确保每个用例运行前在群聊聊天会话页面"""
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+
+    def default_tearDown(self):
+        pass
+        # current_mobile().disconnect_mobile()
+
+    @tags('ALL', 'Priority', 'CMCC')
+    def test_msg_xiaoqiu_0043(self):
+        """ 先卸载后安装"""
+        # 卸载和飞信
+        from settings.available_devices import TARGET_APP
+        current_mobile().remove_app(TARGET_APP.get('APP_PACKAGE'))
+        current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                     replace=True)
+        Preconditions.make_already_in_message_page()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.open_me_page()
+        me = MePage()
+        me.click_collection()
+        time.sleep(1)
+        if not me.is_text_present("没有任何收藏"):
+            raise AssertionError("收藏的文件内容没有被清除")
+        mcp = MeCollectionPage()
+        mcp.click_back()
+        me.open_message_page()
+
+    def tearDown_test_msg_xiaoqiu_0043(self):
+        from settings.available_devices import TARGET_APP
+        Preconditions.select_mobile('Android-移动')
+        if current_mobile().is_app_installed(TARGET_APP.get('APP_PACKAGE')):
+            return
+
+        # 预防安装应用的时候发生异常，尝试恢复安装，（还不知道好不好使）
+        reinstall_try_time = 3
+        while reinstall_try_time > 0:
+            try:
+                current_mobile().remove_app(TARGET_APP.get('APP_PACKAGE'))
+                current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                             replace=True)
+                break
+            except:
+                reinstall_try_time -= 1
+                if reinstall_try_time == 0:
+                    import traceback
+                    traceback.print_exc()
+
+    @tags('ALL', 'Priority', 'CMCC')
+    def test_msg_xiaoqiu_0092(self):
+        """ 先卸载后安装"""
+        gcp = GroupChatPage()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        flag = audio.wait_for_audio_allow_page_load()
+        self.assertTrue(flag)
+        audio.click_allow()
+        audio.wait_until(condition=lambda d: audio.is_text_present("退出"))
+        audio.click_exit()
+        gcp.wait_for_page_load()
+        self.assertFalse(gcp.is_exist_red_dot())
+        # 卸载和飞信
+        from settings.available_devices import TARGET_APP
+        current_mobile().remove_app(TARGET_APP.get('APP_PACKAGE'))
+        current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                     replace=True)
+        Preconditions.enter_group_chat_page()
+        self.assertTrue(gcp.is_exist_red_dot())
+
+    def tearDown_test_msg_xiaoqiu_0092(self):
+        from settings.available_devices import TARGET_APP
+        Preconditions.select_mobile('Android-移动')
+        if current_mobile().is_app_installed(TARGET_APP.get('APP_PACKAGE')):
+            return
+
+        # 预防安装应用的时候发生异常，尝试恢复安装，（还不知道好不好使）
+        reinstall_try_time = 3
+        while reinstall_try_time > 0:
+            try:
+                current_mobile().remove_app(TARGET_APP.get('APP_PACKAGE'))
+                current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                             replace=True)
+                break
+            except:
+                reinstall_try_time -= 1
+                if reinstall_try_time == 0:
+                    import traceback
+                    traceback.print_exc()
 
 class MsgCommonGroupAllTest(TestCase):
     """
