@@ -63,47 +63,47 @@ class CallAll(TestCase):
     Author:wangquansheng
     """
 
-    @classmethod
-    def setUpClass(cls):
-        # 创建联系人
-        fail_time = 0
-        import dataproviders
-        while fail_time < 3:
-            try:
-                required_contacts = dataproviders.get_preset_contacts()
-                conts = ContactsPage()
-                preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
-                current_mobile().hide_keyboard_if_display()
-                for name, number in required_contacts:
-                    preconditions.make_already_in_message_page()
-                    conts.open_contacts_page()
-                    if conts.is_text_present("显示"):
-                        conts.click_text("不显示")
-                    conts.create_contacts_if_not_exits(name, number)
-
-                # 创建群
-                # required_group_chats = dataproviders.get_preset_group_chats()
-                #
-                # conts.open_group_chat_list()
-                # group_list = GroupListPage()
-                # for group_name, members in required_group_chats:
-                #     group_list.wait_for_page_load()
-                #     group_list.create_group_chats_if_not_exits(group_name, members)
-                # group_list.click_back()
-                # conts.open_message_page()
-                return
-            except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
-
-    @classmethod
-    def tearDownClass(cls):
-        current_mobile().hide_keyboard_if_display()
-        preconditions.make_already_in_message_page()
-        cdp = ContactDetailsPage()
-        cdp.delete_all_contact()
+    # @classmethod
+    # def setUpClass(cls):
+    #     # 创建联系人
+    #     fail_time = 0
+    #     import dataproviders
+    #     while fail_time < 3:
+    #         try:
+    #             required_contacts = dataproviders.get_preset_contacts()
+    #             conts = ContactsPage()
+    #             preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
+    #             current_mobile().hide_keyboard_if_display()
+    #             for name, number in required_contacts:
+    #                 preconditions.make_already_in_message_page()
+    #                 conts.open_contacts_page()
+    #                 if conts.is_text_present("显示"):
+    #                     conts.click_text("不显示")
+    #                 conts.create_contacts_if_not_exits(name, number)
+    #
+    #             # 创建群
+    #             # required_group_chats = dataproviders.get_preset_group_chats()
+    #             #
+    #             # conts.open_group_chat_list()
+    #             # group_list = GroupListPage()
+    #             # for group_name, members in required_group_chats:
+    #             #     group_list.wait_for_page_load()
+    #             #     group_list.create_group_chats_if_not_exits(group_name, members)
+    #             # group_list.click_back()
+    #             # conts.open_message_page()
+    #             return
+    #         except:
+    #             fail_time += 1
+    #             import traceback
+    #             msg = traceback.format_exc()
+    #             print(msg)
+    #
+    # @classmethod
+    # def tearDownClass(cls):
+    #     current_mobile().hide_keyboard_if_display()
+    #     preconditions.make_already_in_message_page()
+    #     cdp = ContactDetailsPage()
+    #     cdp.delete_all_contact()
 
     def default_setUp(self):
         """进入Call页面,清空通话记录"""
@@ -243,12 +243,13 @@ class CallAll(TestCase):
         # Step:1.切换至其它模块后又返回到拨号盘
         cpg = CallPage()
         cpg.click_call()
-        time.sleep(1)
         cpg.dial_number("153")
+        time.sleep(1)
         # CheckPoint:1.收起时切换到其他的模块，内容不清除，正常显示
         cpg.page_should_contain_text("153")
         # Step:2. 切换为消息
         cpg.click_message()
+        time.sleep(2)
         # CheckPoint:2.收起时切换到其他的模块，内容不清除，正常显示
         cpg.page_should_not_contain_text("153")
         # Step:3. 切换为拨号盘
@@ -285,7 +286,7 @@ class CallAll(TestCase):
         cpg.click_free_call()
         time.sleep(2)
         # CheckPoint:1.调起联系人多方电话联系人选择器
-        cpg.page_should_contain_text("选择和通讯录联系人")
+        self.assertTrue(CalllogBannerPage().is_exist_contact_search_bar())
         cpg.click_back()
 
     @tags('ALL', 'CMCC', 'Call')
@@ -722,7 +723,8 @@ class CallAll(TestCase):
 
         cpg.click_call()
 
-    @tags('ALL', 'CMCC', 'Call')
+    # @tags('ALL', 'CMCC', 'Call')
+    @unittest.skip("用例删除")
     def test_call_0051(self):
         """检查拨号盘拨号方式“设置”按钮跳转"""
         # 1.用户已登录和飞信：通话-拨号盘
@@ -951,8 +953,8 @@ class CallAll(TestCase):
         # CheckPoint:1.通话记录展示与用户B的语音通话记录，显示用户B的名称、通话类型【语音通话】、归属地。右侧显示通话时间以及时间节点图标
         cpg.page_should_contain_text("13537795364")
         cpg.page_should_contain_text("语音通话")
-        cpg.page_should_contain_text("广东深圳")
-        cpg.page_should_contain_text("移动")
+        # cpg.page_should_contain_text("广东深圳")
+        # cpg.page_should_contain_text("移动")
         self.assertTrue(cpg.is_exist_call_time())
         # Step:2.点击时间节点
         cpg.click_call_time()
@@ -1046,7 +1048,6 @@ class CallAll(TestCase):
         # 2.未订购每月10G用户
         # 3.网络使用4G
         cpg = CallPage()
-        cpg.click_call()
         # Step:1.发起语音通话
         cpg.select_type_start_call(calltype=1, text="13800138001")
         time.sleep(1)
@@ -1092,7 +1093,6 @@ class CallAll(TestCase):
         # 1.客户端已登录
         # 2.已弹出4g弹出每月10G免流特权提示窗口
         cpg = CallPage()
-        cpg.click_call()
         cpg.select_type_start_call(calltype=1, text="13800138001")
         # 1.点击订购免流特权
         cpg.click_text("订购免流特权")

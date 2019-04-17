@@ -74,3 +74,8 @@ class CalllogBannerPage(BasePage):
             # if CallPage().is_exist_allow_button():
             #     CallPage().click_allow_button(auto_accept_permission_alert=False)
         time.sleep(1)
+
+    @TestLogger.log()
+    def is_exist_contact_search_bar(self):
+        """是否存在搜索或输入号码"""
+        return self._is_element_present(self.__locators["搜索或输入号码"])
