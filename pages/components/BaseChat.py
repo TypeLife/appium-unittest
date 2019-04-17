@@ -75,7 +75,9 @@ class BaseChatPage(BasePage):
                   '表情集选择栏btn2': (MobileBy.ID, 'com.chinasofti.rcs:id/sec_emoji'),
                   '翻页小圆点': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/pcv_expression"]/android.widget.ImageView'),
                   '删除表情按钮': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iv_expression_image" and contains(@text,"删除")]'),
-
+                  '发送短信...': (MobileBy.ID, 'com.chinasofti.rcs:id/et_sms'),
+                  '发送': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
+                  '退出短信': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_exitsms'),
                   }
 
     @TestLogger.log()
@@ -224,6 +226,11 @@ class BaseChatPage(BasePage):
         self.click_element(self.__class__.__locators["选择名片"])
 
     @TestLogger.log()
+    def click_free_msg(self):
+        """点击免费短信"""
+        self.click_element(self.__class__.__locators["选择名片"])
+
+    @TestLogger.log()
     def click_gif(self):
         """点击选择gif"""
         self.click_element(self.__class__.__locators["选择gif"])
@@ -243,6 +250,16 @@ class BaseChatPage(BasePage):
     def input_message(self, message):
         """输入聊天信息"""
         self.input_text(self.__class__.__locators["说点什么..."], message)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+        return self
+
+    @TestLogger.log()
+    def input_free_message(self, message):
+        """输入短信信息"""
+        self.input_text(self.__class__.__locators["发送短信..."], message)
         try:
             self.driver.hide_keyboard()
         except:
@@ -556,3 +573,23 @@ class BaseChatPage(BasePage):
     def is_audio_btn_exit(self):
         """语音按钮是否存在"""
         return self._is_element_present(self.__locators["语音按钮"])
+
+    @TestLogger.log()
+    def is_exist_send_button(self):
+        """是否存在资费提醒发送按钮"""
+        return self._is_element_present(self.__locators["发送"])
+
+    @TestLogger.log()
+    def click_send_button(self):
+        """点击确认发送按钮"""
+        self.click_element(self.__class__.__locators["发送"])
+
+    @TestLogger.log()
+    def is_exist_exit_msg(self):
+        """是否存在退出短信"""
+        return self._is_element_present(self.__locators["退出短信"])
+
+    @TestLogger.log()
+    def click_exit_msg(self):
+        """点击退出短信"""
+        self.click_element(self.__class__.__locators["退出短信"])
