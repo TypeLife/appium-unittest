@@ -381,3 +381,8 @@ class SelectContactsPage(BasePage):
             return True
         else:
             return False
+
+    @TestLogger.log()
+    def press_and_move_right(self):
+        """元素内向右滑动"""
+        self.swipe_by_direction(self.__class__.__locators["搜索或输入手机号"], "right")
