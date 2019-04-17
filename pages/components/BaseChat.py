@@ -75,9 +75,10 @@ class BaseChatPage(BasePage):
                   '表情集选择栏btn2': (MobileBy.ID, 'com.chinasofti.rcs:id/sec_emoji'),
                   '翻页小圆点': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/pcv_expression"]/android.widget.ImageView'),
                   '删除表情按钮': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iv_expression_image" and contains(@text,"删除")]'),
-                  '发送短信...': (MobileBy.ID, 'com.chinasofti.rcs:id/et_sms'),
+                  '短信编辑': (MobileBy.ID, 'com.chinasofti.rcs:id/et_sms'),
                   '发送': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
                   '退出短信': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_exitsms'),
+                  '发送短信': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_sms_send'),
                   }
 
     @TestLogger.log()
@@ -259,7 +260,7 @@ class BaseChatPage(BasePage):
     @TestLogger.log()
     def input_free_message(self, message):
         """输入短信信息"""
-        self.input_text(self.__class__.__locators["发送短信..."], message)
+        self.input_text(self.__class__.__locators["短信编辑"], message)
         try:
             self.driver.hide_keyboard()
         except:
@@ -593,3 +594,8 @@ class BaseChatPage(BasePage):
     def click_exit_msg(self):
         """点击退出短信"""
         self.click_element(self.__class__.__locators["退出短信"])
+
+    @TestLogger.log()
+    def click_send_msg(self):
+        """点击发送短信"""
+        self.click_element(self.__class__.__locators["发送短信"])
