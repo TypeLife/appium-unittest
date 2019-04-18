@@ -274,7 +274,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0001(self):
         '''
         搜索输入框校验，通过手机号码搜索，输入数字模糊查询（只搜索一条记录）
-        author:yanshunhua
+        author:darcy
 
         :return:
         '''
@@ -300,7 +300,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0002(self):
         '''
         搜索输入框校验，通过手机号码搜索，输入数字模糊查询（搜索多条记录）
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -328,7 +328,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0003(self):
         '''
         搜索输入框校验，通过手机号码搜索，输入手机号码全匹配查询
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -336,7 +336,7 @@ class ContactLocal(TestCase):
         GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text(text='13800138005')
+        lcontact.input_search_text(text='13800138010')
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(3)
@@ -364,7 +364,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0019(self):
         '''
        测试sim单卡测试，无联系人，手机系统设置关闭“显示SIM联系人”，和飞信关闭“显示sim卡联系人”，是否能搜索到本地联系人
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -398,7 +398,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0020(self):
         '''
        测试sim单卡测试，有联系人，手机系统设置开启“显示SIM联系人”，和飞信开启“显示sim卡联系人”，是否能搜索到sim联系人
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -433,7 +433,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0021(self):
         '''
        测试sim单卡测试，有联系人，手机系统设置开启“显示SIM联系人”，和飞信关闭“显示sim卡联系人”，是否能搜索到sim联系人
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -467,7 +467,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0022(self):
         '''
        测试sim单卡，有联系人，手机系统设置关闭“显示SIM联系人”，和飞信开启“显示sim卡联系人”，是否能搜索到sim联系人
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -495,7 +495,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0005(self):
         '''
         搜索输入框校验，通过名称搜索，输入名称模糊查询（搜索多条记录）
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -523,7 +523,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0006(self):
         '''
         搜索输入框校验，通过名称搜索，输入名称全匹配搜索（搜索多条记录）
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -536,7 +536,7 @@ class ContactLocal(TestCase):
         lcontact.hide_keyboard()
         time.sleep(3)
         els = lcontact.get_element_number()
-        self.assertTrue(len(els) > 1)
+        self.assertTrue(len(els) > 0)
 
     @staticmethod
     def setUp_test_contacts_chenjixiang_0004():
@@ -551,7 +551,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0004(self):
         '''
         搜索输入框校验，通过名称（中文）搜索，输入名称模糊查询（搜索多条记录）
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -580,7 +580,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0007(self):
         '''
         测试空格+文本进行搜索
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -610,7 +610,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0008(self):
         '''
         搜索输入框校验，通过名称搜索（英文），输入名称模糊查询（搜索多条记录）
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -638,7 +638,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0010(self):
         '''
         测试搜索输入框输入超长字符
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -666,7 +666,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0012(self):
         '''
         测试搜索输入框的X按钮是否可以清空内容
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -692,7 +692,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0014(self):
         '''
         搜索一个不存在本地的正常的11位号码
-        auther:yanshunhua
+        auther:darcy
         :return:
 
         '''
@@ -720,7 +720,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0015(self):
         '''
         搜索一个不存在本地的正常的11位号码
-        auther:yanshunhua
+        auther:darcy
         :return:
 
         '''
@@ -756,7 +756,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0016(self):
         '''
         测试sim单卡测试，无联系人，手机系统设置开启“显示SIM联系人”，和飞信开启“显示sim卡联系人”，是否能搜索到本地联系人
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -793,7 +793,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0017(self):
         '''
        测试sim单卡测试，无联系人，手机系统设置开启“显示SIM联系人”，和飞信关闭“显示sim卡联系人”，是否能搜索到不存在的联系人
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -827,7 +827,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0018(self):
         '''
        测试sim单卡测试，无联系人，手机系统设置关闭“显示SIM联系人”，和飞信开启“显示sim卡联系人”，是否能搜索到本地联系人
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -862,7 +862,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0023(self):
         '''
        测试sim单卡，有联系人，手机系统设置关闭“显示SIM联系人”，和飞信关闭“显示sim卡联系人”，是否能搜索到sim联系人
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -900,7 +900,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0024(self):
         '''
        测试sim双卡，卡1有联系人，卡2无联系人，已开启“显示sim卡联系人”，分别搜索卡1、卡2、本地通讯录、和通讯录
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -930,7 +930,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0030(self):
         '''
        测试搜索结果点击后跳转到profile页面
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -961,7 +961,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0031(self):
         '''
        测试系统通讯录联系人拥有多个手机号码，手机号码不一致的情况，通过名称搜索
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -992,7 +992,7 @@ class ContactLocal(TestCase):
     def test_contacts_chenjixiang_0032(self):
         '''
        测试系统通讯录联系人拥有多个手机号码，手机号码不一致的情况，通过手机号码搜索
-        auther:yanshunhua
+        auther:darcy
         :return:
         '''
         lcontact = localContactPage()
@@ -1819,36 +1819,9 @@ class ContactLocal(TestCase):
         lcontact.check_keyword_if_exist(text="13410559633")
         lcontact.click_back_by_android(1)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0063():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
 
-    @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_chenjixiang_0063(self):
-        '''
-        测试已经被过滤掉空格的联系人，通过空格搜索
-        :return:
-        '''
-        lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
-        time.sleep(1)
-        lcontact.click_search_box()
-        time.sleep(1)
-        lcontact.input_search_text(" ")
-        lcontact.hide_keyboard()
-        time.sleep(1)
-        els = lcontact.get_element_number()
-        self.assertTrue(len(els)==0)
-        lcontact.click_back_by_android()
-        
-        
+
 
 if __name__=="__main__":
     unittest.main()
