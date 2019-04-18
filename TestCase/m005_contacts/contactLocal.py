@@ -17,7 +17,7 @@ from pages.contacts.EditContactPage import EditContactPage
 from pages.contacts.components.menu_more import MenuMore
 from pages.contacts.local_contact import localContactPage
 import preconditions
-
+from dataproviders import contact2
 REQUIRED_MOBILES = {
     'Android-移动':'M960BDQN229CH',
     'Android-移动2':'M960BDQN229CK_20',
@@ -222,7 +222,8 @@ class ContactLocal2(TestCase):
         while fail_time < 3:
             try:
                 # 获取需要导入的联系人数据
-                required_contacts = dataproviders.get_preset_contacts()
+              #  required_contacts = dataproviders.get_preset_contacts()
+                required_contacts =contact2.get_preset_contacts()
 
                 # 连接手机
                 Preconditions.connect_mobile('Android-移动')
@@ -263,7 +264,7 @@ class ContactLocal2(TestCase):
         except:
             traceback.print_exc()
 
-class ContactLocal(TestCase):
+#class ContactLocal(TestCase):
     @staticmethod
     def setUp_test_contacts_chenjixiang_0001():
         Preconditions.connect_mobile('Android-移动')

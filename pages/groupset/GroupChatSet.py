@@ -2,7 +2,7 @@ from appium.webdriver.common.mobileby import MobileBy
 import re
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
-
+import time
 
 class GroupChatSetPage(BasePage):
     """群聊设置页面"""
@@ -64,6 +64,7 @@ class GroupChatSetPage(BasePage):
                   '群管理返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
                   '群主管理权转让': (MobileBy.ID, 'com.chinasofti.rcs:id/group_transfer'),
                   '解散群': (MobileBy.ID, 'com.chinasofti.rcs:id/group_disband'),
+                  "二维码重置":(MobileBy.ID,'com.chinasofti.rcs:id/group_qr_icon'),
                   }
 
     @TestLogger.log()
@@ -351,7 +352,19 @@ class GroupChatSetPage(BasePage):
     @TestLogger.log()
     def click_qecode_share_button(self):
         """点击群二维码分享按钮"""
-        self.click_element(self.__class__.__locators['二维码转发'])
+        times=10
+        while times>0:
+            time.sleep(1)
+            if self.get_elements(self.__class__.__locators['二维码转发']):
+                self.click_element(self.__class__.__locators['二维码转发'])
+                break
+            else:
+                times -= 1
+                if self.get_elements(self.__class__.__locators['二维码重置']):
+                   self.click_element(self.__class__.__locators['二维码重置'])
+                   time.sleep(1)
+
+        return False
 
     @TestLogger.log()
     def click_qecode_download_button(self):
