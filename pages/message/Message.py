@@ -557,9 +557,9 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def wait_for_message_list_load(self, timeout=60, auto_accept_alerts=True):
         """等待消息列表加载"""
-        locator = (MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/btn_cancel" and @text ="以后再说"]')
-        if self._is_element_present(locator):
-            self.click_element(locator)
+        # locator = (MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/btn_cancel" and @text ="以后再说"]')
+        # if self._is_element_present(locator):
+        #     self.click_element(locator)
         try:
             self.wait_until(
                 timeout=timeout,

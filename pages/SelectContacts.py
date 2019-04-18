@@ -29,8 +29,8 @@ class SelectContactsPage(BasePage):
         'com.chinasofti.rcs:id/local_contacts': (MobileBy.ID, 'com.chinasofti.rcs:id/local_contacts'),
         '选择一个群': (MobileBy.XPATH, '//*[@text ="选择一个群"]'),
         'com.chinasofti.rcs:id/arrow_right': (MobileBy.ID, 'com.chinasofti.rcs:id/arrow_right'),
-        '选择和通讯录联系人': (MobileBy.XPATH, '//*[@text ="选择和通讯录联系人"]'),
-        '本地联系人': (MobileBy.XPATH, '//*[@text ="本地联系人"]'),
+        '选择团队联系人': (MobileBy.XPATH, '//*[@text ="选择团队联系人"]'),
+        '本地联系人': (MobileBy.XPATH, '//*[@text ="选择手机联系人"]'),
         '最近聊天': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint'),
         'X': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect'),
         '聊天电话': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),
@@ -155,8 +155,8 @@ class SelectContactsPage(BasePage):
 
     @TestLogger.log()
     def click_he_contacts(self):
-        """点击 选择和通讯录联系人"""
-        self.click_element(self.__class__.__locators["选择和通讯录联系人"])
+        """点击 选择和通讯录联系人/选择团队联系人"""
+        self.click_element(self.__class__.__locators["选择团队联系人"])
 
     @TestLogger.log()
     def click_local_contacts(self):
@@ -385,6 +385,7 @@ class SelectContactsPage(BasePage):
         else:
             return False
 
+<<<<<<< HEAD
 
     @TestLogger.log()
     def click_back_by_android(self, times=1):
@@ -422,3 +423,9 @@ class SelectContactsPage(BasePage):
         time.sleep(1)
         mess.click_sure_button()
         time.sleep(1)
+=======
+    @TestLogger.log()
+    def press_and_move_right(self):
+        """元素内向右滑动"""
+        self.swipe_by_direction(self.__class__.__locators["搜索或输入手机号"], "right")
+>>>>>>> 02e1e94ce335259c7db495feb0bb6080e5dd7bf4

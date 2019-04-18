@@ -10,7 +10,7 @@ class CorporateNewsDetailsPage(BasePage):
     ACTIVITY = 'com.cmicc.module_enterprise.ui.activity.EnterpriseH5ProcessActivity'
 
     __locators = {
-        '企业新闻详情': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title_actionbar" and @text ="企业新闻详情"]'),
+        '企业新闻详情': (MobileBy.ID, "com.chinasofti.rcs:id/tv_title_actionbar"),
         '删除': (MobileBy.XPATH, '//*[@text="删除"]'),
         '发布': (MobileBy.XPATH, '//*[@text="发布"]'),
         '下线': (MobileBy.XPATH, '//*[@text="下线"]'),

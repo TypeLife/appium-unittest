@@ -521,6 +521,14 @@ class BasePage(object):
         """点击返回"""
         self.click_element((MobileBy.XPATH, "//*[contains(@resource-id, 'back')]"), 10)
 
+    @TestLogger.log()
+    def click_back_by_android(self, times=1):
+        """android内置键返回"""
+        # times 返回次数
+        for i in range(times):
+            self.driver.back()
+            time.sleep(1)
+
     @TestLogger.log("下一页")
     def page_up(self):
         """向上滑动一页"""

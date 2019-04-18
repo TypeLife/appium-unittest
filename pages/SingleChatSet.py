@@ -24,6 +24,7 @@ class SingleChatSetPage(BasePage):
                   '置顶聊天': (MobileBy.XPATH, '//*[@text="置顶聊天"]'),
                   '查找聊天内容': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_serarch_chat_record'),
                   "消息免打扰开关": (MobileBy.ID, "com.chinasofti.rcs:id/switch_undisturb"),
+                  '聊天设置标题': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/title" and @text ="聊天设置"]')
                   }
 
     @TestLogger.log()
@@ -95,3 +96,17 @@ class SingleChatSetPage(BasePage):
     def click_no_disturb(self):
         """点击 消息免打扰开关"""
         self.click_element(self.__class__.__locators['消息免打扰开关'])
+
+    @TestLogger.log()
+    def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
+        """等待单聊设置页面加载"""
+
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["聊天设置标题"])
+            )
+        except:
+            raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
+        return self

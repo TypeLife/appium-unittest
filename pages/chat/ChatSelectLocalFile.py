@@ -10,7 +10,7 @@ from library.core.TestLogger import TestLogger
 
 class ChatSelectLocalFilePage(BasePage):
     """选择本地文件页面聊天"""
-    ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.ChooseLocalFileActivity'
+    ACTIVITY = 'com.cmicc.module_message.ui.activity.ChooseLocalFileActivity'
 
     __locators = {'': (MobileBy.ID, ''),
                   'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
@@ -109,6 +109,7 @@ class ChatSelectLocalFilePage(BasePage):
                         return el
         c = 0
         while c < times:
+            # self.page_down()
             self.page_up()
             if self._is_element_present(locator):
                 els = self.get_elements(locator)
@@ -119,6 +120,7 @@ class ChatSelectLocalFilePage(BasePage):
             c += 1
         c = 0
         while c < times:
+            # self.page_up()
             self.page_down()
             if self._is_element_present(locator):
                 els = self.get_elements(locator)
@@ -283,7 +285,20 @@ class ChatSelectLocalFilePage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self.is_text_present("和飞信定制流量包")
+                condition=lambda d: self.is_text_present("0元订购")
+            )
+        except:
+            raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
+        return self
+
+    @TestLogger.log()
+    def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
+        """等待 选择本地文件页面聊天 页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["发送"])
             )
         except:
             raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
@@ -308,3 +323,19 @@ class ChatSelectLocalFilePage(BasePage):
     def click_music(self):
         """点击音乐"""
         self.click_element(self.__class__.__locators["音乐"])
+
+    @TestLogger.log()
+    def wait_for_page_loads(self, timeout=60):
+        """等待 页面加载"""
+        try:
+            self.wait_until(
+                auto_accept_permission_alert=True,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["照片"]),
+                timeout=timeout
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
