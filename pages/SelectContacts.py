@@ -385,8 +385,6 @@ class SelectContactsPage(BasePage):
         else:
             return False
 
-<<<<<<< HEAD
-
     @TestLogger.log()
     def click_back_by_android(self, times=1):
         """
@@ -396,7 +394,6 @@ class SelectContactsPage(BasePage):
         for i in range(times):
             self.driver.back()
             time.sleep(1)
-
 
     @TestLogger.log("创建群")
     def create_message_group(self):
@@ -423,9 +420,9 @@ class SelectContactsPage(BasePage):
         time.sleep(1)
         mess.click_sure_button()
         time.sleep(1)
-=======
+
     @TestLogger.log()
     def press_and_move_right(self):
         """元素内向右滑动"""
         self.swipe_by_direction(self.__class__.__locators["搜索或输入手机号"], "right")
->>>>>>> 02e1e94ce335259c7db495feb0bb6080e5dd7bf4
+

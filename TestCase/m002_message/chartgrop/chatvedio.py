@@ -309,16 +309,14 @@ class Preconditions(object):
         wbp.wait_for_workbench_page_load()
         wbp.click_organization()
         osp = OrganizationStructurePage()
-        osp.wait_for_page_load()
-        time.sleep(2)
+        time.sleep(5)
         n = 1
         # 解决工作台不稳定问题
         while osp.is_text_present("账号认证失败"):
             osp.click_back()
             wbp.wait_for_workbench_page_load()
             wbp.click_organization()
-            osp.wait_for_page_load()
-            time.sleep(2)
+            time.sleep(5)
             n += 1
             if n > 10:
                 break
