@@ -671,6 +671,8 @@ class VoiceAnnouncementTest(TestCase):
                 raise AssertionError("不可成功选中")
             if not sc.is_text_present("搜索或输入号码"):
                 raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/1000"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
             current_mobile().back()
             vnp.click_close_more()
             workbench = WorkbenchPage()
@@ -687,6 +689,8 @@ class VoiceAnnouncementTest(TestCase):
                 raise AssertionError("不可成功选中")
             if not sc.is_text_present("搜索或输入号码"):
                 raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/1000"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
             current_mobile().back()
             vnp.click_close_more()
             workbench = WorkbenchPage()
@@ -733,6 +737,8 @@ class VoiceAnnouncementTest(TestCase):
                 raise AssertionError("不可成功选中")
             if not sc.is_text_present("搜索或输入号码"):
                 raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/1000"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
             current_mobile().back()
             vnp.click_close_more()
             workbench = WorkbenchPage()
@@ -749,6 +755,8 @@ class VoiceAnnouncementTest(TestCase):
                 raise AssertionError("不可成功选中")
             if not sc.is_text_present("搜索或输入号码"):
                 raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/1000"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
             current_mobile().back()
             vnp.click_close_more()
             workbench = WorkbenchPage()
@@ -795,6 +803,8 @@ class VoiceAnnouncementTest(TestCase):
                 raise AssertionError("不可成功选中")
             if not sc.is_text_present("搜索或输入号码"):
                 raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/1000"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
             current_mobile().back()
             vnp.click_close_more()
             workbench = WorkbenchPage()
@@ -811,6 +821,8 @@ class VoiceAnnouncementTest(TestCase):
                 raise AssertionError("不可成功选中")
             if not sc.is_text_present("搜索或输入号码"):
                 raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/1000"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
             current_mobile().back()
             vnp.click_close_more()
             workbench = WorkbenchPage()
@@ -857,6 +869,8 @@ class VoiceAnnouncementTest(TestCase):
                 raise AssertionError("不可成功选中")
             if not sc.is_text_present("搜索或输入号码"):
                 raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/1000"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
             current_mobile().back()
             vnp.click_close_more()
             workbench = WorkbenchPage()
@@ -873,6 +887,8 @@ class VoiceAnnouncementTest(TestCase):
                 raise AssertionError("不可成功选中")
             if not sc.is_text_present("搜索或输入号码"):
                 raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/1000"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
             current_mobile().back()
             vnp.click_close_more()
             workbench = WorkbenchPage()
@@ -919,6 +935,8 @@ class VoiceAnnouncementTest(TestCase):
                 raise AssertionError("不可成功选中")
             if not sc.is_text_present("搜索或输入号码"):
                 raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/1000"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
             current_mobile().back()
             vnp.click_close_more()
             workbench = WorkbenchPage()
@@ -935,7 +953,433 @@ class VoiceAnnouncementTest(TestCase):
                 raise AssertionError("不可成功选中")
             if not sc.is_text_present("搜索或输入号码"):
                 raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/1000"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
             current_mobile().back()
             vnp.click_close_more()
             workbench = WorkbenchPage()
             workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0044(self):
+        """特殊字符可支持搜索匹配"""
+        # 1.在搜索框输入特殊字符, 查看匹配结果
+        # 2.点击结果，查看是否可选择成功
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_element_("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        sc = SelectContactsPage()
+        sc.click_local_contacts()
+        if not sc.swipe_and_find_element("属下 &"):
+            current_mobile().back()
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_contacts_page()
+            if workbench.is_text_present("始终允许"):
+                workbench.click_text("始终允许")
+            cp = ContactsPage()
+            cp.create_contacts_if_not_exits("属下 &", "18920796566")
+            time.sleep(2)
+            cp.open_workbench_page()
+            workbench.wait_for_page_load()
+            workbench.click_voice_notice()
+            vnp.wait_for_page_loads()
+            vnp.click_text("创建语音通知")
+            time.sleep(2)
+            vnp.click_add()
+            sc.input_search_keyword("&")
+            time.sleep(2)
+            if not sc.is_text_present("18920796566"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("18920796566")
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选中")
+            if not sc.is_text_present("搜索或输入号码"):
+                raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/1000"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+        else:
+            current_mobile().back()
+            sc.input_search_keyword("&")
+            time.sleep(2)
+            if not sc.is_text_present("18920796566"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("18920796566")
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选中")
+            if not sc.is_text_present("搜索或输入号码"):
+                raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/1000"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0045(self):
+        """纯空格键不支持搜索匹配"""
+        # 1.在搜索框输入空格，查看显示
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_element_("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        sc = SelectContactsPage()
+        sc.click_local_contacts()
+        if not sc.swipe_and_find_element("属下 &"):
+            current_mobile().back()
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_contacts_page()
+            if workbench.is_text_present("始终允许"):
+                workbench.click_text("始终允许")
+            cp = ContactsPage()
+            cp.create_contacts_if_not_exits("属下 &", "18920796566")
+            time.sleep(2)
+            cp.open_workbench_page()
+            workbench.wait_for_page_load()
+            workbench.click_voice_notice()
+            vnp.wait_for_page_loads()
+            vnp.click_text("创建语音通知")
+            time.sleep(2)
+            vnp.click_add()
+            sc.input_search_keyword(" ")
+            time.sleep(2)
+            if sc.is_text_present("18920796566"):
+                raise AssertionError("搜索结果有误")
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+        else:
+            current_mobile().back()
+            sc.input_search_keyword(" ")
+            time.sleep(2)
+            if sc.is_text_present("18920796566"):
+                raise AssertionError("搜索结果有误")
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0046(self):
+        """空格键+文本 可支持匹配"""
+        # 1.在搜索框输入空格键 + 文本, 查看匹配结果
+        # 2.点击结果，查看是否可选择成功
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_element_("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        sc = SelectContactsPage()
+        sc.click_local_contacts()
+        if not sc.swipe_and_find_element("属下 &"):
+            current_mobile().back()
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_contacts_page()
+            if workbench.is_text_present("始终允许"):
+                workbench.click_text("始终允许")
+            cp = ContactsPage()
+            cp.create_contacts_if_not_exits("属下 &", "18920796566")
+            time.sleep(2)
+            cp.open_workbench_page()
+            workbench.wait_for_page_load()
+            workbench.click_voice_notice()
+            vnp.wait_for_page_loads()
+            vnp.click_text("创建语音通知")
+            time.sleep(2)
+            vnp.click_add()
+            sc.input_search_keyword(" 属下")
+            time.sleep(2)
+            if not sc.is_text_present("18920796566"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("18920796566")
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选中")
+            if not sc.is_text_present("搜索或输入号码"):
+                raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/1000"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+        else:
+            current_mobile().back()
+            sc.input_search_keyword(" 属下")
+            time.sleep(2)
+            if not sc.is_text_present("18920796566"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("18920796566")
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选中")
+            if not sc.is_text_present("搜索或输入号码"):
+                raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/1000"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0047(self):
+        """搜索框输入，不限制字符，可一键删除，可按输入盘删除键删除"""
+        # 1.在搜索框输入长文本
+        # 2.在输入框滑动已输入的文字
+        # 3.点击键盘删除
+        # 4.点击X一键删除
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_element_("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        time.sleep(2)
+        sc = SelectContactsPage()
+        mess = "哈" * 30
+        sc.input_search_keyword(mess)
+        time.sleep(2)
+        sc.press_and_move_right()
+        time.sleep(2)
+        vnp.click_element_("查询文本删除X")
+        if not sc.is_text_present("搜索或输入号码"):
+            raise AssertionError("输入框没有自动清空")
+        current_mobile().back()
+        vnp.click_close_more()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0048(self):
+        """搜索本机号码"""
+        # 1.在搜索框输入本机号码，查看匹配结果
+        # 2.点击本机联系人
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_element_("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        sc = SelectContactsPage()
+        sc.click_local_contacts()
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        if not sc.swipe_and_find_element(phone_number):
+            current_mobile().back()
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_contacts_page()
+            if workbench.is_text_present("始终允许"):
+                workbench.click_text("始终允许")
+            cp = ContactsPage()
+            cp.create_contacts_if_not_exits("本机", phone_number)
+            time.sleep(2)
+            cp.open_workbench_page()
+            workbench.wait_for_page_load()
+            workbench.click_voice_notice()
+            vnp.wait_for_page_loads()
+            vnp.click_text("创建语音通知")
+            time.sleep(2)
+            vnp.click_add()
+            sc.input_search_keyword(phone_number)
+            time.sleep(2)
+            if not sc.is_text_present("本机"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("本机")
+            if not sc.is_toast_exist("该联系人不可选择"):
+                raise AssertionError("没有toast提示该联系人不可选择")
+            current_mobile().back()
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+        else:
+            current_mobile().back()
+            sc.input_search_keyword(phone_number)
+            time.sleep(2)
+            if not sc.is_text_present("本机"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("本机")
+            if not sc.is_toast_exist("该联系人不可选择"):
+                raise AssertionError("没有toast提示该联系人不可选择")
+            current_mobile().back()
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0050(self):
+        """字母+汉字组合可精准搜索"""
+        # 1.在搜索框输入：字母 + 汉字, 查看匹配结果
+        # 2.点击结果，查看是否可选择成功
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_element_("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        sc = SelectContactsPage()
+        sc.click_local_contacts()
+        if not sc.swipe_and_find_element("a加1"):
+            current_mobile().back()
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_contacts_page()
+            if workbench.is_text_present("始终允许"):
+                workbench.click_text("始终允许")
+            cp = ContactsPage()
+            cp.create_contacts_if_not_exits("a加1", "18920798888")
+            time.sleep(2)
+            cp.open_workbench_page()
+            workbench.wait_for_page_load()
+            workbench.click_voice_notice()
+            vnp.wait_for_page_loads()
+            vnp.click_text("创建语音通知")
+            time.sleep(2)
+            vnp.click_add()
+            sc.input_search_keyword("a加")
+            time.sleep(2)
+            if not sc.is_text_present("18920798888"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("18920798888")
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选中")
+            if not sc.is_text_present("搜索或输入号码"):
+                raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/1000"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+        else:
+            current_mobile().back()
+            sc.input_search_keyword("a加")
+            time.sleep(2)
+            if not sc.is_text_present("18920798888"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("18920798888")
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选中")
+            if not sc.is_text_present("搜索或输入号码"):
+                raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/1000"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0051(self):
+        """字母+汉字+数字 组合可精准搜索"""
+        # 1.在搜索框输入：字母 + 汉字 + 数字, 查看匹配结果
+        # 2.点击结果，查看是否可选择成功
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_element_("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        sc = SelectContactsPage()
+        sc.click_local_contacts()
+        if not sc.swipe_and_find_element("a加1"):
+            current_mobile().back()
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_contacts_page()
+            if workbench.is_text_present("始终允许"):
+                workbench.click_text("始终允许")
+            cp = ContactsPage()
+            cp.create_contacts_if_not_exits("a加1", "18920798888")
+            time.sleep(2)
+            cp.open_workbench_page()
+            workbench.wait_for_page_load()
+            workbench.click_voice_notice()
+            vnp.wait_for_page_loads()
+            vnp.click_text("创建语音通知")
+            time.sleep(2)
+            vnp.click_add()
+            sc.input_search_keyword("a加1")
+            time.sleep(2)
+            if not sc.is_text_present("18920798888"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("18920798888")
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选中")
+            if not sc.is_text_present("搜索或输入号码"):
+                raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/1000"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+        else:
+            current_mobile().back()
+            sc.input_search_keyword("a加1")
+            time.sleep(2)
+            if not sc.is_text_present("18920798888"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("18920798888")
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选中")
+            if not sc.is_text_present("搜索或输入号码"):
+                raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/1000"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0052(self):
+        """搜索非企业联系人提示无结果"""
+        # 1、搜索不存在在企业通讯录中的用户电话号码，大陆号码11位或8位香港号码
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_element_("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        time.sleep(2)
+        sc = SelectContactsPage()
+        sc.click_text("选择企业通讯录联系人")
+        time.sleep(2)
+        sc.input_search_keyword("12345678")
+        time.sleep(3)
+        if not sc.is_text_present("无搜索结果"):
+            raise AssertionError("没有提示“无搜索结果”")
+        current_mobile().back()
+        current_mobile().back()
+        current_mobile().back()
+        current_mobile().back()
+        vnp.click_close_more()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()

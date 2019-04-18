@@ -2071,3 +2071,182 @@ class MsgLabelGroupingTest(TestCase):
         gif = ChatGIFPage()
         if gif.is_gif_exist():
             gif.close_gif()
+
+
+class MsgLabelGroupingTestAll(TestCase):
+    """
+    模块：消息-标签分组
+    文件位置：全量/114全量测试用例-韦凤莲0322.xlsx
+    表格：标签分组
+    author: 方康
+    """
+
+    def default_setUp(self):
+        """确保每个用例运行前在标签分组会话页面"""
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_label_grouping_chat_page()
+            return
+        chat = LabelGroupingChatPage()
+        if chat.is_on_this_page():
+            return
+        else:
+            current_mobile().launch_app()
+            Preconditions.enter_label_grouping_chat_page()
+
+    def default_tearDown(self):
+        pass
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0001(self):
+        """勾选本地文件内任意文件点击发送按钮"""
+        # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        if not chat.is_open_more():
+            chat.click_more()
+        # 2、点击本地文件
+        more_page = ChatMorePage()
+        more_page.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        # 3、选择任意文件，点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(".xls")
+        if file:
+            local_file.click_send()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+        chat.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0002(self):
+        """网络异常时勾选本地文件内任意文件点击发送按钮"""
+        # 1、在当前聊天会话页面，断开网络，点击更多富媒体的文件按钮
+        chat = LabelGroupingChatPage()
+        chat.set_network_status(0)
+        chat.wait_for_page_load()
+        if not chat.is_open_more():
+            chat.click_more()
+        # 2、点击本地文件
+        more_page = ChatMorePage()
+        more_page.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        # 3、选择任意文件，点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(".xls")
+        if file:
+            local_file.click_send()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+        chat.wait_for_page_load()
+        # 5.验证是否有发送失败的标示
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_fenzu_0002():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0003(self):
+        """会话页面有文件发送失败时查看消息列表是否有消息发送失败的标识"""
+        # 1、在当前聊天会话页面，断开网络，点击更多富媒体的文件按钮
+        chat = LabelGroupingChatPage()
+        chat.set_network_status(0)
+        chat.wait_for_page_load()
+        if not chat.is_open_more():
+            chat.click_more()
+        # 2、点击本地文件
+        more_page = ChatMorePage()
+        more_page.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        # 3、选择任意文件，点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(".xls")
+        if file:
+            local_file.click_send()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+        chat.wait_for_page_load()
+        # 5.验证是否有发送失败的标示
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        # 6.返回消息列表是否有重发的标示
+        label_name = chat.get_label_name()
+        chat.click_back()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_text(label_name)
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_fenzu_0003():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0004(self):
+        """对发送失败的文件进行重发"""
+        # 1、在当前聊天会话页面，断开网络，点击更多富媒体的文件按钮
+        chat = LabelGroupingChatPage()
+        chat.set_network_status(0)
+        chat.wait_for_page_load()
+        if not chat.is_open_more():
+            chat.click_more()
+        # 2、点击本地文件
+        more_page = ChatMorePage()
+        more_page.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        # 3、选择任意文件，点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file(".xls")
+        if file:
+            local_file.click_send()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+        chat.wait_for_page_load()
+        # 5.验证是否有发送失败的标示
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        # 6.对发送失败的文件进行重发
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_fenzu_0004():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep.set_network_status(6)
