@@ -175,6 +175,8 @@ class Preconditions(object):
         if group_name in group_names:
             return
         sog.click_back()
+        mess.click_add_icon()
+        mess.click_group_chat()
         # 从本地联系人中选择成员创建群
         sc.click_local_contacts()
         time.sleep(2)
@@ -399,6 +401,61 @@ class Preconditions(object):
             mp.open_message_page()
             mp.wait_for_page_load()
             Preconditions.create_enterprise_group(name)
+
+    @staticmethod
+    def make_already_delete_my_group():
+        """确保删掉所有群"""
+        # 消息页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(2)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
+        sc.click_select_one_group()
+        # 获取已有群名
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        group_names = sog.get_group_name()
+        # 有群删除，无群返回
+        if len(group_names) == 0:
+            sog.click_back()
+            pass
+        else:
+            for group_name in group_names:
+                sog.select_one_group_by_name(group_name)
+                gcp = GroupChatPage()
+                gcp.wait_for_page_load()
+                gcp.click_setting()
+                gcs = GroupChatSetPage()
+                gcs.wait_for_page_load()
+                gcs.click_delete_and_exit()
+                gcs.click_sure()
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc.wait_for_page_load()
+                sc.click_select_one_group()
+            sog.click_back()
+            # if not gcs.is_toast_exist("已退出群聊"):
+            #     raise AssertionError("无退出群聊提示")
+        # sc.click_back()
+        # mess.open_me_page()
 
 
 class MsgGroupChatvedioTest(TestCase):
@@ -1800,6 +1857,341 @@ class MsgGroupChatvedioTest(TestCase):
         gcv.click_back()
         gcf.click_back()
         gcs.click_back()
+
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    def test_msg_xiaoqiu_0413(self):
+        """群主在群设置页面点击群名称，修改群名后"""
+        # 1.检验是否当前聊天会话页面,点击进入群设置页面
+        Preconditions.enter_group_chat_page()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gsp = GroupChatSetPage()
+        gsp.wait_for_page_load()
+        # 2.点击群名称，修改群名
+        gsp.click_modify_group_name()
+        names = str(uuid.uuid1())
+        group_name = "a" + names[-4:]
+        gsp.input_new_group_name(group_name)
+        gsp.save_group_name()
+        self.assertEquals(gsp.is_toast_exist("修改成功"), True)
+        # 3.返回群聊主页
+        gsp.click_back()
+        gcp.wait_for_page_load()
+        gcp.page_should_contain_text("群名称已修改为 " + group_name)
+
+    @staticmethod
+    def tearDown_test_msg_xiaoqiu_0413():
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gsp = GroupChatSetPage()
+        gsp.wait_for_page_load()
+        # 2.点击群名称，修改群名
+        gsp.click_modify_group_name()
+        group_name = Preconditions.get_group_chat_name()
+        gsp.input_new_group_name(group_name)
+        gsp.save_group_name()
+        gsp.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    def test_msg_xiaoqiu_0414(self):
+        """群主在设置页面点击群管理，点击解散群按钮后"""
+        # 1.检验是否当前聊天会话页面,点击进入群设置页面
+        Preconditions.enter_group_chat_page()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gsp = GroupChatSetPage()
+        gsp.wait_for_page_load()
+        # 2.点击群管理，解散群
+        gsp.click_group_manage()
+        gsp.click_group_manage_disband_button()
+        gsp.click_sure()
+        # 3.返回群聊主页
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        gcp.page_should_contain_text("系统消息")
+        gcp.page_should_contain_text("该群已解散")
+
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    def test_msg_xiaoqiu_0415(self):
+        """群成员在群设置页面点击删除并退出按钮后"""
+        # 1.检验是否当前聊天会话页面,点击进入群设置页面
+        Preconditions.enter_group_chat_page()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gsp = GroupChatSetPage()
+        gsp.wait_for_page_load()
+        # 2.点击删除并退出
+        gsp.click_delete_and_exit()
+        gsp.click_sure()
+        # 3.返回消息页，提示你已退出群
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_text("系统消息")
+        time.sleep(3)
+        mess.page_should_contain_text("你已退出群")
+
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    def test_msg_xiaoqiu_0421(self):
+        """群成员在群设置页面点击删除并退出按钮后"""
+        # 1.检验是否当前聊天会话页面,点击进入群设置页面
+        Preconditions.enter_group_chat_page()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gsp = GroupChatSetPage()
+        gsp.wait_for_page_load()
+        # 2.点击点击+邀请群成员后
+        gsp.click_add_number()
+        slc = SelectLocalContactsPage()
+        group_name = "和飞信电话"
+        slc.swipe_select_one_member_by_name(group_name)
+        slc.click_sure()
+        # 3.返回消息页，提示你已退出群
+        gcp.wait_for_page_load()
+        gcp.page_should_contain_text("你向 " + group_name + "... 发出群邀请")
+
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    def test_msg_xiaoqiu_0422(self):
+        """群成员在群设置页面点击删除并退出按钮后"""
+        # 1.检验是否当前聊天会话页面,点击进入群设置页面
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_back()
+        Preconditions.make_already_delete_my_group()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(2)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
+        time.sleep(3)
+        sc.click_select_one_group()
+        # 群名
+        group_name = Preconditions.get_group_chat_name()
+        # 获取已有群名
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        group_names = sog.get_group_name()
+        # 有群返回，无群创建
+        if group_name in group_names:
+            return
+        sog.click_back()
+        mess.click_add_icon()
+        mess.click_group_chat()
+        # 从本地联系人中选择成员创建群
+        sc.click_local_contacts()
+        time.sleep(2)
+        slc = SelectLocalContactsPage()
+        a = 0
+        names = {}
+        while a < 3:
+            names = slc.get_contacts_name()
+            num = len(names)
+            if not names:
+                raise AssertionError("No contacts, please add contacts in address book.")
+            if num == 1:
+                sog.page_up()
+                a += 1
+                if a == 3:
+                    raise AssertionError("联系人只有一个，请再添加多个不同名字联系人组成群聊")
+            else:
+                break
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        slc.click_sure()
+        # 创建群
+        cgnp = CreateGroupNamePage()
+        cgnp.input_group_name(group_name)
+        cgnp.click_sure()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        gcp.page_should_contain_text("发出群邀请")
+
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    def test_msg_xiaoqiu_0534(self):
+        """创建一个普通群"""
+        # 1.检验是否当前聊天会话页面,点击进入群设置页面
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_back()
+        Preconditions.make_already_delete_my_group()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(2)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
+        time.sleep(3)
+        sc.click_select_one_group()
+        # 群名
+        group_name = Preconditions.get_group_chat_name()
+        # 获取已有群名
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        group_names = sog.get_group_name()
+        # 有群返回，无群创建
+        if group_name in group_names:
+            return
+        sog.click_back()
+        mess.click_add_icon()
+        mess.click_group_chat()
+        # 从本地联系人中选择成员创建群
+        sc.click_local_contacts()
+        time.sleep(2)
+        slc = SelectLocalContactsPage()
+        a = 0
+        names = {}
+        while a < 3:
+            names = slc.get_contacts_name()
+            num = len(names)
+            if not names:
+                raise AssertionError("No contacts, please add contacts in address book.")
+            if num == 1:
+                sog.page_up()
+                a += 1
+                if a == 3:
+                    raise AssertionError("联系人只有一个，请再添加多个不同名字联系人组成群聊")
+            else:
+                break
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        slc.click_sure()
+        # 创建群
+        cgnp = CreateGroupNamePage()
+        cgnp.input_group_name(group_name)
+        cgnp.click_sure()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        gcp.page_should_contain_text("发出群邀请")
+
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    def test_msg_xiaoqiu_0535(self):
+        """创建10一个普通群"""
+        # 1.检验是否当前聊天会话页面,点击进入群设置页面
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_back()
+        Preconditions.make_already_delete_my_group()
+        for i in range(10):
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_add_icon()
+            # 点击 发起群聊
+            mess.click_group_chat()
+            # 选择联系人界面，选择一个群
+            sc = SelectContactsPage()
+            # 群名
+            group_name = Preconditions.get_group_chat_name() + "% d" % i
+            # 从本地联系人中选择成员创建群
+            sc.click_local_contacts()
+            time.sleep(2)
+            slc = SelectLocalContactsPage()
+            a = 0
+            names = {}
+            while a < 3:
+                names = slc.get_contacts_name()
+                num = len(names)
+                if not names:
+                    raise AssertionError("No contacts, please add contacts in address book.")
+                if num == 1:
+                    sc.page_up()
+                    a += 1
+                    if a == 3:
+                        raise AssertionError("联系人只有一个，请再添加多个不同名字联系人组成群聊")
+                else:
+                    break
+            # 选择成员
+            for name in names:
+                slc.select_one_member_by_name(name)
+            slc.click_sure()
+            # 创建群
+            cgnp = CreateGroupNamePage()
+            cgnp.input_group_name(group_name)
+            cgnp.click_sure()
+            # 等待群聊页面加载
+            gcp.wait_for_page_load()
+            gcp.click_back()
+
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    def test_msg_xiaoqiu_0548(self):
+        """创建10一个普通群"""
+        # 1. 普通群，分享群聊邀请口令
+        Preconditions.enter_group_chat_page()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gsp = GroupChatSetPage()
+        gsp.wait_for_page_load()
+        # 2. 分享群聊邀请口令
+        gsp.click_text("邀请微信或QQ好友进群")
+        # 3.验证是否有生成口令的加载框
+        gsp.page_should_contain_text("生成口令")
+        # 4.验证是否群口令分享弹窗
+        gsp.wait_for_share_group_load()
+        gsp.page_should_contain_text("分享群口令邀请好友进群")
+        gsp.page_should_contain_text("下次再说")
+        # 5.点击下次再说，进入群聊设置页面
+        gsp.click_text("下次再说")
+        gsp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    def test_msg_xiaoqiu_0548(self):
+        """创建10一个普通群"""
+        # 1. 普通群，分享群聊邀请口令
+        Preconditions.enter_group_chat_page()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gsp = GroupChatSetPage()
+        gsp.wait_for_page_load()
+        # 2. 分享群聊邀请口令
+        gsp.click_text("邀请微信或QQ好友进群")
+        # 3.验证是否有生成口令的加载框
+        gsp.page_should_contain_text("生成口令")
+        # 4.验证是否群口令分享弹窗
+        gsp.wait_for_share_group_load()
+        gsp.page_should_contain_text("分享群口令邀请好友进群")
+        gsp.page_should_contain_text("下次再说")
+        # 5.点击下次再说，进入群聊设置页面
+        gsp.click_text("下次再说")
+        gsp.wait_for_page_load()
 
 
 class MsgGroupChatVideoPicAllTest(TestCase):
