@@ -66,14 +66,13 @@ class GroupChatSetPage(BasePage):
                   '群管理返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
                   '群主管理权转让': (MobileBy.ID, 'com.chinasofti.rcs:id/group_transfer'),
                   '解散群': (MobileBy.ID, 'com.chinasofti.rcs:id/group_disband'),
-<<<<<<< HEAD
+
                   "二维码重置":(MobileBy.ID,'com.chinasofti.rcs:id/group_qr_icon'),
-=======
+
                   # 邀请分享群口令
                   '分享群口令框': (MobileBy.XPATH,  '//*[@text ="分享群口令邀请好友进群"]'),
                   '下次再说': (MobileBy.XPATH, '//*[@text ="下次再说"]'),
                   '立即分享': (MobileBy.XPATH, '//*[@text ="立即分享"]'),
->>>>>>> ccd757f3419b00fddfada03dd968f740cd2fd7bd
                   }
 
     @TestLogger.log()
