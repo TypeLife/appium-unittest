@@ -29,8 +29,8 @@ class SelectContactsPage(BasePage):
         'com.chinasofti.rcs:id/local_contacts': (MobileBy.ID, 'com.chinasofti.rcs:id/local_contacts'),
         '选择一个群': (MobileBy.XPATH, '//*[@text ="选择一个群"]'),
         'com.chinasofti.rcs:id/arrow_right': (MobileBy.ID, 'com.chinasofti.rcs:id/arrow_right'),
-        '选择团队联系人': (MobileBy.XPATH, '//*[@text ="选择团队联系人"]'),
         '本地联系人': (MobileBy.XPATH, '//*[@text ="选择手机联系人"]'),
+        '选择和通讯录联系人': (MobileBy.XPATH, '//*[@text ="选择团队联系人"]'),
         '最近聊天': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint'),
         'X': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect'),
         '聊天电话': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),
@@ -57,7 +57,76 @@ class SelectContactsPage(BasePage):
         "搜索框左边选中联系人": (MobileBy.ID, "com.chinasofti.rcs:id/image"),
        # 'aaa':(MobileBy.XPATH,"*[@text='aaa']"),
         'aaa':(MobileBy.ID,'com.chinasofti.rcs:id/contact_name'),
+
+        "搜索群组":(MobileBy.ID,'com.chinasofti.rcs:id/et_search'),
+        "搜索1":(MobileBy.ID,'com.chinasofti.rcs:id/edit_query'),
+        "选择团队联系人":(MobileBy.XPATH,"//*[@text='选择团队联系人']"),
+        "选择手机联系人": (MobileBy.XPATH, "//*[@text='选择手机联系人']"),
+        "中软国际科技服务有限公司": (MobileBy.XPATH, "//*[@text='中软国际科技服务有限公司']"),
+        "选择联系人列表":(MobileBy.ID,'com.chinasofti.rcs:id/textview_action_bar_title'),
+        "分组名":(MobileBy.ID,'com.chinasofti.rcs:id/img_icon_department'),
+        "成员ID":(MobileBy.ID, 'com.chinasofti.rcs:id/img_icon_contactlist'),
+        "我已阅读": (MobileBy.ID,'com.chinasofti.rcs:id/btn_check'),
+        "确定3": (MobileBy.ID,'com.chinasofti.rcs:id/dialog_btn_ok'),
+        "最近聊天联系人":(MobileBy.ID,'com.chinasofti.rcs:id/iv_photo'),
     }
+
+    @TestLogger.log("最近聊天联系人")
+    def click_recent_contact(self, text='最近聊天联系人'):
+        """点击组名"""
+        time.sleep(1)
+        self.click_element(self.__locators[text])
+
+    @TestLogger.log("选择团队联系人")
+    def click_group_contact(self, text='选择团队联系人'):
+        """点击组名"""
+        time.sleep(1)
+        self.click_element(self.__locators[text])
+
+    @TestLogger.log("选择手机联系人")
+    def click_phone_contact(self, text='选择手机联系人'):
+        """点击组名"""
+        time.sleep(1)
+        self.click_element(self.__locators[text])
+
+    @TestLogger.log("选择:中软国际科技服务有限公司")
+    def click_group_chinasoft(self, text='中软国际科技服务有限公司'):
+        """点击组名"""
+        time.sleep(1)
+        self.click_element(self.__locators[text])
+
+    @TestLogger.log("选择成员ID")
+    def click_group_contact_member(self, text='成员ID'):
+        """点击组名"""
+        time.sleep(1)
+        self.click_element(self.__locators[text])
+
+    @TestLogger.log("选择分组名")
+    def click_group_contact_name(self, text='分组名'):
+        """点击组名"""
+        time.sleep(1)
+        self.click_element(self.__locators[text])
+
+    @TestLogger.log("点击组名")
+    def click_group_name(self,text='aaa'):
+        """点击组名"""
+        time.sleep(1)
+        self.click_element(self.__locators[text])
+
+
+    @TestLogger.log("点击搜索群组")
+    def click_group_search(self):
+        """搜索联系人"""
+        time.sleep(1)
+        self.click_element(self.__locators["搜索群组"])
+
+    @TestLogger.log("搜索群组")
+    def group_search(self, text='aaa'):
+        """搜索联系人"""
+        time.sleep(1)
+        self.input_text(self.__class__.__locators["搜索1"], text)
+        if self.driver.is_keyboard_shown():
+            self.driver.hide_keyboard()
 
     @TestLogger.log()
     def search(self, text):

@@ -1767,7 +1767,7 @@ class MsgCommonGroupTest(TestCase):
             raise AssertionError("通讯录联系人数量不足，请添加")
         cgacp.click_sure()
         time.sleep(2)
-        gcp.is_toast_exist("发出群邀请")
+        gcp.page_should_contain_text("发出群邀请")
 
     def tearDown_test_msg_common_group_0053(self):
         #删除聊天记录
@@ -4002,6 +4002,280 @@ class MsgCommonGroupTest(TestCase):
         if gcp.is_toast_exist("你撤回了一条信息"):
             raise AssertionError("消息超过十秒可以撤回")
 
+
+class MsgCommonGroupPriorityTest(TestCase):
+    """
+        模块：消息-普通群
+
+        文件位置：1.1.4和飞信APP全量测试用例-优先编写用例 .xlsx
+        表格：消息-普通群
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        pass
+
+    def default_setUp(self):
+        """确保每个用例运行前在群聊聊天会话页面"""
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+
+    def default_tearDown(self):
+        pass
+        # current_mobile().disconnect_mobile()
+
+    # @tags('ALL', 'Priority', 'CMCC')
+    @unittest.skip("卸载先不执行")
+    def test_msg_xiaoqiu_0043(self):
+        """ 先卸载后安装"""
+        # 卸载和飞信
+        from settings.available_devices import TARGET_APP
+        current_mobile().remove_app(TARGET_APP.get('APP_PACKAGE'))
+        current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                     replace=True)
+        Preconditions.make_already_in_message_page()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.open_me_page()
+        me = MePage()
+        me.click_collection()
+        time.sleep(1)
+        if not me.is_text_present("没有任何收藏"):
+            raise AssertionError("收藏的文件内容没有被清除")
+        mcp = MeCollectionPage()
+        mcp.click_back()
+        me.open_message_page()
+
+    def tearDown_test_msg_xiaoqiu_0043(self):
+        from settings.available_devices import TARGET_APP
+        Preconditions.select_mobile('Android-移动')
+        if current_mobile().is_app_installed(TARGET_APP.get('APP_PACKAGE')):
+            return
+
+        # 预防安装应用的时候发生异常，尝试恢复安装，（还不知道好不好使）
+        reinstall_try_time = 3
+        while reinstall_try_time > 0:
+            try:
+                current_mobile().remove_app(TARGET_APP.get('APP_PACKAGE'))
+                current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                             replace=True)
+                break
+            except:
+                reinstall_try_time -= 1
+                if reinstall_try_time == 0:
+                    import traceback
+                    traceback.print_exc()
+
+    # @tags('ALL', 'Priority', 'CMCC')
+    @unittest.skip("卸载先不执行")
+    def test_msg_xiaoqiu_0092(self):
+        """ 先卸载后安装"""
+        gcp = GroupChatPage()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        flag = audio.wait_for_audio_allow_page_load()
+        self.assertTrue(flag)
+        audio.click_allow()
+        audio.wait_until(condition=lambda d: audio.is_text_present("退出"))
+        audio.click_exit()
+        gcp.wait_for_page_load()
+        self.assertFalse(gcp.is_exist_red_dot())
+        # 卸载和飞信
+        from settings.available_devices import TARGET_APP
+        current_mobile().remove_app(TARGET_APP.get('APP_PACKAGE'))
+        current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                     replace=True)
+        Preconditions.enter_group_chat_page()
+        self.assertTrue(gcp.is_exist_red_dot())
+
+    def tearDown_test_msg_xiaoqiu_0092(self):
+        from settings.available_devices import TARGET_APP
+        Preconditions.select_mobile('Android-移动')
+        if current_mobile().is_app_installed(TARGET_APP.get('APP_PACKAGE')):
+            return
+
+        # 预防安装应用的时候发生异常，尝试恢复安装，（还不知道好不好使）
+        reinstall_try_time = 3
+        while reinstall_try_time > 0:
+            try:
+                current_mobile().remove_app(TARGET_APP.get('APP_PACKAGE'))
+                current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                             replace=True)
+                break
+            except:
+                reinstall_try_time -= 1
+                if reinstall_try_time == 0:
+                    import traceback
+                    traceback.print_exc()
+
+    @tags('ALL', 'Priority', 'CMCC')
+    def test_msg_xiaoqiu_0124(self):
+        """普通群——群成员——添加一个成员"""
+        # 1、点击添加成员的“+”号按钮，是否可以跳转到联系人选择器页面
+        # 2、任意选中一个联系人，点击右上角的确定按钮，是否会向邀请人发送一条消息
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击“+”按钮
+        gcsp.click_add_member()
+        time.sleep(2)
+        cgacp = ChatGroupAddContactsPage()
+        if not cgacp.is_text_present("添加群成员"):
+            raise AssertionError("不可以跳转到联系人选择器页面")
+        cgacp.click_one_contact("和飞信电话")
+        time.sleep(1)
+        cgacp.click_sure()
+        time.sleep(2)
+        gcp.page_should_contain_text("发出群邀请")
+
+    @tags('ALL', 'Priority', 'CMCC')
+    def test_msg_xiaoqiu_0125(self):
+        """普通群——群主——添加2个成员"""
+        # 1、点击添加成员的“+”号按钮
+        # 2、任意选中2个联系人，点击右上角的确定按钮，是否会向邀请人发送一条消息
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击“+”按钮
+        gcsp.click_add_member()
+        time.sleep(2)
+        cgacp = ChatGroupAddContactsPage()
+        contactNnames = cgacp.get_contacts_name()
+        if len(contactNnames) > 1:
+            # 选择多个联系人
+            cgacp.select_one_member_by_name(contactNnames[0])
+            cgacp.select_one_member_by_name(contactNnames[1])
+        else:
+            raise AssertionError("通讯录联系人数量不足，请添加")
+        time.sleep(3)
+        cgacp.click_sure()
+        time.sleep(2)
+        gcp.page_should_contain_text("发出群邀请")
+
+    @tags('ALL', 'Priority', 'CMCC')
+    def test_msg_xiaoqiu_0129(self):
+        """普通群——群成员——添加一个成员"""
+        # 1、点击添加成员的“+”号按钮，是否可以跳转到联系人选择器页面
+        # 2、任意选中一个联系人，点击右上角的确定按钮，是否会向邀请人发送一条消息
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击“+”按钮
+        gcsp.click_add_member()
+        time.sleep(2)
+        cgacp = ChatGroupAddContactsPage()
+        if not cgacp.is_text_present("添加群成员"):
+            raise AssertionError("不可以跳转到联系人选择器页面")
+        cgacp.click_one_contact("和飞信电话")
+        time.sleep(1)
+        cgacp.click_sure()
+        time.sleep(2)
+        gcp.page_should_contain_text("发出群邀请")
+
+    @tags('ALL', 'Priority', 'CMCC')
+    def test_msg_xiaoqiu_0131(self):
+        """普通群——群主——添加2个成员"""
+        # 1、点击添加成员的“+”号按钮，是否可以跳转到联系人选择器页面
+        # 2、任意选中2个联系人，点击右上角的确定按钮，是否会向邀请人发送一条消息
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击“+”按钮
+        gcsp.click_add_member()
+        time.sleep(2)
+        cgacp = ChatGroupAddContactsPage()
+        if not cgacp.is_text_present("添加群成员"):
+            raise AssertionError("不可以跳转到联系人选择器页面")
+        contactNnames = cgacp.get_contacts_name()
+        if len(contactNnames) > 1:
+            # 选择多个联系人
+            cgacp.select_one_member_by_name(contactNnames[0])
+            cgacp.select_one_member_by_name(contactNnames[1])
+        else:
+            raise AssertionError("通讯录联系人数量不足，请添加")
+        time.sleep(3)
+        cgacp.click_sure()
+        time.sleep(2)
+        gcp.page_should_contain_text("发出群邀请")
+
+    @tags('ALL', 'Priority', 'CMCC')
+    def test_msg_xiaoqiu_0140(self):
+        """群主——修改群昵称"""
+        # 1、点击群名称入口，是否可以进入到修改群名称页面并且群名称为编辑状态
+        # 2、点击左上角的返回按钮，是否可以返回到群聊设置页面
+        # 3、点击右上角的保存按钮，是否会直接保存现有群名称并返回到群聊设置页面
+        # 4、点击编辑状态群名称右边的“X”，是否可以一次性清除群名称文案，群名称编辑框中，展示默认文案：修改群名称
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_modify_group_name()
+        time.sleep(1)
+        if not gcsp.is_text_present("修改群名称"):
+            raise AssertionError("不可以进入到修改群名称页面")
+        gcsp.click_edit_group_card_back()
+        gcsp.wait_for_page_load()
+        gcsp.click_modify_group_name()
+        time.sleep(2)
+        gcsp.save_group_name()
+        gcsp.wait_for_page_load()
+        gn=Preconditions.get_group_chat_name()
+        if not gcsp.is_text_present(gn):
+            raise AssertionError("没有直接保存现有群名称")
+        gcsp.click_modify_group_name()
+        time.sleep(1)
+        gcsp.click_iv_delete_button()
+        time.sleep(2)
+        if not gcsp.is_text_present("请输入群聊名称"):
+            raise AssertionError("不可以一次性清除群名称文案")
+        gcsp.click_edit_group_card_back()
+        gcsp.click_back()
+
+    @tags('ALL', 'Priority', 'CMCC')
+    def test_msg_xiaoqiu_0141(self):
+        """群主——清除旧名称——录入一个汉字"""
+        # 1、群名称编辑页面，清除旧名称后，录入一个汉字，点击右上角的完成按钮，是否可以完成保存
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_modify_group_name()
+        time.sleep(1)
+        gcsp.clear_group_name()
+        time.sleep(1)
+        # 录入新群名
+        gcsp.input_new_group_name("哈")
+        time.sleep(1)
+        gcsp.save_group_name()
+        if not gcsp.is_toast_exist("修改成功"):
+            raise AssertionError("群名称更改为新名称失败")
+        time.sleep(1)
+        gcsp.click_back()
 
 
 class MsgCommonGroupAllTest(TestCase):

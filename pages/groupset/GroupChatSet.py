@@ -2,7 +2,7 @@ from appium.webdriver.common.mobileby import MobileBy
 import re
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
-
+import time
 
 class GroupChatSetPage(BasePage):
     """群聊设置页面"""
@@ -16,12 +16,14 @@ class GroupChatSetPage(BasePage):
                   '群聊设置': (MobileBy.ID, 'com.chinasofti.rcs:id/text_title'),
                   'com.chinasofti.rcs:id/show_more_member': (MobileBy.ID, 'com.chinasofti.rcs:id/show_more_member'),
                   '群成员(2人)': (MobileBy.ID, 'com.chinasofti.rcs:id/member_count'),
-                  '群成员展开>': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/member_count"]/../android.widget.ImageView'),
+                  '群成员展开>': (
+                      MobileBy.XPATH,
+                      '//*[@resource-id="com.chinasofti.rcs:id/member_count"]/../android.widget.ImageView'),
                   'com.chinasofti.rcs:id/member_list': (MobileBy.ID, 'com.chinasofti.rcs:id/member_list'),
                   'com.chinasofti.rcs:id/iv_avatar': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_avatar'),
                   'com.chinasofti.rcs:id/iv_head': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_head'),
                   'com.chinasofti.rcs:id/iv_group_chairman_tag': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/iv_group_chairman_tag'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/iv_group_chairman_tag'),
                   'mobile0...': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name'),
                   'frank': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name'),
                   'com.chinasofti.rcs:id/tv_name': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name'),
@@ -37,7 +39,7 @@ class GroupChatSetPage(BasePage):
                   '我在本群的昵称': (MobileBy.ID, 'com.chinasofti.rcs:id/left_me_group_name_tv'),
                   'mobile0489': (MobileBy.ID, 'com.chinasofti.rcs:id/my_group_name'),
                   'com.chinasofti.rcs:id/my_group_name_right_arrow': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/my_group_name_right_arrow'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/my_group_name_right_arrow'),
                   'com.chinasofti.rcs:id/group_manage': (MobileBy.ID, 'com.chinasofti.rcs:id/group_manage'),
                   '群管理': (MobileBy.ID, 'com.chinasofti.rcs:id/left_group_manage_tv'),
                   '消息免打扰': (MobileBy.ID, 'com.chinasofti.rcs:id/left_message_interruption_tv'),
@@ -64,6 +66,13 @@ class GroupChatSetPage(BasePage):
                   '群管理返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
                   '群主管理权转让': (MobileBy.ID, 'com.chinasofti.rcs:id/group_transfer'),
                   '解散群': (MobileBy.ID, 'com.chinasofti.rcs:id/group_disband'),
+
+                  "二维码重置":(MobileBy.ID,'com.chinasofti.rcs:id/group_qr_icon'),
+
+                  # 邀请分享群口令
+                  '分享群口令框': (MobileBy.XPATH,  '//*[@text ="分享群口令邀请好友进群"]'),
+                  '下次再说': (MobileBy.XPATH, '//*[@text ="下次再说"]'),
+                  '立即分享': (MobileBy.XPATH, '//*[@text ="立即分享"]'),
                   }
 
     @TestLogger.log()
@@ -263,7 +272,7 @@ class GroupChatSetPage(BasePage):
     @TestLogger.log()
     def click_add_member(self):
         """点击 “+”添加成员"""
-        els=self.get_elements(self.__class__.__locators['群成员'])
+        els = self.get_elements(self.__class__.__locators['群成员'])
         els[-2].click()
 
     @TestLogger.log()
@@ -278,7 +287,7 @@ class GroupChatSetPage(BasePage):
         return self._is_enabled(self.__class__.__locators['完成'])
 
     @TestLogger.log()
-    def input_new_group_name(self,message):
+    def input_new_group_name(self, message):
         """输入新群名"""
         self.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/edit_query'), message)
         try:
@@ -313,8 +322,8 @@ class GroupChatSetPage(BasePage):
     @TestLogger.log()
     def get_edit_query_text(self):
         """获取输入框文本"""
-        el=self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/edit_query'))
-        text=el.get_attribute("text")
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/edit_query'))
+        text = el.get_attribute("text")
         return text
 
     @TestLogger.log()
@@ -351,7 +360,19 @@ class GroupChatSetPage(BasePage):
     @TestLogger.log()
     def click_qecode_share_button(self):
         """点击群二维码分享按钮"""
-        self.click_element(self.__class__.__locators['二维码转发'])
+        times=10
+        while times>0:
+            time.sleep(1)
+            if self.get_elements(self.__class__.__locators['二维码转发']):
+                self.click_element(self.__class__.__locators['二维码转发'])
+                break
+            else:
+                times -= 1
+                if self.get_elements(self.__class__.__locators['二维码重置']):
+                   self.click_element(self.__class__.__locators['二维码重置'])
+                   time.sleep(1)
+
+        return False
 
     @TestLogger.log()
     def click_qecode_download_button(self):
@@ -398,3 +419,25 @@ class GroupChatSetPage(BasePage):
     def page_up(self):
         """向上滑动一页"""
         self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+
+    @TestLogger.log("点击添加成员")
+    def click_add_number(self):
+        els = self.get_elements(self.__locators["com.chinasofti.rcs:id/iv_avatar"])
+        el = els[1]
+        el.click()
+
+    @TestLogger.log()
+    def wait_for_share_group_load(self, timeout=15, auto_accept_alerts=True):
+        """等待群管理页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("分享群口令邀请好友进群")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
