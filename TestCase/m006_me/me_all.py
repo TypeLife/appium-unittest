@@ -151,10 +151,10 @@ class Preconditions(object):
         mup.click_edit()
         mep1 = MeEditUserProfilePage()
         mep1.wait_for_page_load()
-        mep1.input_name("姓名", "中国人123*#!!")
+        mep1.input_name("姓名", "中国人123*#!！!")
         mep1.edit_clear("公司")
         mep1.edit_clear("职位")
-        # mep.swipe_up()
+        mep1.swipe_up()
         mep1.edit_clear("邮箱")
         time.sleep(1)
         mep1.click_save()
@@ -263,6 +263,7 @@ class Preconditions(object):
         group_names = sog.get_group_name()
         # 有群删除，无群返回
         if len(group_names) == 0:
+            sog.click_back()
             pass
         else:
             for group_name in group_names:
@@ -274,10 +275,9 @@ class Preconditions(object):
                 gcs.wait_for_page_load()
                 gcs.click_delete_and_exit()
                 gcs.click_sure()
-                if not gcs.is_toast_exist("已退出群聊"):
-                    raise AssertionError("无退出群聊提示")
-        sog.click_back()
-        sc.click_back()
+                # if not gcs.is_toast_exist("已退出群聊"):
+                #     raise AssertionError("无退出群聊提示")
+        # sc.click_back()
         mess.open_me_page()
 
     @staticmethod
@@ -336,9 +336,9 @@ class Preconditions(object):
         # 有群返回，无群创建
         if group_name in group_names:
             return
-        sog.click_back()
+        sog.click_text("创建群聊")
         # 从本地联系人中选择成员创建群
-        sc.click_local_contacts()
+        sc.select_local_contacts()
         time.sleep(2)
         slc = SelectLocalContactsPage()
         a = 0
@@ -412,6 +412,7 @@ class MeAllTest(TestCase):
         self.assertEquals(mep.is_element_exist("个人头像"), True)
         self.assertEquals(mep.is_element_exist("二维码入口"), True)
         self.assertEquals(mep.is_text_exist("多方电话可用时长"), True)
+        self.assertEquals(mep.is_text_exist("每天领时长"), True)
         self.assertEquals(mep.is_text_exist("和包支付"), True)
         self.assertEquals(mep.is_text_exist("移动营业厅"), True)
         self.assertEquals(mep.is_text_exist("福利"), True)
@@ -621,9 +622,9 @@ class MeAllTest(TestCase):
         scp.click_he_contacts()
         shp = SelectHeContactsPage()
         shp.wait_for_page_load()
-        team_name = shp.get_team_names()[1]
+        team_name = shp.get_team_names()[3]
         if not len(team_name) > 0:
-            raise AssertionError("群名为空，请新建群聊")
+            raise AssertionError("团队名为空，请新建团队")
         # 3.点击任意和通讯录名称
         shp.select_one_team_by_name(team_name)
         sdp = SelectHeContactsDetailPage()
@@ -677,7 +678,7 @@ class MeAllTest(TestCase):
         scp.click_he_contacts()
         shp = SelectHeContactsPage()
         shp.wait_for_page_load()
-        team_name = shp.get_team_names()[1]
+        team_name = shp.get_team_names()[3]
         if not len(team_name) > 0:
             raise AssertionError("群名为空，请新建群聊")
         # 3.点击任意和通讯录团队名称
@@ -1025,20 +1026,19 @@ class MeAllTest(TestCase):
         name = "给1234%6在$"
         scp.input_search_keyword(name)
         time.sleep(1)
-        scp.page_should_contain_text("搜索和通讯录联系人 :")
+        scp.page_should_contain_text("搜索团队联系人 :")
         self.assertEquals(scp.get_element_texts("最近聊天"), True)
         scp.page_should_not_contain_text("本地联系人")
         # 有结果
         scp.click_x_icon()
         name1 = "大佬1"
         scp.input_search_keyword(name1)
-        scp.page_should_contain_text("搜索和通讯录联系人 :")
+        scp.page_should_contain_text("搜索团队联系人 :")
         self.assertEquals(scp.get_element_texts("最近聊天"), True)
         scp.page_contain_element("聊天电话")
         # 5.点击返回
         mup.click_back()
         mup.click_back()
-        time.sleep(30)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_022(self):
@@ -1060,14 +1060,14 @@ class MeAllTest(TestCase):
         name = "159187111111"
         scp.input_search_keyword(name)
         time.sleep(1)
-        scp.page_should_contain_text("搜索和通讯录联系人 :")
+        scp.page_should_contain_text("搜索团队联系人 :")
         self.assertEquals(scp.get_element_texts("最近聊天"), True)
         scp.page_should_not_contain_text("本地联系人")
         # 有结果
         scp.click_x_icon()
         name1 = "15918730974"
         scp.input_search_keyword(name1)
-        scp.page_should_contain_text("搜索和通讯录联系人 :")
+        scp.page_should_contain_text("搜索团队联系人 :")
         self.assertEquals(scp.get_element_texts("最近聊天"), True)
         scp.page_contain_element("聊天电话")
         # 4.点击返回
@@ -1094,7 +1094,7 @@ class MeAllTest(TestCase):
         name = "15918730799"
         scp.input_search_keyword(name)
         time.sleep(1)
-        scp.page_should_contain_text("搜索和通讯录联系人 :")
+        scp.page_should_contain_text("搜索团队联系人 :")
         self.assertEquals(scp.get_element_texts("最近聊天"), True)
         scp.page_should_contain_text("网络搜索")
         scp.page_contain_element("聊天电话")
@@ -1181,6 +1181,7 @@ class MeAllTest(TestCase):
     def tearDown_test_me_all_028():
         Preconditions.make_already_have_my_group()
         mep = MePage()
+        GroupChatPage().click_back()
         mep.click_back()
         mep.open_me_page()
 
@@ -1936,7 +1937,7 @@ class MeAllTest(TestCase):
         # 4.检验有结果和无结果两种情况
         self.assertEquals(scg.page_contain_element('X'), True)
         self.assertEquals(scg.get_element_texts("最近聊天"), True)
-        if scg.is_text_present("本地联系人"):
+        if scg.is_text_present("手机联系人"):
             self.assertEquals(scg.get_element_texts("local联系人"), True)
         # 5.点击返回
         scg.click_back()
@@ -1963,7 +1964,7 @@ class MeAllTest(TestCase):
         # 4.检验有结果和无结果两种情况
         self.assertEquals(scg.page_contain_element('X'), True)
         self.assertEquals(scg.get_element_texts("最近聊天"), True)
-        if scg.is_text_present("本地联系人"):
+        if scg.is_text_present("手机联系人"):
             self.assertEquals(scg.get_element_texts("聊天电话"), True)
         # 5.点击返回
         scg.click_back()
