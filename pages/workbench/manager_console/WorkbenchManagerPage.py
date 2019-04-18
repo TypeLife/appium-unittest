@@ -16,7 +16,8 @@ class WorkBenchManagerPage(BasePage):
         '搜索应用': (MobileBy.XPATH, "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]/android.view.View/android.widget.EditText"),
         '搜索框': (MobileBy.XPATH, '//*[@class ="android.widget.EditText"]'),
         '搜索': (MobileBy.XPATH, '//*[@text ="搜索"]'),
-
+        '添加': (MobileBy.XPATH, '//*[@text ="添加"]'),
+        '添加应用': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[6]/android.view.View')
     }
 
     @TestLogger.log()
@@ -96,3 +97,18 @@ class WorkBenchManagerPage(BasePage):
     def click_search_store(self):
         """点击搜索应用"""
         self.click_element(self.__class__.__locators["搜索应用"])
+
+    @TestLogger.log()
+    def click_join(self):
+        """点击添加"""
+        self.click_element(self.__class__.__locators["添加"])
+
+    @TestLogger.log()
+    def click_add_app(self):
+        """点击添加应用"""
+        self.click_element(self.__class__.__locators["添加应用"])
+
+    @TestLogger.log()
+    def is_exist_join(self):
+        """是否存在添加"""
+        return self._is_element_present(self.__class__.__locators["添加"])

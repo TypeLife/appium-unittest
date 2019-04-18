@@ -2,6 +2,7 @@ from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.TestLogger import TestLogger
 from pages.components import FooterPage
+import time
 
 
 class ContactsPage(FooterPage):
@@ -18,7 +19,7 @@ class ContactsPage(FooterPage):
             MobileBy.ID, 'com.chinasofti.rcs:id/constraintLayout_home_tab'),
         'com.chinasofti.rcs:id/viewPager': (MobileBy.ID, 'com.chinasofti.rcs:id/viewPager'),
         '通讯录': (MobileBy.ID, 'com.chinasofti.rcs:id/tvContact'),
-        '+号': (MobileBy.ID, 'com.chinasofti.rcs:id/action_add'),
+        '+号': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_add'),
         '搜索': (MobileBy.ID, 'com.chinasofti.rcs:id/et_search'),
         'com.chinasofti.rcs:id/recyclerView_contactList': (
             MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView_contactList'),
@@ -60,6 +61,10 @@ class ContactsPage(FooterPage):
         '和通讯录联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_department'),
         '和通讯录更多': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_more'),
         '团队管理': (MobileBy.ID, 'com.chinasofti.rcs:id/quit_confirm_tv'),
+        '显示':(MobileBy.ID,'com.chinasofti.rcs:id/btn_ok'),
+        '不显示': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
+        '企业群标识': (MobileBy.ID, 'com.chinasofti.rcs:id/group_ep'),
+        '群聊列表返回': (MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn'),
     }
 
     @TestLogger.log("获取所有联系人名")
@@ -268,3 +273,26 @@ class ContactsPage(FooterPage):
         """点击和通讯录联系人更多"""
         self.click_element(self.__class__.__locators['和通讯录更多'])
 
+    @TestLogger.log("处理SIM联系人弹框")
+    def click_sim_contact(self):
+        """点击和通讯录联系人更多"""
+        time.sleep(2)
+        if self.get_elements(self.__class__.__locators['不显示']):
+            self.click_element(self.__class__.__locators['不显示'])
+
+    @TestLogger.log()
+    def is_exist_enterprise_group(self):
+        """是否存在企业群"""
+        max_try = 10
+        current = 0
+        while current < max_try:
+            if self._is_element_present(self.__class__.__locators["企业群标识"]):
+                return True
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        return False
+
+    @TestLogger.log()
+    def click_return(self):
+        """点击返回"""
+        self.click_element(self.__class__.__locators['群聊列表返回'])

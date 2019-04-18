@@ -106,6 +106,11 @@ class Preconditions(object):
         if group_name in group_names:
             return
         sog.click_back()
+        time.sleep(2)
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
         # 从本地联系人中选择成员创建群
         sc.click_local_contacts()
         time.sleep(2)
@@ -139,7 +144,7 @@ class Preconditions(object):
     def get_group_chat_name():
         """获取群名"""
         phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
-        group_name = "agroup" + phone_number[-4:]
+        group_name = "ag" + phone_number[-4:]
         return group_name
 
     @staticmethod
@@ -372,6 +377,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         csf = ChatSelectFilePage()
         csf.wait_for_page_load()
         csf.click_video()
+        time.sleep(2)
         # 3、选择视频，直接点击发送按钮
         local_file = ChatSelectLocalFilePage()
         # 页面没有加载出视频，则循环6次
@@ -456,7 +462,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         csf.click_pic()
         # 选择一张照片发送
         local_file = ChatSelectLocalFilePage()
-        local_file.wait_for_page_load()
+        local_file.wait_for_page_loads()
         el = local_file.select_file2("照片")
         if el:
             local_file.click_send()
@@ -530,7 +536,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         csf.click_music()
         # 选择一个音乐文件发送
         local_file = ChatSelectLocalFilePage()
-        local_file.wait_for_page_load()
+        local_file.wait_for_page_loads()
         el = local_file.select_file2("音乐")
         if el:
             local_file.click_send()
@@ -579,11 +585,11 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 点击查看聊天内容
         gcsp.click_search_chat_record()
         search = FindChatRecordPage()
-        search.wait_for_page_load()
+        search.wait_for_page_loads()
         # 点击文件
         search.click_file()
         chat_file = ChatFilePage()
-        chat_file.wait_for_page_load()
+        chat_file.wait_for_page_loads()
         # 长按转发
         chat_file.forward_file(".html")
         # 选择联系人界面，选择一个群
@@ -600,9 +606,9 @@ class MsgGroupChatFileLocationTest(TestCase):
             sog.click_sure_forward()
             if not sog.catch_message_in_page("已转发"):
                 raise AssertionError("转发失败")
-            chat_file.click_back()
-            search.click_back()
-            gcsp.click_back()
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
             time.sleep(1)
         else:
             raise AssertionError("没有群可转发，请创建群")
@@ -651,7 +657,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 点击文件
         search.click_file()
         chat_file = ChatFilePage()
-        chat_file.wait_for_page_load()
+        chat_file.wait_for_page_loads()
         # 长按转发
         chat_file.forward_file(".html")
         # 选择联系人界面，选择一个群
@@ -723,7 +729,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 点击文件
         search.click_file()
         chat_file = ChatFilePage()
-        chat_file.wait_for_page_load()
+        chat_file.wait_for_page_loads()
         # 长按转发
         time.sleep(3)
         chat_file.forward_file(".html")
@@ -788,7 +794,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 点击文件
         search.click_file()
         chat_file = ChatFilePage()
-        chat_file.wait_for_page_load()
+        chat_file.wait_for_page_loads()
         # 长按转发
         chat_file.forward_file(".html")
         # 选择联系人界面，选择一个本地联系人
@@ -854,7 +860,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 点击文件
         search.click_file()
         chat_file = ChatFilePage()
-        chat_file.wait_for_page_load()
+        chat_file.wait_for_page_loads()
         # 长按收藏指定类型的文件
         time.sleep(3)
         chat_file.collection_file(".html")
@@ -917,7 +923,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 点击文件
         search.click_file()
         chat_file = ChatFilePage()
-        chat_file.wait_for_page_load()
+        chat_file.wait_for_page_loads()
         # 长按收藏指定类型的文件
         time.sleep(3)
         chat_file.collection_file(".html")
@@ -927,6 +933,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         chat_file.click_back()
         search.click_back()
         gcsp.click_back()
+        time.sleep(2)
         # 返回消息页面过程中删除聊天记录
         if gcp.is_on_this_page():
             gcp.click_setting()
@@ -950,10 +957,10 @@ class MsgGroupChatFileLocationTest(TestCase):
                 print(e)
 
         gcp.click_back()
-        sog = SelectOneGroupPage()
-        sog.click_back()
-        sc = SelectContactsPage()
-        sc.click_back()
+        # sog = SelectOneGroupPage()
+        # sog.click_back()
+        # sc = SelectContactsPage()
+        # sc.click_back()
         # 跳转到我页面
         me = MePage()
         me.open_me_page()
@@ -981,7 +988,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 点击文件
         search.click_file()
         chat_file = ChatFilePage()
-        chat_file.wait_for_page_load()
+        chat_file.wait_for_page_loads()
         chat_file.delete_file(".html")
         # 返回群聊天页面
         chat_file.click_back()
@@ -1011,11 +1018,13 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 先发送一个指定类型的文件
         Preconditions.public_send_file(".html")
         gcp = GroupChatPage()
+        time.sleep(1)
         # 长按刚刚发送的文件撤回
         gcp.press_file_to_do(".html", "撤回")
-        gcp.click_i_know()
+        time.sleep(2)
+        # gcp.click_i_know()
         # 验证撤回成功
-        time.sleep(1)
+        time.sleep(3)
         if not gcp.is_text_present("你撤回了一条信息"):
             raise AssertionError("撤回失败")
 
@@ -1040,6 +1049,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         if gcp.is_text_present("撤回"):
             raise AssertionError("超过十分钟可以撤回")
         time.sleep(2)
+        gcp.tap_coordinate([(100, 20), (100, 60), (100,100)])
 
     def tearDown_test_msg_group_chat_file_location_0042(self):
         # 删除聊天记录
@@ -1064,7 +1074,7 @@ class MsgGroupChatFileLocationTest(TestCase):
             try:
                 raise AssertionError("没有返回到群聊页面,无法删除记录")
             except AssertionError as e:
-                print(e)
+                raise e
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_file_location_0043(self):

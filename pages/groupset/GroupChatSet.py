@@ -339,7 +339,7 @@ class GroupChatSetPage(BasePage):
         return self._is_enabled(self.__class__.__locators['群名片完成'])
 
     @TestLogger.log()
-    def wait_for_qecode_load(self, timeout=8, auto_accept_alerts=True):
+    def wait_for_qecode_load(self, timeout=15, auto_accept_alerts=True):
         """等待群二维码加载"""
         try:
             self.wait_until(

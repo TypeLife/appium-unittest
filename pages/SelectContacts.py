@@ -3,7 +3,8 @@ import re
 import copy
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
-
+import time
+from pages.message.Message import MessagePage
 
 class SelectContactsPage(BasePage):
     """选择联系人页面"""
@@ -28,8 +29,9 @@ class SelectContactsPage(BasePage):
         'com.chinasofti.rcs:id/local_contacts': (MobileBy.ID, 'com.chinasofti.rcs:id/local_contacts'),
         '选择一个群': (MobileBy.XPATH, '//*[@text ="选择一个群"]'),
         'com.chinasofti.rcs:id/arrow_right': (MobileBy.ID, 'com.chinasofti.rcs:id/arrow_right'),
-        '选择和通讯录联系人': (MobileBy.XPATH, '//*[@text ="选择团队联系人"]'),
+        '选择团队联系人': (MobileBy.XPATH, '//*[@text ="选择团队联系人"]'),
         '本地联系人': (MobileBy.XPATH, '//*[@text ="选择手机联系人"]'),
+        '选择和通讯录联系人': (MobileBy.XPATH, '//*[@text ="选择团队联系人"]'),
         '最近聊天': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint'),
         'X': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect'),
         '聊天电话': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),
@@ -51,7 +53,11 @@ class SelectContactsPage(BasePage):
         '左侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/index_text"]'),
         '查看更多': (MobileBy.XPATH, '//*[@text ="查看更多"]'),
         '和通讯录返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back'),
-        "最近聊天消息名称": (MobileBy.ID, "com.chinasofti.rcs:id/tv_name")
+        "最近聊天消息名称": (MobileBy.ID, "com.chinasofti.rcs:id/tv_name"),
+        "联系人横框": (MobileBy.ID, "com.chinasofti.rcs:id/contact_list_item"),
+        "搜索框左边选中联系人": (MobileBy.ID, "com.chinasofti.rcs:id/image"),
+       # 'aaa':(MobileBy.XPATH,"*[@text='aaa']"),
+        'aaa':(MobileBy.ID,'com.chinasofti.rcs:id/contact_name'),
     }
 
     @TestLogger.log()
@@ -150,8 +156,8 @@ class SelectContactsPage(BasePage):
 
     @TestLogger.log()
     def click_he_contacts(self):
-        """点击 选择和通讯录联系人"""
-        self.click_element(self.__class__.__locators["选择和通讯录联系人"])
+        """点击 选择和通讯录联系人/选择团队联系人"""
+        self.click_element(self.__class__.__locators["选择团队联系人"])
 
     @TestLogger.log()
     def click_local_contacts(self):
@@ -365,3 +371,59 @@ class SelectContactsPage(BasePage):
             return True
         else:
             return False
+
+    @TestLogger.log()
+    def is_element_present_by_locator(self,text):
+        """判断指定元素是否存在"""
+        return self._is_element_present(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def swipe_and_find_element(self, text):
+        """滑动并查找特定元素"""
+        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[@text="%s"]' % text))
+        if el:
+            return True
+        else:
+            return False
+    @TestLogger.log()
+    def click_back_by_android(self, times=1):
+        """
+        点击返回，通过android返回键
+        """
+        # times 返回次数
+        for i in range(times):
+            self.driver.back()
+            time.sleep(1)
+
+
+    @TestLogger.log("创建群")
+    def create_message_group(self):
+        time.sleep(2)
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        time.sleep(1)
+        if self.get_elements(self.__locators['aaa']):
+            self.click_element(self.__locators['aaa'])
+            time.sleep(1)
+            return
+        mess.click_create_group()
+        mess.click_contact_group()
+        mess.click_text("大佬5")
+        time.sleep(1)
+        mess.click_text("大佬6")
+        time.sleep(1)
+        mess.click_sure_button()
+        time.sleep(1)
+
+    @TestLogger.log()
+    def press_and_move_right(self):
+        """元素内向右滑动"""
+        self.swipe_by_direction(self.__class__.__locators["搜索或输入手机号"], "right")
+

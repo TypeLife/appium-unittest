@@ -128,3 +128,34 @@ class SelectHeContactsDetailPage(BasePage):
         self.click_element(
             (MobileBy.XPATH,
              '//*[@resource-id="com.chinasofti.rcs:id/tv_number_personal_contactlist" and contains(@text,"%s")]' % number))
+
+    @TestLogger.log()
+    def selecting_he_contacts_by_name(self, name):
+        """根据名字选择一个和通讯录联系人"""
+        locator = (
+            MobileBy.XPATH,
+            '//*[@resource-id="com.chinasofti.rcs:id/tv_name_personal_contactlist" and @text ="%s"]' % name)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        self.click_element(locator)
+
+    @TestLogger.log()
+    def wait_for_he_contacts_page_load(self, timeout=8, auto_accept_alerts=True):
+        """等待选择联系人->和通讯录联系人 页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__locators['选择联系人'])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self

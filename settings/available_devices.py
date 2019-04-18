@@ -5,7 +5,7 @@ from library.core.common.supportedmodel import SupportedModel
 # 测试APP信息
 TARGET_APP = dict(
     # DOWNLOAD_URL="https://www.pgyer.com/apiv2/app/install?_api_key=298b363e3288c07f2683b96ca9bc5ab6&appKey=andfetiondev&buildPassword=qwer!234",
-    DOWNLOAD_URL="http://dlrcs.fetion-portal.com/mobile/RCS_V6.2.8.0129_20190130.apk",
+    DOWNLOAD_URL="http://dlrcs.fetion-portal.com/mobile/RCS_V6.2.9.0313_20190313.apk",
     APP_PACKAGE="com.chinasofti.rcs",
     APP_ACTIVITY="com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
     INSTALL_BEFORE_RUN=False
@@ -24,12 +24,15 @@ AVAILABLE_DEVICES = {
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
-            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+            #  6.2.8
+            # "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+            #  6.2.9
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
         },
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '14775970982'
+                'CARD_NUMBER': '18875905984'
             },
         ]
     },
@@ -48,7 +51,7 @@ AVAILABLE_DEVICES_DEV = {
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
-            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
         },
         'CARDS': [
             {
@@ -334,7 +337,7 @@ DEVICES_CONFIG_YYX = {
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
-            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
         },
         'CARDS': [
             {
@@ -405,7 +408,7 @@ DEVICES_CONFIG_LXD = {
             "automationName": "UiAutomator2",
             "newCommandTimeout": 6000,
             "appPackage": "com.chinasofti.rcs",
-            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
         },
         'CARDS': [
             {
