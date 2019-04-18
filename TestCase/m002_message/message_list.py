@@ -207,7 +207,6 @@ class MessageListAllTest(TestCase):
     """
 
     def default_setUp(self):
-
         Preconditions.select_mobile('Android-移动')
         mp = MessagePage()
         if mp.is_on_this_page():

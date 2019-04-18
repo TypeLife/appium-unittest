@@ -453,6 +453,7 @@ class SelectContactsPage(BasePage):
             return True
         else:
             return False
+
     @TestLogger.log()
     def click_back_by_android(self, times=1):
         """
@@ -462,7 +463,6 @@ class SelectContactsPage(BasePage):
         for i in range(times):
             self.driver.back()
             time.sleep(1)
-
 
     @TestLogger.log("创建群")
     def create_message_group(self):

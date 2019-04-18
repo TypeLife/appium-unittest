@@ -300,16 +300,14 @@ class Preconditions(object):
         wbp.wait_for_workbench_page_load()
         wbp.click_organization()
         osp = OrganizationStructurePage()
-        osp.wait_for_page_load()
-        time.sleep(2)
+        time.sleep(5)
         n = 1
         # 解决工作台不稳定问题
         while osp.is_text_present("账号认证失败"):
             osp.click_back()
             wbp.wait_for_workbench_page_load()
             wbp.click_organization()
-            osp.wait_for_page_load()
-            time.sleep(2)
+            time.sleep(5)
             n += 1
             if n > 10:
                 break
@@ -2327,7 +2325,6 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         group_name = "群聊1"
         Preconditions.get_into_group_chat_page(group_name)
         # 给当前会话页面发送一张图片,确保最近聊天中有记录
-        gcp = GroupChatPage()
         gcp.wait_for_page_load()
         time.sleep(2)
         gcp.click_picture()
@@ -3362,7 +3359,6 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 确保当前群聊页面已有视频
         Preconditions.make_already_have_my_videos()
         time.sleep(5)
-        gcp = GroupChatPage()
         # 等待群聊页面加载
         gcp.wait_for_page_load()
         # 设置手机网络断开
@@ -3386,26 +3382,10 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         gcp.wait_for_page_load()
         # 返回到消息页
         gcp.click_back()
-        sog = SelectOneGroupPage()
-        sog.wait_for_page_load()
-        sog.click_back()
-        scg.wait_for_page_load()
-        scg.click_back()
-        message = MessagePage()
-        # 等待消息页面加载
-        message.wait_for_page_load()
-        # 选择刚发送消息的陌生联系人
-        message.choose_chat_by_name(number)
-        time.sleep(2)
-        chat = BaseChatPage()
-        if chat.is_exist_dialog():
-            # 点击我已阅读
-            chat.click_i_have_read()
-        # 5.是否显示消息发送失败标识
-        cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
-        # 返回消息页
-        gcp.click_back()
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 5.是否存在消息发送失败的标识
+        self.assertEquals(mp.is_iv_fail_status_present(), True)
 
     @staticmethod
     def tearDown_test_msg_group_chat_total_quantity_0076():
