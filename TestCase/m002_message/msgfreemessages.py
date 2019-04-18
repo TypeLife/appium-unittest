@@ -500,7 +500,7 @@ class MessageScanTest(TestCase):
 
     @tags('ALL', 'CMCC', 'freemsg')
     def test_msg_huangcaizui_B_0040(self):
-        """收藏短信"""
+        """多选，批量转发与删除短信"""
         # 1.网络正常，本网用户
         # 2.客户端已登录
         # 3.本机已发送短信
