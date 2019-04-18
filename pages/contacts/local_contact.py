@@ -69,10 +69,10 @@ class localContactPage(BasePage):
         "确定按钮": (MobileBy.ID, "com.chinasofti.rcs:id/dialog_btn_ok"),
         "信息编辑": (MobileBy.ID, "com.chinasofti.rcs:id/et_message"),
         "dalao4": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_profile_name'),
-
         "信息发送按钮": (MobileBy.ID, "com.chinasofti.rcs:id/ib_send"),
         "aaa":(MobileBy.XPATH,"//*[@text='aaa']"),
         "ccc":(MobileBy.XPATH,"//*[@text='ccc']"),
+        "SIM_联系人": (MobileBy.ID, "com.chinasofti.rcs:id/iv_sim"),
 
 
 
@@ -184,9 +184,11 @@ class localContactPage(BasePage):
 
     @TestLogger.log("查看关键字是否存在")
     def check_keyword_if_exist(self,text="xiaowen"):
-        flag=True
-        while flag:
+        mark=10
+        while mark>0:
             if self.is_text_present(text=text):
                 return True
             else:
                 self.page_up()
+                mark-=1
+        return False

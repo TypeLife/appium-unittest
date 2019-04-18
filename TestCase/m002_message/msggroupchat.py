@@ -1875,3 +1875,112 @@ class MsgGroupChatTest(TestCase):
         search_page.click_back()
         group_set.click_back()
         gcp.wait_for_page_load()
+
+class messagegroupchat(TestCase):
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0173():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        scp = SelectContactsPage()
+        scp.create_message_group()
+
+    @tags('ALL','CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0173(self):
+        """分享群二维码——搜索选择一个群 """
+
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+
+        group_set.click_QRCode()
+        group_set.wait_for_page_load()
+        group_set.click_qecode_share_button()
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        scp.click_text('aaa')
+        time.sleep(2)
+        scp.click_text("取消")
+        scp.click_back_by_android(times=5)
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0174():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        scp = SelectContactsPage()
+        scp.create_message_group()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0174(self):
+        """分享群二维码到——选择一个群 """
+
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+
+        group_set.click_QRCode()
+        group_set.wait_for_page_load()
+        group_set.click_qecode_share_button()
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        scp.click_text('aaa')
+        time.sleep(2)
+        scp.click_text("取消")
+        scp.click_back_by_android(times=5)
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0175():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        scp = SelectContactsPage()
+        scp.create_message_group()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0175(self):
+        """分享群二维码到——选择选择团队联系人——搜索选择联系人 """
+
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+
+        group_set.click_QRCode()
+        group_set.wait_for_page_load()
+        group_set.click_qecode_share_button()
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        scp.click_text('aaa')
+        time.sleep(2)
+        scp.click_text("取消")
+        scp.click_back_by_android(times=5)
+
+
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0176():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        scp = SelectContactsPage()
+        scp.create_message_group()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0176(self):
+        """分享群二维码到——选择选择团队联系人——选择联系人 """
+
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+
+        group_set.click_QRCode()
+        group_set.wait_for_page_load()
+        group_set.click_qecode_share_button()
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        scp.click_text('aaa')
+        time.sleep(2)
+        scp.click_text("取消")
+        scp.click_back_by_android(times=5)
+
+
