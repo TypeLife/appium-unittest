@@ -3,7 +3,8 @@ import re
 import copy
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
-
+import time
+from pages.message.Message import MessagePage
 
 class SelectContactsPage(BasePage):
     """选择联系人页面"""
@@ -54,6 +55,8 @@ class SelectContactsPage(BasePage):
         "最近聊天消息名称": (MobileBy.ID, "com.chinasofti.rcs:id/tv_name"),
         "联系人横框": (MobileBy.ID, "com.chinasofti.rcs:id/contact_list_item"),
         "搜索框左边选中联系人": (MobileBy.ID, "com.chinasofti.rcs:id/image"),
+       # 'aaa':(MobileBy.XPATH,"*[@text='aaa']"),
+        'aaa':(MobileBy.ID,'com.chinasofti.rcs:id/contact_name'),
     }
 
     @TestLogger.log()
@@ -381,3 +384,41 @@ class SelectContactsPage(BasePage):
             return True
         else:
             return False
+
+
+    @TestLogger.log()
+    def click_back_by_android(self, times=1):
+        """
+        点击返回，通过android返回键
+        """
+        # times 返回次数
+        for i in range(times):
+            self.driver.back()
+            time.sleep(1)
+
+
+    @TestLogger.log("创建群")
+    def create_message_group(self):
+        time.sleep(2)
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        time.sleep(1)
+        if self.get_elements(self.__locators['aaa']):
+            self.click_element(self.__locators['aaa'])
+            time.sleep(1)
+            return
+        mess.click_create_group()
+        mess.click_contact_group()
+        mess.click_text("大佬5")
+        time.sleep(1)
+        mess.click_text("大佬6")
+        time.sleep(1)
+        mess.click_sure_button()
+        time.sleep(1)
