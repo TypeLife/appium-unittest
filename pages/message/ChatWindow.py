@@ -10,7 +10,7 @@ from pages.components.selectors import PictureSelector
 
 class ChatWindowPage(ChatNoticeDialog, PictureSelector, BasePage):
     """聊天窗口"""
-    ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.MessageDetailActivity'
+    ACTIVITY = 'com.cmicc.module_message.ui.activity.MessageDetailActivity'
 
     __locators = {
         'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
@@ -59,6 +59,10 @@ class ChatWindowPage(ChatNoticeDialog, PictureSelector, BasePage):
     @TestLogger.log('点击返回')
     def click_back(self):
         self.click_element(self.__locators['返回'])
+
+    @TestLogger.log('点击返回箭头')
+    def click_back1(self):
+        self.click_element(self.__locators['返回箭头'])
 
     @TestLogger.log('点击设置')
     def click_setting(self):
