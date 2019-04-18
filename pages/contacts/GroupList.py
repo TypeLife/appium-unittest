@@ -229,9 +229,7 @@ class GroupListPage(BasePage):
             group_search.click_back()
         else:
             group_search.click_back()
-
             self.click_create_group()
-
             from pages import SelectContactPage
             select_page = SelectContactPage()
             select_page.search_and_select_contact(*members_list)
@@ -245,7 +243,7 @@ class GroupListPage(BasePage):
             if chat.is_tips_display():
                 chat.directly_close_tips_alert()
             chat.wait_for_page_load()
-            chat.click_back()
+            chat.click_back1()
 
     @TestLogger.log()
     def click_label_grouping(self):
