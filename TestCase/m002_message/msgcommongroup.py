@@ -4002,6 +4002,7 @@ class MsgCommonGroupTest(TestCase):
         if gcp.is_toast_exist("你撤回了一条信息"):
             raise AssertionError("消息超过十秒可以撤回")
 
+@unittest.skip("卸载先不执行")
 class MsgCommonGroupPriorityTest(TestCase):
     """
         模块：消息-普通群
