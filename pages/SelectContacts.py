@@ -69,6 +69,7 @@ class SelectContactsPage(BasePage):
         "我已阅读": (MobileBy.ID,'com.chinasofti.rcs:id/btn_check'),
         "确定3": (MobileBy.ID,'com.chinasofti.rcs:id/dialog_btn_ok'),
         "最近聊天联系人":(MobileBy.ID,'com.chinasofti.rcs:id/iv_photo'),
+        "企业通讯录联系人": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name_personal_contactlist'),
     }
 
     @TestLogger.log("最近聊天联系人")
@@ -494,4 +495,14 @@ class SelectContactsPage(BasePage):
     def press_and_move_right(self):
         """元素内向右滑动"""
         self.swipe_by_direction(self.__class__.__locators["搜索或输入手机号"], "right")
+
+    @TestLogger.log()
+    def get_firm_contacts_name_list(self):
+        """获取企业通讯录联系人名"""
+        els = self.get_elements(self.__class__.__locators["企业通讯录联系人"])
+        contacts_name = []
+        if els:
+            for el in els:
+                contacts_name.append(el.text)
+        return contacts_name
 

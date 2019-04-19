@@ -266,4 +266,14 @@ class SelectLocalContactsPage(BasePage):
             els[current].click()
             current += 1
 
+    @TestLogger.log()
+    def get_contacts_name_list(self):
+        """获取联系人名"""
+        els = self.get_elements(self.__class__.__locators["联系人名"])
+        contacts_name = []
+        if els:
+            for el in els:
+                contacts_name.append(el.text)
+        return contacts_name
+
 

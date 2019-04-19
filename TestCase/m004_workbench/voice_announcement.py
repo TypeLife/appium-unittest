@@ -208,6 +208,86 @@ class VoiceAnnouncementTest(TestCase):
         workbench.wait_for_page_load()
 
     @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0009(self):
+        """多个部门成员累加"""
+        # 1、点击“+”
+        # 2、进入多个部门勾选成员
+        # 3、点击“确定”
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_element_("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        time.sleep(2)
+        sc = SelectContactsPage()
+        sc.click_text("选择企业通讯录联系人")
+        time.sleep(2)
+        if sc.is_text_present("bm1"):
+            time.sleep(2)
+            sc.click_text("bm1")
+            time.sleep(2)
+            aa = sc.get_firm_contacts_name_list()
+            sc.click_text(aa[0])
+            current_mobile().back()
+            sc.click_text("bm2")
+            time.sleep(2)
+            sc.click_text(aa[1])
+            if not sc.is_text_present("2/1000"):
+                raise AssertionError("部门人数不可以叠加")
+            sc.click_text("2/1000")
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+        else:
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_message_page()
+            Preconditions.create_sub_department("bm1")
+            Preconditions.create_sub_department("bm2")
+            workbench.open_workbench_page()
+            time.sleep(2)
+            if workbench.is_on_welcome_page():
+                workbench.click_now_create_team()
+            else:
+                a = 0
+                while a < 10:
+                    workbench.wait_for_page_load()
+                    workbench.click_voice_notice()
+                    time.sleep(5)
+                    if workbench.is_text_present("认证失败"):
+                        current_mobile().back()
+                        a += 1
+                    else:
+                        break
+            vnp = VoiceNoticePage()
+            vnp.wait_for_page_loads()
+            vnp.click_element_("创建语音通知")
+            time.sleep(2)
+            vnp.click_add()
+            time.sleep(2)
+            sc = SelectContactsPage()
+            sc.click_text("选择企业通讯录联系人")
+            time.sleep(2)
+            sc.click_text("bm1")
+            time.sleep(2)
+            aa = sc.get_firm_contacts_name_list()
+            sc.click_text(aa[0])
+            current_mobile().back()
+            sc.click_text("bm2")
+            time.sleep(2)
+            sc.click_text(aa[1])
+            if not sc.is_text_present("2/1000"):
+                raise AssertionError("部门人数不可以叠加")
+            sc.click_text("2/1000")
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
     def test_YYTZ_0012(self):
         """无号码或自己等于100，成员等于20的时候成员不可勾选"""
         # 1、点击“+”
@@ -1383,3 +1463,206 @@ class VoiceAnnouncementTest(TestCase):
         vnp.click_close_more()
         workbench = WorkbenchPage()
         workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0053(self):
+        """任意点击搜索结果联系人"""
+        # 1、任意点击头像，选择人员
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_element_("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        time.sleep(2)
+        sc = SelectContactsPage()
+        sc.input_search_keyword("12560")
+        time.sleep(3)
+        if not sc.is_text_present("和飞信电话"):
+            raise AssertionError("搜索结果有误")
+        sc.click_text("和飞信电话")
+        time.sleep(2)
+        if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+            raise AssertionError("不可成功选中")
+        if not sc.is_text_present("/1000"):
+            raise AssertionError("右上角没有展示已选人数/上限人数")
+        current_mobile().back()
+        vnp.click_close_more()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0054(self):
+        """取消选择人员"""
+        # 1、再次点击头像，取消选择人员
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_element_("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        time.sleep(2)
+        sc = SelectContactsPage()
+        sc.input_search_keyword("12560")
+        time.sleep(3)
+        if not sc.is_text_present("和飞信电话"):
+            raise AssertionError("搜索结果有误")
+        sc.click_text("和飞信电话")
+        time.sleep(2)
+        if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+            raise AssertionError("不可成功选中")
+        if not sc.is_text_present("/1000"):
+            raise AssertionError("右上角没有展示已选人数/上限人数")
+        sc.input_search_keyword("12560")
+        time.sleep(3)
+        if not sc.is_text_present("和飞信电话"):
+            raise AssertionError("搜索结果有误")
+        sc.click_text("和飞信电话")
+        time.sleep(2)
+        if sc.is_element_present_by_locator("搜索框左边选中联系人"):
+            raise AssertionError("左侧选中联系人没有撤消")
+        if sc.is_text_present("/1000"):
+            raise AssertionError("右侧已选人员数字没有-1")
+        current_mobile().back()
+        vnp.click_close_more()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0055(self):
+        """多选-任意选择多位联系人"""
+        # 1、任意选择多位联系人
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_element_("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        time.sleep(2)
+        sc = SelectContactsPage()
+        sc.click_local_contacts()
+        time.sleep(2)
+        scp=SelectLocalContactsPage()
+        contactNnames = scp.get_contacts_name()
+        a=list(contactNnames)
+        if len(a) > 1:
+            # 选择多个联系人
+            scp.select_one_member_by_name(a[0])
+            scp.select_one_member_by_name(a[1])
+        else:
+            raise AssertionError("通讯录联系人数量不足，请添加")
+        time.sleep(2)
+        if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+            raise AssertionError("不可成功选中")
+        if not sc.is_text_present("/1000"):
+            raise AssertionError("右上角没有展示已选人数/上限人数")
+        current_mobile().back()
+        current_mobile().back()
+        vnp.click_close_more()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0056(self):
+        """添加多部门联系人"""
+        # 1、进入A部门勾选C用户后，返回一级页面在进入B部门勾选其它用户
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_element_("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        time.sleep(2)
+        sc = SelectContactsPage()
+        sc.click_text("选择企业通讯录联系人")
+        time.sleep(2)
+        if sc.is_text_present("bm1"):
+            time.sleep(2)
+            sc.click_text("bm1")
+            time.sleep(2)
+            aa=sc.get_firm_contacts_name_list()
+            sc.click_text(aa[0])
+            current_mobile().back()
+            sc.click_text("bm2")
+            time.sleep(2)
+            sc.click_text(aa[1])
+            if not sc.is_text_present("2/1000"):
+                raise AssertionError("部门人数不可以叠加")
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+        else:
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_message_page()
+            Preconditions.create_sub_department("bm1")
+            Preconditions.create_sub_department("bm2")
+            workbench.open_workbench_page()
+            time.sleep(2)
+            if workbench.is_on_welcome_page():
+                workbench.click_now_create_team()
+            else:
+                a = 0
+                while a < 10:
+                    workbench.wait_for_page_load()
+                    workbench.click_voice_notice()
+                    time.sleep(5)
+                    if workbench.is_text_present("认证失败"):
+                        current_mobile().back()
+                        a += 1
+                    else:
+                        break
+            vnp = VoiceNoticePage()
+            vnp.wait_for_page_loads()
+            vnp.click_element_("创建语音通知")
+            time.sleep(2)
+            vnp.click_add()
+            time.sleep(2)
+            sc = SelectContactsPage()
+            sc.click_text("选择企业通讯录联系人")
+            time.sleep(2)
+            sc.click_text("bm1")
+            time.sleep(2)
+            aa = sc.get_firm_contacts_name_list()
+            sc.click_text(aa[0])
+            current_mobile().back()
+            sc.click_text("bm2")
+            time.sleep(2)
+            sc.click_text(aa[1])
+            if not sc.is_text_present("2/1000"):
+                raise AssertionError("部门人数不可以叠加")
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0059(self):
+        """直接添加接收人后再次点击'+'"""
+        # 1、点击“+”添加接收人
+        # 2、任意选择2位以上联系人后点击确定
+        # 3、再次点击”+“添加接收人
+        # 4、任意选择联系人之后，点击确定
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_element_("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        time.sleep(2)
+        sc = SelectContactsPage()
+        sc.click_local_contacts()
+        slc = SelectLocalContactsPage()
+        names = slc.get_contacts_name_list()
+        time.sleep(2)
+        sc.click_one_contact(names[0])
+        sc.click_one_contact(names[1])
+        sc.click_one_contact(names[2])
+        time.sleep(2)
+        sc.click_sure_bottom()
