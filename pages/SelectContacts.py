@@ -61,7 +61,7 @@ class SelectContactsPage(BasePage):
         "搜索群组":(MobileBy.ID,'com.chinasofti.rcs:id/et_search'),
         "搜索1":(MobileBy.ID,'com.chinasofti.rcs:id/edit_query'),
         "选择团队联系人":(MobileBy.XPATH,"//*[@text='选择团队联系人']"),
-        "选择手机联系人": (MobileBy.XPATH, "//*[@text='选择手机联系人']"),
+        # "选择手机联系人": (MobileBy.XPATH, "//*[@text='选择手机联系人']"),
         "中软国际科技服务有限公司": (MobileBy.XPATH, "//*[@text='中软国际科技服务有限公司']"),
         "选择联系人列表":(MobileBy.ID,'com.chinasofti.rcs:id/textview_action_bar_title'),
         "分组名":(MobileBy.ID,'com.chinasofti.rcs:id/img_icon_department'),
@@ -454,6 +454,7 @@ class SelectContactsPage(BasePage):
             return True
         else:
             return False
+
     @TestLogger.log()
     def click_back_by_android(self, times=1):
         """
@@ -463,7 +464,6 @@ class SelectContactsPage(BasePage):
         for i in range(times):
             self.driver.back()
             time.sleep(1)
-
 
     @TestLogger.log("创建群")
     def create_message_group(self):

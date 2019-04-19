@@ -99,7 +99,7 @@ class MeSetWefarePage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self.is_text_present("每月10G订购首页")
+                condition=lambda d: self.is_text_present("马上领取")
             )
         except:
             message = "我的福利连接没有打开：{}s内没有加载完毕，或者没有包含文本：".format(timeout)
