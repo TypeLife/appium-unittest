@@ -2192,14 +2192,17 @@ class MsgGroupChatVideoPicAllTest(TestCase):
                 conts = ContactsPage()
                 Preconditions.connect_mobile('Android-移动')
                 current_mobile().hide_keyboard_if_display()
+                Preconditions.make_already_in_message_page()
+                conts.open_contacts_page()
+                try:
+                    if conts.is_text_present("发现SIM卡联系人"):
+                        conts.click_text("显示")
+                except:
+                    pass
                 for name, number in required_contacts:
-                    Preconditions.make_already_in_message_page()
-                    conts.open_contacts_page()
                     conts.create_contacts_if_not_exits(name, number)
-
                 # 创建群
                 required_group_chats = dataproviders.get_preset_group_chats()
-
                 conts.open_group_chat_list()
                 group_list = GroupListPage()
                 for group_name, members in required_group_chats:
