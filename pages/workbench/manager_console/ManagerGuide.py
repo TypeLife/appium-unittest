@@ -30,20 +30,6 @@ class ManagerGuidePage(BasePage):
         return self
 
     @TestLogger.log()
-    def is_on_manager_guide_page(self, timeout=20, auto_accept_alerts=True):
-        """当前页面是否在管理员指引首页"""
-
-        try:
-            self.wait_until(
-                timeout=timeout,
-                auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_element_present(self.__class__.__locators["管理员指引"])
-            )
-            return True
-        except:
-            return False
-
-    @TestLogger.log()
     def click_back(self):
         """点击返回"""
         self.click_element(self.__class__.__locators["返回"])
@@ -55,7 +41,7 @@ class ManagerGuidePage(BasePage):
 
     @TestLogger.log()
     def click_guide_by_name(self, name):
-        """点击指引"""
+        """点击指引/文本"""
         locator = (MobileBy.XPATH, '//*[@text="%s"]' % name)
         max_try = 5
         current = 0

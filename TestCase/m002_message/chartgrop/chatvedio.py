@@ -2258,7 +2258,6 @@ class MsgGroupChatVideoPicAllTest(TestCase):
             current_mobile().hide_keyboard_if_display()
         else:
             current_mobile().launch_app()
-            # preconditions.force_close_and_launch_app()
             Preconditions.make_already_in_message_page()
             Preconditions.get_into_group_chat_page(name)
 

@@ -166,7 +166,7 @@ class MobileAttendanceAllTest(TestCase):
         """可正常进入应用"""
 
         map = MobileAttendancePage()
-        # 等待移动出勤首页加载
+        # 1.等待移动出勤首页加载
         map.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'workbench', 'LXD')
@@ -204,3 +204,5 @@ class MobileAttendanceAllTest(TestCase):
         wbp = WorkbenchPage()
         # 1.等待工作台首页加载
         wbp.wait_for_workbench_page_load()
+        wbp.click_mobile_attendance()
+        map.wait_for_page_load()

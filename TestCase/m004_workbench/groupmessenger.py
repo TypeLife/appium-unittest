@@ -381,7 +381,6 @@ class MassMessengerAllTest(TestCase):
             current_mobile().hide_keyboard_if_display()
         else:
             current_mobile().launch_app()
-            # preconditions.force_close_and_launch_app()
             Preconditions.make_already_in_message_page()
             Preconditions.enter_group_messenger_page()
 
@@ -462,53 +461,53 @@ class MassMessengerAllTest(TestCase):
         # 等待群发信使首页加载
         gmp.wait_for_page_load()
 
-    # @tags('ALL', 'CMCC', 'workbench', 'LXD')
-    # def test_QFXS_0006(self):
-    #     """添加成员之后再移除成员"""
-    #
-    #     gmp = GroupMessengerPage()
-    #     # 等待群发信使首页加载
-    #     gmp.wait_for_page_load()
-    #     # 确保和通讯录有联系人
-    #     gmp.click_back()
-    #     names = ["大佬1", "大佬2", "大佬3"]
-    #     Preconditions.create_he_contacts(names)
-    #     wbp = WorkbenchPage()
-    #     wbp.click_group_messenger()
-    #     gmp.wait_for_page_load()
-    #     gmp.click_new_message()
-    #     nmp = NewMessagePage()
-    #     # 等待群发信使->新建短信页面加载
-    #     nmp.wait_for_page_load()
-    #     nmp.click_add_icon()
-    #     sccp = SelectCompanyContactsPage()
-    #     # 等待群发信使->新建短信->选择联系人页面加载
-    #     sccp.wait_for_page_load()
-    #     # 添加多个联系人
-    #     sccp.click_contacts_by_name(names[0])
-    #     sccp.click_contacts_by_name(names[1])
-    #     sccp.click_contacts_by_name(names[2])
-    #     # 点击确定
-    #     sccp.click_sure_button()
-    #     nmp.wait_for_page_load()
-    #     nmp.click_add_icon()
-    #     sccp.wait_for_page_load()
-    #     # 点击部门已选成员图像取消勾选
-    #     sccp.click_contacts_image_by_name("大佬1")
-    #     # 点击顶部已选成员信息移除成员
-    #     sccp.click_select_contacts_name("佬2")
-    #     # 点击确定
-    #     sccp.click_sure_button()
-    #     nmp.wait_for_page_load()
-    #     # 1.是否正常移除成员
-    #     self.assertEquals(nmp.is_exist_text(names[0]), False)
-    #     self.assertEquals(nmp.is_exist_text(names[1]), False)
-    #     self.assertEquals(nmp.is_exist_text(names[2]), True)
-    #     nmp.click_back()
-    #     time.sleep(2)
-    #     nmp.click_no()
-    #     # 等待群发信使首页加载
-    #     gmp.wait_for_page_load()
+    @unittest.skip("需要创建部门，暂时跳过")
+    def test_QFXS_0006(self):
+        """添加成员之后再移除成员"""
+
+        gmp = GroupMessengerPage()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
+        # 确保和通讯录有联系人
+        gmp.click_back()
+        names = ["大佬1", "大佬2", "大佬3"]
+        Preconditions.create_he_contacts(names)
+        wbp = WorkbenchPage()
+        wbp.click_group_messenger()
+        gmp.wait_for_page_load()
+        gmp.click_new_message()
+        nmp = NewMessagePage()
+        # 等待群发信使->新建短信页面加载
+        nmp.wait_for_page_load()
+        nmp.click_add_icon()
+        sccp = SelectCompanyContactsPage()
+        # 等待群发信使->新建短信->选择联系人页面加载
+        sccp.wait_for_page_load()
+        # 添加多个联系人
+        sccp.click_contacts_by_name(names[0])
+        sccp.click_contacts_by_name(names[1])
+        sccp.click_contacts_by_name(names[2])
+        # 点击确定
+        sccp.click_sure_button()
+        nmp.wait_for_page_load()
+        nmp.click_add_icon()
+        sccp.wait_for_page_load()
+        # 点击部门已选成员图像取消勾选
+        sccp.click_contacts_image_by_name("大佬1")
+        # 点击顶部已选成员信息移除成员
+        sccp.click_select_contacts_name("佬2")
+        # 点击确定
+        sccp.click_sure_button()
+        nmp.wait_for_page_load()
+        # 1.是否正常移除成员
+        self.assertEquals(nmp.is_exist_text(names[0]), False)
+        self.assertEquals(nmp.is_exist_text(names[1]), False)
+        self.assertEquals(nmp.is_exist_text(names[2]), True)
+        nmp.click_back()
+        time.sleep(2)
+        nmp.click_no()
+        # 等待群发信使首页加载
+        gmp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'workbench', 'LXD')
     def test_QFXS_0009(self):
