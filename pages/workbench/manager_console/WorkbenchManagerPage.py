@@ -17,7 +17,7 @@ class WorkBenchManagerPage(BasePage):
         '搜索框': (MobileBy.XPATH, '//*[@class ="android.widget.EditText"]'),
         '搜索': (MobileBy.XPATH, '//*[@text ="搜索"]'),
         '添加': (MobileBy.XPATH, '//*[@text ="添加"]'),
-        '添加应用': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[6]/android.view.View')
+        '添加应用': (MobileBy.XPATH, '//*[@resource-id ="tjyy_but"]')
     }
 
     @TestLogger.log()
