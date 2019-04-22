@@ -106,16 +106,14 @@ class Preconditions(LoginPreconditions):
         wbp.wait_for_workbench_page_load()
         wbp.click_organization()
         osp = OrganizationStructurePage()
-        osp.wait_for_page_load()
-        time.sleep(2)
+        time.sleep(5)
         n = 1
         # 解决工作台不稳定问题
         while osp.is_text_present("账号认证失败"):
             osp.click_back()
             wbp.wait_for_workbench_page_load()
             wbp.click_organization()
-            osp.wait_for_page_load()
-            time.sleep(2)
+            time.sleep(5)
             n += 1
             if n > 10:
                 break
@@ -1966,6 +1964,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
+        shc.click_department_name("test_work")
         shc.selecting_he_contacts_by_name(he_names[2])
         # 确定转发
         scg.click_sure_forward()
@@ -2020,6 +2019,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
+        shc.click_department_name("test_work")
         shc.selecting_he_contacts_by_name(he_names[2])
         # 确定转发
         scg.click_sure_forward()
@@ -2066,6 +2066,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
+        shc.click_department_name("test_work")
         shc.selecting_he_contacts_by_name(he_names[2])
         # 取消转发
         scg.click_cancel_forward()

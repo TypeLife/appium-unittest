@@ -194,6 +194,83 @@ class Preconditions(object):
         osp.click_back()
         wbp.wait_for_workbench_page_load()
 
+    @staticmethod
+    def create_department_and_add_member(names):
+        """创建企业部门并从本地联系人添加成员"""
+
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_organization()
+        osp = OrganizationStructurePage()
+        time.sleep(5)
+        n = 1
+        # 解决工作台不稳定问题
+        while osp.is_text_present("账号认证失败"):
+            osp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_organization()
+            time.sleep(5)
+            n += 1
+            if n > 10:
+                break
+        for name in names:
+            if not osp.is_exist_specify_element_by_name(name):
+                osp.click_specify_element_by_name("添加子部门")
+                time.sleep(2)
+                osp.input_sub_department_name("测试部门")
+                osp.click_confirm()
+                if osp.is_toast_exist("部门已存在"):
+                    osp.click_back()
+                osp.wait_for_page_load()
+            time.sleep(2)
+            osp.click_specify_element_by_name(name)
+            time.sleep(2)
+            osp.click_specify_element_by_name("添加联系人")
+            time.sleep(2)
+            osp.click_specify_element_by_name("从手机通讯录添加")
+            slc = SelectLocalContactsPage()
+            # 等待选择联系人页面加载
+            slc.wait_for_page_load()
+            slc.selecting_local_contacts_by_name("给个红包1")
+            slc.selecting_local_contacts_by_name("给个红包2")
+            slc.selecting_local_contacts_by_name("给个红包3")
+            slc.selecting_local_contacts_by_name("给个红包4")
+            slc.click_sure()
+            osp.wait_for_page_load()
+        osp.click_back()
+        wbp.wait_for_workbench_page_load()
+
+    @staticmethod
+    def add_department_member(name):
+        """添加本机号码到指定部门"""
+
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_organization()
+        osp = OrganizationStructurePage()
+        time.sleep(5)
+        n = 1
+        # 解决工作台不稳定问题
+        while osp.is_text_present("账号认证失败"):
+            osp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_organization()
+            time.sleep(5)
+            n += 1
+            if n > 10:
+                break
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        osp.click_specify_element_by_name(name)
+        time.sleep(2)
+        osp.click_specify_element_by_name("添加联系人")
+        time.sleep(2)
+        osp.click_specify_element_by_name("手动输入添加")
+        osp.input_contacts_name("admin")
+        osp.input_contacts_number(phone_number)
+        osp.click_confirm()
+        osp.click_close()
+        wbp.wait_for_workbench_page_load()
+
 
 # @unittest.skip
 class MassMessengerTest(TestCase):
@@ -461,7 +538,7 @@ class MassMessengerAllTest(TestCase):
         # 等待群发信使首页加载
         gmp.wait_for_page_load()
 
-    @unittest.skip("需要创建部门，暂时跳过")
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
     def test_QFXS_0006(self):
         """添加成员之后再移除成员"""
 
