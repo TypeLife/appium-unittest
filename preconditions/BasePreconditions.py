@@ -197,8 +197,16 @@ class WorkbenchPreconditions(LoginPreconditions):
         if workbench.is_on_welcome_page():
             workbench.click_now_create_team()
         else:
-            workbench.wait_for_page_load()
-            workbench.click_organization()
+            a = 0
+            while a < 10:
+                workbench.wait_for_page_load()
+                workbench.click_organization()
+                time.sleep(5)
+                if workbench.is_text_present("认证失败"):
+                    current_mobile().back()
+                    a += 1
+                else:
+                    break
         osp = OrganizationStructurePage()
         osp.wait_for_page_load()
 
@@ -243,3 +251,47 @@ class WorkbenchPreconditions(LoginPreconditions):
                     break
         vnp = VoiceNoticePage()
         vnp.wait_for_page_loads()
+
+    @staticmethod
+    def create_sub_department(departmentName):
+        """从消息列表开始创建子部门并添加部门成员"""
+        WorkbenchPreconditions.enter_organization_page()
+        osp = OrganizationStructurePage()
+        osp.wait_for_page_load()
+        osp.click_text("添加子部门")
+        osp.wait_for_sub_department_page_load()
+        osp.input_sub_department_name(departmentName)
+        osp.click_text("完成")
+        if osp.is_toast_exist("部门已存在，请勿重复添加"):
+            current_mobile().back()
+            osp.wait_for_page_load()
+        else:
+            osp.wait_for_page_load()
+            time.sleep(2)
+            osp.click_text(departmentName)
+            osp.click_text("添加联系人")
+            time.sleep(1)
+            osp.click_text("从手机通讯录添加")
+            time.sleep(2)
+            sc = SelectContactsPage()
+            slc = SelectLocalContactsPage()
+            # 选择联系人
+            names=slc.get_contacts_name_list()
+            time.sleep(2)
+            sc.click_one_contact(names[0])
+            sc.click_one_contact(names[1])
+            sc.click_one_contact(names[2])
+            # slc.click_one_contact("和飞信电话")
+            slc.click_sure()
+            if not slc.is_toast_exist("操作成功"):
+                raise AssertionError("操作不成功")
+            time.sleep(2)
+            current_mobile().back()
+            time.sleep(2)
+            if not osp.is_on_this_page():
+                raise AssertionError("没有返回上一级")
+            time.sleep(2)
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_message_page()

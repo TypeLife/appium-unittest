@@ -32,7 +32,7 @@ class OrganizationStructurePage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_element_present(self.__class__.__locators["组织架构"])
+                condition=lambda d: self.is_text_present("添加联系人")
             )
         except:
             raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))

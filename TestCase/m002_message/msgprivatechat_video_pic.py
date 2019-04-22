@@ -1692,7 +1692,6 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
             current_mobile().hide_keyboard_if_display()
         else:
             current_mobile().launch_app()
-            # preconditions.force_close_and_launch_app()
             Preconditions.make_already_in_message_page()
             Preconditions.enter_single_chat_page(name)
 
@@ -2107,7 +2106,6 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         scp.wait_for_page_load()
         # 返回到消息页
         scp.click_back()
-        time.sleep(2)
         mp = MessagePage()
         # 等待消息页面加载
         mp.wait_for_page_load()

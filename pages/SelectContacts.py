@@ -61,7 +61,7 @@ class SelectContactsPage(BasePage):
         "搜索群组":(MobileBy.ID,'com.chinasofti.rcs:id/et_search'),
         "搜索1":(MobileBy.ID,'com.chinasofti.rcs:id/edit_query'),
         "选择团队联系人":(MobileBy.XPATH,"//*[@text='选择团队联系人']"),
-        "选择手机联系人": (MobileBy.XPATH, "//*[@text='选择手机联系人']"),
+        # "选择手机联系人": (MobileBy.XPATH, "//*[@text='选择手机联系人']"),
         "中软国际科技服务有限公司": (MobileBy.XPATH, "//*[@text='中软国际科技服务有限公司']"),
         "选择联系人列表":(MobileBy.ID,'com.chinasofti.rcs:id/textview_action_bar_title'),
         "分组名":(MobileBy.ID,'com.chinasofti.rcs:id/img_icon_department'),
@@ -69,10 +69,14 @@ class SelectContactsPage(BasePage):
         "我已阅读": (MobileBy.ID,'com.chinasofti.rcs:id/btn_check'),
         "确定3": (MobileBy.ID,'com.chinasofti.rcs:id/dialog_btn_ok'),
         "最近聊天联系人":(MobileBy.ID,'com.chinasofti.rcs:id/iv_photo'),
+<<<<<<< HEAD
         "群二维码":(MobileBy.ID,'com.chinasofti.rcs:id/imageview_msg_image'),
         "保存图片":(MobileBy.XPATH,'//*[@text="保存图片"]'),
         "识别图中二维码": (MobileBy.XPATH, '//*[@text="识别图中二维码"]'),
         "转发": (MobileBy.XPATH, '//*[@text="转发"]'),
+=======
+        "企业通讯录联系人": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name_personal_contactlist'),
+>>>>>>> ec9054498b51298bfd63d276fcabded261bedfec
     }
 
     @TestLogger.log("点击群二维码")
@@ -469,6 +473,7 @@ class SelectContactsPage(BasePage):
             return True
         else:
             return False
+
     @TestLogger.log()
     def click_back_by_android(self, times=1):
         """
@@ -478,7 +483,6 @@ class SelectContactsPage(BasePage):
         for i in range(times):
             self.driver.back()
             time.sleep(1)
-
 
     @TestLogger.log("创建群")
     def create_message_group(self,text='aaa'):
@@ -516,4 +520,14 @@ class SelectContactsPage(BasePage):
     def press_and_move_right(self):
         """元素内向右滑动"""
         self.swipe_by_direction(self.__class__.__locators["搜索或输入手机号"], "right")
+
+    @TestLogger.log()
+    def get_firm_contacts_name_list(self):
+        """获取企业通讯录联系人名"""
+        els = self.get_elements(self.__class__.__locators["企业通讯录联系人"])
+        contacts_name = []
+        if els:
+            for el in els:
+                contacts_name.append(el.text)
+        return contacts_name
 

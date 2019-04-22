@@ -266,9 +266,7 @@ class Preconditions(object):
         if not scp.is_toast_exist("已收藏"):
             raise AssertionError("没有此弹框")
         mess = MessagePage()
-        mess.click_back()
-        mess.click_back()
-        mess.click_back()
+        scp.click_back()
 
     @staticmethod
     def make_already_set_chart_group_video(pic_video="video"):
@@ -296,10 +294,7 @@ class Preconditions(object):
         scp.click_collection()
         if not scp.is_toast_exist("已收藏"):
             raise AssertionError("没有此弹框")
-        mess = MessagePage()
-        mess.click_back()
-        mess.click_back()
-        mess.click_back()
+        scp.click_back()
 
     @staticmethod
     def make_already_set_chart_group_voice():
@@ -325,10 +320,7 @@ class Preconditions(object):
         scp.press_voice_message_to_do("收藏")
         if not scp.is_toast_exist("已收藏"):
             raise AssertionError("没有此弹框")
-        mess = MessagePage()
-        mess.click_back()
-        mess.click_back()
-        mess.click_back()
+        scp.click_back()
 
     @staticmethod
     def make_already_set_chart_group_name_card():
@@ -349,10 +341,7 @@ class Preconditions(object):
         scp.press_file_to_do("个人名片", "收藏")
         if not scp.is_toast_exist("已收藏"):
             raise AssertionError("没有此弹框")
-        mess = MessagePage()
-        mess.click_back()
-        mess.click_back()
-        mess.click_back()
+        scp.click_back()
 
     @staticmethod
     def make_already_set_chart_group_location():
@@ -372,9 +361,7 @@ class Preconditions(object):
         scp.press_message_to_do("收藏")
         if not scp.is_toast_exist("已收藏"):
             raise AssertionError("没有此弹框")
-        mess.click_back()
-        mess.click_back()
-        mess.click_back()
+        scp.click_back()
 
     @staticmethod
     def make_already_set_chart_group_file(file_type):

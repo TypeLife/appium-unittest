@@ -100,34 +100,25 @@ class Preconditions(object):
         message_page.wait_login_success(60)
 
     @staticmethod
-    def make_already_in_message_page(reset_required=False):
-        """
-        前置条件：
-        1.已登录客户端
-        2.当前在消息页面
-        """
-        if not reset_required:
-            message_page = MessagePage()
-            if message_page.is_on_this_page():
-                return
-            else:
-                try:
-                    current_mobile().terminate_app('com.chinasofti.rcs', timeout=2000)
-                except:
-                    pass
-                current_mobile().launch_app()
+    def make_already_in_message_page(reset=False):
+        """确保应用在消息页面"""
+        Preconditions.select_mobile('Android-移动', reset)
+        current_mobile().hide_keyboard_if_display()
+        time.sleep(1)
+        # 如果在消息页，不做任何操作
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        # 进入一键登录页
+        else:
             try:
-                message_page.wait_until(
-                    condition=lambda d: message_page.is_on_this_page(),
-                    timeout=3
-                )
-                return
-            except TimeoutException:
-                pass
-        Preconditions.reset_and_relaunch_app()
-        Preconditions.make_already_in_one_key_login_page()
-        login_num = Preconditions.login_by_one_key_login()
-        return login_num
+                current_mobile().launch_app()
+                mess.wait_for_page_load()
+            except:
+                # 进入一键登录页
+                Preconditions.make_already_in_one_key_login_page()
+                #  从一键登录页面登录
+                Preconditions.login_by_one_key_login()
 
     @staticmethod
     def reset_and_relaunch_app():
@@ -175,8 +166,6 @@ class Preconditions(object):
         if group_name in group_names:
             return
         sog.click_back()
-        mess.click_add_icon()
-        mess.click_group_chat()
         # 从本地联系人中选择成员创建群
         sc.click_local_contacts()
         time.sleep(2)
@@ -311,16 +300,14 @@ class Preconditions(object):
         wbp.wait_for_workbench_page_load()
         wbp.click_organization()
         osp = OrganizationStructurePage()
-        osp.wait_for_page_load()
-        time.sleep(2)
+        time.sleep(5)
         n = 1
         # 解决工作台不稳定问题
         while osp.is_text_present("账号认证失败"):
             osp.click_back()
             wbp.wait_for_workbench_page_load()
             wbp.click_organization()
-            osp.wait_for_page_load()
-            time.sleep(2)
+            time.sleep(5)
             n += 1
             if n > 10:
                 break
@@ -470,52 +457,42 @@ class MsgGroupChatvedioTest(TestCase):
 
     """前置条件需要修改创建一个群找不到"""
 
-    # @classmethod
-    # def setUpClass(cls):
-    #
-    #     # 创建联系
-    #     fail_time = 0
-    #     import dataproviders
-    #     while fail_time < 3:
-    #         try:
-    #             required_contacts = dataproviders.get_preset_contacts()
-    #             conts = ContactsPage()
-    #             Preconditions.connect_mobile('Android-移动')
-    #             current_mobile().hide_keyboard_if_display()
-    #             for name, number in required_contacts:
-    #                 Preconditions.make_already_in_message_page()
-    #                 conts.open_contacts_page()
-    #                 try:
-    #                     if conts.is_text_present("发现SIM卡联系人"):
-    #                         conts.click_text("显示")
-    #                 except:
-    #                     pass
-    #                 conts.create_contacts_if_not_exits(name, number)
-    #
-    #             # 创建群
-    #             required_group_chats = dataproviders.get_preset_group_chats()
-    #
-    #             conts.open_group_chat_list()
-    #             group_list = GroupListPage()
-    #             for group_name, members in required_group_chats:
-    #                 group_list.wait_for_page_load()
-    #                 group_list.create_group_chats_if_not_exits(group_name, members)
-    #             group_list.click_back()
-    #             conts.open_message_page()
-    #             return
-    #         except:
-    #             fail_time += 1
-    #             import traceback
-    #             msg = traceback.format_exc()
-    #             print(msg)
+    @classmethod
+    def setUpClass(cls):
 
-    # @classmethod
-    # def setUpClass(cls):
-    #     Preconditions.connect_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     local_file = ChatSelectLocalFilePage()
-    #     # 没有预置文件，则上传
-    #     local_file.push_preset_file()
+        # 创建联系
+        fail_time = 0
+        import dataproviders
+        while fail_time < 3:
+            try:
+                required_contacts = dataproviders.get_preset_contacts()
+                conts = ContactsPage()
+                Preconditions.connect_mobile('Android-移动')
+                current_mobile().hide_keyboard_if_display()
+                Preconditions.make_already_in_message_page()
+                conts.open_contacts_page()
+                try:
+                    if conts.is_text_present("发现SIM卡联系人"):
+                        conts.click_text("显示")
+                except:
+                    pass
+                for name, number in required_contacts:
+                    conts.create_contacts_if_not_exits(name, number)
+                # 创建群
+                required_group_chats = dataproviders.get_preset_group_chats()
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
+                return
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
 
     def default_setUp(self):
         """确保每个用例运行前在群聊聊天会话页面"""
@@ -2202,64 +2179,67 @@ class MsgGroupChatVideoPicAllTest(TestCase):
     Author:刘晓东
     """
 
-    # @classmethod
-    # def setUpClass(cls):
-    #
-    #     # 创建联系人
-    #     fail_time = 0
-    #     flag = False
-    #     import dataproviders
-    #     while fail_time < 3:
-    #         try:
-    #             required_contacts = dataproviders.get_preset_contacts()
-    #             conts = ContactsPage()
-    #             Preconditions.connect_mobile('Android-移动')
-    #             current_mobile().hide_keyboard_if_display()
-    #             for name, number in required_contacts:
-    #                 Preconditions.make_already_in_message_page()
-    #                 conts.open_contacts_page()
-    #                 conts.create_contacts_if_not_exits(name, number)
-    #
-    #             # 创建群
-    #             required_group_chats = dataproviders.get_preset_group_chats()
-    #
-    #             conts.open_group_chat_list()
-    #             group_list = GroupListPage()
-    #             for group_name, members in required_group_chats:
-    #                 group_list.wait_for_page_load()
-    #                 group_list.create_group_chats_if_not_exits(group_name, members)
-    #             group_list.click_back()
-    #             conts.open_message_page()
-    #             flag = True
-    #         except:
-    #             fail_time += 1
-    #             import traceback
-    #             msg = traceback.format_exc()
-    #             print(msg)
-    #         if flag:
-    #             break
-    #
-    #     # 确保测试手机有resource文件夹
-    #     name = "群聊1"
-    #     Preconditions.get_into_group_chat_page(name)
-    #     # 在当前聊天会话页面，点击更多富媒体的文件按钮
-    #     gcp = GroupChatPage()
-    #     gcp.wait_for_page_load()
-    #     gcp.click_more()
-    #     # 点击本地文件
-    #     cmp = ChatMorePage()
-    #     cmp.click_file()
-    #     csfp = ChatSelectFilePage()
-    #     csfp.wait_for_page_load()
-    #     csfp.click_local_file()
-    #     # 3、选择任意文件，点击发送按钮
-    #     local_file = ChatSelectLocalFilePage()
-    #     # 没有预置文件，则上传
-    #     local_file.push_preset_file()
-    #     local_file.click_back()
-    #     csfp.wait_for_page_load()
-    #     csfp.click_back()
-    #     gcp.wait_for_page_load()
+    @classmethod
+    def setUpClass(cls):
+
+        # 创建联系人
+        fail_time = 0
+        flag = False
+        import dataproviders
+        while fail_time < 3:
+            try:
+                required_contacts = dataproviders.get_preset_contacts()
+                conts = ContactsPage()
+                Preconditions.connect_mobile('Android-移动')
+                current_mobile().hide_keyboard_if_display()
+                Preconditions.make_already_in_message_page()
+                conts.open_contacts_page()
+                try:
+                    if conts.is_text_present("发现SIM卡联系人"):
+                        conts.click_text("显示")
+                except:
+                    pass
+                for name, number in required_contacts:
+                    conts.create_contacts_if_not_exits(name, number)
+                # 创建群
+                required_group_chats = dataproviders.get_preset_group_chats()
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
+                flag = True
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
+            if flag:
+                break
+
+        # 确保测试手机有resource文件夹
+        name = "群聊1"
+        Preconditions.get_into_group_chat_page(name)
+        # 在当前聊天会话页面，点击更多富媒体的文件按钮
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_more()
+        # 点击本地文件
+        cmp = ChatMorePage()
+        cmp.click_file()
+        csfp = ChatSelectFilePage()
+        csfp.wait_for_page_load()
+        csfp.click_local_file()
+        # 3、选择任意文件，点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        local_file.push_preset_file()
+        local_file.click_back()
+        csfp.wait_for_page_load()
+        csfp.click_back()
+        gcp.wait_for_page_load()
 
     def default_setUp(self):
         """
@@ -2278,7 +2258,6 @@ class MsgGroupChatVideoPicAllTest(TestCase):
             current_mobile().hide_keyboard_if_display()
         else:
             current_mobile().launch_app()
-            # preconditions.force_close_and_launch_app()
             Preconditions.make_already_in_message_page()
             Preconditions.get_into_group_chat_page(name)
 

@@ -21,7 +21,8 @@ class SelectCompanyContactsPage(BasePage):
         '已选人名': (MobileBy.ID, 'com.chinasofti.rcs:id/image_text'),
         '已选头像': (MobileBy.ID, 'com.chinasofti.rcs:id/avator'),
         '确定按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/imagebutton_choose_file_cancel'),
-        '企业层级': (MobileBy.ID, "android:id/title")
+        '企业层级': (MobileBy.ID, "android:id/title"),
+        '部门名称': (MobileBy.ID, "com.chinasofti.rcs:id/tv_title_department")
     }
 
     @TestLogger.log()
@@ -210,6 +211,13 @@ class SelectCompanyContactsPage(BasePage):
         return self._is_element_present(locator)
 
     @TestLogger.log()
+    def click_select_contacts_name(self, name):
+        """点击已选联系人名"""
+        locator = (
+            MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/image_text" and contains(@text,"%s")]' % name)
+        self.click_element(locator)
+
+    @TestLogger.log()
     def is_exist_select_contacts_image(self):
         """是否存在已选联系人头像"""
         return self._is_element_present(self.__class__.__locators['已选头像'])
@@ -226,10 +234,30 @@ class SelectCompanyContactsPage(BasePage):
 
     @TestLogger.log()
     def is_exist_select_and_all(self, text):
-        """是否展示已选人数/上限人数"""
-        return self._is_element_present((MobileBy.XPATH, "//*[contains(@text, '%s/49')]" % text))
+        """是否展示已选人数"""
+        return self._is_element_present((MobileBy.XPATH, "//*[contains(@text, '确定(%s/')]" % text))
 
     @TestLogger.log()
     def is_exist_corporate_grade(self):
         """是否存在企业层级"""
         return self._is_element_present(self.__class__.__locators['企业层级'])
+
+    @TestLogger.log()
+    def is_exist_department_name(self):
+        """是否存在部门名称"""
+        return self._is_element_present(self.__class__.__locators['部门名称'])
+
+    @TestLogger.log()
+    def click_contacts_image_by_name(self, name):
+        """点击指定联系人头像"""
+        locator = (
+            MobileBy.XPATH,
+            '//*[@resource-id="com.chinasofti.rcs:id/tv_name_personal_contactlist" and contains(@text,"%s")]/../../../android.widget.ImageView[@resource-id="com.chinasofti.rcs:id/img_icon_contactlist"]' % name)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        self.click_element(locator)

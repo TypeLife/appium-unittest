@@ -33,6 +33,8 @@ class BaseChatPage(BasePage):
                   '转发': (MobileBy.XPATH, "//*[contains(@text, '转发')]"),
                   '撤回': (MobileBy.XPATH, "//*[contains(@text, '撤回')]"),
                   '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
+                  '复制': (MobileBy.XPATH, "//*[contains(@text, '复制')]"),
+                  '多选': (MobileBy.XPATH, "//*[contains(@text, '多选')]"),
                   # 撤回消息时的弹窗
                   '我知道了': (MobileBy.XPATH, "//*[contains(@text, '知道了')]"),
                   # 用户须知
@@ -586,16 +588,26 @@ class BaseChatPage(BasePage):
         self.click_element(self.__class__.__locators["发送"])
 
     @TestLogger.log()
-    def is_exist_exit_msg(self):
+    def is_exist_exit_sms(self):
         """是否存在退出短信"""
         return self._is_element_present(self.__locators["退出短信"])
 
     @TestLogger.log()
-    def click_exit_msg(self):
+    def click_exit_sms(self):
         """点击退出短信"""
         self.click_element(self.__class__.__locators["退出短信"])
 
     @TestLogger.log()
-    def click_send_msg(self):
+    def click_send_sms(self):
         """点击发送短信"""
         self.click_element(self.__class__.__locators["发送短信"])
+
+    @TestLogger.log()
+    def click_copy(self):
+        """点击复制"""
+        self.click_element(self.__class__.__locators["复制"])
+
+    @TestLogger.log()
+    def click_multiple_selection(self):
+        """点击多选"""
+        self.click_element(self.__class__.__locators["多选"])

@@ -207,14 +207,12 @@ class MessageListAllTest(TestCase):
     """
 
     def default_setUp(self):
-
         Preconditions.select_mobile('Android-移动')
         mp = MessagePage()
         if mp.is_on_this_page():
             return
         else:
             current_mobile().launch_app()
-            # preconditions.force_close_and_launch_app()
             Preconditions.make_already_in_message_page()
 
     def default_tearDown(self):
@@ -300,7 +298,7 @@ class MessageListAllTest(TestCase):
         # 返回消息列表页
         scp.click_back()
 
-    @tags('ALL', 'CMCC_RESET', 'LXD')
+    @tags('ALL', 'CMCC_RESET', 'LXD_RESET')
     def test_message_list_total_quantity_0029(self):
         """消息列表未读消息清空"""
 
@@ -447,7 +445,7 @@ class MessageListAllTest(TestCase):
         mp.open_message_page()
         mp.wait_for_page_load()
 
-    @tags('ALL', 'CMCC_RESET', 'LXD')
+    @tags('ALL', 'CMCC_RESET', 'LXD_RESET')
     def test_message_list_total_quantity_0045(self):
         """导航栏-首次进入查看导航栏"""
 
@@ -465,7 +463,7 @@ class MessageListAllTest(TestCase):
         # 消息标签是否高亮显示
         self.assertEquals(mp.message_icon_is_selected(), True)
 
-    @tags('ALL', 'CMCC_RESET', 'LXD')
+    @tags('ALL', 'CMCC_RESET', 'LXD_RESET')
     def test_message_list_total_quantity_0046(self):
         """验证首次登陆和飞信，进入消息页面（聊天为空），查看页面元素"""
 
