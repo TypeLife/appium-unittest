@@ -482,6 +482,15 @@ class BasePage(object):
         """按压操作"""
         TouchAction(self.driver).long_press(el, duration=times).wait(1).perform()
 
+    def press_xy(self,times=3000):
+        """按压操作"""
+        width = self.driver.get_window_size()["width"]
+        height = self.driver.get_window_size()["height"]
+        x=width/2
+        y=height/2
+        el = None
+        TouchAction(self.driver).long_press(el,x,y, duration=times).wait(1).perform()
+
     @TestLogger.log('获取元素指定坐标颜色')
     def get_coordinate_color_of_element(self, element, x, y, by_percent=False, mode='RGBA') -> tuple:
         return self.mobile.get_coordinate_color_of_element(element, x, y, by_percent, mode)

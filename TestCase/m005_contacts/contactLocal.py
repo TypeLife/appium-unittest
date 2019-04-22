@@ -1759,6 +1759,15 @@ class ContactLocal2(TestCase):
         lcontact.check_keyword_if_exist(text="xiaowen")
         time.sleep(1)
         lcontact.click_back_by_android(1)
+        time.sleep(1)
+        lcontact.set_network_status(6)
+
+    @staticmethod
+    def tearDown_contacts_chenjixiang_0059():
+        # 初始化,恢复app到默认状态
+        lcontact = localContactPage()
+        lcontact.set_network_status(6)
+        lcontact.click_back_by_android(1)
 
     @staticmethod
     def setUp_test_contacts_chenjixiang_0060():
