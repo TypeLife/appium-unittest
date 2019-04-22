@@ -288,6 +288,201 @@ class VoiceAnnouncementTest(TestCase):
             workbench.wait_for_page_load()
 
     @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0010(self):
+        """移除成员"""
+        # 1、点击“+”
+        # 2、选择多个成员
+        # 3、部门下已选择成员，再次点击图像取消勾选
+        # 4、在顶部栏已选择成员信息点击成员图像移除成员
+        # 5、点击“确定”
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_element_("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        time.sleep(2)
+        sc = SelectContactsPage()
+        sc.click_text("选择企业通讯录联系人")
+        time.sleep(2)
+        if not sc.swipe_and_find_element("bm0"):
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_message_page()
+            Preconditions.create_sub_department("bm0")
+            workbench.open_workbench_page()
+            time.sleep(2)
+            if workbench.is_on_welcome_page():
+                workbench.click_now_create_team()
+            else:
+                a = 0
+                while a < 10:
+                    workbench.wait_for_page_load()
+                    workbench.click_voice_notice()
+                    time.sleep(5)
+                    if workbench.is_text_present("认证失败"):
+                        current_mobile().back()
+                        a += 1
+                    else:
+                        break
+            vnp = VoiceNoticePage()
+            vnp.wait_for_page_loads()
+            vnp.click_element_("创建语音通知")
+            time.sleep(2)
+            vnp.click_add()
+            time.sleep(2)
+            sc = SelectContactsPage()
+            sc.click_text("选择企业通讯录联系人")
+            time.sleep(2)
+            sc.click_one_contact("bm0")
+            aa = sc.get_firm_contacts_name_list()
+            sc.click_text(aa[0])
+            time.sleep(2)
+            sc.click_text(aa[0])
+            time.sleep(2)
+            if sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("再次点击图像不可成功取消")
+            sc.click_text(aa[0])
+            time.sleep(2)
+            sc.click_element_("搜索框左边选中联系人")
+            time.sleep(2)
+            if sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("在顶部栏点击图像不可成功取消")
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+        else:
+            sc.click_one_contact("bm0")
+            aa = sc.get_firm_contacts_name_list()
+            sc.click_text(aa[0])
+            time.sleep(2)
+            sc.click_text(aa[0])
+            time.sleep(2)
+            if sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("再次点击图像不可成功取消")
+            sc.click_text(aa[0])
+            time.sleep(2)
+            sc.click_element_("搜索框左边选中联系人")
+            time.sleep(2)
+            if sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("在顶部栏点击图像不可成功取消")
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0011(self):
+        """移除成员再添加成员"""
+        # 1、点击“+”
+        # 2、选择多个成员
+        # 3、部门下已选择成员，再次点击图像取消勾选
+        # 4、在顶部栏已选择成员信息点击成员图像移除成员
+        # 5、再添加其他成员
+        # 6、点击“确定”
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_element_("创建语音通知")
+        time.sleep(2)
+        vnp.click_add()
+        time.sleep(2)
+        sc = SelectContactsPage()
+        sc.click_text("选择企业通讯录联系人")
+        time.sleep(2)
+        if not sc.swipe_and_find_element("bm0"):
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_message_page()
+            Preconditions.create_sub_department("bm0")
+            workbench.open_workbench_page()
+            time.sleep(2)
+            if workbench.is_on_welcome_page():
+                workbench.click_now_create_team()
+            else:
+                a = 0
+                while a < 10:
+                    workbench.wait_for_page_load()
+                    workbench.click_voice_notice()
+                    time.sleep(5)
+                    if workbench.is_text_present("认证失败"):
+                        current_mobile().back()
+                        a += 1
+                    else:
+                        break
+            vnp = VoiceNoticePage()
+            vnp.wait_for_page_loads()
+            vnp.click_element_("创建语音通知")
+            time.sleep(2)
+            vnp.click_add()
+            time.sleep(2)
+            sc = SelectContactsPage()
+            sc.click_text("选择企业通讯录联系人")
+            time.sleep(2)
+            sc.click_one_contact("bm0")
+            aa = sc.get_firm_contacts_name_list()
+            sc.click_text(aa[0])
+            time.sleep(2)
+            sc.click_text(aa[0])
+            time.sleep(2)
+            if sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("再次点击图像不可成功取消")
+            sc.click_text(aa[0])
+            time.sleep(2)
+            sc.click_element_("搜索框左边选中联系人")
+            time.sleep(2)
+            if sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("在顶部栏点击图像不可成功取消")
+            sc.click_text(aa[1])
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选择")
+            sc.click_text("确定")
+            time.sleep(2)
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+        else:
+            sc.click_one_contact("bm0")
+            aa = sc.get_firm_contacts_name_list()
+            sc.click_text(aa[0])
+            time.sleep(2)
+            sc.click_text(aa[0])
+            time.sleep(2)
+            if sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("再次点击图像不可成功取消")
+            sc.click_text(aa[0])
+            time.sleep(2)
+            sc.click_element_("搜索框左边选中联系人")
+            time.sleep(2)
+            if sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("在顶部栏点击图像不可成功取消")
+            sc.click_text(aa[1])
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选择")
+            sc.click_text("确定")
+            time.sleep(2)
+            vnp.click_close_more()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+
+
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
     def test_YYTZ_0012(self):
         """无号码或自己等于100，成员等于20的时候成员不可勾选"""
         # 1、点击“+”
@@ -1643,26 +1838,149 @@ class VoiceAnnouncementTest(TestCase):
             workbench = WorkbenchPage()
             workbench.wait_for_page_load()
 
+    # @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    # def test_YYTZ_0059(self):
+    #     """直接添加接收人后再次点击'+'"""
+    #     # 1、点击“+”添加接收人
+    #     # 2、任意选择2位以上联系人后点击确定
+    #     # 3、再次点击”+“添加接收人
+    #     # 4、任意选择联系人之后，点击确定
+    #     vnp = VoiceNoticePage()
+    #     vnp.wait_for_page_loads()
+    #     vnp.click_element_("创建语音通知")
+    #     time.sleep(2)
+    #     vnp.click_add()
+    #     time.sleep(2)
+    #     sc = SelectContactsPage()
+    #     sc.click_local_contacts()
+    #     slc = SelectLocalContactsPage()
+    #     names = slc.get_contacts_name_list()
+    #     time.sleep(2)
+    #     sc.click_one_contact(names[0])
+    #     sc.click_one_contact(names[1])
+    #     sc.click_one_contact(names[2])
+    #     time.sleep(2)
+    #     sc.click_sure_bottom()
+
     @tags('ALL', "CMCC", 'workbench', 'YYTZ')
-    def test_YYTZ_0059(self):
-        """直接添加接收人后再次点击'+'"""
-        # 1、点击“+”添加接收人
-        # 2、任意选择2位以上联系人后点击确定
-        # 3、再次点击”+“添加接收人
-        # 4、任意选择联系人之后，点击确定
+    def test_YYTZ_0060(self):
+        """无缓存数据-无网络时点击“+”添加接收人"""
+        # 1、点击“+”添加联系人
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_element_("创建语音通知")
+        vnp.set_network_status(0)
+        time.sleep(8)
+        vnp.click_add()
+        time.sleep(2)
+        sc = SelectContactsPage()
+        sc.click_text("选择企业通讯录联系人")
+        if not vnp.is_toast_exist("网络连接异常"):
+            raise AssertionError("没有网络异常提示")
+        vnp.set_network_status(6)
+        time.sleep(8)
+        current_mobile().back()
+        current_mobile().back()
+        current_mobile().back()
+        vnp.click_close_more()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+
+    def tearDown_test_YYTZ_0060(self):
+        vnp = VoiceNoticePage()
+        vnp.set_network_status(6)
+        time.sleep(8)
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0061(self):
+        """有缓存数据-无网络时点击“+”添加接收人"""
+        # 1、点击“+”添加联系人
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        vnp.click_element_("创建语音通知")
+        vnp.set_network_status(0)
+        time.sleep(8)
+        vnp.click_add()
+        time.sleep(2)
+        sc = SelectContactsPage()
+        sc.click_text("选择企业通讯录联系人")
+        if not vnp.is_toast_exist("网络连接异常"):
+            raise AssertionError("没有网络异常提示")
+        if not vnp.is_text_present("企业通讯录"):
+            raise AssertionError("没有转到企业子一层级")
+        vnp.set_network_status(6)
+        time.sleep(8)
+        current_mobile().back()
+        current_mobile().back()
+        current_mobile().back()
+        vnp.click_close_more()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+
+    def tearDown_test_YYTZ_0061(self):
+        vnp = VoiceNoticePage()
+        vnp.set_network_status(6)
+        time.sleep(8)
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0062(self):
+        """断开网络，点击“发送”"""
+        # 1、点击“创建语音通知”
+        # 2、添加接收人
+        # 3、其他信息正常填写
+        # 4、断开网络
+        # 5、点击“发送”
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        time.sleep(2)
+        # 创建语音通知
+        vnp.click_text("创建语音通知")
+        time.sleep(2)
+        vnp.input_notice_text("哈哈")
+        time.sleep(2)
+        vnp.click_add()
+        sc = SelectContactsPage()
+        sc.click_local_contacts()
+        sc.click_one_contact("和飞信电话")
+        time.sleep(2)
+        sc.click_sure_bottom()
+        time.sleep(2)
+        vnp.set_network_status(0)
+        time.sleep(8)
+        vnp.click_send()
+        if not vnp.is_toast_exist("当前网络不可用，请检查连接"):
+            raise AssertionError("没有网络异常提示")
+        vnp.set_network_status(6)
+        time.sleep(8)
+        vnp.click_close_more()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+
+    def tearDown_test_YYTZ_0062(self):
+        vnp = VoiceNoticePage()
+        vnp.set_network_status(6)
+        time.sleep(8)
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0063(self):
+        """点击顶部返回键"""
+        # 1、在任意页面点击顶部【 < 】
+        vnp = VoiceNoticePage()
+        vnp.wait_for_page_loads()
+        # vnp.click_element_("创建语音通知")
+        time.sleep(2)
+        vnp.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'YYTZ')
+    def test_YYTZ_0064(self):
+        """点击顶部关闭按钮"""
+        # 在其他有关闭按钮页面，点击顶部【x】
         vnp = VoiceNoticePage()
         vnp.wait_for_page_loads()
         vnp.click_element_("创建语音通知")
         time.sleep(2)
-        vnp.click_add()
-        time.sleep(2)
-        sc = SelectContactsPage()
-        sc.click_local_contacts()
-        slc = SelectLocalContactsPage()
-        names = slc.get_contacts_name_list()
-        time.sleep(2)
-        sc.click_one_contact(names[0])
-        sc.click_one_contact(names[1])
-        sc.click_one_contact(names[2])
-        time.sleep(2)
-        sc.click_sure_bottom()
+        vnp.click_close_more()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
