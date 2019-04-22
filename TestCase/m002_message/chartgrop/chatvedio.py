@@ -16,6 +16,8 @@ from pages.components import BaseChatPage
 from pages.groupset.GroupChatSetPicVideo import GroupChatSetPicVideoPage
 from selenium.common.exceptions import TimeoutException
 
+from pages.workbench.create_group.CreateGroup import CreateGroupPage
+from pages.workbench.create_group.SelectEnterpriseContacts import SelectEnterpriseContactsPage
 from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
 
 REQUIRED_MOBILES = {
@@ -98,34 +100,25 @@ class Preconditions(object):
         message_page.wait_login_success(60)
 
     @staticmethod
-    def make_already_in_message_page(reset_required=False):
-        """
-        前置条件：
-        1.已登录客户端
-        2.当前在消息页面
-        """
-        if not reset_required:
-            message_page = MessagePage()
-            if message_page.is_on_this_page():
-                return
-            else:
-                try:
-                    current_mobile().terminate_app('com.chinasofti.rcs', timeout=2000)
-                except:
-                    pass
-                current_mobile().launch_app()
+    def make_already_in_message_page(reset=False):
+        """确保应用在消息页面"""
+        Preconditions.select_mobile('Android-移动', reset)
+        current_mobile().hide_keyboard_if_display()
+        time.sleep(1)
+        # 如果在消息页，不做任何操作
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        # 进入一键登录页
+        else:
             try:
-                message_page.wait_until(
-                    condition=lambda d: message_page.is_on_this_page(),
-                    timeout=3
-                )
-                return
-            except TimeoutException:
-                pass
-        Preconditions.reset_and_relaunch_app()
-        Preconditions.make_already_in_one_key_login_page()
-        login_num = Preconditions.login_by_one_key_login()
-        return login_num
+                current_mobile().launch_app()
+                mess.wait_for_page_load()
+            except:
+                # 进入一键登录页
+                Preconditions.make_already_in_one_key_login_page()
+                #  从一键登录页面登录
+                Preconditions.login_by_one_key_login()
 
     @staticmethod
     def reset_and_relaunch_app():
@@ -307,16 +300,14 @@ class Preconditions(object):
         wbp.wait_for_workbench_page_load()
         wbp.click_organization()
         osp = OrganizationStructurePage()
-        osp.wait_for_page_load()
-        time.sleep(2)
+        time.sleep(5)
         n = 1
         # 解决工作台不稳定问题
         while osp.is_text_present("账号认证失败"):
             osp.click_back()
             wbp.wait_for_workbench_page_load()
             wbp.click_organization()
-            osp.wait_for_page_load()
-            time.sleep(2)
+            time.sleep(5)
             n += 1
             if n > 10:
                 break
@@ -337,19 +328,121 @@ class Preconditions(object):
         mp.wait_for_page_load()
 
     @staticmethod
-    def make_no_message_send_failed_status(name):
+    def make_no_message_send_failed_status():
         """确保当前消息列表没有消息发送失败的标识影响验证结果"""
 
-        gcp = GroupChatPage()
-        # 等待群聊页面加载
-        gcp.wait_for_page_load()
-        gcp.click_back()
         mp = MessagePage()
         mp.wait_for_page_load()
         # 确保当前消息列表没有消息发送失败的标识影响验证结果
         if mp.is_iv_fail_status_present():
             mp.clear_fail_in_send_message()
-        Preconditions.get_into_group_chat_page(name)
+
+    @staticmethod
+    def create_enterprise_group(name):
+        """创建企业群"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_workbench_page()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_add_create_group()
+        cgp = CreateGroupPage()
+        # 等待创建群首页加载
+        cgp.wait_for_page_load()
+        cgp.click_create_group()
+        sec = SelectEnterpriseContactsPage()
+        sec.wait_for_page_load()
+        # 创建企业群
+        sec.click_contacts_by_name("大佬1")
+        sec.click_contacts_by_name("大佬2")
+        sec.click_sure()
+        cgp.input_group_name(name)
+        cgp.click_create_group()
+        time.sleep(2)
+        # 返回消息列表
+        cgp.click_back()
+        wbp.wait_for_workbench_page_load()
+        mp.open_message_page()
+        mp.wait_for_page_load()
+
+    @staticmethod
+    def ensure_have_enterprise_group(name):
+        """确保有企业群"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_contacts_page()
+        cp = ContactsPage()
+        cp.wait_for_page_load()
+        cp.open_group_chat_list()
+        time.sleep(2)
+        if cp.is_exist_enterprise_group():
+            cp.click_return()
+            cp.wait_for_page_load()
+            mp.open_message_page()
+            mp.wait_for_page_load()
+        else:
+            cp.click_return()
+            cp.wait_for_page_load()
+            mp.open_message_page()
+            mp.wait_for_page_load()
+            Preconditions.create_enterprise_group(name)
+
+    @staticmethod
+    def make_already_delete_my_group():
+        """确保删掉所有群"""
+        # 消息页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(2)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
+        sc.click_select_one_group()
+        # 获取已有群名
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        group_names = sog.get_group_name()
+        # 有群删除，无群返回
+        if len(group_names) == 0:
+            sog.click_back()
+            pass
+        else:
+            for group_name in group_names:
+                sog.select_one_group_by_name(group_name)
+                gcp = GroupChatPage()
+                gcp.wait_for_page_load()
+                gcp.click_setting()
+                gcs = GroupChatSetPage()
+                gcs.wait_for_page_load()
+                gcs.click_delete_and_exit()
+                gcs.click_sure()
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc.wait_for_page_load()
+                sc.click_select_one_group()
+            sog.click_back()
+            # if not gcs.is_toast_exist("已退出群聊"):
+            #     raise AssertionError("无退出群聊提示")
+        # sc.click_back()
+        # mess.open_me_page()
 
 
 class MsgGroupChatvedioTest(TestCase):
@@ -364,52 +457,42 @@ class MsgGroupChatvedioTest(TestCase):
 
     """前置条件需要修改创建一个群找不到"""
 
-    # @classmethod
-    # def setUpClass(cls):
-    #
-    #     # 创建联系
-    #     fail_time = 0
-    #     import dataproviders
-    #     while fail_time < 3:
-    #         try:
-    #             required_contacts = dataproviders.get_preset_contacts()
-    #             conts = ContactsPage()
-    #             Preconditions.connect_mobile('Android-移动')
-    #             current_mobile().hide_keyboard_if_display()
-    #             for name, number in required_contacts:
-    #                 Preconditions.make_already_in_message_page()
-    #                 conts.open_contacts_page()
-    #                 try:
-    #                     if conts.is_text_present("发现SIM卡联系人"):
-    #                         conts.click_text("显示")
-    #                 except:
-    #                     pass
-    #                 conts.create_contacts_if_not_exits(name, number)
-    #
-    #             # 创建群
-    #             required_group_chats = dataproviders.get_preset_group_chats()
-    #
-    #             conts.open_group_chat_list()
-    #             group_list = GroupListPage()
-    #             for group_name, members in required_group_chats:
-    #                 group_list.wait_for_page_load()
-    #                 group_list.create_group_chats_if_not_exits(group_name, members)
-    #             group_list.click_back()
-    #             conts.open_message_page()
-    #             return
-    #         except:
-    #             fail_time += 1
-    #             import traceback
-    #             msg = traceback.format_exc()
-    #             print(msg)
+    @classmethod
+    def setUpClass(cls):
 
-    # @classmethod
-    # def setUpClass(cls):
-    #     Preconditions.connect_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     local_file = ChatSelectLocalFilePage()
-    #     # 没有预置文件，则上传
-    #     local_file.push_preset_file()
+        # 创建联系
+        fail_time = 0
+        import dataproviders
+        while fail_time < 3:
+            try:
+                required_contacts = dataproviders.get_preset_contacts()
+                conts = ContactsPage()
+                Preconditions.connect_mobile('Android-移动')
+                current_mobile().hide_keyboard_if_display()
+                Preconditions.make_already_in_message_page()
+                conts.open_contacts_page()
+                try:
+                    if conts.is_text_present("发现SIM卡联系人"):
+                        conts.click_text("显示")
+                except:
+                    pass
+                for name, number in required_contacts:
+                    conts.create_contacts_if_not_exits(name, number)
+                # 创建群
+                required_group_chats = dataproviders.get_preset_group_chats()
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
+                return
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
 
     def default_setUp(self):
         """确保每个用例运行前在群聊聊天会话页面"""
@@ -1752,6 +1835,341 @@ class MsgGroupChatvedioTest(TestCase):
         gcf.click_back()
         gcs.click_back()
 
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    def test_msg_xiaoqiu_0413(self):
+        """群主在群设置页面点击群名称，修改群名后"""
+        # 1.检验是否当前聊天会话页面,点击进入群设置页面
+        Preconditions.enter_group_chat_page()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gsp = GroupChatSetPage()
+        gsp.wait_for_page_load()
+        # 2.点击群名称，修改群名
+        gsp.click_modify_group_name()
+        names = str(uuid.uuid1())
+        group_name = "a" + names[-4:]
+        gsp.input_new_group_name(group_name)
+        gsp.save_group_name()
+        self.assertEquals(gsp.is_toast_exist("修改成功"), True)
+        # 3.返回群聊主页
+        gsp.click_back()
+        gcp.wait_for_page_load()
+        gcp.page_should_contain_text("群名称已修改为 " + group_name)
+
+    @staticmethod
+    def tearDown_test_msg_xiaoqiu_0413():
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gsp = GroupChatSetPage()
+        gsp.wait_for_page_load()
+        # 2.点击群名称，修改群名
+        gsp.click_modify_group_name()
+        group_name = Preconditions.get_group_chat_name()
+        gsp.input_new_group_name(group_name)
+        gsp.save_group_name()
+        gsp.click_back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    def test_msg_xiaoqiu_0414(self):
+        """群主在设置页面点击群管理，点击解散群按钮后"""
+        # 1.检验是否当前聊天会话页面,点击进入群设置页面
+        Preconditions.enter_group_chat_page()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gsp = GroupChatSetPage()
+        gsp.wait_for_page_load()
+        # 2.点击群管理，解散群
+        gsp.click_group_manage()
+        gsp.click_group_manage_disband_button()
+        gsp.click_sure()
+        # 3.返回群聊主页
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        gcp.page_should_contain_text("系统消息")
+        gcp.page_should_contain_text("该群已解散")
+
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    def test_msg_xiaoqiu_0415(self):
+        """群成员在群设置页面点击删除并退出按钮后"""
+        # 1.检验是否当前聊天会话页面,点击进入群设置页面
+        Preconditions.enter_group_chat_page()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gsp = GroupChatSetPage()
+        gsp.wait_for_page_load()
+        # 2.点击删除并退出
+        gsp.click_delete_and_exit()
+        gsp.click_sure()
+        # 3.返回消息页，提示你已退出群
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_text("系统消息")
+        time.sleep(3)
+        mess.page_should_contain_text("你已退出群")
+
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    def test_msg_xiaoqiu_0421(self):
+        """群成员在群设置页面点击删除并退出按钮后"""
+        # 1.检验是否当前聊天会话页面,点击进入群设置页面
+        Preconditions.enter_group_chat_page()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gsp = GroupChatSetPage()
+        gsp.wait_for_page_load()
+        # 2.点击点击+邀请群成员后
+        gsp.click_add_number()
+        slc = SelectLocalContactsPage()
+        group_name = "和飞信电话"
+        slc.swipe_select_one_member_by_name(group_name)
+        slc.click_sure()
+        # 3.返回消息页，提示你已退出群
+        gcp.wait_for_page_load()
+        gcp.page_should_contain_text("你向 " + group_name + "... 发出群邀请")
+
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    def test_msg_xiaoqiu_0422(self):
+        """群成员在群设置页面点击删除并退出按钮后"""
+        # 1.检验是否当前聊天会话页面,点击进入群设置页面
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_back()
+        Preconditions.make_already_delete_my_group()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(2)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
+        time.sleep(3)
+        sc.click_select_one_group()
+        # 群名
+        group_name = Preconditions.get_group_chat_name()
+        # 获取已有群名
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        group_names = sog.get_group_name()
+        # 有群返回，无群创建
+        if group_name in group_names:
+            return
+        sog.click_back()
+        mess.click_add_icon()
+        mess.click_group_chat()
+        # 从本地联系人中选择成员创建群
+        sc.click_local_contacts()
+        time.sleep(2)
+        slc = SelectLocalContactsPage()
+        a = 0
+        names = {}
+        while a < 3:
+            names = slc.get_contacts_name()
+            num = len(names)
+            if not names:
+                raise AssertionError("No contacts, please add contacts in address book.")
+            if num == 1:
+                sog.page_up()
+                a += 1
+                if a == 3:
+                    raise AssertionError("联系人只有一个，请再添加多个不同名字联系人组成群聊")
+            else:
+                break
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        slc.click_sure()
+        # 创建群
+        cgnp = CreateGroupNamePage()
+        cgnp.input_group_name(group_name)
+        cgnp.click_sure()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        gcp.page_should_contain_text("发出群邀请")
+
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    def test_msg_xiaoqiu_0534(self):
+        """创建一个普通群"""
+        # 1.检验是否当前聊天会话页面,点击进入群设置页面
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_back()
+        Preconditions.make_already_delete_my_group()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(2)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
+        time.sleep(3)
+        sc.click_select_one_group()
+        # 群名
+        group_name = Preconditions.get_group_chat_name()
+        # 获取已有群名
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        group_names = sog.get_group_name()
+        # 有群返回，无群创建
+        if group_name in group_names:
+            return
+        sog.click_back()
+        mess.click_add_icon()
+        mess.click_group_chat()
+        # 从本地联系人中选择成员创建群
+        sc.click_local_contacts()
+        time.sleep(2)
+        slc = SelectLocalContactsPage()
+        a = 0
+        names = {}
+        while a < 3:
+            names = slc.get_contacts_name()
+            num = len(names)
+            if not names:
+                raise AssertionError("No contacts, please add contacts in address book.")
+            if num == 1:
+                sog.page_up()
+                a += 1
+                if a == 3:
+                    raise AssertionError("联系人只有一个，请再添加多个不同名字联系人组成群聊")
+            else:
+                break
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        slc.click_sure()
+        # 创建群
+        cgnp = CreateGroupNamePage()
+        cgnp.input_group_name(group_name)
+        cgnp.click_sure()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        gcp.page_should_contain_text("发出群邀请")
+
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    def test_msg_xiaoqiu_0535(self):
+        """创建10一个普通群"""
+        # 1.检验是否当前聊天会话页面,点击进入群设置页面
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_back()
+        Preconditions.make_already_delete_my_group()
+        for i in range(10):
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_add_icon()
+            # 点击 发起群聊
+            mess.click_group_chat()
+            # 选择联系人界面，选择一个群
+            sc = SelectContactsPage()
+            # 群名
+            group_name = Preconditions.get_group_chat_name() + "% d" % i
+            # 从本地联系人中选择成员创建群
+            sc.click_local_contacts()
+            time.sleep(2)
+            slc = SelectLocalContactsPage()
+            a = 0
+            names = {}
+            while a < 3:
+                names = slc.get_contacts_name()
+                num = len(names)
+                if not names:
+                    raise AssertionError("No contacts, please add contacts in address book.")
+                if num == 1:
+                    sc.page_up()
+                    a += 1
+                    if a == 3:
+                        raise AssertionError("联系人只有一个，请再添加多个不同名字联系人组成群聊")
+                else:
+                    break
+            # 选择成员
+            for name in names:
+                slc.select_one_member_by_name(name)
+            slc.click_sure()
+            # 创建群
+            cgnp = CreateGroupNamePage()
+            cgnp.input_group_name(group_name)
+            cgnp.click_sure()
+            # 等待群聊页面加载
+            gcp.wait_for_page_load()
+            gcp.click_back()
+
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    def test_msg_xiaoqiu_0548(self):
+        """创建10一个普通群"""
+        # 1. 普通群，分享群聊邀请口令
+        Preconditions.enter_group_chat_page()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gsp = GroupChatSetPage()
+        gsp.wait_for_page_load()
+        # 2. 分享群聊邀请口令
+        gsp.click_text("邀请微信或QQ好友进群")
+        # 3.验证是否有生成口令的加载框
+        gsp.page_should_contain_text("生成口令")
+        # 4.验证是否群口令分享弹窗
+        gsp.wait_for_share_group_load()
+        gsp.page_should_contain_text("分享群口令邀请好友进群")
+        gsp.page_should_contain_text("下次再说")
+        # 5.点击下次再说，进入群聊设置页面
+        gsp.click_text("下次再说")
+        gsp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    def test_msg_xiaoqiu_0548(self):
+        """创建10一个普通群"""
+        # 1. 普通群，分享群聊邀请口令
+        Preconditions.enter_group_chat_page()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gsp = GroupChatSetPage()
+        gsp.wait_for_page_load()
+        # 2. 分享群聊邀请口令
+        gsp.click_text("邀请微信或QQ好友进群")
+        # 3.验证是否有生成口令的加载框
+        gsp.page_should_contain_text("生成口令")
+        # 4.验证是否群口令分享弹窗
+        gsp.wait_for_share_group_load()
+        gsp.page_should_contain_text("分享群口令邀请好友进群")
+        gsp.page_should_contain_text("下次再说")
+        # 5.点击下次再说，进入群聊设置页面
+        gsp.click_text("下次再说")
+        gsp.wait_for_page_load()
+
 
 class MsgGroupChatVideoPicAllTest(TestCase):
     """
@@ -1761,64 +2179,67 @@ class MsgGroupChatVideoPicAllTest(TestCase):
     Author:刘晓东
     """
 
-    # @classmethod
-    # def setUpClass(cls):
-    #
-    #     # 创建联系人
-    #     fail_time = 0
-    #     flag = False
-    #     import dataproviders
-    #     while fail_time < 3:
-    #         try:
-    #             required_contacts = dataproviders.get_preset_contacts()
-    #             conts = ContactsPage()
-    #             Preconditions.connect_mobile('Android-移动')
-    #             current_mobile().hide_keyboard_if_display()
-    #             for name, number in required_contacts:
-    #                 Preconditions.make_already_in_message_page()
-    #                 conts.open_contacts_page()
-    #                 conts.create_contacts_if_not_exits(name, number)
-    #
-    #             # 创建群
-    #             required_group_chats = dataproviders.get_preset_group_chats()
-    #
-    #             conts.open_group_chat_list()
-    #             group_list = GroupListPage()
-    #             for group_name, members in required_group_chats:
-    #                 group_list.wait_for_page_load()
-    #                 group_list.create_group_chats_if_not_exits(group_name, members)
-    #             group_list.click_back()
-    #             conts.open_message_page()
-    #             flag = True
-    #         except:
-    #             fail_time += 1
-    #             import traceback
-    #             msg = traceback.format_exc()
-    #             print(msg)
-    #         if flag:
-    #             break
-    #
-    #     # 确保测试手机有resource文件夹
-    #     name = "群聊1"
-    #     Preconditions.get_into_group_chat_page(name)
-    #     # 在当前聊天会话页面，点击更多富媒体的文件按钮
-    #     gcp = GroupChatPage()
-    #     gcp.wait_for_page_load()
-    #     gcp.click_more()
-    #     # 点击本地文件
-    #     cmp = ChatMorePage()
-    #     cmp.click_file()
-    #     csfp = ChatSelectFilePage()
-    #     csfp.wait_for_page_load()
-    #     csfp.click_local_file()
-    #     # 3、选择任意文件，点击发送按钮
-    #     local_file = ChatSelectLocalFilePage()
-    #     # 没有预置文件，则上传
-    #     local_file.push_preset_file()
-    #     local_file.click_back()
-    #     csfp.wait_for_page_load()
-    #     csfp.click_back()
-    #     gcp.wait_for_page_load()
+    @classmethod
+    def setUpClass(cls):
+
+        # 创建联系人
+        fail_time = 0
+        flag = False
+        import dataproviders
+        while fail_time < 3:
+            try:
+                required_contacts = dataproviders.get_preset_contacts()
+                conts = ContactsPage()
+                Preconditions.connect_mobile('Android-移动')
+                current_mobile().hide_keyboard_if_display()
+                Preconditions.make_already_in_message_page()
+                conts.open_contacts_page()
+                try:
+                    if conts.is_text_present("发现SIM卡联系人"):
+                        conts.click_text("显示")
+                except:
+                    pass
+                for name, number in required_contacts:
+                    conts.create_contacts_if_not_exits(name, number)
+                # 创建群
+                required_group_chats = dataproviders.get_preset_group_chats()
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
+                flag = True
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
+            if flag:
+                break
+
+        # 确保测试手机有resource文件夹
+        name = "群聊1"
+        Preconditions.get_into_group_chat_page(name)
+        # 在当前聊天会话页面，点击更多富媒体的文件按钮
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_more()
+        # 点击本地文件
+        cmp = ChatMorePage()
+        cmp.click_file()
+        csfp = ChatSelectFilePage()
+        csfp.wait_for_page_load()
+        csfp.click_local_file()
+        # 3、选择任意文件，点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        local_file.push_preset_file()
+        local_file.click_back()
+        csfp.wait_for_page_load()
+        csfp.click_back()
+        gcp.wait_for_page_load()
 
     def default_setUp(self):
         """
@@ -1837,7 +2258,6 @@ class MsgGroupChatVideoPicAllTest(TestCase):
             current_mobile().hide_keyboard_if_display()
         else:
             current_mobile().launch_app()
-            # preconditions.force_close_and_launch_app()
             Preconditions.make_already_in_message_page()
             Preconditions.get_into_group_chat_page(name)
 
@@ -1898,11 +2318,15 @@ class MsgGroupChatVideoPicAllTest(TestCase):
     def test_msg_group_chat_total_quantity_0042(self):
         """群聊会话页面，转发他人发送的图片到当前会话窗口时失败"""
 
-        name = "群聊1"
-        # 确保当前消息列表没有消息发送失败的标识影响验证结果
-        Preconditions.make_no_message_send_failed_status(name)
-        # 给当前会话页面发送一张图片,确保最近聊天中有记录
         gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        gcp.click_back()
+        # 确保当前消息列表没有消息发送失败的标识影响验证结果
+        Preconditions.make_no_message_send_failed_status()
+        group_name = "群聊1"
+        Preconditions.get_into_group_chat_page(group_name)
+        # 给当前会话页面发送一张图片,确保最近聊天中有记录
         gcp.wait_for_page_load()
         time.sleep(2)
         gcp.click_picture()
@@ -2019,12 +2443,16 @@ class MsgGroupChatVideoPicAllTest(TestCase):
     def test_msg_group_chat_total_quantity_0045(self):
         """群聊会话页面，转发自己发送的图片到本地联系人时失败"""
 
-        group_name = "群聊1"
+        gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        gcp.click_back()
         # 确保当前消息列表没有消息发送失败的标识影响验证结果
-        Preconditions.make_no_message_send_failed_status(group_name)
+        Preconditions.make_no_message_send_failed_status()
+        group_name = "群聊1"
+        Preconditions.get_into_group_chat_page(group_name)
         # 确保当前群聊页面已有图片
         Preconditions.make_already_have_my_picture()
-        gcp = GroupChatPage()
         # 等待群聊页面加载
         gcp.wait_for_page_load()
         # 设置手机网络断开
@@ -2039,9 +2467,9 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         slc = SelectLocalContactsPage()
         # 等待选择联系人->本地联系人 页面加载
         slc.wait_for_page_load()
-        name = "大佬1"
+        contact_name = "大佬1"
         # 3.选择一个本地联系人
-        slc.selecting_local_contacts_by_name(name)
+        slc.selecting_local_contacts_by_name(contact_name)
         # 确定转发
         scg.click_sure_forward()
         # 4.是否提示已转发,等待群聊页面加载
@@ -2100,8 +2528,6 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待群聊页面加载
         gcp.wait_for_page_load()
         gcp.click_back()
-        mp = MessagePage()
-        mp.wait_for_page_load()
         # 确保有和通讯录联系人
         he_names = ["大佬1", "大佬2", "大佬3"]
         Preconditions.create_he_contacts(he_names)
@@ -2128,6 +2554,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         gcp.wait_for_page_load()
         # 返回到消息页
         gcp.click_back()
+        mp = MessagePage()
         # 等待消息页面加载
         mp.wait_for_page_load()
         # 选择刚发送消息的聊天页
@@ -2147,18 +2574,16 @@ class MsgGroupChatVideoPicAllTest(TestCase):
     def test_msg_group_chat_total_quantity_0048(self):
         """群聊会话页面，转发自己发送的图片到和通讯录联系人时失败"""
 
-        group_name = "群聊1"
-        # 确保当前消息列表没有消息发送失败的标识影响验证结果
-        Preconditions.make_no_message_send_failed_status(group_name)
         gcp = GroupChatPage()
         # 等待群聊页面加载
         gcp.wait_for_page_load()
         gcp.click_back()
-        mp = MessagePage()
-        mp.wait_for_page_load()
+        # 确保当前消息列表没有消息发送失败的标识影响验证结果
+        Preconditions.make_no_message_send_failed_status()
         # 确保有和通讯录联系人
         he_names = ["大佬1", "大佬2", "大佬3"]
         Preconditions.create_he_contacts(he_names)
+        group_name = "群聊1"
         Preconditions.get_into_group_chat_page(group_name)
         # 确保当前群聊页面已有图片
         Preconditions.make_already_have_my_picture()
@@ -2183,6 +2608,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         gcp.wait_for_page_load()
         # 返回到消息页
         gcp.click_back()
+        mp = MessagePage()
         mp.wait_for_page_load()
         # 5.是否存在消息发送失败的标识
         self.assertEquals(mp.is_iv_fail_status_present(), True)
@@ -2202,8 +2628,6 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待群聊页面加载
         gcp.wait_for_page_load()
         gcp.click_back()
-        mp = MessagePage()
-        mp.wait_for_page_load()
         # 确保有和通讯录联系人
         he_names = ["大佬1", "大佬2", "大佬3"]
         Preconditions.create_he_contacts(he_names)
@@ -2282,12 +2706,16 @@ class MsgGroupChatVideoPicAllTest(TestCase):
     def test_msg_group_chat_total_quantity_0051(self):
         """群聊会话页面，转发自己发送的图片到陌生人时失败"""
 
-        group_name = "群聊1"
+        gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        gcp.click_back()
         # 确保当前消息列表没有消息发送失败的标识影响验证结果
-        Preconditions.make_no_message_send_failed_status(group_name)
+        Preconditions.make_no_message_send_failed_status()
+        group_name = "群聊1"
+        Preconditions.get_into_group_chat_page(group_name)
         # 确保当前群聊页面已有图片
         Preconditions.make_already_have_my_picture()
-        gcp = GroupChatPage()
         # 等待群聊页面加载
         gcp.wait_for_page_load()
         # 设置手机网络断开
@@ -2396,12 +2824,16 @@ class MsgGroupChatVideoPicAllTest(TestCase):
     def test_msg_group_chat_total_quantity_0054(self):
         """群聊会话页面，转发自己发送的图片到普通群时失败"""
 
-        group_name = "群聊1"
+        gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        gcp.click_back()
         # 确保当前消息列表没有消息发送失败的标识影响验证结果
-        Preconditions.make_no_message_send_failed_status(group_name)
+        Preconditions.make_no_message_send_failed_status()
+        group_name = "群聊1"
+        Preconditions.get_into_group_chat_page(group_name)
         # 确保当前群聊页面已有图片
         Preconditions.make_already_have_my_picture()
-        gcp = GroupChatPage()
         # 等待群聊页面加载
         gcp.wait_for_page_load()
         # 设置手机网络断开
@@ -2471,6 +2903,140 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         scg.click_back()
 
     @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_group_chat_total_quantity_0056(self):
+        """群聊会话页面，转发自己发送的图片到企业群"""
+
+        gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        gcp.click_back()
+        # 确保有企业群
+        Preconditions.ensure_have_enterprise_group("测试企业群")
+        group_name = "群聊1"
+        Preconditions.get_into_group_chat_page(group_name)
+        # 确保当前群聊页面已有图片
+        Preconditions.make_already_have_my_picture()
+        # 1.长按自己发送的图片并转发
+        gcp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 点击“选择一个群”菜单
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        # 3.选择一个企业群
+        name = sog.select_one_enterprise_group()
+        # 确定转发
+        sog.click_sure_forward()
+        # 4.是否提示已转发,等待群聊页面加载
+        self.assertEquals(gcp.is_exist_forward(), True)
+        gcp.wait_for_page_load()
+        # 返回到消息页
+        gcp.click_back()
+        mp = MessagePage()
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+        # 选择刚发送消息的聊天页
+        mp.choose_chat_by_name(name)
+        time.sleep(2)
+        # 5.验证是否发送成功
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        # 返回消息页
+        gcp.click_back()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_group_chat_total_quantity_0057(self):
+        """群聊会话页面，转发自己发送的图片到企业群时失败"""
+
+        gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        gcp.click_back()
+        # 确保当前消息列表没有消息发送失败的标识影响验证结果
+        Preconditions.make_no_message_send_failed_status()
+        # 确保有企业群
+        Preconditions.ensure_have_enterprise_group("测试企业群")
+        group_name = "群聊1"
+        Preconditions.get_into_group_chat_page(group_name)
+        # 确保当前群聊页面已有图片
+        Preconditions.make_already_have_my_picture()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        # 设置手机网络断开
+        gcp.set_network_status(0)
+        # 1.长按自己发送的图片并转发
+        gcp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 点击“选择一个群”菜单
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        # 3.选择一个企业群
+        sog.select_one_enterprise_group()
+        # 确定转发
+        sog.click_sure_forward()
+        # 4.是否提示已转发,等待群聊页面加载
+        self.assertEquals(gcp.is_exist_forward(), True)
+        gcp.wait_for_page_load()
+        # 返回到消息页
+        gcp.click_back()
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 5.是否存在消息发送失败的标识
+        self.assertEquals(mp.is_iv_fail_status_present(), True)
+
+    @staticmethod
+    def tearDown_test_msg_group_chat_total_quantity_0057():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_group_chat_total_quantity_0058(self):
+        """群聊会话页面，转发自己发送的图片到企业群时点击取消转发"""
+
+        gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        gcp.click_back()
+        # 确保有企业群
+        Preconditions.ensure_have_enterprise_group("测试企业群")
+        group_name = "群聊1"
+        Preconditions.get_into_group_chat_page(group_name)
+        # 确保当前群聊页面已有图片
+        Preconditions.make_already_have_my_picture()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        # 1.长按自己发送的图片并转发
+        gcp.forward_pic()
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 点击“选择一个群”菜单
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 3.等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        # 4.选择一个企业群
+        sog.select_one_enterprise_group()
+        # 取消转发
+        sog.click_cancel_forward()
+        # 5.等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        sog.click_back()
+        # 等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 返回群聊天页面
+        scg.click_back()
+
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0069(self):
         """群聊会话页面，转发自己发送的视频给本地联系人"""
 
@@ -2519,13 +3085,17 @@ class MsgGroupChatVideoPicAllTest(TestCase):
     def test_msg_group_chat_total_quantity_0070(self):
         """群聊会话页面，转发自己发送的视频给本地联系人时失败"""
 
-        group_name = "群聊1"
+        gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        gcp.click_back()
         # 确保当前消息列表没有消息发送失败的标识影响验证结果
-        Preconditions.make_no_message_send_failed_status(group_name)
+        Preconditions.make_no_message_send_failed_status()
+        group_name = "群聊1"
+        Preconditions.get_into_group_chat_page(group_name)
         # 确保当前群聊页面已有视频
         Preconditions.make_already_have_my_videos()
         time.sleep(5)
-        gcp = GroupChatPage()
         # 等待群聊页面加载
         gcp.wait_for_page_load()
         # 设置手机网络断开
@@ -2539,9 +3109,9 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         slc = SelectLocalContactsPage()
         # 等待选择联系人->本地联系人 页面加载
         slc.wait_for_page_load()
-        name = "大佬1"
+        contact_name = "大佬1"
         # 3.选择一个本地联系人
-        slc.selecting_local_contacts_by_name(name)
+        slc.selecting_local_contacts_by_name(contact_name)
         # 确定转发
         scg.click_sure_forward()
         # 4.是否提示已转发,等待群聊页面加载
@@ -2601,8 +3171,6 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待群聊页面加载
         gcp.wait_for_page_load()
         gcp.click_back()
-        mp = MessagePage()
-        mp.wait_for_page_load()
         # 确保有和通讯录联系人
         he_names = ["大佬1", "大佬2", "大佬3"]
         Preconditions.create_he_contacts(he_names)
@@ -2629,6 +3197,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         gcp.wait_for_page_load()
         # 返回到消息页
         gcp.click_back()
+        mp = MessagePage()
         # 等待消息页面加载
         mp.wait_for_page_load()
         # 选择刚发送消息的聊天页
@@ -2648,18 +3217,16 @@ class MsgGroupChatVideoPicAllTest(TestCase):
     def test_msg_group_chat_total_quantity_0073(self):
         """群聊会话页面，转发自己发送的视频给和通讯录联系人时失败"""
 
-        group_name = "群聊1"
-        # 确保当前消息列表没有消息发送失败的标识影响验证结果
-        Preconditions.make_no_message_send_failed_status(group_name)
         gcp = GroupChatPage()
         # 等待群聊页面加载
         gcp.wait_for_page_load()
         gcp.click_back()
-        mp = MessagePage()
-        mp.wait_for_page_load()
+        # 确保当前消息列表没有消息发送失败的标识影响验证结果
+        Preconditions.make_no_message_send_failed_status()
         # 确保有和通讯录联系人
         he_names = ["大佬1", "大佬2", "大佬3"]
         Preconditions.create_he_contacts(he_names)
+        group_name = "群聊1"
         Preconditions.get_into_group_chat_page(group_name)
         # 确保当前群聊页面已有视频
         Preconditions.make_already_have_my_videos()
@@ -2684,6 +3251,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         gcp.wait_for_page_load()
         # 返回到消息页
         gcp.click_back()
+        mp = MessagePage()
         mp.wait_for_page_load()
         # 5.是否存在消息发送失败的标识
         self.assertEquals(mp.is_iv_fail_status_present(), True)
@@ -2703,8 +3271,6 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待群聊页面加载
         gcp.wait_for_page_load()
         gcp.click_back()
-        mp = MessagePage()
-        mp.wait_for_page_load()
         # 确保有和通讯录联系人
         he_names = ["大佬1", "大佬2", "大佬3"]
         Preconditions.create_he_contacts(he_names)
@@ -2784,13 +3350,17 @@ class MsgGroupChatVideoPicAllTest(TestCase):
     def test_msg_group_chat_total_quantity_0076(self):
         """群聊会话页面，转发自己发送的视频给陌生人时失败"""
 
-        group_name = "群聊1"
+        gcp = GroupChatPage()
+        # 等待群聊页面加载
+        gcp.wait_for_page_load()
+        gcp.click_back()
         # 确保当前消息列表没有消息发送失败的标识影响验证结果
-        Preconditions.make_no_message_send_failed_status(group_name)
+        Preconditions.make_no_message_send_failed_status()
+        group_name = "群聊1"
+        Preconditions.get_into_group_chat_page(group_name)
         # 确保当前群聊页面已有视频
         Preconditions.make_already_have_my_videos()
         time.sleep(5)
-        gcp = GroupChatPage()
         # 等待群聊页面加载
         gcp.wait_for_page_load()
         # 设置手机网络断开

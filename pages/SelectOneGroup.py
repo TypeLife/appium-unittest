@@ -4,6 +4,7 @@ from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 import time
 
+
 class SelectOneGroupPage(BasePage):
     """选择一个群页面"""
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.GroupChatListActivity'
@@ -174,6 +175,23 @@ class SelectOneGroupPage(BasePage):
             current += 1
             self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         self.click_element(locator)
+
+    @TestLogger.log()
+    def select_one_enterprise_group(self):
+        """选择一个企业群 返回群名"""
+        locator = (MobileBy.XPATH,
+                   '//*[@resource-id="com.chinasofti.rcs:id/group_ep"]/../android.widget.LinearLayout/android.widget.TextView[@resource-id="com.chinasofti.rcs:id/contact_name"]')
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        els = self.get_elements(locator)
+        name = els[0].text
+        els[0].click()
+        return name
 
     @TestLogger.log()
     def get_search_result_group(self):

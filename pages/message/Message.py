@@ -69,7 +69,37 @@ class MessagePage(FooterPage):
         "版本更新": (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_title'),
         "以后再说": (MobileBy.ID, "com.chinasofti.rcs:id/btn_cancel"),
         '立即更新': (MobileBy.ID, "com.chinasofti.rcs:id/btn_ok"),
+        '创建群聊':(MobileBy.ID,"com.chinasofti.rcs:id/creategroup"),
+        "选择手机联系人":(MobileBy.XPATH,"//*[contains(@text,'选择手机联系人')]"),
+        "确定2":(MobileBy.ID,"com.chinasofti.rcs:id/tv_sure"),
+        "群聊名":(MobileBy.ID,"com.chinasofti.rcs:id/et_group_name"),
     }
+
+    @TestLogger.log("点击创建群聊")
+    def click_create_group(self):
+        self.click_element(self.__locators["创建群聊"])
+        time.sleep(1)
+
+    @TestLogger.log("点击选择手机联系人")
+    def click_contact_group(self):
+        self.click_element(self.__locators["选择手机联系人"])
+        time.sleep(1)
+
+    @TestLogger.log("点击群聊名")
+    def click_group_name(self):
+        self.click_element(self.__locators["群聊名"])
+        time.sleep(1)
+
+    @TestLogger.log("设置群聊名")
+    def set_group_name(self,text='aaa'):
+        self.input_text(self.__locators["群聊名"],text)
+        time.sleep(1)
+
+    @TestLogger.log("点击确定")
+    def click_sure_button(self):
+        self.click_element(self.__locators["确定2"])
+        time.sleep(1)
+
 
     @TestLogger.log('检查顶部搜索框是否显示')
     def assert_search_box_is_display(self, max_wait_time=5):
@@ -744,6 +774,7 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def is_message_content_match_video(self):
         """查看刚刚发送消息的窗口消息内容是否显示视频"""
+
         els = self.get_elements(self.__class__.__locators["消息简要内容"])
         text = els[0].text
         if "[视频]" in text:

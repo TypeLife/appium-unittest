@@ -266,6 +266,16 @@ class SelectLocalContactsPage(BasePage):
             els[current].click()
             current += 1
 
+    @TestLogger.log()
+    def get_contacts_name_list(self):
+        """获取联系人名"""
+        els = self.get_elements(self.__class__.__locators["联系人名"])
+        contacts_name = []
+        if els:
+            for el in els:
+                contacts_name.append(el.text)
+        return contacts_name
+
     @TestLogger.log("点击第一个联系人")
     def click_first_phone_contacts(self):
         self.get_elements(self.__locators['电话号码'])[0].click()

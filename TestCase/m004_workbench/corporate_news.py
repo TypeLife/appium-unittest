@@ -85,7 +85,7 @@ class Preconditions(LoginPreconditions):
         mp.click_workbench()
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
-        wbp.click_corporate_news()
+        wbp.click_add_corporate_news()
 
     @staticmethod
     def create_unpublished_image_news(news):
@@ -204,6 +204,7 @@ class CorporateNewsTest(TestCase):
         cnp.click_no_news()
         cnnp = CorporateNewsNoNewsPage()
         cnnp.wait_for_page_load()
+        time.sleep(2)
         cnnp.clear_no_news()
         # 确保未发新闻列表存在数据
         news = [("测试新闻0007", "测试内容0007")]
@@ -219,6 +220,7 @@ class CorporateNewsTest(TestCase):
         time.sleep(2)
         cndp = CorporateNewsDetailsPage()
         cndp.wait_for_page_load()
+        time.sleep(2)
         # 点击删除
         cndp.click_delete()
         # 点击确定
@@ -238,6 +240,43 @@ class CorporateNewsAllTest(TestCase):
     Author：刘晓东
     """
 
+    @classmethod
+    def setUpClass(cls):
+
+        # 创建联系人
+        fail_time = 0
+        import dataproviders
+        while fail_time < 3:
+            try:
+                required_contacts = dataproviders.get_preset_contacts()
+                conts = ContactsPage()
+                Preconditions.select_mobile('Android-移动')
+                current_mobile().hide_keyboard_if_display()
+                Preconditions.make_already_in_message_page()
+                conts.open_contacts_page()
+                try:
+                    if conts.is_text_present("发现SIM卡联系人"):
+                        conts.click_text("显示")
+                except:
+                    pass
+                for name, number in required_contacts:
+                    conts.create_contacts_if_not_exits(name, number)
+                # 创建群
+                required_group_chats = dataproviders.get_preset_group_chats()
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
+                return
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
+
     def default_setUp(self):
         """
         1、成功登录和飞信
@@ -254,7 +293,6 @@ class CorporateNewsAllTest(TestCase):
             current_mobile().hide_keyboard_if_display()
         else:
             current_mobile().launch_app()
-            # preconditions.force_close_and_launch_app()
             Preconditions.make_already_in_message_page()
             Preconditions.enter_corporate_news_page()
 

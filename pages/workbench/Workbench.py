@@ -51,6 +51,7 @@ class WorkbenchPage(FooterPage):
                   '团队通讯': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_category'),
                   '超级会议': (MobileBy.XPATH, '//*[@text="超级会议"]'),
                   '群发信使': (MobileBy.XPATH, '//*[@text="群发信使"]'),
+                  '移动出勤': (MobileBy.XPATH, '//*[@text="移动出勤"]'),
                   '语音通知': (MobileBy.XPATH, '//*[@text="语音通知"]'),
                   '139邮箱': (MobileBy.XPATH, '//*[@text="139邮箱"]'),
                   '协同办公': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_category'),
@@ -69,6 +70,7 @@ class WorkbenchPage(FooterPage):
                   '应用管理': (MobileBy.XPATH, '//*[@text="应用管理"]'),
                   '咨询客服': (MobileBy.XPATH, '//*[@text="咨询客服"]'),
                   '创建团队': (MobileBy.XPATH, '//*[@text="创建团队"]'),
+                  '创建群': (MobileBy.XPATH, '//*[@text="创建群"]'),
                   '消息': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMessage'),
                   '通话': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCall'),
                   '工作台': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCircle'),
@@ -82,6 +84,8 @@ class WorkbenchPage(FooterPage):
                   '欢迎创建团队': (MobileBy.XPATH, '//*[@text="欢迎创建团队"]'),
                   # 点击左上角的企业名称的倒三角形的团队元素定位
                   '团队列表': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_listitem'),
+                  '工作台提示语': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_shortcut_tip'),
+                  '关闭': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_shortcut_close'),
                   }
 
     def swipe_half_page_up(self):
@@ -289,6 +293,15 @@ class WorkbenchPage(FooterPage):
             raise AssertionError("该页面没有定位到 创建团队 控件")
 
     @TestLogger.log()
+    def click_create_group(self):
+        """点击创建群"""
+        els = self.find_els(self.__class__.__locators['创建群'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 创建群 控件")
+
+    @TestLogger.log()
     def click_rights(self):
         """点击权益"""
         els = self.find_els(self.__class__.__locators['权益'])
@@ -296,6 +309,15 @@ class WorkbenchPage(FooterPage):
             els[0].click()
         else:
             raise AssertionError("该页面没有定位到 权益 控件")
+
+    @TestLogger.log()
+    def click_mobile_attendance(self):
+        """点击移动出勤"""
+        els = self.find_els(self.__class__.__locators['移动出勤'])
+        if els:
+            els[0].click()
+        else:
+            raise AssertionError("该页面没有定位到 移动出勤 控件")
 
     @TestLogger.log()
     def click_enterprise_name_triangle(self):
@@ -410,7 +432,7 @@ class WorkbenchPage(FooterPage):
             return False
 
     @TestLogger.log()
-    def click_corporate_news(self):
+    def click_add_corporate_news(self):
         """点击企业新闻"""
         els = self.find_els(self.__class__.__locators['企业新闻'])
         if els:
@@ -421,7 +443,7 @@ class WorkbenchPage(FooterPage):
             self.click_company_news()
 
     @TestLogger.log()
-    def click_messenger_group(self):
+    def click_add_group_messenger(self):
         """点击群发信使"""
         els = self.find_els(self.__class__.__locators['群发信使'])
         if els:
@@ -430,6 +452,28 @@ class WorkbenchPage(FooterPage):
             self.add_workbench_app("群发信使")
             time.sleep(2)
             self.click_group_messenger()
+
+    @TestLogger.log()
+    def click_add_create_group(self):
+        """点击创建群"""
+        els = self.find_els(self.__class__.__locators['创建群'])
+        if els:
+            els[0].click()
+        else:
+            self.add_workbench_app("创建群")
+            time.sleep(2)
+            self.click_create_group()
+
+    @TestLogger.log()
+    def click_add_mobile_attendance(self):
+        """点击移动出勤"""
+        els = self.find_els(self.__class__.__locators['移动出勤'])
+        if els:
+            els[0].click()
+        else:
+            self.add_workbench_app("移动出勤")
+            time.sleep(2)
+            self.click_mobile_attendance()
 
     @TestLogger.log()
     def add_workbench_app(self, name):

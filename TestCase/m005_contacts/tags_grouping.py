@@ -211,7 +211,7 @@ class Preconditions(object):
         create_page.create_contact(name, number)
         detail_page.wait_for_page_load()
         detail_page.click_back_icon()
-
+@unittest.skip("本地不执行")
 class TagsGroupingTest(TestCase):
     """通讯录 - 标签分组"""
 
@@ -1348,7 +1348,7 @@ class Tag_Group(TestCase):
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0407(self):
         """“分组设置-特殊符号标签名称
-        auther:严顺华
+        auther:darcy
         """
         GroupPage = GroupListPage()
         cdp = ContactDetailsPage()
@@ -1377,7 +1377,7 @@ class Tag_Group(TestCase):
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0408(self):
         """“分组设置-各种标签名称
-        auther:严顺华
+        auther:darcy
         """
         GroupPage = GroupListPage()
         cdp = ContactDetailsPage()
@@ -1406,7 +1406,7 @@ class Tag_Group(TestCase):
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0409(self):
         """“分组设置-各种标签名称删除
-        auther:严顺华
+        auther:darcy
         """
         GroupPage = GroupListPage()
         cdp = ContactDetailsPage()
@@ -1435,7 +1435,7 @@ class Tag_Group(TestCase):
     @tags('ALL', 'CONTACT-debug', 'CMCC')
     def test_contacts_quxinli_0414(self):
         """分组设置-搜索移除成员
-        auther:严顺华
+        auther:darcy
         """
         GroupPage = GroupListPage()
         cdp = ContactDetailsPage()
@@ -1480,7 +1480,7 @@ class Tag_Group(TestCase):
     @tags('ALL', 'CONTACT-debug', 'CMCC')
     def test_contacts_quxinli_0415(self):
         """分组设置-删除标签
-        auther:严顺华
+        auther:darcy
         """
         GroupPage = GroupListPage()
         cdp = ContactDetailsPage()
@@ -1562,7 +1562,7 @@ class Tag_Group(TestCase):
     @tags('ALL', 'CONTACT-debug', 'CMCC')
     def test_contacts_quxinli_0417(self):
         """分组详情操作页面进入Profile页_星标
-        auther:严顺华"""
+        auther:darcy"""
         GroupPage = GroupListPage()
         preconditions.launch_app()
         time.sleep(2)
@@ -1615,7 +1615,7 @@ class Tag_Group(TestCase):
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0421(self):
         """安卓手机：手机系统本地新建分组名称超过30个字符的分组
-        auther:严顺华"""
+        auther:darcy"""
         GroupPage = GroupListPage()
         GroupPage.open_contacts_page()
         GroupPage.click_label_grouping()
@@ -2074,7 +2074,7 @@ class Tag_Group(TestCase):
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_0400(self):
         """“分组设置返回，
-         auther:严顺华
+         auther:darcy
         """
         GroupPage = GroupListPage()
         cdp = ContactDetailsPage()
@@ -2103,7 +2103,7 @@ class Tag_Group(TestCase):
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_0401(self):
         """“分组设置界面
-        auther:严顺华
+        auther:darcy
         """
         GroupPage = GroupListPage()
         cdp = ContactDetailsPage()
@@ -2134,7 +2134,7 @@ class Tag_Group(TestCase):
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_0402(self):
         """“分组设置-标签名称
-        auther:严顺华
+        auther:darcy
         """
         GroupPage = GroupListPage()
         cdp = ContactDetailsPage()
@@ -2163,7 +2163,7 @@ class Tag_Group(TestCase):
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_0403(self):
         """“分组设置-字母标签名称
-        auther:严顺华
+        auther:darcy
         """
         GroupPage = GroupListPage()
         cdp = ContactDetailsPage()
@@ -2192,7 +2192,7 @@ class Tag_Group(TestCase):
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_0404(self):
         """“分组设置-中文标签名称
-        auther:严顺华
+        auther:darcy
         """
         GroupPage = GroupListPage()
         cdp = ContactDetailsPage()
@@ -2221,7 +2221,7 @@ class Tag_Group(TestCase):
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_0405(self):
         """“分组设置-数字标签名称
-        auther:严顺华
+        auther:darcy
         """
         GroupPage = GroupListPage()
         cdp = ContactDetailsPage()
@@ -2250,7 +2250,7 @@ class Tag_Group(TestCase):
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_0406(self):
         """“分组设置-符号标签名称
-        auther:严顺华
+        auther:darcy
         """
         GroupPage = GroupListPage()
         cdp = ContactDetailsPage()
@@ -2279,7 +2279,7 @@ class Tag_Group(TestCase):
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_0407(self):
         """“分组设置-符号标签名称
-        auther:严顺华
+        auther:darcy
         """
         try:
             cdp = ContactDetailsPage()
@@ -2301,7 +2301,7 @@ class Tag_Group(TestCase):
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_0410(self):
         """“分组设置-移除成员入口
-        auther:严顺华
+        auther:darcy
         """
         GroupPage = GroupListPage()
         cdp = ContactDetailsPage()
@@ -2331,7 +2331,7 @@ class Tag_Group(TestCase):
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_0411(self):
         """“分组设置-分组设置-移除成员
-        auther:严顺华
+        auther:darcy
         """
         GroupPage = GroupListPage()
         cdp = ContactDetailsPage()
@@ -2361,7 +2361,7 @@ class Tag_Group(TestCase):
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_0412(self):
         """“分组设置-移除成员选择
-        auther:严顺华
+        auther:darcy
         """
         GroupPage = GroupListPage()
         cdp = ContactDetailsPage()
@@ -2396,10 +2396,11 @@ class Tag_Group(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
+
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_0413(self):
         """分组设置-移除成员
-        auther:严顺华
+        auther:darcy
         """
         GroupPage = GroupListPage()
         cdp = ContactDetailsPage()

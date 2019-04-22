@@ -151,10 +151,10 @@ class Preconditions(object):
         mup.click_edit()
         mep1 = MeEditUserProfilePage()
         mep1.wait_for_page_load()
-        mep1.input_name("姓名", "中国人123*#!!")
+        mep1.input_name("姓名", "中国人123*#!！!")
         mep1.edit_clear("公司")
         mep1.edit_clear("职位")
-        # mep.swipe_up()
+        mep1.swipe_up()
         mep1.edit_clear("邮箱")
         time.sleep(1)
         mep1.click_save()
@@ -263,6 +263,7 @@ class Preconditions(object):
         group_names = sog.get_group_name()
         # 有群删除，无群返回
         if len(group_names) == 0:
+            sog.click_back()
             pass
         else:
             for group_name in group_names:
@@ -274,10 +275,17 @@ class Preconditions(object):
                 gcs.wait_for_page_load()
                 gcs.click_delete_and_exit()
                 gcs.click_sure()
-                if not gcs.is_toast_exist("已退出群聊"):
-                    raise AssertionError("无退出群聊提示")
-        sog.click_back()
-        sc.click_back()
+                mess.click_add_icon()
+                # 点击 发起群聊
+                mess.click_group_chat()
+                sc.click_select_one_group()
+                sog.wait_for_page_load()
+                time.sleep(1.2)
+                if sog.is_text_present("创建群聊"):
+                    sog.click_back()
+                # if not gcs.is_toast_exist("已退出群聊"):
+                #     raise AssertionError("无退出群聊提示")
+        # sc.click_back()
         mess.open_me_page()
 
     @staticmethod
@@ -336,9 +344,9 @@ class Preconditions(object):
         # 有群返回，无群创建
         if group_name in group_names:
             return
-        sog.click_back()
+        sog.click_text("创建群聊")
         # 从本地联系人中选择成员创建群
-        sc.click_local_contacts()
+        sc.select_local_contacts()
         time.sleep(2)
         slc = SelectLocalContactsPage()
         a = 0
@@ -365,6 +373,7 @@ class Preconditions(object):
         cgnp.click_sure()
         # 等待群聊页面加载
         GroupChatPage().wait_for_page_load()
+        GroupChatPage().click_back()
 
 
 class MeAllTest(TestCase):
@@ -412,6 +421,7 @@ class MeAllTest(TestCase):
         self.assertEquals(mep.is_element_exist("个人头像"), True)
         self.assertEquals(mep.is_element_exist("二维码入口"), True)
         self.assertEquals(mep.is_text_exist("多方电话可用时长"), True)
+        self.assertEquals(mep.is_text_exist("每天领时长"), True)
         self.assertEquals(mep.is_text_exist("和包支付"), True)
         self.assertEquals(mep.is_text_exist("移动营业厅"), True)
         self.assertEquals(mep.is_text_exist("福利"), True)
@@ -621,9 +631,9 @@ class MeAllTest(TestCase):
         scp.click_he_contacts()
         shp = SelectHeContactsPage()
         shp.wait_for_page_load()
-        team_name = shp.get_team_names()[1]
+        team_name = shp.get_team_names()[3]
         if not len(team_name) > 0:
-            raise AssertionError("群名为空，请新建群聊")
+            raise AssertionError("团队名为空，请新建团队")
         # 3.点击任意和通讯录名称
         shp.select_one_team_by_name(team_name)
         sdp = SelectHeContactsDetailPage()
@@ -677,7 +687,7 @@ class MeAllTest(TestCase):
         scp.click_he_contacts()
         shp = SelectHeContactsPage()
         shp.wait_for_page_load()
-        team_name = shp.get_team_names()[1]
+        team_name = shp.get_team_names()[3]
         if not len(team_name) > 0:
             raise AssertionError("群名为空，请新建群聊")
         # 3.点击任意和通讯录团队名称
@@ -1025,20 +1035,19 @@ class MeAllTest(TestCase):
         name = "给1234%6在$"
         scp.input_search_keyword(name)
         time.sleep(1)
-        scp.page_should_contain_text("搜索和通讯录联系人 :")
+        scp.page_should_contain_text("搜索团队联系人 :")
         self.assertEquals(scp.get_element_texts("最近聊天"), True)
         scp.page_should_not_contain_text("本地联系人")
         # 有结果
         scp.click_x_icon()
         name1 = "大佬1"
         scp.input_search_keyword(name1)
-        scp.page_should_contain_text("搜索和通讯录联系人 :")
+        scp.page_should_contain_text("搜索团队联系人 :")
         self.assertEquals(scp.get_element_texts("最近聊天"), True)
         scp.page_contain_element("聊天电话")
         # 5.点击返回
         mup.click_back()
         mup.click_back()
-        time.sleep(30)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
     def test_me_all_022(self):
@@ -1060,14 +1069,14 @@ class MeAllTest(TestCase):
         name = "159187111111"
         scp.input_search_keyword(name)
         time.sleep(1)
-        scp.page_should_contain_text("搜索和通讯录联系人 :")
+        scp.page_should_contain_text("搜索团队联系人 :")
         self.assertEquals(scp.get_element_texts("最近聊天"), True)
         scp.page_should_not_contain_text("本地联系人")
         # 有结果
         scp.click_x_icon()
         name1 = "15918730974"
         scp.input_search_keyword(name1)
-        scp.page_should_contain_text("搜索和通讯录联系人 :")
+        scp.page_should_contain_text("搜索团队联系人 :")
         self.assertEquals(scp.get_element_texts("最近聊天"), True)
         scp.page_contain_element("聊天电话")
         # 4.点击返回
@@ -1094,7 +1103,7 @@ class MeAllTest(TestCase):
         name = "15918730799"
         scp.input_search_keyword(name)
         time.sleep(1)
-        scp.page_should_contain_text("搜索和通讯录联系人 :")
+        scp.page_should_contain_text("搜索团队联系人 :")
         self.assertEquals(scp.get_element_texts("最近聊天"), True)
         scp.page_should_contain_text("网络搜索")
         scp.page_contain_element("聊天电话")
@@ -1181,6 +1190,7 @@ class MeAllTest(TestCase):
     def tearDown_test_me_all_028():
         Preconditions.make_already_have_my_group()
         mep = MePage()
+        GroupChatPage().click_back()
         mep.click_back()
         mep.open_me_page()
 
@@ -1936,9 +1946,10 @@ class MeAllTest(TestCase):
         # 4.检验有结果和无结果两种情况
         self.assertEquals(scg.page_contain_element('X'), True)
         self.assertEquals(scg.get_element_texts("最近聊天"), True)
-        if scg.is_text_present("本地联系人"):
-            self.assertEquals(scg.get_element_texts("local联系人"), True)
+        # if scg.is_text_present("手机联系人"):
+        #     self.assertEquals(scg.get_element_texts("local联系人"), True)
         # 5.点击返回
+        scg.click_back()
         scg.click_back()
         qr_code.click_back()
 
@@ -1963,9 +1974,10 @@ class MeAllTest(TestCase):
         # 4.检验有结果和无结果两种情况
         self.assertEquals(scg.page_contain_element('X'), True)
         self.assertEquals(scg.get_element_texts("最近聊天"), True)
-        if scg.is_text_present("本地联系人"):
-            self.assertEquals(scg.get_element_texts("聊天电话"), True)
+        # if scg.is_text_present("手机联系人"):
+        #     self.assertEquals(scg.get_element_texts("聊天电话"), True)
         # 5.点击返回
+        scg.click_back()
         scg.click_back()
         qr_code.click_back()
 
@@ -1990,9 +2002,10 @@ class MeAllTest(TestCase):
         # 4.检验有结果和无结果两种情况
         self.assertEquals(scg.page_contain_element('X'), True)
         self.assertEquals(scg.get_element_texts("最近聊天"), True)
-        if scg.is_text_present("本地联系人"):
-            self.assertEquals(scg.get_element_texts("聊天电话"), True)
+        # if scg.is_text_present("本地联系人"):
+        #     self.assertEquals(scg.get_element_texts("聊天电话"), True)
         # 5.点击返回
+        scg.click_back()
         scg.click_back()
         qr_code.click_back()
 
@@ -2022,7 +2035,8 @@ class MeAllTest(TestCase):
         time.sleep(2.8)
         self.assertEquals(scg.is_text_present("无搜索结果"), True)
         # 6.点击返回
-        scg.click_element(["id", 'com.chinasofti.rcs:id/btn_back'])
+        scg.click_back()
+        scg.click_back()
         scg.click_back()
         qr_code.click_back()
 
@@ -2090,8 +2104,8 @@ class MeAllTest(TestCase):
         self.assertEquals(scg.is_toast_exist("该联系人不可选"), True)
         # 6.点击返回
         scg.click_back()
+        scg.click_back()
         qr_code.click_back()
-        time.sleep(30)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
     def test_me_all_067(self):
@@ -2145,11 +2159,12 @@ class MeAllTest(TestCase):
         slc.search_and_select_one_member_by_name(phone_number)
         time.sleep(1)
         # 4.检验有未保存在本地的手机号码
-        scg.click_local_contacts()
+        scg.click_one_local_contacts()
         self.assertEquals(scg.is_toast_exist("该联系人不可选"), True)
         # 6.点击返回
         scg.click_back()
-        slc.click_back()
+        scg.click_back()
+        scg.click_back()
         qr_code.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
@@ -2460,7 +2475,7 @@ class MeAllTest(TestCase):
         mmp.wait_for_page_load()
         # 2.点击点击充值中心,无套餐
         mmp.click_el_text("Q&A")
-        time.sleep(3)
+        time.sleep(50)
         mmp.page_should_contain_text("出错了")
         mmp.page_should_contain_text("网络异常，请检查网络设置")
         # 5.点击返回
@@ -2489,7 +2504,7 @@ class MeAllTest(TestCase):
         # 2.点击点击充值中心,无套餐
         mmp.click_el_text("资费说明")
         time.sleep(3)
-        mmp.page_should_contain_text("网页无法打开")
+        # mmp.page_should_contain_text("网页无法打开")
         mmp.page_should_contain_text("网络出错，轻触屏幕重新加载")
         # 5.点击返回
         mep.click_back()
@@ -2529,7 +2544,7 @@ class MeAllTest(TestCase):
         mwp = MeSetWefarePage()
         # 2.等待福利页面跳转
         mwp.wait_for_page_load()
-        mwp.page_should_contain_text("网页无法打开")
+        # mwp.page_should_contain_text("网页无法打开")
         mwp.page_should_contain_text("网络出错")
         mwp.click_back()
 
@@ -2555,7 +2570,8 @@ class MeAllTest(TestCase):
         # 3.点击任意一个福利活动
         mwp.click_welfare_activities()
         mwp.wait_for_page_load_welfare_activities()
-        mwp.page_should_contain_text("流量包亮点")
+        time.sleep(15)
+        mwp.page_should_contain_text("活动规则")
         mwp.click_close_welfare_activities()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
@@ -2573,9 +2589,10 @@ class MeAllTest(TestCase):
         # 3.点击任意一个福利活动
         mwp.click_welfare_activities()
         mwp.wait_for_page_load_welfare_activities()
-        mwp.page_should_contain_text("网页无法打开")
+        # mwp.page_should_contain_text("网页无法打开")
+        time.sleep(15)
         mwp.page_should_contain_text("网络出错")
-        mwp.click_close_welfare_activities()
+        mwp.click_back()
 
     @staticmethod
     def tearDown_test_me_all_419():
@@ -2599,7 +2616,8 @@ class MeAllTest(TestCase):
         # 3.点击任意一个福利活动
         mwp.click_welfare_activities()
         mwp.wait_for_page_load_welfare_activities()
-        mwp.page_should_contain_text("流量包亮点")
+        time.sleep(10)
+        mwp.page_should_contain_text("活动规则")
         # 4.点击右上角…分享入口
         mwp.click_more()
         mwp.click_more_share()
@@ -2618,7 +2636,7 @@ class MeAllTest(TestCase):
         slp.click_sure_forward()
         self.assertEquals(slp.is_toast_exist("已转发"), True)
         mwp.wait_for_page_load_welfare_activities()
-        mwp.page_should_contain_text("流量包亮点")
+        mwp.page_should_contain_text("活动规则")
         # 7.点击返回
         mwp.click_close_welfare_activities()
 
@@ -2636,7 +2654,7 @@ class MeAllTest(TestCase):
         # 3.点击任意一个福利活动
         mwp.click_welfare_activities()
         mwp.wait_for_page_load_welfare_activities()
-        mwp.page_should_contain_text("流量包亮点")
+        mwp.page_should_contain_text("活动规则")
         # 4.点击右上角…分享入口
         mwp.click_more()
         mwp.click_more_share()
@@ -2665,7 +2683,8 @@ class MeAllTest(TestCase):
         # 3.点击任意一个福利活动
         mwp.click_welfare_activities()
         mwp.wait_for_page_load_welfare_activities()
-        mwp.page_should_contain_text("流量包亮点")
+        time.sleep(10)
+        mwp.page_should_contain_text("活动规则")
         # 4.点击右上角…分享入口，点击浏览器打开
         mwp.click_more()
         mwp.click_open_browser()
@@ -2684,12 +2703,14 @@ class MeAllTest(TestCase):
         # 3.点击任意一个福利活动
         mwp.click_welfare_activities()
         mwp.wait_for_page_load_welfare_activities()
-        mwp.page_should_contain_text("流量包亮点")
+        time.sleep(10)
+        mwp.page_should_contain_text("活动规则")
         # 4.点击右上角…分享入口，点击复制
         mwp.click_more()
         mwp.click_copy_link()
         mwp.wait_for_page_load_welfare_activities()
-        mwp.page_should_contain_text("流量包亮点")
+        time.sleep(10)
+        mwp.page_should_contain_text("活动规则")
         self.assertEquals(mwp.is_toast_exist("内容已经复制到剪贴板"), True)
         mwp.click_close_welfare_activities()
         mep.open_message_page()
@@ -2700,7 +2721,7 @@ class MeAllTest(TestCase):
         gcp.send_text()
         gcp.click_long_message()
         mwp.wait_for_page_load_welfare_activities_open()
-        mwp.page_should_contain_text("流量包亮点")
+        mwp.page_should_contain_text("活动规则")
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
     def test_me_all_437(self):
@@ -2716,12 +2737,13 @@ class MeAllTest(TestCase):
         # 3.点击任意一个福利活动
         mwp.click_welfare_activities()
         mwp.wait_for_page_load_welfare_activities()
-        mwp.page_should_contain_text("流量包亮点")
+        time.sleep(10)
+        mwp.page_should_contain_text("活动规则")
         # 4.点击右上角…分享入口，点击刷新
         mwp.click_more()
         mwp.click_refurbish()
         mwp.wait_for_page_load_welfare_activities()
-        mwp.page_should_contain_text("流量包亮点")
+        mwp.page_should_contain_text("活动规则")
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
     def test_me_all_438(self):
@@ -2737,13 +2759,13 @@ class MeAllTest(TestCase):
         # 3.点击任意一个福利活动
         mwp.click_welfare_activities()
         mwp.wait_for_page_load_welfare_activities()
-        mwp.page_should_contain_text("流量包亮点")
+        mwp.page_should_contain_text("活动规则")
         mwp.set_network_status(0)
         # 4.点击右上角…分享入口
         mwp.click_more()
         mwp.click_refurbish()
         mwp.wait_for_page_load_welfare_activities()
-        mwp.page_should_contain_text("网页无法打开")
+        # mwp.page_should_contain_text("网页无法打开")
         mwp.page_should_contain_text("网络出错")
 
     @staticmethod

@@ -82,6 +82,7 @@ __all__ = [
     'GrantPemissionsPage',
     'CallContactDetailPage',
     'NewOrEditContactPage',
+    'MultiPartyVideoPage',
 ]
 
 from .ChatFile import ChatFilePage
@@ -167,3 +168,4 @@ from .call import ContactSecltorPage
 from .call import GrantPemissionsPage
 from .call import CallContactDetailPage
 from .call import NewOrEditContactPage
+from .call import MultiPartyVideoPage
