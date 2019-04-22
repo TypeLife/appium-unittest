@@ -210,3 +210,11 @@ class SingleChatPage(BaseChatPage):
         els = self.get_elements(self.__class__.__locators["文件名称"])
         file_name = els[-1].text
         return file_name
+
+    @TestLogger.log("确认短信弹框页面是否有两个按键")
+    def check_cmcc_msg_two_button(self):
+        btn_list = [('id','com.chinasofti.rcs:id/sure_btn'),('id','com.chinasofti.rcs:id/cancle_btn')]
+        for btn in btn_list:
+            if not self._is_enabled(btn):
+                return False
+        return True

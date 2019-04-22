@@ -184,3 +184,9 @@ class SelectOneGroupPage(BasePage):
         else:
             raise AssertionError("没有搜索结果")
 
+    @TestLogger.log("根据导航栏的A字母定位")
+    def choose_index_bar_click_element(self):
+        self.click_element(
+            ('xpath','//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView[3]'))
+        elements = self.get_elements(self.__class__.__locators["群聊名"])
+        elements[0].click()
