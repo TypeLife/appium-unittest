@@ -159,3 +159,10 @@ class SelectHeContactsDetailPage(BasePage):
                 message
             )
         return self
+
+    @TestLogger.log()
+    def click_department_name(self, name):
+        """点击指定企业/部门名称"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title_department" and @text ="%s"]' % name)
+        if self._is_element_present(locator):
+            self.click_element(locator)
