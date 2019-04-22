@@ -211,7 +211,7 @@ class Preconditions(object):
         create_page.create_contact(name, number)
         detail_page.wait_for_page_load()
         detail_page.click_back_icon()
-
+@unittest.skip("本地不执行")
 class TagsGroupingTest(TestCase):
     """通讯录 - 标签分组"""
 
@@ -2395,6 +2395,7 @@ class Tag_Group(TestCase):
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
+
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_0413(self):

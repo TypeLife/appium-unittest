@@ -377,7 +377,19 @@ class GroupChatSetPage(BasePage):
     @TestLogger.log()
     def click_qecode_download_button(self):
         """点击群二维码下载按钮"""
-        self.click_element(self.__class__.__locators['二维码下载'])
+        times = 10
+        while times > 0:
+            time.sleep(1)
+            if self.get_elements(self.__class__.__locators['二维码下载']):
+                self.click_element(self.__class__.__locators['二维码下载'])
+                break
+            else:
+                times -= 1
+                if self.get_elements(self.__class__.__locators['二维码重置']):
+                    self.click_element(self.__class__.__locators['二维码重置'])
+                    time.sleep(1)
+
+        return False
 
     @TestLogger.log()
     def click_qecode_back_button(self):

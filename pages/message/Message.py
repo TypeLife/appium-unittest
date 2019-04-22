@@ -91,8 +91,8 @@ class MessagePage(FooterPage):
         time.sleep(1)
 
     @TestLogger.log("设置群聊名")
-    def set_group_name(self):
-        self.input_text(self.__locators["群聊名"],"aaa")
+    def set_group_name(self,text='aaa'):
+        self.input_text(self.__locators["群聊名"],text)
         time.sleep(1)
 
     @TestLogger.log("点击确定")
@@ -774,6 +774,7 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def is_message_content_match_video(self):
         """查看刚刚发送消息的窗口消息内容是否显示视频"""
+
         els = self.get_elements(self.__class__.__locators["消息简要内容"])
         text = els[0].text
         if "[视频]" in text:
