@@ -56,6 +56,7 @@ class Preconditions(LoginPreconditions):
             return
         sog.click_back()
         # 从本地联系人中选择成员创建群
+
         sc.click_local_contacts()
         time.sleep(2)
         slc = SelectLocalContactsPage()
@@ -2128,13 +2129,215 @@ class messagegroupchat(TestCase):
         group_set.click_qecode_share_button()
         time.sleep(1)
         scp = SelectContactsPage()
-        scp.click_recent_contact()
+        scp.click_select_one_group()
+        time.sleep(1)
+        scp.click_text('aaa')
         time.sleep(2)
-        scp.click_text("取消")
-        time.sleep(1)
-        scp.click_recent_contact()
-        time.sleep(1)
         scp.click_text("确定")
-        scp.is_toast_exist("已转发")
-        scp.click_back_by_android(times=5)
+        time.sleep(1)
+        scp.click_back_by_android(times=2)
+        time.sleep(1)
+        scp.click_group_code()
+        time.sleep(1)
+        scp.press_xy()
+        time.sleep(2)
+        scp.click_recognize_code()
+        time.sleep(1)
+        scp.is_text_present("aaa")
+        scp.click_back_by_android()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0182():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        scp = SelectContactsPage()
+        scp.create_message_group(text='bbb')
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0182(self):
+        """聊天会话窗口中——长按识别二维码 """
+
+        gcp = GroupChatPage()
+        scp = SelectContactsPage()
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_QRCode()
+        group_set.click_qecode_download_button()
+        group_set.is_toast_exist("已保存")
+        scp.click_back_by_android()
+        time.sleep(1)
+        scp.page_up()
+        time.sleep(1)
+        group_set.click_delete_and_exit()
+        time.sleep(3)
+        group_set.click_sure()
+        time.sleep(1)
+        scp.create_message_group(text='aaa')
+        gcp = GroupChatPage()
+        # 点击图片按钮
+        gcp.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        # 2.选择一张照片，点击右下角高亮展示的发送按钮，发送此照片
+        cpg.select_pic()
+        # 发送按钮可点击
+        self.assertTrue(cpg.send_btn_is_enabled())
+        cpg.click_send()
+        time.sleep(3)
+        scp.click_group_code()
+        time.sleep(1)
+        scp.press_xy()
+        time.sleep(2)
+        scp.click_recognize_code()
+        time.sleep(5)
+        scp.is_text_present("群已解散")
+        scp.click_back_by_android(times=4)
+
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0183():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        scp = SelectContactsPage()
+        scp.create_message_group(text='bbb')
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0183(self):
+        """聊天会话窗口中——长按识别二维码 """
+
+        gcp = GroupChatPage()
+        scp = SelectContactsPage()
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_QRCode()
+        group_set.click_qecode_download_button()
+        time.sleep(2)
+        scp.click_back_by_android()
+        time.sleep(1)
+        scp.page_up()
+        time.sleep(1)
+        group_set.click_delete_and_exit()
+        time.sleep(3)
+        group_set.click_sure()
+        time.sleep(1)
+        scp.create_message_group(text='aaa')
+        gcp = GroupChatPage()
+        # 点击图片按钮
+        gcp.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_pic()
+        time.sleep(1)
+        cpg.click_send()
+        time.sleep(2)
+        scp.click_group_code()
+        time.sleep(1)
+        scp.press_xy()
+        time.sleep(1)
+        scp.click_recognize_code()
+        time.sleep(6)
+        scp.is_text_present("群已解散")
+        scp.click_back_by_android(times=4)
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0185():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        scp = SelectContactsPage()
+        scp.create_message_group(text='bbb')
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0185(self):
+        """聊天会话窗口中——长按识别二维码"""
+
+        gcp = GroupChatPage()
+        scp = SelectContactsPage()
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_QRCode()
+        group_set.click_qecode_download_button()
+        time.sleep(2)
+        scp.click_back_by_android()
+        time.sleep(1)
+        scp.page_up()
+        time.sleep(1)
+        group_set.click_delete_and_exit()
+        time.sleep(3)
+        group_set.click_sure()
+        time.sleep(1)
+        scp.create_message_group(text='aaa')
+        gcp = GroupChatPage()
+        # 点击图片按钮
+        gcp.click_pic()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_pic()
+        time.sleep(1)
+        cpg.click_send()
+        time.sleep(2)
+        scp.click_group_code()
+        time.sleep(1)
+        scp.press_xy()
+        time.sleep(1)
+        scp.click_recognize_code()
+        time.sleep(6)
+        scp.is_text_present("群已解散")
+        scp.click_back_by_android(times=4)
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0186():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        scp = SelectContactsPage()
+        scp.create_message_group(text='bbb')
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0186(self):
+        """群二维码详情页——保存二维码"""
+
+        gcp = GroupChatPage()
+        scp = SelectContactsPage()
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_QRCode()
+        group_set.click_qecode_download_button()
+        group_set.is_toast_exist("已保存")
+        scp.click_back_by_android()
+        time.sleep(1)
+        scp.page_up()
+        time.sleep(1)
+        group_set.click_delete_and_exit()
+        time.sleep(3)
+        group_set.click_sure()
+        time.sleep(1)
+        scp.click_back_by_android()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0188():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        scp = SelectContactsPage()
+        scp.create_message_group(text='bbb')
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0188(self):
+        """群聊设置页面——进入到群管理详情页"""
+        gcp = GroupChatPage()
+        scp = SelectContactsPage()
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_group_manage()
+        group_set.click_group_manage_transfer_button()
+        group_set.is_toast_exist("暂无群成员")
+        scp.click_back_by_android(times=3)
 

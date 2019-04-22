@@ -69,8 +69,27 @@ class SelectContactsPage(BasePage):
         "我已阅读": (MobileBy.ID,'com.chinasofti.rcs:id/btn_check'),
         "确定3": (MobileBy.ID,'com.chinasofti.rcs:id/dialog_btn_ok'),
         "最近聊天联系人":(MobileBy.ID,'com.chinasofti.rcs:id/iv_photo'),
+<<<<<<< HEAD
+        "群二维码":(MobileBy.ID,'com.chinasofti.rcs:id/imageview_msg_image'),
+        "保存图片":(MobileBy.XPATH,'//*[@text="保存图片"]'),
+        "识别图中二维码": (MobileBy.XPATH, '//*[@text="识别图中二维码"]'),
+        "转发": (MobileBy.XPATH, '//*[@text="转发"]'),
+=======
         "企业通讯录联系人": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name_personal_contactlist'),
+>>>>>>> ec9054498b51298bfd63d276fcabded261bedfec
     }
+
+    @TestLogger.log("点击群二维码")
+    def click_group_code(self, text='群二维码'):
+        """点击组名"""
+        time.sleep(1)
+        self.click_element(self.__locators[text])
+
+    @TestLogger.log("识别图中二维码")
+    def click_recognize_code(self, text='识别图中二维码'):
+        """点击组名"""
+        time.sleep(1)
+        self.click_element(self.__locators[text])
 
     @TestLogger.log("最近聊天联系人")
     def click_recent_contact(self, text='最近聊天联系人'):
@@ -466,7 +485,7 @@ class SelectContactsPage(BasePage):
             time.sleep(1)
 
     @TestLogger.log("创建群")
-    def create_message_group(self):
+    def create_message_group(self,text='aaa'):
         time.sleep(2)
         mess = MessagePage()
         mess.wait_for_page_load()
@@ -484,9 +503,15 @@ class SelectContactsPage(BasePage):
             return
         mess.click_create_group()
         mess.click_contact_group()
-        mess.click_text("大佬5")
+        mess.click_text("大佬2")
         time.sleep(1)
-        mess.click_text("大佬6")
+        mess.click_text("大佬3")
+        time.sleep(1)
+        mess.click_sure_button()
+        time.sleep(1)
+        mess.click_group_name()
+        time.sleep(1)
+        mess.set_group_name(text=text)
         time.sleep(1)
         mess.click_sure_button()
         time.sleep(1)
@@ -505,4 +530,9 @@ class SelectContactsPage(BasePage):
             for el in els:
                 contacts_name.append(el.text)
         return contacts_name
+
+    @TestLogger.log()
+    def click_element_(self, text):
+        """点击元素"""
+        self.click_element(self.__class__.__locators[text])
 
