@@ -69,14 +69,11 @@ class SelectContactsPage(BasePage):
         "我已阅读": (MobileBy.ID,'com.chinasofti.rcs:id/btn_check'),
         "确定3": (MobileBy.ID,'com.chinasofti.rcs:id/dialog_btn_ok'),
         "最近聊天联系人":(MobileBy.ID,'com.chinasofti.rcs:id/iv_photo'),
-<<<<<<< HEAD
         "群二维码":(MobileBy.ID,'com.chinasofti.rcs:id/imageview_msg_image'),
         "保存图片":(MobileBy.XPATH,'//*[@text="保存图片"]'),
         "识别图中二维码": (MobileBy.XPATH, '//*[@text="识别图中二维码"]'),
         "转发": (MobileBy.XPATH, '//*[@text="转发"]'),
-=======
         "企业通讯录联系人": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name_personal_contactlist'),
->>>>>>> ec9054498b51298bfd63d276fcabded261bedfec
     }
 
     @TestLogger.log("点击群二维码")
