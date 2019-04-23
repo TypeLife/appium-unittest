@@ -65,8 +65,7 @@ class Preconditions(LoginPreconditions):
                 pass
         Preconditions.reset_and_relaunch_app()
         Preconditions.make_already_in_one_key_login_page()
-        login_num = Preconditions.login_by_one_key_login()
-        return login_num
+        Preconditions.login_by_one_key_login()
 
     @staticmethod
     def reset_and_relaunch_app():
