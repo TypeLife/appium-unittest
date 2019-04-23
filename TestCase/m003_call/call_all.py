@@ -55,6 +55,28 @@ class Preconditions(object):
         preconditions.login_by_one_key_login()
         cpg.click_call()
 
+    @staticmethod
+    def enter_single_chat_page(name):
+        """进入单聊聊天会话页面"""
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 点击 +
+        mp.click_add_icon()
+        # 点击“新建消息”
+        mp.click_new_message()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        # 进入单聊会话页面
+        slc.selecting_local_contacts_by_name(name)
+        bcp = BaseChatPage()
+        if bcp.is_exist_dialog():
+            # 点击我已阅读
+            bcp.click_i_have_read()
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+
+
 class CallAll(TestCase):
     """
     模块：通话
@@ -357,7 +379,7 @@ class CallAll(TestCase):
         # Step:1.点击拨号盘按钮
         # CheckPoint:1.拨号盘可收起展开，拨号盘图标变为7个蓝点
         callcolor = cpg.get_call_color_of_element()
-        #TODOs
+        # TODOs
 
     @tags('ALL', 'CMCC', 'Call')
     def test_call_shenlisi_0014(self):
@@ -678,7 +700,7 @@ class CallAll(TestCase):
         # Step:2.查看排序
         time.sleep(1)
         # CheckPoint:2.排序正常
-        #TODO
+        # TODO
 
     @staticmethod
     def tearDown_test_call_shenlisi_0030():
@@ -769,20 +791,22 @@ class CallAll(TestCase):
         cpg.click_back_by_android(2)
 
     @tags('ALL', 'CMCC', 'Call')
-    def test_call_0049(self):
+    def test_call_shenlisi_0050(self):
         """检查拨号盘取消拨号方式"""
         # 1.用户已登录和飞信：通话-拨号盘
         # 2.已弹出拨号方式
         cpg = CallPage()
         cpg.click_call()
+        cpg.dial_number("15340038800")
+        cpg.click_call_phone()
         # Step:1.点击“取消”按钮
         cpg.click_back_by_android()
         # CheckPoint:1.拨号方式收起，停留在输入号码的拨号盘页
-        cpg.page_should_not_contain_text("直接拨号或开始搜索")
+        self.assertTrue(cpg.check_call_phone())
 
     @tags('ALL', 'CMCC', 'Call')
-    def test_call_0050(self):
-        """拨号盘呼叫和飞信通话"""
+    def test_call_shenlisi_0051(self):
+        """检查在拨号盘输入异常字符拨号"""
         # 1.用户已登录和飞信：通话-拨号盘
         # 2.在拨号盘已输入*，#、空格等字符
         # 3.无副号
@@ -799,7 +823,7 @@ class CallAll(TestCase):
 
     # @tags('ALL', 'CMCC', 'Call')
     @unittest.skip("用例删除")
-    def test_call_0051(self):
+    def test_call_shenlisi_0052(self):
         """检查拨号盘拨号方式“设置”按钮跳转"""
         # 1.用户已登录和飞信：通话-拨号盘
         # 2.在输入框输入合法手机号
@@ -841,8 +865,37 @@ class CallAll(TestCase):
         cpg.page_should_contain_text("自动推荐")
         cpg.click_back_by_android(2)
 
+    def test_call_shenlisi_0053(self):
+        """多方电话时长大于0时调起的通话方式选择【和飞信电话】右侧新增【设置为默认】按钮"""
+        # 多方电话时长大于0且拨号方式设置为总是询问
+        # Step:1、在拨号盘输入号码，点击通话按钮
+        cpg = CallPage()
+        cpg.click_call()
+        cpg.dial_number("15343039999")
+        cpg.click_call_phone()
+        time.sleep(2)
+        # CheckPoint:1.调起的通话方式选择【和飞信电话】右侧新增【设置为默认】按钮
+        cpg.page_should_contain_text("和飞信电话")
+        cpg.page_should_contain_text("设置为默认")
+
+        # Step:2.点击“设置为默认”
+        CallTypeSelectPage().click_setting()
+
+        # CheckPoint:2.可设置默认拨号方式为“和飞信电话”拨号设置并默认同步“优先使用和飞信”按钮，并弹出提示：可前往“我-设置-拨号设置”中进行设置
+        cpg.select_dial_mode()
+        cpg.is_toast_exist("可前往“我-设置-拨号设置”修改")
+        self.assertTrue(MeSetDialWayPage().check_call_type(1))
+        cpg.click_back_by_android(3)
+        cpg.click_call()
+        cpg.click_back_by_android()
+
+    @staticmethod
+    def tearDown_test_call_shenlisi_0053():
+        Preconditions.make_already_in_call()
+        CallPage().setting_dial_mode_and_go_back_call()
+
     @tags('ALL', 'CMCC', 'Call')
-    def test_call_0061(self):
+    def test_call_shenlisi_0064(self):
         """检查拨号盘搜索功能---内陆本地联系人"""
         # 1.用户已登录和飞信：通话记录列表页面
         # 2.拨号盘输入的内陆号本地已保存
@@ -1007,13 +1060,46 @@ class CallAll(TestCase):
         cpg.click_back_by_android()
 
     @tags('ALL', 'CMCC', 'Call')
-    def test_call_0082(self):
-        """检查语音通话记录"""
+    def test_call_shenlisi_0086(self):
+        """检查语音通话记录-陌生联系人"""
         # 1.A已登录和飞信
         # 2.用户A已成功发起与用户B的语音通话
         # Step:1.用户A查看通话记录
         cpg = CallPage()
         cpg.click_call()
+        time.sleep(1)
+        cpg.select_type_start_call(calltype=1, text="13800138001")
+        if cpg.is_text_present("继续拨打"):
+            cpg.click_text("继续拨打")
+        time.sleep(2)
+        if cpg.is_text_present("暂不开启"):
+            cpg.click_text("暂不开启")
+        cpg.wait_for_dial_pad()
+        if not cpg.is_on_the_call_page():
+            cpg.click_call()
+        time.sleep(1)
+        # CheckPoint:1.通话记录展示与用户B的语音通话记录，显示用户B的名称、通话类型【语音通话】、归属地。右侧显示通话时间以及时间节点图标
+        cpg.page_should_contain_text("给个红包2")
+        cpg.page_should_contain_text("语音通话")
+        # cpg.page_should_contain_text("广东深圳")
+        # cpg.page_should_contain_text("移动")
+        self.assertTrue(cpg.is_exist_call_time())
+        # Step:2.点击时间节点
+        cpg.click_call_time()
+        time.sleep(1)
+        # CheckPoint:2.进入到用户B的通话profile
+        self.assertTrue(cpg.is_exist_profile_name())
+        cpg.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0088(self):
+        """检查语音通话记录-陌生联系人"""
+        # 1.A已登录和飞信
+        # 2.用户A已成功发起与用户B的语音通话
+        # Step:1.用户A查看通话记录
+        cpg = CallPage()
+        cpg.click_call()
+        time.sleep(1)
         cpg.select_type_start_call(calltype=1, text="13537795364")
         if cpg.is_text_present("继续拨打"):
             cpg.click_text("继续拨打")
@@ -1109,11 +1195,11 @@ class CallAll(TestCase):
 
     @staticmethod
     def setUp_test_call_0149():
-       # 关闭WiFi，打开4G网络
-       Preconditions.make_already_in_call()
-       CalllogBannerPage().skip_multiparty_call()
-       CallPage().delete_all_call_entry()
-       CallPage().set_network_status(4)
+        # 关闭WiFi，打开4G网络
+        Preconditions.make_already_in_call()
+        CalllogBannerPage().skip_multiparty_call()
+        CallPage().delete_all_call_entry()
+        CallPage().set_network_status(4)
 
     @tags('ALL', 'CMCC', 'Call')
     def test_call_0149(self):
@@ -1216,8 +1302,36 @@ class CallAll(TestCase):
         cpg.click_back_by_android()
 
     @tags('ALL', 'CMCC', 'Call')
-    def test_call_0184(self):
-        """检查视频通话记录"""
+    def test_call_shenlisi_0213(self):
+        """检查视频通话记录——本地联系人"""
+        # 1.A已登录和飞信
+        # 2.用户A已成功发起与用户B的视频通话
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        time.sleep(1)
+        CalllogBannerPage().input_telephone("13800138001")
+        cpg.hide_keyboard()
+        time.sleep(1)
+        cpg.click_text("给个红包2")
+        time.sleep(1)
+        cpg.click_text("呼叫")
+        time.sleep(1)
+        if cpg.is_text_present("继续拨打"):
+            cpg.click_text("继续拨打")
+        time.sleep(1)
+        if cpg.is_text_present("暂不开启"):
+            cpg.click_text("暂不开启")
+        # Step:1.用户A查看通话记录
+        cpg.wait_for_page_load()
+
+        # CheckPoint:1.通话记录展示与用户B的视频通话记录，显示用户B的名称、通话类型【视频通话】、手机号/归属地
+        cpg.page_should_contain_text("给个红包2")
+        cpg.page_should_contain_text("视频通话")
+        self.assertTrue(cpg.is_exist_call_time())
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0215(self):
+        """检查视频通话记录-陌生联系人"""
         # 1.A已登录和飞信
         # 2.用户A已成功发起与用户B的视频通话
         cpg = CallPage()
@@ -1236,13 +1350,13 @@ class CallAll(TestCase):
         if cpg.is_text_present("暂不开启"):
             cpg.click_text("暂不开启")
         # Step:1.用户A查看通话记录
-        cpg.wait_for_call_page()
+        cpg.wait_for_page_load()
 
         # CheckPoint:1.通话记录展示与用户B的视频通话记录，显示用户B的名称、通话类型【视频通话】、手机号/归属地
         cpg.page_should_contain_text("13537795364")
         cpg.page_should_contain_text("视频通话")
-        cpg.page_should_contain_text("广东深圳")
-        cpg.page_should_contain_text("移动")
+        # cpg.page_should_contain_text("广东深圳")
+        # cpg.page_should_contain_text("移动")
         self.assertTrue(cpg.is_exist_call_time())
 
     @tags('ALL', 'CMCC', 'Call')
@@ -1678,6 +1792,64 @@ class CallAll(TestCase):
         cpg.page_should_contain_text("高清通话，高效沟通")
 
     @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0307(self):
+        """检查断网无法发起视频通话"""
+        # 1.已登录和飞信
+        # 2.已开启“麦克风权限”
+        # 3.当前已断网
+        cpg = CallPage()
+        self.test_call_shenlisi_0213()
+        cpg.set_network_status(0)
+        # 1.从单聊会话窗口发起视频通话
+        ContactsPage().click_message_icon()
+        Preconditions.enter_single_chat_page("给个红包2")
+        BaseChatPage().click_more()
+        ChatMorePage().click_voice_and_video_call()
+        time.sleep(1)
+        cpg.click_text("视频通话")
+        time.sleep(1)
+        if cpg.is_text_present("继续拨打"):
+            cpg.click_text("继续拨打")
+        self.assertTrue(cpg.is_toast_exist("当前网络不可用，请检查网络设置"))
+        cpg.click_back_by_android()
+        # 2.从拨号盘发起视频通话--6.2.9版本已取消拨号盘视频通话
+
+        # 3.从通话记录-重拨视频通话
+        cpg.click_call()
+        time.sleep(1)
+        cpg.click_text("视频通话")
+        time.sleep(1)
+        if cpg.is_text_present("继续拨打"):
+            cpg.click_text("继续拨打")
+        self.assertTrue(cpg.is_toast_exist("当前网络不可用，请检查网络设置"))
+
+        # 4.从通话profile发起视频通话
+        cpg.create_call_entry("13800138001")
+        cpg.click_call_time()
+        CallContactDetailPage().click_video_call()
+        time.sleep(1)
+        if cpg.is_text_present("继续拨打"):
+            cpg.click_text("继续拨打")
+        self.assertTrue(cpg.is_toast_exist("当前网络不可用，请检查网络设置"))
+        cpg.click_back_by_android()
+
+        # 5.从profile发起视频通话
+        # CheckPoint：1.视频通话发起失败，提示“当前网络不可用”
+        cpg.search_contact_and_enter_contact_details("给个红包2")
+        CallContactDetailPage().click_video_call()
+        time.sleep(1)
+        if cpg.is_text_present("继续拨打"):
+            cpg.click_text("继续拨打")
+        self.assertTrue(cpg.is_toast_exist("当前网络不可用，请检查网络设置"))
+        cpg.click_back_by_android(2)
+        cpg.click_call()
+
+    def tearDown_test_call_shenlisi_0307(self):
+        # 打开网络
+        cpg = CallPage()
+        cpg.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'Call')
     def test_call_0314(self):
         """检查本地联系人通话profile左上角显示名称"""
         # 1.已登录和飞信：通话tab
@@ -1819,7 +1991,7 @@ class CallAll(TestCase):
         cpg.page_should_contain_text("语音通话")
 
     @tags('ALL', 'CMCC', 'Call')
-    def test_call_0322(self):
+    def test_call_shenlisi_0356(self):
         """检查通话profile界面发起视频通话"""
         # 1.已登录和飞信：通话tab
         # 2.已进入到联系人通话profile
@@ -1925,7 +2097,59 @@ class CallAll(TestCase):
         cpg.click_back_by_android(3)
 
     @tags('ALL', 'CMCC', 'Call')
-    def test_call_0331(self):
+    def test_call_shenlisi_0364(self):
+        """检查无效手机号profile无法发起语音通话"""
+        # 1.联系人A：11位数内陆手机号（1322456546）
+        # 2.联系人B：13位数手机号（132367849098）
+        # 3.联系人C：无效区号+手机号（+85213260892669/+8667656003）
+        # 4.联系人D：7位数香港无效手机号（6765600）
+        # 5.联系人E：9位数香港无效手机号（676660056）
+        # 6.联系人F：123456789012
+        # 1.进入到联系人A的通话profile，发起语音通话
+        # 2.进入到联系人B的通话profile，发起语音通话
+        # 3.进入到联系人C的通话profile，发起语音通话
+        # 4.进入到联系人D的通话profile，发起语音通话
+        # 5.进入到联系人E的通话profile，发起语音通话
+        # 6.进入到联系人F的通话profile，发起语音通话
+        # 步骤1 - 6：发起语音通话失败，提示“号码有误
+        lst = ["1322456546", "132367849098", "+85213260892669", "6765600", "676660056", "123456789012"]
+        cpg = CallPage()
+        ccdpg = CallContactDetailPage()
+        for i in range(6):
+            cpg.create_call_entry(str(lst[i]))
+            cpg.click_call_time()
+            ccdpg.click_voice_call()
+            self.assertTrue(cpg.is_toast_exist("号码有误"))
+            cpg.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0365(self):
+        """检查无效手机号profile无法发起视屏通话"""
+        # 1.联系人A：11位数内陆手机号（1322456546）
+        # 2.联系人B：13位数手机号（132367849098）
+        # 3.联系人C：无效区号+手机号（+85213260892669/+8667656003）
+        # 4.联系人D：7位数香港无效手机号（6765600）
+        # 5.联系人E：9位数香港无效手机号（676660056）
+        # 6.联系人F：123456789012
+        # 1.进入到联系人A的通话profile，发起语音通话
+        # 2.进入到联系人B的通话profile，发起语音通话
+        # 3.进入到联系人C的通话profile，发起语音通话
+        # 4.进入到联系人D的通话profile，发起语音通话
+        # 5.进入到联系人E的通话profile，发起语音通话
+        # 6.进入到联系人F的通话profile，发起语音通话
+        # 步骤1 - 6：发起语音通话失败，提示“号码有误
+        lst = ["1322456546", "132367849098", "+85213260892669", "6765600", "676660056", "123456789012"]
+        cpg = CallPage()
+        ccdpg = CallContactDetailPage()
+        for i in range(6):
+            cpg.create_call_entry(str(lst[i]))
+            cpg.click_call_time()
+            ccdpg.click_video_call()
+            self.assertTrue(cpg.is_toast_exist("号码有误"))
+            cpg.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0366(self):
         """检查检查内陆固话profile发起语音通话提示号码无效"""
         # 1.已登录和飞信
         # 2.进入到内陆固号通话profile界面
@@ -2145,4 +2369,3 @@ class CallAll(TestCase):
         for i in range(2):
             cpg.swipe_by_percent_on_screen(50, 30, 50, 80, 800)
         cpg.page_should_contain_text("15343030009")
-
