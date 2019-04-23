@@ -166,6 +166,10 @@ class Preconditions(object):
         if group_name in group_names:
             return
         sog.click_back()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
         # 从本地联系人中选择成员创建群
         sc.click_local_contacts()
         time.sleep(2)

@@ -2,8 +2,9 @@ from appium.webdriver.common.mobileby import MobileBy
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 import time
-from pages import MessagePage, MePage, SettingPage, MeSetDialPage, MeSetDialWayPage
+from pages import MessagePage, MePage, SettingPage, MeSetDialPage, MeSetDialWayPage, GroupListPage
 from pages.call.CallTypeSelect import CallTypeSelectPage
+from pages.contacts.local_contact import localContactPage
 
 
 class CallPage(BasePage):
@@ -371,7 +372,7 @@ class CallPage(BasePage):
                             self.click_allow_button(auto_accept_permission_alert=False)
                         ret = False
                 else:
-                    print("已清空联系人")
+                    print("已清空通话记录")
                     flag = False
         else:
             raise AttributeError
@@ -526,5 +527,19 @@ class CallPage(BasePage):
             return True
         except:
             return False
+
+    @TestLogger.log()
+    def search_contact_and_enter_contact_details(self, name):
+        """搜索联系人并进入详情界面"""
+        lcontact = localContactPage()
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        time.sleep(3)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text(name)
+        time.sleep(1)
+        lcontact.hide_keyboard()
+        lcontact.click_one_contact(name)
 
 
