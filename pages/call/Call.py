@@ -2,9 +2,10 @@ from appium.webdriver.common.mobileby import MobileBy
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 import time
-from pages import MessagePage, MePage, SettingPage, MeSetDialPage, MeSetDialWayPage, GroupListPage
+from pages import MessagePage, MePage, SettingPage, MeSetDialPage, MeSetDialWayPage, GroupListPage, SelectContacts
 from pages.call.CallTypeSelect import CallTypeSelectPage
 from pages.contacts.local_contact import localContactPage
+from pages.call.MultiPartyVideo import MultiPartyVideoPage
 
 
 class CallPage(BasePage):
@@ -53,6 +54,8 @@ class CallPage(BasePage):
         "通话记录时间": (MobileBy.ID, "com.chinasofti.rcs:id/tvCallTime"),
         "profileName": (MobileBy.ID, "com.chinasofti.rcs:id/tv_profile_name"),
         "+号": (MobileBy.ID, 'com.chinasofti.rcs:id/action_add'),
+        '视频通话': (MobileBy.XPATH, '//*[@text="视频通话"]'),
+        '语音通话': (MobileBy.XPATH, '//*[@text="语音通话"]'),
     }
 
     @TestLogger.log()
@@ -529,17 +532,23 @@ class CallPage(BasePage):
             return False
 
     @TestLogger.log()
-    def search_contact_and_enter_contact_details(self, name):
-        """搜索联系人并进入详情界面"""
-        lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        time.sleep(3)
-        lcontact.click_search_box()
-        time.sleep(1)
-        lcontact.input_search_text(name)
-        time.sleep(1)
-        lcontact.hide_keyboard()
-        lcontact.click_one_contact(name)
+    def enter_contact_details(self, name):
+        """进入联系人详情界面"""
+        GroupListPage().open_contacts_page()
+        for i in range(10):
+            time.sleep(2)
+            if self.is_text_present(name):
+                self.click_text(name)
+                break
+            else:
+                self.page_up()
 
+    @TestLogger.log()
+    def click_video_call(self):
+        """点击视频通话"""
+        self.click_element(self.__class__.__locators["视频通话"])
 
+    @TestLogger.log()
+    def click_voice_call(self):
+        """点击语音通话"""
+        self.click_element(self.__class__.__locators["语音通话"])
