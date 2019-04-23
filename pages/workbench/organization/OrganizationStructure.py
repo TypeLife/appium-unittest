@@ -18,11 +18,13 @@ class OrganizationStructurePage(BasePage):
         '访客模式开关': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View/android.view.View[4]/android.view.View[2]/android.view.View[1]'),
         '点击右上角即可分享': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View/android.view.View[6]/android.view.View'),
         '子部门名称输入框': (MobileBy.XPATH, '//*[@resource-id ="department_add_name_input"]'),
-        '部门排序输入框': (MobileBy.XPATH, '//*[@resource-id ="	department_add_sort_input"]'),
+        '部门排序输入框': (MobileBy.XPATH, '//*[@resource-id ="department_add_sort_input"]'),
         '当前组织联系人': (MobileBy.XPATH, '//*[@class ="android.widget.CheckBox"]'),
         '确定删除成员': (MobileBy.XPATH, '//*[@resource-id ="contact_del_confirm"]'),
         '搜索框': (MobileBy.XPATH, '//*[@resource-id ="c_com_search_input"]'),
         '完成': (MobileBy.XPATH, '//*[@text="完成"]'),
+        '删除': (MobileBy.XPATH, '//*[@text="删除"]'),
+        '确定': (MobileBy.XPATH, '//*[@text="确定"]'),
         '联系人名称输入框': (MobileBy.XPATH, '//*[@resource-id ="contact_add_name_input"]'),
         '联系人号码输入框': (MobileBy.XPATH, '//*[@resource-id ="contact_add_mobile_input"]'),
     }
@@ -129,6 +131,16 @@ class OrganizationStructurePage(BasePage):
         return self
 
     @TestLogger.log()
+    def input_sub_department_sort(self, number):
+        """输入子部门排序"""
+        self.input_text(self.__class__.__locators["部门排序输入框"], number)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+        return self
+
+    @TestLogger.log()
     def get_contacts_in_organization(self):
         """获取组织联系人"""
         els = self.get_elements(self.__class__.__locators['当前组织联系人'])
@@ -190,3 +202,13 @@ class OrganizationStructurePage(BasePage):
     def click_close(self):
         """点击关闭"""
         self.click_element(self.__class__.__locators["关闭"])
+
+    @TestLogger.log()
+    def click_delete(self):
+        """点击删除"""
+        self.click_element(self.__class__.__locators["删除"])
+
+    @TestLogger.log()
+    def click_sure(self):
+        """点击确定"""
+        self.click_element(self.__class__.__locators["确定"])
