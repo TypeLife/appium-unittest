@@ -640,3 +640,8 @@ class SelectContactsPage(BasePage):
                 contacts_name.append(el.text)
         return contacts_name
 
+    @TestLogger.log()
+    def click_element_(self, text):
+        """点击元素"""
+        self.click_element(self.__class__.__locators[text])
+

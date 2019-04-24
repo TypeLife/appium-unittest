@@ -2,7 +2,6 @@ import unittest
 import uuid
 import time
 
-
 from library.core.common.simcardtype import CardType
 from selenium.common.exceptions import TimeoutException
 from library.core.TestCase import TestCase

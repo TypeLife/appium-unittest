@@ -476,6 +476,17 @@ class WorkbenchPage(FooterPage):
             self.click_mobile_attendance()
 
     @TestLogger.log()
+    def click_add_enterprise_contacts(self):
+        """点击企业通讯录"""
+        els = self.find_els(self.__class__.__locators['企业通讯录'])
+        if els:
+            els[0].click()
+        else:
+            self.add_workbench_app("企业通讯录")
+            time.sleep(2)
+            self.click_company_contacts()
+
+    @TestLogger.log()
     def add_workbench_app(self, name):
         """添加工作台里的应用"""
         self.wait_for_workbench_page_load()

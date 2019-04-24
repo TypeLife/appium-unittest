@@ -142,7 +142,7 @@ class Preconditions(LoginPreconditions):
                 mp.click_group_chat()
             else:
                 break
-            n = n + 1
+            n += 1
         scg.select_local_contacts()
         slc = SelectLocalContactsPage()
         # 等待选择联系人->本地联系人 页面加载
@@ -186,8 +186,7 @@ class Preconditions(LoginPreconditions):
                 pass
         Preconditions.reset_and_relaunch_app()
         Preconditions.make_already_in_one_key_login_page()
-        login_num = Preconditions.login_by_one_key_login()
-        return login_num
+        Preconditions.login_by_one_key_login()
 
     @staticmethod
     def reset_and_relaunch_app():
