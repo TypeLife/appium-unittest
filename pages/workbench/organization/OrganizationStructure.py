@@ -11,17 +11,24 @@ class OrganizationStructurePage(BasePage):
     __locators = {
         '组织架构': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title_actionbar" and @text ="组织架构"]'),
         '返回': (MobileBy.ID, "com.chinasofti.rcs:id/btn_back_actionbar"),
+        '关闭': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_close_actionbar'),
         '添加子部门': (MobileBy.XPATH, '//*[@text ="添加子部门"]'),
         '分享': (MobileBy.XPATH, '//*[@resource-id ="code_qrcodeInner_share"]'),
         '保存二维码': (MobileBy.XPATH, '//*[@resource-id ="code_qrcodeInner_save"]'),
         '访客模式开关': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View/android.view.View[4]/android.view.View[2]/android.view.View[1]'),
         '点击右上角即可分享': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View/android.view.View[6]/android.view.View'),
         '子部门名称输入框': (MobileBy.XPATH, '//*[@resource-id ="department_add_name_input"]'),
-        '部门排序输入框': (MobileBy.XPATH, '//*[@resource-id ="	department_add_sort_input"]'),
+        '部门排序输入框': (MobileBy.XPATH, '//*[@resource-id ="department_add_sort_input"]'),
         '当前组织联系人': (MobileBy.XPATH, '//*[@class ="android.widget.CheckBox"]'),
         '确定删除成员': (MobileBy.XPATH, '//*[@resource-id ="contact_del_confirm"]'),
         '搜索框': (MobileBy.XPATH, '//*[@resource-id ="c_com_search_input"]'),
-
+        '完成': (MobileBy.XPATH, '//*[@text="完成"]'),
+        '删除': (MobileBy.XPATH, '//*[@text="删除"]'),
+        '确定': (MobileBy.XPATH, '//*[@text="确定"]'),
+        '联系人名称输入框': (MobileBy.XPATH, '//*[@resource-id ="contact_add_name_input"]'),
+        '联系人号码输入框': (MobileBy.XPATH, '//*[@resource-id ="contact_add_mobile_input"]'),
+        # '手动输入姓名框': (MobileBy.XPATH, '//*[@resource-id ="contact_add_name_input"]'),
+        # '手动输入电话框': (MobileBy.XPATH, '//*[@resource-id ="contact_add_mobile_input"]'),
     }
 
     @TestLogger.log()
@@ -126,6 +133,16 @@ class OrganizationStructurePage(BasePage):
         return self
 
     @TestLogger.log()
+    def input_sub_department_sort(self, number):
+        """输入子部门排序"""
+        self.input_text(self.__class__.__locators["部门排序输入框"], number)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+        return self
+
+    @TestLogger.log()
     def get_contacts_in_organization(self):
         """获取组织联系人"""
         els = self.get_elements(self.__class__.__locators['当前组织联系人'])
@@ -157,3 +174,52 @@ class OrganizationStructurePage(BasePage):
         except:
             pass
         return self
+
+    @TestLogger.log()
+    def click_confirm(self):
+        """点击完成"""
+        self.click_element(self.__class__.__locators["完成"])
+
+    @TestLogger.log()
+    def input_contacts_name(self, name):
+        """输入联系人名称"""
+        self.input_text(self.__class__.__locators["联系人名称输入框"], name)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+        return self
+
+    @TestLogger.log()
+    def input_contacts_number(self, name):
+        """输入联系人号码"""
+        self.input_text(self.__class__.__locators["联系人号码输入框"], name)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+        return self
+
+    @TestLogger.log()
+    def click_close(self):
+        """点击关闭"""
+        self.click_element(self.__class__.__locators["关闭"])
+
+    @TestLogger.log()
+    def click_delete(self):
+        """点击删除"""
+        self.click_element(self.__class__.__locators["删除"])
+
+    @TestLogger.log()
+    def click_sure(self):
+        """点击确定"""
+        self.click_element(self.__class__.__locators["确定"])
+
+    @TestLogger.log()
+    def swipe_and_find_element(self, text):
+        """滑动并查找特定元素"""
+        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[@text="%s"]' % text))
+        if el:
+            return True
+        else:
+            return False

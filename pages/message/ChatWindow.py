@@ -53,7 +53,11 @@ class ChatWindowPage(ChatNoticeDialog, PictureSelector, BasePage):
         'com.chinasofti.rcs:id/ib_record_red_dot': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_record_red_dot'),
         'android:id/statusBarBackground': (MobileBy.ID, 'android:id/statusBarBackground'),
         '我已阅读': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_check'),
-        '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_btn_ok')
+        '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_btn_ok'),
+        '重新发送': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
+        '取消重发': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
+        '确定重发': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
+
     }
 
     @TestLogger.log('点击返回')
@@ -143,3 +147,21 @@ class ChatWindowPage(ChatNoticeDialog, PictureSelector, BasePage):
                                                     most_recent_index=most_recent_index) == expected,
             timeout=max_wait_time
         )
+
+    @TestLogger.log()
+    def click_resend_button(self):
+        """点击重新发送"""
+        self.click_element(self.__locators['重新发送'])
+
+    @TestLogger.log('点击确定重发')
+    def click_resend_sure(self):
+        self.click_element(self.__locators['确定重发'])
+
+    @TestLogger.log('点击取消重发')
+    def click_resend_not(self):
+        self.click_element(self.__locators['取消重发'])
+
+    @TestLogger.log('重新发送是否存在')
+    def is_element_present_resend(self):
+        return self._is_element_present(self.__locators['重新发送'])
+

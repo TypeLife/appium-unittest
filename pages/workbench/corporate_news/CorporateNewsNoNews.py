@@ -1,3 +1,4 @@
+import time
 from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
@@ -77,4 +78,5 @@ class CorporateNewsNoNewsPage(BasePage):
                 cndp.wait_for_page_load()
                 cndp.click_delete()
                 cndp.click_sure()
+                time.sleep(2)
                 self.wait_for_page_load()

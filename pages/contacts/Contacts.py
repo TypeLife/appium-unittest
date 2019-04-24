@@ -70,6 +70,13 @@ class ContactsPage(FooterPage):
     @TestLogger.log("获取所有联系人名")
     def get_contacts_name(self):
         """获取所有联系人名"""
+        max_try = 5
+        current = 0
+        while current < max_try:
+            if self._is_element_present(self.__class__.__locators["联系人名"]):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         els = self.get_elements(self.__class__.__locators["联系人名"])
         contacts_name = []
         if els:

@@ -38,8 +38,7 @@ class Preconditions(LoginPreconditions):
                 pass
         Preconditions.reset_and_relaunch_app()
         Preconditions.make_already_in_one_key_login_page()
-        login_num = Preconditions.login_by_one_key_login()
-        return login_num
+        Preconditions.login_by_one_key_login()
 
     @staticmethod
     def reset_and_relaunch_app():
@@ -855,6 +854,185 @@ class MsgPrivateChatFileLocationTest(TestCase):
     def test_msg_private_chat_file_location_0058(self):
         """单聊天会话页面，点击自己发送格式为txt的文件"""
         self.click_open_file(".txt")
+
+
+class MsgPrivateChatAllTest(TestCase):
+    """
+    模块：单聊
+    文件位置：1.1.3全量测试用例->113全量测试用例-韦凤莲.xlsx
+    表格：单聊
+    Author:刘晓东
+    """
+
+    def default_setUp(self):
+        """
+        1、成功登录和飞信
+        2.确保每个用例运行前在单聊会话页面
+        """
+
+        Preconditions.select_mobile('Android-移动')
+        name = "大佬1"
+        mp = MessagePage()
+        if mp.is_on_this_page():
+            Preconditions.enter_single_chat_page(name)
+            return
+        scp = SingleChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+        else:
+            current_mobile().launch_app()
+            Preconditions.make_already_in_message_page()
+            Preconditions.enter_single_chat_page(name)
+
+    def default_tearDown(self):
+        pass
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0001(self):
+        """勾选本地文件内任意文件点击发送按钮"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        file_type = ".txt"
+        # 1、2.发送指定类型文件
+        Preconditions.send_file_by_type(file_type)
+        # 3.验证是否发送成功
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        time.sleep(2)
+        # 获取发送的文件名称
+        file_name = scp.get_current_file_name()
+        scp.click_back()
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 4.该消息窗口是否显示文件+文件名
+        self.assertEquals(mp.is_message_content_match_file_name(file_name), True)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0002(self):
+        """网络异常时勾选本地文件内任意文件点击发送按钮"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        file_type = ".txt"
+        # 确保当前单聊会话页面没有重发按钮影响验证结果
+        name = "大佬1"
+        Preconditions.make_no_retransmission_button(name)
+        # 设置手机网络断开
+        scp.set_network_status(0)
+        # 1、2.发送指定类型文件
+        Preconditions.send_file_by_type(file_type)
+        # 3.验证是否发送失败，是否存在重发按钮
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        self.assertEquals(scp.is_exist_msg_send_failed_button(), True)
+
+    @staticmethod
+    def tearDown_test_msg_0002():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0003(self):
+        """会话页面有文件发送失败时查看消息列表是否有消息发送失败的标识"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        name = "大佬1"
+        # 确保当前消息列表没有消息发送失败的标识影响验证结果
+        Preconditions.make_no_message_send_failed_status(name)
+        # 确保当前单聊会话页面没有重发按钮影响验证结果
+        Preconditions.make_no_retransmission_button(name)
+        # 设置手机网络断开
+        scp.set_network_status(0)
+        file_type = ".txt"
+        # 发送指定类型文件
+        Preconditions.send_file_by_type(file_type)
+        # 1.验证是否发送失败，是否存在重发按钮
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        self.assertEquals(scp.is_exist_msg_send_failed_button(), True)
+        scp.click_back()
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 2.是否存在消息发送失败的标识
+        self.assertEquals(mp.is_iv_fail_status_present(), True)
+
+    @staticmethod
+    def tearDown_test_msg_0003():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0004(self):
+        """对发送失败的文件进行重发"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 确保当前单聊会话页面有发送失败的文件重发
+        file_type = ".txt"
+        scp.set_network_status(0)
+        # 发送指定类型文件
+        Preconditions.send_file_by_type(file_type)
+        scp.set_network_status(6)
+        # 1.点击重发按钮
+        scp.click_msg_send_failed_button(-1)
+        time.sleep(2)
+        scp.click_sure()
+        # 2.验证是否重发成功
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+
+    @staticmethod
+    def tearDown_test_msg_0004():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0005(self):
+        """对发送失败的文件进行重发后，消息列表页面的消息发送失败的标识消失"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        name = "大佬1"
+        # 确保当前消息列表没有消息发送失败的标识影响验证结果
+        Preconditions.make_no_message_send_failed_status(name)
+        # 确保当前单聊会话页面有发送失败的文件重发
+        file_type = ".txt"
+        scp.set_network_status(0)
+        # 发送指定类型文件
+        Preconditions.send_file_by_type(file_type)
+        scp.set_network_status(6)
+        # 1.点击重发按钮
+        scp.click_msg_send_failed_button(-1)
+        time.sleep(2)
+        scp.click_sure()
+        # 2.验证是否重发成功
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        scp.click_back()
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 3.是否存在消息发送失败的标识
+        self.assertEquals(mp.is_iv_fail_status_present(), False)
+
+    @staticmethod
+    def tearDown_test_msg_0005():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
 
 
 

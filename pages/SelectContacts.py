@@ -5,6 +5,7 @@ from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 import time
 from pages.message.Message import MessagePage
+from pages.GroupChat import GroupChatPage
 
 class SelectContactsPage(BasePage):
     """选择联系人页面"""
@@ -69,15 +70,24 @@ class SelectContactsPage(BasePage):
         "我已阅读": (MobileBy.ID,'com.chinasofti.rcs:id/btn_check'),
         "确定3": (MobileBy.ID,'com.chinasofti.rcs:id/dialog_btn_ok'),
         "最近聊天联系人":(MobileBy.ID,'com.chinasofti.rcs:id/iv_photo'),
-# <<<<<<< HEAD
         "群二维码":(MobileBy.ID,'com.chinasofti.rcs:id/imageview_msg_image'),
         "保存图片":(MobileBy.XPATH,'//*[@text="保存图片"]'),
         "识别图中二维码": (MobileBy.XPATH, '//*[@text="识别图中二维码"]'),
         "转发": (MobileBy.XPATH, '//*[@text="转发"]'),
-# =======
         "企业通讯录联系人": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name_personal_contactlist'),
-# >>>>>>> ec9054498b51298bfd63d276fcabded261bedfec
+        "搜索3":(MobileBy.ID,'com.chinasofti.rcs:id/search_edit'),
+        "搜索4":(MobileBy.ID,'com.chinasofti.rcs:id/edit_query01'),
+        "发送人头像":(MobileBy.ID,'com.chinasofti.rcs:id/svd_head'),
+        "发送时间":(MobileBy.ID,'com.chinasofti.rcs:id/tv_time'),
+        "选中联系人头像":(MobileBy.ID,'com.chinasofti.rcs:id/contact_icon'),
+
+        '联系人列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
+
     }
+
+    @TestLogger.log("检查控件是否存在")
+    def check_if_element_exist(self,text='发送人头像'):
+        self.page_should_contain_element(self.__locators[text])
 
     @TestLogger.log("点击群二维码")
     def click_group_code(self, text='群二维码'):
@@ -516,6 +526,98 @@ class SelectContactsPage(BasePage):
         mess.click_sure_button()
         time.sleep(1)
 
+    @TestLogger.log("选择多个联系人")
+    def create_multi_contacts_group(self,groupname='aaa',num=1,times=1):
+        time.sleep(2)
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        time.sleep(1)
+        from pages.groupset.GroupChatSet import GroupChatSetPage
+        if self.get_elements(self.__locators['aaa']):
+            self.click_element(self.__locators['aaa'])
+            time.sleep(1)
+            gcp = GroupChatPage()
+            group_set = GroupChatSetPage()
+            time.sleep(1)
+            gcp.click_setting()
+            time.sleep(1)
+            sc.page_up()
+            time.sleep(1)
+            group_set.click_delete_and_exit()
+        mess.click_create_group()
+        mess.click_contact_group()
+        while times>0:
+            self.page_up()
+            els=self.get_elements(self.__locators['aaa'])
+            if els is None:
+                break
+            for i in range(num):
+               time.sleep(1)
+               els[i].click()
+            times-=1
+        time.sleep(1)
+        mess.click_sure_button()
+        time.sleep(1)
+        mess.click_group_name()
+        time.sleep(1)
+        mess.set_group_name(text=groupname)
+        time.sleep(1)
+        mess.click_sure_button()
+        time.sleep(1)
+
+    @TestLogger.log("选择团队联系人")
+    def select_group_contacts(self, groupname='aaa', num=1, times=1):
+        time.sleep(2)
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        time.sleep(1)
+        from pages.groupset.GroupChatSet import GroupChatSetPage
+        if self.get_elements(self.__locators['aaa']):
+            self.click_element(self.__locators['aaa'])
+            time.sleep(1)
+            gcp = GroupChatPage()
+            group_set = GroupChatSetPage()
+            time.sleep(1)
+            gcp.click_setting()
+            time.sleep(1)
+            sc.page_up()
+            time.sleep(1)
+            group_set.click_delete_and_exit()
+        mess.click_create_group()
+        mess.click_contact_group()
+        while times > 0:
+            self.page_up()
+            els = self.get_elements(self.__locators['aaa'])
+            if els is None:
+                break
+            for i in range(num):
+                time.sleep(1)
+                els[i].click()
+            times -= 1
+        time.sleep(1)
+        mess.click_sure_button()
+        time.sleep(1)
+        mess.click_group_name()
+        time.sleep(1)
+        mess.set_group_name(text=groupname)
+        time.sleep(1)
+        mess.click_sure_button()
+        time.sleep(1)
+
     @TestLogger.log()
     def press_and_move_right(self):
         """元素内向右滑动"""
@@ -530,6 +632,12 @@ class SelectContactsPage(BasePage):
             for el in els:
                 contacts_name.append(el.text)
         return contacts_name
+
+    @TestLogger.log()
+    def click_element_(self, text):
+        """点击元素"""
+        self.click_element(self.__class__.__locators[text])
+
 
     @TestLogger.log("当前页面是否在选择联系人页")
     def is_on_this_page(self):

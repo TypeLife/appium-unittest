@@ -166,6 +166,10 @@ class Preconditions(object):
         if group_name in group_names:
             return
         sog.click_back()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
         # 从本地联系人中选择成员创建群
         sc.click_local_contacts()
         time.sleep(2)
@@ -2546,6 +2550,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
+        shc.click_department_name("test_work")
         shc.selecting_he_contacts_by_name(he_names[2])
         # 确定转发
         scg.click_sure_forward()
@@ -2600,6 +2605,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
+        shc.click_department_name("test_work")
         shc.selecting_he_contacts_by_name(he_names[2])
         # 确定转发
         scg.click_sure_forward()
@@ -2646,6 +2652,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
+        shc.click_department_name("test_work")
         shc.selecting_he_contacts_by_name(he_names[2])
         # 取消转发
         scg.click_cancel_forward()
@@ -3189,6 +3196,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
+        shc.click_department_name("test_work")
         shc.selecting_he_contacts_by_name(he_names[2])
         # 确定转发
         scg.click_sure_forward()
@@ -3243,6 +3251,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
+        shc.click_department_name("test_work")
         shc.selecting_he_contacts_by_name(he_names[2])
         # 确定转发
         scg.click_sure_forward()
@@ -3289,6 +3298,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
         # 3、4.选择一个和通讯录联系人
+        shc.click_department_name("test_work")
         shc.selecting_he_contacts_by_name(he_names[2])
         # 取消转发
         scg.click_cancel_forward()

@@ -174,7 +174,7 @@ class VoiceNoticeTest(TestCase):
         self.assertEquals(wbp.is_on_this_page(), True)
 
     @tags('ALL', 'workbench', 'debug_fk')
-    def test_CJHY_0001(self):
+    def test_cjhy_0001(self):
         """查看超级会议使用说明"""
         # 0.进入超级会议页面页面
         wbp = WorkbenchPage()

@@ -2341,3 +2341,429 @@ class messagegroupchat(TestCase):
         group_set.is_toast_exist("暂无群成员")
         scp.click_back_by_android(times=3)
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0195():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        scp = SelectContactsPage()
+        scp.create_message_group()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0195(self):
+        """群聊设置页面——查找聊天内容"""
+        gcp = GroupChatPage()
+        scp = SelectContactsPage()
+        info = "Hello everyone"
+        gcp.input_message(info)
+        # 2.点击输入框右边高亮展示的发送按钮，发送此段文本
+        gcp.page_should_contain_send_btn()
+        gcp.send_message()
+        gcp.page_should_contain_text(info)
+        scp.click_back_by_android(times=1)
+        time.sleep(1)
+        scp.click_text('aaa')
+        time.sleep(1)
+        gcp.page_should_contain_text(info)
+        scp.click_back_by_android(times=1)
+        time.sleep(1)
+        scp = SelectContactsPage()
+        scp.click_group_search()
+        scp.group_search(text='aaa')
+        gcp.page_should_contain_text("aaa")
+        scp.click_back_by_android(times=1)
+
+
+
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0197():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        scp = SelectContactsPage()
+        scp.create_message_group()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0197(self):
+        """群聊设置页面——查找聊天内容——数字搜索——搜索结果展示"""
+        gcp = GroupChatPage()
+        scp = SelectContactsPage()
+        info = "9999"
+        gcp.input_message(info)
+        # 2.点击输入框右边高亮展示的发送按钮，发送此段文本
+        gcp.page_should_contain_send_btn()
+        gcp.send_message()
+        gcp.page_should_contain_text(info)
+        scp.click_back_by_android(times=1)
+        time.sleep(1)
+        scp.click_text('aaa')
+        time.sleep(1)
+        gcp.page_should_contain_text(info)
+        scp.check_if_element_exist(text='发送人头像')
+        scp.check_if_element_exist(text='发送时间')
+        scp.click_back_by_android(times=1)
+        time.sleep(1)
+
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0254():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        scp = SelectContactsPage()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0254(self):
+        """消息列表——发起群聊——选择1个手机联系人"""
+        gcp = GroupChatPage()
+        time.sleep(2)
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        time.sleep(1)
+        mess.click_create_group()
+        mess.click_contact_group()
+        mess.click_text("大佬2")
+        time.sleep(1)
+        mess.click_sure_button()
+        time.sleep(1)
+        scp = SelectContactsPage()
+        #一个人创建群聊失败
+        mess.check_group_name_exist()
+        gcp.click_back_by_android(times=2)
+
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0255():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        time.sleep(2)
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0255(self):
+        """消息列表——发起群聊——选择5个手机联系人——创建群聊"""
+        scp = SelectContactsPage()
+        gcp = GroupChatPage()
+        scp.create_multi_contacts_group(groupname='aaa',num=5)
+        time.sleep(1)
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+        scp.page_up()
+        time.sleep(1)
+        group_set.click_delete_and_exit()
+        gcp.click_back_by_android(times=2)
+
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0256():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        time.sleep(2)
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0256(self):
+        """消息列表——发起群聊——选择50个手机联系人——创建群聊"""
+        scp = SelectContactsPage()
+        gcp = GroupChatPage()
+        scp.create_multi_contacts_group(groupname='aaa',num=6,times=3)
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+        scp.page_up()
+        time.sleep(1)
+        group_set.click_delete_and_exit()
+        gcp.click_back_by_android(times=2)
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0258():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        time.sleep(2)
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0258(self):
+        """消息列表——发起群聊——选择选择团队联系人——创建群聊"""
+        scp = SelectContactsPage()
+        gcp = GroupChatPage()
+        scp.create_multi_contacts_group(groupname='aaa',num=6,times=3)
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+        scp.page_up()
+        time.sleep(1)
+        group_set.click_delete_and_exit()
+        gcp.click_back_by_android(times=2)
+
+
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0271():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        time.sleep(2)
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0271(self):
+        """消息列表——发起群聊——选择2个手机联系人"""
+        scp = SelectContactsPage()
+        scp.create_message_group()
+        time.sleep(1)
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+        scp.page_up()
+        time.sleep(1)
+        group_set.click_delete_and_exit()
+        gcp.click_back_by_android(times=2)
+
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0278():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        time.sleep(2)
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0278(self):
+        """通讯录——群聊——搜索——选择一个群"""
+        scp = SelectContactsPage()
+        scp.create_message_group(text='中软国际')
+        time.sleep(1)
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_QRCode()
+        time.sleep(1)
+        group_set.click_qecode_share_button()
+        time.sleep(1)
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        time.sleep(1)
+        scp.click_group_search()
+        scp.group_search(text="中软国际")
+        time.sleep(1)
+        scp.page_should_not_contain_text("无搜索结果")
+        time.sleep(1)
+        gcp.click_back_by_android(times=2)
+        scp.page_up()
+        time.sleep(1)
+        group_set.click_delete_and_exit()
+        gcp.click_back_by_android(times=2)
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0215():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        time.sleep(2)
+
+    @tags('ALL', 'CMCC_debug', 'group_chat')
+    def test_msg_xiaoqiu_0215(self):
+        """群聊设置页面——关闭消息免打扰——网络异常"""
+        scp = SelectContactsPage()
+        scp.create_message_group()
+        time.sleep(1)
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.wait_for_page_load()
+        switch_status = group_set.get_switch_undisturb_status()
+        # 如果关闭，则打开
+        if not switch_status:
+            group_set.click_switch_undisturb()
+            time.sleep(2)
+
+        group_set.set_network_status(1)
+        time.sleep(3)
+        #关闭
+        group_set.click_switch_undisturb()
+        group_set.is_toast_exist("没有网络，请连接网络再试")
+        scp.page_up()
+        time.sleep(1)
+        group_set.click_delete_and_exit()
+        gcp.click_back_by_android(times=2)
+
+    @staticmethod
+    def tearDown_msg_xiaoqiu_0215():
+        # 初始化,恢复app到默认状态
+        group_set = GroupChatSetPage()
+        group_set.set_network_status(6)
+        group_set.click_back_by_android(1)
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0216():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        time.sleep(2)
+
+    @tags('ALL', 'CMCC_debug', 'group_chat')
+    def test_msg_xiaoqiu_0216(self):
+        """群聊设置页面——关闭消息免打扰——网络断网"""
+        scp = SelectContactsPage()
+        scp.create_message_group()
+        time.sleep(1)
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.wait_for_page_load()
+        switch_status = group_set.get_switch_undisturb_status()
+        # 如果关闭，则打开
+        if not switch_status:
+            group_set.click_switch_undisturb()
+            time.sleep(2)
+
+        group_set.set_network_status(0)
+        time.sleep(3)
+        #关闭
+        group_set.click_switch_undisturb()
+        group_set.is_toast_exist("没有网络，请连接网络再试")
+        scp.page_up()
+        time.sleep(1)
+        group_set.click_delete_and_exit()
+        gcp.click_back_by_android(times=2)
+
+    @staticmethod
+    def tearDown_msg_xiaoqiu_0216():
+        # 初始化,恢复app到默认状态
+        group_set = GroupChatSetPage()
+        group_set.set_network_status(6)
+        group_set.click_back_by_android(1)
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0217():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        time.sleep(2)
+
+    @tags('ALL', 'CMCC_debug', 'group_chat')
+    def test_msg_xiaoqiu_0217(self):
+        """群聊设置页面——开启消息免打扰——网络断网"""
+        scp = SelectContactsPage()
+        scp.create_message_group()
+        time.sleep(1)
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.wait_for_page_load()
+        switch_status = group_set.get_switch_undisturb_status()
+        # 如果打开，则关闭
+        if switch_status:
+            group_set.click_switch_undisturb()
+            time.sleep(2)
+
+        group_set.set_network_status(0)
+        time.sleep(3)
+        # 关闭
+        group_set.click_switch_undisturb()
+        group_set.is_toast_exist("没有网络，请连接网络再试")
+        scp.page_up()
+        time.sleep(1)
+        group_set.click_delete_and_exit()
+        gcp.click_back_by_android(times=2)
+
+    @staticmethod
+    def tearDown_msg_xiaoqiu_0217():
+        # 初始化,恢复app到默认状态
+        group_set = GroupChatSetPage()
+        group_set.set_network_status(6)
+        group_set.click_back_by_android(1)
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0218():
+        Preconditions.select_mobile('Android-移动')
+        from settings.available_devices import TARGET_APP
+        current_mobile().remove_app(TARGET_APP.get('APP_PACKAGE'))
+        current_mobile().install_app(TARGET_APP.get('DOWNLOAD_URL'),
+                                     replace=True)
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CMCC_debug', 'group_chat')
+    def test_msg_xiaoqiu_0218(self):
+        """卸载重装——登录和飞信——查看置顶状态"""
+        scp = SelectContactsPage()
+        scp.create_message_group()
+        time.sleep(1)
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        top_switch = group_set.get_chat_set_to_top_switch_status()
+        self.assertTrue(top_switch==False)
+        scp.page_up()
+        time.sleep(1)
+        group_set.click_delete_and_exit()
+        gcp.click_back_by_android(times=2)
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0242():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        time.sleep(2)
+
+    @tags('ALL', 'CMCC_debug', 'group_chat')
+    def test_msg_xiaoqiu_0242(self):
+        """卸载重装——登录和飞信——查看置顶状态"""
+        scp = SelectContactsPage()
+        scp.create_message_group()
+        time.sleep(1)
+        gcp = GroupChatPage()
+        info = "Hello everyone"
+        gcp.input_message(info)
+        # 2.点击输入框右边高亮展示的发送按钮，发送此段文本
+        gcp.send_message()
+        gcp.input_message(info)
+        gcp.click_back_by_android(times=2)
+        gcp.page_should_contain_text("[草稿]")
+        gcp.click_text("aaa")
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        scp.page_up()
+        time.sleep(1)
+        group_set.click_delete_and_exit()
+        gcp.click_back_by_android(times=2)
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0243():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        time.sleep(2)
+
+    @tags('ALL', 'CMCC_debug', 'group_chat')
+    def test_msg_xiaoqiu_0243(self):
+        """卸载重装——登录和飞信——查看置顶状态"""
+        scp = SelectContactsPage()
+        scp.create_message_group()
+        time.sleep(1)
+        gcp = GroupChatPage()
+        infos = ["appium", "哈哈", "a", "123456", "w(ﾟДﾟ)w"]
+        gcp.input_message(infos)
+        # 2.点击输入框右边高亮展示的发送按钮，发送此段文本
+        gcp.send_message()
+        gcp.input_message(infos)
+        gcp.click_back_by_android(times=2)
+        gcp.page_should_contain_text("[草稿]")
+        gcp.click_text("aaa")
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        scp.page_up()
+        time.sleep(1)
+        group_set.click_delete_and_exit()
+        gcp.click_back_by_android(times=2)
