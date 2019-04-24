@@ -210,3 +210,8 @@ class SingleChatPage(BaseChatPage):
         els = self.get_elements(self.__class__.__locators["文件名称"])
         file_name = els[-1].text
         return file_name
+
+    @TestLogger.log()
+    def click_action_call(self):
+        """点击打电话图标"""
+        self.click_element(self.__class__.__locators["打电话图标"])

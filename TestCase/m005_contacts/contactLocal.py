@@ -208,7 +208,7 @@ class Preconditions(object):
         login_num = Preconditions.login_by_one_key_login()
         return login_num
 
-#@unittest.skip("本地不执行")
+
 class ContactLocal2(TestCase):
     '''
     通讯录测试记录-陈计祥
@@ -407,7 +407,7 @@ class ContactLocal2(TestCase):
         GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text("ximi")
+        lcontact.input_search_text("xili")
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(3)
@@ -1799,6 +1799,12 @@ class ContactLocal2(TestCase):
         time.sleep(1)
         lcontact.click_back_by_android(1)
 
+    @staticmethod
+    def tearDown_contacts_chenjixiang_0060():
+        # 初始化,恢复app到默认状态
+        lcontact = localContactPage()
+        lcontact.set_network_status(6)
+        lcontact.click_back_by_android(1)
 
     @staticmethod
     def setUp_test_contacts_chenjixiang_0061():

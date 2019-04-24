@@ -5,6 +5,7 @@ import random
 from library.core.common.simcardtype import CardType
 from pages.workbench.manager_console.WorkbenchManagerPage import WorkBenchManagerPage
 from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
+from pages.workbench.super_meeting.SuperMeeting import SuperMeetingPage
 from pages.workbench.voice_notice.VoiceNotice import VoiceNoticePage
 
 REQUIRED_MOBILES = {
@@ -295,3 +296,20 @@ class WorkbenchPreconditions(LoginPreconditions):
             workbench = WorkbenchPage()
             workbench.wait_for_page_load()
             workbench.open_message_page()
+
+    @staticmethod
+    def enter_super_meeting_page(reset=False):
+        """从消息进入超级会议页面"""
+        # 登录进入消息页面
+        LoginPreconditions.make_already_in_message_page(reset)
+        mess = MessagePage()
+        # 从消息进入组织架构页面
+        mess.open_workbench_page()
+        workbench = WorkbenchPage()
+        if workbench.is_on_welcome_page():
+            workbench.click_now_create_team()
+        else:
+            workbench.wait_for_page_load()
+            workbench.click_super_meeting()
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()

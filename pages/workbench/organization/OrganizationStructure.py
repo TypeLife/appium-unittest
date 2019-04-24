@@ -27,6 +27,8 @@ class OrganizationStructurePage(BasePage):
         '确定': (MobileBy.XPATH, '//*[@text="确定"]'),
         '联系人名称输入框': (MobileBy.XPATH, '//*[@resource-id ="contact_add_name_input"]'),
         '联系人号码输入框': (MobileBy.XPATH, '//*[@resource-id ="contact_add_mobile_input"]'),
+        # '手动输入姓名框': (MobileBy.XPATH, '//*[@resource-id ="contact_add_name_input"]'),
+        # '手动输入电话框': (MobileBy.XPATH, '//*[@resource-id ="contact_add_mobile_input"]'),
     }
 
     @TestLogger.log()
@@ -212,3 +214,12 @@ class OrganizationStructurePage(BasePage):
     def click_sure(self):
         """点击确定"""
         self.click_element(self.__class__.__locators["确定"])
+
+    @TestLogger.log()
+    def swipe_and_find_element(self, text):
+        """滑动并查找特定元素"""
+        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[@text="%s"]' % text))
+        if el:
+            return True
+        else:
+            return False

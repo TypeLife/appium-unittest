@@ -432,7 +432,7 @@ DEVICES_CONFIG_YMS = {
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
-            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
         },
         'CARDS': [
             {
@@ -449,18 +449,42 @@ DEVICES_CONFIG_MATES = {
         "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
-            "platformVersion": "7.0.0",
-            "deviceName": "71BQADSJFM8XS",
-            "udid": "71BQADSJFM8XS",
+            "platformVersion": "9",
+            "deviceName": "DWT7N18614014715",
+            "udid": "DWT7N18614014715",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",
-            "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity",
+            # "appActivity": "com.cmcc.cmrcs.android.ui.activities.WelcomeActivity"
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
         },
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '18373306417'
+                'CARD_NUMBER': '19876283465'
+            },
+        ]
+    },
+}
+
+DEVICES_CONFIG_YMS2 = {
+    'M960BDQN229CH': {
+        "MODEL": SupportedModel.HUAWEI_P20,
+        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
+        "DEFAULT_CAPABILITY": {
+            "platformName": "Android",
+            "platformVersion": "8.0.0",
+            "deviceName": "RKKDU18321000975",
+            "udid": "RKKDU18321000975",
+            "automationName": "UiAutomator2",
+            "newCommandTimeout": 600,
+            "appPackage": "com.chinasofti.rcs",
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
+        },
+        'CARDS': [
+            {
+                'TYPE': CardType.CHINA_MOBILE,
+                'CARD_NUMBER': '15875537272'
             },
         ]
     },

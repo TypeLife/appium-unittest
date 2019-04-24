@@ -203,6 +203,10 @@ class GroupChatSetPage(BasePage):
         """点击删除并退出"""
         self._find_menu(self.__locators['删除并退出'])
         self.click_element(self.__locators['删除并退出'])
+        time.sleep(2)
+        if self.get_elements(self.__locators["确定"]):
+            self.click_element(self.__locators['确定'])
+        time.sleep(3)
 
     @TestLogger.log()
     def wait_clear_chat_record_confirmation_box_load(self, timeout=10, auto_accept_alerts=True):

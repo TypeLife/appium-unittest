@@ -98,6 +98,32 @@ class OrganizationTest(TestCase):
         mess.open_message_page()
 
     @tags('ALL', "CMCC", 'workbench', 'ZZJG')
+    def test_ZZJG_0003(self):
+        """手动添加联系人"""
+        # 1、点击“组织架构”应用
+        # 2、点击“添加联系人”
+        # 3、点击“手动输入添加”
+        # 4、输入姓名：测试号
+        # 5、输入主手机：15220089861
+        # 6、点击“完成”
+        osp = OrganizationStructurePage()
+        osp.wait_for_page_load()
+        if not osp.swipe_and_find_element("yyx"):
+            osp.click_text("添加联系人")
+            time.sleep(1)
+            osp.click_text("手动输入添加")
+            time.sleep(1)
+            osp.input_contacts_name("yyx")
+            osp.input_contacts_number("18920736596")
+            time.sleep(2)
+            osp.click_text("完成")
+            if not osp.is_toast_exist("成功"):
+                raise AssertionError("手动添加失败")
+            osp.wait_for_page_load()
+        else:
+            print("已存在联系人yyx")
+
+    @tags('ALL', "CMCC", 'workbench', 'ZZJG')
     def test_ZZJG_0004(self):
         """手动添加联系人"""
         #1、点击“组织架构”应用
