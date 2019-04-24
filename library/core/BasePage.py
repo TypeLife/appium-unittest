@@ -581,3 +581,13 @@ class BasePage(object):
             return el
         else:
             print("本地联系人中无%s ，请添加此联系人再操作" % contactName)
+
+    @TestLogger.log('模擬android电源键')
+    def press_power_key(self):
+        """模擬android电源键"""
+        return self.execute_shell_command('input', 'keyevent', 26)
+
+    @TestLogger.log("判断设备是否锁屏")
+    def is_locked(self):
+        """判断设备是否锁屏"""
+        return self.driver.is_locked()

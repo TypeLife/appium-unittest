@@ -90,6 +90,10 @@ class MessagePage(FooterPage):
         self.click_element(self.__locators["群聊名"])
         time.sleep(1)
 
+    @TestLogger.log("检查群聊名是否存在")
+    def check_group_name_exist(self):
+        return self.page_should_not_contain_element(self.__locators["群聊名"])
+
     @TestLogger.log("设置群聊名")
     def set_group_name(self,text='aaa'):
         self.input_text(self.__locators["群聊名"],text)
