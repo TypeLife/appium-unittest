@@ -3,6 +3,7 @@ import time
 from selenium.common.exceptions import TimeoutException
 
 from library.core.TestCase import TestCase
+from library.core.common.simcardtype import CardType
 from library.core.utils.testcasefilter import tags
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile, current_driver
 from pages import AgreementDetailPage
@@ -12,6 +13,7 @@ from pages import OneKeyLoginPage
 from pages import PermissionListPage
 from pages import WorkbenchPage
 from pages.workbench.enterprise_contacts.EnterpriseContacts import EnterpriseContactsPage
+from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -139,6 +141,108 @@ class Preconditions(object):
         ecp = EnterpriseContactsPage()
         ecp.wait_for_page_load()
 
+    @staticmethod
+    def add_phone_number_to_department(department_name):
+        """添加本机号码到指定部门"""
+
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_organization()
+        osp = OrganizationStructurePage()
+        time.sleep(5)
+        n = 1
+        # 解决工作台不稳定问题
+        while osp.is_text_present("账号认证失败"):
+            osp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_organization()
+            time.sleep(5)
+            n += 1
+            if n > 10:
+                break
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        if not osp.is_exist_specify_element_by_name(department_name):
+            osp.click_specify_element_by_name("添加子部门")
+            time.sleep(2)
+            osp.input_sub_department_name(department_name)
+            osp.input_sub_department_sort("1")
+            osp.click_confirm()
+            if osp.is_toast_exist("部门已存在", 2):
+                osp.click_back()
+            osp.wait_for_page_load()
+        osp.click_specify_element_by_name(department_name)
+        time.sleep(2)
+        osp.click_specify_element_by_name("添加联系人")
+        time.sleep(2)
+        osp.click_specify_element_by_name("手动输入添加")
+        osp.input_contacts_name("admin")
+        osp.input_contacts_number(phone_number)
+        osp.click_confirm()
+        osp.click_close()
+        wbp.wait_for_workbench_page_load()
+
+    @staticmethod
+    def delete_department_by_name(department_name):
+        """删除指定部门"""
+
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_organization()
+        osp = OrganizationStructurePage()
+        time.sleep(5)
+        n = 1
+        # 解决工作台不稳定问题
+        while osp.is_text_present("账号认证失败"):
+            osp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_organization()
+            time.sleep(5)
+            n += 1
+            if n > 10:
+                break
+        if osp.is_exist_specify_element_by_name(department_name):
+            osp.click_specify_element_by_name(department_name)
+            time.sleep(2)
+            osp.click_specify_element_by_name("更多")
+            time.sleep(2)
+            osp.click_specify_element_by_name("部门设置")
+            time.sleep(2)
+            osp.click_delete()
+            osp.click_sure()
+        osp.click_back()
+        wbp.wait_for_workbench_page_load()
+
+    @staticmethod
+    def add_phone_number_to_he_contacts():
+        """添加本机号码到和通讯录"""
+
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_organization()
+        osp = OrganizationStructurePage()
+        time.sleep(5)
+        n = 1
+        # 解决工作台不稳定问题
+        while osp.is_text_present("账号认证失败"):
+            osp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_organization()
+            time.sleep(5)
+            n += 1
+            if n > 10:
+                break
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        if not osp.is_exist_specify_element_by_name(phone_number):
+            osp.click_specify_element_by_name("添加联系人")
+            time.sleep(2)
+            osp.click_specify_element_by_name("手动输入添加")
+            osp.input_contacts_name("admin")
+            osp.input_contacts_number(phone_number)
+            osp.click_confirm()
+            osp.wait_for_page_load()
+        osp.click_back()
+        wbp.wait_for_workbench_page_load()
+
 class EnterpriseContactsAllTest(TestCase):
     """
     模块：工作台->企业通讯录
@@ -187,6 +291,162 @@ class EnterpriseContactsAllTest(TestCase):
         # 等待工作台首页加载
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QYTXL_0002(self):
+        """用户在企业部门下直接进入企业层级"""
+
+        wbp = WorkbenchPage()
+        # 添加本机号码到指定部门
+        department_name = "admin_department"
+        Preconditions.add_phone_number_to_department(department_name)
+        workbench_name = wbp.get_workbench_name()
+        # 解决用户部门变更后不能及时刷新的问题
+        wbp.click_company_contacts()
+        ecp = EnterpriseContactsPage()
+        ecp.wait_for_page_load()
+        ecp.click_back()
+        ecp.click_back()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_company_contacts()
+        ecp.wait_for_page_load()
+        # 1.是否直接进入企业层级：企业+部门名称
+        self.assertEquals(ecp.is_exist_corporate_grade(), False)
+        self.assertEquals(ecp.is_exist_department_by_name(workbench_name), True)
+        self.assertEquals(ecp.is_exist_department_by_name(department_name), True)
+        ecp.click_back()
+        wbp.wait_for_workbench_page_load()
+
+    @staticmethod
+    def tearDown_test_QYTXL_0002():
+        """恢复环境"""
+
+        fail_time = 0
+        while fail_time < 5:
+            try:
+                Preconditions.make_already_in_message_page()
+                mp = MessagePage()
+                mp.open_workbench_page()
+                wbp = WorkbenchPage()
+                Preconditions.delete_department_by_name("admin_department")
+                # 解决用户部门变更后不能及时刷新的问题
+                wbp.click_company_contacts()
+                ecp = EnterpriseContactsPage()
+                ecp.wait_for_page_load()
+                ecp.click_back()
+                time.sleep(2)
+                if ecp.is_exist_department_name():
+                    ecp.click_back()
+                wbp.wait_for_workbench_page_load()
+                return
+            except:
+                fail_time += 1
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QYTXL_0003(self):
+        """用户在企业部门下又在企业子一层级中，直接进入企业层级"""
+
+        wbp = WorkbenchPage()
+        # 添加本机号码到指定部门
+        department_name = "admin_department"
+        Preconditions.add_phone_number_to_department(department_name)
+        # 添加本机号码到和通讯录
+        Preconditions.add_phone_number_to_he_contacts()
+        workbench_name = wbp.get_workbench_name()
+        # 解决用户部门变更后不能及时刷新的问题
+        wbp.click_company_contacts()
+        ecp = EnterpriseContactsPage()
+        ecp.wait_for_page_load()
+        ecp.click_back()
+        ecp.click_back()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_company_contacts()
+        ecp.wait_for_page_load()
+        # 1.是否直接进入企业层级：企业+部门名称
+        self.assertEquals(ecp.is_exist_corporate_grade(), False)
+        self.assertEquals(ecp.is_exist_department_by_name(workbench_name), True)
+        self.assertEquals(ecp.is_exist_department_by_name(department_name), True)
+        ecp.click_back()
+        wbp.wait_for_workbench_page_load()
+
+    @staticmethod
+    def tearDown_test_QYTXL_0003():
+        """恢复环境"""
+
+        fail_time = 0
+        while fail_time < 5:
+            try:
+                Preconditions.make_already_in_message_page()
+                mp = MessagePage()
+                mp.open_workbench_page()
+                wbp = WorkbenchPage()
+                Preconditions.delete_department_by_name("admin_department")
+                # 解决用户部门变更后不能及时刷新的问题
+                wbp.click_company_contacts()
+                ecp = EnterpriseContactsPage()
+                ecp.wait_for_page_load()
+                ecp.click_back()
+                time.sleep(2)
+                if ecp.is_exist_department_name():
+                    ecp.click_back()
+                wbp.wait_for_workbench_page_load()
+                return
+            except:
+                fail_time += 1
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QYTXL_0004(self):
+        """用户同时在两个部门下直接进入企业层级"""
+
+        wbp = WorkbenchPage()
+        # 添加本机号码到指定部门1
+        department_name1 = "admin_department1"
+        Preconditions.add_phone_number_to_department(department_name1)
+        # 添加本机号码到指定部门2
+        department_name2 = "admin_department2"
+        Preconditions.add_phone_number_to_department(department_name2)
+        workbench_name = wbp.get_workbench_name()
+        # 解决用户部门变更后不能及时刷新的问题
+        wbp.click_company_contacts()
+        ecp = EnterpriseContactsPage()
+        ecp.wait_for_page_load()
+        ecp.click_back()
+        ecp.click_back()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_company_contacts()
+        ecp.wait_for_page_load()
+        # 1.跳转后是否显示企业层级：企业+部门名称（部门随机显示一个）
+        self.assertEquals(ecp.is_exist_corporate_grade(), False)
+        self.assertEquals(ecp.is_exist_department_by_name(workbench_name), True)
+        self.assertEquals((ecp.is_exist_department_by_name(department_name1) or ecp.is_exist_department_by_name(department_name2)), True)
+        ecp.click_back()
+        wbp.wait_for_workbench_page_load()
+
+    @staticmethod
+    def tearDown_test_QYTXL_0004():
+        """恢复环境"""
+
+        fail_time = 0
+        while fail_time < 5:
+            try:
+                Preconditions.make_already_in_message_page()
+                mp = MessagePage()
+                mp.open_workbench_page()
+                wbp = WorkbenchPage()
+                Preconditions.delete_department_by_name("admin_department1")
+                Preconditions.delete_department_by_name("admin_department2")
+                # 解决用户部门变更后不能及时刷新的问题
+                wbp.click_company_contacts()
+                ecp = EnterpriseContactsPage()
+                ecp.wait_for_page_load()
+                ecp.click_back()
+                time.sleep(2)
+                if ecp.is_exist_department_name():
+                    ecp.click_back()
+                wbp.wait_for_workbench_page_load()
+                return
+            except:
+                fail_time += 1
 
     @tags('ALL', 'CMCC', 'workbench', 'LXD')
     def test_QYTXL_0008(self):
