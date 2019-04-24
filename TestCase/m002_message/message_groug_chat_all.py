@@ -155,9 +155,6 @@ class MsgGroupChatTest(TestCase):
         Preconditions.select_mobile('Android-移动')
         mess = MessagePage()
         if mess.is_on_this_page():
-            if mess.get_top_news_name() == Preconditions.get_group_chat_name():
-                mess.choose_chat_by_name(Preconditions.get_group_chat_name())
-                return
             Preconditions.enter_group_chat_page()
             return
         scp = GroupChatPage()
@@ -1328,6 +1325,7 @@ class MsgGroupChatTest(TestCase):
         phone_contacts.click_first_phone_contacts()
         phone_contacts.click_sure_forward()
         GroupChatPage().click_back()
+        MessagePage().wait_for_page_load()
         self.assertTrue(MessagePage().is_iv_fail_status_present())
         MessagePage().clear_fail_in_send_message()
 
@@ -1372,6 +1370,259 @@ class MsgGroupChatTest(TestCase):
         """将自己发送的文件转发到在搜索框输入字母搜索到的手机联系人"""
         self.pubilic_phone_contacts_search_text('abc')
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0098(self):
+        """将自己发送的文件转发到在搜索框输入空格搜索到的手机联系人"""
+        self.pubilic_phone_contacts_search_text('   ')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0100(self):
+        """将自己发送的文件转发到在搜索框输入号码搜索到的手机联系人"""
+        self.pubilic_phone_contacts_search_text('13800138005')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0101(self):
+        """将自己发送的文件转发到在搜索框进行搜索到的手机联系人时取消转发"""
+        self.public_forward_mobile_phone_contacts()
+        search_contact = SelectLocalContactsPage()
+        search_contact.search('13800138005')
+        if search_contact.is_text_present('无搜索结果'):
+            pass
+        else:
+            search_contact.click_search_phone_contacts()
+            search_contact.click_cancel_forward()
+            search_contact.wait_for_page_load()
+            self.assertTrue(search_contact.is_on_this_page())
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0102(self):
+        """将自己发送的文件转发到滑动右边字母导航栏定位查找的手机联系人"""
+        self.public_forward_mobile_phone_contacts()
+        # 导航栏选择联系人
+        SelectOneGroupPage().choose_index_bar_click_element()
+        SelectOneGroupPage().click_sure_forward()
+        self.assertTrue(GroupChatPage().is_exist_forward())
+        GroupChatPage().wait_for_page_load()
+        self.assertTrue(GroupChatPage().is_on_this_page())
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0103(self):
+        """将自己发送的文件转发到滑动右边字母导航栏定位查找的手机联系人"""
+        self.public_forward_mobile_phone_contacts()
+        # 导航栏选择联系人
+        SelectOneGroupPage().choose_index_bar_click_element()
+        SelectOneGroupPage().click_cancel_forward()
+        SelectLocalContactsPage().wait_for_page_load()
+        self.assertTrue(SelectLocalContactsPage().is_on_this_page())
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0124(self):
+        """将自己发送的文件转发到我的电脑"""
+        self.press_group_file()
+        ChatFilePage().forward_file('.xlsx')
+        SelectContactsPage().wait_for_page_load()
+        SelectContactsPage().search('我的电脑')
+        SelectOneGroupPage().click_search_result()
+        SelectOneGroupPage().click_sure_forward()
+        # 转发成功并回到聊天页面
+        self.assertTrue(GroupChatPage().is_exist_forward())
+        GroupChatPage().wait_for_page_load()
+        self.assertTrue(GroupChatPage().is_on_this_page())
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0125(self):
+        """将自己发送的文件转发到最近聊天"""
+        self.press_group_file()
+        ChatFilePage().forward_file('.xlsx')
+        select_recent_chat = SelectContactsPage()
+        select_recent_chat.wait_for_page_load()
+        select_recent_chat.select_recent_chat_by_number(0)
+        SelectContactsPage().click_sure_forward()
+        # 转发成功并回到聊天页面
+        self.assertTrue(GroupChatPage().is_exist_forward())
+        GroupChatPage().wait_for_page_load()
+        self.assertTrue(GroupChatPage().is_on_this_page())
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0126(self):
+        """将自己发送的文件转发到最近聊天时点击取消转发"""
+        self.press_group_file()
+        ChatFilePage().forward_file('.xlsx')
+        select_recent_chat = SelectContactsPage()
+        select_recent_chat.wait_for_page_load()
+        select_recent_chat.select_recent_chat_by_number(0)
+        select_recent_chat.click_cancel_forward()
+        # 转发成功并回到聊天页面
+        self.assertTrue(select_recent_chat.is_on_this_page)
+        select_recent_chat.click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0127(self):
+        """将自己发送的文件转发到最近聊天时转发失败"""
+        current_mobile().turn_off_wifi()
+        current_mobile().turn_off_mobile_data()
+        self.press_group_file()
+        ChatFilePage().forward_file('.xlsx')
+        select_recent_chat = SelectContactsPage()
+        select_recent_chat.wait_for_page_load()
+        select_recent_chat.select_recent_chat_by_number(0)
+        select_recent_chat.click_sure_forward()
+        GroupChatPage().wait_for_page_load()
+        GroupChatPage().click_back()
+        MessagePage().wait_for_page_load()
+        self.assertTrue(MessagePage().is_iv_fail_status_present())
+        MessagePage().clear_fail_in_send_message()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def tearDown_test_msg_weifenglian_qun_0127(self):
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0128(self):
+        """对自己发送出去的文件消息进行删除"""
+        self.press_group_file()
+        GroupChatPage().delete_group_all_file()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0129(self):
+        """对自己发送出去的文件消息进行十秒内撤回"""
+        self.press_group_file()
+        GroupChatPage().recall_file('.xlsx')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0130(self):
+        """对自己发送出去的文件消息进行收藏"""
+        self.press_group_file()
+        ChatFilePage().collection_file('.xlsx')
+        GroupChatPage().wait_for_page_load()
+        GroupChatPage().is_exist_collection()
+        GroupChatPage().click_back()
+        message_page = MessagePage()
+        message_page.wait_for_page_load()
+        message_page.open_me_page()
+        MePage().is_on_this_page()
+        # 点击我的收藏,进入收藏页面
+        MePage().click_collection()
+        collection_page = MeCollectionPage()
+        collection_page.wait_for_page_load()
+        collection_page.element_contain_text("我", Preconditions.get_group_chat_name())
+        MePage().click_back()
+        MePage().open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0189(self):
+        """在收藏页面查看在群聊收藏自己发送的文件"""
+        self.press_group_file()
+        ChatFilePage().collection_file('.xlsx')
+        GroupChatPage().wait_for_page_load()
+        GroupChatPage().is_exist_collection()
+        GroupChatPage().click_back()
+        message_page = MessagePage()
+        message_page.wait_for_page_load()
+        message_page.open_me_page()
+        MePage().is_on_this_page()
+        # 点击我的收藏,进入收藏页面
+        MePage().click_collection()
+        collection_page = MeCollectionPage()
+        collection_page.wait_for_page_load()
+        collection_page.element_contain_text("我", Preconditions.get_group_chat_name())
+        self.assertTrue(collection_page.get_width_of_collection('文件名', 2))
+        self.assertTrue(collection_page.page_contain_element('文件大小'))
+        file_names = collection_page.get_all_file_names()
+        self.assertTrue(file_names[0].endswith(".xlsx"))
+        file_ele = collection_page.get_all_collection()
+        for i in range(len(file_ele)):
+            collection_page.press_and_move_left()
+            if collection_page.is_delete_element_present():
+                collection_page.click_delete_collection()
+                collection_page.click_sure_forward()
+        MePage().click_back()
+        MePage().wait_for_page_load()
+        MePage().open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0191(self):
+        self.press_group_file()
+        GroupChatPage().click_setting()
+        # 2. 点击下方的查找聊天内容按钮
+        GroupChatSetPage().click_search_chat_record()
+        current_mobile().hide_keyboard_if_display()
+        FindChatRecordPage().wait_for_page_loads()
+        FindChatRecordPage().click_file()
+        chat_file = ChatFilePage()
+        chat_file.wait_for_page_loads()
+        chat_file.click_back()
+        FindChatRecordPage().click_back()
+        GroupChatSetPage().click_back()
+        GroupChatPage().click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0194(self):
+        """群聊聊天文件列表页面显示正常"""
+        chat_more = ChatMorePage()
+        chat_more.close_more()
+        chat_more.click_file1()
+        select_file_type = ChatSelectFilePage()
+        select_file_type.wait_for_page_load()
+        select_file_type.click_local_file()
+        local_file = ChatSelectLocalFilePage()
+        local_file.click_preset_file_dir()
+        local_file.select_file(".html")
+        local_file.click_send()
+        GroupChatPage().wait_for_page_load()
+        # 1. 点击右上角个人设置按钮
+        GroupChatPage().click_setting()
+        # 2. 点击下方的查找聊天内容按钮
+        GroupChatSetPage().click_search_chat_record()
+        current_mobile().hide_keyboard_if_display()
+        FindChatRecordPage().wait_for_page_loads()
+        FindChatRecordPage().click_file()
+        chat_file = ChatFilePage()
+        chat_file.wait_for_page_loads()
+        chat_file.click_file('.html')
+        current_mobile().back()
+        self.assertTrue(chat_file.is_on_this_page())
+        chat_file.click_back()
+        FindChatRecordPage().click_back()
+        GroupChatSetPage().click_back()
+        GroupChatPage().click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0195(self):
+        """群聊聊天文件列表页面显示正常"""
+        self.press_group_file()
+        # 1. 点击右上角个人设置按钮
+        GroupChatPage().click_setting()
+        # 2. 点击下方的查找聊天内容按钮
+        GroupChatSetPage().click_search_chat_record()
+        current_mobile().hide_keyboard_if_display()
+        FindChatRecordPage().wait_for_page_loads()
+        FindChatRecordPage().click_file()
+        chat_file = ChatFilePage()
+        chat_file.wait_for_page_loads()
+        chat_file.click_file('.xlsx')
+        chat_file.click_back()
+        chat_file.wait_for_page_loads()
+        self.assertTrue(chat_file.is_on_this_page)
+        chat_file.click_back()
+        FindChatRecordPage().click_back()
+        GroupChatSetPage().click_back()
+        GroupChatPage().click_back()
+        MessagePage().clear_message_record()
+
+    def setUp_test_msg_weifenglian_qun_0199(self):
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        else:
+            current_mobile().launch_app()
+            mess.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0199(self):
+        self.assertTrue(MessagePage().is_on_this_page())
 
 
 class MsgAllPrior(TestCase):

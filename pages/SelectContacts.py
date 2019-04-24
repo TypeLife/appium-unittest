@@ -69,14 +69,14 @@ class SelectContactsPage(BasePage):
         "我已阅读": (MobileBy.ID,'com.chinasofti.rcs:id/btn_check'),
         "确定3": (MobileBy.ID,'com.chinasofti.rcs:id/dialog_btn_ok'),
         "最近聊天联系人":(MobileBy.ID,'com.chinasofti.rcs:id/iv_photo'),
-<<<<<<< HEAD
+# <<<<<<< HEAD
         "群二维码":(MobileBy.ID,'com.chinasofti.rcs:id/imageview_msg_image'),
         "保存图片":(MobileBy.XPATH,'//*[@text="保存图片"]'),
         "识别图中二维码": (MobileBy.XPATH, '//*[@text="识别图中二维码"]'),
         "转发": (MobileBy.XPATH, '//*[@text="转发"]'),
-=======
+# =======
         "企业通讯录联系人": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name_personal_contactlist'),
->>>>>>> ec9054498b51298bfd63d276fcabded261bedfec
+# >>>>>>> ec9054498b51298bfd63d276fcabded261bedfec
     }
 
     @TestLogger.log("点击群二维码")
@@ -531,3 +531,9 @@ class SelectContactsPage(BasePage):
                 contacts_name.append(el.text)
         return contacts_name
 
+    @TestLogger.log("当前页面是否在选择联系人页")
+    def is_on_this_page(self):
+        bol = self.wait_until(
+            condition=lambda d: self._is_element_present(self.__class__.__locators["选择一个群"])
+        )
+        return bol

@@ -480,3 +480,9 @@ class GroupChatPage(BaseChatPage):
                 self.click_element(self.__class__.__locators['删除'])
         else:
             raise AssertionError('当前窗口没有可以删除的消息')
+
+    @TestLogger.log("撤回文件")
+    def recall_file(self, file):
+        el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))
+        self.press(el)
+        self.click_element(self.__class__.__locators['撤回'])
