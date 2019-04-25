@@ -765,7 +765,7 @@ class MsgGroupChatTest(TestCase):
         local_file.select_file("2M_vedio.mp4")
         local_file.click_single_send()
         local_file.click_free_data_button()
-        bol = local_file.wait_until(lambda x: ChatSelectLocalFilePage().is_text_present('和飞信'),
+        bol = local_file.wait_until(lambda x: ChatSelectLocalFilePage().is_text_present('和飞信'), timeout=15,
                                     auto_accept_permission_alert=False)
         self.assertTrue(bol)
         local_file.click_free_data_back()
@@ -977,7 +977,7 @@ class MsgGroupChatTest(TestCase):
         local_file.select_file("2M_music.mp3")
         local_file.click_single_send()
         local_file.click_free_data_button()
-        bol = local_file.wait_until(lambda x: ChatSelectLocalFilePage().is_text_present('和飞信'),
+        bol = local_file.wait_until(lambda x: ChatSelectLocalFilePage().is_text_present('和飞信'), timeout=15,
                                     auto_accept_permission_alert=False)
         self.assertTrue(bol)
         local_file.click_free_data_back()
@@ -1473,8 +1473,8 @@ class MsgGroupChatTest(TestCase):
         self.assertTrue(MessagePage().is_iv_fail_status_present())
         MessagePage().clear_fail_in_send_message()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
-    def tearDown_test_msg_weifenglian_qun_0127(self):
+    @staticmethod
+    def tearDown_test_msg_weifenglian_qun_0127():
         current_mobile().turn_on_wifi()
         current_mobile().turn_on_mobile_data()
 
@@ -1611,7 +1611,8 @@ class MsgGroupChatTest(TestCase):
         GroupChatPage().click_back()
         MessagePage().clear_message_record()
 
-    def setUp_test_msg_weifenglian_qun_0199(self):
+    @staticmethod
+    def setUp_test_msg_weifenglian_qun_0199():
         Preconditions.select_mobile('Android-移动')
         mess = MessagePage()
         if mess.is_on_this_page():
@@ -1622,7 +1623,91 @@ class MsgGroupChatTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_weifenglian_qun_0199(self):
+        """进入消息模块中"""
         self.assertTrue(MessagePage().is_on_this_page())
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0200(self):
+        """进入群聊天页面调起隐藏菜单栏"""
+        chat_more = ChatMorePage()
+        chat_more.close_more()
+        self.assertTrue(chat_more.check_all_element_is_enable())
+        chat_more.close_more()
+        time.sleep(10)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0201(self):
+        """选择点击文件"""
+        chat_more = ChatMorePage()
+        chat_more.close_more()
+        chat_more.click_file1()
+        ChatSelectFilePage().wait_for_page_load()
+        ChatSelectFilePage().click_back()
+
+    def public_enter_file_select_page(self):
+        chat_more = ChatMorePage()
+        chat_more.close_more()
+        chat_more.click_file1()
+        select_file_type = ChatSelectFilePage()
+        select_file_type.wait_for_page_load()
+        select_file_type.click_local_file()
+        local_file = ChatSelectLocalFilePage()
+        # 进入预置文件目录，选择文件发送
+        local_file.enter_preset_file_dir()
+        local_file.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0202(self):
+        """观察文件选择页面"""
+        local_file = ChatSelectLocalFilePage()
+        self.assertTrue(local_file.check_element_is_exist('文件按钮'))
+        self.assertFalse(local_file.check_element_is_exist('文件显示大小'))
+        self.assertFalse(local_file.check_element_is_enable('发送'))
+        local_file.click_back()
+        local_file.click_back()
+        ChatSelectFilePage().click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0203(self):
+        """未选择文件的情况下点击发送按钮"""
+        self.public_enter_file_select_page()
+        file = ChatSelectLocalFilePage()
+        self.assertFalse(file.check_element_is_enable('发送'))
+        file.click_back()
+        file.click_back()
+        ChatSelectFilePage().click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0204(self):
+        """选择其中一文件"""
+        self.public_enter_file_select_page()
+        file = ChatSelectLocalFilePage()
+        file.select_file('.xlsx')
+        self.assertTrue(file.check_element_is_exist('文件显示大小'))
+        self.assertTrue(file.check_element_is_enable('发送'))
+        file.click_back()
+        file.click_back()
+        ChatSelectFilePage().click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0205(self):
+        """网络异常选择其中一文件"""
+        self.public_enter_file_select_page()
+        current_mobile().turn_off_wifi()
+        current_mobile().turn_off_mobile_data()
+        file = ChatSelectLocalFilePage()
+        file.select_file('.xlsx')
+        self.assertTrue(file.check_element_is_exist('文件显示大小'))
+        self.assertTrue(file.check_element_is_enable('发送'))
+        file.click_back()
+        file.click_back()
+        ChatSelectFilePage().click_back()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_qun_0205():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
 
 
 class MsgAllPrior(TestCase):

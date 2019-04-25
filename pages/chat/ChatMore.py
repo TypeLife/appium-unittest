@@ -92,4 +92,11 @@ class ChatMorePage(BasePage):
         """点击音视频通话"""
         self.click_element(self.__class__.__locators["音视频通话"])
 
-
+    @TestLogger.log()
+    def check_all_element_is_enable(self):
+        """检查元素是否存在"""
+        ele_list = ['文件', '群短信', '位置', '红包']
+        for ele in ele_list:
+            if not self._is_enabled(self.__locators[ele]):
+                return False
+        return True

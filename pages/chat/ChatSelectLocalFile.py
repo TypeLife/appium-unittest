@@ -65,7 +65,9 @@ class ChatSelectLocalFilePage(BasePage):
                   '继续发送按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/continue_call'),
                   '订购免流特权': (MobileBy.ID, 'com.chinasofti.rcs:id/get_mian_liu_permission'),
                   '以后不再提示': (MobileBy.ID, 'com.chinasofti.rcs:id/pop_window_not_pop_btn'),
-                  '返回上一级': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back_actionbar')
+                  '返回上一级': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back_actionbar'),
+                  '文件显示大小':(MobileBy.ID, 'com.chinasofti.rcs:id/textview_select_file_size'),
+                  '文件按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/cb_choose_icon')
                   }
 
     @TestLogger.log()
@@ -340,6 +342,7 @@ class ChatSelectLocalFilePage(BasePage):
                 message
             )
         return self
+
     @TestLogger.log("进入预置文件的目录")
     def enter_preset_file_dir(self):
         base_dir = os.path.basename(settings.RESOURCE_FILE_PATH)
@@ -390,3 +393,11 @@ class ChatSelectLocalFilePage(BasePage):
     @TestLogger.log("点击弹窗外面的元素关闭弹窗")
     def click_outside_element(self):
         self.mobile.click_out_side_of_element(('id', 'com.chinasofti.rcs:id/pop_window_for_10g_main_view'))
+
+    @TestLogger.log("检测元素是否可以点击")
+    def check_element_is_enable(self, locator):
+        return self._is_enabled((self.__locators[locator]))
+
+    @TestLogger.log("检测元素是否存在")
+    def check_element_is_exist(self, locator):
+        return self._is_element_present(self.__locators[locator])
