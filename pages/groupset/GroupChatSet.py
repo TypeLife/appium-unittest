@@ -73,7 +73,13 @@ class GroupChatSetPage(BasePage):
                   '分享群口令框': (MobileBy.XPATH,  '//*[@text ="分享群口令邀请好友进群"]'),
                   '下次再说': (MobileBy.XPATH, '//*[@text ="下次再说"]'),
                   '立即分享': (MobileBy.XPATH, '//*[@text ="立即分享"]'),
+                  "再次邀请":(MobileBy.XPATH,'//*[@text="还有人未进群,再次邀请"]'),
                   }
+
+    @TestLogger.log("获取控件数量")
+    def get_element_count(self):
+        els=self.get_elements(self.__locators["再次邀请"])
+        return len(els)
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
