@@ -7,9 +7,6 @@ from selenium.common.exceptions import TimeoutException
 from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile, current_driver
 from pages.components import BaseChatPage
-from pages.workbench.create_group.CreateGroup import CreateGroupPage
-from pages.workbench.create_group.SelectEnterpriseContacts import SelectEnterpriseContactsPage
-from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
 from preconditions.BasePreconditions import LoginPreconditions
 from library.core.utils.testcasefilter import tags
 from pages import *
@@ -95,44 +92,6 @@ class Preconditions(LoginPreconditions):
         current_mobile().reset_app()
 
     @staticmethod
-    def create_he_contacts(names):
-        """选择本地联系人创建为和通讯录联系人"""
-
-        mp = MessagePage()
-        mp.wait_for_page_load()
-        mp.open_workbench_page()
-        wbp = WorkbenchPage()
-        wbp.wait_for_workbench_page_load()
-        wbp.click_organization()
-        osp = OrganizationStructurePage()
-        time.sleep(5)
-        n = 1
-        # 解决工作台不稳定问题
-        while osp.is_text_present("账号认证失败"):
-            osp.click_back()
-            wbp.wait_for_workbench_page_load()
-            wbp.click_organization()
-            time.sleep(5)
-            n += 1
-            if n > 10:
-                break
-        for name in names:
-            if not osp.is_exist_specify_element_by_name(name):
-                osp.click_specify_element_by_name("添加联系人")
-                time.sleep(2)
-                osp.click_specify_element_by_name("从手机通讯录添加")
-                slc = SelectLocalContactsPage()
-                # 等待选择联系人页面加载
-                slc.wait_for_page_load()
-                slc.selecting_local_contacts_by_name(name)
-                slc.click_sure()
-                osp.wait_for_page_load()
-        osp.click_back()
-        wbp.wait_for_workbench_page_load()
-        mp.open_message_page()
-        mp.wait_for_page_load()
-
-    @staticmethod
     def make_no_message_send_failed_status():
         """确保当前消息列表没有消息发送失败的标识影响验证结果"""
 
@@ -141,58 +100,6 @@ class Preconditions(LoginPreconditions):
         # 确保当前消息列表没有消息发送失败的标识影响验证结果
         if mp.is_iv_fail_status_present():
             mp.clear_fail_in_send_message()
-
-    @staticmethod
-    def create_enterprise_group(name):
-        """创建企业群"""
-
-        mp = MessagePage()
-        mp.wait_for_page_load()
-        mp.open_workbench_page()
-        wbp = WorkbenchPage()
-        wbp.wait_for_workbench_page_load()
-        wbp.click_add_create_group()
-        cgp = CreateGroupPage()
-        # 等待创建群首页加载
-        cgp.wait_for_page_load()
-        cgp.click_create_group()
-        sec = SelectEnterpriseContactsPage()
-        sec.wait_for_page_load()
-        # 创建企业群
-        sec.click_contacts_by_name("大佬1")
-        sec.click_contacts_by_name("大佬2")
-        sec.click_sure()
-        cgp.input_group_name(name)
-        cgp.click_create_group()
-        time.sleep(2)
-        # 返回消息列表
-        cgp.click_back()
-        wbp.wait_for_workbench_page_load()
-        mp.open_message_page()
-        mp.wait_for_page_load()
-
-    @staticmethod
-    def ensure_have_enterprise_group(name):
-        """确保有企业群"""
-
-        mp = MessagePage()
-        mp.wait_for_page_load()
-        mp.open_contacts_page()
-        cp = ContactsPage()
-        cp.wait_for_page_load()
-        cp.open_group_chat_list()
-        time.sleep(2)
-        if cp.is_exist_enterprise_group():
-            cp.click_return()
-            cp.wait_for_page_load()
-            mp.open_message_page()
-            mp.wait_for_page_load()
-        else:
-            cp.click_return()
-            cp.wait_for_page_load()
-            mp.open_message_page()
-            mp.wait_for_page_load()
-            Preconditions.create_enterprise_group(name)
 
 
 class MsgPrivateChatVideoPicTest(TestCase):
@@ -1944,12 +1851,6 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         scp = SingleChatPage()
         # 等待单聊会话页面加载
         scp.wait_for_page_load()
-        scp.click_back()
-        # 确保有和通讯录联系人
-        he_names = ["大佬1", "大佬2", "大佬3"]
-        Preconditions.create_he_contacts(he_names)
-        single_name = "大佬1"
-        Preconditions.enter_single_chat_page(single_name)
         # 确保当前聊天页面已有图片
         Preconditions.make_already_have_my_picture()
         # 1.长按自己发送的图片并转发
@@ -1964,7 +1865,8 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
         shc.click_department_name("test_work")
-        shc.selecting_he_contacts_by_name(he_names[2])
+        name = "大佬3"
+        shc.selecting_he_contacts_by_name(name)
         # 确定转发
         scg.click_sure_forward()
         # 4.是否提示已转发,等待单聊页面加载
@@ -1976,7 +1878,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         # 等待消息页面加载
         mp.wait_for_page_load()
         # 选择刚发送消息的聊天页
-        mp.choose_chat_by_name(he_names[2])
+        mp.choose_chat_by_name(name)
         time.sleep(2)
         chat = BaseChatPage()
         if chat.is_exist_dialog():
@@ -1998,9 +1900,6 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         scp.click_back()
         # 确保当前消息列表没有消息发送失败的标识影响验证结果
         Preconditions.make_no_message_send_failed_status()
-        # 确保有和通讯录联系人
-        he_names = ["大佬1", "大佬2", "大佬3"]
-        Preconditions.create_he_contacts(he_names)
         contact_name = "大佬1"
         Preconditions.enter_single_chat_page(contact_name)
         # 确保当前聊天页面已有图片
@@ -2019,7 +1918,8 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
         shc.click_department_name("test_work")
-        shc.selecting_he_contacts_by_name(he_names[2])
+        name = "大佬3"
+        shc.selecting_he_contacts_by_name(name)
         # 确定转发
         scg.click_sure_forward()
         # 4.是否提示已转发,等待单聊页面加载
@@ -2046,12 +1946,6 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         scp = SingleChatPage()
         # 等待单聊会话页面加载
         scp.wait_for_page_load()
-        scp.click_back()
-        # 确保有和通讯录联系人
-        he_names = ["大佬1", "大佬2", "大佬3"]
-        Preconditions.create_he_contacts(he_names)
-        single_name = "大佬1"
-        Preconditions.enter_single_chat_page(single_name)
         # 确保当前聊天页面已有图片
         Preconditions.make_already_have_my_picture()
         # 1.长按自己发送的图片并转发
@@ -2066,7 +1960,8 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
         shc.click_department_name("test_work")
-        shc.selecting_he_contacts_by_name(he_names[2])
+        name = "大佬3"
+        shc.selecting_he_contacts_by_name(name)
         # 取消转发
         scg.click_cancel_forward()
         # 4.等待选择联系人->和通讯录联系人 页面加载
@@ -2330,11 +2225,6 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         scp = SingleChatPage()
         # 等待单聊会话页面加载
         scp.wait_for_page_load()
-        scp.click_back()
-        # 确保有企业群
-        Preconditions.ensure_have_enterprise_group("测试企业群")
-        contact_name = "大佬1"
-        Preconditions.enter_single_chat_page(contact_name)
         # 确保当前聊天页面已有图片
         Preconditions.make_already_have_my_picture()
         # 等待单聊会话页面加载
@@ -2381,8 +2271,6 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         scp.click_back()
         # 确保当前消息列表没有消息发送失败的标识影响验证结果
         Preconditions.make_no_message_send_failed_status()
-        # 确保有企业群
-        Preconditions.ensure_have_enterprise_group("测试企业群")
         contact_name = "大佬1"
         Preconditions.enter_single_chat_page(contact_name)
         # 确保当前聊天页面已有图片
@@ -2429,11 +2317,6 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         scp = SingleChatPage()
         # 等待单聊会话页面加载
         scp.wait_for_page_load()
-        scp.click_back()
-        # 确保有企业群
-        Preconditions.ensure_have_enterprise_group("测试企业群")
-        contact_name = "大佬1"
-        Preconditions.enter_single_chat_page(contact_name)
         # 确保当前聊天页面已有图片
         Preconditions.make_already_have_my_picture()
         # 等待单聊会话页面加载

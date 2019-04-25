@@ -56,5 +56,12 @@ class EnterpriseContactsPage(BasePage):
 
     @TestLogger.log()
     def is_exist_department_name(self):
-        """是否存在部门名称"""
+        """是否存在部门/企业名称"""
         return self._is_element_present(self.__class__.__locators['部门名称'])
+
+    @TestLogger.log()
+    def is_exist_department_by_name(self, name):
+        """是否存在指定部门/企业名称"""
+        locator = (
+        MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title_department" and @text="%s"]' % name)
+        return self._is_element_present(locator)

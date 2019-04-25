@@ -13,6 +13,7 @@ from pages.workbench.corporate_news.CorporateNewsDetails import CorporateNewsDet
 from pages.workbench.corporate_news.CorporateNewsImageText import CorporateNewsImageTextPage
 from pages.workbench.corporate_news.CorporateNewsLink import CorporateNewsLinkPage
 from pages.workbench.corporate_news.CorporateNewsNoNews import CorporateNewsNoNewsPage
+from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
 from preconditions.BasePreconditions import LoginPreconditions
 
 REQUIRED_MOBILES = {
@@ -132,6 +133,96 @@ class Preconditions(LoginPreconditions):
             cnitp.click_sure()
             cnp.wait_for_page_load()
 
+    @staticmethod
+    def create_he_contacts(names):
+        """选择本地联系人创建为和通讯录联系人"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_workbench_page()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_organization()
+        osp = OrganizationStructurePage()
+        time.sleep(5)
+        n = 1
+        # 解决工作台不稳定问题
+        while osp.is_text_present("账号认证失败"):
+            osp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_organization()
+            time.sleep(5)
+            n += 1
+            if n > 10:
+                break
+        for name in names:
+            if not osp.is_exist_specify_element_by_name(name):
+                osp.click_specify_element_by_name("添加联系人")
+                time.sleep(2)
+                osp.click_specify_element_by_name("从手机通讯录添加")
+                slc = SelectLocalContactsPage()
+                # 等待选择联系人页面加载
+                slc.wait_for_page_load()
+                slc.selecting_local_contacts_by_name(name)
+                slc.click_sure()
+                osp.wait_for_page_load()
+        osp.click_back()
+        wbp.wait_for_workbench_page_load()
+        mp.open_message_page()
+        mp.wait_for_page_load()
+
+    @staticmethod
+    def create_department_and_add_member(department_names):
+        """创建企业部门并从本地联系人添加成员"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_workbench_page()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_organization()
+        osp = OrganizationStructurePage()
+        time.sleep(5)
+        n = 1
+        # 解决工作台不稳定问题
+        while osp.is_text_present("账号认证失败"):
+            osp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_organization()
+            time.sleep(5)
+            n += 1
+            if n > 10:
+                break
+        for department_name in department_names:
+            if not osp.is_exist_specify_element_by_name(department_name):
+                osp.click_specify_element_by_name("添加子部门")
+                time.sleep(2)
+                osp.input_sub_department_name(department_name)
+                osp.input_sub_department_sort("1")
+                osp.click_confirm()
+                if osp.is_toast_exist("部门已存在", 2):
+                    osp.click_back()
+                osp.wait_for_page_load()
+                osp.click_specify_element_by_name(department_name)
+                time.sleep(2)
+                osp.click_specify_element_by_name("添加联系人")
+                time.sleep(2)
+                osp.click_specify_element_by_name("从手机通讯录添加")
+                slc = SelectLocalContactsPage()
+                # 等待选择联系人页面加载
+                slc.wait_for_page_load()
+                slc.selecting_local_contacts_by_name("大佬1")
+                slc.selecting_local_contacts_by_name("大佬2")
+                slc.selecting_local_contacts_by_name("大佬3")
+                slc.selecting_local_contacts_by_name("大佬4")
+                slc.click_sure()
+                osp.wait_for_page_load()
+                osp.click_back()
+        osp.click_back()
+        wbp.wait_for_workbench_page_load()
+        mp.open_message_page()
+        mp.wait_for_page_load()
+
 
 class CorporateNewsTest(TestCase):
     """
@@ -157,7 +248,6 @@ class CorporateNewsTest(TestCase):
             current_mobile().hide_keyboard_if_display()
         else:
             current_mobile().launch_app()
-            # preconditions.force_close_and_launch_app()
             Preconditions.make_already_in_message_page()
             Preconditions.enter_corporate_news_page()
 
@@ -242,14 +332,15 @@ class CorporateNewsAllTest(TestCase):
     @classmethod
     def setUpClass(cls):
 
-        # 创建联系人
-        fail_time = 0
+        Preconditions.select_mobile('Android-移动')
+        # 导入测试联系人、群聊
+        fail_time1 = 0
+        flag1 = False
         import dataproviders
-        while fail_time < 3:
+        while fail_time1 < 3:
             try:
                 required_contacts = dataproviders.get_preset_contacts()
                 conts = ContactsPage()
-                Preconditions.select_mobile('Android-移动')
                 current_mobile().hide_keyboard_if_display()
                 Preconditions.make_already_in_message_page()
                 conts.open_contacts_page()
@@ -259,22 +350,38 @@ class CorporateNewsAllTest(TestCase):
                 except:
                     pass
                 for name, number in required_contacts:
+                    # 创建联系人
                     conts.create_contacts_if_not_exits(name, number)
-                # 创建群
                 required_group_chats = dataproviders.get_preset_group_chats()
                 conts.open_group_chat_list()
                 group_list = GroupListPage()
                 for group_name, members in required_group_chats:
                     group_list.wait_for_page_load()
+                    # 创建群
                     group_list.create_group_chats_if_not_exits(group_name, members)
                 group_list.click_back()
                 conts.open_message_page()
-                return
+                flag1 = True
             except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
+                fail_time1 += 1
+            if flag1:
+                break
+
+        # 导入和通讯录联系人、企业部门
+        fail_time2 = 0
+        flag2 = False
+        while fail_time2 < 5:
+            try:
+                Preconditions.make_already_in_message_page()
+                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4", "b测算", "c平5", '哈 马上']
+                Preconditions.create_he_contacts(contact_names)
+                department_names = ["测试部门1", "测试部门2"]
+                Preconditions.create_department_and_add_member(department_names)
+                flag2 = True
+            except:
+                fail_time2 += 1
+            if flag2:
+                break
 
     def default_setUp(self):
         """

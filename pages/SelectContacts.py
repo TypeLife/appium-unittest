@@ -507,10 +507,19 @@ class SelectContactsPage(BasePage):
         sc = SelectContactsPage()
         sc.click_select_one_group()
         time.sleep(1)
+        from pages.groupset.GroupChatSet import GroupChatSetPage
         if self.get_elements(self.__locators['aaa']):
             self.click_element(self.__locators['aaa'])
             time.sleep(1)
-            return
+            gcp = GroupChatPage()
+            group_set = GroupChatSetPage()
+            time.sleep(1)
+            gcp.click_setting()
+            time.sleep(1)
+            sc.page_up()
+            time.sleep(1)
+            group_set.click_delete_and_exit()
+            time.sleep(3)
         mess.click_create_group()
         mess.click_contact_group()
         mess.click_text("大佬2")
@@ -551,6 +560,7 @@ class SelectContactsPage(BasePage):
             sc.page_up()
             time.sleep(1)
             group_set.click_delete_and_exit()
+            time.sleep(3)
         mess.click_create_group()
         mess.click_contact_group()
         while times>0:

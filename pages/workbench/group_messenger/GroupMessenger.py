@@ -17,7 +17,7 @@ class GroupMessengerPage(BasePage):
     }
 
     @TestLogger.log()
-    def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
+    def wait_for_page_load(self, timeout=60, auto_accept_alerts=True):
         """等待群发信使首页加载"""
 
         try:

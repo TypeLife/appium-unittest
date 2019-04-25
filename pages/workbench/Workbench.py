@@ -86,6 +86,7 @@ class WorkbenchPage(FooterPage):
                   '团队列表': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_listitem'),
                   '工作台提示语': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_shortcut_tip'),
                   '关闭': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_shortcut_close'),
+                  '当前团队名称': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_actionbar'),
                   }
 
     def swipe_half_page_up(self):
@@ -513,5 +514,9 @@ class WorkbenchPage(FooterPage):
         wbmp.click_close()
         self.wait_for_workbench_page_load()
 
-
-
+    @TestLogger.log()
+    def get_workbench_name(self):
+        """获取当前团队名称"""
+        el = self.get_element(self.__class__.__locators["当前团队名称"])
+        name = el.text
+        return name

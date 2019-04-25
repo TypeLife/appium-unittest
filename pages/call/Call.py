@@ -56,6 +56,8 @@ class CallPage(BasePage):
         "+号": (MobileBy.ID, 'com.chinasofti.rcs:id/action_add'),
         '视频通话': (MobileBy.XPATH, '//*[@text="视频通话"]'),
         '语音通话': (MobileBy.XPATH, '//*[@text="语音通话"]'),
+        '继续拨打': (MobileBy.XPATH, '//*[@text="继续拨打"]'),
+        '暂不开启': (MobileBy.XPATH, '//*[@text="暂不开启"]'),
     }
 
     @TestLogger.log()
@@ -552,3 +554,28 @@ class CallPage(BasePage):
     def click_voice_call(self):
         """点击语音通话"""
         self.click_element(self.__class__.__locators["语音通话"])
+
+    @TestLogger.log('点击继续拨打')
+    def click_go_on(self):
+        self.click_element(self.__locators['继续拨打'])
+
+    @TestLogger.log()
+    def is_exist_go_on(self):
+        """是否存在继续拨打按钮"""
+        return self._is_element_present(self.__class__.__locators["继续拨打"])
+
+    @TestLogger.log()
+    def click_cancel_open(self):
+        """是否存在继续拨打按钮"""
+        if self._is_element_present(self.__class__.__locators["暂不开启"]):
+            self.click_element(self.__locators['暂不开启'])
+        else:
+            return
+
+    @TestLogger.log()
+    def wait_for_chat_page(self):
+        """等待单聊界面展示"""
+        self.wait_until(
+            timeout=30,
+            auto_accept_permission_alert=True,
+            condition=lambda d: self.is_text_present("说点什么..."))

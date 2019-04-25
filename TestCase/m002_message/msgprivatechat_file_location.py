@@ -1034,5 +1034,178 @@ class MsgPrivateChatAllTest(TestCase):
         mp = MessagePage()
         mp.set_network_status(6)
 
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0006(self):
+        """点击取消重发文件消失，停留在当前页面"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 确保当前单聊会话页面有发送失败的文件重发
+        file_type = ".txt"
+        scp.set_network_status(0)
+        # 发送指定类型文件
+        Preconditions.send_file_by_type(file_type)
+        scp.set_network_status(6)
+        # 1.点击重发按钮
+        scp.click_msg_send_failed_button(-1)
+        time.sleep(2)
+        scp.click_cancel()
+        # 2.等待单聊会话页面加载
+        scp.wait_for_page_load()
+
+    @staticmethod
+    def tearDown_test_msg_0006():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0007(self):
+        """未订购每月10G的用户发送大于2M的文件时有弹窗提示"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 设置当前网络为2/3/4G
+        scp.set_network_status(4)
+        # 发送大型文件
+        Preconditions.send_large_file()
+        time.sleep(2)
+        local_file = ChatSelectLocalFilePage()
+        # 1.是否弹出继续发送、订购免流特权、以后不再提示
+        self.assertEquals(local_file.is_exist_continue_send(), True)
+        self.assertEquals(local_file.is_exist_free_flow_privilege(), True)
+        self.assertEquals(local_file.is_exist_no_longer_prompt(), True)
+        time.sleep(2)
+        local_file.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+        local_file.wait_for_page_load()
+        local_file.click_back()
+        local_file.click_back()
+        csfp = ChatSelectFilePage()
+        csfp.click_back()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+
+    @staticmethod
+    def tearDown_test_msg_0007():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0008(self):
+        """直接点击“继续发送”：关闭弹窗，拨出，下次继续提示"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 设置当前网络为2/3/4G
+        scp.set_network_status(4)
+        # 发送大型文件
+        Preconditions.send_large_file()
+        local_file = ChatSelectLocalFilePage()
+        # 点击继续发送
+        local_file.click_continue_send()
+        # 1.验证是否发送成功
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
+        # 再次选择大型文件发送
+        Preconditions.send_large_file()
+        time.sleep(2)
+        # 2.是否弹出继续发送、订购免流特权、以后不再提示
+        self.assertEquals(local_file.is_exist_continue_send(), True)
+        self.assertEquals(local_file.is_exist_free_flow_privilege(), True)
+        self.assertEquals(local_file.is_exist_no_longer_prompt(), True)
+        time.sleep(2)
+        local_file.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+        local_file.wait_for_page_load()
+        local_file.click_back()
+        local_file.click_back()
+        csfp = ChatSelectFilePage()
+        csfp.click_back()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+
+    @staticmethod
+    def tearDown_test_msg_0008():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC_RESET', 'LXD_RESET')
+    def test_msg_0009(self):
+        """勾选“以后不再提示”再点击“继续发送”"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 设置当前网络为2/3/4G
+        scp.set_network_status(4)
+        # 发送大型文件
+        Preconditions.send_large_file()
+        local_file = ChatSelectLocalFilePage()
+        # 勾选以后不再提示
+        local_file.click_no_longer_prompt()
+        # 点击继续发送
+        local_file.click_continue_send()
+        # 1.验证是否发送成功
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
+        # 再次选择大型文件发送
+        Preconditions.send_large_file()
+        time.sleep(2)
+        # 2.是否弹出继续发送、订购免流特权、以后不再提示，文件是否发送成功
+        self.assertEquals(local_file.is_exist_continue_send(), False)
+        self.assertEquals(local_file.is_exist_free_flow_privilege(), False)
+        self.assertEquals(local_file.is_exist_no_longer_prompt(), False)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
+
+    @staticmethod
+    def tearDown_test_msg_0009():
+        """恢复网络，重置app，确保不影响其他用例执行"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+        Preconditions.make_already_in_message_page(True)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0010(self):
+        """点击订购免流特权后可正常返回"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 设置当前网络为2/3/4G
+        scp.set_network_status(4)
+        # 发送大型文件
+        Preconditions.send_large_file()
+        local_file = ChatSelectLocalFilePage()
+        # 点击订购免流特权
+        local_file.click_free_flow_privilege()
+        # 1.等待免流订购页面加载
+        local_file.wait_for_free_flow_privilege_page_load()
+        local_file.click_return()
+        time.sleep(2)
+        local_file.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+        # 2.等待文件列表页面加载
+        local_file.wait_for_page_load()
+        local_file.click_back()
+        local_file.click_back()
+        csfp = ChatSelectFilePage()
+        csfp.click_back()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+
+    @staticmethod
+    def tearDown_test_msg_0010():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
 
 

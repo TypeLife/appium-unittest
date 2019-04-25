@@ -1086,11 +1086,10 @@ class CallAll(TestCase):
         # Step:1.点击语音通话
         cpg.click_voice_call()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
         time.sleep(1)
-        if cpg.is_text_present("暂不开启"):
-            cpg.click_text("暂不开启")
+        cpg.click_cancel_open()
         time.sleep(1)
         # CheckPoint:1.直接呼出一对一语音通话
         cpg.page_should_contain_text("正在呼叫")
@@ -1102,12 +1101,10 @@ class CallAll(TestCase):
         BaseChatPage().click_more()
         ChatMorePage().click_voice_and_video_call()
         cpg.click_video_call()
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
-        time.sleep(1)
-        if cpg.is_text_present("暂不开启"):
-            cpg.click_text("暂不开启")
+        cpg.click_cancel_open()
         # Step:2.直接呼出一对一视频通话
         time.sleep(2)
         cpg.page_should_contain_text("视频通话呼叫中")
@@ -1167,11 +1164,11 @@ class CallAll(TestCase):
         cpg.click_call()
         time.sleep(1)
         cpg.select_type_start_call(calltype=1, text="13800138001")
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
-        time.sleep(2)
-        if cpg.is_text_present("暂不开启"):
-            cpg.click_text("暂不开启")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(1)
         cpg.wait_for_dial_pad()
         if not cpg.is_on_the_call_page():
             cpg.click_call()
@@ -1199,11 +1196,11 @@ class CallAll(TestCase):
         cpg.click_call()
         time.sleep(1)
         cpg.select_type_start_call(calltype=1, text="13537795364")
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
-        time.sleep(2)
-        if cpg.is_text_present("暂不开启"):
-            cpg.click_text("暂不开启")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(1)
         cpg.wait_for_dial_pad()
         if not cpg.is_on_the_call_page():
             cpg.click_call()
@@ -1233,11 +1230,11 @@ class CallAll(TestCase):
         ccdp = CallContactDetailPage()
         ccdp.click_voice_call()
         time.sleep(2)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
-        time.sleep(2)
-        if cpg.is_text_present("暂不开启"):
-            cpg.click_text("暂不开启")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(1)
         # Step:1.点击缩放按钮
         ccdp.click_smart_voice_hide()
         time.sleep(2)
@@ -1268,11 +1265,11 @@ class CallAll(TestCase):
         ccdp = CallContactDetailPage()
         ccdp.click_voice_call()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
-        time.sleep(2)
-        if cpg.is_text_present("暂不开启"):
-            cpg.click_text("暂不开启")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(1)
         # Step:1.点击缩放按钮
         ccdp.click_smart_voice_hide()
         time.sleep(2)
@@ -1318,10 +1315,11 @@ class CallAll(TestCase):
         cpg.page_should_contain_text("订购免流特权")
         cpg.page_should_contain_text("以后不再提示")
         # Step:3.点击“继续拨打”
-        cpg.click_text("继续拨打")
-        time.sleep(2)
-        if cpg.is_text_present("暂不开启"):
-            cpg.click_text("暂不开启")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(1)
         time.sleep(1)
         # CheckPoint:3.点击后，直接呼叫
         cpg.page_should_contain_text("正在呼叫")
@@ -1379,7 +1377,7 @@ class CallAll(TestCase):
         CallPage().delete_all_call_entry()
         CallPage().set_network_status(6)
 
-    # @tags('ALL', 'CMCC', 'Call')
+    @tags('ALL', 'CMCC', 'Call')
     def test_call_shenlisi_0158(self):
         """检查语音呼叫-未订购每月10G用户--用户在WiFi环境下不提示此类弹窗"""
         # 1.客户端已登录
@@ -1402,6 +1400,50 @@ class CallAll(TestCase):
         cpg.click_back_by_android()
 
     @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0193(self):
+        """检查登陆客户端发起音视频通话锁屏，不会产生callkit"""
+        # 1.A登陆和飞信
+        # 1.发起语音通话，锁屏
+        cpg = CallPage()
+        cpg.create_call_entry("13800138006")
+        cpg.click_call_time()
+        cpg.click_voice_call()
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(1)
+        cpg.press_power_key()
+        time.sleep(1)
+        # 1.A不进入callkit通话
+        print(cpg.is_locked())
+        self.assertTrue(cpg.is_locked())
+        cpg.press_power_key()
+        cpg.page_should_contain_text("正在呼叫")
+        CallContactDetailPage().wait_for_profile_name()
+        # 2.发起视频通话，锁屏
+        cpg.click_video_call()
+        time.sleep(1)
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(1)
+        cpg.press_power_key()
+        time.sleep(1)
+        # 2.A不进入callkit通话
+        self.assertTrue(cpg.is_locked())
+        cpg.press_power_key()
+        cpg.page_should_contain_text("视频通话呼叫中")
+        CallContactDetailPage().wait_for_profile_name()
+
+    @staticmethod
+    def tearDown_test_call_shenlisi_0193():
+        cpg = CallPage()
+        if cpg.is_locked():
+            cpg.press_power_key()
+
+    @tags('ALL', 'CMCC', 'Call')
     def test_call_shenlisi_0213(self):
         """检查视频通话记录——本地联系人"""
         # 1.A已登录和飞信
@@ -1416,11 +1458,11 @@ class CallAll(TestCase):
         time.sleep(1)
         cpg.click_text("呼叫")
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
         time.sleep(1)
-        if cpg.is_text_present("暂不开启"):
-            cpg.click_text("暂不开启")
+        cpg.click_cancel_open()
+        time.sleep(1)
         # Step:1.用户A查看通话记录
         cpg.wait_for_page_load()
 
@@ -1444,11 +1486,11 @@ class CallAll(TestCase):
         time.sleep(1)
         cpg.click_text("呼叫")
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
         time.sleep(1)
-        if cpg.is_text_present("暂不开启"):
-            cpg.click_text("暂不开启")
+        cpg.click_cancel_open()
+        time.sleep(1)
         # Step:1.用户A查看通话记录
         cpg.wait_for_page_load()
 
@@ -1472,11 +1514,11 @@ class CallAll(TestCase):
         # Step:1.视频呼叫M，进入到呼叫界面
         CallContactDetailPage().click_video_call()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
-        time.sleep(2)
-        if cpg.is_text_present("暂不开启"):
-            cpg.click_text("暂不开启")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(1)
         # CheckPoint:1.头像下展示用户M的名称+手机号
         cpg.page_should_contain_text("13800138001")
         cpg.page_should_contain_text("给个红包2")
@@ -1497,11 +1539,11 @@ class CallAll(TestCase):
         # Step:1.视频呼叫M，进入到呼叫界面
         CallContactDetailPage().click_video_call()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
-        time.sleep(2)
-        if cpg.is_text_present("暂不开启"):
-            cpg.click_text("暂不开启")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(1)
         # CheckPoint:1.头像下展示用户M的手机号+归属地
         cpg.page_should_contain_text("15343038867")
         cpg.page_should_contain_text("湖南-株洲")
@@ -1516,11 +1558,11 @@ class CallAll(TestCase):
         # Step:2.视频呼叫N，进入到呼叫界面
         CallContactDetailPage().click_video_call()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
-        time.sleep(2)
-        if cpg.is_text_present("暂不开启"):
-            cpg.click_text("暂不开启")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(1)
         # CheckPoint:2.头像下展示用户M的手机号+未知归属地
         cpg.page_should_contain_text("19823452586")
         cpg.page_should_contain_text("未知归属地")
@@ -1539,11 +1581,11 @@ class CallAll(TestCase):
         ccdp = CallContactDetailPage()
         ccdp.click_video_call()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
-        time.sleep(2)
-        if cpg.is_text_present("暂不开启"):
-            cpg.click_text("暂不开启")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(1)
         # Step:1.点击缩放按钮
         ccdp.click_switch()
         time.sleep(2)
@@ -1574,11 +1616,11 @@ class CallAll(TestCase):
         ccdp = CallContactDetailPage()
         ccdp.click_video_call()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
-        time.sleep(2)
-        if cpg.is_text_present("暂不开启"):
-            cpg.click_text("暂不开启")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(1)
         # Step:1.点击缩放按钮
         ccdp.click_switch()
         time.sleep(2)
@@ -1596,6 +1638,96 @@ class CallAll(TestCase):
         cpg.page_should_not_contain_text("你正在视频通话")
 
         cpg.click_call()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0226(self):
+        """检查同时获取相机权限以及麦克风权限可发起视频通话"""
+        # 1.和飞信系统已获取相机、麦克风权限
+        cpg = CallPage()
+        self.test_call_shenlisi_0213()
+        # 1.从单聊会话窗口发起视频通话
+        # 步骤1--步骤6：视频通话发起成功，进入到视频通话呼叫界面
+        ContactsPage().click_message_icon()
+        Preconditions.enter_single_chat_page("给个红包2")
+        BaseChatPage().click_more()
+        ChatMorePage().click_voice_and_video_call()
+        cpg.click_video_call()
+        time.sleep(1)
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(1)
+        cpg.page_should_contain_text("视频通话呼叫中")
+        cpg.wait_until(
+            timeout=30,
+            auto_accept_permission_alert=True,
+            condition=lambda d: cpg.is_text_present("说点什么..."))
+        cpg.click_back_by_android()
+        cpg.click_call()
+        # 2.从通话tab-视频按钮选择单个成员发起视频通话
+        cpg.click_multi_party_video()
+        for i in range(10):
+            time.sleep(2)
+            if cpg.is_text_present("给个红包2"):
+                cpg.click_text("给个红包2")
+                break
+            else:
+                cpg.page_up()
+        MultiPartyVideoPage().click_tv_sure()
+        time.sleep(1)
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(1)
+        cpg.page_should_contain_text("视频通话呼叫中")
+        cpg.wait_for_call_page()
+
+        # 3.从通话profile-视频通话发起.视频通话
+        cpg.create_call_entry("13800138001")
+        cpg.click_call_time()
+        CallContactDetailPage().click_video_call()
+        time.sleep(1)
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(1)
+        cpg.page_should_contain_text("视频通话呼叫中")
+        CallContactDetailPage().wait_for_profile_name()
+        cpg.click_back_by_android()
+
+        # 4.从profile-视频通话发起视频通话
+        cpg.enter_contact_details("给个红包2")
+        CallContactDetailPage().click_video_call()
+        time.sleep(1)
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(1)
+        cpg.page_should_contain_text("视频通话呼叫中")
+        CallContactDetailPage().wait_for_profile_name()
+        cpg.click_back_by_android()
+        cpg.click_call()
+
+        # 5.从已存在的视频通话记录-重拨
+        time.sleep(1)
+        cpg.click_text("视频通话")
+        time.sleep(1)
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(1)
+        cpg.page_should_contain_text("视频通话呼叫中")
+        cpg.wait_for_call_page()
+
+        # 6.从标签分组-多方视频选择单个成员发起视频通话
+        # GroupListPage().open_contacts_page()
+        # ContactsPage().click_label_grouping()
+        # LabelGroupingPage().click_label_group("alg3465")
 
     @staticmethod
     def setUp_test_call_shenlisi_0231():
@@ -1626,10 +1758,11 @@ class CallAll(TestCase):
         cpg.page_should_contain_text("订购免流特权")
         cpg.page_should_contain_text("以后不再提示")
         # Step:3.点击“继续拨打”
-        cpg.click_text("继续拨打")
-        time.sleep(2)
-        if cpg.is_text_present("暂不开启"):
-            cpg.click_text("暂不开启")
+        time.sleep(1)
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
         time.sleep(1)
         # CheckPoint:3.点击后，直接呼叫
         cpg.page_should_contain_text("视频通话呼叫中")
@@ -1721,11 +1854,11 @@ class CallAll(TestCase):
         ccdp = CallContactDetailPage()
         ccdp.click_video_call()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
-        time.sleep(2)
-        if cpg.is_text_present("暂不开启"):
-            cpg.click_text("暂不开启")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(1)
         # Step:1.用户A点击左上角的“缩放”按钮
         ccdp.click_switch()
         time.sleep(2)
@@ -1760,8 +1893,8 @@ class CallAll(TestCase):
         time.sleep(1)
         cpg.click_video_call()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
         self.assertTrue(cpg.is_toast_exist("当前网络不可用，请检查网络设置"))
         cpg.click_back_by_android()
         # 2.从拨号盘发起视频通话--6.2.9版本已取消拨号盘视频通话
@@ -1771,8 +1904,8 @@ class CallAll(TestCase):
         time.sleep(1)
         cpg.click_video_call()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
         self.assertTrue(cpg.is_toast_exist("当前网络不可用，请检查网络设置"))
 
         # 4.从通话profile发起视频通话
@@ -1780,8 +1913,8 @@ class CallAll(TestCase):
         cpg.click_call_time()
         CallContactDetailPage().click_video_call()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
         self.assertTrue(cpg.is_toast_exist("当前网络不可用，请检查网络设置"))
         cpg.click_back_by_android()
 
@@ -1790,8 +1923,8 @@ class CallAll(TestCase):
         cpg.enter_contact_details("给个红包2")
         CallContactDetailPage().click_video_call()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
         self.assertTrue(cpg.is_toast_exist("当前网络不可用，请检查网络设置"))
         cpg.click_back_by_android()
         cpg.click_call()
@@ -1826,8 +1959,8 @@ class CallAll(TestCase):
         # Step:3.点击【呼叫】按钮
         cmvp.click_tv_sure()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
         GrantPemissionsPage().allow_contacts_permission()
         time.sleep(2)
         if cpg.is_text_present("暂不开启"):
@@ -1856,8 +1989,8 @@ class CallAll(TestCase):
         # Step:1.查看界面
         cmvp.click_tv_sure()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
         GrantPemissionsPage().allow_contacts_permission()
         time.sleep(2)
         if cpg.is_text_present("暂不开启"):
@@ -1906,8 +2039,8 @@ class CallAll(TestCase):
         cmvp.click_contact_head()
         cmvp.click_tv_sure()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
         GrantPemissionsPage().allow_contacts_permission()
         time.sleep(2)
         if cpg.is_text_present("暂不开启"):
@@ -2120,8 +2253,8 @@ class CallAll(TestCase):
         cpg.click_call_time()
         CallContactDetailPage().click_voice_call()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
         GrantPemissionsPage().allow_contacts_permission()
         time.sleep(2)
         if cpg.is_text_present("暂不开启"):
@@ -2143,12 +2276,11 @@ class CallAll(TestCase):
         cpg.click_call_time()
         CallContactDetailPage().click_video_call()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
         GrantPemissionsPage().allow_contacts_permission()
         time.sleep(2)
-        if cpg.is_text_present("暂不开启"):
-            cpg.click_text("暂不开启")
+        cpg.click_cancel_open()
         # CheckPoint:1.发起1v1视频呼叫
         CallContactDetailPage().wait_for_profile_name()
         cpg.click_back_by_android()
@@ -2265,19 +2397,19 @@ class CallAll(TestCase):
 
     @tags('ALL', 'CMCC', 'Call')
     def test_call_shenlisi_0365(self):
-        """检查无效手机号profile无法发起视屏通话"""
+        """检查无效手机号profile无法发起视频通话"""
         # 1.联系人A：11位数内陆手机号（1322456546）
         # 2.联系人B：13位数手机号（132367849098）
         # 3.联系人C：无效区号+手机号（+85213260892669/+8667656003）
         # 4.联系人D：7位数香港无效手机号（6765600）
         # 5.联系人E：9位数香港无效手机号（676660056）
         # 6.联系人F：123456789012
-        # 1.进入到联系人A的通话profile，发起语音通话
-        # 2.进入到联系人B的通话profile，发起语音通话
-        # 3.进入到联系人C的通话profile，发起语音通话
-        # 4.进入到联系人D的通话profile，发起语音通话
-        # 5.进入到联系人E的通话profile，发起语音通话
-        # 6.进入到联系人F的通话profile，发起语音通话
+        # 1.进入到联系人A的通话profile，发起视频通话
+        # 2.进入到联系人B的通话profile，发起视频通话
+        # 3.进入到联系人C的通话profile，发起视频通话
+        # 4.进入到联系人D的通话profile，发起视频通话
+        # 5.进入到联系人E的通话profile，发起视频通话
+        # 6.进入到联系人F的通话profile，发起视频通话
         # 步骤1 - 6：发起语音通话失败，提示“号码有误
         lst = ["1322456546", "132367849098", "+85213260892669", "6765600", "676660056", "123456789012"]
         cpg = CallPage()
@@ -2301,16 +2433,16 @@ class CallAll(TestCase):
         ccdp = CallContactDetailPage()
         ccdp.click_voice_call()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
         # CheckPoint:1.提示“号码有误”
         flag = cpg.is_toast_exist("号码有误")
         self.assertTrue(flag)
         # Step:2.点击视频通话
         ccdp.click_video_call()
         time.sleep(1)
-        if cpg.is_text_present("继续拨打"):
-            cpg.click_text("继续拨打")
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
         # CheckPoint:2.提示“号码有误”
         flag = cpg.is_toast_exist("号码有误")
         self.assertTrue(flag)
@@ -2475,3 +2607,240 @@ class CallAll(TestCase):
         self.assertTrue(cpg.check_multiparty_video())
         cpg.page_should_contain_text("13800138006")
 
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0377(self):
+        """检查单聊富媒体面板-和飞信电话入口拨打"""
+        # 1.登录和飞信：消息tab-单聊会话窗口-富媒体面板
+        # Step: 1.点击和飞信
+        cpg = CallPage()
+        ContactsPage().click_message_icon()
+        Preconditions.enter_single_chat_page("给个红包2")
+        BaseChatPage().click_more()
+        ChatMorePage().click_hefeixin_call()
+        time.sleep(1)
+        if cpg.is_text_present("我知道了"):
+            cpg.click_text("我知道了")
+        time.sleep(1)
+        if cpg.is_text_present("始终允许"):
+            cpg.click_text("始终允许")
+        # CheckPoint: 1.直接呼出一对一的回拨电话
+        time.sleep(3)
+        flag = cpg.is_phone_in_calling_state()
+        self.assertTrue(flag)
+        cpg.page_should_contain_text("和飞信电话")
+        time.sleep(1)
+        cpg.hang_up_the_call()
+        cpg.wait_for_chat_page()
+        cpg.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0381(self):
+        """检查单聊富媒体面板-音频通话包含语音通话年华、视频"""
+        # 1.登录和飞信：消息tab-单聊会话窗口-富媒体面板
+        # Step: 1.1.点击音频电话按钮
+        cpg = CallPage()
+        ContactsPage().click_message_icon()
+        Preconditions.enter_single_chat_page("给个红包2")
+        BaseChatPage().click_more()
+        ChatMorePage().click_voice_and_video_call()
+        time.sleep(1)
+        # CheckPoint: 1.展开的富媒体消息体选择面板收起后Android：中间弹出”语音通话、视频通话“两个按钮
+        cpg.page_should_contain_text("语音通话")
+        cpg.page_should_contain_text("视频通话")
+        cpg.click_back_by_android(2)
+
+    @staticmethod
+    def setUp_test_call_shenlisi_0383():
+        # 关闭WiFi，打开4G网络
+        Preconditions.make_already_in_call()
+        CalllogBannerPage().skip_multiparty_call()
+        CallPage().delete_all_call_entry()
+        CallPage().set_network_status(4)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0383(self):
+        """单聊界面--检查语音呼叫-未订购每月10G用户--4g弹出每月10G免流特权提示窗口"""
+        # 1.客户端已登录
+        # 2.未订购每月10G用户
+        # 3.网络使用4G
+        cpg = CallPage()
+        # Step:1.发起语音通话
+        ContactsPage().click_message_icon()
+        Preconditions.enter_single_chat_page("给个红包2")
+        BaseChatPage().click_more()
+        ChatMorePage().click_voice_and_video_call()
+        cpg.click_voice_call()
+        try:
+            if cpg.is_exist_allow_button():
+                cpg.click_allow_button()
+        except:
+            pass
+        # CheckPoint:1.弹出每月10G免流特权提示窗口。
+        cpg.page_should_contain_text("每月10G免流特权")
+        # Step:2.查看界面
+        # CheckPoint:2.加粗文案为：语音通话每分钟消耗约0.3MB流量，订购[每月10G]畅聊语音/视频通话。弹窗底部显示“继续拨打”、“订购免流特权”、“以后不再提示”
+        cpg.page_should_contain_text("语音通话每分钟消耗约0.3MB流量，订购[每月10G]畅聊语音/视频通话")
+        cpg.page_should_contain_text("继续拨打")
+        cpg.page_should_contain_text("订购免流特权")
+        cpg.page_should_contain_text("以后不再提示")
+        # Step:3.点击“继续拨打”
+        cpg.click_go_on()
+        time.sleep(1)
+        cpg.click_cancel_open()
+        time.sleep(2)
+        # CheckPoint:3.点击后，直接呼叫
+        cpg.page_should_contain_text("正在呼叫")
+        cpg.wait_for_chat_page()
+        # Step:4.再次点击语音通话
+        BaseChatPage().click_more()
+        ChatMorePage().click_voice_and_video_call()
+        cpg.click_voice_call()
+        # CheckPoint:4.继续弹出提示窗口
+        cpg.page_should_contain_text("每月10G免流特权")
+        cpg.click_back_by_android(2)
+
+    @staticmethod
+    def tearDown_test_call_shenlisi_0383():
+        # 打开网络
+        cpg = CallPage()
+        cpg.set_network_status(6)
+
+    @staticmethod
+    def setUp_test_call_shenlisi_0384():
+        # 关闭WiFi，打开4G网络
+        Preconditions.make_already_in_call()
+        CalllogBannerPage().skip_multiparty_call()
+        CallPage().delete_all_call_entry()
+        CallPage().set_network_status(4)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0384(self):
+        """单聊界面---检查4g免流特权提示权订购免流特权提示窗口订购免流界面跳转---语音通话"""
+        # 1.客户端已登录
+        # 2.已弹出4g弹出每月10G免流特权提示窗口
+        cpg = CallPage()
+        ContactsPage().click_message_icon()
+        Preconditions.enter_single_chat_page("给个红包2")
+        BaseChatPage().click_more()
+        ChatMorePage().click_voice_and_video_call()
+        cpg.click_voice_call()
+        # 1.点击订购免流特权
+        ChatSelectLocalFilePage().click_free_flow_privilege()
+        # 1.跳转到【和飞信送你每月10G流量】H5页面
+        cpg.wait_until(timeout=30, auto_accept_permission_alert=True,
+                       condition=lambda d: cpg.is_text_present("和飞信送你每月10G流量"))
+        cpg.page_should_contain_text("和飞信送你每月10G流量")
+        # 2.点击返回按钮
+        cpg.click_back_by_android()
+        # 2.点击返回按钮，返回上一级
+        cpg.page_should_contain_text("每月10G免流特权")
+        cpg.click_back_by_android(2)
+
+    @staticmethod
+    def tearDown_test_call_shenlisi_0384():
+        # 打开网络
+        cpg = CallPage()
+        cpg.set_network_status(6)
+
+    @staticmethod
+    def setUp_test_call_shenlisi_0386():
+        # 确保打开WiFi网络
+        Preconditions.make_already_in_call()
+        CalllogBannerPage().skip_multiparty_call()
+        CallPage().delete_all_call_entry()
+        CallPage().set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0386(self):
+        """单聊界面--检查语音呼叫-未订购每月10G用户--用户在WiFi环境下不提示此类弹窗"""
+        # 1.客户端已登录
+        # 2.未订购每月10G用户
+        # 3.网络使用WIFI
+        # 1.发起语音通话
+        cpg = CallPage()
+        ContactsPage().click_message_icon()
+        Preconditions.enter_single_chat_page("给个红包2")
+        BaseChatPage().click_more()
+        ChatMorePage().click_voice_and_video_call()
+        cpg.click_voice_call()
+        time.sleep(2)
+        # 1.直接发起语音通话，没有弹窗
+        cpg.page_should_not_contain_text("每月10G免流特权")
+        cpg.click_cancel_open()
+        time.sleep(1)
+        cpg.page_should_contain_text("正在呼叫")
+        cpg.wait_for_chat_page()
+        cpg.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0388(self):
+        """检查单聊会话窗口右上角电话按钮"""
+        # 1.登录和飞信：消息tab-单聊会话窗口
+        # Step:1.点击右上角的电话按钮
+        cpg = CallPage()
+        ContactsPage().click_message_icon()
+        Preconditions.enter_single_chat_page("给个红包2")
+        SingleChatPage().click_action_call()
+        time.sleep(1)
+        # CheckPoint:1.弹出系统选择弹窗，选择和飞信电话（免费）与普通电话
+        cpg.page_should_contain_text("飞信电话（免费）")
+        cpg.page_should_contain_text("普通电话")
+        cpg.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0389(self):
+        """检查单聊会话窗口右上角电话按钮-和飞信电话拨打"""
+        # 1.登录和飞信：消息tab-单聊会话窗口
+        # 2.已弹出和飞信电话（免费）与普通电话
+        # Step:1.点击和飞信
+        cpg = CallPage()
+        ContactsPage().click_message_icon()
+        Preconditions.enter_single_chat_page("给个红包2")
+        SingleChatPage().click_action_call()
+        time.sleep(1)
+        # CheckPoint:1.直接呼出一对一的回拨电话
+        cpg.page_should_contain_text("飞信电话（免费）")
+        cpg.page_should_contain_text("普通电话")
+        time.sleep(1)
+        cpg.click_text("飞信电话（免费）")
+        time.sleep(1)
+        if cpg.is_text_present("我知道了"):
+            # 点击‘我知道了’
+            CalllogBannerPage().click_i_know()
+        if cpg.is_text_present("始终允许"):
+            cpg.click_text("始终允许")
+        time.sleep(3)
+        flag = cpg.is_phone_in_calling_state()
+        self.assertTrue(flag)
+        cpg.page_should_contain_text("和飞信电话")
+        time.sleep(1)
+        cpg.hang_up_the_call()
+        cpg.wait_for_chat_page()
+        cpg.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0390(self):
+        """检查单聊会话窗口右上角电话按钮-普通电话拨打"""
+        # 1.登录和飞信：消息tab-单聊会话窗口
+        # 2.已弹出和飞信电话（免费）与普通电话
+        # Step:1.点击普通电话
+        cpg = CallPage()
+        ContactsPage().click_message_icon()
+        Preconditions.enter_single_chat_page("给个红包2")
+        SingleChatPage().click_action_call()
+        time.sleep(1)
+        # CheckPoint:1.直接调起系统电话
+        cpg.page_should_contain_text("飞信电话（免费）")
+        cpg.page_should_contain_text("普通电话")
+        time.sleep(1)
+        cpg.click_text("普通电话")
+        time.sleep(1)
+        if cpg.is_text_present("始终允许"):
+            cpg.click_text("始终允许")
+        time.sleep(2)
+        flag = cpg.is_phone_in_calling_state()
+        self.assertTrue(flag)
+        time.sleep(1)
+        cpg.hang_up_the_call()
+        cpg.wait_for_chat_page()
+        cpg.click_back_by_android()

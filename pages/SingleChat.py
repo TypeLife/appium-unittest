@@ -218,3 +218,7 @@ class SingleChatPage(BaseChatPage):
             if not self._is_enabled(btn):
                 return False
         return True
+    @TestLogger.log()
+    def click_action_call(self):
+        """点击打电话图标"""
+        self.click_element(self.__class__.__locators["打电话图标"])

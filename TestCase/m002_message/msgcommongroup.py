@@ -674,10 +674,11 @@ class MsgCommonGroupTest(TestCase):
         sc = SelectContactsPage()
         sc.wait_for_page_local_contact_load()
         #搜索联系人
-        sc.input_search_contact_message("主")
+        sc.input_search_contact_message("和")
         time.sleep(3)
         #选择“和飞信电话”联系人进行转发
-        sc.click_text("和飞信电话")
+        sc.click_text("012560")
+        time.sleep(2)
         sc.click_sure_forward()
         flag=sc.is_toast_exist("已转发")
         self.assertTrue(flag)

@@ -208,8 +208,7 @@ class Preconditions(object):
         login_num = Preconditions.login_by_one_key_login()
         return login_num
 
-
-class ContactLocal2(TestCase):
+class ContactLocal(TestCase):
     '''
     通讯录测试记录-陈计祥
     '''
@@ -1763,7 +1762,7 @@ class ContactLocal2(TestCase):
         lcontact.set_network_status(6)
 
     @staticmethod
-    def tearDown_contacts_chenjixiang_0059():
+    def tearDown_test_contacts_chenjixiang_0059():
         # 初始化,恢复app到默认状态
         lcontact = localContactPage()
         lcontact.set_network_status(6)
@@ -1800,7 +1799,7 @@ class ContactLocal2(TestCase):
         lcontact.click_back_by_android(1)
 
     @staticmethod
-    def tearDown_contacts_chenjixiang_0060():
+    def tearDown_test_contacts_chenjixiang_0060():
         # 初始化,恢复app到默认状态
         lcontact = localContactPage()
         lcontact.set_network_status(6)
