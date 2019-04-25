@@ -45,7 +45,8 @@ class LabelGroupingChatPage(BaseChatPage):
                   'com.chinasofti.rcs:id/fl_edit_panel': (MobileBy.ID, 'com.chinasofti.rcs:id/fl_edit_panel'),
                   '说点什么...': (MobileBy.ID, 'com.chinasofti.rcs:id/et_message'),
                   'com.chinasofti.rcs:id/ib_expression': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression'),
-                  'com.chinasofti.rcs:id/ib_audio': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_audio')
+                  'com.chinasofti.rcs:id/ib_audio': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_audio'),
+                  "文件名": (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_name'),
                   }
 
     @TestLogger.log()
@@ -82,3 +83,7 @@ class LabelGroupingChatPage(BaseChatPage):
         """点击返回按钮"""
         el = self.get_element(self.__locators["lab2"])
         return el.text
+
+    @TestLogger.log('文件是否存在')
+    def is_element_present_file(self):
+        return self._is_element_present(self.__locators['文件名'])
