@@ -1164,7 +1164,7 @@ class MsgLabelGroupingAll(TestCase):
                 sogp.click_back()
                 scp.click_back()
         else:
-            SelectContactsPage().page_should_contain_text('无搜索结果')
+            sogp.page_should_contain_text('无搜索结果')
 
 
 
