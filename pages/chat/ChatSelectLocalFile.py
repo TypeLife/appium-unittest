@@ -190,6 +190,7 @@ class ChatSelectLocalFilePage(BasePage):
             self.mobile.push_folder(settings.RESOURCE_FILE_PATH, "/sdcard")
             return True
 
+
     @TestLogger.log()
     def send_btn_is_enabled(self):
         """获取发送按钮状态是否可点击"""
