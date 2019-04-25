@@ -1581,6 +1581,7 @@ class MsgGroupChatTest(TestCase):
         chat_file = ChatFilePage()
         chat_file.wait_for_page_loads()
         chat_file.click_file('.html')
+        time.sleep(2)
         current_mobile().back()
         self.assertTrue(chat_file.is_on_this_page())
         chat_file.click_back()
@@ -1631,9 +1632,9 @@ class MsgGroupChatTest(TestCase):
         """进入群聊天页面调起隐藏菜单栏"""
         chat_more = ChatMorePage()
         chat_more.close_more()
+        time.sleep(1.5)
         self.assertTrue(chat_more.check_all_element_is_enable())
         chat_more.close_more()
-        time.sleep(10)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_weifenglian_qun_0201(self):
@@ -1659,6 +1660,7 @@ class MsgGroupChatTest(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_weifenglian_qun_0202(self):
         """观察文件选择页面"""
+        self.public_enter_file_select_page()
         local_file = ChatSelectLocalFilePage()
         self.assertTrue(local_file.check_element_is_exist('文件按钮'))
         self.assertFalse(local_file.check_element_is_exist('文件显示大小'))
