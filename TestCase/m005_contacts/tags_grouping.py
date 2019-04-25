@@ -211,7 +211,7 @@ class Preconditions(object):
         create_page.create_contact(name, number)
         detail_page.wait_for_page_load()
         detail_page.click_back_icon()
-@unittest.skip("本地不执行")
+
 class TagsGroupingTest(TestCase):
     """通讯录 - 标签分组"""
 
@@ -231,7 +231,7 @@ class TagsGroupingTest(TestCase):
                 current_mobile().hide_keyboard_if_display()
                 # 导入数据
                 for name, number in required_contacts:
-                   # Preconditions.create_contacts_if_not_exits(name, number)
+                  # Preconditions.create_contacts_if_not_exits(name, number)
                    Preconditions.create_contacts(name, number)
 
                 # 推送resource文件到手机
