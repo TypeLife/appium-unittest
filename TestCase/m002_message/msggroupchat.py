@@ -12,97 +12,9 @@ from library.core.utils.applicationcache import current_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
 from pages.contacts.local_contact import localContactPage
-from dataproviders import contact2
 
 class Preconditions(LoginPreconditions):
     """前置条件"""
-
-    @staticmethod
-    def create_contacts(name, number):
-        """
-        导入联系人数据
-        :param name:
-        :param number:
-        :return:
-        """
-        contacts_page = ContactsPage()
-        detail_page = ContactDetailsPage()
-        try:
-            contacts_page.wait_for_page_load()
-            contacts_page.open_contacts_page()
-        except:
-            Preconditions.make_already_in_message_page(reset=False)
-            contacts_page.open_contacts_page()
-        # 创建联系人
-        contacts_page.click_search_box()
-        contact_search = ContactListSearchPage()
-        contact_search.wait_for_page_load()
-        contact_search.input_search_keyword(name)
-        if contact_search.is_contact_in_list(name):
-            contact_search.click_back()
-        else:
-            contact_search.click_back()
-            contacts_page.click_add()
-            create_page = CreateContactPage()
-            create_page.hide_keyboard_if_display()
-            create_page.create_contact(name, number)
-            detail_page.wait_for_page_load()
-            detail_page.click_back_icon()
-
-    @staticmethod
-    def import_contacts():
-        # 创建联系人
-        fail_time = 0
-        import dataproviders
-
-        while fail_time < 3:
-            try:
-                # 获取需要导入的联系人数据
-              #  required_contacts = dataproviders.get_preset_contacts()
-                required_contacts =contact2.get_preset_contacts()
-
-                # 连接手机
-              #  Preconditions.connect_mobile('Android-移动')
-                Preconditions.select_mobile('Android-移动')
-                Preconditions.make_already_in_message_page(reset=True)
-                current_mobile().hide_keyboard_if_display()
-                # 导入数据
-                for name, number in required_contacts:
-                    Preconditions.create_contacts(name, number)
-
-                # 推送resource文件到手机
-                dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.select_mobile('Android-移动'))
-                return
-            except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
-
-    @staticmethod
-    def delete_contact():
-        try:
-         #   Preconditions.connect_mobile('Android-移动')
-            Preconditions.select_mobile('Android-移动')
-            current_mobile().hide_keyboard_if_display()
-            Preconditions.make_already_in_message_page()
-            conts_page = ContactsPage()
-            conts_page.open_contacts_page()
-            conts_page.click_label_grouping()
-            lg = LabelGroupingPage()
-            lg.wait_for_page_load()
-            lg.delete_all_label()
-        except:
-            import traceback
-            traceback.print_exc()
-        try:
-            current_mobile().hide_keyboard_if_display()
-            Preconditions.make_already_in_message_page()
-            cdp = ContactDetailsPage()
-            cdp.delete_all_contact()
-        except:
-            traceback.print_exc()
-
 
     @staticmethod
     def make_already_have_my_group(reset=False):
@@ -1966,6 +1878,7 @@ class MsgGroupChatTest(TestCase):
         gcp.wait_for_page_load()
 
 class messagegroupchat(TestCase):
+
     @classmethod
     # def setUpClass(cls):
     #     #Preconditions.select_mobile('Android-移动')
@@ -2658,7 +2571,7 @@ class messagegroupchat(TestCase):
         Preconditions.make_already_in_message_page()
         time.sleep(2)
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @tags('ALL', 'CMCC_debug', 'group_chat')
     def test_msg_xiaoqiu_0215(self):
         """群聊设置页面——关闭消息免打扰——网络异常"""
         scp = SelectContactsPage()
@@ -2687,7 +2600,7 @@ class messagegroupchat(TestCase):
         gcp.click_back_by_android(times=2)
 
     @staticmethod
-    def tearDown_test_msg_xiaoqiu_0215():
+    def tearDown_msg_xiaoqiu_0215():
         # 初始化,恢复app到默认状态
         group_set = GroupChatSetPage()
         group_set.set_network_status(6)
@@ -2699,7 +2612,7 @@ class messagegroupchat(TestCase):
         Preconditions.make_already_in_message_page()
         time.sleep(2)
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @tags('ALL', 'CMCC_debug', 'group_chat')
     def test_msg_xiaoqiu_0216(self):
         """群聊设置页面——关闭消息免打扰——网络断网"""
         scp = SelectContactsPage()
@@ -2728,7 +2641,7 @@ class messagegroupchat(TestCase):
         gcp.click_back_by_android(times=2)
 
     @staticmethod
-    def tearDown_test_msg_xiaoqiu_0216():
+    def tearDown_msg_xiaoqiu_0216():
         # 初始化,恢复app到默认状态
         group_set = GroupChatSetPage()
         group_set.set_network_status(6)
@@ -2740,7 +2653,7 @@ class messagegroupchat(TestCase):
         Preconditions.make_already_in_message_page()
         time.sleep(2)
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @tags('ALL', 'CMCC_debug', 'group_chat')
     def test_msg_xiaoqiu_0217(self):
         """群聊设置页面——开启消息免打扰——网络断网"""
         scp = SelectContactsPage()
@@ -2769,7 +2682,7 @@ class messagegroupchat(TestCase):
         gcp.click_back_by_android(times=2)
 
     @staticmethod
-    def tearDown_test_msg_xiaoqiu_0217():
+    def tearDown_msg_xiaoqiu_0217():
         # 初始化,恢复app到默认状态
         group_set = GroupChatSetPage()
         group_set.set_network_status(6)
@@ -2784,7 +2697,7 @@ class messagegroupchat(TestCase):
                                      replace=True)
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @tags('ALL', 'CMCC_debug', 'group_chat')
     def test_msg_xiaoqiu_0218(self):
         """卸载重装——登录和飞信——查看置顶状态"""
         scp = SelectContactsPage()
@@ -2808,7 +2721,7 @@ class messagegroupchat(TestCase):
         Preconditions.make_already_in_message_page()
         time.sleep(2)
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @tags('ALL', 'CMCC_debug', 'group_chat')
     def test_msg_xiaoqiu_0242(self):
         """卸载重装——登录和飞信——查看置顶状态"""
         scp = SelectContactsPage()
@@ -2838,7 +2751,7 @@ class messagegroupchat(TestCase):
         Preconditions.make_already_in_message_page()
         time.sleep(2)
 
-    @tags('ALL', 'CMCC', 'group_chat')
+    @tags('ALL', 'CMCC_debug', 'group_chat')
     def test_msg_xiaoqiu_0243(self):
         """卸载重装——登录和飞信——查看置顶状态"""
         scp = SelectContactsPage()
@@ -2861,7 +2774,6 @@ class messagegroupchat(TestCase):
         time.sleep(1)
         group_set.click_delete_and_exit()
         gcp.click_back_by_android(times=2)
-
 
     @staticmethod
     def setUp_test_msg_xiaoqiu_0245():

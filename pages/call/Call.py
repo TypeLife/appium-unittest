@@ -58,6 +58,8 @@ class CallPage(BasePage):
         '语音通话': (MobileBy.XPATH, '//*[@text="语音通话"]'),
         '继续拨打': (MobileBy.XPATH, '//*[@text="继续拨打"]'),
         '暂不开启': (MobileBy.XPATH, '//*[@text="暂不开启"]'),
+        '多方电话': (MobileBy.XPATH, '//*[@text="多方电话"]'),
+        '多方视频': (MobileBy.XPATH, '//*[@text="多方视频"]'),
     }
 
     @TestLogger.log()
@@ -554,6 +556,16 @@ class CallPage(BasePage):
     def click_voice_call(self):
         """点击语音通话"""
         self.click_element(self.__class__.__locators["语音通话"])
+
+    @TestLogger.log()
+    def click_mutil_call(self):
+        """点击多方电话"""
+        self.click_element(self.__class__.__locators["多方电话"])
+
+    @TestLogger.log()
+    def click_mutil_video_call(self):
+        """点击多方视频"""
+        self.click_element(self.__class__.__locators["多方视频"])
 
     @TestLogger.log('点击继续拨打')
     def click_go_on(self):
