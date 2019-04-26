@@ -461,3 +461,92 @@ class EnterpriseContactsAllTest(TestCase):
         # 1.等待工作台首页加载
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QYTXL_0009(self):
+        """精确搜索（数字、中文、英文）"""
+
+        # 进入企业通讯录首页
+        Preconditions.enter_enterprise_contacts_page()
+        ecp = EnterpriseContactsPage()
+        # 点击搜索框
+        ecp.click_search_box()
+        search_name = "陈丹丹"
+        ecp.input_search_message(search_name)
+        time.sleep(2)
+        # 1.检查搜索结果是否完全匹配关键字
+        self.assertEquals(ecp.is_search_contacts_name_full_match(search_name), True)
+        search_name2 = "alice"
+        ecp.input_search_message(search_name2)
+        time.sleep(2)
+        # 2.检查搜索结果是否完全匹配关键字
+        self.assertEquals(ecp.is_search_contacts_name_full_match(search_name2), True)
+        search_number = "13802883296"
+        ecp.input_search_message(search_number)
+        time.sleep(2)
+        # 3.检查搜索结果是否完全匹配关键字
+        self.assertEquals(ecp.is_search_contacts_number_full_match(search_number), True)
+        ecp.click_return()
+        ecp.click_back()
+        ecp.click_back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QYTXL_0010(self):
+        """模糊搜索（数字、中文、英文）"""
+
+        # 进入企业通讯录首页
+        Preconditions.enter_enterprise_contacts_page()
+        ecp = EnterpriseContactsPage()
+        # 点击搜索框
+        ecp.click_search_box()
+        search_name = "陈"
+        ecp.input_search_message(search_name)
+        time.sleep(2)
+        # 1.检查搜索结果是否模糊匹配关键字
+        self.assertEquals(ecp.is_search_contacts_name_match(search_name), True)
+        search_name2 = "zhg"
+        ecp.input_search_message(search_name2)
+        time.sleep(2)
+        # 2.检查搜索结果是否模糊匹配关键字
+        self.assertEquals(ecp.is_search_contacts_name_match("郑海贵"), True)
+        search_number = "138028"
+        ecp.input_search_message(search_number)
+        time.sleep(2)
+        # 3.检查搜索结果是否模糊匹配关键字
+        self.assertEquals(ecp.is_search_contacts_number_match(search_number), True)
+        ecp.click_return()
+        ecp.click_back()
+        ecp.click_back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QYTXL_0011(self):
+        """网络异常下搜索企业通讯录联系人"""
+
+        # 进入企业通讯录首页
+        Preconditions.enter_enterprise_contacts_page()
+        ecp = EnterpriseContactsPage()
+        # 设置手机网络断开
+        ecp.set_network_status(0)
+        # 点击搜索框
+        ecp.click_search_box()
+        search_name = "大佬1"
+        ecp.input_search_message(search_name)
+        # 1.页面是否出现网络异常提示
+        self.assertEquals(ecp.is_toast_exist("网络连接异常"), True)
+        self.assertEquals(ecp.is_text_present("网络出错，轻触屏幕重新加载"), True)
+        ecp.click_return()
+        ecp.click_back()
+        ecp.click_back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+
+    @staticmethod
+    def tearDown_test_QYTXL_0011():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)

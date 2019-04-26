@@ -101,6 +101,38 @@ class Preconditions(LoginPreconditions):
         if mp.is_iv_fail_status_present():
             mp.clear_fail_in_send_message()
 
+    @staticmethod
+    def if_exists_multiple_enterprises_enter_single_chat():
+        """选择和通讯录联系人时存在多个团队时返回获取当前团队名"""
+
+        shc = SelectHeContactsDetailPage()
+        # 测试号码是否存在多个团队
+        if not shc.is_exist_corporate_grade():
+            mp = MessagePage()
+            scg = SelectContactsPage()
+            gcp = GroupChatPage()
+            shc.click_back()
+            scg.wait_for_page_load()
+            scg.click_back()
+            gcp.wait_for_page_load()
+            gcp.click_back()
+            mp.wait_for_page_load()
+            mp.open_workbench_page()
+            wbp = WorkbenchPage()
+            wbp.wait_for_workbench_page_load()
+            # 获取当前团队名
+            workbench_name = wbp.get_workbench_name()
+            mp.open_message_page()
+            mp.wait_for_page_load()
+            single_name = "大佬1"
+            Preconditions.enter_single_chat_page(single_name)
+            gcp.forward_pic()
+            scg.wait_for_page_load()
+            scg.click_he_contacts()
+            shc.wait_for_he_contacts_page_load()
+            # 选择当前团队
+            shc.click_department_name(workbench_name)
+
 
 class MsgPrivateChatVideoPicTest(TestCase):
     """
@@ -1606,8 +1638,9 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
     def test_msg_privateChat_videoPic_total_quantity_0041(self):
         """单聊会话页面，转发自己发送的图片到当前会话窗口"""
 
-        # 给当前会话页面发送一张图片,确保最近聊天中有记录
         scp = SingleChatPage()
+        scp.wait_for_page_load()
+        # 给当前会话页面发送一张图片,确保最近聊天中有记录
         cpp = ChatPicPage()
         time.sleep(2)
         scp.click_picture()
@@ -1615,15 +1648,31 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         cpp.select_pic_fk(1)
         cpp.click_send()
         time.sleep(5)
-        # 等待单聊会话页面加载
-        scp.wait_for_page_load()
+        contact_name = "大佬1"
+        # 解决发送图片后，最近聊天窗口没有记录，需要退出刷新的问题
+        scp.click_back()
+        # 返回时做一个判断，避免被别的模块影响执行
+        mp = MessagePage()
+        if not mp.is_on_this_page():
+            cdp = ContactDetailsPage()
+            cdp.click_back_icon()
+            cp = ContactsPage()
+            cp.wait_for_page_load()
+            mp.open_message_page()
+            Preconditions.enter_single_chat_page(contact_name)
+            scp.click_picture()
+            cpp.wait_for_page_load()
+            cpp.select_pic_fk(1)
+            cpp.click_send()
+            time.sleep(5)
+        Preconditions.enter_single_chat_page(contact_name)
         # 1.长按自己发送的图片并转发
         scp.forward_pic()
         scg = SelectContactsPage()
         # 2.等待选择联系人页面加载
         scg.wait_for_page_load()
         # 3.选择最近聊天中的当前会话窗口
-        scg.select_recent_chat_by_number(0)
+        scg.select_recent_chat_by_name(contact_name)
         # 确定转发
         scg.click_sure_forward()
         # 4.是否提示已转发,等待单聊页面加载
@@ -1638,13 +1687,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         """单聊会话页面，转发自己发送的图片到当前会话窗口时失败"""
 
         scp = SingleChatPage()
-        # 等待单聊会话页面加载
         scp.wait_for_page_load()
-        scp.click_back()
-        # 确保当前消息列表没有消息发送失败的标识影响验证结果
-        Preconditions.make_no_message_send_failed_status()
-        contact_name = "大佬1"
-        Preconditions.enter_single_chat_page(contact_name)
         # 给当前会话页面发送一张图片,确保最近聊天中有记录
         cpp = ChatPicPage()
         time.sleep(2)
@@ -1653,6 +1696,11 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         cpp.select_pic_fk(1)
         cpp.click_send()
         time.sleep(5)
+        scp.click_back()
+        # 确保当前消息列表没有消息发送失败的标识影响验证结果
+        Preconditions.make_no_message_send_failed_status()
+        contact_name = "大佬1"
+        Preconditions.enter_single_chat_page(contact_name)
         # 等待单聊会话页面加载
         scp.wait_for_page_load()
         # 设置手机网络断开
@@ -1663,7 +1711,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         # 2.等待选择联系人页面加载
         scg.wait_for_page_load()
         # 3.选择最近聊天中的当前会话窗口
-        scg.select_recent_chat_by_number(0)
+        scg.select_recent_chat_by_name(contact_name)
         # 确定转发
         scg.click_sure_forward()
         # 4.是否提示已转发,等待单聊页面加载
@@ -1686,8 +1734,9 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
     def test_msg_privateChat_videoPic_total_quantity_0043(self):
         """单聊会话页面，转发自己发送的图片到当前会话窗口时点击取消转发"""
 
-        # 给当前会话页面发送一张图片,确保最近聊天中有记录
         scp = SingleChatPage()
+        scp.wait_for_page_load()
+        # 给当前会话页面发送一张图片,确保最近聊天中有记录
         cpp = ChatPicPage()
         time.sleep(2)
         scp.click_picture()
@@ -1695,15 +1744,17 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         cpp.select_pic_fk(1)
         cpp.click_send()
         time.sleep(5)
-        # 等待单聊会话页面加载
-        scp.wait_for_page_load()
+        # 解决发送图片后，最近聊天窗口没有记录，需要退出刷新的问题
+        scp.click_back()
+        contact_name = "大佬1"
+        Preconditions.enter_single_chat_page(contact_name)
         # 1.长按自己发送的图片并转发
         scp.forward_pic()
         scg = SelectContactsPage()
         # 2.等待选择联系人页面加载
         scg.wait_for_page_load()
         # 3.选择最近聊天中的当前会话窗口
-        scg.select_recent_chat_by_number(0)
+        scg.select_recent_chat_by_name(contact_name)
         # 取消转发
         scg.click_cancel_forward()
         # 4.等待选择联系人页面加载
@@ -1864,7 +1915,8 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
-        shc.click_department_name("test_work")
+        # 需要考虑测试号码存在多个团队的情况
+        Preconditions.if_exists_multiple_enterprises_enter_single_chat()
         name = "大佬3"
         shc.selecting_he_contacts_by_name(name)
         # 确定转发
@@ -1917,7 +1969,8 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
-        shc.click_department_name("test_work")
+        # 需要考虑测试号码存在多个团队的情况
+        Preconditions.if_exists_multiple_enterprises_enter_single_chat()
         name = "大佬3"
         shc.selecting_he_contacts_by_name(name)
         # 确定转发
@@ -1959,7 +2012,8 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
-        shc.click_department_name("test_work")
+        # 需要考虑测试号码存在多个团队的情况
+        Preconditions.if_exists_multiple_enterprises_enter_single_chat()
         name = "大佬3"
         shc.selecting_he_contacts_by_name(name)
         # 取消转发
