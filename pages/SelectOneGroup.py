@@ -36,6 +36,9 @@ class SelectOneGroupPage(BasePage):
                   'A': (MobileBy.ID, ''),
                   'B': (MobileBy.ID, ''),
                   'C': (MobileBy.ID, ''),
+                  '右侧字母索引': (MobileBy.XPATH,
+                             '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView'),
+                  '左侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_index"]'),
                   # 选择一个群转发消息时的弹框
                   '发送给': (MobileBy.XPATH, "//*[contains(@text, '发送给')]"),
                   '取消': (MobileBy.XPATH, "//*[contains(@text, '取消')]"),
@@ -44,6 +47,7 @@ class SelectOneGroupPage(BasePage):
                   '群-搜索': (MobileBy.ID, 'com.chinasofti.rcs:id/edit_query'),
                   '搜索-返回': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_back'),
                   '搜索结果展示': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
+                  '黏贴': (MobileBy.XPATH, "//*[contains(@text, '黏贴')]"),
                   }
 
     @TestLogger.log()
@@ -201,4 +205,20 @@ class SelectOneGroupPage(BasePage):
             return els
         else:
             raise AssertionError("没有搜索结果")
+
+    @TestLogger.log("根据导航栏的第一个字母定位")
+    def choose_index_bar_click_element(self):
+        self.click_element(
+            ('xpath','//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView[1]'))
+        elements = self.get_elements(self.__class__.__locators["群聊名"])
+        elements[0].click()
+
+    @TestLogger.log()
+    def page_contain_element_result(self):
+        """页面应该展示搜索结果"""
+        self.page_should_contain_element(self.__class__.__locators['搜索结果展示'])
+
+    @TestLogger.log('搜索结果是否存在')
+    def is_element_present_result(self):
+        return self._is_element_present(self.__locators['搜索结果展示'])
 

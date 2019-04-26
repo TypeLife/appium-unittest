@@ -197,6 +197,9 @@ class Preconditions(object):
             return
         sog.click_back()
         # 从本地联系人中选择成员创建群
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
         sc.click_local_contacts()
         time.sleep(2)
         slc = SelectLocalContactsPage()
@@ -373,7 +376,6 @@ class Preconditions(object):
             scp.click_i_have_read()
         scp.click_more()
         cmp = ChatMorePage()
-        cmp.wait_for_page_load()
         cmp.click_file1()
         csf = ChatSelectFilePage()
         csf.wait_for_page_load()
@@ -398,8 +400,6 @@ class Preconditions(object):
         scp.press_file_to_do(file_type, "收藏")
         if not scp.is_toast_exist("已收藏"):
             raise AssertionError("没有此弹框")
-        cmp.click_back()
-        cmp.click_back()
         cmp.click_back()
 
     @staticmethod
@@ -858,7 +858,7 @@ class MeAllCollect(TestCase):
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     def test_me_all_page_460(self):
         """查看收藏内容为可识别的音频格式"""
-        Preconditions.make_already_set_chart_group_file(".mp3")
+        Preconditions.make_already_set_chart_group_file("18718.mp3")
         # 1.点击跳转到我的页面
         mess = MessagePage()
         mess.wait_for_page_load()
@@ -961,7 +961,7 @@ class MeAllCollect(TestCase):
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     def test_me_all_page_464(self):
         """在收藏列表中打开音频文件"""
-        Preconditions.make_already_set_chart_group_file(".mp3")
+        Preconditions.make_already_set_chart_group_file("18718.mp3")
         # 1.点击跳转到我的页面
         mess = MessagePage()
         mess.wait_for_page_load()
@@ -1491,9 +1491,9 @@ class MeAllCollect(TestCase):
         scp.wait_for_page_local_contact_load()
         phoneNumber = "12560"
         scp.input_search_contact_message(phoneNumber)
-        info = "搜索和通讯录联系人 : " + phoneNumber
+        info = "搜索团队联系人 : " + phoneNumber
         scp.page_should_contain_text(info)
-        scp.page_should_contain_text("本地联系人")
+        scp.page_should_contain_text("联系人")
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     def test_me_all_page_528(self):
@@ -1515,9 +1515,9 @@ class MeAllCollect(TestCase):
         scp.wait_for_page_local_contact_load()
         phoneNumber = "1"
         scp.search(phoneNumber)
-        info = "搜索和通讯录联系人 : " + phoneNumber
+        info = "搜索团队联系人 : " + phoneNumber
         scp.page_should_contain_text(info)
-        scp.page_should_contain_text("本地联系人")
+        scp.page_should_contain_text("联系人")
         self.assertEquals(scp.result_is_more_tree(), True)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
@@ -2016,7 +2016,7 @@ class MeAllCollect(TestCase):
         mfp.wait_for_page_load()
         mfp.page_contain_text("在线客服")
         # 4.点击返回
-        mfp.click_back()
+        # mfp.click_back()
         mfp.click_text_button("X")
         mess.open_message_page()
 
@@ -2061,7 +2061,8 @@ class MeAllCollect(TestCase):
         mfp.page_contain_text("和飞信社区")
         # 5.点击返回
         mfp.click_back()
-        mfp.click_back()
+        # mfp.click_back()
+        mep.wait_for_page_load()
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')

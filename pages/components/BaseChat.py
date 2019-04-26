@@ -611,3 +611,16 @@ class BaseChatPage(BasePage):
     def click_multiple_selection(self):
         """点击多选"""
         self.click_element(self.__class__.__locators["多选"])
+
+    @TestLogger.log("检查消息弹框是否有2个按钮")
+    def check_element_enabled(self, locator):
+        return self._is_enabled(self.__locators[locator])
+
+    @TestLogger.log("点击我已阅读")
+    def click_only_i_have_read(self):
+        self.click_element(self.__class__.__locators["我已阅读"])
+
+    @TestLogger.log("点击消息确定")
+    def click_only_sure_button(self):
+        self.click_element(self.__class__.__locators["确定"])
+

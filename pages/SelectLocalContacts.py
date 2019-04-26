@@ -276,4 +276,17 @@ class SelectLocalContactsPage(BasePage):
                 contacts_name.append(el.text)
         return contacts_name
 
+    @TestLogger.log("点击第一个联系人")
+    def click_first_phone_contacts(self):
+        self.get_elements(self.__locators['电话号码'])[0].click()
 
+    @TestLogger.log("当前页面是否在选择联系人页")
+    def is_on_this_page(self):
+        el = self.get_elements(self.__locators['选择联系人'])
+        if len(el) > 0:
+            return True
+        return False
+
+    @TestLogger.log("点击搜索第一个联系人")
+    def click_search_phone_contacts(self):
+        self.get_elements(self.__class__.__locators["联系人名"])[0].click()

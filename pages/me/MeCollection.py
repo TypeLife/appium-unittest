@@ -53,6 +53,7 @@ class MeCollectionPage(BasePage):
                   '内容来源': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name'),
                   '收藏时间': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_time'),
                   '收藏内容': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_tv'),
+                  '文件大小': (MobileBy.ID, 'com.chinasofti.rcs:id/file_size'),
                   }
 
     @TestLogger.log()

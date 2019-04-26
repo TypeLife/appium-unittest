@@ -80,10 +80,16 @@ class LabelGroupingChatPage(BaseChatPage):
 
     @TestLogger.log()
     def get_label_name(self):
-        """点击返回按钮"""
+        """获取标题名称"""
         el = self.get_element(self.__locators["lab2"])
         return el.text
 
     @TestLogger.log('文件是否存在')
     def is_element_present_file(self):
         return self._is_element_present(self.__locators['文件名'])
+
+    @TestLogger.log()
+    def press_file(self):
+        """长按文件"""
+        el = self.get_element(self.__class__.__locators['文件名'])
+        self.press(el)

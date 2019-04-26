@@ -71,6 +71,7 @@ class WorkbenchPage(FooterPage):
                   '咨询客服': (MobileBy.XPATH, '//*[@text="咨询客服"]'),
                   '创建团队': (MobileBy.XPATH, '//*[@text="创建团队"]'),
                   '创建群': (MobileBy.XPATH, '//*[@text="创建群"]'),
+                  '马上创建群': (MobileBy.XPATH, '//*[@text="马上创建群"]'),
                   '消息': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMessage'),
                   '通话': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCall'),
                   '工作台': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCircle'),
