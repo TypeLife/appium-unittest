@@ -21,7 +21,6 @@ REQUIRED_MOBILES = {
 class Preconditions(LoginPreconditions):
     """前置条件"""
 
-
     @staticmethod
     def enter_label_grouping_chat_page(reset=False):
         """进入标签分组会话页面"""
@@ -96,7 +95,6 @@ class Preconditions(LoginPreconditions):
         client = switch_to_mobile(REQUIRED_MOBILES[category])
         client.connect_mobile()
         return client
-
 
     @staticmethod
     def enter_local_video_catalog():
@@ -738,7 +736,6 @@ class MsgLabelGroupingAll(TestCase):
         time.sleep(2)
         LabelGroupingChatPage().page_should_contain_text("alg7272")
 
-
     @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0014(self):
         """文件列表页面-图片发送成功"""
@@ -992,7 +989,6 @@ class MsgLabelGroupingAll(TestCase):
             mep = MePage()
             mep.set_network_status(6)
 
-
     # Android手机无取消按钮,IOS有
     @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
     def test_msg_weifenglian_fenzu_0025(self):
@@ -1103,76 +1099,6 @@ class MsgLabelGroupingAll(TestCase):
         except:
             mep = MePage()
             mep.set_network_status(6)
-
-    @tags('ALL', 'SMOKE', 'DEBUG_1', 'label_grouping')
-    def test_msg_weifenglian_fenzu_0061(self):
-        """标签分组天会话页面，长按文件转发到任意群"""
-        # 1、在当前群聊天会话页面长按任意文件
-        chat = LabelGroupingChatPage()
-        chat.wait_for_page_load()
-        # 进入到文件选择页面
-        if not chat.is_open_more():
-            chat.click_more()
-        more_page = ChatMorePage()
-        more_page.click_file()
-        # 点击本地文件，进入到本地文件中
-        csf = ChatSelectFilePage()
-        csf.wait_for_page_load()
-        csf.click_local_file()
-        local_file = ChatSelectLocalFilePage()
-        # 没有预置文件，则上传
-        flag = local_file.push_preset_file()
-        if flag:
-            local_file.click_back()
-            csf.click_local_file()
-        # 进入预置文件目录，选择文件发送
-        local_file.click_preset_file_dir()
-        local_file.select_file(".txt")
-        local_file.click_send()
-        # 2、选择转发，选择一个群
-        chat.wait_for_page_load()
-        chat.press_mess(".txt")
-        time.sleep(2)
-        #页面调起功能菜单
-        chat.page_should_contain_text('转发')
-        chat.page_should_contain_text('收藏')
-        chat.page_should_contain_text('撤回')
-        chat.page_should_contain_text('删除')
-        chat.page_should_contain_text('多选')
-        #点击转发
-        chat.click_forward()
-        SelectContactsPage().wait_for_page_load()
-        scp = SelectContactsPage()
-        scp.click_select_one_group()
-        sogp = SelectOneGroupPage()
-        sogp.wait_for_page_load()
-        #搜索群组
-        sogp.click_search_group()
-        result=sogp.input_search_keyword('给个红包1')
-        if result:
-            names=sogp.click_search_result()
-            if names:
-                # 3、点击确定
-                time .sleep(2)
-                SelectContactsPage().page_should_contain_text('取消')
-                SelectContactsPage().page_should_contain_text('确定')
-                sogp.click_sure_forward()
-                flag = sogp.is_toast_exist("已转发")
-                self.assertTrue(flag)
-            else:
-                print("WARN: There is no group.")
-                sogp.click_back()
-                scp.click_back()
-        else:
-            sogp.page_should_contain_text('无搜索结果')
-
-
-
-
-
-
-
-
 
 
 
