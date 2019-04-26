@@ -1713,6 +1713,7 @@ class MsgGroupChatTest(TestCase):
 
 
 class MsgAllPrior(TestCase):
+
     @staticmethod
     def setUp_test_msg_xiaoqiu_0605():
         """确保在群聊聊天会话页面"""
@@ -1769,7 +1770,7 @@ class MsgAllPrior(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset=Flag)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior')
+    @unittest.skip('用例需要重置')
     def test_msg_huangcaizui_A_0058(self):
         """新建消息入口首次进入一对一聊天页面是否有弹框出来"""
         self.enter_o2o_message_page()
@@ -1783,7 +1784,7 @@ class MsgAllPrior(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior')
+    @unittest.skip('用例需要重置')
     def test_msg_huangcaizui_A_0059(self):
         """观察从新建消息入口出现的弹框页面"""
         self.enter_o2o_message_page()
@@ -1800,7 +1801,7 @@ class MsgAllPrior(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior')
+    @unittest.skip('用例需要重置')
     def test_msg_huangcaizui_A_0060(self):
         """验证点选弹框中的“我已阅读”按钮后确定按钮是否会变高亮"""
         self.enter_o2o_message_page()
@@ -1818,7 +1819,7 @@ class MsgAllPrior(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior')
+    @unittest.skip('用例需要重置')
     def test_msg_huangcaizui_A_0061(self):
         """验证点选弹框中的“我已阅读”按钮后确定按钮是否会变高亮"""
         self.enter_o2o_message_page()
@@ -1838,7 +1839,7 @@ class MsgAllPrior(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page(reset=True)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior')
+    @unittest.skip('用例需要重置')
     def test_msg_huangcaizui_A_0062(self):
         """验证不点击确定，使用手机系统返回，再次进入一对一聊天窗口是否会再次弹出使用须知"""
         self.enter_o2o_message_page()
