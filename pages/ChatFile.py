@@ -101,3 +101,7 @@ class ChatFilePage(BasePage):
                 message
             )
         return self
+
+    @TestLogger.log("点击文件")
+    def click_file(self, file):
+        self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file)).click()

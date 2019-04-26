@@ -331,6 +331,42 @@ class Preconditions(object):
         mp.wait_for_page_load()
 
     @staticmethod
+    def create_he_contacts2(contacts):
+        """手动输入联系人创建为和通讯录联系人"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_workbench_page()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_organization()
+        osp = OrganizationStructurePage()
+        time.sleep(5)
+        n = 1
+        # 解决工作台不稳定问题
+        while osp.is_text_present("账号认证失败"):
+            osp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_organization()
+            time.sleep(5)
+            n += 1
+            if n > 10:
+                break
+        for name, number in contacts:
+            if not osp.is_exist_specify_element_by_name(name):
+                osp.click_specify_element_by_name("添加联系人")
+                time.sleep(2)
+                osp.click_specify_element_by_name("手动输入添加")
+                osp.input_contacts_name(name)
+                osp.input_contacts_number(number)
+                osp.click_confirm()
+                osp.wait_for_page_load()
+        osp.click_back()
+        wbp.wait_for_workbench_page_load()
+        mp.open_message_page()
+        mp.wait_for_page_load()
+
+    @staticmethod
     def make_no_message_send_failed_status():
         """确保当前消息列表没有消息发送失败的标识影响验证结果"""
 
@@ -391,6 +427,38 @@ class Preconditions(object):
             mp.open_message_page()
             mp.wait_for_page_load()
             Preconditions.create_enterprise_group("测试企业群")
+
+    @staticmethod
+    def if_exists_multiple_enterprises_enter_group_chat():
+        """选择和通讯录联系人时存在多个团队时返回获取当前团队名"""
+
+        shc = SelectHeContactsDetailPage()
+        # 测试号码是否存在多个团队
+        if not shc.is_exist_corporate_grade():
+            mp = MessagePage()
+            scg = SelectContactsPage()
+            gcp = GroupChatPage()
+            shc.click_back()
+            scg.wait_for_page_load()
+            scg.click_back()
+            gcp.wait_for_page_load()
+            gcp.click_back()
+            mp.wait_for_page_load()
+            mp.open_workbench_page()
+            wbp = WorkbenchPage()
+            wbp.wait_for_workbench_page_load()
+            # 获取当前团队名
+            workbench_name = wbp.get_workbench_name()
+            mp.open_message_page()
+            mp.wait_for_page_load()
+            group_name = "群聊1"
+            Preconditions.get_into_group_chat_page(group_name)
+            gcp.forward_pic()
+            scg.wait_for_page_load()
+            scg.click_he_contacts()
+            shc.wait_for_he_contacts_page_load()
+            # 选择当前团队
+            shc.click_department_name(workbench_name)
 
     @staticmethod
     def make_already_delete_my_group():
@@ -2226,8 +2294,11 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         while fail_time2 < 5:
             try:
                 Preconditions.make_already_in_message_page()
-                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4", "b测算", "c平5", '哈 马上']
+                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
                 Preconditions.create_he_contacts(contact_names)
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "13800137005"), ('郑海贵', "13802883296")]
+                Preconditions.create_he_contacts2(contact_names2)
                 flag2 = True
             except:
                 fail_time2 += 1
@@ -2310,9 +2381,9 @@ class MsgGroupChatVideoPicAllTest(TestCase):
     def test_msg_group_chat_total_quantity_0041(self):
         """群聊会话页面,转发自己发送的图片到当前会话窗口"""
 
-        # 给当前会话页面发送一张图片,确保最近聊天中有记录
         gcp = GroupChatPage()
         gcp.wait_for_page_load()
+        # 给当前会话页面发送一张图片,确保最近聊天中有记录
         time.sleep(2)
         gcp.click_picture()
         cpg = ChatPicPage()
@@ -2320,8 +2391,6 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         cpg.select_pic_fk(1)
         cpg.click_send()
         time.sleep(5)
-        # 等待群聊页面加载
-        gcp.wait_for_page_load()
         # 解决发送图片后，最近聊天窗口没有记录，需要退出刷新的问题
         gcp.click_back()
         group_name = "群聊1"
@@ -2333,7 +2402,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         scg.wait_for_page_load()
         time.sleep(2)
         # 3.选择最近聊天中的当前会话窗口
-        scg.select_recent_chat_by_number(0)
+        scg.select_recent_chat_by_name(group_name)
         # 确定转发
         scg.click_sure_forward()
         # 4.是否提示已转发,等待群聊页面加载
@@ -2348,15 +2417,8 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         """群聊会话页面，转发他人发送的图片到当前会话窗口时失败"""
 
         gcp = GroupChatPage()
-        # 等待群聊页面加载
         gcp.wait_for_page_load()
-        gcp.click_back()
-        # 确保当前消息列表没有消息发送失败的标识影响验证结果
-        Preconditions.make_no_message_send_failed_status()
-        group_name = "群聊1"
-        Preconditions.get_into_group_chat_page(group_name)
         # 给当前会话页面发送一张图片,确保最近聊天中有记录
-        gcp.wait_for_page_load()
         time.sleep(2)
         gcp.click_picture()
         cpg = ChatPicPage()
@@ -2364,6 +2426,11 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         cpg.select_pic_fk(1)
         cpg.click_send()
         time.sleep(5)
+        gcp.click_back()
+        # 确保当前消息列表没有消息发送失败的标识影响验证结果
+        Preconditions.make_no_message_send_failed_status()
+        group_name = "群聊1"
+        Preconditions.get_into_group_chat_page(group_name)
         # 等待群聊页面加载
         gcp.wait_for_page_load()
         # 设置手机网络断开
@@ -2374,7 +2441,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 2.等待选择联系人页面加载
         scg.wait_for_page_load()
         # 3.选择最近聊天中的当前会话窗口
-        scg.select_recent_chat_by_number(0)
+        scg.select_recent_chat_by_name(group_name)
         # 确定转发
         scg.click_sure_forward()
         # 4.是否提示已转发,等待群聊页面加载
@@ -2397,9 +2464,9 @@ class MsgGroupChatVideoPicAllTest(TestCase):
     def test_msg_group_chat_total_quantity_0043(self):
         """群聊会话页面，转发自己发送的图片到当前会话窗口时点击取消转发"""
 
-        # 给当前会话页面发送一张图片,确保最近聊天中有记录
         gcp = GroupChatPage()
         gcp.wait_for_page_load()
+        # 给当前会话页面发送一张图片,确保最近聊天中有记录
         time.sleep(2)
         gcp.click_picture()
         cpg = ChatPicPage()
@@ -2407,8 +2474,6 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         cpg.select_pic_fk(1)
         cpg.click_send()
         time.sleep(5)
-        # 等待群聊页面加载
-        gcp.wait_for_page_load()
         # 解决发送图片后，最近聊天窗口没有记录，需要退出刷新的问题
         gcp.click_back()
         group_name = "群聊1"
@@ -2419,7 +2484,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 2.等待选择联系人页面加载
         scg.wait_for_page_load()
         # 3.选择最近聊天中的当前会话窗口
-        scg.select_recent_chat_by_number(0)
+        scg.select_recent_chat_by_name(group_name)
         # 取消转发
         scg.click_cancel_forward()
         # 4.等待选择联系人页面加载
@@ -2573,7 +2638,8 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
-        shc.click_department_name("test_work")
+        # 需要考虑测试号码存在多个团队的情况
+        Preconditions.if_exists_multiple_enterprises_enter_group_chat()
         name = "大佬3"
         shc.selecting_he_contacts_by_name(name)
         # 确定转发
@@ -2626,7 +2692,8 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
-        shc.click_department_name("test_work")
+        # 需要考虑测试号码存在多个团队的情况
+        Preconditions.if_exists_multiple_enterprises_enter_group_chat()
         contact_name = "大佬3"
         shc.selecting_he_contacts_by_name(contact_name)
         # 确定转发
@@ -2668,7 +2735,8 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
-        shc.click_department_name("test_work")
+        # 需要考虑测试号码存在多个团队的情况
+        Preconditions.if_exists_multiple_enterprises_enter_group_chat()
         name = "大佬3"
         shc.selecting_he_contacts_by_name(name)
         # 取消转发
@@ -3195,7 +3263,8 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
-        shc.click_department_name("test_work")
+        # 需要考虑测试号码存在多个团队的情况
+        Preconditions.if_exists_multiple_enterprises_enter_group_chat()
         name = "大佬3"
         shc.selecting_he_contacts_by_name(name)
         # 确定转发
@@ -3248,7 +3317,8 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个和通讯录联系人
-        shc.click_department_name("test_work")
+        # 需要考虑测试号码存在多个团队的情况
+        Preconditions.if_exists_multiple_enterprises_enter_group_chat()
         name = "大佬3"
         shc.selecting_he_contacts_by_name(name)
         # 确定转发
@@ -3290,7 +3360,8 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
         # 3、4.选择一个和通讯录联系人
-        shc.click_department_name("test_work")
+        # 需要考虑测试号码存在多个团队的情况
+        Preconditions.if_exists_multiple_enterprises_enter_group_chat()
         name = "大佬3"
         shc.selecting_he_contacts_by_name(name)
         # 取消转发

@@ -58,7 +58,6 @@ class SelectContactsPage(BasePage):
         "搜索框左边选中联系人": (MobileBy.ID, "com.chinasofti.rcs:id/image"),
        # 'aaa':(MobileBy.XPATH,"*[@text='aaa']"),
         'aaa':(MobileBy.ID,'com.chinasofti.rcs:id/contact_name'),
-        "bbb":(MobileBy.ID,'com.chinasofti.rcs:id/tv_conv_name'),
 
         "搜索群组":(MobileBy.ID,'com.chinasofti.rcs:id/et_search'),
         "搜索1":(MobileBy.ID,'com.chinasofti.rcs:id/edit_query'),
@@ -156,19 +155,13 @@ class SelectContactsPage(BasePage):
     def click_group_search(self):
         """搜索联系人"""
         time.sleep(1)
-        if self.get_elements(self.__locators["搜索3"]):
-            self.click_element(self.__locators["搜索3"])
-        else:
-            self.click_element(self.__locators["搜索群组"])
+        self.click_element(self.__locators["搜索群组"])
 
     @TestLogger.log("搜索群组")
     def group_search(self, text='aaa'):
         """搜索联系人"""
         time.sleep(1)
-        if self.get_elements(self.__locators["搜索4"]):
-            self.input_text(self.__class__.__locators["搜索4"], text)
-        else:
-            self.input_text(self.__class__.__locators["搜索1"], text)
+        self.input_text(self.__class__.__locators["搜索1"], text)
         if self.driver.is_keyboard_shown():
             self.driver.hide_keyboard()
 
@@ -457,11 +450,11 @@ class SelectContactsPage(BasePage):
         return arrs == letters
 
     @TestLogger.log()
-    def select_recent_chat_by_number(self, number):
-        """选择某一条最近聊天记录"""
-        if self._is_element_present(self.__class__.__locators["最近聊天消息名称"]):
-            els = self.get_elements(self.__class__.__locators["最近聊天消息名称"])
-            els[number].click()
+    def select_recent_chat_by_name(self, name):
+        """根据名字选择某一条最近聊天记录"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text="%s"]' % name)
+        if self._is_element_present(locator):
+            self.click_element(locator)
 
     @TestLogger.log()
     def is_page_more_text(self, menu):
@@ -663,7 +656,6 @@ class SelectContactsPage(BasePage):
         self.click_element(self.__class__.__locators[text])
 
 
-
     @TestLogger.log("删除自建群")
     def del_message_group(self):
         flag=True
@@ -722,3 +714,10 @@ class SelectContactsPage(BasePage):
         time.sleep(1)
         mess.click_sure_button()
         time.sleep(1)
+
+    @TestLogger.log("当前页面是否在选择联系人页")
+    def is_on_this_page(self):
+        bol = self.wait_until(
+            condition=lambda d: self._is_element_present(self.__class__.__locators["选择一个群"])
+        )
+        return bol

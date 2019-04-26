@@ -9,6 +9,8 @@ from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import switch_to_mobile, current_mobile, current_driver
 from library.core.utils.testcasefilter import tags
 from pages import AgreementDetailPage, SelectLocalContactsPage
+from pages import ContactsPage
+from pages import GroupListPage
 from pages import GuidePage
 from pages import MessagePage
 from pages import OneKeyLoginPage
@@ -302,6 +304,42 @@ class Preconditions(object):
         mp.wait_for_page_load()
 
     @staticmethod
+    def create_he_contacts2(contacts):
+        """手动输入联系人创建为和通讯录联系人"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_workbench_page()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_organization()
+        osp = OrganizationStructurePage()
+        time.sleep(5)
+        n = 1
+        # 解决工作台不稳定问题
+        while osp.is_text_present("账号认证失败"):
+            osp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_organization()
+            time.sleep(5)
+            n += 1
+            if n > 10:
+                break
+        for name, number in contacts:
+            if not osp.is_exist_specify_element_by_name(name):
+                osp.click_specify_element_by_name("添加联系人")
+                time.sleep(2)
+                osp.click_specify_element_by_name("手动输入添加")
+                osp.input_contacts_name(name)
+                osp.input_contacts_number(number)
+                osp.click_confirm()
+                osp.wait_for_page_load()
+        osp.click_back()
+        wbp.wait_for_workbench_page_load()
+        mp.open_message_page()
+        mp.wait_for_page_load()
+
+    @staticmethod
     def create_department_and_add_member(department_names):
         """创建企业部门并从本地联系人添加成员"""
 
@@ -528,20 +566,57 @@ class MassMessengerAllTest(TestCase):
     def setUpClass(cls):
 
         Preconditions.select_mobile('Android-移动')
+        # 导入测试联系人、群聊
+        fail_time1 = 0
+        flag1 = False
+        import dataproviders
+        while fail_time1 < 3:
+            try:
+                required_contacts = dataproviders.get_preset_contacts()
+                conts = ContactsPage()
+                current_mobile().hide_keyboard_if_display()
+                Preconditions.make_already_in_message_page()
+                conts.open_contacts_page()
+                try:
+                    if conts.is_text_present("发现SIM卡联系人"):
+                        conts.click_text("显示")
+                except:
+                    pass
+                for name, number in required_contacts:
+                    # 创建联系人
+                    conts.create_contacts_if_not_exits(name, number)
+                required_group_chats = dataproviders.get_preset_group_chats()
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    # 创建群
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
+                flag1 = True
+            except:
+                fail_time1 += 1
+            if flag1:
+                break
+
         # 导入和通讯录联系人、企业部门
-        fail_time = 0
-        flag = False
-        while fail_time < 5:
+        fail_time2 = 0
+        flag2 = False
+        while fail_time2 < 5:
             try:
                 Preconditions.make_already_in_message_page()
-                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4", "b测算", "c平5", '哈 马上']
+                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
                 Preconditions.create_he_contacts(contact_names)
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "13800137005"), ('郑海贵', "13802883296")]
+                Preconditions.create_he_contacts2(contact_names2)
                 department_names = ["测试部门1", "测试部门2"]
                 Preconditions.create_department_and_add_member(department_names)
-                flag = True
+                flag2 = True
             except:
-                fail_time += 1
-            if flag:
+                fail_time2 += 1
+            if flag2:
                 break
 
     def default_setUp(self):
@@ -582,16 +657,19 @@ class MassMessengerAllTest(TestCase):
         hcp.wait_for_introduction_page_load()
         hcp.click_back()
         hcp.wait_for_page_load()
+        time.sleep(1)
         # 查看操作指引
         hcp.click_guide()
         hcp.wait_for_guide_page_load()
         hcp.click_back()
         hcp.wait_for_page_load()
+        time.sleep(1)
         # 查看资费说明
         hcp.click_explain()
         hcp.wait_for_explain_page_load()
         hcp.click_back()
         hcp.wait_for_page_load()
+        time.sleep(1)
         # 查看常见问题
         hcp.click_problem()
         hcp.wait_for_problem_page_load()

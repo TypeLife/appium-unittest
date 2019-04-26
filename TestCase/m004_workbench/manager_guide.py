@@ -189,6 +189,7 @@ class MobileAttendanceAllTest(TestCase):
         # 进入管理员指引首页
         Preconditions.enter_manager_guide_page()
         mgp = ManagerGuidePage()
+        # 解决工作台不稳定问题
         mgp.click_back()
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
@@ -215,6 +216,7 @@ class MobileAttendanceAllTest(TestCase):
         mgp.wait_for_guide_page_load("后台登录指引")
         mgp.click_back()
         mgp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        time.sleep(2)
         # 3.进入帮助中心
         mgp.click_guide_by_name("帮助中心")
         mgp.wait_for_guide_page_load("创建团队")
@@ -243,15 +245,19 @@ class MobileAttendanceAllTest(TestCase):
         mgp.click_guide_by_name("添加/邀请成员 壮大团队，提高协同办公效率")
         mgp.wait_for_guide_page_load("快速建群")
         mgp.click_back()
+        time.sleep(1)
         mgp.click_guide_by_name("快速建群 根据组织架构快速建群，方便快捷")
         mgp.wait_for_guide_page_load("快速建群")
         mgp.click_back()
+        time.sleep(1)
         mgp.click_guide_by_name("应用配置 灵活配置应用，打造专属工作台")
         mgp.wait_for_guide_page_load("应用配置")
         mgp.click_back()
+        time.sleep(1)
         mgp.click_guide_by_name("企业认证 官方认证更权威，免费获取更多权益")
         mgp.wait_for_guide_page_load("企业认证")
         mgp.click_back()
+        time.sleep(1)
         mgp.click_guide_by_name("后台登录指引 更多管理功能，登录和飞信企业管理后台")
         mgp.wait_for_guide_page_load("后台登录指引")
         mgp.click_back()
@@ -311,7 +317,9 @@ class MobileAttendanceAllTest(TestCase):
         # 设置手机网络断开
         mgp.set_network_status(0)
         time.sleep(2)
-        mgp.click_guide_by_name("如何解散团队")
+        mgp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        time.sleep(2)
+        mgp.click_guide_by_name("帮助中心")
         time.sleep(2)
         # 1.页面是否提示“网络出错，轻触屏幕重新加载”
         self.assertEquals(mgp.is_text_present("网络出错，轻触屏幕重新加载"), True)
