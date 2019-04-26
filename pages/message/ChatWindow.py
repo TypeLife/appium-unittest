@@ -57,7 +57,6 @@ class ChatWindowPage(ChatNoticeDialog, PictureSelector, BasePage):
         '重新发送': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
         '取消重发': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
         '确定重发': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
-
     }
 
     @TestLogger.log('点击返回')

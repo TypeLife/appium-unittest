@@ -2,6 +2,7 @@ import preconditions
 from library.core.TestCase import TestCase
 from selenium.common.exceptions import TimeoutException
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile, current_driver
+from library.core.common.simcardtype import CardType
 from library.core.utils.testcasefilter import tags
 from pages import *
 from pages.components.BaseChat import BaseChatPage
@@ -76,6 +77,40 @@ class Preconditions(object):
         # 等待单聊会话页面加载
         scp.wait_for_page_load()
 
+    @staticmethod
+    def enter_group_chat_page(name):
+        """进入群聊聊天会话页面"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 点击 +
+        mp.click_add_icon()
+        # 点击发起群聊
+        mp.click_group_chat()
+        scg = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            # 等待选择联系人页面加载
+            flag = scg.wait_for_page_load()
+            if not flag:
+                scg.click_back()
+                time.sleep(2)
+                mp.click_add_icon()
+                mp.click_group_chat()
+            else:
+                break
+            n = n + 1
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        # 选择一个普通群
+        sog.selecting_one_group_by_name(name)
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+
 
 class CallAll(TestCase):
     """
@@ -104,15 +139,15 @@ class CallAll(TestCase):
                     conts.create_contacts_if_not_exits(name, number)
 
                 # 创建群
-                # required_group_chats = dataproviders.get_preset_group_chats()
-                #
-                # conts.open_group_chat_list()
-                # group_list = GroupListPage()
-                # for group_name, members in required_group_chats:
-                #     group_list.wait_for_page_load()
-                #     group_list.create_group_chats_if_not_exits(group_name, members)
-                # group_list.click_back()
-                # conts.open_message_page()
+                required_group_chats = dataproviders.get_preset_group_chats()
+
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
                 return
             except:
                 fail_time += 1
@@ -858,6 +893,7 @@ class CallAll(TestCase):
         cpg.click_call()
         cpg.dial_number("15340038800")
         cpg.click_call_phone()
+        time.sleep(1)
         # Step:1.点击“取消”按钮
         cpg.click_back_by_android()
         # CheckPoint:1.拨号方式收起，停留在输入号码的拨号盘页
@@ -1247,9 +1283,9 @@ class CallAll(TestCase):
         # Step:2.点击返回
         # Step：3.点击通话入口
         ccdp.click_voice_call_status()
-
+        # time.sleep(1)
         # CheckPoint：3.返回到呼叫界面
-        cpg.page_should_contain_text("15343038867")
+        cpg.page_should_contain_text("正在呼叫")
         cpg.is_on_this_messagepage()
 
         cpg.click_call()
@@ -1598,9 +1634,10 @@ class CallAll(TestCase):
         # Step:2.点击返回
         # Step：3.点击通话入口
         ccdp.click_video_call_status()
+        time.sleep(1)
 
         # CheckPoint：3.返回到呼叫界面
-        cpg.page_should_contain_text("15343038867")
+        cpg.page_should_contain_text("视频通话呼叫中")
         cpg.is_on_this_messagepage()
 
         cpg.click_call()
@@ -1871,6 +1908,7 @@ class CallAll(TestCase):
         ccdp.click_video_call_status()
 
         # CheckPoint：2.返回到呼叫界面
+        time.sleep(1)
         cpg.page_should_contain_text("视频通话呼叫中")
         cpg.is_on_this_messagepage()
 
@@ -1902,7 +1940,8 @@ class CallAll(TestCase):
         # 3.从通话记录-重拨视频通话
         cpg.click_call()
         time.sleep(1)
-        cpg.click_video_call()
+        # cpg.click_video_call()
+        cpg.click_text("给个红包2")
         time.sleep(1)
         if cpg.is_exist_go_on():
             cpg.click_go_on()
@@ -1962,10 +2001,10 @@ class CallAll(TestCase):
         if cpg.is_exist_go_on():
             cpg.click_go_on()
         GrantPemissionsPage().allow_contacts_permission()
-        time.sleep(2)
+        time.sleep(1)
         if cpg.is_text_present("暂不开启"):
             cpg.click_text("暂不开启")
-        time.sleep(2)
+        time.sleep(1)
         # CheckPoint:3.转入多方视频拨通界面
         cpg.page_should_contain_text("关闭摄像头")
 
@@ -2844,3 +2883,27 @@ class CallAll(TestCase):
         cpg.hang_up_the_call()
         cpg.wait_for_chat_page()
         cpg.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0395(self):
+        """检查群聊聊富媒体面板-多方电话入口拨打"""
+        # 1.登录和飞信：消息tab-群聊会话窗口-富媒体面板
+        # 2.已弹出系统选择弹窗多方电话和多方视频
+        ContactsPage().click_message_icon()
+        Preconditions.enter_group_chat_page("群聊")
+        # Step:1.点击多方电话
+        gpg = GroupListPage()
+        gpg.click_mult_call_icon()
+        CallPage().click_mutil_call()
+        # CheckPoint:1.调起联系人选择器
+        time.sleep(1)
+        gpg.page_should_contain_text("搜索成员")
+        gpg.click_back_by_android()
+        # Step:2.点击多方视频
+        gpg = GroupListPage()
+        gpg.click_mult_call_icon()
+        CallPage().click_mutil_video_call()
+        # CheckPoint:2.调起联系人选择器
+        time.sleep(1)
+        gpg.page_should_contain_text("搜索成员")
+        gpg.click_back_by_android(2)
