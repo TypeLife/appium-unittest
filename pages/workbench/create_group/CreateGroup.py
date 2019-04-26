@@ -12,7 +12,7 @@ class CreateGroupPage(BasePage):
 
     __locators = {
         '创建群标题': (MobileBy.ID, "com.chinasofti.rcs:id/tv_title_actionbar"),
-        '马上创建群': (MobileBy.XPATH, '//*[@text="马上创建群"]'),
+        '马上创建群': (MobileBy.XPATH, '//*[@text="马上创建群" or @content-desc="马上创建群"]'),
         '群名输入框': (MobileBy.XPATH, '//*[@resource-id="gp_name"]'),
         '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back_actionbar'),
     }

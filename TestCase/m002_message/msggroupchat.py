@@ -12,9 +12,118 @@ from library.core.utils.applicationcache import current_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
 from pages.contacts.local_contact import localContactPage
-
+from pages.workbench.create_group.CreateGroup import CreateGroupPage
+from pages.workbench.create_group.SelectEnterpriseContacts import SelectEnterpriseContactsPage
 class Preconditions(LoginPreconditions):
     """前置条件"""
+
+    @staticmethod
+    def create_enterprise_group(name):
+        """创建企业群"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_workbench_page()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_add_create_group()
+        cgp = CreateGroupPage()
+        # 等待创建群首页加载
+        cgp.wait_for_page_load()
+
+        cgp.click_create_group()
+        sec = SelectEnterpriseContactsPage()
+        sec.wait_for_page_load()
+        # 创建企业群
+        sec.click_contacts_by_name("大佬1")
+        sec.click_contacts_by_name("大佬2")
+        sec.click_sure()
+        cgp.input_group_name(name)
+        cgp.click_create_group()
+        time.sleep(2)
+        # 返回消息列表
+        cgp.click_back()
+        wbp.wait_for_workbench_page_load()
+        mp.open_message_page()
+        mp.wait_for_page_load()
+
+    @staticmethod
+    def ensure_have_enterprise_group():
+        """确保有企业群"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_contacts_page()
+        cp = ContactsPage()
+        cp.wait_for_page_load()
+        cp.open_group_chat_list()
+        time.sleep(2)
+        if cp.is_exist_enterprise_group():
+            cp.click_return()
+            cp.wait_for_page_load()
+            mp.open_message_page()
+            mp.wait_for_page_load()
+        else:
+            cp.click_return()
+            cp.wait_for_page_load()
+            mp.open_message_page()
+            mp.wait_for_page_load()
+            Preconditions.create_enterprise_group("测试企业群")
+
+    @staticmethod
+    def make_already_delete_my_group():
+        """确保删掉所有群"""
+        # 消息页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(2)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
+        sc.click_select_one_group()
+        # 获取已有群名
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        group_names = sog.get_group_name()
+        # 有群删除，无群返回
+        if len(group_names) == 0:
+            sog.click_back()
+            pass
+        else:
+            for group_name in group_names:
+                sog.select_one_group_by_name(group_name)
+                gcp = GroupChatPage()
+                gcp.wait_for_page_load()
+                gcp.click_setting()
+                gcs = GroupChatSetPage()
+                gcs.wait_for_page_load()
+                gcs.click_delete_and_exit()
+                gcs.click_sure()
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc.wait_for_page_load()
+                sc.click_select_one_group()
+            sog.click_back()
+            # if not gcs.is_toast_exist("已退出群聊"):
+            #     raise AssertionError("无退出群聊提示")
+            # sc.click_back()
+
 
     @staticmethod
     def make_already_have_my_group(reset=False):
@@ -2986,7 +3095,9 @@ class messagegroupchat(TestCase):
         Preconditions.make_already_in_message_page()
         time.sleep(2)
         scp = SelectContactsPage()
-        scp.create_message_group(text='中软国际')
+        scp.del_message_group()
+        scp.create_message_group2(text='中软国际')
+      #  scp.create_message_group(text='中软国际')
 
     @tags('ALL', 'CMCC', 'group_chat')
     def test_msg_xiaoqiu_0279(self):
@@ -3014,3 +3125,66 @@ class messagegroupchat(TestCase):
         time.sleep(1)
         group_set.click_delete_and_exit()
         gcp.click_back_by_android(times=2)
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0292():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        time.sleep(2)
+        scp = SelectContactsPage()
+        scp.del_message_group()
+        groupname=["aaa","bbb","ccc","ddd","eee","fff","hhh","kkk"]
+        for name in groupname:
+            scp.create_message_group2(text=name)
+            time.sleep(1)
+            scp.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0292(self):
+        """通讯录-群聊-索引字母定位选择"""
+        mess = MessagePage()
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        time.sleep(1)
+
+        cpp = ChatProfilePage()
+        # 获取所有右侧索引字母，随机选择一个点击
+        letters = cpp.get_letters_index()
+        letter = letters[0]
+        cpp.click_letter_index(letter)
+        time.sleep(1)
+        sc.page_should_contain_text("aaa")
+        letters = cpp.get_letters_index()
+        letter = letters[-1]
+        cpp.click_letter_index(letter)
+        time.sleep(1)
+        sc.page_should_contain_text("kkk")
+        sc.click_back_by_android(times=1)
+
+    def tearDown_test_msg_xiaoqiu_0292(self):
+        scp = SelectContactsPage()
+        scp.del_message_group()
+
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0259():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        Preconditions.make_already_delete_my_group()
+        Preconditions.ensure_have_enterprise_group()
+
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0259(self):
+        """消息列表——发起群聊——选择选择团队联系人——创建群聊"""
+        scp = SelectContactsPage()
+        scp.create_message_group2()
+
+    def tearDown_test_msg_xiaoqiu_0259(self):
+        scp = SelectContactsPage()
+        scp.del_message_group()
+
