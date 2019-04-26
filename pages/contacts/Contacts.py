@@ -65,6 +65,7 @@ class ContactsPage(FooterPage):
         '不显示': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
         '企业群标识': (MobileBy.ID, 'com.chinasofti.rcs:id/group_ep'),
         '群聊列表返回': (MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn'),
+        '团队名称': (MobileBy.ID, 'com.chinasofti.rcs:id/img_icon_department'),
     }
 
     @TestLogger.log("获取所有联系人名")
@@ -303,3 +304,8 @@ class ContactsPage(FooterPage):
     def click_return(self):
         """点击返回"""
         self.click_element(self.__class__.__locators['群聊列表返回'])
+
+    @TestLogger.log()
+    def click_one_firm(self):
+        """点击一个团队"""
+        self.click_element(self.__class__.__locators['团队名称'])
