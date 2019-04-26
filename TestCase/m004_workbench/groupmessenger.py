@@ -183,6 +183,7 @@ class Preconditions(object):
             if n > 10:
                 break
         phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        time.sleep(3)
         if not osp.is_exist_specify_element_by_name(department_name):
             osp.click_specify_element_by_name("添加子部门")
             time.sleep(2)
@@ -223,6 +224,7 @@ class Preconditions(object):
             if n > 10:
                 break
         phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        time.sleep(3)
         if not osp.is_exist_specify_element_by_name(phone_number):
             osp.click_specify_element_by_name("添加联系人")
             time.sleep(2)
@@ -253,6 +255,7 @@ class Preconditions(object):
             n += 1
             if n > 10:
                 break
+        time.sleep(3)
         if osp.is_exist_specify_element_by_name(department_name):
             osp.click_specify_element_by_name(department_name)
             time.sleep(2)
@@ -287,6 +290,7 @@ class Preconditions(object):
             n += 1
             if n > 10:
                 break
+        time.sleep(3)
         for name in names:
             if not osp.is_exist_specify_element_by_name(name):
                 osp.click_specify_element_by_name("添加联系人")
@@ -325,6 +329,7 @@ class Preconditions(object):
             n += 1
             if n > 10:
                 break
+        time.sleep(3)
         for name, number in contacts:
             if not osp.is_exist_specify_element_by_name(name):
                 osp.click_specify_element_by_name("添加联系人")
@@ -361,6 +366,7 @@ class Preconditions(object):
             n += 1
             if n > 10:
                 break
+        time.sleep(3)
         for department_name in department_names:
             if not osp.is_exist_specify_element_by_name(department_name):
                 osp.click_specify_element_by_name("添加子部门")

@@ -50,7 +50,10 @@ class ContactDetailsPage(BasePage):
         "视频通话呼叫中": (MobileBy.XPATH, "//*[@text='	视频通话呼叫中']"),
         "挂断视频通话": (MobileBy.ID, "com.chinasofti.rcs:id/iv_out_Cancel"),
         "取消拨打": (MobileBy.XPATH, "//*[@text='取消拨打']"),
-        "联系人名称": (MobileBy.ID, "com.chinasofti.rcs:id/contact_name")
+        "联系人名称": (MobileBy.ID, "com.chinasofti.rcs:id/contact_name"),
+        "用户名称": (MobileBy.ID, "com.chinasofti.rcs:id/tv_profile_name"),
+        "用户头像": (MobileBy.ID, "com.chinasofti.rcs:id/recyclesafeimageview_profile_photo"),
+        "用户号码": (MobileBy.ID, "com.chinasofti.rcs:id/tv_phone"),
     }
 
     @TestLogger.log("更改手机号码")
@@ -241,6 +244,55 @@ class ContactDetailsPage(BasePage):
     def page_should_contain_element_first_letter(self):
         """页面应该包含首字母"""
         return self.page_should_contain_element("名片首字母")
+
+    @TestLogger.log()
+    def is_exists_contacts_image(self):
+        """是否存在联系人头像"""
+        return self._is_element_present(self.__class__.__locators["用户头像"])
+
+    @TestLogger.log()
+    def is_exists_contacts_name(self):
+        """是否存在联系人名"""
+        return self._is_element_present(self.__class__.__locators["用户名称"])
+
+    @TestLogger.log()
+    def is_exists_contacts_number(self):
+        """是否存在联系人号码"""
+        return self._is_element_present(self.__class__.__locators["用户号码"])
+
+    @TestLogger.log()
+    def is_exists_message_icon(self):
+        """是否存在消息图标"""
+        return self._is_element_present(self.__class__.__locators["消息"])
+
+    @TestLogger.log()
+    def is_exists_call_icon(self):
+        """是否存在电话图标"""
+        return self._is_element_present(self.__class__.__locators["电话"])
+
+    @TestLogger.log()
+    def is_exists_voice_call_icon(self):
+        """是否存在语音通话图标"""
+        return self._is_element_present(self.__class__.__locators["语音通话"])
+
+    @TestLogger.log()
+    def is_exists_video_call_icon(self):
+        """是否存在视频通话图标"""
+        return self._is_element_present(self.__class__.__locators["视频通话"])
+
+    @TestLogger.log()
+    def is_exists_dial_hefeixin_icon(self):
+        """是否存在和飞信电话图标"""
+        return self._is_element_present(self.__class__.__locators["和飞信电话"])
+
+    def is_exists_share_card_icon(self):
+        """是否存在分享名片图标"""
+        return self._is_element_present(self.__class__.__locators["分享名片"])
+
+    def is_exists_company_element(self):
+        """是否存在公司元素"""
+        locator = ( MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/property" and @text="公司"]')
+        return self._is_element_present(locator)
 
     @TestLogger.log("截图")
     def take_screen_out(self):

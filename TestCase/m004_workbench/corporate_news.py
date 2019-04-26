@@ -155,6 +155,7 @@ class Preconditions(LoginPreconditions):
             n += 1
             if n > 10:
                 break
+        time.sleep(3)
         for name in names:
             if not osp.is_exist_specify_element_by_name(name):
                 osp.click_specify_element_by_name("添加联系人")
@@ -193,6 +194,7 @@ class Preconditions(LoginPreconditions):
             n += 1
             if n > 10:
                 break
+        time.sleep(3)
         for name, number in contacts:
             if not osp.is_exist_specify_element_by_name(name):
                 osp.click_specify_element_by_name("添加联系人")
@@ -229,6 +231,7 @@ class Preconditions(LoginPreconditions):
             n += 1
             if n > 10:
                 break
+        time.sleep(3)
         for department_name in department_names:
             if not osp.is_exist_specify_element_by_name(department_name):
                 osp.click_specify_element_by_name("添加子部门")

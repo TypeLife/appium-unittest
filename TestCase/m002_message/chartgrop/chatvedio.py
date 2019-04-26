@@ -314,6 +314,7 @@ class Preconditions(object):
             n += 1
             if n > 10:
                 break
+        time.sleep(3)
         for name in names:
             if not osp.is_exist_specify_element_by_name(name):
                 osp.click_specify_element_by_name("添加联系人")
@@ -352,6 +353,7 @@ class Preconditions(object):
             n += 1
             if n > 10:
                 break
+        time.sleep(3)
         for name, number in contacts:
             if not osp.is_exist_specify_element_by_name(name):
                 osp.click_specify_element_by_name("添加联系人")
@@ -392,6 +394,7 @@ class Preconditions(object):
         cgp.click_create_group()
         sec = SelectEnterpriseContactsPage()
         sec.wait_for_page_load()
+        time.sleep(2)
         # 创建企业群
         sec.click_contacts_by_name("大佬1")
         sec.click_contacts_by_name("大佬2")

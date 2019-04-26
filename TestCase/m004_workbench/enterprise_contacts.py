@@ -7,6 +7,7 @@ from library.core.common.simcardtype import CardType
 from library.core.utils.testcasefilter import tags
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile, current_driver
 from pages import AgreementDetailPage
+from pages import ContactDetailsPage
 from pages import GuidePage
 from pages import MessagePage
 from pages import OneKeyLoginPage
@@ -161,6 +162,7 @@ class Preconditions(object):
             if n > 10:
                 break
         phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        time.sleep(3)
         if not osp.is_exist_specify_element_by_name(department_name):
             osp.click_specify_element_by_name("添加子部门")
             time.sleep(2)
@@ -200,6 +202,7 @@ class Preconditions(object):
             n += 1
             if n > 10:
                 break
+        time.sleep(3)
         if osp.is_exist_specify_element_by_name(department_name):
             osp.click_specify_element_by_name(department_name)
             time.sleep(2)
@@ -232,6 +235,7 @@ class Preconditions(object):
             if n > 10:
                 break
         phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        time.sleep(3)
         if not osp.is_exist_specify_element_by_name(phone_number):
             osp.click_specify_element_by_name("添加联系人")
             time.sleep(2)
@@ -457,6 +461,7 @@ class EnterpriseContactsAllTest(TestCase):
         ecp = EnterpriseContactsPage()
         # 点击【<】返回
         ecp.click_back()
+        time.sleep(1)
         ecp.click_back()
         # 1.等待工作台首页加载
         wbp = WorkbenchPage()
@@ -550,3 +555,59 @@ class EnterpriseContactsAllTest(TestCase):
 
         mp = MessagePage()
         mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QYTXL_0012(self):
+        """搜索企业通讯录联系人结果展示"""
+
+        # 进入企业通讯录首页
+        Preconditions.enter_enterprise_contacts_page()
+        ecp = EnterpriseContactsPage()
+        # 点击搜索框
+        ecp.click_search_box()
+        search_name = "陈丹丹"
+        ecp.input_search_message(search_name)
+        time.sleep(2)
+        # 1.是否显示头像、姓名、号码、公司部门（没公司部门的不显示）
+        self.assertEquals(ecp.is_exists_contacts_image(), True)
+        self.assertEquals(ecp.is_exists_contacts_name(), True)
+        self.assertEquals(ecp.is_exists_contacts_number(), True)
+        ecp.click_return()
+        ecp.click_back()
+        ecp.click_back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_QYTXL_0013(self):
+        """点击搜索结果已保存到本地的RCS用户进入联系人详情页"""
+
+        # 进入企业通讯录首页
+        Preconditions.enter_enterprise_contacts_page()
+        ecp = EnterpriseContactsPage()
+        # 点击搜索框
+        ecp.click_search_box()
+        search_name = "大佬1"
+        ecp.input_search_message(search_name)
+        time.sleep(2)
+        ecp.click_contacts_by_name(search_name)
+        cdp = ContactDetailsPage()
+        cdp.wait_for_page_load()
+        # 1.是否显示用户的详情信息
+        self.assertEquals(cdp.is_exists_contacts_name(), True)
+        self.assertEquals(cdp.is_exists_contacts_number(), True)
+        self.assertEquals(cdp.is_exists_contacts_image(), True)
+        self.assertEquals(cdp.is_exists_company_element(), True)
+        self.assertEquals(cdp.is_exists_message_icon(), True)
+        self.assertEquals(cdp.is_exists_call_icon(), True)
+        self.assertEquals(cdp.is_exists_voice_call_icon(), True)
+        self.assertEquals(cdp.is_exists_video_call_icon(), True)
+        self.assertEquals(cdp.is_exists_dial_hefeixin_icon(), True)
+        self.assertEquals(cdp.is_exists_share_card_icon(), True)
+        # 返回工作台
+        cdp.click_back_icon()
+        ecp.click_return()
+        ecp.click_back()
+        ecp.click_back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
