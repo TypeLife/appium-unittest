@@ -1967,14 +1967,14 @@ class MsgGroupChatTest(TestCase):
 
 class messagegroupchat(TestCase):
     @classmethod
-    def setUpClass(cls):
-        #Preconditions.select_mobile('Android-移动')
-        Preconditions.import_contacts()
-        current_mobile().launch_app()
-
-    @classmethod
-    def tearDownClass(cls):
-        Preconditions.delete_contact()
+    # def setUpClass(cls):
+    #     #Preconditions.select_mobile('Android-移动')
+    #     Preconditions.import_contacts()
+    #     current_mobile().launch_app()
+    #
+    # @classmethod
+    # def tearDownClass(cls):
+    #     Preconditions.delete_contact()
 
 
     @staticmethod
@@ -2471,9 +2471,6 @@ class messagegroupchat(TestCase):
         gcp.page_should_contain_text("aaa")
         scp.click_back_by_android(times=1)
 
-
-
-
     @staticmethod
     def setUp_test_msg_xiaoqiu_0197():
         Preconditions.select_mobile('Android-移动')
@@ -2501,7 +2498,6 @@ class messagegroupchat(TestCase):
         scp.check_if_element_exist(text='发送时间')
         scp.click_back_by_android(times=1)
         time.sleep(1)
-
 
     @staticmethod
     def setUp_test_msg_xiaoqiu_0254():
@@ -2534,7 +2530,6 @@ class messagegroupchat(TestCase):
         #一个人创建群聊失败
         mess.check_group_name_exist()
         gcp.click_back_by_android(times=2)
-
 
     @staticmethod
     def setUp_test_msg_xiaoqiu_0255():
@@ -3070,5 +3065,40 @@ class messagegroupchat(TestCase):
         scp.page_up()
         time.sleep(1)
         group_set = GroupChatSetPage()
+        group_set.click_delete_and_exit()
+        gcp.click_back_by_android(times=2)
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0279():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_in_message_page()
+        time.sleep(2)
+        scp = SelectContactsPage()
+        scp.create_message_group(text='中软国际')
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_xiaoqiu_0279(self):
+        """通讯录-群聊-中文模糊搜索——搜索结果展示"""
+        time.sleep(1)
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        group_set.click_QRCode()
+        time.sleep(1)
+        group_set.click_qecode_share_button()
+        time.sleep(1)
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        time.sleep(1)
+        scp.click_group_search()
+        scp.group_search(text="中国")
+        time.sleep(1)
+        scp.page_should_contain_text("无搜索结果")
+        time.sleep(1)
+        gcp.click_back_by_android(times=4)
+        scp.page_up()
+        time.sleep(1)
         group_set.click_delete_and_exit()
         gcp.click_back_by_android(times=2)
