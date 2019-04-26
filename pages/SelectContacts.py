@@ -443,11 +443,11 @@ class SelectContactsPage(BasePage):
         return arrs == letters
 
     @TestLogger.log()
-    def select_recent_chat_by_number(self, number):
-        """选择某一条最近聊天记录"""
-        if self._is_element_present(self.__class__.__locators["最近聊天消息名称"]):
-            els = self.get_elements(self.__class__.__locators["最近聊天消息名称"])
-            els[number].click()
+    def select_recent_chat_by_name(self, name):
+        """根据名字选择某一条最近聊天记录"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text="%s"]' % name)
+        if self._is_element_present(locator):
+            self.click_element(locator)
 
     @TestLogger.log()
     def is_page_more_text(self, menu):

@@ -1207,5 +1207,266 @@ class MsgPrivateChatAllTest(TestCase):
         mp = MessagePage()
         mp.set_network_status(6)
 
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0012(self):
+        """在文件列表页选择文件后再点击取消按钮，停留在当前页面"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        file_type = ".txt"
+        # 1、2.进入预置文件目录
+        Preconditions.enter_preset_file_catalog()
+        local_file = ChatSelectLocalFilePage()
+        # 选择文件
+        local_file.select_file(file_type)
+        time.sleep(2)
+        # 再次选择，取消
+        local_file.select_file(file_type)
+        # 3.等待文件列表页面加载
+        local_file.wait_for_page_load()
+        local_file.click_back()
+        local_file.click_back()
+        csfp = ChatSelectFilePage()
+        csfp.wait_for_page_load()
+        csfp.click_back()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0013(self):
+        """在文件列表页点击返回按钮时可正常逐步返回到会话页面"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 在当前聊天会话页面，点击更多富媒体的文件按钮
+        scp.click_more()
+        cmp = ChatMorePage()
+        cmp.click_file()
+        csfp = ChatSelectFilePage()
+        # 等待选择文件页面加载
+        csfp.wait_for_page_load()
+        # 点击本地文件
+        csfp.click_local_file()
+        local_file = ChatSelectLocalFilePage()
+        # 等待文件列表页面加载
+        local_file.wait_for_page_load()
+        local_file.click_back()
+        time.sleep(2)
+        # 1.等待选择文件页面加载
+        csfp.wait_for_page_load()
+        csfp.click_back()
+        time.sleep(2)
+        # 2.等待单聊会话页面加载
+        scp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0014(self):
+        """勾选本地照片内任意相册的图片点击发送按钮"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1、2.发送本地图片
+        Preconditions.send_local_picture()
+        # 3.验证是否发送成功
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
+        scp.click_back()
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 4.该消息窗口是否显示图片
+        self.assertEquals(mp.is_message_content_match_picture(), True)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0015(self):
+        """网络异常时勾选本地照片内任意相册的图片点击发送按钮"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        name = "大佬1"
+        # 确保当前单聊会话页面没有重发按钮影响验证结果
+        Preconditions.make_no_retransmission_button(name)
+        # 设置手机网络断开
+        scp.set_network_status(0)
+        # 1、2.发送本地图片
+        Preconditions.send_local_picture()
+        local_file = ChatSelectLocalFilePage()
+        time.sleep(2)
+        if local_file.is_exist_continue_send():
+            local_file.click_continue_send()
+        # 3.验证是否发送失败，是否存在重发按钮
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        self.assertEquals(scp.is_exist_msg_send_failed_button(), True)
+
+    @staticmethod
+    def tearDown_test_msg_0015():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0016(self):
+        """会话页面有图片发送失败时查看消息列表是否有消息发送失败的标识"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        name = "大佬1"
+        # 确保当前消息列表没有消息发送失败的标识影响验证结果
+        Preconditions.make_no_message_send_failed_status(name)
+        # 确保当前单聊会话页面没有重发按钮影响验证结果
+        Preconditions.make_no_retransmission_button(name)
+        # 设置手机网络断开
+        scp.set_network_status(0)
+        file_type = ".jpg"
+        # 发送指定类型文件
+        Preconditions.send_file_by_type(file_type)
+        time.sleep(2)
+        # 1.验证是否发送失败，是否存在重发按钮
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        self.assertEquals(scp.is_exist_msg_send_failed_button(), True)
+        scp.click_back()
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 2.是否存在消息发送失败的标识
+        self.assertEquals(mp.is_iv_fail_status_present(), True)
+
+    @staticmethod
+    def tearDown_test_msg_0016():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0017(self):
+        """对发送失败的图片文件进行重发"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 确保当前单聊会话页面有发送失败的图片文件重发
+        file_type = ".jpg"
+        scp.set_network_status(0)
+        # 发送指定类型文件
+        Preconditions.send_file_by_type(file_type)
+        scp.set_network_status(6)
+        # 1.点击重发按钮
+        scp.click_msg_send_failed_button(-1)
+        time.sleep(2)
+        scp.click_sure()
+        # 2.验证是否重发成功
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+
+    @staticmethod
+    def tearDown_test_msg_0017():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0018(self):
+        """对发送失败的图片进行重发后，消息列表页面的消息发送失败的标识消失"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        name = "大佬1"
+        # 确保当前消息列表没有消息发送失败的标识影响验证结果
+        Preconditions.make_no_message_send_failed_status(name)
+        # 确保当前单聊会话页面有发送失败的图片文件重发
+        file_type = ".jpg"
+        scp.set_network_status(0)
+        # 发送指定类型文件
+        Preconditions.send_file_by_type(file_type)
+        scp.set_network_status(6)
+        # 1.点击重发按钮
+        scp.click_msg_send_failed_button(-1)
+        time.sleep(2)
+        scp.click_sure()
+        # 2.验证是否重发成功
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        scp.click_back()
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 3.是否存在消息发送失败的标识
+        self.assertEquals(mp.is_iv_fail_status_present(), False)
+
+    @staticmethod
+    def tearDown_test_msg_0018():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0019(self):
+        """点击取消重发图片消息，停留在当前页面"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 确保当前单聊会话页面有发送失败的图片文件重发
+        file_type = ".jpg"
+        scp.set_network_status(0)
+        # 发送指定类型文件
+        Preconditions.send_file_by_type(file_type)
+        scp.set_network_status(6)
+        # 1.点击重发按钮
+        scp.click_msg_send_failed_button(-1)
+        time.sleep(2)
+        scp.click_cancel()
+        # 2.等待单聊会话页面加载
+        scp.wait_for_page_load()
+
+    @staticmethod
+    def tearDown_test_msg_0019():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0020(self):
+        """未订购每月10G的用户发送大于2M的图片时有弹窗提示"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 设置当前网络为2/3/4G
+        scp.set_network_status(4)
+        # 发送大型图片文件
+        Preconditions.send_large_picture_file()
+        time.sleep(2)
+        local_file = ChatSelectLocalFilePage()
+        # 1.是否弹出继续发送、订购免流特权、以后不再提示
+        self.assertEquals(local_file.is_exist_continue_send(), True)
+        self.assertEquals(local_file.is_exist_free_flow_privilege(), True)
+        self.assertEquals(local_file.is_exist_no_longer_prompt(), True)
+        time.sleep(2)
+        local_file.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+        local_file.wait_for_page_load()
+        local_file.click_back()
+        csfp = ChatSelectFilePage()
+        csfp.click_back()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+
+    @staticmethod
+    def tearDown_test_msg_0020():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
 
 

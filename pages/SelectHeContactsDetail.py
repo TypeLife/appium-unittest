@@ -61,6 +61,7 @@ class SelectHeContactsDetailPage(BasePage):
                   '发送给': (MobileBy.XPATH, "//*[contains(@text, '发送给')]"),
                   '取消': (MobileBy.XPATH, "//*[contains(@text, '取消')]"),
                   '确定': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
+                  '企业层级': (MobileBy.ID, "android:id/title"),
                   }
 
     @TestLogger.log()
@@ -164,5 +165,16 @@ class SelectHeContactsDetailPage(BasePage):
     def click_department_name(self, name):
         """点击指定企业/部门名称"""
         locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title_department" and @text ="%s"]' % name)
-        if self._is_element_present(locator):
-            self.click_element(locator)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        self.click_element(locator)
+
+    @TestLogger.log()
+    def is_exist_corporate_grade(self):
+        """是否存在企业层级"""
+        return self._is_element_present(self.__class__.__locators['企业层级'])
