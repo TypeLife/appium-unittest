@@ -106,6 +106,11 @@ class ContactsPage(FooterPage):
         """点击消息按钮"""
         self.click_element(self.__locators['消息'])
 
+    @TestLogger.log('点击我页面')
+    def click_me_icon(self):
+        """点击进入我页面"""
+        self.click_element(self.__locators['我'])
+
     @TestLogger.log('点击搜索框')
     def click_search_box(self):
         """点击搜索框"""
