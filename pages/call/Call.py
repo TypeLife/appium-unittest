@@ -40,6 +40,8 @@ class CallPage(BasePage):
         '结束通话': (MobileBy.ID, 'com.android.incallui:id/endButton'),
         '呼叫中': (MobileBy.ID, 'com.chinasofti.rcs:id/ivAvatar'),
         '挂断语音通话': (MobileBy.ID, 'com.chinasofti.rcs:id/smart_call_out_term'),
+        '挂断视频通话': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_out_Cancel'),
+        '挂断和飞信电话': (MobileBy.ID, 'com.chinasofti.rcs:id/ivDecline'),
         '通话显示': (MobileBy.ID, 'com.chinasofti.rcs:id/tvTitle'),
         '通话记录': (MobileBy.ID, 'com.chinasofti.rcs:id/tvName'),
         '0731210086': (MobileBy.XPATH, "//*[contains(@text, '0731210086')]"),
@@ -306,6 +308,24 @@ class CallPage(BasePage):
     def click_end_voice_call(self):
         """点击结束语音通话"""
         self.click_element(self.__locators["挂断语音通话"])
+
+    @TestLogger.log()
+    def hang_up_voice_call(self):
+        """挂断语音通话"""
+        if self._is_element_present(self.__class__.__locators["挂断语音通话"]):
+            self.click_element(self.__class__.__locators["挂断语音通话"])
+
+    @TestLogger.log()
+    def hang_up_video_call(self):
+        """挂断视频通话"""
+        if self._is_element_present(self.__class__.__locators["挂断视频通话"]):
+            self.click_element(self.__class__.__locators["挂断视频通话"])
+
+    @TestLogger.log()
+    def hang_up_hefeixin_call(self):
+        """挂断和飞信电话"""
+        if self._is_element_present(self.__class__.__locators["挂断和飞信电话"]):
+            self.click_element(self.__class__.__locators["挂断和飞信电话"])
 
     @TestLogger.log()
     def is_phone_in_calling_state(self):

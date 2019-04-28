@@ -171,7 +171,7 @@ class EnterpriseContactsPage(BasePage):
 
     @TestLogger.log()
     def click_contacts_by_name(self, name):
-        """选择指定联系人"""
+        """选择指定联系人名"""
         locator = (
             MobileBy.XPATH,
             '//*[@resource-id="com.chinasofti.rcs:id/tv_name_personal_contactlist" and contains(@text,"%s")]' % name)
@@ -183,3 +183,38 @@ class EnterpriseContactsPage(BasePage):
             current += 1
             self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         self.click_element(locator)
+
+    @TestLogger.log()
+    def click_contacts_by_number(self, number):
+        """选择指定联系人号码"""
+        locator = (
+            MobileBy.XPATH,
+            '//*[@resource-id="com.chinasofti.rcs:id/tv_number_personal_contactlist" and contains(@text,"%s")]' % number)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        self.click_element(locator)
+
+    @TestLogger.log()
+    def is_exists_value_by_name(self, name):
+        """用户有公司部门的是否显示"""
+        locator = (MobileBy.XPATH,
+                   '//*[@resource-id="com.chinasofti.rcs:id/tv_name_personal_contactlist" and @text="%s"]/../../android.widget.TextView[@resource-id="com.chinasofti.rcs:id/tv_position_personal_contactlist"]' % name)
+        if self._is_element_present(locator):
+            text = self.get_element(locator).text
+            if text:
+                # 有此信息有值时返回True
+                # print(text)
+                return True
+            else:
+                # 有此信息无值时返回False
+                # print("出错")
+                return False
+        else:
+            # 没有此信息时返回True
+            print(name + " 无部门")
+            return True
