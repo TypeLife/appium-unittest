@@ -255,7 +255,7 @@ class Preconditions(object):
             n += 1
             if n > 10:
                 break
-        time.sleep(3)
+        time.sleep(5)
         if osp.is_exist_specify_element_by_name(department_name):
             osp.click_specify_element_by_name(department_name)
             time.sleep(2)

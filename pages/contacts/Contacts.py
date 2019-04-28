@@ -309,3 +309,16 @@ class ContactsPage(FooterPage):
     def click_one_firm(self):
         """点击一个团队"""
         self.click_element(self.__class__.__locators['团队名称'])
+
+    @TestLogger.log()
+    def wait_for_contacts_page_load(self, timeout=20, auto_accept_alerts=True):
+        """等待通讯录页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["+号"])
+            )
+        except:
+            raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
+        return self

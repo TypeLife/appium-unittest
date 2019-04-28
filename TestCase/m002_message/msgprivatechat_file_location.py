@@ -103,6 +103,9 @@ class Preconditions(LoginPreconditions):
         # 发送指定类型文件
         local_file.select_file(file_type)
         local_file.click_send_button()
+        time.sleep(2)
+        if local_file.is_exist_continue_send():
+            local_file.click_continue_send()
 
     @staticmethod
     def send_large_file():
@@ -146,6 +149,9 @@ class Preconditions(LoginPreconditions):
         # 发送本地照片
         local_file.click_picture()
         local_file.click_send_button()
+        time.sleep(2)
+        if local_file.is_exist_continue_send():
+            local_file.click_continue_send()
 
     @staticmethod
     def send_large_picture_file():
@@ -190,6 +196,9 @@ class Preconditions(LoginPreconditions):
         # 发送本地视频
         local_file.click_video()
         local_file.click_send_button()
+        time.sleep(2)
+        if local_file.is_exist_continue_send():
+            local_file.click_continue_send()
 
     @staticmethod
     def send_large_video_file():
@@ -234,6 +243,9 @@ class Preconditions(LoginPreconditions):
         # 发送本地音乐
         local_file.click_music()
         local_file.click_send_button()
+        time.sleep(2)
+        if local_file.is_exist_continue_send():
+            local_file.click_continue_send()
 
     @staticmethod
     def send_large_music_file():
@@ -1293,10 +1305,6 @@ class MsgPrivateChatAllTest(TestCase):
         scp.set_network_status(0)
         # 1、2.发送本地图片
         Preconditions.send_local_picture()
-        local_file = ChatSelectLocalFilePage()
-        time.sleep(2)
-        if local_file.is_exist_continue_send():
-            local_file.click_continue_send()
         # 3.验证是否发送失败，是否存在重发按钮
         cwp = ChatWindowPage()
         cwp.wait_for_msg_send_status_become_to('发送失败', 10)
@@ -1601,6 +1609,102 @@ class MsgPrivateChatAllTest(TestCase):
         csfp.click_back()
         # 等待单聊会话页面加载
         scp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0026(self):
+        """在选择图片页面点击返回按钮时可正常逐步返回到会话页面"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1.进入本地照片目录
+        Preconditions.enter_local_picture_catalog()
+        local_file = ChatSelectLocalFilePage()
+        local_file.click_back()
+        csfp = ChatSelectFilePage()
+        # 2.等待选择文件页面加载
+        csfp.wait_for_page_load()
+        csfp.click_back()
+        # 3.等待单聊会话页面加载
+        scp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0028(self):
+        """勾选本地视频内任意视频点击发送按钮"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1、2.发送本地视频
+        Preconditions.send_local_video()
+        # 3.验证是否发送成功
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
+        scp.click_back()
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 4.该消息窗口是否显示视频
+        self.assertEquals(mp.is_message_content_match_video(), True)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0029(self):
+        """网络异常时勾选本地文件内任意视频点击发送按钮"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        name = "大佬1"
+        # 确保当前单聊会话页面没有重发按钮影响验证结果
+        Preconditions.make_no_retransmission_button(name)
+        # 设置手机网络断开
+        scp.set_network_status(0)
+        # 1、2.发送本地视频
+        Preconditions.send_local_video()
+        # 3.验证是否发送失败，是否存在重发按钮
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        self.assertEquals(scp.is_exist_msg_send_failed_button(), True)
+
+    @staticmethod
+    def tearDown_test_msg_0029():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_0030(self):
+        """会话页面有视频发送失败时查看消息列表是否有消息发送失败的标识"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        name = "大佬1"
+        # 确保当前消息列表没有消息发送失败的标识影响验证结果
+        Preconditions.make_no_message_send_failed_status(name)
+        # 确保当前单聊会话页面没有重发按钮影响验证结果
+        Preconditions.make_no_retransmission_button(name)
+        # 设置手机网络断开
+        scp.set_network_status(0)
+        file_type = ".mp4"
+        # 发送指定类型文件
+        Preconditions.send_file_by_type(file_type)
+        # 1.验证是否发送失败，是否存在重发按钮
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        self.assertEquals(scp.is_exist_msg_send_failed_button(), True)
+        scp.click_back()
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 2.是否存在消息发送失败的标识
+        self.assertEquals(mp.is_iv_fail_status_present(), True)
+
+    @staticmethod
+    def tearDown_test_msg_0030():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
 
 
 
