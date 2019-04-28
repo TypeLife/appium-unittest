@@ -255,7 +255,7 @@ class Preconditions(object):
             n += 1
             if n > 10:
                 break
-        time.sleep(3)
+        time.sleep(5)
         if osp.is_exist_specify_element_by_name(department_name):
             osp.click_specify_element_by_name(department_name)
             time.sleep(2)
@@ -842,6 +842,7 @@ class MassMessengerAllTest(TestCase):
         ecp = EnterpriseContactsPage()
         ecp.wait_for_page_load()
         ecp.click_back()
+        time.sleep(1)
         ecp.click_back()
         wbp.wait_for_workbench_page_load()
         wbp.click_group_messenger()
@@ -919,6 +920,7 @@ class MassMessengerAllTest(TestCase):
         ecp = EnterpriseContactsPage()
         ecp.wait_for_page_load()
         ecp.click_back()
+        time.sleep(1)
         ecp.click_back()
         wbp.wait_for_workbench_page_load()
         wbp.click_group_messenger()
@@ -997,6 +999,7 @@ class MassMessengerAllTest(TestCase):
         ecp = EnterpriseContactsPage()
         ecp.wait_for_page_load()
         ecp.click_back()
+        time.sleep(1)
         ecp.click_back()
         wbp.wait_for_workbench_page_load()
         wbp.click_group_messenger()

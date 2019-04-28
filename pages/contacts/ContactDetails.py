@@ -36,7 +36,8 @@ class ContactDetailsPage(BasePage):
         '职位名': (MobileBy.ID, 'com.chinasofti.rcs:id/value'),
         '邮箱': (MobileBy.ID, 'com.chinasofti.rcs:id/property'),
         '邮箱地址': (MobileBy.ID, 'com.chinasofti.rcs:id/value'),
-        '分享名片': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_share_card'),
+        '分享名片': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/btn_share_card" and @text="分享名片"]'),
+        '保存到通讯录': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/btn_share_card" and @text="保存到通讯录"]'),
         'com.chinasofti.rcs:id/btn_share_card_line': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_share_card_line'),
         '邀请使用': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_invitation_to_use'),
         '大图': (MobileBy.ID, 'com.chinasofti.rcs:id/img_smooth'),
@@ -196,6 +197,11 @@ class ContactDetailsPage(BasePage):
         """点击大图"""
         self.click_element(self.__locators['大图'])
 
+    @TestLogger.log()
+    def is_exists_big_avatar(self):
+        """是否存在大图"""
+        return self._is_element_present(self.__class__.__locators["大图"])
+
     @TestLogger.log("点击分享名片")
     def click_share_business_card(self):
         """点击分享名片"""
@@ -251,6 +257,11 @@ class ContactDetailsPage(BasePage):
         return self._is_element_present(self.__class__.__locators["用户头像"])
 
     @TestLogger.log()
+    def click_contacts_image(self):
+        """点击联系人头像"""
+        self.click_element(self.__class__.__locators["用户头像"])
+
+    @TestLogger.log()
     def is_exists_contacts_name(self):
         """是否存在联系人名"""
         return self._is_element_present(self.__class__.__locators["用户名称"])
@@ -266,9 +277,19 @@ class ContactDetailsPage(BasePage):
         return self._is_element_present(self.__class__.__locators["消息"])
 
     @TestLogger.log()
+    def message_icon_is_enabled(self):
+        """消息图标是否可点击"""
+        return self._is_enabled(self.__class__.__locators["消息"])
+
+    @TestLogger.log()
     def is_exists_call_icon(self):
         """是否存在电话图标"""
         return self._is_element_present(self.__class__.__locators["电话"])
+
+    @TestLogger.log()
+    def call_icon_is_enabled(self):
+        """电话图标是否可点击"""
+        return self._is_enabled(self.__class__.__locators["电话"])
 
     @TestLogger.log()
     def is_exists_voice_call_icon(self):
@@ -276,23 +297,69 @@ class ContactDetailsPage(BasePage):
         return self._is_element_present(self.__class__.__locators["语音通话"])
 
     @TestLogger.log()
+    def voice_call_icon_is_enabled(self):
+        """语音通话图标是否可点击"""
+        return self._is_enabled(self.__class__.__locators["语音通话"])
+
+    @TestLogger.log()
     def is_exists_video_call_icon(self):
         """是否存在视频通话图标"""
         return self._is_element_present(self.__class__.__locators["视频通话"])
+
+    @TestLogger.log()
+    def video_call_icon_is_enabled(self):
+        """视频通话图标是否可点击"""
+        return self._is_enabled(self.__class__.__locators["视频通话"])
 
     @TestLogger.log()
     def is_exists_dial_hefeixin_icon(self):
         """是否存在和飞信电话图标"""
         return self._is_element_present(self.__class__.__locators["和飞信电话"])
 
+    @TestLogger.log()
+    def dial_hefeixin_icon_is_enabled(self):
+        """和飞信电话图标是否可点击"""
+        return self._is_enabled(self.__class__.__locators["和飞信电话"])
+
+    @TestLogger.log()
     def is_exists_share_card_icon(self):
         """是否存在分享名片图标"""
         return self._is_element_present(self.__class__.__locators["分享名片"])
 
-    def is_exists_company_element(self):
-        """是否存在公司元素"""
-        locator = ( MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/property" and @text="公司"]')
-        return self._is_element_present(locator)
+    @TestLogger.log()
+    def click_share_card_icon(self):
+        """点击分享名片图标"""
+        self.click_element(self.__class__.__locators["分享名片"])
+
+    @TestLogger.log()
+    def is_exists_save_contacts_icon(self):
+        """是否存在保存到通讯录图标"""
+        return self._is_element_present(self.__class__.__locators["保存到通讯录"])
+
+    @TestLogger.log()
+    def click_save_contacts_icon(self):
+        """点击保存到通讯录图标"""
+        self.click_element(self.__class__.__locators["保存到通讯录"])
+
+    @TestLogger.log()
+    def is_exists_value_by_name(self, name):
+        """用户信息有值时是否显示"""
+        locator = (MobileBy.XPATH,
+                   '//*[@resource-id="com.chinasofti.rcs:id/property" and @text="%s"]/../android.widget.TextView[@resource-id="com.chinasofti.rcs:id/value"]' % name)
+        if self._is_element_present(locator):
+            text = self.get_element(locator).text
+            if text:
+                # 有此信息有值时返回True
+                # print(text)
+                return True
+            else:
+                # 有此信息无值时返回False
+                # print("出错")
+                return False
+        else:
+            # 没有此信息时返回True
+            # print("无" + name)
+            return True
 
     @TestLogger.log("截图")
     def take_screen_out(self):

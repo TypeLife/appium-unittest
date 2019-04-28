@@ -216,6 +216,7 @@ class ManagerGuideAllTest(TestCase):
         mgp.wait_for_guide_page_load("后台登录指引")
         mgp.click_back()
         mgp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        mgp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         time.sleep(2)
         # 3.进入帮助中心
         mgp.click_guide_by_name("帮助中心")
