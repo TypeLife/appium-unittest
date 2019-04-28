@@ -27,8 +27,8 @@ class OrganizationStructurePage(BasePage):
         '确定': (MobileBy.XPATH, '//*[@text="确定"]'),
         '联系人名称输入框': (MobileBy.XPATH, '//*[@resource-id ="contact_add_name_input"]'),
         '联系人号码输入框': (MobileBy.XPATH, '//*[@resource-id ="contact_add_mobile_input"]'),
-        # '手动输入姓名框': (MobileBy.XPATH, '//*[@resource-id ="contact_add_name_input"]'),
-        # '手动输入电话框': (MobileBy.XPATH, '//*[@resource-id ="contact_add_mobile_input"]'),
+        '确定删除部门': (MobileBy.XPATH, '//*[@resource-id ="c_com_confirm"]'),
+
     }
 
     @TestLogger.log()
@@ -223,3 +223,8 @@ class OrganizationStructurePage(BasePage):
             return True
         else:
             return False
+
+    @TestLogger.log()
+    def click_element_(self, text):
+        """点击元素"""
+        self.click_element(self.__class__.__locators[text])
