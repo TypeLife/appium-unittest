@@ -47,6 +47,13 @@ class LabelGroupingChatPage(BaseChatPage):
                   'com.chinasofti.rcs:id/ib_expression': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression'),
                   'com.chinasofti.rcs:id/ib_audio': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_audio'),
                   "文件名": (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_name'),
+                  # 消息长按弹窗
+                  '收藏': (MobileBy.XPATH, "//*[contains(@text, '收藏')]"),
+                  '转发': (MobileBy.XPATH, "//*[contains(@text, '转发')]"),
+                  '撤回': (MobileBy.XPATH, "//*[contains(@text, '撤回')]"),
+                  '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
+                  '复制': (MobileBy.XPATH, "//*[contains(@text, '复制')]"),
+                  '多选': (MobileBy.XPATH, "//*[contains(@text, '多选')]"),
                   }
 
     @TestLogger.log()
@@ -93,3 +100,29 @@ class LabelGroupingChatPage(BaseChatPage):
         """长按文件"""
         el = self.get_element(self.__class__.__locators['文件名'])
         self.press(el)
+
+    @TestLogger.log("删除当前分组发送的文件")
+    def delete_group_all_file(self):
+        msg_file = self.get_elements(('id', 'com.chinasofti.rcs:id/ll_msg'))
+        if msg_file:
+            for file in msg_file:
+                self.press(file)
+                self.click_element(self.__class__.__locators['删除'])
+        else:
+            raise AssertionError('当前窗口没有可以删除的消息')
+
+    @TestLogger.log("撤回当前分组发送的文件")
+    def recall_group_all_file(self):
+        msg_file = self.get_elements(('id', 'com.chinasofti.rcs:id/ll_msg'))
+        if msg_file:
+            for file in msg_file:
+                self.press(file)
+                self.click_element(self.__class__.__locators['撤回'])
+        else:
+            raise AssertionError('当前窗口没有可以撤回的消息')
+
+    @TestLogger.log()
+    def get_file_name(self):
+        """获取文件名称"""
+        el = self.get_element(self.__locators["文件名"])
+        return el.text

@@ -473,6 +473,12 @@ class MessagePage(FooterPage):
         return self._is_element_present(self.__locators['消息发送失败感叹号'])
 
     @TestLogger.log()
+    def is_message_fail_status_present(self,name):
+        """判断某条消息,消息发送失败“！”标致是否存在"""
+        return self._is_element_present(self.__locators['消息发送失败感叹号'],name)
+
+
+    @TestLogger.log()
     def press_file_to_do(self, file, text):
         """长按指定文件进行操作"""
         el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))

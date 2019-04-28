@@ -457,6 +457,13 @@ class SelectContactsPage(BasePage):
             self.click_element(locator)
 
     @TestLogger.log()
+    def select_recent_chat_by_number(self, number):
+        """选择某一条最近聊天记录"""
+        if self._is_element_present(self.__class__.__locators["最近聊天消息名称"]):
+            els = self.get_elements(self.__class__.__locators["最近聊天消息名称"])
+            els[number].click()
+
+    @TestLogger.log()
     def is_page_more_text(self, menu):
         """选择某一条最近聊天记录"""
         for text in menu:
