@@ -887,14 +887,14 @@ class MassMessengerAllTest(TestCase):
                 if sccp.is_exist_department_name():
                     ecp.click_back()
                 wbp.wait_for_workbench_page_load()
-                wbp.click_group_messenger()
-                n = 1
-                # 解决工作台不稳定问题
-                while wbp.is_on_workbench_page():
-                    n += 1
-                    if n > 10:
-                        break
-                    wbp.click_group_messenger()
+                # wbp.click_group_messenger()
+                # n = 1
+                # # 解决工作台不稳定问题
+                # while wbp.is_on_workbench_page():
+                #     n += 1
+                #     if n > 10:
+                #         break
+                #     wbp.click_group_messenger()
                 return
             except:
                 fail_time += 1
@@ -965,14 +965,14 @@ class MassMessengerAllTest(TestCase):
                 if sccp.is_exist_department_name():
                     ecp.click_back()
                 wbp.wait_for_workbench_page_load()
-                wbp.click_group_messenger()
-                n = 1
-                # 解决工作台不稳定问题
-                while wbp.is_on_workbench_page():
-                    n += 1
-                    if n > 10:
-                        break
-                    wbp.click_group_messenger()
+                # wbp.click_group_messenger()
+                # n = 1
+                # # 解决工作台不稳定问题
+                # while wbp.is_on_workbench_page():
+                #     n += 1
+                #     if n > 10:
+                #         break
+                #     wbp.click_group_messenger()
                 return
             except:
                 fail_time += 1
@@ -1045,14 +1045,14 @@ class MassMessengerAllTest(TestCase):
                 if sccp.is_exist_department_name():
                     ecp.click_back()
                 wbp.wait_for_workbench_page_load()
-                wbp.click_group_messenger()
-                n = 1
-                # 解决工作台不稳定问题
-                while wbp.is_on_workbench_page():
-                    n += 1
-                    if n > 10:
-                        break
-                    wbp.click_group_messenger()
+                # wbp.click_group_messenger()
+                # n = 1
+                # # 解决工作台不稳定问题
+                # while wbp.is_on_workbench_page():
+                #     n += 1
+                #     if n > 10:
+                #         break
+                #     wbp.click_group_messenger()
                 return
             except:
                 fail_time += 1
