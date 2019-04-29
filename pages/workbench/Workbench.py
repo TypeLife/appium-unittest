@@ -489,6 +489,17 @@ class WorkbenchPage(FooterPage):
             self.click_company_contacts()
 
     @TestLogger.log()
+    def click_add_attendance_card(self):
+        """点击考勤打卡"""
+        els = self.find_els(self.__class__.__locators['考勤打卡'])
+        if els:
+            els[0].click()
+        else:
+            self.add_workbench_app("考勤打卡")
+            time.sleep(2)
+            self.click_attendance_card()
+
+    @TestLogger.log()
     def add_workbench_app(self, name):
         """添加工作台里的应用"""
         self.wait_for_workbench_page_load()
