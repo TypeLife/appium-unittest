@@ -18,6 +18,9 @@ class SuperMeetingPage(BasePage):
         '下三角': (MobileBy.XPATH, '//*[@text="ic_arrow_%20down"]'),
         '上三角': (MobileBy.XPATH, '//*[@text="ic_arrow_upward"]'),
         '(2人)': (MobileBy.XPATH, '//*[@text="（2人）"]'),
+        '查询文本删除X': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect'),
+        '右三角': (MobileBy.ID, 'com.chinasofti.rcs:id/img_right_department'),
+        '加号': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[2]/android.widget.ListView/android.view.View[3]/android.widget.Image'),
         '确定删除所有记录': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[2]/android.view.View[2]/android.view.View/android.view.View/android.view.View[2]/android.view.View[2]'),
         '确定取消此次会议': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[4]/android.view.View[2]/android.view.View/android.view.View/android.view.View[2]/android.view.View[2]'),
 

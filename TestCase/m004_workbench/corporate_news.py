@@ -155,6 +155,7 @@ class Preconditions(LoginPreconditions):
             n += 1
             if n > 10:
                 break
+        time.sleep(3)
         for name in names:
             if not osp.is_exist_specify_element_by_name(name):
                 osp.click_specify_element_by_name("添加联系人")
@@ -165,6 +166,43 @@ class Preconditions(LoginPreconditions):
                 slc.wait_for_page_load()
                 slc.selecting_local_contacts_by_name(name)
                 slc.click_sure()
+                osp.wait_for_page_load()
+        osp.click_back()
+        wbp.wait_for_workbench_page_load()
+        mp.open_message_page()
+        mp.wait_for_page_load()
+
+    @staticmethod
+    def create_he_contacts2(contacts):
+        """手动输入联系人创建为和通讯录联系人"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_workbench_page()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_organization()
+        osp = OrganizationStructurePage()
+        time.sleep(5)
+        n = 1
+        # 解决工作台不稳定问题
+        while osp.is_text_present("账号认证失败"):
+            osp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_organization()
+            time.sleep(5)
+            n += 1
+            if n > 10:
+                break
+        time.sleep(3)
+        for name, number in contacts:
+            if not osp.is_exist_specify_element_by_name(name):
+                osp.click_specify_element_by_name("添加联系人")
+                time.sleep(2)
+                osp.click_specify_element_by_name("手动输入添加")
+                osp.input_contacts_name(name)
+                osp.input_contacts_number(number)
+                osp.click_confirm()
                 osp.wait_for_page_load()
         osp.click_back()
         wbp.wait_for_workbench_page_load()
@@ -193,6 +231,7 @@ class Preconditions(LoginPreconditions):
             n += 1
             if n > 10:
                 break
+        time.sleep(3)
         for department_name in department_names:
             if not osp.is_exist_specify_element_by_name(department_name):
                 osp.click_specify_element_by_name("添加子部门")
@@ -373,8 +412,11 @@ class CorporateNewsAllTest(TestCase):
         while fail_time2 < 5:
             try:
                 Preconditions.make_already_in_message_page()
-                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4", "b测算", "c平5", '哈 马上']
+                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
                 Preconditions.create_he_contacts(contact_names)
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "13800137005"), ('郑海贵', "13802883296")]
+                Preconditions.create_he_contacts2(contact_names2)
                 department_names = ["测试部门1", "测试部门2"]
                 Preconditions.create_department_and_add_member(department_names)
                 flag2 = True

@@ -106,6 +106,11 @@ class ContactsPage(FooterPage):
         """点击消息按钮"""
         self.click_element(self.__locators['消息'])
 
+    @TestLogger.log('点击我页面')
+    def click_me_icon(self):
+        """点击进入我页面"""
+        self.click_element(self.__locators['我'])
+
     @TestLogger.log('点击搜索框')
     def click_search_box(self):
         """点击搜索框"""
@@ -309,3 +314,29 @@ class ContactsPage(FooterPage):
     def click_one_firm(self):
         """点击一个团队"""
         self.click_element(self.__class__.__locators['团队名称'])
+
+    @TestLogger.log()
+    def wait_for_contacts_page_load(self, timeout=20, auto_accept_alerts=True):
+        """等待通讯录页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["+号"])
+            )
+        except:
+            raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
+        return self
+
+    @TestLogger.log()
+    def select_contacts_by_name(self, name):
+        """根据名字选择一个联系人"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text ="%s"]' % name)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        self.click_element(locator)

@@ -46,6 +46,9 @@ class SelectLocalContactsPage(BasePage):
                   MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_view'),
                   'com.chinasofti.rcs:id/contact_index_bar_container': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_container'),
+                  '右侧字母索引': (MobileBy.XPATH,
+                             '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView'),
+                  '左侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_index"]'),
                   # 删除成员
                   '确定删除': (MobileBy.XPATH, '//*[@text="确定"]'),
                   # 分享群二维码时选择联系人后的弹窗页面
@@ -60,6 +63,7 @@ class SelectLocalContactsPage(BasePage):
                   '取消转发': (MobileBy.XPATH, "//*[contains(@text, '取消')]"),
                   '确定转发': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
                   '被选中的联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/avator'),
+                  '搜索结果展示': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
                   }
 
     @TestLogger.log()
@@ -71,6 +75,25 @@ class SelectLocalContactsPage(BasePage):
     def click_cancel_forward(self):
         """点击取消转发"""
         self.click_element(self.__class__.__locators['取消转发'])
+
+    @TestLogger.log()
+    def click_search_box(self):
+        """点击搜索框"""
+        self.click_element(self.__class__.__locators['搜索或输入手机号'])
+
+    @TestLogger.log()
+    def input_search_keyword(self, keyword):
+        """输入搜索内容"""
+        self.input_text(self.__locators['搜索或输入手机号'], keyword)
+
+    @TestLogger.log("根据导航栏的第一个字母定位")
+    def choose_index_bar_click_element(self):
+        self.click_element(
+            ('xpath','//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView[1]'))
+        elements = self.get_elements(self.__class__.__locators["联系人名"])
+        elements[0].click()
+
+
 
     @TestLogger.log()
     def click_sure_share(self):
@@ -276,4 +299,17 @@ class SelectLocalContactsPage(BasePage):
                 contacts_name.append(el.text)
         return contacts_name
 
+    @TestLogger.log("点击第一个联系人")
+    def click_first_phone_contacts(self):
+        self.get_elements(self.__locators['电话号码'])[0].click()
 
+    @TestLogger.log("当前页面是否在选择联系人页")
+    def is_on_this_page(self):
+        el = self.get_elements(self.__locators['选择联系人'])
+        if len(el) > 0:
+            return True
+        return False
+
+    @TestLogger.log("点击搜索第一个联系人")
+    def click_search_phone_contacts(self):
+        self.get_elements(self.__class__.__locators["联系人名"])[0].click()

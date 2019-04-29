@@ -6,6 +6,7 @@ from appium.webdriver.common.mobileby import MobileBy
 import settings
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
+from . import ChatSelectFilePage
 
 
 class ChatSelectLocalFilePage(BasePage):
@@ -64,7 +65,9 @@ class ChatSelectLocalFilePage(BasePage):
                   '继续发送按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/continue_call'),
                   '订购免流特权': (MobileBy.ID, 'com.chinasofti.rcs:id/get_mian_liu_permission'),
                   '以后不再提示': (MobileBy.ID, 'com.chinasofti.rcs:id/pop_window_not_pop_btn'),
-                  '返回上一级': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back_actionbar')
+                  '返回上一级': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back_actionbar'),
+                  '文件显示大小':(MobileBy.ID, 'com.chinasofti.rcs:id/textview_select_file_size'),
+                  '文件按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/cb_choose_icon')
                   }
 
     @TestLogger.log()
@@ -340,3 +343,62 @@ class ChatSelectLocalFilePage(BasePage):
                 message
             )
         return self
+
+    @TestLogger.log("进入预置文件的目录")
+    def enter_preset_file_dir(self):
+        base_dir = os.path.basename(settings.RESOURCE_FILE_PATH)
+        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[@text="%s"]' % base_dir))
+        if el:
+            el.click()
+            return el
+        else:
+            self.mobile.push_folder(settings.RESOURCE_FILE_PATH, "/sdcard")
+            self.click_back()
+            ChatSelectFilePage().click_local_file()
+            self.enter_preset_file_dir()
+
+    @TestLogger.log("当前页面是否在文件选择页")
+    def is_on_this_page(self):
+        try:
+            self.wait_until(
+                timeout=15,
+                auto_accept_permission_alert=True,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["发送"])
+            )
+            return True
+        except:
+            return False
+
+    @TestLogger.log("10G免流特权弹窗")
+    def check_10G_free_data_page(self):
+        self.wait_until(condition=lambda x: self.is_text_present('继续发送'), auto_accept_permission_alert=False)
+        check_text = ['每月10G免流特权','继续发送','订购免流特权','以后不再提示']
+        for check in check_text:
+            if not self.is_text_present(check):
+                return False
+        return True
+
+    # 继续发送  com.chinasofti.rcs:id/continue_call
+    @TestLogger.log("点击订购免流特权")
+    def click_free_data_button(self):
+        self.click_element(("id","com.chinasofti.rcs:id/get_mian_liu_permission"))
+
+    @TestLogger.log("只点击发送")
+    def click_single_send(self):
+        self.click_element(self.__class__.__locators["发送"])
+
+    @TestLogger.log("点击订购免流返回")
+    def click_free_data_back(self):
+        self.click_element(("id","com.chinasofti.rcs:id/btn_back_actionbar"))
+
+    @TestLogger.log("点击弹窗外面的元素关闭弹窗")
+    def click_outside_element(self):
+        self.mobile.click_out_side_of_element(('id', 'com.chinasofti.rcs:id/pop_window_for_10g_main_view'))
+
+    @TestLogger.log("检测元素是否可以点击")
+    def check_element_is_enable(self, locator):
+        return self._is_enabled((self.__locators[locator]))
+
+    @TestLogger.log("检测元素是否存在")
+    def check_element_is_exist(self, locator):
+        return self._is_element_present(self.__locators[locator])

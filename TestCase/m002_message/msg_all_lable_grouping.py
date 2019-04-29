@@ -11,6 +11,7 @@ import random
 from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
 
 
+
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
     'Android-XX': ''  # 用来发短信
@@ -95,6 +96,28 @@ class Preconditions(LoginPreconditions):
         client = switch_to_mobile(REQUIRED_MOBILES[category])
         client.connect_mobile()
         return client
+
+    @staticmethod
+    def enter_local_file_catalog():
+        """进入本地预置文件目录"""
+
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+        if not chat.is_open_more():
+            chat.click_more()
+        # 2、点击本地文件
+        more_page = ChatMorePage()
+        more_page.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        # 3、选择任意文件，点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        # 进入预置文件目录，选择文件发送
+        local_file.push_preset_file()
+        local_file.click_preset_file_dir()
+
+
 
     @staticmethod
     def enter_local_video_catalog():
@@ -226,22 +249,11 @@ class MsgLabelGroupingAll(TestCase):
     def test_msg_weifenglian_fenzu_0001(self):
         """勾选本地文件内任意文件点击发送按钮"""
         # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
-        chat = LabelGroupingChatPage()
-        chat.wait_for_page_load()
-        if not chat.is_open_more():
-            chat.click_more()
-        # 2、点击本地文件
-        more_page = ChatMorePage()
-        more_page.click_file()
-        csf = ChatSelectFilePage()
-        csf.wait_for_page_load()
-        csf.click_local_file()
-        # 3、选择任意文件，点击发送按钮
+        Preconditions.enter_local_file_catalog()
         local_file = ChatSelectLocalFilePage()
-        # 进入预置文件目录，选择文件发送
-        local_file.push_preset_file()
-        local_file.click_preset_file_dir()
-        file = local_file.select_file(".xls")
+        chat = LabelGroupingChatPage()
+        csf = ChatSelectFilePage()
+        file = local_file.select_file(".txt")
         if file:
             local_file.click_send()
         else:
@@ -256,20 +268,10 @@ class MsgLabelGroupingAll(TestCase):
         # 1、在当前聊天会话页面，断开网络，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.set_network_status(0)
-        chat.wait_for_page_load()
-        if not chat.is_open_more():
-            chat.click_more()
-        # 2、点击本地文件
-        more_page = ChatMorePage()
-        more_page.click_file()
-        csf = ChatSelectFilePage()
-        csf.wait_for_page_load()
-        csf.click_local_file()
-        # 3、选择任意文件，点击发送按钮
+        Preconditions.enter_local_file_catalog()
         local_file = ChatSelectLocalFilePage()
-        # 进入预置文件目录，选择文件发送
-        local_file.click_preset_file_dir()
-        file = local_file.select_file(".xls")
+        csf = ChatSelectFilePage()
+        file = local_file.select_file(".txt")
         if file:
             local_file.click_send()
         else:
@@ -296,21 +298,10 @@ class MsgLabelGroupingAll(TestCase):
         # 1、在当前聊天会话页面，断开网络，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.set_network_status(0)
-        chat.wait_for_page_load()
-        if not chat.is_open_more():
-            chat.click_more()
-        # 2、点击本地文件
-        more_page = ChatMorePage()
-        more_page.click_file()
-        csf = ChatSelectFilePage()
-        csf.wait_for_page_load()
-        csf.click_local_file()
-        # 3、选择任意文件，点击发送按钮
+        Preconditions.enter_local_file_catalog()
         local_file = ChatSelectLocalFilePage()
-        # 进入预置文件目录，选择文件发送
-        local_file.push_preset_file()
-        local_file.click_preset_file_dir()
-        file = local_file.select_file(".xls")
+        csf = ChatSelectFilePage()
+        file = local_file.select_file(".txt")
         if file:
             local_file.click_send()
         else:
@@ -348,21 +339,11 @@ class MsgLabelGroupingAll(TestCase):
         # 1、在当前聊天会话页面，断开网络，点击更多富媒体的文件按钮
         chat = LabelGroupingChatPage()
         chat.set_network_status(0)
-        chat.wait_for_page_load()
-        if not chat.is_open_more():
-            chat.click_more()
-        # 2、点击本地文件
-        more_page = ChatMorePage()
-        more_page.click_file()
-        csf = ChatSelectFilePage()
-        csf.wait_for_page_load()
-        csf.click_local_file()
-        # 3、选择任意文件，点击发送按钮
+        Preconditions.enter_local_file_catalog()
         local_file = ChatSelectLocalFilePage()
-        # 进入预置文件目录，选择文件发送
-        local_file.push_preset_file()
-        local_file.click_preset_file_dir()
-        file = local_file.select_file(".xls")
+        chat = LabelGroupingChatPage()
+        csf = ChatSelectFilePage()
+        file = local_file.select_file(".txt")
         if file:
             local_file.click_send()
         else:
@@ -402,21 +383,11 @@ class MsgLabelGroupingAll(TestCase):
             # 1、在当前聊天会话页面，断开网络，点击更多富媒体的文件按钮
             chat = LabelGroupingChatPage()
             chat.set_network_status(0)
-            chat.wait_for_page_load()
-            if not chat.is_open_more():
-                chat.click_more()
-            # 2、点击本地文件
-            more_page = ChatMorePage()
-            more_page.click_file()
-            csf = ChatSelectFilePage()
-            csf.wait_for_page_load()
-            csf.click_local_file()
-            # 3、选择任意文件，点击发送按钮
+            Preconditions.enter_local_file_catalog()
             local_file = ChatSelectLocalFilePage()
-            # 进入预置文件目录，选择文件发送
-            local_file.push_preset_file()
-            local_file.click_preset_file_dir()
-            file = local_file.select_file(".xls")
+            chat = LabelGroupingChatPage()
+            csf = ChatSelectFilePage()
+            file = local_file.select_file(".txt")
             if file:
                 local_file.click_send()
             else:
@@ -447,29 +418,20 @@ class MsgLabelGroupingAll(TestCase):
     def test_msg_weifenglian_fenzu_0006(self):
         """取消重发,页面停留在当前页面"""
         time.sleep(2)
+        cwp = ChatWindowPage()
+        lable_name = cwp.get_label_name()
         if ChatWindowPage().is_element_present_resend():
-            cwp = ChatWindowPage()
             cwp.click_resend_button()
             cwp.click_resend_not()
         else:
             # 1、在当前聊天会话页面，断开网络，点击更多富媒体的文件按钮
             chat = LabelGroupingChatPage()
             chat.set_network_status(0)
-            chat.wait_for_page_load()
-            if not chat.is_open_more():
-                chat.click_more()
-            # 2、点击本地文件
-            more_page = ChatMorePage()
-            more_page.click_file()
-            csf = ChatSelectFilePage()
-            csf.wait_for_page_load()
-            csf.click_local_file()
-            # 3、选择任意文件，点击发送按钮
+            Preconditions.enter_local_file_catalog()
             local_file = ChatSelectLocalFilePage()
-            # 进入预置文件目录，选择文件发送
-            local_file.push_preset_file()
-            local_file.click_preset_file_dir()
-            file = local_file.select_file(".xls")
+            chat = LabelGroupingChatPage()
+            csf = ChatSelectFilePage()
+            file = local_file.select_file(".txt")
             if file:
                 local_file.click_send()
             else:
@@ -483,7 +445,7 @@ class MsgLabelGroupingAll(TestCase):
             cwp.click_resend_button()
             cwp.click_resend_not()
         time.sleep(2)
-        LabelGroupingChatPage().page_should_contain_text("alg7272")
+        LabelGroupingChatPage().page_should_contain_text(lable_name)
 
     @staticmethod
     def tearDown_test_msg_weifenglian_fenzu_0006():
@@ -501,19 +463,9 @@ class MsgLabelGroupingAll(TestCase):
         lbgc=LabelGroupingChatPage()
         lbgc.set_network_status(4)
         #发送大于2M的文件
-        chat = LabelGroupingChatPage()
-        if not chat.is_open_more():
-            chat.click_more()
-        # 2、点击本地文件
-        more_page = ChatMorePage()
-        more_page.click_file()
-        csf = ChatSelectFilePage()
-        csf.wait_for_page_load()
-        csf.click_local_file()
+        Preconditions.enter_local_file_catalog()
         local_file = ChatSelectLocalFilePage()
-        # 进入预置文件目录，选择文件发送
-        local_file.push_preset_file()
-        local_file.click_preset_file_dir()
+        csf = ChatSelectFilePage()
         file = local_file.select_file("测试log文件.log")
         if file:
             local_file.click_send_button()
@@ -535,19 +487,9 @@ class MsgLabelGroupingAll(TestCase):
         lbgc=LabelGroupingChatPage()
         lbgc.set_network_status(4)
         #发送大于2M的文件
-        chat = LabelGroupingChatPage()
-        if not chat.is_open_more():
-            chat.click_more()
-        # 2、点击本地文件
-        more_page = ChatMorePage()
-        more_page.click_file()
-        csf = ChatSelectFilePage()
-        csf.wait_for_page_load()
-        csf.click_local_file()
+        Preconditions.enter_local_file_catalog()
         local_file = ChatSelectLocalFilePage()
-        # 进入预置文件目录，选择文件发送
-        local_file.push_preset_file()
-        local_file.click_preset_file_dir()
+        csf = ChatSelectFilePage()
         file = local_file.select_file("测试log文件.log")
         if file:
             local_file.click_send_button()
@@ -561,18 +503,9 @@ class MsgLabelGroupingAll(TestCase):
         local_file.click_continue_send()
         #再次发送大于2M的文件
         LabelGroupingChatPage().wait_for_page_load()
-        if not chat.is_open_more():
-            chat.click_more()
-        # 2.1、点击本地文件
-        more_page = ChatMorePage()
-        more_page.click_file()
-        csf = ChatSelectFilePage()
-        csf.wait_for_page_load()
-        csf.click_local_file()
+        Preconditions.enter_local_file_catalog()
         local_file = ChatSelectLocalFilePage()
-        # 进入预置文件目录，选择文件发送
-        local_file.push_preset_file()
-        local_file.click_preset_file_dir()
+        csf = ChatSelectFilePage()
         file = local_file.select_file("测试log文件.log")
         if file:
             local_file.click_send()
@@ -591,19 +524,9 @@ class MsgLabelGroupingAll(TestCase):
         lbgc=LabelGroupingChatPage()
         lbgc.set_network_status(4)
         #发送大于2M的文件
-        chat = LabelGroupingChatPage()
-        if not chat.is_open_more():
-            chat.click_more()
-        # 2、点击本地文件
-        more_page = ChatMorePage()
-        more_page.click_file()
-        csf = ChatSelectFilePage()
-        csf.wait_for_page_load()
-        csf.click_local_file()
+        Preconditions.enter_local_file_catalog()
         local_file = ChatSelectLocalFilePage()
-        # 进入预置文件目录，选择文件发送
-        local_file.push_preset_file()
-        local_file.click_preset_file_dir()
+        csf = ChatSelectFilePage()
         file = local_file.select_file("测试log文件.log")
         if file:
             local_file.click_send_button()
@@ -616,19 +539,9 @@ class MsgLabelGroupingAll(TestCase):
         local_file.click_no_longer_prompt()
         local_file.click_continue_send()
         #再次发送大于2M文件
-        LabelGroupingChatPage().wait_for_page_load()
-        if not chat.is_open_more():
-            chat.click_more()
-        # 2.1、点击本地文件
-        more_page = ChatMorePage()
-        more_page.click_file()
-        csf = ChatSelectFilePage()
-        csf.wait_for_page_load()
-        csf.click_local_file()
+        Preconditions.enter_local_file_catalog()
         local_file = ChatSelectLocalFilePage()
-        # 进入预置文件目录，选择文件发送
-        local_file.push_preset_file()
-        local_file.click_preset_file_dir()
+        csf = ChatSelectFilePage()
         file = local_file.select_file("测试log文件.log")
         if file:
             local_file.click_send_button()
@@ -657,19 +570,9 @@ class MsgLabelGroupingAll(TestCase):
         lbgc = LabelGroupingChatPage()
         lbgc.set_network_status(4)
         # 发送大于2M的文件
-        chat = LabelGroupingChatPage()
-        if not chat.is_open_more():
-            chat.click_more()
-        # 2、点击本地文件
-        more_page = ChatMorePage()
-        more_page.click_file()
-        csf = ChatSelectFilePage()
-        csf.wait_for_page_load()
-        csf.click_local_file()
+        Preconditions.enter_local_file_catalog()
         local_file = ChatSelectLocalFilePage()
-        # 进入预置文件目录，选择文件发送
-        local_file.push_preset_file()
-        local_file.click_preset_file_dir()
+        csf = ChatSelectFilePage()
         file = local_file.select_file("测试log文件.log")
         if file:
             local_file.click_send_button()
@@ -697,19 +600,9 @@ class MsgLabelGroupingAll(TestCase):
     @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0012(self):
         """文件列表页面-点击取消"""
-        chat = LabelGroupingChatPage()
-        if not chat.is_open_more():
-            chat.click_more()
-        # 2、点击本地文件
-        more_page = ChatMorePage()
-        more_page.click_file()
-        csf = ChatSelectFilePage()
-        csf.wait_for_page_load()
-        csf.click_local_file()
+        Preconditions.enter_local_file_catalog()
         local_file = ChatSelectLocalFilePage()
-        # 进入预置文件目录，选择文件发送
-        local_file.push_preset_file()
-        local_file.click_preset_file_dir()
+
         local_file.select_file(".xls")
         #点击取消
 
@@ -717,24 +610,15 @@ class MsgLabelGroupingAll(TestCase):
     def test_msg_weifenglian_fenzu_0013(self):
         """文件列表页面-选中文件后可返回到会话页面"""
         chat = LabelGroupingChatPage()
-        if not chat.is_open_more():
-            chat.click_more()
-        # 2、点击本地文件
-        more_page = ChatMorePage()
-        more_page.click_file()
-        csf = ChatSelectFilePage()
-        csf.wait_for_page_load()
-        csf.click_local_file()
+        label_name = chat.get_label_name()
+        Preconditions.enter_local_file_catalog()
         local_file = ChatSelectLocalFilePage()
-        # 进入预置文件目录，选择文件发送
-        local_file.push_preset_file()
-        local_file.click_preset_file_dir()
         time.sleep(2)
         local_file.click_back()
         local_file.click_back()
         ChatSelectFilePage().click_back()
         time.sleep(2)
-        LabelGroupingChatPage().page_should_contain_text("alg7272")
+        LabelGroupingChatPage().page_should_contain_text(label_name)
 
     @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0014(self):
@@ -875,7 +759,7 @@ class MsgLabelGroupingAll(TestCase):
         MessagePage().wait_for_page_load()
         MessagePage().is_iv_fail_status_present()
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0019(self):
         """点击重发按钮后,取消重发"""
         chat = ChatWindowPage()
@@ -900,7 +784,7 @@ class MsgLabelGroupingAll(TestCase):
         # 判断图片发送成功
         chat.wait_for_msg_send_status_become_to('发送失败', 10)
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0020(self):
         """移动网络下,发送大于2M的图片会出现弹框"""
         # 设置网络为移动网络
@@ -914,7 +798,7 @@ class MsgLabelGroupingAll(TestCase):
         local_file.is_exist_free_flow_privilege()
         local_file.is_exist_no_longer_prompt()
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0021(self):
         """移动网络下,发送大于2M的图片会出现弹框,继续发送"""
         # 设置网络为移动网络
@@ -935,7 +819,7 @@ class MsgLabelGroupingAll(TestCase):
         time.sleep(2)
         local_file.is_exist_free_flow_privilege()
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0022(self):
         """移动网络下,选择以后不再提示后点击发送"""
         # 设置网络为移动网络
@@ -965,7 +849,7 @@ class MsgLabelGroupingAll(TestCase):
         MessagePage().wait_for_page_load()
         Preconditions.enter_label_grouping_chat_page()
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0023(self):
         """移动网络下,点击订购免流特权"""
         # 设置网络为移动网络
@@ -990,7 +874,7 @@ class MsgLabelGroupingAll(TestCase):
             mep.set_network_status(6)
 
     # Android手机无取消按钮,IOS有
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0025(self):
         """文件列表页面-点击取消"""
         chat = LabelGroupingChatPage()
@@ -1009,31 +893,22 @@ class MsgLabelGroupingAll(TestCase):
         local_file.select_file(".jpg")
         # 点击取消
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0026(self):
         """文件列表页面-选中文件后可返回到会话页面"""
         chat = LabelGroupingChatPage()
-        if not chat.is_open_more():
-            chat.click_more()
-        # 2、点击本地文件
-        more_page = ChatMorePage()
-        more_page.click_file()
-        csf = ChatSelectFilePage()
-        csf.wait_for_page_load()
-        csf.click_local_file()
+        label_name = chat.get_label_name()
+        Preconditions.enter_local_file_catalog()
         local_file = ChatSelectLocalFilePage()
-        # 进入预置文件目录，选择文件发送
-        local_file.push_preset_file()
-        local_file.click_preset_file_dir()
         time.sleep(2)
         local_file.click_back()
         local_file.click_back()
         ChatSelectFilePage().click_back()
         time.sleep(2)
-        LabelGroupingChatPage().page_should_contain_text("alg7272")
+        LabelGroupingChatPage().page_should_contain_text(label_name)
 
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping','yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0028(self):
         """文件列表页面-视频发送成功"""
         Preconditions.enter_local_video_catalog()
@@ -1054,7 +929,7 @@ class MsgLabelGroupingAll(TestCase):
         mess.page_should_contain_text(label_name)
         mess.page_should_contain_text('视频')
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping','yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0029(self):
         """断网发送视频不成功"""
         LabelGroupingChatPage().set_network_status(0)
@@ -1068,7 +943,7 @@ class MsgLabelGroupingAll(TestCase):
         cwp = ChatWindowPage()
         cwp.wait_for_msg_send_status_become_to('发送失败', 10)
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping','yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0030(self):
         """断网发送视频不成功,消息列表显示发送失败"""
         LabelGroupingChatPage().set_network_status(0)
@@ -1100,18 +975,473 @@ class MsgLabelGroupingAll(TestCase):
             mep = MePage()
             mep.set_network_status(6)
 
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0031(self):
+        """重发图片成功"""
+        chat = ChatWindowPage()
+        chat.wait_for_page_load()
+        if chat.is_element_present_resend():
+            while chat.is_element_present_resend():
+                chat.click_resend_button()
+                chat.click_resend_sure()
+                time.sleep(2)
+        else:
+            LabelGroupingChatPage().set_network_status(0)
+            LabelGroupingChatPage().click_more()
+            more_page = ChatMorePage()
+            more_page.click_file()
+            csf = ChatSelectFilePage()
+            csf.wait_for_page_load()
+            csf.click_local_file()
+            local_file = ChatSelectLocalFilePage()
+            # 进入预置文件目录，选择文件发送
+            local_file.push_preset_file()
+            local_file.click_preset_file_dir()
+            time.sleep(2)
+            local_file.select_file('.mp4')
+            local_file.click_send()
+            # 恢复网络重新发送
+            chat.set_network_status(6)
+            chat.click_resend_button()
+            chat.click_resend_sure()
+            time.sleep(2)
+        # 判断图片发送成功
+        chat.wait_for_msg_send_status_become_to('发送成功', 10)
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_fenzu_0031():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep = MePage()
+            mep.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0032(self):
+        """重发图片成功,消息列表不显示标志"""
+        chat = ChatWindowPage()
+        chat.wait_for_page_load()
+        if chat.is_element_present_resend():
+            while chat.is_element_present_resend():
+                chat.set_network_status(6)
+                chat.click_resend_button()
+                chat.click_resend_sure()
+                time.sleep(2)
+        else:
+            LabelGroupingChatPage().set_network_status(0)
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            time.sleep(2)
+            local_file.select_file('.mp4')
+            local_file.click_send()
+            # 恢复网络重新发送
+            chat.set_network_status(6)
+            chat.click_resend_button()
+            chat.click_resend_sure()
+            time.sleep(2)
+        # 判断图片发送成功
+        chat.wait_for_msg_send_status_become_to('发送成功', 10)
+        # 返回消息列表
+        LabelGroupingChatPage().wait_for_page_load()
+        time.sleep(2)
+        chat = LabelGroupingChatPage()
+        chat.click_back()
+        LableGroupDetailPage().click_back()
+        LabelGroupingPage().click_back()
+        ContactsPage().click_message_icon()
+        MessagePage().wait_for_page_load()
+        MessagePage().is_iv_fail_status_present()
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0033(self):
+        """点击重发按钮后,取消重发"""
+        chat = ChatWindowPage()
+        chat.wait_for_page_load()
+        if chat.is_element_present_resend():
+            while chat.is_element_present_resend():
+                chat.click_resend_button()
+                chat.click_resend_not()
+                time.sleep(2)
+        else:
+            LabelGroupingChatPage().set_network_status(0)
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            time.sleep(2)
+            local_file.select_file('.mp4')
+            local_file.click_send()
+            # 恢复网络重新发送
+            chat.set_network_status(6)
+            chat.click_resend_button()
+            chat.click_resend_not()
+            time.sleep(2)
+        # 判断图片发送成功
+        chat.wait_for_msg_send_status_become_to('发送失败', 10)
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0035(self):
+        """移动网络下,发送大于2M的视频会出现弹框"""
+        # 设置网络为移动网络
+        lbgc = LabelGroupingChatPage()
+        lbgc.set_network_status(4)
+        Preconditions.send_large_video_file()
+        # 弹出10G免流特权弹窗
+        local_file = ChatSelectLocalFilePage()
+        time.sleep(2)
+        local_file.is_exist_continue_send()
+        local_file.is_exist_free_flow_privilege()
+        local_file.is_exist_no_longer_prompt()
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0036(self):
+        """移动网络下,发送大于2M的视频会出现弹框,继续发送"""
+        # 设置网络为移动网络
+        lbgc = LabelGroupingChatPage()
+        lbgc.set_network_status(4)
+        Preconditions.send_large_video_file()
+        # 弹出10G免流特权弹窗
+        local_file = ChatSelectLocalFilePage()
+        time.sleep(2)
+        local_file.is_exist_continue_send()
+        local_file.click_continue_send()
+        LabelGroupingChatPage().wait_for_page_load()
+        # 再次发送大于2M的文件
+        Preconditions.send_large_video_file()
+        # 再次发送,页面仍弹出弹框
+        time.sleep(2)
+        local_file.is_exist_continue_send()
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0037(self):
+        """移动网络下,选择以后不再提示后点击发送"""
+        # 设置网络为移动网络
+        lbgc = LabelGroupingChatPage()
+        lbgc.set_network_status(4)
+        # 发送大于2M的文件
+        Preconditions.send_large_video_file()
+        # 弹出10G免流特权弹窗,选择以后不再提示
+        time.sleep(2)
+        local_file = ChatSelectLocalFilePage()
+        local_file.click_no_longer_prompt()
+        local_file.click_continue_send()
+        # 再次发送大于2M文件
+        LabelGroupingChatPage().wait_for_page_load()
+        Preconditions.send_large_video_file()
+        # 再次发送,查看是否存在弹框
+        time.sleep(2)
+        local_file.is_exist_free_flow_privilege()
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_fenzu_0038():
+
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_one_key_login_page()
+        Preconditions.login_by_one_key_login()
+        MessagePage().wait_for_page_load()
+        Preconditions.enter_label_grouping_chat_page()
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0038(self):
+        """移动网络下,点击订购免流特权"""
+        # 设置网络为移动网络
+        lbgc = LabelGroupingChatPage()
+        lbgc.set_network_status(4)
+        # 发送大于2M的文件
+        Preconditions.send_large_video_file()
+        # 点击订购免流特权
+        time.sleep(2)
+        local_file = ChatSelectLocalFilePage()
+        local_file.click_free_flow_privilege()
+        local_file.wait_for_free_flow_privilege_page_load()
+        local_file.click_return()
+        local_file.is_exist_free_flow_privilege()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_fenzu_0038():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep = MePage()
+            mep.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0039(self):
+        """取消选择视频"""
+        # 进入本地视频页面
+        Preconditions.enter_local_video_catalog()
+        local_file = ChatSelectLocalFilePage()
+        local_file.select_file('.mp4')
+        # 点击取消(ios才有)
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0040(self):
+        """选择视频后返回"""
+        # 进入本地视频页面
+        Preconditions.enter_local_video_catalog()
+        local_file = ChatSelectLocalFilePage()
+        local_file.select_file('.mp4')
+        # 点击返回
+        local_file.click_back()
+        time.sleep(2)
+        ChatSelectFilePage().page_should_contain_text('选择文件')
+        # 再点击返回,进入聊天页面
+        ChatSelectFilePage().click_back()
+        LabelGroupingChatPage().is_on_this_page()
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    def test_msg_weifenglian_fenzu_0042(self):
+        """音乐发送成功"""
+        Preconditions.enter_local_music_catalog()
+        local_file = ChatSelectLocalFilePage()
+        local_file.select_file('.mp3')
+        local_file.click_send()
+        #返回消息页面,查看页面显示
+        LabelGroupingChatPage().wait_for_page_load()
+        label_name = LabelGroupingChatPage().get_label_name()
+        LabelGroupingChatPage().click_back()
+        LableGroupDetailPage().click_back()
+        LabelGroupingPage().click_back()
+        ContactsPage().click_message_icon()
+        MessagePage().wait_for_page_load()
+        MessagePage().page_should_contain_text(label_name)
+        MessagePage().page_should_contain_text('文件')
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    def test_msg_weifenglian_fenzu_0043(self):
+        """断网音乐发送失败"""
+        Preconditions.enter_local_music_catalog()
+        #断网
+        local_file = ChatSelectLocalFilePage()
+        local_file.set_network_status(0)
+        local_file.select_file('.mp3')
+        local_file.click_send()
+        #重发按钮是否存在
+        ChatWindowPage().wait_for_page_load()
+        ChatWindowPage().is_element_present_resend()
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    def test_msg_weifenglian_fenzu_0044(self):
+        """断网音乐发送失败,消息列表有显示"""
+        Preconditions.enter_local_music_catalog()
+        #断网
+        local_file = ChatSelectLocalFilePage()
+        local_file.set_network_status(0)
+        local_file.select_file('.mp3')
+        local_file.click_send()
+        #重发按钮是否存在
+        cwp=ChatWindowPage()
+        cwp.wait_for_page_load()
+        cwp.is_element_present_resend()
+        #返回消息页面
+        cwp.click_back()
+        LableGroupDetailPage().click_back()
+        LabelGroupingPage().click_back()
+        ContactsPage().click_message_icon()
+        MessagePage().wait_for_page_load()
+        MessagePage().is_iv_fail_status_present()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_fenzu_0044():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep = MePage()
+            mep.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    def test_msg_weifenglian_fenzu_0045(self):
+        """发送失败的文件,重复成功"""
+        chat=ChatWindowPage()
+        if chat.is_element_present_resend():
+            while chat.is_element_present_resend():
+                chat.click_resend_button()
+                chat.click_resend_sure()
+                time.sleep(2)
+        else:
+            LabelGroupingChatPage().set_network_status(0)
+            Preconditions.enter_local_music_catalog()
+            local_file = ChatSelectLocalFilePage()
+            time.sleep(2)
+            local_file.select_file('.mp3')
+            local_file.click_send()
+            #恢复网络重新发送
+            chat.set_network_status(6)
+            chat.click_resend_button()
+            chat.click_resend_sure()
+            time.sleep(2)
+        #判断图片发送成功
+        chat.wait_for_msg_send_status_become_to('发送成功',10)
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    def test_msg_weifenglian_fenzu_0046(self):
+        """发送失败的文件,重复成功,返回消息列表,标志消失"""
+        chat=ChatWindowPage()
+        if chat.is_element_present_resend():
+            while chat.is_element_present_resend():
+                chat.click_resend_button()
+                chat.click_resend_sure()
+                time.sleep(2)
+        else:
+            LabelGroupingChatPage().set_network_status(0)
+            Preconditions.enter_local_music_catalog()
+            local_file = ChatSelectLocalFilePage()
+            time.sleep(2)
+            local_file.select_file('.mp3')
+            local_file.click_send()
+            #恢复网络重新发送
+            chat.set_network_status(6)
+            chat.click_resend_button()
+            chat.click_resend_sure()
+            time.sleep(2)
+        #判断图片发送成功
+        chat.wait_for_msg_send_status_become_to('发送成功',10)
+        #返回消息页面
+        ChatWindowPage().click_back()
+        LableGroupDetailPage().click_back()
+        LabelGroupingPage().click_back()
+        ContactsPage().click_message_icon()
+        MessagePage().wait_for_page_load()
+        MessagePage().is_iv_fail_status_present()
 
 
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    def test_msg_weifenglian_fenzu_0047(self):
+        """发送失败的文件,取消重发"""
+        chat=ChatWindowPage()
+        if chat.is_element_present_resend():
+            while chat.is_element_present_resend():
+                chat.click_resend_button()
+                chat.click_resend_not()
+                time.sleep(2)
+        else:
+            LabelGroupingChatPage().set_network_status(0)
+            Preconditions.enter_local_music_catalog()
+            local_file = ChatSelectLocalFilePage()
+            time.sleep(2)
+            local_file.select_file('.mp3')
+            local_file.click_send()
+            #恢复网络重新发送
+            chat.set_network_status(6)
+            chat.click_resend_button()
+            chat.click_resend_not()
+            time.sleep(2)
+        #判断图片发送成功
+        LabelGroupingChatPage().is_on_this_page()
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    def test_msg_weifenglian_fenzu_0048(self):
+        """移动网络下,发送大于2M的音乐会出现弹框"""
+        # 设置网络为移动网络
+        lbgc = LabelGroupingChatPage()
+        lbgc.set_network_status(4)
+        Preconditions.send_large_music_file()
+        local_file = ChatSelectLocalFilePage()
+        # 弹出10G免流特权弹窗
+        time.sleep(2)
+        local_file.is_exist_continue_send()
+        local_file.is_exist_free_flow_privilege()
+        local_file.is_exist_no_longer_prompt()
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    def test_msg_weifenglian_fenzu_0049(self):
+        """移动网络下,发送大于2M的音乐会出现弹框,继续发送"""
+        # 设置网络为移动网络
+        lbgc = LabelGroupingChatPage()
+        lbgc.set_network_status(4)
+        # 发送大于2M的文件
+        Preconditions.send_large_music_file()
+        local_file = ChatSelectLocalFilePage()
+
+        # 弹出10G免流特权弹窗
+        time.sleep(2)
+        local_file.is_exist_continue_send()
+        local_file.click_continue_send()
+        # 再次发送大于2M的文件
+        LabelGroupingChatPage().wait_for_page_load()
+        Preconditions.send_large_music_file()
+        # 再次发送,页面仍弹出弹框
+        time.sleep(2)
+        local_file.is_exist_free_flow_privilege()
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    def test_msg_weifenglian_fenzu_0050(self):
+        """移动网络下,选择以后不再提示后点击发送"""
+        # 设置网络为移动网络
+        lbgc = LabelGroupingChatPage()
+        lbgc.set_network_status(4)
+        # 发送大于2M的文件
+        Preconditions.send_large_music_file()
+        local_file = ChatSelectLocalFilePage()
+        # 弹出10G免流特权弹窗,选择以后不再提示
+        time.sleep(2)
+        local_file.click_no_longer_prompt()
+        local_file.click_continue_send()
+        # 再次发送大于2M文件
+        LabelGroupingChatPage().wait_for_page_load()
+        Preconditions.send_large_music_file()
+        # 再次发送,查看是否存在弹框
+        local_file.is_exist_free_flow_privilege()
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_fenzu_0051():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_one_key_login_page()
+        Preconditions.login_by_one_key_login()
+        MessagePage().wait_for_page_load()
+        Preconditions.enter_label_grouping_chat_page()
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    def test_msg_weifenglian_fenzu_0051(self):
+        """移动网络下,点击订购免流特权"""
+        # 设置网络为移动网络
+        lbgc = LabelGroupingChatPage()
+        lbgc.set_network_status(4)
+        # 发送大于2M的文件
+        Preconditions.send_large_music_file()
+        local_file = ChatSelectLocalFilePage()
+        # 点击订购免流特权
+        time.sleep(2)
+        local_file.click_free_flow_privilege()
+        local_file.wait_for_free_flow_privilege_page_load()
+        local_file.click_return()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_fenzu_0051():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep = MePage()
+            mep.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    def test_msg_weifenglian_fenzu_0053(self):
+        """取消选择音乐"""
+        #进入本地音乐页面
+        Preconditions.enter_local_music_catalog()
+        local_file = ChatSelectLocalFilePage()
+        local_file.select_file('.mp3')
+        #点击取消(ios才有)
 
 
-
-
-
-
-
-
-
-
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    def test_msg_weifenglian_fenzu_0054(self):
+        """返回选择音乐页面"""
+        #进入本地音乐页面
+        Preconditions.enter_local_music_catalog()
+        #返回
+        local_file = ChatSelectLocalFilePage()
+        local_file.click_back()
+        local_file.page_should_contain_text('选择文件')
+        #再点击返回按钮
+        ChatSelectFilePage().click_back()
+        LabelGroupingChatPage().is_on_this_page()
 
 
 

@@ -633,3 +633,730 @@ class SuperMeetingTest(TestCase):
             workbench = WorkbenchPage()
             workbench.wait_for_page_load()
 
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0012(self):
+        """字母搜索可支持多个字母大小写同时匹配"""
+        # 1.在搜索框输入多方大小写字母, 查看匹配结果
+        # 2.点击结果，查看是否可选择成功
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        smp.click_element_("预约会议")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_local_contacts()
+        if not sc.swipe_and_find_element("18920796596"):
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_contacts_page()
+            if workbench.is_text_present("始终允许"):
+                workbench.click_text("始终允许")
+            cp = ContactsPage()
+            cp.create_contacts_if_not_exits("主子", "18920796596")
+            time.sleep(2)
+            cp.open_workbench_page()
+            workbench.wait_for_page_load()
+            workbench.click_super_meeting()
+            smp.wait_for_page_loads()
+            smp.click_element_("预约会议")
+            time.sleep(2)
+            sc.input_search_keyword("Zhu")
+            time.sleep(2)
+            if not sc.is_text_present("18920796596"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("18920796596")
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选中")
+            if not sc.is_text_present("搜索或输入号码"):
+                raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/63"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+        else:
+            current_mobile().back()
+            sc.input_search_keyword("Zhu")
+            time.sleep(2)
+            if not sc.is_text_present("18920796596"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("18920796596")
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选中")
+            if not sc.is_text_present("搜索或输入号码"):
+                raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/63"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0013(self):
+        """特殊字符可支持搜索匹配"""
+        # 1.在搜索框输入特殊字符, 查看匹配结果
+        # 2.点击结果，查看是否可选择成功
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        smp.click_element_("预约会议")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_local_contacts()
+        if not sc.swipe_and_find_element("属下 &"):
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_contacts_page()
+            if workbench.is_text_present("始终允许"):
+                workbench.click_text("始终允许")
+            cp = ContactsPage()
+            cp.create_contacts_if_not_exits("属下 &", "18920796566")
+            time.sleep(2)
+            cp.open_workbench_page()
+            workbench.wait_for_page_load()
+            workbench.click_super_meeting()
+            smp.wait_for_page_loads()
+            smp.click_element_("预约会议")
+            time.sleep(2)
+            sc.input_search_keyword("&")
+            time.sleep(2)
+            if not sc.is_text_present("18920796566"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("18920796566")
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选中")
+            if not sc.is_text_present("搜索或输入号码"):
+                raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/63"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+        else:
+            current_mobile().back()
+            sc.input_search_keyword("&")
+            time.sleep(2)
+            if not sc.is_text_present("18920796566"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("18920796566")
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选中")
+            if not sc.is_text_present("搜索或输入号码"):
+                raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/63"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0014(self):
+        """纯空格键不支持搜索匹配"""
+        # 1.在搜索框输入空格，查看显示
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        smp.click_element_("预约会议")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_local_contacts()
+        if not sc.swipe_and_find_element("属下 &"):
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_contacts_page()
+            if workbench.is_text_present("始终允许"):
+                workbench.click_text("始终允许")
+            cp = ContactsPage()
+            cp.create_contacts_if_not_exits("属下 &", "18920796566")
+            time.sleep(2)
+            cp.open_workbench_page()
+            workbench.wait_for_page_load()
+            workbench.click_super_meeting()
+            smp.wait_for_page_loads()
+            smp.click_element_("预约会议")
+            time.sleep(2)
+            sc.input_search_keyword(" ")
+            time.sleep(2)
+            if sc.is_text_present("18920796566"):
+                raise AssertionError("搜索结果有误")
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+        else:
+            current_mobile().back()
+            sc.input_search_keyword(" ")
+            time.sleep(2)
+            if sc.is_text_present("18920796566"):
+                raise AssertionError("搜索结果有误")
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0015(self):
+        """空格键+文本 可支持匹配"""
+        # 1.在搜索框输入空格键 + 文本, 查看匹配结果
+        # 2.点击结果，查看是否可选择成功
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        smp.click_element_("预约会议")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_local_contacts()
+        if not sc.swipe_and_find_element("属下 &"):
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_contacts_page()
+            if workbench.is_text_present("始终允许"):
+                workbench.click_text("始终允许")
+            cp = ContactsPage()
+            cp.create_contacts_if_not_exits("属下 &", "18920796566")
+            time.sleep(2)
+            cp.open_workbench_page()
+            workbench.wait_for_page_load()
+            workbench.click_super_meeting()
+            smp.wait_for_page_loads()
+            smp.click_element_("预约会议")
+            time.sleep(2)
+            sc.input_search_keyword(" 属下")
+            time.sleep(2)
+            if not sc.is_text_present("18920796566"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("18920796566")
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选中")
+            if not sc.is_text_present("搜索或输入号码"):
+                raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/63"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+        else:
+            current_mobile().back()
+            sc.input_search_keyword(" 属下")
+            time.sleep(2)
+            if not sc.is_text_present("18920796566"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("18920796566")
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选中")
+            if not sc.is_text_present("搜索或输入号码"):
+                raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/63"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0016(self):
+        """搜索框输入，不限制字符，可一键删除，可按输入盘删除键删除"""
+        # 1.在搜索框输入长文本
+        # 2.在输入框滑动已输入的文字
+        # 3.点击键盘删除
+        # 4.点击X一键删除
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        smp.click_element_("预约会议")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        mess = "哈" * 30
+        sc.input_search_keyword(mess)
+        time.sleep(2)
+        sc.press_and_move_right()
+        time.sleep(2)
+        smp.click_element_("查询文本删除X")
+        if not sc.is_text_present("搜索或输入号码"):
+            raise AssertionError("输入框没有自动清空")
+        current_mobile().back()
+        current_mobile().back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0017(self):
+        """搜索本机号码"""
+        # 1.在搜索框输入本机号码，查看匹配结果
+        # 2.点击本机联系人
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        smp.click_element_("预约会议")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_local_contacts()
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        if not sc.swipe_and_find_element(phone_number):
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_contacts_page()
+            if workbench.is_text_present("始终允许"):
+                workbench.click_text("始终允许")
+            cp = ContactsPage()
+            cp.create_contacts_if_not_exits("本机", phone_number)
+            time.sleep(2)
+            cp.open_workbench_page()
+            workbench.wait_for_page_load()
+            workbench.click_super_meeting()
+            smp.wait_for_page_loads()
+            smp.click_element_("预约会议")
+            time.sleep(2)
+            sc.input_search_keyword(phone_number)
+            time.sleep(2)
+            if not sc.is_text_present("本机"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("本机")
+            if not sc.is_toast_exist("该联系人不可选择"):
+                raise AssertionError("没有toast提示该联系人不可选择")
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+        else:
+            current_mobile().back()
+            sc.input_search_keyword(phone_number)
+            time.sleep(2)
+            if not sc.is_text_present("本机"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("本机")
+            if not sc.is_toast_exist("该联系人不可选择"):
+                raise AssertionError("没有toast提示该联系人不可选择")
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0019(self):
+        """字母+汉字组合可精准搜索"""
+        # 1.在搜索框输入：字母 + 汉字, 查看匹配结果
+        # 2.点击结果，查看是否可选择成功
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        smp.click_element_("预约会议")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_local_contacts()
+        if not sc.swipe_and_find_element("a加1"):
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_contacts_page()
+            if workbench.is_text_present("始终允许"):
+                workbench.click_text("始终允许")
+            cp = ContactsPage()
+            cp.create_contacts_if_not_exits("a加1", "18920798888")
+            time.sleep(2)
+            cp.open_workbench_page()
+            workbench.wait_for_page_load()
+            workbench.click_super_meeting()
+            smp.wait_for_page_loads()
+            smp.click_element_("预约会议")
+            time.sleep(2)
+            sc.input_search_keyword("a加")
+            time.sleep(2)
+            if not sc.is_text_present("18920798888"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("18920798888")
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选中")
+            if not sc.is_text_present("搜索或输入号码"):
+                raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/63"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+        else:
+            current_mobile().back()
+            sc.input_search_keyword("a加")
+            time.sleep(2)
+            if not sc.is_text_present("18920798888"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("18920798888")
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选中")
+            if not sc.is_text_present("搜索或输入号码"):
+                raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/63"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0020(self):
+        """字母+汉字+数字组合可精准搜索"""
+        # 1.在搜索框输入：字母 + 汉字 + 数字, 查看匹配结果
+        # 2.点击结果，查看是否可选择成功
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        smp.click_element_("预约会议")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_local_contacts()
+        if not sc.swipe_and_find_element("a加1"):
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_contacts_page()
+            if workbench.is_text_present("始终允许"):
+                workbench.click_text("始终允许")
+            cp = ContactsPage()
+            cp.create_contacts_if_not_exits("a加1", "18920798888")
+            time.sleep(2)
+            cp.open_workbench_page()
+            workbench.wait_for_page_load()
+            workbench.click_super_meeting()
+            smp.wait_for_page_loads()
+            smp.click_element_("预约会议")
+            time.sleep(2)
+            sc.input_search_keyword("a加1")
+            time.sleep(2)
+            if not sc.is_text_present("18920798888"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("18920798888")
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选中")
+            if not sc.is_text_present("搜索或输入号码"):
+                raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/63"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+        else:
+            current_mobile().back()
+            sc.input_search_keyword("a加1")
+            time.sleep(2)
+            if not sc.is_text_present("18920798888"):
+                raise AssertionError("搜索结果有误")
+            sc.click_text("18920798888")
+            time.sleep(2)
+            if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+                raise AssertionError("不可成功选中")
+            if not sc.is_text_present("搜索或输入号码"):
+                raise AssertionError("输入框没有自动清空")
+            if not sc.is_text_present("/63"):
+                raise AssertionError("右上角没有展示已选人数/上限人数")
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0021(self):
+        """搜索固话"""
+        # 1.在搜索框输入：固话号码, 查看匹配结果
+        # 2.点击结果，查看是否可选择成功
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        smp.click_element_("预约会议")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.input_search_keyword("06638820709")
+        time.sleep(2)
+        if not sc.is_text_present("未知号码"):
+            raise AssertionError("搜索结果有误")
+        sc.click_text("未知号码")
+        time.sleep(2)
+        if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
+            raise AssertionError("不可成功选中")
+        current_mobile().back()
+        current_mobile().back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0022(self):
+        """用户不在任何部门下"""
+        # 1.点击“+”添加联系人
+        # 2.点击返回或者面包屑中的企业通讯录
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        smp.click_element_("预约会议")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text("选择手机联系人")
+        time.sleep(2)
+        sc.input_search_contact_message("和飞信")
+        time.sleep(2)
+        sc.click_text("和飞信电话")
+        time.sleep(2)
+        sc.click_text("确定")
+        smp.wait_for_page_loads("会议开始时间")
+        time.sleep(2)
+        smp.click_text("取消")
+        smp.click_element_("加号")
+        sc.wait_for_page_load()
+        sc.click_text("选择企业通讯录联系人")
+        time.sleep(2)
+        if not sc.is_text_present("企业通讯录"):
+            raise AssertionError("没有直接进入企业子一层级")
+        current_mobile().back()
+        time.sleep(2)
+        if not smp.is_element_exit("右三角"):
+            raise AssertionError("页面没有跳转到企业层级")
+        current_mobile().back()
+        current_mobile().back()
+        smp.click_close_more()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0023(self):
+        """用户在企业部门下"""
+        # 1.点击“+”添加联系人
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        smp.click_element_("预约会议")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text("选择企业通讯录联系人")
+        time.sleep(2)
+        if sc.is_text_present("企业通讯录"):
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.click_organization()
+            osp=OrganizationStructurePage()
+            osp.wait_for_page_load()
+            osp.click_text("添加子部门")
+            osp.wait_for_sub_department_page_load()
+            osp.input_sub_department_name("用户在企业部门下1")
+            osp.click_text("完成")
+            osp.wait_for_page_load()
+            time.sleep(2)
+            sc.click_one_contact("用户在企业部门下1")
+            time.sleep(2)
+            osp.click_text("添加联系人")
+            time.sleep(1)
+            osp.click_text("手动输入添加")
+            time.sleep(1)
+            osp.input_contacts_name("本机")
+            phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+            osp.input_contacts_number(phone_number)
+            time.sleep(2)
+            osp.click_text("完成")
+            if not osp.is_toast_exist("成功"):
+                raise AssertionError("手动添加失败")
+            time.sleep(2)
+            current_mobile().back()
+            current_mobile().back()
+            workbench.wait_for_page_load()
+            workbench.click_super_meeting()
+            smp.wait_for_page_loads()
+            smp.click_element_("预约会议")
+            sc = SelectContactsPage()
+            sc.wait_for_page_load()
+            sc.click_text("选择手机联系人")
+            time.sleep(2)
+            sc.input_search_contact_message("和飞信")
+            time.sleep(2)
+            sc.click_text("和飞信电话")
+            time.sleep(2)
+            sc.click_text("确定")
+            smp.wait_for_page_loads("会议开始时间")
+            time.sleep(2)
+            smp.click_text("取消")
+            smp.click_element_("加号")
+            sc.wait_for_page_load()
+            sc.click_text("选择企业通讯录联系人")
+            time.sleep(3)
+            current_mobile().back()
+            time.sleep(2)
+            current_mobile().back()
+            sc.click_text("选择企业通讯录联系人")
+            time.sleep(2)
+            if sc.is_text_present("企业通讯录"):
+                raise AssertionError("跳转后没有直接进入企业层级：企业+部门名称")
+            current_mobile().back()
+            current_mobile().back()
+            smp.click_close_more()
+            workbench.wait_for_page_load()
+            workbench.click_organization()
+            osp.wait_for_page_load()
+            sc.click_one_contact("用户在企业部门下1")
+            osp.click_text("更多")
+            time.sleep(1)
+            osp.click_text("部门设置")
+            time.sleep(1)
+            osp.click_text("删除")
+            time.sleep(2)
+            osp.click_element_("确定删除部门")
+            if not osp.is_toast_exist("成功"):
+                raise AssertionError("删除部门失败")
+            current_mobile().back()
+            workbench.wait_for_page_load()
+            workbench.click_super_meeting()
+            smp.wait_for_page_loads()
+            smp.click_element_("预约会议")
+            sc = SelectContactsPage()
+            sc.wait_for_page_load()
+            sc.click_text("选择企业通讯录联系人")
+            time.sleep(2)
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            workbench.wait_for_page_load()
+        else:
+            raise AssertionError("用户一开始已经在企业部门下，请删除部门让用户一开始不在企业部门下")
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0024(self):
+        """用户在企业部门下又在企业子一层级中，直接进入企业层级"""
+        # 1.点击“+”添加联系人
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        smp.click_element_("预约会议")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text("选择企业通讯录联系人")
+        time.sleep(2)
+        if sc.is_text_present("企业通讯录"):
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.click_organization()
+            osp = OrganizationStructurePage()
+            osp.wait_for_page_load()
+            phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+            if not osp.swipe_and_find_element(phone_number):
+                osp.click_text("添加联系人")
+                time.sleep(1)
+                osp.click_text("手动输入添加")
+                time.sleep(1)
+                osp.input_contacts_name("本机")
+                osp.input_contacts_number(phone_number)
+                time.sleep(2)
+                osp.click_text("完成")
+                if not osp.is_toast_exist("成功"):
+                    raise AssertionError("手动添加失败")
+                osp.wait_for_page_load()
+            osp.click_text("添加子部门")
+            osp.wait_for_sub_department_page_load()
+            osp.input_sub_department_name("用户在企业部门下1")
+            osp.click_text("完成")
+            osp.wait_for_page_load()
+            time.sleep(2)
+            sc.click_one_contact("用户在企业部门下1")
+            time.sleep(2)
+            osp.click_text("添加联系人")
+            time.sleep(1)
+            osp.click_text("手动输入添加")
+            time.sleep(1)
+            osp.input_contacts_name("本机")
+            osp.input_contacts_number(phone_number)
+            time.sleep(2)
+            osp.click_text("完成")
+            if not osp.is_toast_exist("成功"):
+                raise AssertionError("手动添加失败")
+            time.sleep(2)
+            current_mobile().back()
+            current_mobile().back()
+            workbench.wait_for_page_load()
+            workbench.click_super_meeting()
+            smp.wait_for_page_loads()
+            smp.click_element_("预约会议")
+            sc = SelectContactsPage()
+            sc.wait_for_page_load()
+            sc.click_text("选择手机联系人")
+            time.sleep(2)
+            sc.input_search_contact_message("和飞信")
+            time.sleep(2)
+            sc.click_text("和飞信电话")
+            time.sleep(2)
+            sc.click_text("确定")
+            smp.wait_for_page_loads("会议开始时间")
+            time.sleep(2)
+            smp.click_text("取消")
+            smp.click_element_("加号")
+            sc.wait_for_page_load()
+            sc.click_text("选择企业通讯录联系人")
+            time.sleep(3)
+            current_mobile().back()
+            time.sleep(2)
+            current_mobile().back()
+            sc.click_text("选择企业通讯录联系人")
+            time.sleep(2)
+            if sc.is_text_present("企业通讯录"):
+                raise AssertionError("跳转后没有直接进入企业层级：企业+部门名称")
+            current_mobile().back()
+            current_mobile().back()
+            smp.click_close_more()
+            workbench.wait_for_page_load()
+            workbench.click_organization()
+            osp.wait_for_page_load()
+            sc.click_one_contact("用户在企业部门下1")
+            osp.click_text("更多")
+            time.sleep(1)
+            osp.click_text("部门设置")
+            time.sleep(1)
+            osp.click_text("删除")
+            time.sleep(2)
+            osp.click_element_("确定删除部门")
+            if not osp.is_toast_exist("成功"):
+                raise AssertionError("删除部门失败")
+            current_mobile().back()
+            workbench.wait_for_page_load()
+            workbench.click_super_meeting()
+            smp.wait_for_page_loads()
+            smp.click_element_("预约会议")
+            sc = SelectContactsPage()
+            sc.wait_for_page_load()
+            sc.click_text("选择企业通讯录联系人")
+            time.sleep(2)
+            current_mobile().back()
+            current_mobile().back()
+            current_mobile().back()
+            workbench.wait_for_page_load()
+        else:
+            raise AssertionError("用户一开始已经在企业部门下，请删除部门让用户一开始不在企业部门下")
+
+
+

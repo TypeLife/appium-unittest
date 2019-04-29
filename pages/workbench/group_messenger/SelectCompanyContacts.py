@@ -118,7 +118,7 @@ class SelectCompanyContactsPage(BasePage):
         els = self.get_elements(self.__class__.__locators["联系人号码"])
         texts = []
         for el in els:
-            text = el.text
+            text = el.text.strip()
             if text:
                 texts.append(text)
         for t in texts:
