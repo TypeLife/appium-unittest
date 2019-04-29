@@ -10,6 +10,7 @@ from pages import AgreementDetailPage
 from pages import CallPage
 from pages import ChatWindowPage
 from pages import ContactDetailsPage
+from pages import ContactListSearchPage
 from pages import ContactsPage
 from pages import CreateContactPage
 from pages import GroupChatPage
@@ -843,15 +844,22 @@ class EnterpriseContactsAllTest(TestCase):
         cp = ContactsPage()
         cp.wait_for_page_load()
         # 删除指定联系人
-        cp.select_contacts_by_name("陈丹丹")
-        cdp = ContactDetailsPage()
-        cdp.wait_for_page_load()
-        cdp.click_edit_contact()
-        time.sleep(2)
-        current_mobile().hide_keyboard_if_display()
-        time.sleep(2)
-        cdp.change_delete_number()
-        cdp.click_sure_delete()
+        cp.click_search_box()
+        name = "陈丹丹"
+        contact_search = ContactListSearchPage()
+        contact_search.wait_for_page_load()
+        contact_search.input_search_keyword(name)
+        if contact_search.is_contact_in_list(name):
+            cp.select_contacts_by_name(name)
+            cdp = ContactDetailsPage()
+            cdp.wait_for_page_load()
+            cdp.click_edit_contact()
+            time.sleep(1)
+            current_mobile().hide_keyboard_if_display()
+            time.sleep(1)
+            cdp.change_delete_number()
+            cdp.click_sure_delete()
+        contact_search.click_back()
         cp.wait_for_page_load()
         mp.open_workbench_page()
         wbp = WorkbenchPage()

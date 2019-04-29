@@ -222,3 +222,16 @@ class SelectOneGroupPage(BasePage):
     def is_element_present_result(self):
         return self._is_element_present(self.__locators['搜索结果展示'])
 
+    @TestLogger.log()
+    def is_search_group_name_full_match(self, name):
+        """搜索群名是否精准匹配"""
+        els = self.get_elements(self.__class__.__locators["群聊名"])
+        texts = []
+        for el in els:
+            text = el.text.strip()
+            if text:
+                texts.append(text)
+        for t in texts:
+            if name == t:
+                return True
+        raise AssertionError('搜索结果"{}"没有找到与关键字"{}"完全匹配的文本'.format(texts, name))
