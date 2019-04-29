@@ -76,6 +76,7 @@ class GroupListPage(BasePage):
         '多方电话': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_third_colum'),
         '多方视频': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_fourth_colum'),
         '大佬1': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
+        '大佬3':(MobileBy.XPATH,'//*[@text="大佬3"]'),
 
         '大佬2': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
         '搜索或输入手机号':(MobileBy.XPATH,"//*[@text='搜索或输入手机号']"),
@@ -269,6 +270,17 @@ class GroupListPage(BasePage):
             self.click_element(self.__class__.__locators['确定'])
         else:
             self.click_element(self.__class__.__locators['确定3'])
+
+    @TestLogger.log("点击某个联系人")
+    def click_contact_element(self,text='大佬3'):
+        for i in range(4):
+            time.sleep(2)
+            if self._is_element_present(self.__class__.__locators[text]):
+                self.click_element(self.__class__.__locators[text])
+                return True
+            else:
+                self.page_up()
+        return False
 
     @TestLogger.log("点击允许权限")
     def click_allow_button(self):
