@@ -6,9 +6,10 @@ from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 from pages.components import ChatNoticeDialog
 from pages.components.selectors import PictureSelector
+from pages.components.BaseChat import BaseChatPage
 
 
-class ChatWindowPage(ChatNoticeDialog, PictureSelector, BasePage):
+class ChatWindowPage(ChatNoticeDialog, PictureSelector, BaseChatPage,BasePage):
     """聊天窗口"""
     ACTIVITY = 'com.cmicc.module_message.ui.activity.MessageDetailActivity'
 
@@ -169,3 +170,17 @@ class ChatWindowPage(ChatNoticeDialog, PictureSelector, BasePage):
         """获取标题名称"""
         el = self.get_element(self.__locators["13537795364"])
         return el.text
+
+    @TestLogger.log()
+    def find_element_by_swipe(self, locator, times=15):
+        """找不到元素就滑动"""
+        if self._is_element_present(locator):
+            return self.get_element(locator)
+        else:
+            c = 0
+            while c < times:
+                self.page_up()
+                if self._is_element_present(locator):
+                    return self.get_element(locator)
+                c += 1
+            return None

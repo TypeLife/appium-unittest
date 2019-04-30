@@ -66,3 +66,11 @@ class ChatSelectFilePage(BasePage):
     def click_music(self):
         """点击音乐"""
         self.click_element(self.__class__.__locators["音乐"])
+
+    @TestLogger.log()
+    def is_on_this_page(self):
+        """当前页面是否在选择文件界面"""
+        el = self.get_elements(self.__locators['本地文件'])
+        if len(el) > 0:
+            return True
+        return False
