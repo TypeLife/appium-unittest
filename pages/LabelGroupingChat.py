@@ -126,3 +126,9 @@ class LabelGroupingChatPage(BaseChatPage):
         """获取文件名称"""
         el = self.get_element(self.__locators["文件名"])
         return el.text
+
+    @TestLogger.log()
+    def get_one_file_name(self,type):
+        """获取文件名称"""
+        el = self.get_element(self.__locators["文件名"],type)
+        return el.text

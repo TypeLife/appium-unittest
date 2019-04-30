@@ -117,7 +117,38 @@ class Preconditions(LoginPreconditions):
         local_file.push_preset_file()
         local_file.click_preset_file_dir()
 
+    @staticmethod
+    def send_local_file(file_type):
+        """发送本地文件夹文件"""
+        Preconditions.enter_local_file_catalog()
+        local_file=ChatSelectLocalFilePage()
+        local_file.select_file(file_type)
+        local_file.click_send()
+        ChatWindowPage().wait_for_page_load()
 
+    @staticmethod
+    def public_open_file_network_broken(file_type):
+        """断网状态在聊天会话页面打开文件"""
+        chat = LabelGroupingChatPage()
+        Preconditions.send_local_file(file_type)
+        chat.wait_for_page_load()
+        chat.set_network_status(0)
+        chat.open_file_in_chat_page(file_type)
+        chat.wait_for_open_file()
+        chat.click_back_in_open_file_page()
+        chat.wait_for_page_load()
+        chat.set_network_status(6)
+
+    @staticmethod
+    def public_open_file_network_ok(file_type):
+        """正常状态在聊天会话页面打开文件"""
+        chat = LabelGroupingChatPage()
+        Preconditions.send_local_file(file_type)
+        chat.wait_for_page_load()
+        chat.open_file_in_chat_page(file_type)
+        chat.wait_for_open_file()
+        chat.click_back_in_open_file_page()
+        chat.wait_for_page_load()
 
     @staticmethod
     def enter_local_video_catalog():
@@ -369,8 +400,8 @@ class MsgLabelGroupingAll(TestCase):
             mep = MePage()
             mep.set_network_status(6)
 
-    #和飞信bug,未发送成功的文件联网后重新发送,返回消息列表页面,该对话框的群聊名称不显示
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    # #和飞信bug,未发送成功的文件联网后重新发送,返回消息列表页面,该对话框的群聊名称不显示
+    @tags('和飞信有bug,跳过')
     def test_msg_weifenglian_fenzu_0005(self):
         """对发送失败的文件进行重发,发送失败的标志取消"""
         time.sleep(2)
@@ -517,7 +548,7 @@ class MsgLabelGroupingAll(TestCase):
         time.sleep(2)
         local_file.is_exist_free_flow_privilege()
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    @tags('ALL', 'CMCC-RESET', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0009(self):
         """移动网络下,选择以后不再提示后点击发送"""
         #设置网络为移动网络
@@ -563,7 +594,7 @@ class MsgLabelGroupingAll(TestCase):
         MessagePage().wait_for_page_load()
         Preconditions.enter_label_grouping_chat_page()
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    @tags('ALL', 'CMCC-RESET', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0010(self):
         """移动网络下,点击订购免流特权"""
         # 设置网络为移动网络
@@ -819,7 +850,7 @@ class MsgLabelGroupingAll(TestCase):
         time.sleep(2)
         local_file.is_exist_free_flow_privilege()
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    @tags('ALL', 'CMCC-RESET', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0022(self):
         """移动网络下,选择以后不再提示后点击发送"""
         # 设置网络为移动网络
@@ -849,7 +880,7 @@ class MsgLabelGroupingAll(TestCase):
         MessagePage().wait_for_page_load()
         Preconditions.enter_label_grouping_chat_page()
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    @tags('ALL', 'CMCC-RESET', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0023(self):
         """移动网络下,点击订购免流特权"""
         # 设置网络为移动网络
@@ -1111,7 +1142,7 @@ class MsgLabelGroupingAll(TestCase):
         time.sleep(2)
         local_file.is_exist_continue_send()
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    @tags('ALL', 'CMCC-RESET', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0037(self):
         """移动网络下,选择以后不再提示后点击发送"""
         # 设置网络为移动网络
@@ -1142,7 +1173,7 @@ class MsgLabelGroupingAll(TestCase):
         MessagePage().wait_for_page_load()
         Preconditions.enter_label_grouping_chat_page()
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    @tags('ALL', 'CMCC-RESET', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0038(self):
         """移动网络下,点击订购免流特权"""
         # 设置网络为移动网络
@@ -1191,7 +1222,7 @@ class MsgLabelGroupingAll(TestCase):
         ChatSelectFilePage().click_back()
         LabelGroupingChatPage().is_on_this_page()
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0042(self):
         """音乐发送成功"""
         Preconditions.enter_local_music_catalog()
@@ -1209,7 +1240,7 @@ class MsgLabelGroupingAll(TestCase):
         MessagePage().page_should_contain_text(label_name)
         MessagePage().page_should_contain_text('文件')
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0043(self):
         """断网音乐发送失败"""
         Preconditions.enter_local_music_catalog()
@@ -1222,7 +1253,7 @@ class MsgLabelGroupingAll(TestCase):
         ChatWindowPage().wait_for_page_load()
         ChatWindowPage().is_element_present_resend()
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0044(self):
         """断网音乐发送失败,消息列表有显示"""
         Preconditions.enter_local_music_catalog()
@@ -1252,7 +1283,7 @@ class MsgLabelGroupingAll(TestCase):
             mep = MePage()
             mep.set_network_status(6)
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0045(self):
         """发送失败的文件,重复成功"""
         chat=ChatWindowPage()
@@ -1276,7 +1307,7 @@ class MsgLabelGroupingAll(TestCase):
         #判断图片发送成功
         chat.wait_for_msg_send_status_become_to('发送成功',10)
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0046(self):
         """发送失败的文件,重复成功,返回消息列表,标志消失"""
         chat=ChatWindowPage()
@@ -1308,7 +1339,7 @@ class MsgLabelGroupingAll(TestCase):
         MessagePage().is_iv_fail_status_present()
 
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0047(self):
         """发送失败的文件,取消重发"""
         chat=ChatWindowPage()
@@ -1332,7 +1363,7 @@ class MsgLabelGroupingAll(TestCase):
         #判断图片发送成功
         LabelGroupingChatPage().is_on_this_page()
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0048(self):
         """移动网络下,发送大于2M的音乐会出现弹框"""
         # 设置网络为移动网络
@@ -1346,7 +1377,7 @@ class MsgLabelGroupingAll(TestCase):
         local_file.is_exist_free_flow_privilege()
         local_file.is_exist_no_longer_prompt()
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0049(self):
         """移动网络下,发送大于2M的音乐会出现弹框,继续发送"""
         # 设置网络为移动网络
@@ -1367,7 +1398,7 @@ class MsgLabelGroupingAll(TestCase):
         time.sleep(2)
         local_file.is_exist_free_flow_privilege()
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC-RESET', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0050(self):
         """移动网络下,选择以后不再提示后点击发送"""
         # 设置网络为移动网络
@@ -1396,7 +1427,7 @@ class MsgLabelGroupingAll(TestCase):
         MessagePage().wait_for_page_load()
         Preconditions.enter_label_grouping_chat_page()
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC-RESET', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0051(self):
         """移动网络下,点击订购免流特权"""
         # 设置网络为移动网络
@@ -1420,7 +1451,7 @@ class MsgLabelGroupingAll(TestCase):
             mep = MePage()
             mep.set_network_status(6)
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0053(self):
         """取消选择音乐"""
         #进入本地音乐页面
@@ -1430,7 +1461,7 @@ class MsgLabelGroupingAll(TestCase):
         #点击取消(ios才有)
 
 
-    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0054(self):
         """返回选择音乐页面"""
         #进入本地音乐页面
@@ -1442,6 +1473,656 @@ class MsgLabelGroupingAll(TestCase):
         #再点击返回按钮
         ChatSelectFilePage().click_back()
         LabelGroupingChatPage().is_on_this_page()
+
+    @tags('ALL','CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    def test_msg_weifenglian_fenzu_0055(self):
+        """标签分组天会话页面，长按文件转发到任意群"""
+        chat = LabelGroupingChatPage()
+        if LabelGroupingChatPage().is_element_present_file():
+            chat.wait_for_page_load()
+        else:
+            # 1、在当前群聊天会话页面长按任意文件
+            # 进入到文件选择页面
+            chat = LabelGroupingChatPage()
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            local_file.select_file(".txt")
+            local_file.click_send()
+            # 2、选择转发，选择一个群
+            chat.wait_for_page_load()
+        chat.press_file()
+        time.sleep(2)
+        # 页面调起功能菜单
+        chat.page_should_contain_text('转发')
+        chat.page_should_contain_text('收藏')
+        chat.page_should_contain_text('撤回')
+        chat.page_should_contain_text('删除')
+        chat.page_should_contain_text('多选')
+        # 点击转发
+        chat.click_forward()
+        SelectContactsPage().wait_for_page_load()
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        names = sogp.get_group_name()
+        if sogp.is_element_present_result():
+            sogp.select_one_group_by_name(names[0])
+            # 3、点击确定
+            time.sleep(1)
+            sogp.page_should_contain_text('取消')
+            sogp.page_should_contain_text('确定')
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+        else:
+            sogp.page_should_contain_text('无搜索结果')
+
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping', 'yms')
+    def test_msg_weifenglian_fenzu_0057(self):
+        """断网状态,标签分组天会话页面，长按文件转发到任意群失败"""
+        if LabelGroupingChatPage().is_element_present_file():
+            chat = LabelGroupingChatPage()
+            chat.wait_for_page_load()
+        else:
+            chat = LabelGroupingChatPage()
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            local_file.select_file(".txt")
+            local_file.click_send()
+        #长按文件转发
+        chat.press_file()
+        time.sleep(2)
+        chat.page_should_contain_text('转发')
+        chat.page_should_contain_text('收藏')
+        chat.page_should_contain_text('撤回')
+        chat.page_should_contain_text('删除')
+        chat.page_should_contain_text('多选')
+        # 断网状态点击转发
+        chat.click_forward()
+        SelectContactsPage().set_network_status(0)
+        SelectContactsPage().wait_for_page_load()
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        names = sogp.get_group_name()
+        if sogp.is_element_present_result():
+            sogp.select_one_group_by_name(names[0])
+            # 3、点击确定
+            time.sleep(1)
+            sogp.page_should_contain_text('取消')
+            sogp.page_should_contain_text('确定')
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+        else:
+            sogp.page_should_contain_text('无搜索结果')
+        # 返回消息页面,查看文件是否发送成功
+        ChatWindowPage().click_back()
+        LableGroupDetailPage().click_back()
+        LabelGroupingPage().click_back()
+        ContactsPage().click_message_icon()
+        MessagePage().wait_for_page_load()
+        MessagePage().is_iv_fail_status_present()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_fenzu_0057():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep = MePage()
+            mep.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0059(self):
+        """标签分组天会话页面，长按文件取消转发到任意群"""
+        if LabelGroupingChatPage().is_element_present_file():
+            chat = LabelGroupingChatPage()
+            chat.wait_for_page_load()
+        else:
+            # 进入到文件选择页面
+            chat = LabelGroupingChatPage()
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            local_file.select_file(".txt")
+            local_file.click_send()
+            # 2、选择转发，选择一个群
+            chat.wait_for_page_load()
+        # 2、选择转发，选择一个群
+        chat.press_file()
+        time.sleep(2)
+        # 页面调起功能菜单
+        chat.page_should_contain_text('转发')
+        chat.page_should_contain_text('收藏')
+        chat.page_should_contain_text('撤回')
+        chat.page_should_contain_text('删除')
+        chat.page_should_contain_text('多选')
+        # 点击转发
+        chat.click_forward()
+        SelectContactsPage().wait_for_page_load()
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        names = sogp.get_group_name()
+        if sogp.is_element_present_result():
+            sogp.select_one_group_by_name(names[0])
+            # 3、点击取消
+            time.sleep(1)
+            sogp.page_should_contain_text('取消')
+            sogp.page_should_contain_text('确定')
+            sogp.click_cancel_forward()
+            sogp.page_contain_element_result()
+        else:
+            sogp.page_should_contain_text('无搜索结果')
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0061(self):
+        """长按文件转发到任意群名为文字的群"""
+        chat = LabelGroupingChatPage()
+        if LabelGroupingChatPage().is_element_present_file():
+            chat.wait_for_page_load()
+        else:
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            local_file.select_file(".txt")
+            local_file.click_send()
+        # 2、选择转发，选择一个群
+        chat.press_file()
+        #点击转发
+        chat.click_forward()
+        SelectContactsPage().wait_for_page_load()
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        #搜索群组
+        sogp.click_search_group()
+        sogp.input_search_keyword('和飞信')
+        if sogp.is_element_present_result():
+            sogp.click_search_result()
+            # 3、点击确定
+            time.sleep(1)
+            sogp.page_should_contain_text('取消')
+            sogp.page_should_contain_text('确定')
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+        else:
+            sogp.page_should_contain_text('无搜索结果')
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0062(self):
+        """长按文件转发到任意群名为英文的群"""
+        chat = LabelGroupingChatPage()
+        if LabelGroupingChatPage().is_element_present_file():
+            chat.wait_for_page_load()
+        else:
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            local_file.select_file(".txt")
+            local_file.click_send()
+        # 2、选择转发，选择一个群
+        chat.press_file()
+        #点击转发
+        chat.click_forward()
+        SelectContactsPage().wait_for_page_load()
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        #搜索群组
+        sogp.click_search_group()
+        sogp.input_search_keyword('hfx')
+        if sogp.is_element_present_result():
+            sogp.click_search_result()
+            # 3、点击确定
+            time.sleep(1)
+            sogp.page_should_contain_text('取消')
+            sogp.page_should_contain_text('确定')
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+        else:
+            sogp.page_should_contain_text('无搜索结果')
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0063(self):
+        """长按文件转发到任意群名为数字的群"""
+        chat = LabelGroupingChatPage()
+        if LabelGroupingChatPage().is_element_present_file():
+            chat.wait_for_page_load()
+        else:
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            local_file.select_file(".txt")
+            local_file.click_send()
+        # 2、选择转发，选择一个群
+        chat.press_file()
+        #点击转发
+        chat.click_forward()
+        SelectContactsPage().wait_for_page_load()
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        #搜索群组
+        sogp.click_search_group()
+        sogp.input_search_keyword('123')
+        if sogp.is_element_present_result():
+            sogp.click_search_result()
+            # 3、点击确定
+            time.sleep(1)
+            sogp.page_should_contain_text('取消')
+            sogp.page_should_contain_text('确定')
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+        else:
+            sogp.page_should_contain_text('无搜索结果')
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0064(self):
+        """长按文件转发到任意群名为标点符号的群"""
+        chat = LabelGroupingChatPage()
+        if LabelGroupingChatPage().is_element_present_file():
+            chat.wait_for_page_load()
+        else:
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            local_file.select_file(".txt")
+            local_file.click_send()
+        # 2、选择转发，选择一个群
+        chat.press_file()
+        #点击转发
+        chat.click_forward()
+        SelectContactsPage().wait_for_page_load()
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        #搜索群组
+        sogp.click_search_group()
+        sogp.input_search_keyword(',,,')
+        if sogp.is_element_present_result():
+            sogp.click_search_result()
+            # 3、点击确定
+            time.sleep(1)
+            sogp.page_should_contain_text('取消')
+            sogp.page_should_contain_text('确定')
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+        else:
+            sogp.page_should_contain_text('无搜索结果')
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0065(self):
+        """长按文件转发到任意群名为特殊字符的群"""
+        chat = LabelGroupingChatPage()
+        if LabelGroupingChatPage().is_element_present_file():
+            chat.wait_for_page_load()
+        else:
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            local_file.select_file(".txt")
+            local_file.click_send()
+        # 2、选择转发，选择一个群
+        chat.press_file()
+        #点击转发
+        chat.click_forward()
+        SelectContactsPage().wait_for_page_load()
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        #搜索群组
+        sogp.click_search_group()
+        sogp.input_search_keyword('///')
+        if sogp.is_element_present_result():
+            sogp.click_search_result()
+            # 3、点击确定
+            time.sleep(1)
+            sogp.page_should_contain_text('取消')
+            sogp.page_should_contain_text('确定')
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+        else:
+            sogp.page_should_contain_text('无搜索结果')
+
+    @tags('ALL','CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0066(self):
+        """长按文件转发到任意群名为空格的群"""
+        chat = LabelGroupingChatPage()
+        if LabelGroupingChatPage().is_element_present_file():
+            chat.wait_for_page_load()
+        else:
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            local_file.select_file(".txt")
+            local_file.click_send()
+        # 2、选择转发，选择一个群
+        chat.press_file()
+        #点击转发
+        chat.click_forward()
+        SelectContactsPage().wait_for_page_load()
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        #搜索群组
+        sogp.click_search_group()
+        sogp.input_search_keyword('   ')
+        if sogp.is_element_present_result():
+            sogp.click_search_result()
+            # 3、点击确定
+            time.sleep(1)
+            sogp.page_should_contain_text('取消')
+            sogp.page_should_contain_text('确定')
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+        else:
+            sogp.page_should_contain_text('无搜索结果')
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0067(self):
+        """长按文件转发到任意群名为多种字符的群"""
+        chat = LabelGroupingChatPage()
+        if LabelGroupingChatPage().is_element_present_file():
+            chat.wait_for_page_load()
+        else:
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            local_file.select_file(".txt")
+            local_file.click_send()
+        # 2、选择转发，选择一个群
+        chat.press_file()
+        #点击转发
+        chat.click_forward()
+        SelectContactsPage().wait_for_page_load()
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        #搜索群组
+        sogp.click_search_group()
+        sogp.input_search_keyword('hfx123,,,///')
+        if sogp.is_element_present_result():
+            sogp.click_search_result()
+            # 3、点击确定
+            time.sleep(1)
+            sogp.page_should_contain_text('取消')
+            sogp.page_should_contain_text('确定')
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+        else:
+            sogp.page_should_contain_text('无搜索结果')
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0068(self):
+        """长按文件转发到任意群名为多种字符的群"""
+        chat = LabelGroupingChatPage()
+        if LabelGroupingChatPage().is_element_present_file():
+            chat.wait_for_page_load()
+        else:
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            local_file.select_file(".txt")
+            local_file.click_send()
+        # 2、选择转发，选择一个群
+        chat.press_file()
+        #点击转发
+        chat.click_forward()
+        SelectContactsPage().wait_for_page_load()
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        #搜索群组
+        sogp.click_search_group()
+        sogp.input_search_keyword('hfx123,,,///')
+        if sogp.is_element_present_result():
+            sogp.click_search_result()
+            # 3、点击确定
+            time.sleep(1)
+            sogp.page_should_contain_text('取消')
+            sogp.page_should_contain_text('确定')
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+        else:
+            sogp.page_should_contain_text('无搜索结果')
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0070(self):
+        """选择群后,取消转发文件"""
+        chat = LabelGroupingChatPage()
+        if LabelGroupingChatPage().is_element_present_file():
+            chat.wait_for_page_load()
+        else:
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            local_file.select_file(".txt")
+            local_file.click_send()
+        # 2、转发，选择一个群
+        chat.press_mess(".txt")
+        #点击转发
+        chat.click_forward()
+        SelectContactsPage().wait_for_page_load()
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        #搜索群组
+        sogp.click_search_group()
+        sogp.input_search_keyword('给个红包1')
+        time.sleep(1)
+        if sogp.is_element_present_result():
+            sogp.click_search_result()
+            time.sleep(2)
+            sogp.page_should_contain_text('取消')
+            sogp.page_should_contain_text('确定')
+            sogp.click_cancel_forward()
+
+            sogp.page_contain_element_result()
+
+        else:
+            sogp.page_should_contain_text('无搜索结果')
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0071(self):
+        """转发文件,根据右侧字母定位群"""
+        chat = LabelGroupingChatPage()
+        if LabelGroupingChatPage().is_element_present_file():
+            chat.wait_for_page_load()
+        else:
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            local_file.select_file(".txt")
+            local_file.click_send()
+        #点击转发
+        chat.press_mess(".txt")
+        chat.click_forward()
+        SelectContactsPage().wait_for_page_load()
+        scp = SelectContactsPage()
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        sogp.choose_index_bar_click_element()
+        time.sleep(1)
+        sogp.page_should_contain_text('取消')
+        sogp.page_should_contain_text('确定')
+        sogp.click_sure_forward()
+        flag = sogp.is_toast_exist("已转发")
+        self.assertTrue(flag)
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0072(self):
+        """标签分组天会话页面，长按文件转发到手机联系人"""
+        chat = LabelGroupingChatPage()
+        if LabelGroupingChatPage().is_element_present_file():
+            chat.wait_for_page_load()
+        else:
+            # 1、在当前群聊天会话页面长按任意文件
+            # 进入到文件选择页面
+            chat = LabelGroupingChatPage()
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            local_file.select_file(".txt")
+            local_file.click_send()
+            chat.wait_for_page_load()
+        # 2、选择转发，选择手机联系人
+        chat.press_file()
+        chat.click_forward()
+        SelectContactsPage().wait_for_page_load()
+        scp = SelectContactsPage()
+        scp.click_phone_contact()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        slcp.click_first_phone_contacts()
+        slcp.page_should_contain_text('取消')
+        slcp.page_should_contain_text('确定')
+        slcp.click_sure_forward()
+        slcp.is_toast_exist('已转发')
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0073(self):
+        """标签分组天会话页面，长按文件取消转发到手机联系人"""
+        if LabelGroupingChatPage().is_element_present_file():
+            chat = LabelGroupingChatPage()
+            chat.wait_for_page_load()
+        else:
+            # 1、在当前群聊天会话页面长按任意文件
+            # 进入到文件选择页面
+            chat = LabelGroupingChatPage()
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            local_file.select_file(".txt")
+            local_file.click_send()
+            chat.wait_for_page_load()
+            # 2、选择转发，选择手机联系人
+        chat.press_file()
+        chat.click_forward()
+        SelectContactsPage().wait_for_page_load()
+        scp = SelectContactsPage()
+        scp.click_phone_contact()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        slcp.click_first_phone_contacts()
+        slcp.page_should_contain_text('取消')
+        slcp.page_should_contain_text('确定')
+        slcp.click_cancel_forward()
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0074(self):
+        """断网状态,标签分组天会话页面，长按文件转发到手机联系人失败"""
+        if LabelGroupingChatPage().is_element_present_file():
+            chat = LabelGroupingChatPage()
+            chat.wait_for_page_load()
+        else:
+            # 1、在当前群聊天会话页面长按任意文件
+            # 进入到文件选择页面
+            chat = LabelGroupingChatPage()
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            local_file.select_file(".txt")
+            local_file.click_send()
+            chat.wait_for_page_load()
+            # 2、选择转发，选择手机联系人
+        chat.press_file()
+        chat.click_forward()
+        SelectContactsPage().wait_for_page_load()
+        #断网
+        scp = SelectContactsPage()
+        scp.set_network_status(0)
+        scp.click_phone_contact()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        slcp.click_first_phone_contacts()
+        slcp.page_should_contain_text('取消')
+        slcp.page_should_contain_text('确定')
+        slcp.click_sure_forward()
+        slcp.is_toast_exist('已转发')
+        # 返回消息页面,查看文件是否发送成功
+        ChatWindowPage().click_back()
+        LableGroupDetailPage().click_back()
+        LabelGroupingPage().click_back()
+        ContactsPage().click_message_icon()
+        MessagePage().wait_for_page_load()
+        MessagePage().is_iv_fail_status_present()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_fenzu_0074():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep = MePage()
+            mep.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0075(self):
+        """长按文件转发到任意手机联系人名称为多种字符"""
+        chat = LabelGroupingChatPage()
+        if LabelGroupingChatPage().is_element_present_file():
+            chat.wait_for_page_load()
+        else:
+            Preconditions.enter_local_file_catalog()
+            local_file = ChatSelectLocalFilePage()
+            local_file.select_file(".txt")
+            local_file.click_send()
+        # 2、选择转发，选择一个群
+        chat.press_file()
+        #点击转发
+        chat.click_forward()
+        SelectContactsPage().wait_for_page_load()
+        scp = SelectContactsPage()
+        scp.click_phone_contact()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        slcp.click_search_box()
+        slcp.input_search_keyword('给个红包1///')
+        slcp.hide_keyboard()
+        if slcp.is_text_present('无搜索结果'):
+            pass
+        else:
+            slcp.click_first_phone_contacts()
+            # 3、点击确定
+            time.sleep(1)
+            slcp.page_should_contain_text('取消')
+            slcp.page_should_contain_text('确定')
+            slcp.click_sure_forward()
+            flag = slcp.is_toast_exist("已转发")
+            self.assertTrue(flag)
+
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
+    def test_msg_weifenglian_fenzu_0157(self):
+        """发送位置信息"""
+        Preconditions.enter_label_grouping_chat_page()
+        chat=LabelGroupingChatPage()
+        chat.click_more()
+        ChatMorePage().click_location()
+        location_page = ChatLocationPage()
+        if location_page.is_text_present('始终允许'):
+            location_page.click_allow()
+        location_page.wait_for_page_load()
+        time.sleep(3)
+        location_page.click_send()
+
+
+
+
+
+
+
+
+
 
 
 
