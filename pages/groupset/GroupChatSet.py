@@ -215,6 +215,12 @@ class GroupChatSetPage(BasePage):
         time.sleep(3)
 
     @TestLogger.log()
+    def click_delete_and_exit2(self):
+        """点击删除并退出"""
+        self._find_menu(self.__locators['删除并退出'])
+        self.click_element(self.__locators['删除并退出'])
+
+    @TestLogger.log()
     def wait_clear_chat_record_confirmation_box_load(self, timeout=10, auto_accept_alerts=True):
         """等待 聊天记录清除确认框"""
         try:

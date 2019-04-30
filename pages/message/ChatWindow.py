@@ -164,3 +164,8 @@ class ChatWindowPage(ChatNoticeDialog, PictureSelector, BasePage):
     def is_element_present_resend(self):
         return self._is_element_present(self.__locators['重新发送'])
 
+    @TestLogger.log()
+    def get_label_name(self):
+        """获取标题名称"""
+        el = self.get_element(self.__locators["13537795364"])
+        return el.text

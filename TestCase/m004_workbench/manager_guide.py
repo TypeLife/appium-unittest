@@ -152,7 +152,7 @@ class Preconditions(object):
         eip.wait_for_page_load()
 
 
-class MobileAttendanceAllTest(TestCase):
+class ManagerGuideAllTest(TestCase):
     """
     模块：工作台->管理员指引、权益
     文件位置：20190313工作台全量用例整理.xlsx
@@ -215,6 +215,7 @@ class MobileAttendanceAllTest(TestCase):
         mgp.click_guide_by_name("后台登录指引 更多管理功能，登录和飞信企业管理后台")
         mgp.wait_for_guide_page_load("后台登录指引")
         mgp.click_back()
+        mgp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         mgp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         time.sleep(2)
         # 3.进入帮助中心

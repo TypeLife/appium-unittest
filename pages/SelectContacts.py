@@ -82,8 +82,15 @@ class SelectContactsPage(BasePage):
         "选中联系人头像":(MobileBy.ID,'com.chinasofti.rcs:id/contact_icon'),
 
         '联系人列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
+        'A':(MobileBy.XPATH,'//*[@text ="A"]'),
+        'K': (MobileBy.XPATH, '//*[@text ="K"]'),
+        "字母栏":(MobileBy.ID,'	com.chinasofti.rcs:id/contact_index_bar_container'),
 
     }
+
+    @TestLogger.log("点击右侧字母")
+    def click_right_word(self,text='A'):
+        self.click_element(self.__locators[text])
 
     @TestLogger.log("检查控件是否存在")
     def check_if_element_exist(self,text='发送人头像'):
@@ -450,6 +457,13 @@ class SelectContactsPage(BasePage):
             self.click_element(locator)
 
     @TestLogger.log()
+    def select_recent_chat_by_number(self, number):
+        """选择某一条最近聊天记录"""
+        if self._is_element_present(self.__class__.__locators["最近聊天消息名称"]):
+            els = self.get_elements(self.__class__.__locators["最近聊天消息名称"])
+            els[number].click()
+
+    @TestLogger.log()
     def is_page_more_text(self, menu):
         """选择某一条最近聊天记录"""
         for text in menu:
@@ -647,6 +661,66 @@ class SelectContactsPage(BasePage):
     def click_element_(self, text):
         """点击元素"""
         self.click_element(self.__class__.__locators[text])
+
+
+    @TestLogger.log("删除自建群")
+    def del_message_group(self):
+        flag=True
+        time.sleep(2)
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        # 删除原来的群
+        while flag:
+            mess.click_add_icon()
+            # 点击 发起群聊
+            mess.click_group_chat()
+            # 选择联系人界面，选择一个群
+            sc = SelectContactsPage()
+            sc.click_select_one_group()
+            time.sleep(1)
+            from pages.groupset.GroupChatSet import GroupChatSetPage
+            if self.get_elements(self.__locators['aaa']):
+                self.click_element(self.__locators['aaa'])
+                time.sleep(1)
+                gcp = GroupChatPage()
+                group_set = GroupChatSetPage()
+                time.sleep(1)
+                gcp.click_setting()
+                time.sleep(1)
+                sc.page_up()
+                time.sleep(1)
+                group_set.click_delete_and_exit()
+                time.sleep(3)
+            else:
+                self.click_back_by_android()
+                break
+
+    @TestLogger.log("创建群,选择手机联系人")
+    def create_message_group2(self,text='aaa'):
+        time.sleep(2)
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        #删除原来的群
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        time.sleep(1)
+        mess.click_contact_group()
+        mess.click_text("大佬2")
+        time.sleep(1)
+        mess.click_text("大佬3")
+        time.sleep(1)
+        mess.click_sure_button()
+        time.sleep(1)
+        mess.click_group_name()
+        time.sleep(1)
+        mess.set_group_name(text=text)
+        time.sleep(1)
+        mess.click_sure_button()
+        time.sleep(1)
 
     @TestLogger.log("当前页面是否在选择联系人页")
     def is_on_this_page(self):

@@ -314,6 +314,7 @@ class Preconditions(object):
             n += 1
             if n > 10:
                 break
+        time.sleep(3)
         for name in names:
             if not osp.is_exist_specify_element_by_name(name):
                 osp.click_specify_element_by_name("添加联系人")
@@ -352,6 +353,7 @@ class Preconditions(object):
             n += 1
             if n > 10:
                 break
+        time.sleep(3)
         for name, number in contacts:
             if not osp.is_exist_specify_element_by_name(name):
                 osp.click_specify_element_by_name("添加联系人")
@@ -392,6 +394,7 @@ class Preconditions(object):
         cgp.click_create_group()
         sec = SelectEnterpriseContactsPage()
         sec.wait_for_page_load()
+        time.sleep(2)
         # 创建企业群
         sec.click_contacts_by_name("大佬1")
         sec.click_contacts_by_name("大佬2")
@@ -416,16 +419,14 @@ class Preconditions(object):
         cp.wait_for_page_load()
         cp.open_group_chat_list()
         time.sleep(2)
-        if cp.is_exist_enterprise_group():
-            cp.click_return()
-            cp.wait_for_page_load()
-            mp.open_message_page()
-            mp.wait_for_page_load()
-        else:
-            cp.click_return()
-            cp.wait_for_page_load()
-            mp.open_message_page()
-            mp.wait_for_page_load()
+        flag = False
+        if not cp.is_exist_enterprise_group():
+            flag = True
+        cp.click_return()
+        cp.wait_for_page_load()
+        mp.open_message_page()
+        mp.wait_for_page_load()
+        if flag:
             Preconditions.create_enterprise_group("测试企业群")
 
     @staticmethod
@@ -584,7 +585,7 @@ class MsgGroupChatvedioTest(TestCase):
         pass
         # current_mobile().disconnect_mobile()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0001(self):
         """群聊会话页面，不勾选相册内图片点击发送按钮"""
         # 1.检验是否当前聊天会话页面，
@@ -601,7 +602,7 @@ class MsgGroupChatvedioTest(TestCase):
         # 5.点击返回
         cpg.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0002(self):
         """群聊会话页面，勾选相册内一张图片发送"""
         # 1.检验是否当前聊天会话页面，
@@ -617,7 +618,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpg.click_send()
         gcp.is_on_this_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0003(self):
         """群聊会话页面，预览相册内图片"""
         # 1.检验是否当前聊天会话页面，
@@ -639,7 +640,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpp.click_back()
         cpg.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0004(self):
         """群聊会话页面，预览相册内图片，不勾选原图发送"""
         # 1.检验是否当前聊天会话页面，
@@ -660,7 +661,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcp.is_on_this_page()
         self.assertEqual(gcp.is_send_sucess(), True)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0005(self):
         """群聊会话页面，预览相册数量与发送按钮数量一致"""
         # 1.检验是否当前聊天会话页面，
@@ -682,7 +683,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpp.click_back()
         cpg.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0006(self):
         """群聊会话页面，编辑图片发送"""
         # 1.检验是否当前聊天会话页面，
@@ -720,7 +721,7 @@ class MsgGroupChatvedioTest(TestCase):
         # 6 点击发送后，判断在群聊首页
         gcp.is_on_this_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0007(self):
         """群聊会话页面，编辑图片发送"""
         # 1.检验是否当前聊天会话页面，
@@ -762,7 +763,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcp.is_on_this_page()
         self.assertEqual(gcp.is_send_sucess(), True)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0008(self):
         """群聊会话页面，编辑图片发送"""
         # 1.检验是否当前聊天会话页面，
@@ -805,7 +806,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcp.is_on_this_page()
         self.assertEqual(gcp.is_send_sucess(), True)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0009(self):
         """群聊会话页面，编辑图片发送"""
         # 1.检验是否当前聊天会话页面，
@@ -847,7 +848,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcp.is_on_this_page()
         self.assertEqual(gcp.is_send_sucess(), True)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0010(self):
         """群聊会话页面，取消编辑图片,不发送"""
         # 1.检验是否当前聊天会话页面，
@@ -887,7 +888,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpp.click_back()
         cpg.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0011(self):
         """群聊会话页面，取消编辑图片,发送"""
         # 1.检验是否当前聊天会话页面，
@@ -930,7 +931,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcp.wait_for_page_load()
         self.assertEqual(gcp.is_send_sucess(), True)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0012(self):
         """群聊会话页面，发送相册内的图片，校验预览格式"""
         # 1.检验是否当前聊天会话页面，
@@ -952,7 +953,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpp.click_back()
         cpg.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0013(self):
         """群聊会话页面，点击该相册内两张图片，点击预览，隐藏"编辑"按钮"""
         # 1.检验是否当前聊天会话页面，
@@ -977,7 +978,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpp.click_back()
         cpg.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0014(self):
         """群聊会话页面，勾选9张相册内图片发送"""
         # 1.检验是否当前聊天会话页面，
@@ -997,7 +998,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcp.wait_for_page_load()
         self.assertEqual(gcp.is_send_sucess(), True)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0015(self):
         """群聊会话页面，勾选10张相册内图片发送校验"""
         # 1.检验是否当前聊天会话页面，
@@ -1016,7 +1017,7 @@ class MsgGroupChatvedioTest(TestCase):
         # 4.点击返回
         cpg.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0016(self):
         """群聊会话页面，同时发送相册中的图片和视屏"""
         # 1.检验是否当前聊天会话页面，
@@ -1033,7 +1034,7 @@ class MsgGroupChatvedioTest(TestCase):
         self.assertEqual(flag, True)
         cpg.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0017(self):
         """群聊会话页面，使用拍照功能拍照发送照片"""
         # 1.检验是否当前聊天会话页面，
@@ -1048,7 +1049,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpp.send_photo()
         time.sleep(1)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0018(self):
         """群聊会话页面，使用拍照功能拍照编辑后发送照片"""
         # 1.检验是否当前聊天会话页面，
@@ -1070,7 +1071,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpe.click_send()
         time.sleep(1)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0019(self):
         """群聊会话页面，使用拍照功能拍照编辑后发送照片"""
         # 1.检验是否当前聊天会话页面，
@@ -1092,7 +1093,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpe.click_picture_save()
         cpe.click_send()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0020(self):
         """群聊会话页面，使用拍照功能拍照编辑后发送照片"""
         # 1.检验是否当前聊天会话页面，
@@ -1115,7 +1116,7 @@ class MsgGroupChatvedioTest(TestCase):
         time.sleep(1)
         cpp.send_photo()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0022(self):
         """群聊会话页面，打开拍照，拍照之后返回会话窗口"""
         # 1.检验是否当前聊天会话页面，
@@ -1174,7 +1175,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcp.is_on_this_page()
         self.assertEquals(gcp.is_exist_forward(), True)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0030(self):
         """群聊会话页面，删除自己发送的图片"""
         # 1.检验是否当前聊天会话页面且有图片
@@ -1188,7 +1189,7 @@ class MsgGroupChatvedioTest(TestCase):
         # 3.校验是否在消息聊天页面，是否提示已删除成功
         gcp.is_on_this_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0032(self):
         """群聊会话页面，收藏自己发送的照片"""
         # 1.检验是否当前聊天会话页面且有图片
@@ -1264,7 +1265,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcp.is_on_this_page()
         self.assertEquals(gcp.is_exist_forward(), True)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0040(self):
         """群聊会话页面，删除自己发送的视频"""
         # 1.检验是否当前聊天会话页面且有视频
@@ -1278,7 +1279,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcp.is_on_this_page()
         self.assertEquals(gcp.is_exist_msg_videos(), False)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0042(self):
         """群聊会话页面，收藏自己发送的视频"""
         # 1.检验是否当前聊天会话页面且有视频
@@ -1309,7 +1310,7 @@ class MsgGroupChatvedioTest(TestCase):
         mcp.click_back()
         fp.open_message_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0043(self):
         """群聊会话页面，发送相册内的视频"""
         # 1.检验是否在当前聊天会话页
@@ -1325,7 +1326,7 @@ class MsgGroupChatvedioTest(TestCase):
         self.assertIsNotNone(cpg.get_video_times()[1])
         cpg.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0044(self):
         """群聊会话页面，发送相册内一个视频"""
         # 1.检验是否在当前聊天会话页
@@ -1343,7 +1344,7 @@ class MsgGroupChatvedioTest(TestCase):
         flg = gcp.wait_for_play_video_button_load()
         self.assertIsNotNone(flg)
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0045(self):
         """群聊会话页面，发送相册内多个视频"""
         # 1.检验是否在当前聊天会话页
@@ -1358,7 +1359,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpg.is_toast_exist_more_video()
         cpg.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0046(self):
         """群聊会话页面，群聊会话页面，同时发送相册内视频和图片"""
         # 1.检验是否在当前聊天会话页
@@ -1374,7 +1375,7 @@ class MsgGroupChatvedioTest(TestCase):
         cpg.is_toast_exist_pv()
         cpg.click_back()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0047(self):
         """群聊会话页面，发送视频时预览视频"""
         # 1.检验是否在当前聊天会话页
@@ -2360,7 +2361,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
     def default_tearDown(self):
         pass
 
-    @tags('ALL', 'CMCC', 'LXD')
+    @tags('ALL', 'CMCC', 'LXD', 'high')
     def test_msg_group_chat_total_quantity_0021(self):
         """群聊会话页面，打开拍照，立刻返回会话窗口"""
 
@@ -2412,9 +2413,9 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         cwp = ChatWindowPage()
         cwp.wait_for_msg_send_status_become_to('发送成功', 10)
 
-    @tags('ALL', 'CMCC', 'LXD')
+    @tags('ALL', 'CMCC', 'LXD', 'high')
     def test_msg_group_chat_total_quantity_0042(self):
-        """群聊会话页面，转发他人发送的图片到当前会话窗口时失败"""
+        """群聊会话页面，转发自己发送的图片到当前会话窗口时失败"""
 
         gcp = GroupChatPage()
         gcp.wait_for_page_load()
@@ -2537,7 +2538,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 返回消息页
         gcp.click_back()
 
-    @tags('ALL', 'CMCC', 'LXD')
+    @tags('ALL', 'CMCC', 'LXD', 'high')
     def test_msg_group_chat_total_quantity_0045(self):
         """群聊会话页面，转发自己发送的图片到本地联系人时失败"""
 
@@ -2618,7 +2619,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         scg.wait_for_page_load()
         scg.click_back()
 
-    @tags('ALL', 'CMCC', 'LXD')
+    @tags('ALL', 'CMCC', 'LXD', 'high')
     def test_msg_group_chat_total_quantity_0047(self):
         """群聊会话页面，转发自己发送的图片给和通讯录联系人"""
 
@@ -2750,7 +2751,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         scg.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'CMCC', 'LXD')
+    @tags('ALL', 'CMCC', 'LXD', 'high')
     def test_msg_group_chat_total_quantity_0050(self):
         """群聊会话页面，转发自己发送的图片给陌生人"""
 
@@ -3116,7 +3117,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 返回群聊天页面
         scg.click_back()
 
-    @tags('ALL', 'CMCC', 'LXD')
+    @tags('ALL', 'CMCC', 'LXD', 'high')
     def test_msg_group_chat_total_quantity_0069(self):
         """群聊会话页面，转发自己发送的视频给本地联系人"""
 
@@ -3243,7 +3244,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         scg.wait_for_page_load()
         scg.click_back()
 
-    @tags('ALL', 'CMCC', 'LXD')
+    @tags('ALL', 'CMCC', 'LXD', 'high')
     def test_msg_group_chat_total_quantity_0072(self):
         """群聊会话页面，转发自己发送的视频给和通讯录联系人"""
 
@@ -3375,7 +3376,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         scg.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'CMCC', 'LXD')
+    @tags('ALL', 'CMCC', 'LXD', 'high')
     def test_msg_group_chat_total_quantity_0075(self):
         """群聊会话页面，转发自己发送的视频给陌生人"""
 

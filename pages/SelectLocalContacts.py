@@ -43,9 +43,12 @@ class SelectLocalContactsPage(BasePage):
                   '联系人名': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
                   '电话号码': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),
                   'com.chinasofti.rcs:id/contact_index_bar_view': (
-                      MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_view'),
+                  MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_view'),
                   'com.chinasofti.rcs:id/contact_index_bar_container': (
-                      MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_container'),
+                  MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_container'),
+                  '右侧字母索引': (MobileBy.XPATH,
+                             '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView'),
+                  '左侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_index"]'),
                   # 删除成员
                   '确定删除': (MobileBy.XPATH, '//*[@text="确定"]'),
                   # 分享群二维码时选择联系人后的弹窗页面
@@ -60,6 +63,7 @@ class SelectLocalContactsPage(BasePage):
                   '取消转发': (MobileBy.XPATH, "//*[contains(@text, '取消')]"),
                   '确定转发': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
                   '被选中的联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/avator'),
+                  '搜索结果展示': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
                   }
 
     @TestLogger.log()
@@ -71,6 +75,25 @@ class SelectLocalContactsPage(BasePage):
     def click_cancel_forward(self):
         """点击取消转发"""
         self.click_element(self.__class__.__locators['取消转发'])
+
+    @TestLogger.log()
+    def click_search_box(self):
+        """点击搜索框"""
+        self.click_element(self.__class__.__locators['搜索或输入手机号'])
+
+    @TestLogger.log()
+    def input_search_keyword(self, keyword):
+        """输入搜索内容"""
+        self.input_text(self.__locators['搜索或输入手机号'], keyword)
+
+    @TestLogger.log("根据导航栏的第一个字母定位")
+    def choose_index_bar_click_element(self):
+        self.click_element(
+            ('xpath','//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView[1]'))
+        elements = self.get_elements(self.__class__.__locators["联系人名"])
+        elements[0].click()
+
+
 
     @TestLogger.log()
     def click_sure_share(self):

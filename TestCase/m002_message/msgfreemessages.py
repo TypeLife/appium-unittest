@@ -293,7 +293,7 @@ class MessageScanTest(TestCase):
         # CheckPoint: 4.自动退回消息列表
         mp.is_on_this_page()
 
-    @tags('ALL', 'CMCC', 'freemsg')
+    @tags('ALL', 'CMCC', 'freemsg', "high")
     def test_msg_huangcaizui_B_0023(self):
         """在单聊页面中非首次点击发送短信按钮是否有短信资费介绍页"""
         # 1.网络正常，本网用户
@@ -330,7 +330,7 @@ class MessageScanTest(TestCase):
         Preconditions.make_already_in_message_page()
         MessagePage().set_network_status(0)
 
-    @tags('ALL', 'CMCC', 'freemsg')
+    @tags('ALL', 'CMCC', 'freemsg', "high")
     def test_msg_huangcaizui_B_0024(self):
         """在单聊页面中非首次点击发送短信按钮是否有短信资费介绍页--网络异常"""
         # 1.网络异常，本网用户
@@ -365,7 +365,7 @@ class MessageScanTest(TestCase):
         Preconditions.make_already_in_message_page()
         MessagePage().clear_message_record()
 
-    @tags('ALL', 'CMCC', 'freemsg')
+    @tags('ALL', 'CMCC', 'freemsg', "high")
     def test_msg_huangcaizui_B_0035(self):
         """在单聊页面中非首次点击发送短信按钮是否有短信资费介绍页--无资费介绍"""
         # 1.网络正常，本网用户
@@ -385,7 +385,7 @@ class MessageScanTest(TestCase):
         basepg.click_exit_sms()
         basepg.click_back_by_android()
 
-    @tags('ALL', 'CMCC', 'freemsg')
+    @tags('ALL', 'CMCC', 'freemsg', "high")
     def test_msg_huangcaizui_B_0036(self):
         """转发短信"""
         # 1.网络正常，本网用户
@@ -418,7 +418,7 @@ class MessageScanTest(TestCase):
         Preconditions.make_already_in_message_page()
         MessagePage().clear_message_record()
 
-    @tags('ALL', 'CMCC', 'freemsg')
+    @tags('ALL', 'CMCC', 'freemsg', "high")
     def test_msg_huangcaizui_B_0037(self):
         """删除短信"""
         # 1.网络正常，本网用户
@@ -446,7 +446,7 @@ class MessageScanTest(TestCase):
         Preconditions.make_already_in_message_page()
         MessagePage().clear_message_record()
 
-    @tags('ALL', 'CMCC', 'freemsg')
+    @tags('ALL', 'CMCC', 'freemsg', "high")
     def test_msg_huangcaizui_B_0038(self):
         """复制短信"""
         # 1.网络正常，本网用户
@@ -472,7 +472,7 @@ class MessageScanTest(TestCase):
         Preconditions.make_already_in_message_page()
         MessagePage().clear_message_record()
 
-    @tags('ALL', 'CMCC', 'freemsg')
+    @tags('ALL', 'CMCC', 'freemsg', "high")
     def test_msg_huangcaizui_B_0039(self):
         """收藏短信"""
         # 1.网络正常，本网用户
@@ -498,7 +498,7 @@ class MessageScanTest(TestCase):
         Preconditions.make_already_in_message_page()
         MessagePage().clear_message_record()
 
-    @tags('ALL', 'CMCC', 'freemsg')
+    @tags('ALL', 'CMCC', 'freemsg', "high")
     def test_msg_huangcaizui_B_0040(self):
         """多选，批量转发与删除短信"""
         # 1.网络正常，本网用户

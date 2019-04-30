@@ -71,6 +71,7 @@ class WorkbenchPage(FooterPage):
                   '咨询客服': (MobileBy.XPATH, '//*[@text="咨询客服"]'),
                   '创建团队': (MobileBy.XPATH, '//*[@text="创建团队"]'),
                   '创建群': (MobileBy.XPATH, '//*[@text="创建群"]'),
+                  '马上创建群': (MobileBy.XPATH, '//*[@text="马上创建群"]'),
                   '消息': (MobileBy.ID, 'com.chinasofti.rcs:id/tvMessage'),
                   '通话': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCall'),
                   '工作台': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCircle'),
@@ -486,6 +487,17 @@ class WorkbenchPage(FooterPage):
             self.add_workbench_app("企业通讯录")
             time.sleep(2)
             self.click_company_contacts()
+
+    @TestLogger.log()
+    def click_add_attendance_card(self):
+        """点击考勤打卡"""
+        els = self.find_els(self.__class__.__locators['考勤打卡'])
+        if els:
+            els[0].click()
+        else:
+            self.add_workbench_app("考勤打卡")
+            time.sleep(2)
+            self.click_attendance_card()
 
     @TestLogger.log()
     def add_workbench_app(self, name):
