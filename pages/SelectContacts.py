@@ -728,3 +728,8 @@ class SelectContactsPage(BasePage):
             condition=lambda d: self._is_element_present(self.__class__.__locators["选择一个群"])
         )
         return bol
+
+    @TestLogger.log("通过索引选择最近联系人最近聊天")
+    def select_recent_chat_by_number(self, num):
+        elements_list = self.get_elements(('id', 'com.chinasofti.rcs:id/item_rl'))
+        elements_list[num].click()

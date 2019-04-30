@@ -2,10 +2,17 @@ import os
 import traceback
 import unittest
 
-from pip._internal import main as install_requirements
+# from pip._internal import main as install_requirements
 
 # 自动安装依赖
-install_requirements(['install', '-r', 'requirements.txt'])
+module_list = os.popen('pip freeze').readlines()
+with open('requirements.txt', 'r') as f:
+    require_list = f.readlines()
+    for require in require_list:
+        if require not in module_list:
+            os.system('pip install -r requirements.txt')
+            break
+# install_requirements(['install', '-r', 'requirements.txt'])
 
 if __name__ == '__main__':
     os.environ.setdefault('AVAILABLE_DEVICES_SETTING', 'AVAILABLE_DEVICES')
