@@ -132,7 +132,7 @@ class SelectHeContactsDetailPage(BasePage):
 
     @TestLogger.log()
     def selecting_he_contacts_by_name(self, name):
-        """根据名字选择一个和通讯录联系人"""
+        """根据名字选择一个团队联系人"""
         locator = (
             MobileBy.XPATH,
             '//*[@resource-id="com.chinasofti.rcs:id/tv_name_personal_contactlist" and @text ="%s"]' % name)

@@ -270,7 +270,7 @@ class Preconditions(object):
 
     @staticmethod
     def create_he_contacts(names):
-        """选择本地联系人创建为和通讯录联系人"""
+        """选择手机联系人创建为团队联系人"""
 
         mp = MessagePage()
         mp.wait_for_page_load()
@@ -309,7 +309,7 @@ class Preconditions(object):
 
     @staticmethod
     def create_he_contacts2(contacts):
-        """手动输入联系人创建为和通讯录联系人"""
+        """手动输入联系人创建为团队联系人"""
 
         mp = MessagePage()
         mp.wait_for_page_load()
@@ -346,7 +346,7 @@ class Preconditions(object):
 
     @staticmethod
     def create_department_and_add_member(department_names):
-        """创建企业部门并从本地联系人添加成员"""
+        """创建企业部门并从手机联系人添加成员"""
 
         mp = MessagePage()
         mp.wait_for_page_load()
@@ -606,7 +606,7 @@ class MassMessengerAllTest(TestCase):
             if flag1:
                 break
 
-        # 导入和通讯录联系人、企业部门
+        # 导入团队联系人、企业部门
         fail_time2 = 0
         flag2 = False
         while fail_time2 < 5:
