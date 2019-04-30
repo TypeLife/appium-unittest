@@ -1,7 +1,7 @@
 from appium.webdriver.common.mobileby import MobileBy
 from library.core.TestLogger import TestLogger
 from pages.components.Footer import FooterPage
-from pages.workbench.manager_console.WorkbenchManagerPage import WorkBenchManagerPage
+from pages.workbench.app_store.AppStore import AppStorePage
 import time
 
 
@@ -504,26 +504,26 @@ class WorkbenchPage(FooterPage):
         """添加工作台里的应用"""
         self.wait_for_workbench_page_load()
         self.click_app_store()
-        wbmp = WorkBenchManagerPage()
-        wbmp.wait_for_store_page_load()
-        wbmp.click_search_store()
-        wbmp.input_store_name(name)
-        wbmp.click_search()
+        asp = AppStorePage()
+        asp.wait_for_page_load()
+        asp.click_search_app()
+        asp.input_store_name(name)
+        asp.click_search()
         time.sleep(5)
-        if not wbmp.is_exist_join():
-            wbmp.click_close()
+        if not asp.is_exist_join():
+            asp.click_close()
             self.wait_for_workbench_page_load()
             self.click_app_store()
-            wbmp.wait_for_store_page_load()
-            wbmp.click_search_store()
-            wbmp.input_store_name(name)
-            wbmp.click_search()
+            asp.wait_for_page_load()
+            asp.click_search_app()
+            asp.input_store_name(name)
+            asp.click_search()
             time.sleep(5)
-        wbmp.click_join()
+        asp.click_join()
         time.sleep(2)
-        wbmp.click_add_app()
+        asp.click_add_app()
         time.sleep(2)
-        wbmp.click_close()
+        asp.click_close()
         self.wait_for_workbench_page_load()
 
     @TestLogger.log()
@@ -532,3 +532,12 @@ class WorkbenchPage(FooterPage):
         el = self.get_element(self.__class__.__locators["当前团队名称"])
         name = el.text
         return name
+
+    @TestLogger.log()
+    def is_exists_app_by_name(self, name):
+        """是否存在指定应用"""
+        els = self.find_els(self.__class__.__locators[name])
+        if els:
+            return True
+        else:
+            return False

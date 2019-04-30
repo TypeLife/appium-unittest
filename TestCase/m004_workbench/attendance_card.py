@@ -6,16 +6,12 @@ from library.core.TestCase import TestCase
 from library.core.utils.testcasefilter import tags
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile, current_driver
 from pages import AgreementDetailPage
-from pages import ContactsPage
-from pages import GroupListPage
 from pages import GuidePage
 from pages import MessagePage
 from pages import OneKeyLoginPage
 from pages import PermissionListPage
-from pages import SelectLocalContactsPage
 from pages import WorkbenchPage
 from pages.workbench.attendance_card.AttendanceCard import AttendanceCardPage
-from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -124,168 +120,41 @@ class Preconditions(object):
         current_mobile().reset_app()
 
     @staticmethod
-    def enter_workbench_page():
-        """进入工作台首页"""
+    def enter_attendance_card_page():
+        """进入考勤打卡首页"""
 
         mp = MessagePage()
         mp.wait_for_page_load()
         mp.click_workbench()
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
-
-    @staticmethod
-    def enter_attendance_card_page():
-        """进入考勤打卡首页"""
-
-        wbp = WorkbenchPage()
-        wbp.wait_for_workbench_page_load()
         wbp.click_add_attendance_card()
-
-    @staticmethod
-    def create_attendance_group():
-        """创建考勤组"""
-
         acp = AttendanceCardPage()
-        acp.click_text("新建考勤组")
-        time.sleep(3)
-        acp.click_text("请选择")
-        time.sleep(1)
-        acp.click_text("全选")
-        time.sleep(1)
-        acp.click_text("确认")
-        time.sleep(1)
-        acp.click_create_attendance_group_button()
-        time.sleep(5)
-        acp.click_back()
-
-    @staticmethod
-    def create_he_contacts(names):
-        """选择手机联系人创建为团队联系人"""
-
-        mp = MessagePage()
-        mp.wait_for_page_load()
-        mp.open_workbench_page()
-        wbp = WorkbenchPage()
-        wbp.wait_for_workbench_page_load()
-        wbp.click_organization()
-        osp = OrganizationStructurePage()
+        # 解决工作台不稳定问题
         time.sleep(5)
         n = 1
-        # 解决工作台不稳定问题
-        while osp.is_text_present("账号认证失败"):
-            osp.click_back()
+        while acp.is_text_present("返回重试"):
+            acp.click_text("返回重试")
             wbp.wait_for_workbench_page_load()
-            wbp.click_organization()
+            wbp.click_attendance_card()
             time.sleep(5)
             n += 1
             if n > 10:
                 break
-        time.sleep(3)
-        for name in names:
-            if not osp.is_exist_specify_element_by_name(name):
-                osp.click_specify_element_by_name("添加联系人")
-                time.sleep(2)
-                osp.click_specify_element_by_name("从手机通讯录添加")
-                slc = SelectLocalContactsPage()
-                # 等待选择联系人页面加载
-                slc.wait_for_page_load()
-                slc.selecting_local_contacts_by_name(name)
-                slc.click_sure()
-                osp.wait_for_page_load()
-        osp.click_back()
-        wbp.wait_for_workbench_page_load()
-        mp.open_message_page()
-        mp.wait_for_page_load()
-
-    @staticmethod
-    def create_he_contacts2(contacts):
-        """手动输入联系人创建为团队联系人"""
-
-        mp = MessagePage()
-        mp.wait_for_page_load()
-        mp.open_workbench_page()
-        wbp = WorkbenchPage()
-        wbp.wait_for_workbench_page_load()
-        wbp.click_organization()
-        osp = OrganizationStructurePage()
-        time.sleep(5)
-        n = 1
-        # 解决工作台不稳定问题
-        while osp.is_text_present("账号认证失败"):
-            osp.click_back()
-            wbp.wait_for_workbench_page_load()
-            wbp.click_organization()
+        # 确保已经加入考勤组
+        if not acp.is_on_attendance_card_page():
+            acp.click_text("新建考勤组")
+            time.sleep(3)
+            acp.click_text("请选择")
+            time.sleep(1)
+            acp.click_text("全选")
+            time.sleep(1)
+            acp.click_text("确认")
+            time.sleep(1)
+            acp.click_create_attendance_group_button()
             time.sleep(5)
-            n += 1
-            if n > 10:
-                break
-        time.sleep(3)
-        for name, number in contacts:
-            if not osp.is_exist_specify_element_by_name(name):
-                osp.click_specify_element_by_name("添加联系人")
-                time.sleep(2)
-                osp.click_specify_element_by_name("手动输入添加")
-                osp.input_contacts_name(name)
-                osp.input_contacts_number(number)
-                osp.click_confirm()
-                osp.wait_for_page_load()
-        osp.click_back()
-        wbp.wait_for_workbench_page_load()
-        mp.open_message_page()
-        mp.wait_for_page_load()
-
-    @staticmethod
-    def create_department_and_add_member(department_names):
-        """创建企业部门并从手机联系人添加成员"""
-
-        mp = MessagePage()
-        mp.wait_for_page_load()
-        mp.open_workbench_page()
-        wbp = WorkbenchPage()
-        wbp.wait_for_workbench_page_load()
-        wbp.click_organization()
-        osp = OrganizationStructurePage()
-        time.sleep(5)
-        n = 1
-        # 解决工作台不稳定问题
-        while osp.is_text_present("账号认证失败"):
-            osp.click_back()
-            wbp.wait_for_workbench_page_load()
-            wbp.click_organization()
-            time.sleep(5)
-            n += 1
-            if n > 10:
-                break
-        time.sleep(3)
-        for department_name in department_names:
-            if not osp.is_exist_specify_element_by_name(department_name):
-                osp.click_specify_element_by_name("添加子部门")
-                time.sleep(2)
-                osp.input_sub_department_name(department_name)
-                osp.input_sub_department_sort("1")
-                osp.click_confirm()
-                if osp.is_toast_exist("部门已存在", 2):
-                    osp.click_back()
-                osp.wait_for_page_load()
-                osp.click_specify_element_by_name(department_name)
-                time.sleep(2)
-                osp.click_specify_element_by_name("添加联系人")
-                time.sleep(2)
-                osp.click_specify_element_by_name("从手机通讯录添加")
-                slc = SelectLocalContactsPage()
-                # 等待选择联系人页面加载
-                slc.wait_for_page_load()
-                slc.selecting_local_contacts_by_name("大佬1")
-                slc.selecting_local_contacts_by_name("大佬2")
-                slc.selecting_local_contacts_by_name("大佬3")
-                slc.selecting_local_contacts_by_name("大佬4")
-                slc.click_sure()
-                osp.wait_for_page_load()
-                osp.click_back()
-        osp.click_back()
-        wbp.wait_for_workbench_page_load()
-        mp.open_message_page()
-        mp.wait_for_page_load()
+            acp.click_back()
+            acp.wait_for_page_load()
 
 
 class AttendanceCardAllTest(TestCase):
@@ -296,81 +165,24 @@ class AttendanceCardAllTest(TestCase):
     Author：刘晓东
     """
 
-    @classmethod
-    def setUpClass(cls):
-
-        Preconditions.select_mobile('Android-移动')
-        # 导入测试联系人、群聊
-        fail_time1 = 0
-        flag1 = False
-        import dataproviders
-        while fail_time1 < 3:
-            try:
-                required_contacts = dataproviders.get_preset_contacts()
-                conts = ContactsPage()
-                current_mobile().hide_keyboard_if_display()
-                Preconditions.make_already_in_message_page()
-                conts.open_contacts_page()
-                try:
-                    if conts.is_text_present("发现SIM卡联系人"):
-                        conts.click_text("显示")
-                except:
-                    pass
-                for name, number in required_contacts:
-                    # 创建联系人
-                    conts.create_contacts_if_not_exits(name, number)
-                required_group_chats = dataproviders.get_preset_group_chats()
-                conts.open_group_chat_list()
-                group_list = GroupListPage()
-                for group_name, members in required_group_chats:
-                    group_list.wait_for_page_load()
-                    # 创建群
-                    group_list.create_group_chats_if_not_exits(group_name, members)
-                group_list.click_back()
-                conts.open_message_page()
-                flag1 = True
-            except:
-                fail_time1 += 1
-            if flag1:
-                break
-
-        # 导入团队联系人、企业部门
-        fail_time2 = 0
-        flag2 = False
-        while fail_time2 < 5:
-            try:
-                Preconditions.make_already_in_message_page()
-                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
-                Preconditions.create_he_contacts(contact_names)
-                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
-                                  ('陈丹丹', "13800137004"), ('alice', "13800137005"), ('郑海贵', "13802883296")]
-                Preconditions.create_he_contacts2(contact_names2)
-                department_names = ["测试部门1", "测试部门2"]
-                Preconditions.create_department_and_add_member(department_names)
-                flag2 = True
-            except:
-                fail_time2 += 1
-            if flag2:
-                break
-
     def default_setUp(self):
         """
         1、成功登录和飞信
-        2、当前页面在工作台首页
+        2、当前页面在考勤打卡首页
         """
 
         Preconditions.select_mobile('Android-移动')
         mp = MessagePage()
         if mp.is_on_this_page():
-            Preconditions.enter_workbench_page()
+            Preconditions.enter_attendance_card_page()
             return
-        wbp = WorkbenchPage()
-        if wbp.is_on_workbench_page():
+        acp = AttendanceCardPage()
+        if acp.is_on_attendance_card_page():
             current_mobile().hide_keyboard_if_display()
         else:
             current_mobile().launch_app()
             Preconditions.make_already_in_message_page()
-            Preconditions.enter_workbench_page()
+            Preconditions.enter_attendance_card_page()
 
     def default_tearDown(self):
         pass
@@ -379,21 +191,14 @@ class AttendanceCardAllTest(TestCase):
     def test_KQDK_0001(self):
         """帮助文档展示正常"""
 
-        # 进入考勤打卡首页
-        Preconditions.enter_attendance_card_page()
         acp = AttendanceCardPage()
         acp.wait_for_page_load()
-        wbp = WorkbenchPage()
         # # 解决工作台不稳定问题
         # acp.click_back()
+        # wbp = WorkbenchPage()
         # wbp.wait_for_workbench_page_load()
         # wbp.click_attendance_card()
         # acp.wait_for_page_load()
-        time.sleep(10)
-        # 确保已经加入考勤组
-        if acp.is_text_present("新建考勤组"):
-            Preconditions.create_attendance_group()
-        time.sleep(2)
         # 点击帮助图标
         acp.click_help_icon()
         time.sleep(2)
@@ -411,28 +216,37 @@ class AttendanceCardAllTest(TestCase):
         acp.click_back()
         time.sleep(1)
         acp.click_back()
-        time.sleep(1)
-        acp.click_back()
-        wbp.wait_for_workbench_page_load()
+        # 等待考勤打卡首页加载
+        acp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'workbench', 'LXD')
     def test_KQDK_0006(self):
         """点击顶部返回键，返回到上一级页面"""
 
-        # 进入考勤打卡首页
-        Preconditions.enter_attendance_card_page()
         acp = AttendanceCardPage()
         acp.wait_for_page_load()
-        time.sleep(10)
-        # 确保已经加入考勤组
-        if acp.is_text_present("新建考勤组"):
-            Preconditions.create_attendance_group()
-        time.sleep(2)
         acp.click_back()
         wbp = WorkbenchPage()
         # 1.等待工作台首页加载
         wbp.wait_for_workbench_page_load()
-
+        wbp.click_attendance_card()
+        # 解决工作台不稳定问题
+        time.sleep(5)
+        n = 1
+        while acp.is_text_present("返回重试"):
+            acp.click_text("返回重试")
+            wbp.wait_for_workbench_page_load()
+            wbp.click_attendance_card()
+            time.sleep(5)
+            n += 1
+            if n > 10:
+                break
+        acp.wait_for_page_load()
+        acp.click_help_icon()
+        time.sleep(2)
+        acp.click_back()
+        # 2.等待考勤打卡首页加载
+        acp.wait_for_page_load()
 
 
 
