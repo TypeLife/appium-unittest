@@ -1906,7 +1906,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcf.click_back()
         gcs.click_back()
 
-    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1', 'high')
     def test_msg_xiaoqiu_0413(self):
         """群主在群设置页面点击群名称，修改群名后"""
         # 1.检验是否当前聊天会话页面,点击进入群设置页面
@@ -1943,7 +1943,7 @@ class MsgGroupChatvedioTest(TestCase):
         gsp.click_back()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1', 'high')
     def test_msg_xiaoqiu_0414(self):
         """群主在设置页面点击群管理，点击解散群按钮后"""
         # 1.检验是否当前聊天会话页面,点击进入群设置页面
@@ -1963,7 +1963,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcp.page_should_contain_text("系统消息")
         gcp.page_should_contain_text("该群已解散")
 
-    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1', 'high')
     def test_msg_xiaoqiu_0415(self):
         """群成员在群设置页面点击删除并退出按钮后"""
         # 1.检验是否当前聊天会话页面,点击进入群设置页面
@@ -1983,7 +1983,7 @@ class MsgGroupChatvedioTest(TestCase):
         time.sleep(3)
         mess.page_should_contain_text("你已退出群")
 
-    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1', 'high')
     def test_msg_xiaoqiu_0421(self):
         """群成员在群设置页面点击删除并退出按钮后"""
         # 1.检验是否当前聊天会话页面,点击进入群设置页面
@@ -2003,7 +2003,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcp.wait_for_page_load()
         gcp.page_should_contain_text("你向 " + group_name + "... 发出群邀请")
 
-    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1', 'high')
     def test_msg_xiaoqiu_0422(self):
         """群成员在群设置页面点击删除并退出按钮后"""
         # 1.检验是否当前聊天会话页面,点击进入群设置页面
@@ -2076,7 +2076,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcp.wait_for_page_load()
         gcp.page_should_contain_text("发出群邀请")
 
-    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1', 'high')
     def test_msg_xiaoqiu_0534(self):
         """创建一个普通群"""
         # 1.检验是否当前聊天会话页面,点击进入群设置页面
@@ -2149,7 +2149,7 @@ class MsgGroupChatvedioTest(TestCase):
         gcp.wait_for_page_load()
         gcp.page_should_contain_text("发出群邀请")
 
-    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1', 'high')
     def test_msg_xiaoqiu_0535(self):
         """创建10一个普通群"""
         # 1.检验是否当前聊天会话页面,点击进入群设置页面
@@ -2197,7 +2197,7 @@ class MsgGroupChatvedioTest(TestCase):
             gcp.wait_for_page_load()
             gcp.click_back()
 
-    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1', 'high')
     def test_msg_xiaoqiu_0548(self):
         """创建10一个普通群"""
         # 1. 普通群，分享群聊邀请口令
@@ -2219,7 +2219,7 @@ class MsgGroupChatvedioTest(TestCase):
         gsp.click_text("下次再说")
         gsp.wait_for_page_load()
 
-    @tags('ALL', 'CMCC', 'message114', 'debug_fk1')
+    @tags('ALL', 'CMCC', 'message114', 'debug_fk1', 'high')
     def test_msg_xiaoqiu_0548(self):
         """创建10一个普通群"""
         # 1. 普通群，分享群聊邀请口令

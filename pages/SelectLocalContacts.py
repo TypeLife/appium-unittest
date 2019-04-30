@@ -23,11 +23,11 @@ class SelectLocalContactsPage(BasePage):
                   '搜索或输入手机号': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_search_bar'),
                   'com.chinasofti.rcs:id/bottom_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/bottom_layout'),
                   'com.chinasofti.rcs:id/contact_selection_list_view': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/contact_selection_list_view'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/contact_selection_list_view'),
                   '容器列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list'),
                   'com.chinasofti.rcs:id/contact_list_item': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
                   'com.chinasofti.rcs:id/asp_selecttion_contact_content': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/asp_selecttion_contact_content'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/asp_selecttion_contact_content'),
                   'D': (MobileBy.ID, ''),
                   'dx1645': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
                   '15338821645': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),
@@ -43,9 +43,9 @@ class SelectLocalContactsPage(BasePage):
                   '联系人名': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
                   '电话号码': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),
                   'com.chinasofti.rcs:id/contact_index_bar_view': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_view'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_view'),
                   'com.chinasofti.rcs:id/contact_index_bar_container': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_container'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_container'),
                   # 删除成员
                   '确定删除': (MobileBy.XPATH, '//*[@text="确定"]'),
                   # 分享群二维码时选择联系人后的弹窗页面
@@ -95,7 +95,7 @@ class SelectLocalContactsPage(BasePage):
         if els:
             for el in els:
                 contacts_name.append(el.text)
-        b=set(contacts_name)
+        b = set(contacts_name)
         return b
 
     @TestLogger.log()
@@ -156,7 +156,8 @@ class SelectLocalContactsPage(BasePage):
     @TestLogger.log()
     def contacts_is_selected(self, name):
         """获取联系人的选择状态"""
-        selected_els = self.get_elements((MobileBy.XPATH, '//*[@text ="%s"]/../android.widget.ImageView[@resource-id="com.chinasofti.rcs:id/contact_icon"]' % name))
+        selected_els = self.get_elements((MobileBy.XPATH,
+                                          '//*[@text ="%s"]/../android.widget.ImageView[@resource-id="com.chinasofti.rcs:id/contact_icon"]' % name))
         if selected_els:
             return True
         else:
@@ -253,7 +254,7 @@ class SelectLocalContactsPage(BasePage):
     @TestLogger.log()
     def is_search_result(self, msg):
         """搜索结果判断"""
-        els = self.get_elements((MobileBy.XPATH,'//*[contains(@text, "%s")]' % msg))
+        els = self.get_elements((MobileBy.XPATH, '//*[contains(@text, "%s")]' % msg))
         return len(els) > 1
 
     @TestLogger.log()
@@ -289,4 +290,7 @@ class SelectLocalContactsPage(BasePage):
 
     @TestLogger.log("点击搜索第一个联系人")
     def click_search_phone_contacts(self):
-        self.get_elements(self.__class__.__locators["联系人名"])[0].click()
+        self.wait_until(
+            condition=lambda x: self.get_elements(self.__class__.__locators["联系人名"])[0],
+            auto_accept_permission_alert=False
+        ).click()

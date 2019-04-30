@@ -648,10 +648,14 @@ class SelectContactsPage(BasePage):
         """点击元素"""
         self.click_element(self.__class__.__locators[text])
 
-
     @TestLogger.log("当前页面是否在选择联系人页")
     def is_on_this_page(self):
         bol = self.wait_until(
             condition=lambda d: self._is_element_present(self.__class__.__locators["选择一个群"])
         )
         return bol
+
+    @TestLogger.log("通过索引选择最近联系人最近聊天")
+    def select_recent_chat_by_number(self, num):
+        elements_list = self.get_elements(('id', 'com.chinasofti.rcs:id/item_rl'))
+        elements_list[num].click()

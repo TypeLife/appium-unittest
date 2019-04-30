@@ -70,7 +70,8 @@ class GroupChatPage(BaseChatPage):
                   "粘贴": (MobileBy.ID, "com.chinasofti.rcs:id/ib_pic"),
                   "照片选择框": (MobileBy.ID, "com.chinasofti.rcs:id/iv_select"),
                   "更多小红点": (MobileBy.ID, "com.chinasofti.rcs:id/id_more_red_dot"),
-
+                  "预览文件_返回": (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
+                  '预览文件_更多': (MobileBy.ID, 'com.chinasofti.rcs:id/menu'),
                   }
 
     def is_exist_msg_videos(self):
@@ -483,6 +484,36 @@ class GroupChatPage(BaseChatPage):
 
     @TestLogger.log("撤回文件")
     def recall_file(self, file):
-        el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))
+        el = self.wait_until(condition=lambda x:self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file)))
         self.press(el)
         self.click_element(self.__class__.__locators['撤回'])
+
+    @TestLogger.log("点击发送的最后的文件")
+    def click_last_file_send_fail(self):
+        ele_list = self.get_elements(('id', 'com.chinasofti.rcs:id/ll_msg'))
+        ele_list[-1].click()
+
+    @TestLogger.log("点击预览文件返回")
+    def click_file_back(self):
+        self.click_element(self.__locators['预览文件_返回'])
+
+    @TestLogger.log("预览文件里的更多按钮是否存在")
+    def is_exist_more_button(self):
+        return self.wait_until(condition=lambda x:self._is_element_present(self.__locators['预览文件_更多']))
+
+    @TestLogger.log("点击预览文件里的更多按钮")
+    def click_more_button(self):
+        self.click_element(self.__locators['预览文件_更多'])
+
+    @TestLogger.log("检查预览文件选项是否可用")
+    def check_options_is_enable(self):
+        text_list = ['转发', '收藏', '其他应用打开']
+        for text in text_list:
+            if not self._is_enabled(('xpath', '//*[contains(@text, "{}")]'.format(text))):
+                return False
+        return True
+
+    @TestLogger.log("通过文本点击元素")
+    def click_element_by_text(self, text):
+        ele = ('xpath', '//*[contains(@text, "{}")]'.format(text))
+        self.click_element(ele)

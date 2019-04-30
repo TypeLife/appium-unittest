@@ -159,7 +159,8 @@ class ChatSelectLocalFilePage(BasePage):
             el.click()
             return el
         else:
-            raise AssertionError("在SD卡 无%s类型的文件，请预置相应类型文件" % file_type)
+            self.make_file_into_sdcard(file_type)
+            # raise AssertionError("在SD卡 无%s类型的文件，请预置相应类型文件" % file_type)
 
     @TestLogger.log()
     def select_file2(self, file_type):
@@ -356,6 +357,20 @@ class ChatSelectLocalFilePage(BasePage):
             self.click_back()
             ChatSelectFilePage().click_local_file()
             self.enter_preset_file_dir()
+
+    def make_file_into_sdcard(self, file_type):
+        times = 3
+        while times > 0:
+            self.click_back()
+            self.mobile.push_folder(settings.RESOURCE_FILE_PATH, "/sdcard")
+            self.enter_preset_file_dir()
+            el = self.find_file_by_type((MobileBy.XPATH, '//*[contains(@text,"%s")]' % file_type), file_type)
+            if el:
+                el.click()
+                return
+            else:
+                times -= 1
+        print("在SD卡 无%s类型的文件，请预置相应类型文件" % file_type)
 
     @TestLogger.log("当前页面是否在文件选择页")
     def is_on_this_page(self):
