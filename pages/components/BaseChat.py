@@ -85,7 +85,7 @@ class BaseChatPage(BasePage):
                   '预览文件标题': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
                   '预览文件-更多':(MobileBy.XPATH,'/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.FrameLayout[2]/android.widget.ImageView'),
                   '预览文件-转发': (MobileBy.XPATH, "//*[contains(@text, '转发')]"),
-                  '预览文件-收藏': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
+                  '预览文件-收藏': (MobileBy.XPATH, "//*[contains(@text, '收藏')]"),
                   '其他应用打开': (MobileBy.XPATH, "//*[contains(@text, '其他应用打开')]"),
 
                   }
@@ -655,6 +655,21 @@ class BaseChatPage(BasePage):
         self.click_element(self.__class__.__locators["预览文件-转发"])
 
 
+    @TestLogger.log("点击预览文件页面-收藏")
+    def click_collection_Preview(self):
+        self.click_element(self.__class__.__locators["预览文件-收藏"])
+
+    @TestLogger.log("点击其他应用打开")
+    def click_other_App_open(self):
+        self.click_element(self.__class__.__locators["其他应用打开"])
+
+    @TestLogger.log()
+    def get_width_of_msg_of_text(self):
+        """获取最近一条聊天记录文本信息框的大小"""
+        time.sleep(1)
+        els=self.get_element((MobileBy.ID,'com.chinasofti.rcs:id/tv_message'))
+        rect=els.rect
+        return rect["width"]
 
 
 

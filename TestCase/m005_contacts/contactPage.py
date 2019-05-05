@@ -192,7 +192,7 @@ class ContactPage(TestCase):
     #             return
     #         except:
     #             fail_time += 1
-    #             import traceback
+    #             import tracebac
     #             msg = traceback.format_exc()
     #             print(msg)
 
@@ -212,11 +212,8 @@ class ContactPage(TestCase):
     def test_contacts_0001(self):
         """验证通讯录页面元素"""
         contacts = ContactsPage()
-        if ContactsPage().is_text_present('不显示'):
-            ContactPage
         contacts.page_should_contain_text('通讯录')
-        # contacts.page_should_contain_element('+')
-
+        contacts.page_contain_element('+')
         contacts.page_should_contain_text('搜索')
         if contacts.is_text_present('备份你的手机通讯录，联系人数据不丢失'):
             contacts.page_should_contain_text('备份你的手机通讯录，联系人数据不丢失')
