@@ -230,6 +230,14 @@ class MessagePage(FooterPage):
         self.click_element(self.__locators['搜索'])
 
     @TestLogger.log()
+    def input_search_message(self, message):
+        """输入查询内容"""
+        self.input_text(self.__class__.__locators["搜索"], message)
+
+
+
+
+    @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
         """等待消息页面加载（自动允许权限）"""
 

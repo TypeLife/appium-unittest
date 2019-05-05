@@ -4,7 +4,6 @@ from selenium.common.exceptions import TimeoutException
 
 import preconditions
 from library.core.utils.applicationcache import current_mobile, current_driver
-from pages.call.Call import CallPage
 from pages.components import BaseChatPage
 from pages.contacts import OfficialAccountPage, SearchOfficialAccountPage
 from preconditions.BasePreconditions import LoginPreconditions

@@ -294,7 +294,7 @@ class Preconditions(object):
 
     @staticmethod
     def create_he_contacts(names):
-        """选择本地联系人创建为和通讯录联系人"""
+        """选择手机联系人创建为团队联系人"""
 
         mp = MessagePage()
         mp.wait_for_page_load()
@@ -333,7 +333,7 @@ class Preconditions(object):
 
     @staticmethod
     def create_he_contacts2(contacts):
-        """手动输入联系人创建为和通讯录联系人"""
+        """手动输入联系人创建为团队联系人"""
 
         mp = MessagePage()
         mp.wait_for_page_load()
@@ -431,7 +431,7 @@ class Preconditions(object):
 
     @staticmethod
     def if_exists_multiple_enterprises_enter_group_chat():
-        """选择和通讯录联系人时存在多个团队时返回获取当前团队名"""
+        """选择团队联系人时存在多个团队时返回获取当前团队名"""
 
         shc = SelectHeContactsDetailPage()
         # 测试号码是否存在多个团队
@@ -2289,7 +2289,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
             if flag1:
                 break
 
-        # 导入和通讯录联系人
+        # 导入团队联系人
         fail_time2 = 0
         flag2 = False
         while fail_time2 < 5:
@@ -2495,7 +2495,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0044(self):
-        """群聊会话页面，转发自己发送的图片给本地联系人"""
+        """群聊会话页面，转发自己发送的图片给手机联系人"""
 
         # 确保当前群聊页面已有图片
         Preconditions.make_already_have_my_picture()
@@ -2513,7 +2513,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待选择联系人->本地联系人 页面加载
         slc.wait_for_page_load()
         name = "大佬1"
-        # 3.选择一个本地联系人
+        # 3.选择一个手机联系人
         slc.selecting_local_contacts_by_name(name)
         # 确定转发
         scg.click_sure_forward()
@@ -2540,7 +2540,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'LXD', 'high')
     def test_msg_group_chat_total_quantity_0045(self):
-        """群聊会话页面，转发自己发送的图片到本地联系人时失败"""
+        """群聊会话页面，转发自己发送的图片到手机联系人时失败"""
 
         gcp = GroupChatPage()
         # 等待群聊页面加载
@@ -2567,7 +2567,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待选择联系人->本地联系人 页面加载
         slc.wait_for_page_load()
         contact_name = "大佬1"
-        # 3.选择一个本地联系人
+        # 3.选择一个手机联系人
         slc.selecting_local_contacts_by_name(contact_name)
         # 确定转发
         scg.click_sure_forward()
@@ -2590,7 +2590,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0046(self):
-        """群聊会话页面，转发自己发送的图片到本地联系人时点击取消转发"""
+        """群聊会话页面，转发自己发送的图片到手机联系人时点击取消转发"""
 
         # 确保当前群聊页面已有图片
         Preconditions.make_already_have_my_picture()
@@ -2608,7 +2608,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待选择联系人->本地联系人 页面加载
         slc.wait_for_page_load()
         name = "大佬1"
-        # 3.选择一个本地联系人
+        # 3.选择一个手机联系人
         slc.selecting_local_contacts_by_name(name)
         # 取消转发
         scg.click_cancel_forward()
@@ -2621,7 +2621,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'LXD', 'high')
     def test_msg_group_chat_total_quantity_0047(self):
-        """群聊会话页面，转发自己发送的图片给和通讯录联系人"""
+        """群聊会话页面，转发自己发送的图片给团队联系人"""
 
         gcp = GroupChatPage()
         # 等待群聊页面加载
@@ -2638,7 +2638,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         shc = SelectHeContactsDetailPage()
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
-        # 3.选择一个和通讯录联系人
+        # 3.选择一个团队联系人
         # 需要考虑测试号码存在多个团队的情况
         Preconditions.if_exists_multiple_enterprises_enter_group_chat()
         name = "大佬3"
@@ -2668,7 +2668,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0048(self):
-        """群聊会话页面，转发自己发送的图片到和通讯录联系人时失败"""
+        """群聊会话页面，转发自己发送的图片到团队联系人时失败"""
 
         gcp = GroupChatPage()
         # 等待群聊页面加载
@@ -2692,7 +2692,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         shc = SelectHeContactsDetailPage()
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
-        # 3.选择一个和通讯录联系人
+        # 3.选择一个团队联系人
         # 需要考虑测试号码存在多个团队的情况
         Preconditions.if_exists_multiple_enterprises_enter_group_chat()
         contact_name = "大佬3"
@@ -2718,7 +2718,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0049(self):
-        """群聊会话页面，转发自己发送的图片到和通讯录联系人时点击取消转发"""
+        """群聊会话页面，转发自己发送的图片到团队联系人时点击取消转发"""
 
         gcp = GroupChatPage()
         # 等待群聊页面加载
@@ -2735,7 +2735,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         shc = SelectHeContactsDetailPage()
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
-        # 3.选择一个和通讯录联系人
+        # 3.选择一个团队联系人
         # 需要考虑测试号码存在多个团队的情况
         Preconditions.if_exists_multiple_enterprises_enter_group_chat()
         name = "大佬3"
@@ -3119,7 +3119,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'LXD', 'high')
     def test_msg_group_chat_total_quantity_0069(self):
-        """群聊会话页面，转发自己发送的视频给本地联系人"""
+        """群聊会话页面，转发自己发送的视频给手机联系人"""
 
         # 确保当前群聊页面已有视频
         Preconditions.make_already_have_my_videos()
@@ -3137,7 +3137,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待选择联系人->本地联系人 页面加载
         slc.wait_for_page_load()
         name = "大佬1"
-        # 3.选择一个本地联系人
+        # 3.选择一个手机联系人
         slc.selecting_local_contacts_by_name(name)
         # 确定转发
         scg.click_sure_forward()
@@ -3164,7 +3164,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0070(self):
-        """群聊会话页面，转发自己发送的视频给本地联系人时失败"""
+        """群聊会话页面，转发自己发送的视频给手机联系人时失败"""
 
         gcp = GroupChatPage()
         # 等待群聊页面加载
@@ -3191,7 +3191,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待选择联系人->本地联系人 页面加载
         slc.wait_for_page_load()
         contact_name = "大佬1"
-        # 3.选择一个本地联系人
+        # 3.选择一个手机联系人
         slc.selecting_local_contacts_by_name(contact_name)
         # 确定转发
         scg.click_sure_forward()
@@ -3214,7 +3214,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0071(self):
-        """群聊会话页面，转发自己发送的视频给本地联系人时点击取消转发"""
+        """群聊会话页面，转发自己发送的视频给手机联系人时点击取消转发"""
 
         # 确保当前群聊页面已有视频
         Preconditions.make_already_have_my_videos()
@@ -3233,7 +3233,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # 等待选择联系人->本地联系人 页面加载
         slc.wait_for_page_load()
         name = "大佬1"
-        # 3、4.选择一个本地联系人
+        # 3、4.选择一个手机联系人
         slc.selecting_local_contacts_by_name(name)
         # 取消转发
         scg.click_cancel_forward()
@@ -3246,7 +3246,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'LXD', 'high')
     def test_msg_group_chat_total_quantity_0072(self):
-        """群聊会话页面，转发自己发送的视频给和通讯录联系人"""
+        """群聊会话页面，转发自己发送的视频给团队联系人"""
 
         gcp = GroupChatPage()
         # 等待群聊页面加载
@@ -3263,7 +3263,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         shc = SelectHeContactsDetailPage()
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
-        # 3.选择一个和通讯录联系人
+        # 3.选择一个团队联系人
         # 需要考虑测试号码存在多个团队的情况
         Preconditions.if_exists_multiple_enterprises_enter_group_chat()
         name = "大佬3"
@@ -3293,7 +3293,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0073(self):
-        """群聊会话页面，转发自己发送的视频给和通讯录联系人时失败"""
+        """群聊会话页面，转发自己发送的视频给团队联系人时失败"""
 
         gcp = GroupChatPage()
         # 等待群聊页面加载
@@ -3317,7 +3317,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         shc = SelectHeContactsDetailPage()
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
-        # 3.选择一个和通讯录联系人
+        # 3.选择一个团队联系人
         # 需要考虑测试号码存在多个团队的情况
         Preconditions.if_exists_multiple_enterprises_enter_group_chat()
         name = "大佬3"
@@ -3343,7 +3343,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'LXD')
     def test_msg_group_chat_total_quantity_0074(self):
-        """群聊会话页面，转发自己发送的视频给和通讯录联系人时点击取消转发"""
+        """群聊会话页面，转发自己发送的视频给团队联系人时点击取消转发"""
 
         gcp = GroupChatPage()
         # 等待群聊页面加载
@@ -3360,7 +3360,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         shc = SelectHeContactsDetailPage()
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
-        # 3、4.选择一个和通讯录联系人
+        # 3、4.选择一个团队联系人
         # 需要考虑测试号码存在多个团队的情况
         Preconditions.if_exists_multiple_enterprises_enter_group_chat()
         name = "大佬3"

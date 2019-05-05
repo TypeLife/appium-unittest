@@ -661,7 +661,6 @@ class EnterpriseContactsAllTest(TestCase):
             ccp = CreateContactPage()
             ccp.wait_for_page_load()
             ccp.save_contact()
-            cdp.wait_for_page_load()
             time.sleep(2)
         # 1.是否显示用户的详情信息（副号拨打没做验证，需要提供满足条件的测试号码）
         self.assertEquals(cdp.is_exists_contacts_name(), True)
@@ -770,7 +769,7 @@ class EnterpriseContactsAllTest(TestCase):
         time.sleep(2)
         # 点击电话图标
         cdp.click_call_icon()
-        time.sleep(4)
+        time.sleep(5)
         # 验证是否在通话界面
         self.assertEquals(cdp.is_phone_in_calling_state(), True)
         cp = CallPage()
@@ -782,7 +781,10 @@ class EnterpriseContactsAllTest(TestCase):
         time.sleep(4)
         if cdp.is_text_present("继续拨打"):
             cdp.click_text("继续拨打")
-            time.sleep(2)
+            time.sleep(4)
+        if cdp.is_text_present("始终允许"):
+            cdp.click_text("始终允许")
+            time.sleep(4)
         if cdp.is_text_present("暂不开启"):
             cdp.click_text("暂不开启")
             time.sleep(2)
@@ -796,7 +798,7 @@ class EnterpriseContactsAllTest(TestCase):
         time.sleep(4)
         if cdp.is_text_present("继续拨打"):
             cdp.click_text("继续拨打")
-            time.sleep(2)
+            time.sleep(4)
         if cdp.is_text_present("暂不开启"):
             cdp.click_text("暂不开启")
             time.sleep(2)
@@ -809,13 +811,13 @@ class EnterpriseContactsAllTest(TestCase):
         time.sleep(2)
         if cdp.is_text_present("我知道了"):
             cdp.click_text("我知道了")
-            time.sleep(2)
+            time.sleep(4)
         if cdp.is_text_present("始终允许"):
             cdp.click_text("始终允许")
-            time.sleep(2)
+            time.sleep(4)
         if cdp.is_text_present("和飞信电话"):
             cp.hang_up_the_call()
-            time.sleep(2)
+            time.sleep(4)
         if cdp.is_text_present("暂不开启"):
             cdp.click_text("暂不开启")
             time.sleep(2)

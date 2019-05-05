@@ -6,7 +6,7 @@ from library.core.TestLogger import TestLogger
 
 
 class AttendanceCardPage(BasePage):
-    """考勤打卡页"""
+    """考勤打卡首页"""
 
     ACTIVITY = 'com.cmicc.module_enterprise.ui.activity.EnterpriseH5ProcessActivity'
 
@@ -18,16 +18,30 @@ class AttendanceCardPage(BasePage):
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
-        """等待考勤打卡页加载"""
+        """等待考勤打卡首页加载"""
         try:
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self.driver.current_activity == self.ACTIVITY
+                condition=lambda d: self._is_element_present(self.__class__.__locators["帮助图标"])
             )
         except:
             raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
         return self
+
+    @TestLogger.log()
+    def is_on_attendance_card_page(self, timeout=20, auto_accept_alerts=True):
+        """当前页面是否在考勤打卡首页"""
+
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["帮助图标"])
+            )
+            return True
+        except:
+            return False
 
     @TestLogger.log()
     def click_back(self):

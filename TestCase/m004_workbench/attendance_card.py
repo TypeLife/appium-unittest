@@ -120,39 +120,41 @@ class Preconditions(object):
         current_mobile().reset_app()
 
     @staticmethod
-    def enter_workbench_page():
-        """进入工作台首页"""
+    def enter_attendance_card_page():
+        """进入考勤打卡首页"""
 
         mp = MessagePage()
         mp.wait_for_page_load()
         mp.click_workbench()
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
-
-    @staticmethod
-    def enter_attendance_card_page():
-        """进入考勤打卡首页"""
-
-        wbp = WorkbenchPage()
-        wbp.wait_for_workbench_page_load()
         wbp.click_add_attendance_card()
-
-    @staticmethod
-    def create_attendance_group():
-        """创建考勤组"""
-
         acp = AttendanceCardPage()
-        acp.click_text("新建考勤组")
-        time.sleep(3)
-        acp.click_text("请选择")
-        time.sleep(1)
-        acp.click_text("全选")
-        time.sleep(1)
-        acp.click_text("确认")
-        time.sleep(1)
-        acp.click_create_attendance_group_button()
+        # 解决工作台不稳定问题
         time.sleep(5)
-        acp.click_back()
+        n = 1
+        while acp.is_text_present("返回重试"):
+            acp.click_text("返回重试")
+            wbp.wait_for_workbench_page_load()
+            wbp.click_attendance_card()
+            time.sleep(5)
+            n += 1
+            if n > 10:
+                break
+        # 确保已经加入考勤组
+        if not acp.is_on_attendance_card_page():
+            acp.click_text("新建考勤组")
+            time.sleep(3)
+            acp.click_text("请选择")
+            time.sleep(1)
+            acp.click_text("全选")
+            time.sleep(1)
+            acp.click_text("确认")
+            time.sleep(1)
+            acp.click_create_attendance_group_button()
+            time.sleep(5)
+            acp.click_back()
+            acp.wait_for_page_load()
 
 
 class AttendanceCardAllTest(TestCase):
@@ -166,21 +168,21 @@ class AttendanceCardAllTest(TestCase):
     def default_setUp(self):
         """
         1、成功登录和飞信
-        2、当前页面在工作台首页
+        2、当前页面在考勤打卡首页
         """
 
         Preconditions.select_mobile('Android-移动')
         mp = MessagePage()
         if mp.is_on_this_page():
-            Preconditions.enter_workbench_page()
+            Preconditions.enter_attendance_card_page()
             return
-        wbp = WorkbenchPage()
-        if wbp.is_on_workbench_page():
+        acp = AttendanceCardPage()
+        if acp.is_on_attendance_card_page():
             current_mobile().hide_keyboard_if_display()
         else:
             current_mobile().launch_app()
             Preconditions.make_already_in_message_page()
-            Preconditions.enter_workbench_page()
+            Preconditions.enter_attendance_card_page()
 
     def default_tearDown(self):
         pass
@@ -189,21 +191,14 @@ class AttendanceCardAllTest(TestCase):
     def test_KQDK_0001(self):
         """帮助文档展示正常"""
 
-        # 进入考勤打卡首页
-        Preconditions.enter_attendance_card_page()
         acp = AttendanceCardPage()
         acp.wait_for_page_load()
-        wbp = WorkbenchPage()
         # # 解决工作台不稳定问题
         # acp.click_back()
+        # wbp = WorkbenchPage()
         # wbp.wait_for_workbench_page_load()
         # wbp.click_attendance_card()
         # acp.wait_for_page_load()
-        time.sleep(10)
-        # 确保已经加入考勤组
-        if acp.is_text_present("新建考勤组"):
-            Preconditions.create_attendance_group()
-        time.sleep(2)
         # 点击帮助图标
         acp.click_help_icon()
         time.sleep(2)
@@ -221,28 +216,37 @@ class AttendanceCardAllTest(TestCase):
         acp.click_back()
         time.sleep(1)
         acp.click_back()
-        time.sleep(1)
-        acp.click_back()
-        wbp.wait_for_workbench_page_load()
+        # 等待考勤打卡首页加载
+        acp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'workbench', 'LXD')
     def test_KQDK_0006(self):
         """点击顶部返回键，返回到上一级页面"""
 
-        # 进入考勤打卡首页
-        Preconditions.enter_attendance_card_page()
         acp = AttendanceCardPage()
         acp.wait_for_page_load()
-        time.sleep(10)
-        # 确保已经加入考勤组
-        if acp.is_text_present("新建考勤组"):
-            Preconditions.create_attendance_group()
-        time.sleep(2)
         acp.click_back()
         wbp = WorkbenchPage()
         # 1.等待工作台首页加载
         wbp.wait_for_workbench_page_load()
-
+        wbp.click_attendance_card()
+        # 解决工作台不稳定问题
+        time.sleep(5)
+        n = 1
+        while acp.is_text_present("返回重试"):
+            acp.click_text("返回重试")
+            wbp.wait_for_workbench_page_load()
+            wbp.click_attendance_card()
+            time.sleep(5)
+            n += 1
+            if n > 10:
+                break
+        acp.wait_for_page_load()
+        acp.click_help_icon()
+        time.sleep(2)
+        acp.click_back()
+        # 2.等待考勤打卡首页加载
+        acp.wait_for_page_load()
 
 
 
