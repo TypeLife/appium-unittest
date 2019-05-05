@@ -15,12 +15,17 @@ class AppStorePage(BasePage):
         '关闭': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_close_actionbar'),
         '搜索应用': (MobileBy.XPATH,
                  "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]/android.view.View/android.widget.EditText"),
-        '搜索框': (MobileBy.XPATH, '//*[@class ="android.widget.EditText"]'),
-        '搜索': (MobileBy.XPATH, '//*[@text ="搜索"]'),
-        '添加': (MobileBy.XPATH, '//*[@text ="添加"]'),
-        '确定': (MobileBy.XPATH, '//*[@text ="确定"]'),
-        '热门推荐': (MobileBy.XPATH, '//*[@text ="热门推荐"]'),
-        '添加应用': (MobileBy.XPATH, '//*[@resource-id ="tjyy_but"]'),
+        '搜索框': (MobileBy.XPATH, '//*[@class="android.widget.EditText"]'),
+        '搜索': (MobileBy.XPATH, '//*[@text="搜索"]'),
+        '添加': (MobileBy.XPATH, '//*[@text="添加"]'),
+        '打开': (MobileBy.XPATH, '//*[@text="打开"]'),
+        '确定': (MobileBy.XPATH, '//*[@text="确定"]'),
+        '热门推荐': (MobileBy.XPATH, '//*[@text="热门推荐"]'),
+        '个人专区': (MobileBy.XPATH, '//*[@text="个人专区"]'),
+        '添加应用': (MobileBy.XPATH, '//*[@resource-id="tjyy_but"]'),
+        '应用介绍': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title_actionbar" and @text="应用介绍"]'),
+        'brenner图1': (MobileBy.XPATH, '	/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[3]/android.view.View[1]/android.view.View'),
+        'brenner图2': (MobileBy.XPATH, '	/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[3]/android.view.View[2]/android.view.View'),
     }
 
     @TestLogger.log()
@@ -91,6 +96,11 @@ class AppStorePage(BasePage):
         self.click_element(self.__class__.__locators["添加"])
 
     @TestLogger.log()
+    def click_open(self):
+        """点击打开"""
+        self.click_element(self.__class__.__locators["打开"])
+
+    @TestLogger.log()
     def click_add_app(self):
         """点击添加应用"""
         self.click_element(self.__class__.__locators["添加应用"])
@@ -109,8 +119,79 @@ class AppStorePage(BasePage):
     @TestLogger.log()
     def is_search_result_match(self, name):
         """搜索结果是否匹配"""
-        locator = (MobileBy.XPATH, '//*[@text ="添加"]/../android.view.View[2]')
+        locator = (MobileBy.XPATH, '//*[@text="添加"]/../android.view.View[2]')
         text = self.get_element(locator).text
         if name in text:
             return True
         raise AssertionError('搜索结果"{}"没有找到包含关键字"{}"的文本'.format(text, name))
+
+    @TestLogger.log()
+    def click_search_result(self):
+        """点击搜索结果"""
+        locator = (MobileBy.XPATH, '//*[@text="添加"]/../android.view.View[2]')
+        self.click_element(locator)
+
+    @TestLogger.log()
+    def wait_for_search_page_load(self, timeout=20, auto_accept_alerts=True):
+        """等待搜索页加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["搜索"])
+            )
+        except:
+            raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
+        return self
+
+    @TestLogger.log()
+    def wait_for_app_details_page_load(self, timeout=20, auto_accept_alerts=True):
+        """等待应用介绍详情页加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["应用介绍"])
+            )
+        except:
+            raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
+        return self
+
+    @TestLogger.log()
+    def click_personal_area(self):
+        """点击个人专区"""
+        self.click_element(self.__class__.__locators["个人专区"])
+
+    @TestLogger.log()
+    def add_app_by_name(self, name):
+        """添加指定应用"""
+        locator = (MobileBy.XPATH, '//*[contains(@text,"%s")]/../android.view.View[1]' % name)
+        self.click_element(locator)
+
+    @TestLogger.log()
+    def get_app_button_text_by_name(self, name):
+        """获取指定应用后的按钮文本"""
+        locator = (MobileBy.XPATH, '//*[contains(@text,"%s")]/../android.view.View[1]' % name)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        return self.get_element(locator).text
+
+    @TestLogger.log()
+    def swipe_by_brenner1(self):
+        """滑动brenner图1"""
+        self.swipe_by_direction(self.__class__.__locators["brenner图1"], "left", 800)
+
+    @TestLogger.log()
+    def swipe_by_brenner2(self):
+        """滑动brenner图2"""
+        self.swipe_by_direction(self.__class__.__locators["brenner图2"], "right", 800)
+
+    @TestLogger.log()
+    def click_brenner(self):
+        """点击brenner图"""
+        self.click_element(self.__class__.__locators["brenner图1"])
