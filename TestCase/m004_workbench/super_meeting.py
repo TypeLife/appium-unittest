@@ -1703,3 +1703,294 @@ class SuperMeetingTest(TestCase):
         wbp = WorkbenchPage()
         wbp.wait_for_page_load()
 
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0034(self):
+        """添加最近聊天"""
+        # 1、点击“预约会议”
+        # 2、点击“最近聊天”中的联系人
+        # 3、点击选中联系人
+        # 4、点击“确定”
+        # 5、选择开始时间，点击“下一步”
+        # 6、点击“确定”
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        current_mobile().back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_page_load()
+        wbp.open_message_page()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个手机联系人发信息
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text("选择手机联系人")
+        sc.input_search_contact_message("和飞信")
+        sc.click_text("和飞信电话")
+        sc.click_sure_bottom()
+        time.sleep(2)
+        chat = SingleChatPage()
+        # 如果弹框用户须知则点击处理
+        flag = chat.is_exist_dialog()
+        if flag:
+            chat.click_i_have_read()
+        info = "哈"
+        chat.input_message(info)
+        chat.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        current_mobile().back()
+        mess.wait_for_page_load()
+        mess.open_workbench_page()
+        wbp.wait_for_page_load()
+        wbp.click_super_meeting()
+        smp.wait_for_page_loads()
+        smp.click_element_("预约会议")
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.click_text("和飞信电话")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(5)
+        sc.click_text("确定")
+        time.sleep(5)
+        sc.click_text("确定")
+        if not smp.is_toast_exist("会议预约成功"):
+            raise AssertionError("会议预约失败")
+        # 取消会议
+        time.sleep(5)
+        smp.click_text("(2人)")
+        smp.wait_for_page_loads("取消会议")
+        smp.click_text("取消会议")
+        time.sleep(5)
+        smp.click_element_("确定取消此次会议")
+        time.sleep(8)
+        current_mobile().back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0038(self):
+        """预约会议详情"""
+        # 1、点击已经预约成功的会议，进入详情
+        # 2、点击“+”
+        # 3、选择其他未选择的成员，点击“确定”
+        # 4、点击“确定”
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        smp.click_element_("预约会议")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text("选择手机联系人")
+        time.sleep(2)
+        sc.input_search_contact_message("和飞信")
+        time.sleep(2)
+        sc.click_text("和飞信电话")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(5)
+        smp.swipe_by_up()
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(5)
+        sc.click_text("确定")
+        if not smp.is_toast_exist("会议预约成功"):
+            raise AssertionError("会议预约失败")
+        time.sleep(5)
+        smp.click_text("(2人)")
+        smp.wait_for_page_loads("取消会议")
+        smp.click_element_("加号")
+        sc.wait_for_page_load()
+        sc.click_text("选择手机联系人")
+        time.sleep(2)
+        sc.click_one_local_contacts()
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(5)
+        smp.click_text("确定")
+        if not smp.is_toast_exist("修改预约会议成功"):
+            raise AssertionError("修改预约会议失败")
+        # 取消会议
+        time.sleep(5)
+        smp.click_text("(3人)")
+        smp.wait_for_page_loads("取消会议")
+        smp.click_text("取消会议")
+        time.sleep(5)
+        smp.click_element_("确定取消此次会议")
+        time.sleep(8)
+        current_mobile().back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0039(self):
+        """预约会议详情"""
+        # 1、点击已经预约成功的会议，进入详情
+        # 2、点击“-”
+        # 3、点击成员旁边红色“x”
+        # 4、点击“确定”
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        smp.click_element_("预约会议")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text("选择手机联系人")
+        time.sleep(2)
+        sc.input_search_contact_message("和飞信")
+        time.sleep(2)
+        sc.click_text("和飞信电话")
+        time.sleep(2)
+        sc.click_one_local_contacts()
+        sc.click_text("确定")
+        time.sleep(5)
+        smp.swipe_by_up()
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(5)
+        sc.click_text("确定")
+        if not smp.is_toast_exist("会议预约成功"):
+            raise AssertionError("会议预约失败")
+        time.sleep(5)
+        smp.click_text("(3人)")
+        smp.wait_for_page_loads("取消会议")
+        smp.click_element_("减号5")
+        time.sleep(2)
+        smp.click_element_("去掉会议人员X")
+        time.sleep(2)
+        smp.click_text("确定")
+        if not smp.is_toast_exist("修改预约会议成功"):
+            raise AssertionError("修改预约会议失败")
+        # 取消会议
+        time.sleep(5)
+        smp.click_text("(2人)")
+        smp.wait_for_page_loads("取消会议")
+        smp.click_text("取消会议")
+        time.sleep(5)
+        smp.click_element_("确定取消此次会议")
+        time.sleep(8)
+        current_mobile().back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0040(self):
+        """添加搜索出的企业通讯录联系人"""
+        # 1、点击“马上开会”
+        # 2、搜索关键词，如“测试”
+        # 3、选择“搜索企业通讯录联系人：测试”
+        # 4、点击搜索出的成员
+        # 5、点击“确定”
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        current_mobile().back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_page_load()
+        wbp.click_organization()
+        osp = OrganizationStructurePage()
+        osp.wait_for_page_load()
+        if not osp.swipe_and_find_element("yyx"):
+            osp.click_text("添加联系人")
+            time.sleep(1)
+            osp.click_text("手动输入添加")
+            time.sleep(1)
+            osp.input_contacts_name("yyx")
+            osp.input_contacts_number("18920736596")
+            time.sleep(2)
+            osp.click_text("完成")
+            if not osp.is_toast_exist("成功"):
+                raise AssertionError("手动添加失败")
+            time.sleep(2)
+            current_mobile().back()
+            wbp.wait_for_page_load()
+        else:
+            current_mobile().back()
+            wbp.wait_for_page_load()
+        wbp.click_super_meeting()
+        smp.wait_for_page_loads()
+        smp.click_element_("马上开会")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text("选择企业通讯录联系人")
+        time.sleep(2)
+        sc.input_search_contact_message("yyx")
+        time.sleep(2)
+        sc.click_text("18920736596")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        current_mobile().hang_up_the_call()
+        time.sleep(2)
+        smp.click_text("结束会议")
+        time.sleep(2)
+        smp.click_text("确定")
+        time.sleep(2)
+        current_mobile().back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0041(self):
+        """添加搜索出的本地联系人"""
+        # 1、点击“马上开会”
+        # 2、搜索关键词，如“测试”
+        # 3、选择本地联系人搜索结果
+        # 4、点击搜索出的成员
+        # 5、点击“确定”
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        smp.click_element_("马上开会")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text("选择手机联系人")
+        time.sleep(2)
+        sc.input_search_contact_message("和飞信")
+        time.sleep(2)
+        sc.click_text("和飞信电话")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        current_mobile().hang_up_the_call()
+        time.sleep(2)
+        smp.click_text("结束会议")
+        time.sleep(2)
+        smp.click_text("确定")
+        time.sleep(2)
+        current_mobile().back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0042(self):
+        """添加搜索的陌生号码"""
+        # 1、点击“马上开会”
+        # 2、搜索陌生号码
+        # 3、点击搜索出的成员
+        # 4、点击“确定”
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        smp.click_element_("马上开会")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_contact_message("15202265088")
+        time.sleep(2)
+        sc.click_text("未知号码")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        current_mobile().hang_up_the_call()
+        time.sleep(2)
+        smp.click_text("结束会议")
+        time.sleep(2)
+        smp.click_text("确定")
+        time.sleep(2)
+        current_mobile().back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_page_load()
