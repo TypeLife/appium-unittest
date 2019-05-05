@@ -173,7 +173,14 @@ class MsgMyPCChating(TestCase):
         #返回聊天页面
         chat.click_back_in_open_file_page()
 
-
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0302():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep = MePage()
+            mep.set_network_status(6)
 
 
 

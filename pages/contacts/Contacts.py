@@ -340,3 +340,8 @@ class ContactsPage(FooterPage):
             current += 1
             self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         self.click_element(locator)
+
+    @TestLogger.log()
+    def page_contain_element(self, locator):
+        """页面包含元素"""
+        self.page_should_contain_element(self.__class__.__locators[locator])
