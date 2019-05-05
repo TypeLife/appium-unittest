@@ -232,7 +232,7 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def input_search_message(self, message):
         """输入查询内容"""
-        self.input_text(self.__class__.__locators["搜索"], message)
+        self.input_text(self.__locators['搜索'], message)
 
 
 

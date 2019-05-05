@@ -184,3 +184,12 @@ class ChatWindowPage(ChatNoticeDialog, PictureSelector, BaseChatPage,BasePage):
                     return self.get_element(locator)
                 c += 1
             return None
+
+    @TestLogger.log()
+    def is_address_text_present(self):
+        """判断位置信息是否在聊天页面发送"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/lloc_famous_address_text'))
+        if el:
+            return True
+        else:
+            return False
