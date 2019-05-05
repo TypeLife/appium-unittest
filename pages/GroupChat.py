@@ -72,6 +72,7 @@ class GroupChatPage(BaseChatPage):
                   "更多小红点": (MobileBy.ID, "com.chinasofti.rcs:id/id_more_red_dot"),
                   "预览文件_返回": (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
                   '预览文件_更多': (MobileBy.ID, 'com.chinasofti.rcs:id/menu'),
+                  '定位_地图': ('id', 'com.chinasofti.rcs:id/location_info_view'),
                   }
 
     def is_exist_msg_videos(self):
@@ -517,3 +518,21 @@ class GroupChatPage(BaseChatPage):
     def click_element_by_text(self, text):
         ele = ('xpath', '//*[contains(@text, "{}")]'.format(text))
         self.click_element(ele)
+
+    @TestLogger.log("当前页面是否有发地图消息")
+    def is_exist_loc_msg(self):
+        el = self.get_elements(self.__locators['定位_地图'])
+        return len(el) > 0
+
+    @TestLogger.log("撤回文件")
+    def recall_file(self, file):
+        el = self.wait_until(condition=lambda x:self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file)))
+        self.press(el)
+        self.click_element(self.__class__.__locators['撤回'])
+
+    @TestLogger.log("撤回位置消息")
+    def recall_loc_msg(self):
+        el = self.wait_until(
+            condition=lambda x: self.get_elements(self.__locators['定位_地图']))
+        self.press(el[-1])
+        self.click_element(self.__class__.__locators['撤回'])

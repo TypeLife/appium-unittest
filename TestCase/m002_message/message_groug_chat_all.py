@@ -2306,3 +2306,137 @@ class MsgGroupChatTest(TestCase):
         ChatFilePage().click_back()
         FindChatRecordPage().click_back()
         GroupChatSetPage().click_back()
+
+
+class MsgGroupChatPrior(TestCase):
+
+    def default_setUp(self):
+        """确保每个用例运行前在群聊聊天会话页面"""
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            try:
+                mess.choose_chat_by_name(Preconditions.get_group_chat_name())
+                return
+            except:
+                Preconditions.enter_group_chat_page()
+                return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            Preconditions.enter_group_chat_page()
+
+    def default_tearDown(self):
+        pass
+
+    def make_sure_have_loc_msg(self):
+        group_chat_page = GroupChatPage()
+        group_chat_page.wait_for_page_load()
+        if group_chat_page.is_exist_loc_msg():
+            pass
+        else:
+            chat_more = ChatMorePage()
+            chat_more.close_more()
+            chat_more.click_location()
+            location_page = ChatLocationPage()
+            location_page.wait_for_page_load()
+            time.sleep(1)
+            # 点击发送按钮
+            if not location_page.send_btn_is_enabled():
+                raise AssertionError("位置页面发送按钮不可点击")
+            location_page.click_send()
+            group_chat_page.wait_for_page_load()
+            group_chat_page.click_more()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'level_high')
+    def test_msg_weifenglian_qun_0336(self):
+        """将自己发送的位置转发到手机联系人"""
+        self.make_sure_have_loc_msg()
+        GroupChatPage().press_message_to_do("转发")
+        SelectContactsPage().wait_for_page_load()
+        SelectContactsPage().select_local_contacts()
+        phone_contacts = SelectLocalContactsPage()
+        phone_contacts.wait_for_page_load()
+        phone_contacts.click_first_phone_contacts()
+        phone_contacts.click_sure_forward()
+        # 转发成功并回到聊天页面
+        self.assertTrue(GroupChatPage().is_exist_forward())
+        GroupChatPage().wait_for_page_load()
+        self.assertTrue(GroupChatPage().is_on_this_page())
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'level_high')
+    def test_msg_weifenglian_qun_0369(self):
+        """将自己发送的位置转发到我的电脑"""
+        self.make_sure_have_loc_msg()
+        GroupChatPage().press_message_to_do("转发")
+        SelectContactsPage().wait_for_page_load()
+        SelectContactsPage().search('我的电脑')
+        SelectOneGroupPage().click_search_result()
+        SelectOneGroupPage().click_sure_forward()
+        # 转发成功并回到聊天页面
+        self.assertTrue(GroupChatPage().is_exist_forward())
+        GroupChatPage().wait_for_page_load()
+        self.assertTrue(GroupChatPage().is_on_this_page())
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'level_high')
+    def test_msg_weifenglian_qun_0370(self):
+        """将自己发送的位置转发到我的电脑"""
+        self.make_sure_have_loc_msg()
+        GroupChatPage().press_message_to_do("转发")
+        select_recent_chat = SelectContactsPage()
+        select_recent_chat.wait_for_page_load()
+        select_recent_chat.select_recent_chat_by_number(0)
+        SelectContactsPage().click_sure_forward()
+        # 转发成功并回到聊天页面
+        self.assertTrue(GroupChatPage().is_exist_forward())
+        GroupChatPage().wait_for_page_load()
+        self.assertTrue(GroupChatPage().is_on_this_page())
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'level_high')
+    def test_msg_weifenglian_qun_0373(self):
+        """对自己发送出去的位置消息进行删除"""
+        self.make_sure_have_loc_msg()
+        GroupChatPage().press_message_to_do("删除")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'level_high')
+    def test_msg_weifenglian_qun_0374(self):
+        """对自己发送出去的位置消息进行十秒内撤回"""
+        group_chat_page = GroupChatPage()
+        group_chat_page.wait_for_page_load()
+        chat_more = ChatMorePage()
+        chat_more.close_more()
+        chat_more.click_location()
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        time.sleep(1)
+        # 点击发送按钮
+        if not location_page.send_btn_is_enabled():
+            raise AssertionError("位置页面发送按钮不可点击")
+        location_page.click_send()
+        group_chat_page.wait_for_page_load()
+        group_chat_page.click_more()
+        group_chat_page.recall_loc_msg()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'level_high')
+    def test_msg_weifenglian_qun_0375(self):
+        """对自己发送出去的位置消息进行收藏"""
+        self.make_sure_have_loc_msg()
+        group_chat_page = GroupChatPage()
+        group_chat_page.press_message_to_do("收藏")
+        GroupChatPage().is_exist_collection()
+        GroupChatPage().click_back()
+        message_page = MessagePage()
+        message_page.wait_for_page_load()
+        message_page.open_me_page()
+        MePage().is_on_this_page()
+        # 点击我的收藏,进入收藏页面
+        MePage().click_collection()
+        collection_page = MeCollectionPage()
+        collection_page.wait_for_page_load()
+        bol = collection_page.wait_until(condition=lambda x:collection_page.is_text_present('位置'))
+        self.assertTrue(bol)
+        MePage().click_back()
+        MePage().open_message_page()
