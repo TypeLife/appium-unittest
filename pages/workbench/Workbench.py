@@ -65,7 +65,12 @@ class WorkbenchPage(FooterPage):
                   '网易考拉': (MobileBy.XPATH, '//*[@text="网易考拉"]'),
                   '政企优惠': (MobileBy.XPATH, '//*[@text="政企优惠"]'),
                   '人事管理': (MobileBy.XPATH, '//*[@text="人事管理"]'),
+                  '考试评测': (MobileBy.XPATH, '//*[@text="考试评测"]'),
+                  '移动报销': (MobileBy.XPATH, '//*[@text="移动报销"]'),
+                  '考勤签到': (MobileBy.XPATH, '//*[@text="考勤签到"]'),
+                  '企业云盘': (MobileBy.XPATH, '//*[@text="企业云盘"]'),
                   '岭南优品': (MobileBy.XPATH, '//*[@text="岭南优品"]'),
+                  '展开': (MobileBy.XPATH, '//*[@text="展开"]'),
                   'com.chinasofti.rcs:id/rl_bottom': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_bottom'),
                   'com.chinasofti.rcs:id/recyclerView': (MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView'),
                   '应用商城': (MobileBy.XPATH, '//*[@text="应用商城"]'),
@@ -103,6 +108,8 @@ class WorkbenchPage(FooterPage):
 
     def find_els(self, location):
         """查找元素"""
+        # 查找并点击所有展开元素
+        self.find_and_click_open_element()
         els = self.get_elements(location)
         if len(els) > 0:
             return els
@@ -125,6 +132,28 @@ class WorkbenchPage(FooterPage):
             if len(els) > 0:
                 break
         return False
+
+    @TestLogger.log()
+    def find_and_click_open_element(self):
+        """查找并点击所有展开元素"""
+        while True:
+            if self._is_element_present(self.__class__.__locators["展开"]):
+                self.click_element(self.__class__.__locators["展开"])
+                self.find_and_click_open_element()
+                return
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+            # 滑动到底部还未找到元素则终止滑动
+            if self._is_element_present(self.__class__.__locators["创建团队"]):
+                break
+        while True:
+            if self._is_element_present(self.__class__.__locators["展开"]):
+                self.click_element(self.__class__.__locators["展开"])
+                self.find_and_click_open_element()
+                return
+            self.swipe_by_percent_on_screen(50, 30, 50, 70, 700)
+            # 滑动到顶部还未找到元素则终止滑动
+            if self._is_element_present(self.__class__.__locators["广告banner"]):
+                break
 
     @TestLogger.log()
     def click_organization(self):

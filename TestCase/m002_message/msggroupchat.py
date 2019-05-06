@@ -1988,15 +1988,15 @@ class MsgGroupChatTest(TestCase):
 
 class messagegroupchat(TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        #Preconditions.select_mobile('Android-移动')
-        Preconditions.import_contacts()
-        current_mobile().launch_app()
-
-    @classmethod
-    def tearDownClass(cls):
-        Preconditions.delete_contact()
+    # @classmethod
+    # def setUpClass(cls):
+    #     #Preconditions.select_mobile('Android-移动')
+    #     Preconditions.import_contacts()
+    #     current_mobile().launch_app()
+    #
+    # @classmethod
+    # def tearDownClass(cls):
+    #     Preconditions.delete_contact()
 
 
     @staticmethod

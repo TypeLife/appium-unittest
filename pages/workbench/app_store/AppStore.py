@@ -158,6 +158,19 @@ class AppStorePage(BasePage):
         return self
 
     @TestLogger.log()
+    def wait_for_app_group_page_load(self, timeout=20, auto_accept_alerts=True):
+        """等待应用分组页加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("添加到分组")
+            )
+        except:
+            raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
+        return self
+
+    @TestLogger.log()
     def click_personal_area(self):
         """点击个人专区"""
         self.click_element(self.__class__.__locators["个人专区"])
@@ -166,6 +179,13 @@ class AppStorePage(BasePage):
     def add_app_by_name(self, name):
         """添加指定应用"""
         locator = (MobileBy.XPATH, '//*[contains(@text,"%s")]/../android.view.View[1]' % name)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         self.click_element(locator)
 
     @TestLogger.log()
@@ -195,3 +215,16 @@ class AppStorePage(BasePage):
     def click_brenner(self):
         """点击brenner图"""
         self.click_element(self.__class__.__locators["brenner图1"])
+
+    @TestLogger.log()
+    def click_text_by_name(self, name):
+        """点击指定文本"""
+        locator = (MobileBy.XPATH, '//*[contains(@text,"%s")]' % name)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        self.click_element(locator)

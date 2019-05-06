@@ -37,4 +37,11 @@ class WorkbenchManagePage(BasePage):
     def click_remove_icon_by_app_name(self, name):
         """点击某个应用的移除图标"""
         locator = (MobileBy.XPATH, '//*[@text ="%s"]/../android.view.View[1]' % name)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         self.click_element(locator)

@@ -534,7 +534,11 @@ class SelectContactsPage(BasePage):
             time.sleep(1)
             group_set.click_delete_and_exit()
             time.sleep(3)
-        mess.click_create_group()
+        # mess.click_create_group()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
         mess.click_contact_group()
         mess.click_text("大佬2")
         time.sleep(1)

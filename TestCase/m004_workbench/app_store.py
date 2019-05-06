@@ -326,16 +326,17 @@ class AppStoreAllTest(TestCase):
             time.sleep(5)
         # 3.搜索关键词是否展示在搜索结果列表中
         self.assertEquals(asp.is_search_result_match(app_name), True)
-        # 进入应用介绍页
+        # 点击搜索结果，进入应用介绍页
         asp.click_search_result()
         # 4.等待应用介绍详情页加载
         asp.wait_for_app_details_page_load()
+        time.sleep(2)
         # 5.点击添加
         asp.click_join()
         time.sleep(2)
         asp.click_sure()
-        asp.click_back()
         time.sleep(2)
+        asp.click_back()
         # 6.添加成功，返回搜索页，搜索栏内容保存
         asp.wait_for_search_page_load()
         self.assertEquals(asp.get_search_box_text(), app_name)
@@ -362,6 +363,7 @@ class AppStoreAllTest(TestCase):
         time.sleep(5)
         # 2.添加指定应用
         asp.add_app_by_name(app_name)
+        time.sleep(2)
         asp.click_sure()
         time.sleep(5)
         # 3.添加按钮是否变化为打开按钮
@@ -391,11 +393,12 @@ class AppStoreAllTest(TestCase):
         asp.click_text(app_name)
         # 2.等待应用介绍详情页加载
         asp.wait_for_app_details_page_load()
+        time.sleep(2)
         # 3.点击添加
         asp.click_join()
-        time.sleep(1)
+        time.sleep(2)
         asp.click_sure()
-        time.sleep(1)
+        time.sleep(2)
         asp.click_back()
         time.sleep(5)
         # 4.添加按钮是否变化为打开按钮
@@ -441,26 +444,169 @@ class AppStoreAllTest(TestCase):
             time.sleep(5)
         # 3.搜索关键词是否展示在搜索结果列表中
         self.assertEquals(asp.is_search_result_match(app_name), True)
-        # 4.点击添加
         asp.click_join()
-        time.sleep(2)
+        # 4.等待应用分组页加载
+        asp.wait_for_app_group_page_load()
         # 5.选择应用分组（勾选状态没有可辨识标识，无法验证）
         asp.click_text("特色通讯")
         time.sleep(2)
         asp.click_add_app()
-        time.sleep(2)
+        asp.wait_for_search_page_load()
         # 进入移动办公套件应用列表
         asp.click_back()
         asp.wait_for_page_load()
         asp.click_text("分类")
-        time.sleep(2)
+        time.sleep(3)
         asp.click_text("移动办公套件")
+        time.sleep(3)
+        # 6.添加按钮是否变化为打开按钮
+        self.assertEquals(asp.get_app_button_text_by_name(app_name), "打开")
+        asp.click_close()
+        wbp.wait_for_workbench_page_load()
+        # 7.工作台是否存在指定应用图标
+        self.assertEquals(wbp.is_exists_app_by_name(app_name), True)
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_YYSC_0012(self):
+        """管理员搜索未添加企业应用进入应用介绍页时添加"""
+
+        # 确保不存在指定应用
+        app_name = "移动报销"
+        Preconditions.ensure_not_exists_app_by_name(app_name)
+        # 添加工作台里的应用
+        wbp = WorkbenchPage()
+        wbp.click_app_store()
+        asp = AppStorePage()
+        asp.wait_for_page_load()
+        # 点击搜索应用
+        asp.click_search_app()
+        # 1.等待搜索页加载
+        asp.wait_for_search_page_load()
+        asp.input_store_name(app_name)
+        time.sleep(1)
+        # 2.搜索栏是否显示指定文本
+        self.assertEquals(asp.get_search_box_text(), app_name)
+        asp.click_search()
+        time.sleep(5)
+        # 解决工作台不稳定的问题
+        if not asp.is_exist_join():
+            asp.click_close()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_app_store()
+            asp.wait_for_page_load()
+            asp.click_search_app()
+            asp.wait_for_search_page_load()
+            asp.input_store_name(app_name)
+            asp.click_search()
+            time.sleep(5)
+        # 3.搜索关键词是否展示在搜索结果列表中
+        self.assertEquals(asp.is_search_result_match(app_name), True)
+        # 点击搜索结果，进入应用介绍页
+        asp.click_search_result()
+        # 4.等待应用介绍详情页加载
+        asp.wait_for_app_details_page_load()
+        time.sleep(2)
+        asp.click_join()
+        # 5.等待应用分组页加载
+        asp.wait_for_app_group_page_load()
+        # 6.选择应用分组（勾选状态没有可辨识标识，无法验证）
+        asp.click_text("特色通讯")
+        time.sleep(2)
+        asp.click_add_app()
+        time.sleep(5)
+        # 进入移动办公套件应用列表
+        asp.click_back()
+        asp.wait_for_search_page_load()
+        asp.click_back()
+        asp.wait_for_page_load()
+        asp.click_text("分类")
+        time.sleep(3)
+        asp.click_text("移动办公套件")
+        time.sleep(3)
+        # 7.添加按钮是否变化为打开按钮
+        self.assertEquals(asp.get_app_button_text_by_name(app_name), "打开")
+        asp.click_close()
+        wbp.wait_for_workbench_page_load()
+        # 8.工作台是否存在指定应用图标
+        self.assertEquals(wbp.is_exists_app_by_name(app_name), True)
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_YYSC_0013(self):
+        """分类-管理员添加应用"""
+
+        # 确保不存在指定应用
+        app_name = "考试评测"
+        Preconditions.ensure_not_exists_app_by_name(app_name)
+        # 添加工作台里的应用
+        wbp = WorkbenchPage()
+        wbp.click_app_store()
+        asp = AppStorePage()
+        asp.wait_for_page_load()
+        # 解决工作台不稳定的问题
+        asp.click_back()
+        wbp.click_app_store()
+        asp.wait_for_page_load()
+        # 1.点击分类
+        asp.click_text("分类")
+        time.sleep(3)
+        # 2.点击移动办公套件
+        asp.click_text("移动办公套件")
+        time.sleep(3)
+        asp.add_app_by_name(app_name)
+        # 3.等待应用分组页加载
+        asp.wait_for_app_group_page_load()
+        # 4.选择应用分组（勾选状态没有可辨识标识，无法验证）
+        asp.click_text("特色通讯")
+        time.sleep(2)
+        asp.click_add_app()
+        time.sleep(5)
+        # 5.添加按钮是否变化为打开按钮
+        self.assertEquals(asp.get_app_button_text_by_name(app_name), "打开")
+        asp.click_close()
+        wbp.wait_for_workbench_page_load()
+        # 6.工作台是否存在指定应用图标
+        self.assertEquals(wbp.is_exists_app_by_name(app_name), True)
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_YYSC_0014(self):
+        """分类-管理员应用介绍页添加应用"""
+
+        # 确保不存在指定应用
+        app_name = "企业云盘"
+        Preconditions.ensure_not_exists_app_by_name(app_name)
+        # 添加工作台里的应用
+        wbp = WorkbenchPage()
+        wbp.click_app_store()
+        asp = AppStorePage()
+        asp.wait_for_page_load()
+        # 解决工作台不稳定的问题
+        asp.click_back()
+        wbp.click_app_store()
+        asp.wait_for_page_load()
+        # 1.点击分类
+        asp.click_text("分类")
+        time.sleep(3)
+        # 2.点击移动办公套件
+        asp.click_text("移动办公套件")
+        time.sleep(3)
+        # 进入应用介绍页
+        asp.click_text_by_name(app_name)
+        # 3.等待应用介绍详情页加载
+        asp.wait_for_app_details_page_load()
+        time.sleep(2)
+        asp.click_join()
+        # 4.等待应用分组页加载
+        asp.wait_for_app_group_page_load()
+        # 5.选择应用分组（勾选状态没有可辨识标识，无法验证）
+        asp.click_text("特色通讯")
+        time.sleep(2)
+        asp.click_add_app()
+        time.sleep(5)
+        asp.click_back()
         time.sleep(2)
         # 6.添加按钮是否变化为打开按钮
         self.assertEquals(asp.get_app_button_text_by_name(app_name), "打开")
-        asp.click_back()
-        time.sleep(1)
-        asp.click_back()
+        asp.click_close()
         wbp.wait_for_workbench_page_load()
         # 7.工作台是否存在指定应用图标
         self.assertEquals(wbp.is_exists_app_by_name(app_name), True)
@@ -545,7 +691,7 @@ class AppStoreAllTest(TestCase):
             time.sleep(5)
         # 打开应用
         asp.click_open()
-        # 1.等待企业通讯录首页加载
+        # 1.等待应用首页加载
         ecp = EnterpriseContactsPage()
         ecp.wait_for_page_load()
         ecp.click_back()
@@ -560,7 +706,7 @@ class AppStoreAllTest(TestCase):
         # 打开应用
         asp.click_open()
         smp = SuperMeetingPage()
-        # 2.等待超级会议首页加载
+        # 2.等待应用首页加载
         smp.wait_for_page_loads()
         smp.click_close()
         wbp.wait_for_workbench_page_load()
