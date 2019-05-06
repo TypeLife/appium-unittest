@@ -809,7 +809,7 @@ class Tag_Group(TestCase):
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0366(self):
-        """新建分组,标签分组名称为30个字符：汉字、数字、英文字母和特殊字符组合"""
+        """新建分组,标签分组名称为30个字符：汉字、数字、英文字母和特殊字符组合(汉字占3字符)"""
         GroupPage = GroupListPage()
         GroupPage.open_contacts_page()
         GroupPage.click_label_grouping()
@@ -817,7 +817,7 @@ class Tag_Group(TestCase):
         GroupPage.click_new_group()
         GroupPage.click_input_element()
         time.sleep(1)
-        self.message='我'*5+'1'*10+'a'*10+'/'*5
+        self.message='我'*1+'1'*10+'a'*8+'/'*9
         GroupPage.input_content(text=self.message)
         GroupPage.hide_keyboard()
         time.sleep(1)
@@ -829,7 +829,7 @@ class Tag_Group(TestCase):
         SelectContactsPage().click_back()
         LabelGroupingPage().click_back()
         time.sleep(2)
-        LabelGroupingPage().delete_all_label()
+        GroupListPage().delete_group(name=self.message)
         time.sleep(1)
         LabelGroupingPage().click_back()
         ContactsPage().click_message_icon()
