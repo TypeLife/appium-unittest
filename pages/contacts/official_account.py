@@ -19,7 +19,7 @@ class OfficialAccountPage(BasePage):
 
         '公众号列表': (MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView'),
         '公众号列表项': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/recyclerView"]/*'),
-        '公众号头像': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_user_photo'),
+        '公众号头像': (MobileBy.ID, 'com.chinasofti.rcs:id/public_header'),
         '公众号名称': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_user_name'),
         '公众号描述': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_user_info'),
         '未关注任何企业号': (MobileBy.ID, 'com.chinasofti.rcs:id/empty_hint_view'),
@@ -27,6 +27,8 @@ class OfficialAccountPage(BasePage):
         '和飞信团队': (MobileBy.XPATH, '//*[@text="和飞信团队"]'),
         '和飞信新闻': (MobileBy.XPATH, '//*[@text="和飞信新闻"]'),
         '中国移动10086': (MobileBy.XPATH, '//*[@text="中国移动10086"]'),
+        #进入公众号
+        '公众号标题': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
         'input_box': (MobileBy.ID, 'com.chinasofti.rcs:id/et_message'),
         'send_button': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_send'),
         'setting': (MobileBy.ID, 'com.chinasofti.rcs:id/action_setting'),
@@ -54,6 +56,8 @@ class OfficialAccountPage(BasePage):
         '百度连接':(MobileBy.XPATH,'//*[@text="www.baidu.com"]'),
         '进入公众号': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_into_public'),
         '查看历史资讯': (MobileBy.XPATH,'//*[@text="查看历史资讯"]'),
+        '始终允许': (MobileBy.XPATH, "//*[contains(@text, '始终允许')]"),
+        # '历史资讯-时间': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_time'),
         '认证主体': (MobileBy.ID, 'com.chinasofti.rcs:id/public_auth_text'),
         '功能介绍': (MobileBy.ID, 'com.chinasofti.rcs:id/intro_title'),
         '更多': (MobileBy.ID, 'com.chinasofti.rcs:id/menu_more'),
@@ -142,7 +146,7 @@ class OfficialAccountPage(BasePage):
         y_end = y
         self.tap_coordinate([(x_start, y_end)])
 
-    @TestLogger.log('和飞信')
+    @TestLogger.log('和飞信新闻')
     def click_officel_account(self):
         self.click_element(self.__locators['和飞信新闻'], 30)
 
@@ -276,3 +280,20 @@ class OfficialAccountPage(BasePage):
     def click_setting_button(self):
         self.click_element(self.__locators['setting'])
 
+    @TestLogger.log()
+    def get_first_account(self):
+        """获取第一个公众号的名称"""
+        return self.get_elements(self.__class__.__locators['公众号名称'])[0].text
+        # el = el[0]
+        # return el.text
+
+    @TestLogger.log()
+    def get_account_title(self):
+        """获取公众号标题名称"""
+        return self.get_element(self.__locators['公众号标题']).text
+
+    @TestLogger.log()
+    def click_always_allowed(self):
+        """获取通讯录权限点击始终允许"""
+        if self.get_elements(self.__class__.__locators['弹出框点击允许']):
+            self.click_element(self.__class__.__locators['弹出框点击允许'])

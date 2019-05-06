@@ -47,7 +47,7 @@ class LabelGroupingPage(ContactsSelector, BasePage):
             # 删除标签
             detail = LableGroupDetailPage()
             try:
-                self.click_element(['xpath', '//*[@text="知道了"]'], 1)
+                self.click_element(['xpath', '//*[@text="我知道了"]'], 1)
             except:
                 pass
             detail.open_setting_menu()
