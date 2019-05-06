@@ -345,3 +345,8 @@ class ContactsPage(FooterPage):
     def page_contain_element_add(self):
         """页面包含元素+号"""
         self.page_should_contain_element(self.__class__.__locators['+号'])
+
+    @TestLogger.log()
+    def page_contain_element(self,locator):
+        """页面包含元素"""
+        self.page_should_contain_element(self.__class__.__locators[locator])
