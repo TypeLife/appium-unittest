@@ -52,7 +52,7 @@ class Preconditions(LoginPreconditions):
             contacts_page.wait_for_page_load()
             contacts_page.open_contacts_page()
         except:
-            Preconditions.make_already_in_message_page(reset_required=False)
+            Preconditions.make_already_in_message_page(reset=False)
             contacts_page.open_contacts_page()
         # 创建联系人
         contacts_page.click_search_box()
@@ -120,7 +120,7 @@ class Preconditions(LoginPreconditions):
             contacts_page.wait_for_page_load()
             contacts_page.open_contacts_page()
         except:
-            Preconditions.make_already_in_message_page(reset_required=False)
+            Preconditions.make_already_in_message_page(reset=False)
             contacts_page.open_contacts_page()
         # 创建联系人
         contacts_page.click_search_box()
@@ -197,47 +197,47 @@ class ContactLocal(TestCase):
 class ContactsLocal(TestCase):
     """通讯录测试记录-陈继祥"""
 
-
-    def default_setUp(self):
-        """确保每个用例运行前在通讯录页面"""
-        # Preconditions.connect_mobile('Android-移动')
-        # current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-        MessagePage().wait_for_page_load()
-        MessagePage().click_contacts()
-
-
-    @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_chenjixiang_0001(self):
-        '''
-        搜索输入框校验，通过手机号码搜索，输入数字模糊查询（只搜索一条记录）
-        author:darcy
-
-        :return:
-        '''
-        lcontact=localContactPage()
-        lcontact.click_search_box()
-        lcontact.input_search_text(text='138005')
-        lcontact.page_contain_element()
-        lcontact.page_contain_element(text='联系人电话')
-        lcontact.page_contain_element(text='联系人名字')
-
-    @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_chenjixiang_0002(self):
-        '''
-        搜索输入框校验，通过手机号码搜索，输入数字模糊查询（搜索多条记录）
-        auther:darcy
-        :return:
-        '''
-        lcontact = localContactPage()
-        lcontact.click_search_box()
-        time.sleep(1)
-        lcontact.input_search_text(text='138')
-        time.sleep(1)
-        lcontact.hide_keyboard()
-        time.sleep(3)
-        els=lcontact.get_element_number()
-        self.assertTrue(len(els)>1)
+    #
+    # def default_setUp(self):
+    #     """确保每个用例运行前在通讯录页面"""
+    #     # Preconditions.connect_mobile('Android-移动')
+    #     # current_mobile().hide_keyboard_if_display()
+    #     Preconditions.make_already_in_message_page()
+    #     MessagePage().wait_for_page_load()
+    #     MessagePage().click_contacts()
+    #
+    #
+    # @tags('ALL', 'CONTACTS', 'CMCC')
+    # def test_contacts_chenjixiang_0001(self):
+    #     '''
+    #     搜索输入框校验，通过手机号码搜索，输入数字模糊查询（只搜索一条记录）
+    #     author:darcy
+    #
+    #     :return:
+    #     '''
+    #     lcontact=localContactPage()
+    #     lcontact.click_search_box()
+    #     lcontact.input_search_text(text='138005')
+    #     lcontact.page_contain_element()
+    #     lcontact.page_contain_element(text='联系人电话')
+    #     lcontact.page_contain_element(text='联系人名字')
+    #
+    # @tags('ALL', 'CONTACTS', 'CMCC')
+    # def test_contacts_chenjixiang_0002(self):
+    #     '''
+    #     搜索输入框校验，通过手机号码搜索，输入数字模糊查询（搜索多条记录）
+    #     auther:darcy
+    #     :return:
+    #     '''
+    #     lcontact = localContactPage()
+    #     lcontact.click_search_box()
+    #     time.sleep(1)
+    #     lcontact.input_search_text(text='138')
+    #     time.sleep(1)
+    #     lcontact.hide_keyboard()
+    #     time.sleep(3)
+    #     els=lcontact.get_element_number()
+    #     self.assertTrue(len(els)>1)
 
     # @tags('ALL', 'CONTACTS', 'CMCC')
     # def test_contacts_chenjixiang_0003(self):
