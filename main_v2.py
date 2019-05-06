@@ -15,7 +15,7 @@ def get_case(cli_commands):
     if cli_commands.suite:
         sui = unittest.TestSuite()
         for p in cli_commands.suite:
-            path_list = [os.path.join(root, name) for root, dirs, files in os.walk(p) for name in files if os.path.join(root, name).endswith('.py') and not os.path.join(root, name).endswith('__init__.py')]
+            path_list = sorted([os.path.join(root, name) for root, dirs, files in os.walk(p) for name in files if os.path.join(root, name).endswith('.py') and not os.path.join(root, name).endswith('__init__.py')])
             print(path_list)
             for path in path_list:
                 loader = unittest.TestLoader()
