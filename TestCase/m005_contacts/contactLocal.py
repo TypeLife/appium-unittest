@@ -2,7 +2,7 @@ import unittest
 import uuid
 import time
 import threading
-
+from preconditions.BasePreconditions import LoginPreconditions
 from library.core.common.simcardtype import CardType
 from selenium.common.exceptions import TimeoutException
 from library.core.TestCase import TestCase
@@ -18,12 +18,16 @@ from pages.contacts.components.menu_more import MenuMore
 from pages.contacts.local_contact import localContactPage
 import preconditions
 from dataproviders import contact2
+
+
 REQUIRED_MOBILES = {
     'Android-移动':'M960BDQN229CH',
     'Android-移动2':'M960BDQN229CK_20',
     'Android-XX': ''  # 用来发短信
 }
-class Preconditions(object):
+
+
+class Preconditions(LoginPreconditions):
     """
     分解前置条件
     """
@@ -33,56 +37,6 @@ class Preconditions(object):
         client = switch_to_mobile(REQUIRED_MOBILES[category])
         client.connect_mobile()
         return client
-
-    @staticmethod
-    def make_already_in_one_key_login_page():
-        """
-        1、已经进入一键登录页
-        :return:
-        """
-        # 如果当前页面已经是一键登录页，不做任何操作
-        one_key = OneKeyLoginPage()
-        if one_key.is_on_this_page():
-            return
-
-        # 如果当前页不是引导页第一页，重新启动app
-        guide_page = GuidePage()
-        if not guide_page.is_on_the_first_guide_page():
-            current_mobile().launch_app()
-            guide_page.wait_for_page_load(20)
-
-        # 跳过引导页
-        guide_page.wait_for_page_load(30)
-        guide_page.swipe_to_the_second_banner()
-        guide_page.swipe_to_the_third_banner()
-        guide_page.click_start_the_experience()
-
-        # 点击权限列表页面的确定按钮
-        permission_list = PermissionListPage()
-        permission_list.click_submit_button()
-        one_key.wait_for_page_load(30)
-
-    @staticmethod
-    def login_by_one_key_login():
-        """
-        从一键登录页面登录
-        :return:
-        """
-        # 等待号码加载完成后，点击一键登录
-        one_key = OneKeyLoginPage()
-        one_key.wait_for_tell_number_load(60)
-        login_number = one_key.get_login_number()
-        one_key.click_one_key_login()
-        one_key.click_read_agreement_detail()
-
-        # 同意协议
-        agreement = AgreementDetailPage()
-        agreement.click_agree_button()
-
-        # 等待消息页
-        message_page = MessagePage()
-        message_page.wait_login_success(60)
-        return login_number
 
     @staticmethod
     def create_contacts(name, number):
@@ -98,7 +52,7 @@ class Preconditions(object):
             contacts_page.wait_for_page_load()
             contacts_page.open_contacts_page()
         except:
-            Preconditions.make_already_in_message_page(reset_required=False)
+            Preconditions.make_already_in_message_page(reset=False)
             contacts_page.open_contacts_page()
         # 创建联系人
         contacts_page.click_search_box()
@@ -147,7 +101,6 @@ class Preconditions(object):
         app_id = current_driver().desired_capability['appPackage']
         current_mobile().termiate_app(app_id)
 
-
     @staticmethod
     def background_app():
         """后台运行"""
@@ -156,7 +109,7 @@ class Preconditions(object):
     @staticmethod
     def create_contacts_if_not_exits(name, number):
         """
-        导入联系人数据
+        不存在就导入联系人数据
         :param name:
         :param number:
         :return:
@@ -167,7 +120,7 @@ class Preconditions(object):
             contacts_page.wait_for_page_load()
             contacts_page.open_contacts_page()
         except:
-            Preconditions.make_already_in_message_page(reset_required=False)
+            Preconditions.make_already_in_message_page(reset=False)
             contacts_page.open_contacts_page()
         # 创建联系人
         contacts_page.click_search_box()
@@ -185,165 +138,163 @@ class Preconditions(object):
             detail_page.wait_for_page_load()
             detail_page.click_back_icon()
 
-
-    @staticmethod
-    def make_already_in_message_page(reset_required=False):
-        """
-        前置条件：
-        1.已登录客户端
-        2.当前在消息页面
-        """
-        if not reset_required:
-            message_page = MessagePage()
-            try:
-                message_page.wait_until(
-                    condition=lambda d: message_page.is_on_this_page(),
-                    timeout=3
-                )
-                return
-            except TimeoutException:
-                pass
-        Preconditions.reset_and_relaunch_app()
-        Preconditions.make_already_in_one_key_login_page()
-        login_num = Preconditions.login_by_one_key_login()
-        return login_num
-
 @unittest.skip("本地调试不执行")
 class ContactLocal(TestCase):
     '''
     通讯录测试记录-陈计祥
     '''
-    @classmethod
-    def setUpClass(cls):
-        # 创建联系人
-        fail_time = 0
-        import dataproviders
+    # @classmethod
+    # def setUpClass(cls):
+    #     # 创建联系人
+    #     fail_time = 0
+    #     import dataproviders
+    #
+    #     while fail_time < 3:
+    #         try:
+    #             # 获取需要导入的联系人数据
+    #           #  required_contacts = dataproviders.get_preset_contacts()
+    #             required_contacts =contact2.get_preset_contacts()
+    #
+    #             # 连接手机
+    #             Preconditions.connect_mobile('Android-移动')
+    #             current_mobile().hide_keyboard_if_display()
+    #             # 导入数据
+    #             for name, number in required_contacts:
+    #                 Preconditions.create_contacts(name, number)
+    #
+    #             # 推送resource文件到手机
+    #             dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
+    #             return
+    #         except:
+    #             fail_time += 1
+    #             import traceback
+    #             msg = traceback.format_exc()
+    #             print(msg)
+    #
+    # @classmethod
+    # def tearDownClass(cls):
+    #     try:
+    #         Preconditions.connect_mobile('Android-移动')
+    #         current_mobile().hide_keyboard_if_display()
+    #         Preconditions.make_already_in_message_page()
+    #         conts_page = ContactsPage()
+    #         conts_page.open_contacts_page()
+    #         conts_page.click_label_grouping()
+    #         lg = LabelGroupingPage()
+    #         lg.wait_for_page_load()
+    #         lg.delete_all_label()
+    #     except:
+    #         import traceback
+    #         traceback.print_exc()
+    #     try:
+    #         current_mobile().hide_keyboard_if_display()
+    #         Preconditions.make_already_in_message_page()
+    #         cdp = ContactDetailsPage()
+    #         cdp.delete_all_contact()
+    #     except:
+    #         traceback.print_exc()
 
-        while fail_time < 3:
-            try:
-                # 获取需要导入的联系人数据
-              #  required_contacts = dataproviders.get_preset_contacts()
-                required_contacts =contact2.get_preset_contacts()
+class ContactsLocal(TestCase):
+    """通讯录测试记录-陈继祥"""
 
-                # 连接手机
-                Preconditions.connect_mobile('Android-移动')
-                current_mobile().hide_keyboard_if_display()
-                # 导入数据
-                for name, number in required_contacts:
-                    Preconditions.create_contacts(name, number)
+    #
+    # def default_setUp(self):
+    #     """确保每个用例运行前在通讯录页面"""
+    #     # Preconditions.connect_mobile('Android-移动')
+    #     # current_mobile().hide_keyboard_if_display()
+    #     Preconditions.make_already_in_message_page()
+    #     MessagePage().wait_for_page_load()
+    #     MessagePage().click_contacts()
+    #
+    #
+    # @tags('ALL', 'CONTACTS', 'CMCC')
+    # def test_contacts_chenjixiang_0001(self):
+    #     '''
+    #     搜索输入框校验，通过手机号码搜索，输入数字模糊查询（只搜索一条记录）
+    #     author:darcy
+    #
+    #     :return:
+    #     '''
+    #     lcontact=localContactPage()
+    #     lcontact.click_search_box()
+    #     lcontact.input_search_text(text='138005')
+    #     lcontact.page_contain_element()
+    #     lcontact.page_contain_element(text='联系人电话')
+    #     lcontact.page_contain_element(text='联系人名字')
+    #
+    # @tags('ALL', 'CONTACTS', 'CMCC')
+    # def test_contacts_chenjixiang_0002(self):
+    #     '''
+    #     搜索输入框校验，通过手机号码搜索，输入数字模糊查询（搜索多条记录）
+    #     auther:darcy
+    #     :return:
+    #     '''
+    #     lcontact = localContactPage()
+    #     lcontact.click_search_box()
+    #     time.sleep(1)
+    #     lcontact.input_search_text(text='138')
+    #     time.sleep(1)
+    #     lcontact.hide_keyboard()
+    #     time.sleep(3)
+    #     els=lcontact.get_element_number()
+    #     self.assertTrue(len(els)>1)
 
-                # 推送resource文件到手机
-                dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
-                return
-            except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
+    # @tags('ALL', 'CONTACTS', 'CMCC')
+    # def test_contacts_chenjixiang_0003(self):
+    #     '''
+    #     搜索输入框校验，通过手机号码搜索，输入手机号码全匹配查询
+    #     auther:darcy
+    #     :return:
+    #     '''
+    #     lcontact = localContactPage()
+    #     lcontact.click_search_box()
+    #     time.sleep(1)
+    #     lcontact.input_search_text(text='13800138001')
+    #     time.sleep(1)
+    #     lcontact.hide_keyboard()
+    #     time.sleep(3)
+    #     lcontact.page_contain_element()
+    #     lcontact.page_contain_element(text='联系人电话')
+    #     lcontact.page_contain_element(text='联系人名字')
+    #
+    # @tags('ALL', 'CONTACTS', 'CMCC')
+    # def test_contacts_chenjixiang_0004(self):
+    #     '''
+    #     搜索输入框校验，通过名称(中文)搜索(多条记录)
+    #     auther:darcy
+    #     :return:
+    #     '''
+    #     lcontact = localContactPage()
+    #     lcontact.click_search_box()
+    #     time.sleep(1)
+    #     lcontact.input_search_text(text='给个红包')
+    #     time.sleep(1)
+    #     lcontact.hide_keyboard()
+    #     time.sleep(3)
+    #     lcontact.page_contain_element()
+    #     lcontact.page_contain_element(text='联系人电话')
+    #     lcontact.page_contain_element(text='联系人名字')
+    #
+    # @tags('ALL', 'CONTACTS', 'CMCC')
+    # def test_contacts_chenjixiang_0005(self):
+    #     '''
+    #     搜索输入框校验，通过名称(英文)搜索(多条记录)
+    #     auther:darcy
+    #     :return:
+    #     '''
+    #     lcontact = localContactPage()
+    #     lcontact.click_search_box()
+    #     time.sleep(1)
+    #     lcontact.input_search_text(text='ABC')
+    #     time.sleep(1)
+    #     lcontact.hide_keyboard()
+    #     time.sleep(3)
+    #     lcontact.page_contain_element()
+    #     lcontact.page_contain_element(text='联系人电话')
+    #     lcontact.page_contain_element(text='联系人名字')
+    #
 
-    @classmethod
-    def tearDownClass(cls):
-        try:
-            Preconditions.connect_mobile('Android-移动')
-            current_mobile().hide_keyboard_if_display()
-            Preconditions.make_already_in_message_page()
-            conts_page = ContactsPage()
-            conts_page.open_contacts_page()
-            conts_page.click_label_grouping()
-            lg = LabelGroupingPage()
-            lg.wait_for_page_load()
-            lg.delete_all_label()
-        except:
-            import traceback
-            traceback.print_exc()
-        try:
-            current_mobile().hide_keyboard_if_display()
-            Preconditions.make_already_in_message_page()
-            cdp = ContactDetailsPage()
-            cdp.delete_all_contact()
-        except:
-            traceback.print_exc()
 
-class ContactLocal(TestCase):
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0001():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-
-    @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_chenjixiang_0001(self):
-        '''
-        搜索输入框校验，通过手机号码搜索，输入数字模糊查询（只搜索一条记录）
-        author:darcy
-
-        :return:
-        '''
-        lcontact=localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        lcontact.click_search_box()
-        lcontact.input_search_text()
-        lcontact.page_contain_element()
-        lcontact.page_contain_element(text='联系人电话')
-        lcontact.page_contain_element(text='联系人名字')
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0002():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
-
-    @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_chenjixiang_0002(self):
-        '''
-        搜索输入框校验，通过手机号码搜索，输入数字模糊查询（搜索多条记录）
-        auther:darcy
-        :return:
-        '''
-        lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        lcontact.click_search_box()
-        time.sleep(1)
-        lcontact.input_search_text(text='138')
-        time.sleep(1)
-        lcontact.hide_keyboard()
-        time.sleep(3)
-        els=lcontact.get_element_number()
-        self.assertTrue(len(els)>1)
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0003():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
-
-    @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_chenjixiang_0003(self):
-        '''
-        搜索输入框校验，通过手机号码搜索，输入手机号码全匹配查询
-        auther:darcy
-        :return:
-        '''
-        lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        lcontact.click_search_box()
-        time.sleep(1)
-        lcontact.input_search_text(text='13800138010')
-        time.sleep(1)
-        lcontact.hide_keyboard()
-        time.sleep(3)
-        lcontact.page_contain_element()
-        lcontact.page_contain_element(text='联系人电话')
-        lcontact.page_contain_element(text='联系人名字')
 
     @staticmethod
     def setUp_test_contacts_chenjixiang_0019():
