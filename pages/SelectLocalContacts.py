@@ -93,8 +93,6 @@ class SelectLocalContactsPage(BasePage):
         elements = self.get_elements(self.__class__.__locators["联系人名"])
         elements[0].click()
 
-
-
     @TestLogger.log()
     def click_sure_share(self):
         """点击确定分享"""

@@ -7,14 +7,18 @@ from library.core.utils.applicationcache import current_mobile, current_driver, 
 from library.core.utils.testcasefilter import tags
 from pages import *
 from pages.contacts import OfficialAccountPage, SearchOfficialAccountPage
+from pages.contacts import OfficialAccountDetailPage
+from preconditions.BasePreconditions import LoginPreconditions
 import time
-import preconditions
+# import preconditions
+
+
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
 }
 
 
-class Preconditions(object):
+class Preconditions(LoginPreconditions):
     """
     分解前置条件
     """
@@ -25,56 +29,6 @@ class Preconditions(object):
         client = switch_to_mobile(REQUIRED_MOBILES[category])
         client.connect_mobile()
         return client
-
-    @staticmethod
-    def make_already_in_one_key_login_page():
-        """
-        1、已经进入一键登录页
-        :return:
-        """
-        # 如果当前页面已经是一键登录页，不做任何操作
-        one_key = OneKeyLoginPage()
-        if one_key.is_on_this_page():
-            return
-
-        # 如果当前页不是引导页第一页，重新启动app
-        guide_page = GuidePage()
-        if not guide_page.is_on_the_first_guide_page():
-            current_mobile().launch_app()
-            guide_page.wait_for_page_load(20)
-
-        # 跳过引导页
-        guide_page.wait_for_page_load(30)
-        guide_page.swipe_to_the_second_banner()
-        guide_page.swipe_to_the_third_banner()
-        guide_page.click_start_the_experience()
-
-        # 点击权限列表页面的确定按钮
-        permission_list = PermissionListPage()
-        permission_list.click_submit_button()
-        one_key.wait_for_page_load(30)
-
-    @staticmethod
-    def login_by_one_key_login():
-        """
-        从一键登录页面登录
-        :return:
-        """
-        # 等待号码加载完成后，点击一键登录
-        one_key = OneKeyLoginPage()
-        one_key.wait_for_tell_number_load(60)
-        login_number = one_key.get_login_number()
-        one_key.click_one_key_login()
-        one_key.click_read_agreement_detail()
-
-        # 同意协议
-        agreement = AgreementDetailPage()
-        agreement.click_agree_button()
-
-        # 等待消息页
-        message_page = MessagePage()
-        message_page.wait_login_success(60)
-        return login_number
 
     @staticmethod
     def take_logout_operation_if_already_login():
@@ -116,54 +70,33 @@ class Preconditions(object):
         current_mobile().press_home_key()
 
     @staticmethod
-    def make_already_in_message_page(reset_required=False):
-        """
-        前置条件：
-        1.已登录客户端
-        2.当前在消息页面
-        """
-        if not reset_required:
-            message_page = MessagePage()
-            try:
-                message_page.wait_until(
-                    condition=lambda d: message_page.is_on_this_page(),
-                    timeout=3
-                )
-                return
-            except TimeoutException:
-                pass
-        Preconditions.reset_and_relaunch_app()
-        Preconditions.make_already_in_one_key_login_page()
-        login_num = Preconditions.login_by_one_key_login()
-        return login_num
+    def make_sure_in_official_page():
+        """确保在公众号页面"""
+        Preconditions.connect_mobile('Android-移动')
+        # current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        conts_page = ContactsPage()
+        conts_page.open_contacts_page()
+        conts_page.click_official_account_icon()
 
 
 class OfficialAccountTest(TestCase):
     """通讯录 - 公众号模块"""
 
-    @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Conts_OfficialAccount_0001(self):
-        """公众号列表为空"""
-        conts_page = ContactsPage()
-        conts_page.open_contacts_page()
-        conts_page.click_official_account_icon()
+    def default_setUp(self):
+        """确保每个用例运行前在公众号页面"""
+        Preconditions.make_sure_in_official_page()
 
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_contacts_quxinli_0323(self):
+        """公众号列表为空"""
         official_account = OfficialAccountPage()
         official_account.click_tag('企业号')
         official_account.assert_enterprise_account_list_is_empty()
 
-    def setUp_test_Conts_OfficialAccount_0001(self):
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-
     @unittest.skip('脚本无法操作搜索公众号页面')
     def test_Conts_OfficialAccount_0002(self):
         """公众号列表为空"""
-        conts_page = ContactsPage()
-        conts_page.open_contacts_page()
-        conts_page.click_official_account_icon()
-
         official_account = OfficialAccountPage()
         official_account.click_tag('订阅/服务号')
         official_account.click_add()
@@ -173,42 +106,21 @@ class OfficialAccountTest(TestCase):
         search.subscribe_first_items(12)
         print('test')
 
-    def setUp_test_Conts_OfficialAccount_0002(self):
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-
-    @staticmethod
-    def setUp_test_contacts_0321():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_0321(self):
+    def test_contacts_quxinli_0322(self):
         """订阅号/服务号列表显示"""
         conts_page = ContactsPage()
-        officea=OfficialAccountPage()
-        conts_page.open_contacts_page()
-        conts_page.click_official_account_icon()
+        time.sleep(2)
         conts_page.is_text_present('和飞信')
         conts_page.is_text_present('和飞信团队')
         conts_page.is_text_present('和飞信新闻')
         conts_page.is_text_present('中国移动10086')
 
-    @staticmethod
-    def setUp_test_contacts_0323():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_0323(self):
         """公众号会话页面"""
-        conts_page = ContactsPage()
         official = OfficialAccountPage()
-        conts_page.open_contacts_page()
-        conts_page.click_official_account_icon()
         official.click_officel_account()
         time.sleep(2)
         official.page_contain_expresssion()
@@ -216,19 +128,10 @@ class OfficialAccountTest(TestCase):
         official.page_contain_news()
         official.page_contain_setting()
 
-    @staticmethod
-    def setUp_test_contacts_0324():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_0324(self):
         """公众号会话页面,查看输入框"""
-        conts_page = ContactsPage()
         official = OfficialAccountPage()
-        conts_page.open_contacts_page()
-        conts_page.click_official_account_icon()
         official.click_officel_account()
         time.sleep(2)
         official.page_contain_expresssion()
@@ -238,19 +141,10 @@ class OfficialAccountTest(TestCase):
         official.click_input_box()
         official.page_contain_input_box()
 
-    @staticmethod
-    def setUp_test_contacts_0325():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_0325(self):
         """公众号会话页面,发送信息"""
-        conts_page = ContactsPage()
         official = OfficialAccountPage()
-        conts_page.open_contacts_page()
-        conts_page.click_official_account_icon()
         official.click_officel_account()
         time.sleep(2)
         official.click_input_box()
@@ -259,19 +153,10 @@ class OfficialAccountTest(TestCase):
         official.page_should_not_contain_sendfail_element()
         official.page_should_contain_text('good news')
 
-    @staticmethod
-    def setUp_test_contacts_0326():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_0326(self):
         """公众号会话页面，发送表情"""
-        conts_page = ContactsPage()
         official = OfficialAccountPage()
-        conts_page.open_contacts_page()
-        conts_page.click_official_account_icon()
         official.click_officel_account()
         time.sleep(2)
         official.click_expression()
@@ -282,19 +167,11 @@ class OfficialAccountTest(TestCase):
         official.page_should_not_contain_sendfail_element()
         official.page_should_contain_text('[微笑1]')
 
-    @staticmethod
-    def setUp_test_contacts_0327():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_0327(self):
+    def test_contacts_quxinli_0328(self):
         """公众号会话页面，发送表情+信息"""
-        conts_page = ContactsPage()
         official = OfficialAccountPage()
-        conts_page.open_contacts_page()
-        conts_page.click_official_account_icon()
         official.click_officel_account()
         time.sleep(2)
         official.input_message('good news')
@@ -308,19 +185,10 @@ class OfficialAccountTest(TestCase):
         official.page_should_contain_text('good news')
         official.page_should_contain_text('[微笑1]')
 
-    @staticmethod
-    def setUp_test_contacts_0328():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_0328(self):
         """公众号会话页面，发送长信息"""
-        conts_page = ContactsPage()
         official = OfficialAccountPage()
-        conts_page.open_contacts_page()
-        conts_page.click_official_account_icon()
         official.click_officel_account()
         time.sleep(2)
         official.click_input_box()
@@ -330,19 +198,10 @@ class OfficialAccountTest(TestCase):
         official.page_should_not_contain_sendfail_element()
         official.page_should_contain_text(mesaage)
 
-    @staticmethod
-    def setUp_test_contacts_0329():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_0329(self):
         """公众号会话页面发送链接消息"""
-        conts_page = ContactsPage()
         official = OfficialAccountPage()
-        conts_page.open_contacts_page()
-        conts_page.click_official_account_icon()
         official.click_officel_account()
         time.sleep(2)
         official.click_input_box()
@@ -353,28 +212,17 @@ class OfficialAccountTest(TestCase):
         official.page_should_contain_text(mesaage)
         official.click_baidu_button()
         time.sleep(8)
+        if official.is_text_present('权限'):
+            official.click_always_allowed()
         official.page_should_contain_text("百度一下")
-    @staticmethod
-    def tearDown_test_contacts_0329():
-        # 初始化,恢复app到默认状态
-        Preconditions.reset_and_relaunch_app()
-
-    @staticmethod
-    def setUp_test_contacts_0330():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-
-        Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_0330(self):
         """公众号会话页面网络异常情况下发送消息"""
         conts_page = ContactsPage()
         official = OfficialAccountPage()
-        conts_page.open_contacts_page()
-        conts_page.click_official_account_icon()
         official.click_officel_account()
-        conts_page.set_network_status(1)
+        conts_page.set_network_status(0)
         time.sleep(2)
         official.click_input_box()
         official.input_message()
@@ -388,28 +236,16 @@ class OfficialAccountTest(TestCase):
         time.sleep(2)
         official.page_should_not_contain_sendfail_element()
 
-
     @staticmethod
     def tearDown_test_contacts_0330():
-        # 初始化,恢复app到默认状态
+        # 初始化,恢复网络
         conts_page = ContactsPage()
-        Preconditions.reset_and_relaunch_app()
         conts_page.set_network_status(6)
 
-    @staticmethod
-    def setUp_test_contacts_0331():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        preconditions.force_close_and_launch_app()
-        Preconditions.make_already_in_message_page()
-
     @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_0331(self):
+    def test_contacts_quxinli_0332(self):
         """公众号会话页面右上角设置按钮"""
-        conts_page = ContactsPage()
         official = OfficialAccountPage()
-        conts_page.open_contacts_page()
-        conts_page.click_official_account_icon()
         official.click_officel_account()
         official.click_setting_button()
         time.sleep(3)
@@ -421,10 +257,52 @@ class OfficialAccountTest(TestCase):
         official.page_contain_element('公众号头像')
         time.sleep(1)
 
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_quxinli_0334(self):
+        """公众号置顶"""
+        official = OfficialAccountPage()
+        official.click_officel_account()
+        time.sleep(1)
+        account_name=official.get_account_title()
+        official.click_setting_button()
+        time.sleep(1)
+        #点击置顶公众号
+        official_detail = OfficialAccountDetailPage()
+        official_detail.click_to_be_top()
+        official.click_back()
+        official.click_back()
+        time.sleep(2)
+        top_name = official.get_first_account()
+        #判断是否置顶
+        time.sleep(1)
+        self.assertEqual(account_name, top_name)
+
     @staticmethod
-    def tearDown_test_contacts_0331():
-        # 初始化,恢复app到默认状态
-        preconditions.force_close_and_launch_app()
+    def tearDown_test_contacts_quxinli_0334():
+        official = OfficialAccountPage()
+        #返回公众号详情页面,取消置顶
+        official.click_officel_account()
+        official.click_setting_button()
+        OfficialAccountDetailPage().click_to_be_top()
+
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_quxinli_0335(self):
+        """查看历史资讯"""
+        official = OfficialAccountPage()
+        official.click_officel_account()
+        time.sleep(1)
+        official.click_setting_button()
+        official_detail = OfficialAccountDetailPage()
+
+        official_detail.click_read_old_message()
+        official_detail.wait_for_page_load()
+        if official_detail.is_contain_old_mes():
+            official_detail.page_contain_time()
+        else:
+            official_detail.page_should_contain_text('无历史推送资讯')
+
 
 if __name__ == '__main__':
     unittest.main()

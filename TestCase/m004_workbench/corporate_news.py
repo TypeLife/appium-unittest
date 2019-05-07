@@ -3,7 +3,7 @@ import unittest
 from selenium.common.exceptions import TimeoutException
 
 from library.core.TestCase import TestCase
-from library.core.utils.applicationcache import current_mobile, switch_to_mobile, current_driver
+from library.core.utils.applicationcache import current_mobile, current_driver
 from library.core.utils.testcasefilter import tags
 from pages import *
 from pages.workbench.corporate_news.CorporateNews import CorporateNewsPage
@@ -13,7 +13,7 @@ from pages.workbench.corporate_news.CorporateNewsDetails import CorporateNewsDet
 from pages.workbench.corporate_news.CorporateNewsImageText import CorporateNewsImageTextPage
 from pages.workbench.corporate_news.CorporateNewsLink import CorporateNewsLinkPage
 from pages.workbench.corporate_news.CorporateNewsNoNews import CorporateNewsNoNewsPage
-from preconditions.BasePreconditions import LoginPreconditions
+from preconditions.BasePreconditions import WorkbenchPreconditions
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -28,18 +28,8 @@ REQUIRED_MOBILES = {
 }
 
 
-class Preconditions(LoginPreconditions):
+class Preconditions(WorkbenchPreconditions):
     """前置条件"""
-
-    @staticmethod
-    def select_mobile(category, reset=False):
-        """选择手机"""
-
-        client = switch_to_mobile(REQUIRED_MOBILES[category])
-        client.connect_mobile()
-        if reset:
-            current_mobile().reset_app()
-        return client
 
     @staticmethod
     def make_already_in_message_page(reset_required=False):

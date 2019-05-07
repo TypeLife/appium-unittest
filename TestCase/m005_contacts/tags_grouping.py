@@ -615,14 +615,34 @@ class TagsGroupingTest(TestCase):
 
 class Tag_Group(TestCase):
 
+    def setUp_test_contacts_quxinli_0352(self):
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_contacts_quxinli_0352(self):
+        """无分组"""
+        conts_page = ContactsPage()
+        conts_page.open_contacts_page()
+        conts_page.click_label_grouping()
+        lg = LabelGroupingPage()
+        lg.wait_for_page_load()
+        lg.delete_all_label()
+        lg.assert_default_status_is_right()
+
+        lg.wait_for_page_load()
+        lg.click_back()
+        conts_page.open_message_page()
+
     @staticmethod
-    def setUp_test_contacts_quxinli_0352():
+    def setUp_test_contacts_quxinli_0353():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
-    def test_contacts_quxinli_0352(self):
+    def test_contacts_quxinli_0353(self):
         """新建分组,检查元素"""
         GroupPage=GroupListPage()
         GroupPage.open_contacts_page()
@@ -780,6 +800,39 @@ class Tag_Group(TestCase):
         GroupPage = GroupListPage()
         time.sleep(1)
         GroupPage.delete_group(name=self.message)
+
+    @staticmethod
+    def setUp_test_contacts_quxinli_0366():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_quxinli_0366(self):
+        """新建分组,标签分组名称为30个字符：汉字、数字、英文字母和特殊字符组合(汉字占3字符)"""
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.click_new_group()
+        GroupPage.click_input_element()
+        time.sleep(1)
+        self.message='我'*1+'1'*10+'a'*8+'/'*9
+        GroupPage.input_content(text=self.message)
+        GroupPage.hide_keyboard()
+        time.sleep(1)
+        GroupPage.click_sure_element()
+        time.sleep(1)
+        SelectContactsPage().page_should_contain_text('选择联系人')
+
+    def tearDown_test_contacts_quxinli_0366(self):
+        SelectContactsPage().click_back()
+        LabelGroupingPage().click_back()
+        time.sleep(2)
+        GroupListPage().delete_group(name=self.message)
+        time.sleep(1)
+        LabelGroupingPage().click_back()
+        ContactsPage().click_message_icon()
 
     @staticmethod
     def setUp_test_contacts_quxinli_0368():

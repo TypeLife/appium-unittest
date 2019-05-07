@@ -62,6 +62,7 @@ class CallPage(BasePage):
         '暂不开启': (MobileBy.XPATH, '//*[@text="暂不开启"]'),
         '多方电话': (MobileBy.XPATH, '//*[@text="多方电话"]'),
         '多方视频': (MobileBy.XPATH, '//*[@text="多方视频"]'),
+        '我知道了': (MobileBy.XPATH, '//*[@text="我知道了"]'),
     }
 
     @TestLogger.log()
@@ -333,6 +334,19 @@ class CallPage(BasePage):
         return self.driver.current_activity == '.InCallActivity'
 
     @TestLogger.log()
+    def is_on_calling_page(self, timeout=20, auto_accept_alerts=True):
+        """当前是否在通话页面"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.driver.current_activity == '.InCallActivity'
+            )
+            return True
+        except:
+            return False
+
+    @TestLogger.log()
     def hang_up_the_call(self):
         """挂断电话"""
         command = 'input keyevent KEYCODE_ENDCALL'
@@ -598,11 +612,17 @@ class CallPage(BasePage):
 
     @TestLogger.log()
     def click_cancel_open(self):
-        """是否存在继续拨打按钮"""
+        """点击暂不开启"""
         if self._is_element_present(self.__class__.__locators["暂不开启"]):
             self.click_element(self.__locators['暂不开启'])
         else:
             return
+
+    @TestLogger.log()
+    def click_i_know(self):
+        """点击我知道了"""
+        if self._is_element_present(self.__class__.__locators["我知道了"]):
+            self.click_element(self.__class__.__locators["我知道了"])
 
     @TestLogger.log()
     def wait_for_chat_page(self):

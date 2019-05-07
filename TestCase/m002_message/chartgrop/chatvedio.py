@@ -13,11 +13,8 @@ from library.core.utils.testcasefilter import tags
 from pages import *
 from pages.components import BaseChatPage
 from pages.groupset.GroupChatSetPicVideo import GroupChatSetPicVideoPage
-from selenium.common.exceptions import TimeoutException
 
-from pages.workbench.create_group.CreateGroup import CreateGroupPage
-from pages.workbench.create_group.SelectEnterpriseContacts import SelectEnterpriseContactsPage
-from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
+from preconditions.BasePreconditions import WorkbenchPreconditions
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -32,7 +29,7 @@ REQUIRED_MOBILES = {
 }
 
 
-class Preconditions(object):
+class Preconditions(WorkbenchPreconditions):
     """前置条件"""
 
     @staticmethod
@@ -41,62 +38,6 @@ class Preconditions(object):
         client = switch_to_mobile(REQUIRED_MOBILES[category])
         client.connect_mobile()
         return client
-
-    @staticmethod
-    def select_mobile(category, reset=False):
-        """选择手机"""
-        client = switch_to_mobile(REQUIRED_MOBILES[category])
-        client.connect_mobile()
-        if reset:
-            current_mobile().reset_app()
-        return client
-
-    @staticmethod
-    def make_already_in_one_key_login_page():
-        """已经进入一键登录页"""
-        # 如果当前页面已经是一键登录页，不做任何操作
-        one_key = OneKeyLoginPage()
-        if one_key.is_on_this_page():
-            return
-
-        # 如果当前页不是引导页第一页，重新启动app
-        guide_page = GuidePage()
-        if not guide_page.is_on_the_first_guide_page():
-            # current_mobile().launch_app()
-            current_mobile().reset_app()
-            guide_page.wait_for_page_load(20)
-
-        # 跳过引导页
-        guide_page.wait_for_page_load(30)
-        guide_page.swipe_to_the_second_banner()
-        guide_page.swipe_to_the_third_banner()
-        current_mobile().hide_keyboard_if_display()
-        guide_page.click_start_the_experience()
-
-        # 点击权限列表页面的确定按钮
-        permission_list = PermissionListPage()
-        permission_list.click_submit_button()
-        one_key.wait_for_page_load(30)
-
-    @staticmethod
-    def login_by_one_key_login():
-        """
-        从一键登录页面登录
-        :return:
-        """
-        # 等待号码加载完成后，点击一键登录
-        one_key = OneKeyLoginPage()
-        one_key.wait_for_tell_number_load(60)
-        one_key.click_one_key_login()
-        one_key.click_read_agreement_detail()
-
-        # 同意协议
-        agreement = AgreementDetailPage()
-        agreement.click_agree_button()
-
-        # 等待消息页
-        message_page = MessagePage()
-        message_page.wait_login_success(60)
 
     @staticmethod
     def make_already_in_message_page(reset=False):
@@ -293,82 +234,6 @@ class Preconditions(object):
         gcp.wait_for_page_load()
 
     @staticmethod
-    def create_he_contacts(names):
-        """选择手机联系人创建为团队联系人"""
-
-        mp = MessagePage()
-        mp.wait_for_page_load()
-        mp.open_workbench_page()
-        wbp = WorkbenchPage()
-        wbp.wait_for_workbench_page_load()
-        wbp.click_organization()
-        osp = OrganizationStructurePage()
-        time.sleep(5)
-        n = 1
-        # 解决工作台不稳定问题
-        while osp.is_text_present("账号认证失败"):
-            osp.click_back()
-            wbp.wait_for_workbench_page_load()
-            wbp.click_organization()
-            time.sleep(5)
-            n += 1
-            if n > 10:
-                break
-        time.sleep(3)
-        for name in names:
-            if not osp.is_exist_specify_element_by_name(name):
-                osp.click_specify_element_by_name("添加联系人")
-                time.sleep(2)
-                osp.click_specify_element_by_name("从手机通讯录添加")
-                slc = SelectLocalContactsPage()
-                # 等待选择联系人页面加载
-                slc.wait_for_page_load()
-                slc.selecting_local_contacts_by_name(name)
-                slc.click_sure()
-                osp.wait_for_page_load()
-        osp.click_back()
-        wbp.wait_for_workbench_page_load()
-        mp.open_message_page()
-        mp.wait_for_page_load()
-
-    @staticmethod
-    def create_he_contacts2(contacts):
-        """手动输入联系人创建为团队联系人"""
-
-        mp = MessagePage()
-        mp.wait_for_page_load()
-        mp.open_workbench_page()
-        wbp = WorkbenchPage()
-        wbp.wait_for_workbench_page_load()
-        wbp.click_organization()
-        osp = OrganizationStructurePage()
-        time.sleep(5)
-        n = 1
-        # 解决工作台不稳定问题
-        while osp.is_text_present("账号认证失败"):
-            osp.click_back()
-            wbp.wait_for_workbench_page_load()
-            wbp.click_organization()
-            time.sleep(5)
-            n += 1
-            if n > 10:
-                break
-        time.sleep(3)
-        for name, number in contacts:
-            if not osp.is_exist_specify_element_by_name(name):
-                osp.click_specify_element_by_name("添加联系人")
-                time.sleep(2)
-                osp.click_specify_element_by_name("手动输入添加")
-                osp.input_contacts_name(name)
-                osp.input_contacts_number(number)
-                osp.click_confirm()
-                osp.wait_for_page_load()
-        osp.click_back()
-        wbp.wait_for_workbench_page_load()
-        mp.open_message_page()
-        mp.wait_for_page_load()
-
-    @staticmethod
     def make_no_message_send_failed_status():
         """确保当前消息列表没有消息发送失败的标识影响验证结果"""
 
@@ -377,57 +242,6 @@ class Preconditions(object):
         # 确保当前消息列表没有消息发送失败的标识影响验证结果
         if mp.is_iv_fail_status_present():
             mp.clear_fail_in_send_message()
-
-    @staticmethod
-    def create_enterprise_group(name):
-        """创建企业群"""
-
-        mp = MessagePage()
-        mp.wait_for_page_load()
-        mp.open_workbench_page()
-        wbp = WorkbenchPage()
-        wbp.wait_for_workbench_page_load()
-        wbp.click_add_create_group()
-        cgp = CreateGroupPage()
-        # 等待创建群首页加载
-        cgp.wait_for_page_load()
-        cgp.click_create_group()
-        sec = SelectEnterpriseContactsPage()
-        sec.wait_for_page_load()
-        time.sleep(2)
-        # 创建企业群
-        sec.click_contacts_by_name("大佬1")
-        sec.click_contacts_by_name("大佬2")
-        sec.click_sure()
-        cgp.input_group_name(name)
-        cgp.click_create_group()
-        time.sleep(2)
-        # 返回消息列表
-        cgp.click_back()
-        wbp.wait_for_workbench_page_load()
-        mp.open_message_page()
-        mp.wait_for_page_load()
-
-    @staticmethod
-    def ensure_have_enterprise_group():
-        """确保有企业群"""
-
-        mp = MessagePage()
-        mp.wait_for_page_load()
-        mp.open_contacts_page()
-        cp = ContactsPage()
-        cp.wait_for_page_load()
-        cp.open_group_chat_list()
-        time.sleep(2)
-        flag = False
-        if not cp.is_exist_enterprise_group():
-            flag = True
-        cp.click_return()
-        cp.wait_for_page_load()
-        mp.open_message_page()
-        mp.wait_for_page_load()
-        if flag:
-            Preconditions.create_enterprise_group("测试企业群")
 
     @staticmethod
     def if_exists_multiple_enterprises_enter_group_chat():
