@@ -79,7 +79,7 @@ class GroupListPage(BasePage):
         '大佬3':(MobileBy.XPATH,'//*[@text="大佬3"]'),
 
         '大佬2': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
-        '搜索或输入手机号':(MobileBy.XPATH,"//*[@text='搜索或输入手机号']"),
+        '搜索或输入手机号':(MobileBy.XPATH,"//*[@text='搜索或输入号码']"),
         '选择联系人':(MobileBy.ID,"com.chinasofti.rcs:id/title"),
         '选择和通讯录联系人':(MobileBy.ID,'com.chinasofti.rcs:id/text_hint'),
         '删除-搜索':(MobileBy.ID,'com.chinasofti.rcs:id/iv_delect'),
@@ -103,7 +103,7 @@ class GroupListPage(BasePage):
         '图片发送':(MobileBy.ID,'com.chinasofti.rcs:id/button_send'),
         '发送失败':(MobileBy.ID,'com.chinasofti.rcs:id/imageview_msg_send_failed'),
         '成员头像':(MobileBy.ID,'com.chinasofti.rcs:id/avator'),
-        "确定_可用":(MobileBy.XPATH,'//*[@text="确定(1/1)"]'),
+        "确定_可用":(MobileBy.XPATH,'//*[@text="确定"]'),
         "版本更新":(MobileBy.ID,'com.chinasofti.rcs:id/dialog_title'),
         "以后再说":(MobileBy.ID,"com.chinasofti.rcs:id/btn_cancel"),
         '立即更新':(MobileBy.ID,"com.chinasofti.rcs:id/btn_ok"),
@@ -248,7 +248,7 @@ class GroupListPage(BasePage):
 
     @TestLogger.log()
     def click_label_grouping(self):
-        """点击标签分组1"""
+        """点击标签分组"""
         self.click_element(self.__class__.__locators['标签分组'])
 
     @TestLogger.log()
@@ -335,9 +335,6 @@ class GroupListPage(BasePage):
         time.sleep(1)
         self.click_element(self.__class__.__locators['发送_邀请'])
         time.sleep(1)
-
-
-
 
     @TestLogger.log("点击搜索框")
     def click_search_box(self,text='搜索或输入手机号'):

@@ -315,3 +315,5 @@ class SelectLocalContactsPage(BasePage):
             condition=lambda x: self.get_elements(('id', 'com.chinasofti.rcs:id/contact_list_item'))[0],
             auto_accept_permission_alert=False
         ).click()
+
+

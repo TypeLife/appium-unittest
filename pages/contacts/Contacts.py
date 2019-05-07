@@ -28,6 +28,7 @@ class ContactsPage(FooterPage):
         '群聊': (MobileBy.ID, 'com.chinasofti.rcs:id/first_item'),
         '标签分组': (MobileBy.ID, 'com.chinasofti.rcs:id/second_item'),
         '公众号': (MobileBy.ID, 'com.chinasofti.rcs:id/third_item'),
+        '创建团队': (MobileBy.XPATH, '//*[@text="创建团队"]'),
         'com.chinasofti.rcs:id/contact_group_chat_item_id': (
             MobileBy.ID, 'com.chinasofti.rcs:id/contact_group_chat_item_id'),
         'com.chinasofti.rcs:id/contact_image': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_image'),
@@ -90,6 +91,20 @@ class ContactsPage(FooterPage):
         if "和飞信电话" in contacts_name:
             contacts_name.remove("和飞信电话")
         return contacts_name
+
+    @TestLogger.log()
+    def find_element_by_swipe(self, locator, times=15):
+        """找不到元素就滑动"""
+        if self._is_element_present(locator):
+            return self.get_element(locator)
+        else:
+            c = 0
+            while c < times:
+                self.page_up()
+                if self._is_element_present(locator):
+                    return self.get_element(locator)
+                c += 1
+            return None
 
     @TestLogger.log("通过人名选择一个联系人")
     def select_people_by_name(self, name):
@@ -349,4 +364,5 @@ class ContactsPage(FooterPage):
     @TestLogger.log()
     def page_contain_element(self,locator):
         """页面包含元素"""
+        # self.find_element_by_swipe()
         self.page_should_contain_element(self.__class__.__locators[locator])
