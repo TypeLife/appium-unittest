@@ -314,6 +314,6 @@ class SelectLocalContactsPage(BasePage):
     @TestLogger.log("点击搜索第一个联系人")
     def click_search_phone_contacts(self):
         self.wait_until(
-            condition=lambda x: self.get_elements(self.__class__.__locators["联系人名"])[0],
+            condition=lambda x: self.get_elements(('id', 'com.chinasofti.rcs:id/contact_list_item'))[0],
             auto_accept_permission_alert=False
         ).click()

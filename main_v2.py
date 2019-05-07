@@ -15,13 +15,18 @@ def get_case(cli_commands):
     if cli_commands.suite:
         sui = unittest.TestSuite()
         for p in cli_commands.suite:
-            path_list = [os.path.join(root, name) for root, dirs, files in os.walk(p) for name in files if os.path.join(root, name).endswith('.py') and not os.path.join(root, name).endswith('__init__.py')]
-            print(path_list)
-            for path in path_list:
-                loader = unittest.TestLoader()
-                print(path)
-                path, file = os.path.split(os.path.abspath(path))
-                s = loader.discover(path, file)
+            if os.path.isdir(p):
+                path_list = sorted([os.path.join(root, name) for root, dirs, files in os.walk(p) for name in files if os.path.join(root, name).endswith('.py') and not os.path.join(root, name).endswith('__init__.py')])
+                print(path_list)
+                for path in path_list:
+                    loader = unittest.TestLoader()
+                    print(path)
+                    path, file = os.path.split(os.path.abspath(path))
+                    s = loader.discover(path, file)
+                    sui.addTest(s)
+            elif os.path.isfile(p):
+                path, file = os.path.split(os.path.abspath(p))
+                s = unittest.defaultTestLoader.discover(path, file)
                 sui.addTest(s)
     else:
         case_path = ConfigManager.get_test_case_root()
