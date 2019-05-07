@@ -2,7 +2,6 @@ import unittest
 
 from selenium.common.exceptions import TimeoutException
 
-import preconditions
 from library.core.utils.applicationcache import current_mobile, current_driver
 from pages.components import BaseChatPage
 from pages.contacts import OfficialAccountPage, SearchOfficialAccountPage
@@ -693,7 +692,7 @@ class MessageListAllTest(TestCase):
 
         mess = MessagePage()
         if not mess.is_on_this_page():
-            preconditions.force_close_and_launch_app()
+            current_mobile().launch_app()
             mess.wait_for_page_load()
         Preconditions.enter_single_chat_page("大佬1")
         scp = SingleChatPage()
@@ -756,7 +755,7 @@ class MessageListAllTest(TestCase):
 
         mp = MessagePage()
         if not mp.is_on_this_page():
-            preconditions.force_close_and_launch_app()
+            current_mobile().launch_app()
             mp.wait_for_page_load()
         Preconditions.enter_group_chat_page("群聊1")
         gcp = GroupChatPage()
@@ -798,7 +797,7 @@ class MessageListAllTest(TestCase):
 
         mp = MessagePage()
         if not mp.is_on_this_page():
-            preconditions.force_close_and_launch_app()
+            current_mobile().launch_app()
             mp.wait_for_page_load()
         if mp.current_message_list_is_exist_name("系统消息"):
             mp.choose_chat_by_name("系统消息")

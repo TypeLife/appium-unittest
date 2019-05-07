@@ -56,8 +56,8 @@ class SelectContactsPage(BasePage):
         "最近聊天消息名称": (MobileBy.ID, "com.chinasofti.rcs:id/tv_name"),
         "联系人横框": (MobileBy.ID, "com.chinasofti.rcs:id/contact_list_item"),
         "搜索框左边选中联系人": (MobileBy.ID, "com.chinasofti.rcs:id/image"),
-       # 'aaa':(MobileBy.XPATH,"*[@text='aaa']"),
-        'aaa':(MobileBy.ID,'com.chinasofti.rcs:id/contact_name'),
+       'aaa':(MobileBy.XPATH,"*[@text='aaa']"),
+        # 'aaa':(MobileBy.ID,'com.chinasofti.rcs:id/contact_name'),
 
         "搜索群组":(MobileBy.ID,'com.chinasofti.rcs:id/et_search'),
         "搜索1":(MobileBy.ID,'com.chinasofti.rcs:id/edit_query'),
@@ -534,6 +534,8 @@ class SelectContactsPage(BasePage):
             time.sleep(1)
             group_set.click_delete_and_exit()
             time.sleep(3)
+        else:
+            self.click_back_by_android()
         # mess.click_create_group()
         # 点击 +
         mess.click_add_icon()
@@ -579,7 +581,13 @@ class SelectContactsPage(BasePage):
             time.sleep(1)
             group_set.click_delete_and_exit()
             time.sleep(3)
-        mess.click_create_group()
+        else:
+            self.click_back_by_android()
+        # mess.click_create_group()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
         mess.click_contact_group()
         while times>0:
             self.page_up()
@@ -625,7 +633,13 @@ class SelectContactsPage(BasePage):
             sc.page_up()
             time.sleep(1)
             group_set.click_delete_and_exit()
-        mess.click_create_group()
+        else:
+            self.click_back_by_android()
+        # mess.click_create_group()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
         mess.click_contact_group()
         while times > 0:
             self.page_up()

@@ -164,8 +164,12 @@ class Preconditions(LoginPreconditions):
         if group_name in group_names:
             return
         sog.click_back()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
         # 从本地联系人中选择成员创建群
-
         sc.click_local_contacts()
         time.sleep(2)
         slc = SelectLocalContactsPage()
@@ -244,7 +248,7 @@ class MsgGroupChatTest(TestCase):
             current_mobile().hide_keyboard_if_display()
             return
         else:
-            preconditions.force_close_and_launch_app()
+            current_mobile().launch_app()
             Preconditions.enter_group_chat_page()
 
     def default_tearDown(self):
@@ -469,8 +473,8 @@ class MsgGroupChatTest(TestCase):
         # 4、预览播放视频中途，点击左上角的返回按钮，是否可以返回到上一级页面
         video_preview.play_video()
         video_preview.close_video()
+        video_preview.click_back()
         cpp.wait_for_page_load()
-        cpp.click_back()
         cpp.click_back()
         gcp.wait_for_page_load()
 
@@ -612,29 +616,29 @@ class MsgGroupChatTest(TestCase):
         cpp.wait_for_card_page_load()
         cpp.send_card()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
-    def test_msg_group_chat_0030(self):
-        """在群聊聊天会话页面，发送名片消息"""
-        # 1.在当前聊天会话页面，点击输入框上方的名片图标，可进入到名片详情页面
-        gcp = GroupChatPage()
-        gcp.click_profile()
-        # 2.在名片详情页面，不可以搜索选择陌生联系人名片，进行发送
-        cpp = ChatProfilePage()
-        cpp.wait_for_page_load()
-        # names = cpp.get_contacts_name()
-        names = cpp.get_first_page_contacts_name()
-        # 构造陌生联系人名
-        name = ""
-        while True:
-            info = "在名片详情页面，不可以搜索选择陌生联系人名片，进行发送"
-            name = random.choices(info, k=3)
-            if name not in names:
-                break
-        cpp.search(name)
-        flag = cpp.select_card()
-        self.assertFalse(flag)
-        cpp.click_back()
-        gcp.wait_for_page_load()
+    # @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    # def test_msg_group_chat_0030(self):
+    #     """在群聊聊天会话页面，发送名片消息"""
+    #     # 1.在当前聊天会话页面，点击输入框上方的名片图标，可进入到名片详情页面
+    #     gcp = GroupChatPage()
+    #     gcp.click_profile()
+    #     # 2.在名片详情页面，不可以搜索选择陌生联系人名片，进行发送
+    #     cpp = ChatProfilePage()
+    #     cpp.wait_for_page_load()
+    #     # names = cpp.get_contacts_name()
+    #     names = cpp.get_first_page_contacts_name()
+    #     # 构造陌生联系人名
+    #     name = ""
+    #     while True:
+    #         info = "在名片详情页面，不可以搜索选择陌生联系人名片，进行发送"
+    #         name = random.choices(info, k=3)
+    #         if name not in names:
+    #             break
+    #     cpp.search(name)
+    #     flag = cpp.select_card()
+    #     self.assertFalse(flag)
+    #     cpp.click_back()
+    #     gcp.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0033(self):
@@ -1076,12 +1080,18 @@ class MsgGroupChatTest(TestCase):
         self.assertIn(names[0], results)
         name1 = str(uuid.uuid1()) + "Name"
         group_member.search(name1)
-        results1 = group_member.get_all_group_member_names()
-        self.assertEqual(0, len(results1))
+        # results1 = group_member.get_all_group_member_names()
+        # self.assertEqual(0, len(results1))
+        time.sleep(1)
+        self.assertEquals(group_member.is_text_present("无搜索结果"), True)
         name2 = str(uuid.uuid1()) + "中文"
         group_member.search(name2)
-        results2 = group_member.get_all_group_member_names()
-        self.assertEqual(0, len(results2))
+        # results2 = group_member.get_all_group_member_names()
+        # self.assertEqual(0, len(results2))
+        time.sleep(1)
+        self.assertEquals(group_member.is_text_present("无搜索结果"), True)
+        group_member.click_back()
+        time.sleep(1)
         group_member.click_back()
         group_set.click_back()
         gcp.wait_for_page_load()
@@ -1104,7 +1114,7 @@ class MsgGroupChatTest(TestCase):
         # flag = contacts_page.sure_btn_is_enabled()
         # self.assertFalse(flag)
         # 5、选择联系人后，右上角的确定按钮上是否会展示已选择人数加剩余可选择人数，例：确定（2/462）
-        names = contacts_page.get_contacts_name()
+        names = contacts_page.get_contacts_name_list()
         for name in names:
             contacts_page.select_one_member_by_name(name)
         info = contacts_page.get_sure_btn_text()
@@ -1126,7 +1136,7 @@ class MsgGroupChatTest(TestCase):
         # 2.在联系人选择器页面，单击是否可以选择联系人
         contacts_page = SelectLocalContactsPage()
         contacts_page.wait_for_page_load()
-        names = contacts_page.get_contacts_name()
+        names = contacts_page.get_contacts_name_list()
         contacts_page.select_one_member_by_name(names[0])
         flag = contacts_page.contacts_is_selected(names[0])
         if not flag:
@@ -1154,7 +1164,7 @@ class MsgGroupChatTest(TestCase):
         # 是否可以返回到聊天会话页面并且清除已选择的联系人选择状态
         contacts_page = SelectLocalContactsPage()
         contacts_page.wait_for_page_load()
-        names = contacts_page.get_contacts_name()
+        names = contacts_page.get_contacts_name_list()
         for name in names:
             contacts_page.select_one_member_by_name(name)
         contacts_page.click_back()
@@ -1174,7 +1184,7 @@ class MsgGroupChatTest(TestCase):
         # 2.在联系人选择页面，把剩余可选择人数全部勾选上，点击右上角的确定按钮，是否可以发送邀请
         contacts_page = SelectLocalContactsPage()
         contacts_page.wait_for_page_load()
-        names = contacts_page.get_contacts_name()
+        names = contacts_page.get_contacts_name_list()
         contacts_page.swipe_to_top()
         for name in names:
             contacts_page.search_and_select_one_member_by_name(name)
@@ -1251,7 +1261,7 @@ class MsgGroupChatTest(TestCase):
             contacts_page.search_and_select_one_member_by_name(name)
         selected_nums, threshold_nums = contacts_page.get_selected_and_threshold_nums()
         if selected_nums > threshold_nums:
-            name_list = contacts_page.get_contacts_name()
+            name_list = contacts_page.get_contacts_name_list()
             if contacts_page.contacts_is_selected(name_list[0]):
                 contacts_page.select_one_member_by_name(name_list[0])
             contacts_page.select_one_member_by_name(name_list[0])
@@ -1302,7 +1312,7 @@ class MsgGroupChatTest(TestCase):
         contacts = SelectLocalContactsPage()
         contacts.wait_for_page_load()
         # 3.在群成员展示列表中，点击勾选一个成员，右上角的确定是否会高亮展示并且展示已选择的移除数量
-        names = contacts.get_contacts_name()
+        names = contacts.get_contacts_name_list()
         contacts.select_one_member_by_name(names[0])
         info = contacts.get_sure_btn_text()
         self.assertIsNotNone(re.match(r'确定\(1/\d+\)', info))
@@ -1335,7 +1345,7 @@ class MsgGroupChatTest(TestCase):
         contacts = SelectLocalContactsPage()
         contacts.wait_for_page_load()
         # 3.在群成员展示列表中，点击勾选2个成员，右上角的确定是否会高亮展示并且展示已选择的移除数量
-        names = contacts.get_contacts_name()
+        names = contacts.get_contacts_name_list()
         contacts.select_one_member_by_name(names[0])
         contacts.select_one_member_by_name(names[1])
         info = contacts.get_sure_btn_text()
@@ -1369,7 +1379,7 @@ class MsgGroupChatTest(TestCase):
         contacts = SelectLocalContactsPage()
         contacts.wait_for_page_load()
         # 3.在群成员展示列表中，点击勾选2个成员，右上角的确定是否会高亮展示并且展示已选择的移除数量
-        names = contacts.get_contacts_name()
+        names = contacts.get_contacts_name_list()
         contacts.select_one_member_by_name(names[0])
         contacts.select_one_member_by_name(names[1])
         info = contacts.get_sure_btn_text()
@@ -1602,7 +1612,7 @@ class MsgGroupChatTest(TestCase):
         # 3、在联系人选择器页面，选择一个群聊或者联系人，是否会弹出确认分享弹窗
         scp.select_local_contacts()
         local_contacts = SelectLocalContactsPage()
-        names = local_contacts.get_contacts_name()
+        names = local_contacts.get_contacts_name_list()
         local_contacts.select_one_member_by_name(names[0])
         # 4、点击确定是否可以分享成功
         local_contacts.click_sure_share()
@@ -1750,7 +1760,7 @@ class MsgGroupChatTest(TestCase):
         # 3、点击选择一个群成员，是否会弹出提示：是否确定XXX为新群主的确认提示
         contacts = SelectLocalContactsPage()
         contacts.wait_for_page_load()
-        names = contacts.get_contacts_name()
+        names = contacts.get_contacts_name_list()
         contacts.select_one_member_by_name(names[0])
         contacts.page_should_contain_text("确定选择" + names[0] + "为新群主")
         # 4、点击取消，返回到上一级操作
@@ -1789,9 +1799,9 @@ class MsgGroupChatTest(TestCase):
             raise AssertionError("在聊天会话页面，页面上方没有展示免打扰标志")
         gcp.click_back()
         sogp = SelectOneGroupPage()
-        sogp.click_back()
+        # sogp.click_back()
         scp = SelectContactsPage()
-        scp.click_back()
+        # scp.click_back()
         # 3、返回到消息列表，开启免打扰的聊天窗口上是否会展示免打扰标志
         mess = MessagePage()
         mess.wait_for_page_load()
@@ -1829,9 +1839,9 @@ class MsgGroupChatTest(TestCase):
         self.assertFalse(flag)
         gcp.click_back()
         sogp = SelectOneGroupPage()
-        sogp.click_back()
+        # sogp.click_back()
         scp = SelectContactsPage()
-        scp.click_back()
+        # scp.click_back()
         # 3.返回到消息列表，关闭免打扰的聊天窗口上是否会隐藏免打扰标志
         mess = MessagePage()
         mess.wait_for_page_load()
@@ -1865,9 +1875,9 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.click_back()
         sogp = SelectOneGroupPage()
-        sogp.click_back()
+        # sogp.click_back()
         scp = SelectContactsPage()
-        scp.click_back()
+        # scp.click_back()
         mess = MessagePage()
         mess.wait_for_page_load()
         # 给其他联系人发送一条消息，看群聊是否设置成功置顶
@@ -1922,9 +1932,9 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.click_back()
         sogp = SelectOneGroupPage()
-        sogp.click_back()
+        # sogp.click_back()
         scp = SelectContactsPage()
-        scp.click_back()
+        # scp.click_back()
         mess = MessagePage()
         mess.wait_for_page_load()
         # 给其他联系人发送一条消息，看群聊是否成功取消置顶

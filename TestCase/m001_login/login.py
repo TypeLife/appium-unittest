@@ -988,7 +988,8 @@ class LoginTest(TestCase):
         :return:
         '''
         oklp = OneKeyLoginPage()
-        preconditions.force_close_and_launch_app()
+        # preconditions.force_close_and_launch_app()
+        current_mobile().launch_app()
         sl = SmsLoginPage()
         sl.page_should_not_contain_text('一键登陆')
 

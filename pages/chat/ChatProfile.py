@@ -27,7 +27,7 @@ class ChatProfilePage(BasePage):
                   'com.chinasofti.rcs:id/local_contacts': (MobileBy.ID, 'com.chinasofti.rcs:id/local_contacts'),
                   '选择和通讯录联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint'),
                   'com.chinasofti.rcs:id/arrow_right': (MobileBy.ID, 'com.chinasofti.rcs:id/arrow_right'),
-                  'com.chinasofti.rcs:id/contact_list_item': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
+                  '联系人列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
                   'com.chinasofti.rcs:id/asp_selecttion_contact_content': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/asp_selecttion_contact_content'),
                   'D': (MobileBy.ID, ''),
@@ -129,7 +129,8 @@ class ChatProfilePage(BasePage):
     @TestLogger.log()
     def select_card(self):
         """选择名片"""
-        els = self.get_elements(self.__class__.__locators["联系人名"])
+        # els = self.get_elements(self.__class__.__locators["联系人名"])
+        els = self.get_elements(self.__class__.__locators["联系人列表"])
         if els:
             els[0].click()
             return True
