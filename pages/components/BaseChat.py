@@ -81,7 +81,18 @@ class BaseChatPage(BasePage):
                   '发送': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
                   '退出短信': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_exitsms'),
                   '发送短信': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_sms_send'),
+                  #预览文件页面
+                  '预览文件标题': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
+                  '预览文件-更多':(MobileBy.XPATH,'/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.FrameLayout[2]/android.widget.ImageView'),
+                  '预览文件-转发': (MobileBy.XPATH, "//*[contains(@text, '转发')]"),
+                  '预览文件-收藏': (MobileBy.XPATH, "//*[contains(@text, '收藏')]"),
+                  '其他应用打开': (MobileBy.XPATH, "//*[contains(@text, '其他应用打开')]"),
+
                   }
+
+    @TestLogger.log('文件是否存在')
+    def is_element_present_file(self):
+        return self._is_element_present(self.__locators['文件名'])
 
     @TestLogger.log()
     def is_msg_send_fail(self):
@@ -97,6 +108,11 @@ class BaseChatPage(BasePage):
     def click_sure_repeat_msg(self):
         """点击 确定 重发消息"""
         self.click_element(self.__class__.__locators['确定重发'])
+
+    @TestLogger.log()
+    def click_not_repeat_msg(self):
+        """点击 取消 重发消息"""
+        self.click_element(self.__class__.__locators['取消重发'])
 
     @TestLogger.log()
     def click_addr_info(self):
@@ -623,4 +639,49 @@ class BaseChatPage(BasePage):
     @TestLogger.log("点击消息确定")
     def click_only_sure_button(self):
         self.click_element(self.__class__.__locators["确定"])
+
+    @TestLogger.log()
+    def page_contain_element_more(self):
+        """预览文件页面-页面应该包含更多"""
+        self.page_should_contain_element(self.__locators["预览文件-更多"])
+
+    @TestLogger.log("点击预览文件页面-更多按钮")
+    def click_more_Preview(self):
+        self.click_element(self.__class__.__locators["预览文件-更多"])
+
+
+    @TestLogger.log("点击预览文件页面-转发")
+    def click_forward_Preview(self):
+        self.click_element(self.__class__.__locators["预览文件-转发"])
+
+
+    @TestLogger.log("点击预览文件页面-收藏")
+    def click_collection_Preview(self):
+        self.click_element(self.__class__.__locators["预览文件-收藏"])
+
+    @TestLogger.log("点击其他应用打开")
+    def click_other_App_open(self):
+        self.click_element(self.__class__.__locators["其他应用打开"])
+
+    @TestLogger.log()
+    def get_width_of_msg_of_text(self):
+        """获取最近一条聊天记录文本信息框的大小"""
+        time.sleep(1)
+        els=self.get_element((MobileBy.ID,'com.chinasofti.rcs:id/tv_message'))
+        rect=els.rect
+        return rect["width"]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

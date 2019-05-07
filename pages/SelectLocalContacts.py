@@ -23,11 +23,11 @@ class SelectLocalContactsPage(BasePage):
                   '搜索或输入手机号': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_search_bar'),
                   'com.chinasofti.rcs:id/bottom_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/bottom_layout'),
                   'com.chinasofti.rcs:id/contact_selection_list_view': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/contact_selection_list_view'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/contact_selection_list_view'),
                   '容器列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list'),
                   'com.chinasofti.rcs:id/contact_list_item': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
                   'com.chinasofti.rcs:id/asp_selecttion_contact_content': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/asp_selecttion_contact_content'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/asp_selecttion_contact_content'),
                   'D': (MobileBy.ID, ''),
                   'dx1645': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
                   '15338821645': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),
@@ -93,8 +93,6 @@ class SelectLocalContactsPage(BasePage):
         elements = self.get_elements(self.__class__.__locators["联系人名"])
         elements[0].click()
 
-
-
     @TestLogger.log()
     def click_sure_share(self):
         """点击确定分享"""
@@ -118,7 +116,7 @@ class SelectLocalContactsPage(BasePage):
         if els:
             for el in els:
                 contacts_name.append(el.text)
-        b=set(contacts_name)
+        b = set(contacts_name)
         return b
 
     @TestLogger.log()
@@ -179,7 +177,8 @@ class SelectLocalContactsPage(BasePage):
     @TestLogger.log()
     def contacts_is_selected(self, name):
         """获取联系人的选择状态"""
-        selected_els = self.get_elements((MobileBy.XPATH, '//*[@text ="%s"]/../android.widget.ImageView[@resource-id="com.chinasofti.rcs:id/contact_icon"]' % name))
+        selected_els = self.get_elements((MobileBy.XPATH,
+                                          '//*[@text ="%s"]/../android.widget.ImageView[@resource-id="com.chinasofti.rcs:id/contact_icon"]' % name))
         if selected_els:
             return True
         else:
@@ -262,7 +261,7 @@ class SelectLocalContactsPage(BasePage):
 
     @TestLogger.log()
     def selecting_local_contacts_by_name(self, name):
-        """根据名字选择一个本地联系人"""
+        """根据名字选择一个手机联系人"""
         locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text ="%s"]' % name)
         max_try = 20
         current = 0
@@ -276,7 +275,7 @@ class SelectLocalContactsPage(BasePage):
     @TestLogger.log()
     def is_search_result(self, msg):
         """搜索结果判断"""
-        els = self.get_elements((MobileBy.XPATH,'//*[contains(@text, "%s")]' % msg))
+        els = self.get_elements((MobileBy.XPATH, '//*[contains(@text, "%s")]' % msg))
         return len(els) > 1
 
     @TestLogger.log()
@@ -312,4 +311,7 @@ class SelectLocalContactsPage(BasePage):
 
     @TestLogger.log("点击搜索第一个联系人")
     def click_search_phone_contacts(self):
-        self.get_elements(self.__class__.__locators["联系人名"])[0].click()
+        self.wait_until(
+            condition=lambda x: self.get_elements(self.__class__.__locators["联系人名"])[0],
+            auto_accept_permission_alert=False
+        ).click()

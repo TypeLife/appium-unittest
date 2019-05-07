@@ -22,9 +22,9 @@ class ChatFilePage(BasePage):
                   '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name'),
                   '今天': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_time'),
                   'com.chinasofti.rcs:id/favorite_image_shortcut': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/favorite_image_shortcut'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/favorite_image_shortcut'),
                   'com.chinasofti.rcs:id/favorite_file_name_size': (
-                  MobileBy.ID, 'com.chinasofti.rcs:id/favorite_file_name_size'),
+                      MobileBy.ID, 'com.chinasofti.rcs:id/favorite_file_name_size'),
                   '文件名': (MobileBy.ID, 'com.chinasofti.rcs:id/file_name'),
                   '录制.txt': (MobileBy.ID, 'com.chinasofti.rcs:id/file_name'),
                   '271.0B': (MobileBy.ID, 'com.chinasofti.rcs:id/file_size'),
@@ -104,4 +104,5 @@ class ChatFilePage(BasePage):
 
     @TestLogger.log("点击文件")
     def click_file(self, file):
-        self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file)).click()
+        self.wait_until(
+            condition=lambda x: self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))).click()

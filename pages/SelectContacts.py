@@ -534,7 +534,11 @@ class SelectContactsPage(BasePage):
             time.sleep(1)
             group_set.click_delete_and_exit()
             time.sleep(3)
-        mess.click_create_group()
+        # mess.click_create_group()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
         mess.click_contact_group()
         mess.click_text("大佬2")
         time.sleep(1)
@@ -728,3 +732,8 @@ class SelectContactsPage(BasePage):
             condition=lambda d: self._is_element_present(self.__class__.__locators["选择一个群"])
         )
         return bol
+
+    @TestLogger.log("通过索引选择最近联系人最近聊天")
+    def select_recent_chat_by_number(self, num):
+        elements_list = self.get_elements(('id', 'com.chinasofti.rcs:id/item_rl'))
+        elements_list[num].click()

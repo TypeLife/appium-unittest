@@ -12,6 +12,7 @@ class SuperMeetingPage(BasePage):
         '？': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_right1'),
         'X': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_close_actionbar'),
         '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back_actionbar'),
+        '关闭': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_close_actionbar'),
         '创建语音通知': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]/android.view.View/android.view.View/android.view.View[5]/android.view.View'),
         '预约会议': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View/android.view.View[3]/android.view.View[1]'),
         '马上开会': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View/android.view.View[3]/android.view.View[2]'),
@@ -120,6 +121,11 @@ class SuperMeetingPage(BasePage):
     def click_back(self):
         """点击返回"""
         self.click_element(self.__class__.__locators['返回'])
+
+    @TestLogger.log()
+    def click_close(self):
+        """点击关闭"""
+        self.click_element(self.__class__.__locators["关闭"])
 
     @TestLogger.log()
     def swipe_by_up(self):

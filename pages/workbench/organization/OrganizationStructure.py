@@ -48,13 +48,13 @@ class OrganizationStructurePage(BasePage):
     @TestLogger.log()
     def is_exist_specify_element_by_name(self, name):
         """是否存在指定元素"""
-        locator = (MobileBy.XPATH, '//*[@text="%s"]' % name)
+        locator = (MobileBy.XPATH, '//*[contains(@text,"%s")]' % name)
         return self._is_element_present(locator)
 
     @TestLogger.log()
     def click_specify_element_by_name(self, name):
         """点击指定元素"""
-        locator = (MobileBy.XPATH, '//*[@text="%s"]' % name)
+        locator = (MobileBy.XPATH, '//*[contains(@text,"%s")]' % name)
         self.click_element(locator)
 
     @TestLogger.log()

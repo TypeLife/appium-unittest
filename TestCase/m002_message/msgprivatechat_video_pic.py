@@ -7,12 +7,12 @@ from selenium.common.exceptions import TimeoutException
 from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile, current_driver
 from pages.components import BaseChatPage
-from preconditions.BasePreconditions import LoginPreconditions
+from preconditions.BasePreconditions import WorkbenchPreconditions
 from library.core.utils.testcasefilter import tags
 from pages import *
 
 
-class Preconditions(LoginPreconditions):
+class Preconditions(WorkbenchPreconditions):
     """前置条件"""
 
     @staticmethod
@@ -103,7 +103,7 @@ class Preconditions(LoginPreconditions):
 
     @staticmethod
     def if_exists_multiple_enterprises_enter_single_chat():
-        """选择和通讯录联系人时存在多个团队时返回获取当前团队名"""
+        """选择团队联系人时存在多个团队时返回获取当前团队名"""
 
         shc = SelectHeContactsDetailPage()
         # 测试号码是否存在多个团队
@@ -1611,6 +1611,74 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
     Author:刘晓东
     """
 
+    @classmethod
+    def setUpClass(cls):
+
+        Preconditions.select_mobile('Android-移动')
+        # 导入测试联系人、群聊
+        fail_time1 = 0
+        flag1 = False
+        import dataproviders
+        while fail_time1 < 3:
+            try:
+                required_contacts = dataproviders.get_preset_contacts()
+                conts = ContactsPage()
+                current_mobile().hide_keyboard_if_display()
+                Preconditions.make_already_in_message_page()
+                conts.open_contacts_page()
+                try:
+                    if conts.is_text_present("发现SIM卡联系人"):
+                        conts.click_text("显示")
+                except:
+                    pass
+                for name, number in required_contacts:
+                    # 创建联系人
+                    conts.create_contacts_if_not_exits(name, number)
+                required_group_chats = dataproviders.get_preset_group_chats()
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    # 创建群
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
+                flag1 = True
+            except:
+                fail_time1 += 1
+            if flag1:
+                break
+
+        # 导入团队联系人
+        fail_time2 = 0
+        flag2 = False
+        while fail_time2 < 5:
+            try:
+                Preconditions.make_already_in_message_page()
+                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
+                Preconditions.create_he_contacts(contact_names)
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "13800137005"), ('郑海贵', "13802883296")]
+                Preconditions.create_he_contacts2(contact_names2)
+                flag2 = True
+            except:
+                fail_time2 += 1
+            if flag2:
+                break
+
+        # 确保有企业群
+        fail_time3 = 0
+        flag3 = False
+        while fail_time3 < 5:
+            try:
+                Preconditions.make_already_in_message_page()
+                Preconditions.ensure_have_enterprise_group()
+                flag3 = True
+            except:
+                fail_time3 += 1
+            if flag3:
+                break
+
     def default_setUp(self):
         """
         1、成功登录和飞信
@@ -1765,7 +1833,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'LXD')
     def test_msg_privateChat_videoPic_total_quantity_0044(self):
-        """单聊会话页面，转发自己发送的图片给本地联系人"""
+        """单聊会话页面，转发自己发送的图片给手机联系人"""
 
         # 确保当前聊天页面已有图片
         Preconditions.make_already_have_my_picture()
@@ -1783,7 +1851,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         # 等待选择联系人->本地联系人 页面加载
         slc.wait_for_page_load()
         name = "大佬2"
-        # 3.选择一个本地联系人
+        # 3.选择一个手机联系人
         slc.selecting_local_contacts_by_name(name)
         # 确定转发
         slc.click_sure_forward()
@@ -1817,7 +1885,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'LXD')
     def test_msg_privateChat_videoPic_total_quantity_0045(self):
-        """单聊会话页面，转发自己发送的图片到本地联系人时失败"""
+        """单聊会话页面，转发自己发送的图片到手机联系人时失败"""
 
         scp = SingleChatPage()
         # 等待单聊会话页面加载
@@ -1844,7 +1912,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         # 等待选择联系人->本地联系人 页面加载
         slc.wait_for_page_load()
         name = "大佬2"
-        # 3.选择一个本地联系人
+        # 3.选择一个手机联系人
         slc.selecting_local_contacts_by_name(name)
         # 确定转发
         slc.click_sure_forward()
@@ -1867,7 +1935,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'LXD')
     def test_msg_privateChat_videoPic_total_quantity_0046(self):
-        """单聊会话页面，转发自己发送的图片到本地联系人时点击取消转发"""
+        """单聊会话页面，转发自己发送的图片到手机联系人时点击取消转发"""
 
         # 确保当前聊天页面已有图片
         Preconditions.make_already_have_my_picture()
@@ -1885,7 +1953,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         # 等待选择联系人->本地联系人 页面加载
         slc.wait_for_page_load()
         name = "大佬2"
-        # 3.选择一个本地联系人
+        # 3.选择一个手机联系人
         slc.selecting_local_contacts_by_name(name)
         # 取消转发
         slc.click_cancel_forward()
@@ -1898,7 +1966,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'LXD')
     def test_msg_privateChat_videoPic_total_quantity_0047(self):
-        """单聊会话页面，转发自己发送的图片给和通讯录联系人"""
+        """单聊会话页面，转发自己发送的图片给团队联系人"""
 
         scp = SingleChatPage()
         # 等待单聊会话页面加载
@@ -1915,7 +1983,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         shc = SelectHeContactsDetailPage()
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
-        # 3.选择一个和通讯录联系人
+        # 3.选择一个团队联系人
         # 需要考虑测试号码存在多个团队的情况
         Preconditions.if_exists_multiple_enterprises_enter_single_chat()
         name = "大佬3"
@@ -1945,7 +2013,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'LXD')
     def test_msg_privateChat_videoPic_total_quantity_0048(self):
-        """单聊会话页面，转发自己发送的图片到和通讯录联系人时失败"""
+        """单聊会话页面，转发自己发送的图片到团队联系人时失败"""
 
         scp = SingleChatPage()
         # 等待单聊会话页面加载
@@ -1969,7 +2037,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         shc = SelectHeContactsDetailPage()
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
-        # 3.选择一个和通讯录联系人
+        # 3.选择一个团队联系人
         # 需要考虑测试号码存在多个团队的情况
         Preconditions.if_exists_multiple_enterprises_enter_single_chat()
         name = "大佬3"
@@ -1995,7 +2063,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'LXD')
     def test_msg_privateChat_videoPic_total_quantity_0049(self):
-        """单聊会话页面，转发自己发送的图片到和通讯录联系人时点击取消转发"""
+        """单聊会话页面，转发自己发送的图片到团队联系人时点击取消转发"""
 
         scp = SingleChatPage()
         # 等待单聊会话页面加载
@@ -2012,7 +2080,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         shc = SelectHeContactsDetailPage()
         # 等待选择联系人->和通讯录联系人 页面加载
         shc.wait_for_he_contacts_page_load()
-        # 3.选择一个和通讯录联系人
+        # 3.选择一个团队联系人
         # 需要考虑测试号码存在多个团队的情况
         Preconditions.if_exists_multiple_enterprises_enter_single_chat()
         name = "大佬3"

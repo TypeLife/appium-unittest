@@ -110,6 +110,275 @@ class Preconditions(LoginPreconditions):
         return group_name
 
 
+class MsgAllPrior(TestCase):
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0605():
+        """确保在群聊聊天会话页面"""
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            if mess.get_top_news_name() == Preconditions.get_group_chat_name():
+                mess.choose_chat_by_name(Preconditions.get_group_chat_name())
+                return
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0605(self):
+        """开启免打扰后，在聊天页面在输入框输入内容-返回到消息列表页时，该消息列表窗口直接展示：草稿"""
+        # 1、点击消息免打扰的开关，是否可以打开消息免打扰开关
+        group_chat_page = GroupChatPage()
+        group_chat_page.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        switch_status = group_set.get_switch_undisturb_status()
+        if not switch_status:
+            group_set.click_switch_undisturb()
+            time.sleep(2)
+        # 返回到聊天会话页面，页面上方是否会展示免打扰标志
+        group_set.click_back()
+        group_chat_page.wait_for_page_load()
+        group_chat_page.input_message("this is a test message")
+        group_chat_page.click_back()
+        msg_page = MessagePage()
+        msg_page.wait_for_page_load()
+        self.assertTrue(msg_page.wait_until(lambda x: msg_page.is_text_present('草稿')))
+        MessagePage().choose_chat_by_name(Preconditions.get_group_chat_name())
+        group_chat_page = GroupChatPage()
+        group_chat_page.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        switch_status = group_set.get_switch_undisturb_status()
+        if switch_status:
+            group_set.click_switch_undisturb()
+            time.sleep(1)
+
+    def enter_o2o_message_page(self):
+        msg_page = MessagePage()
+        msg_page.open_message_page()
+        msg_page.click_add_icon()
+        msg_page.click_new_message()
+        select_contact = SelectContactsPage()
+        select_contact.wait_for_create_msg_page_load()
+        select_contact.click_one_local_contacts()
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0058():
+        Flag = True
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page(reset=Flag)
+
+    @unittest.skip('用例需要重置')
+    def test_msg_huangcaizui_A_0058(self):
+        """新建消息入口首次进入一对一聊天页面是否有弹框出来"""
+        self.enter_o2o_message_page()
+        self.assertTrue(SingleChatPage().is_exist_dialog(timeout=8))
+        SingleChatPage().driver.back()
+        SingleChatPage().click_back()
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0059():
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @unittest.skip('用例需要重置')
+    def test_msg_huangcaizui_A_0059(self):
+        """观察从新建消息入口出现的弹框页面"""
+        self.enter_o2o_message_page()
+        single_chat = SingleChatPage()
+        self.assertTrue(single_chat.is_exist_dialog(timeout=8))
+        self.assertTrue(single_chat.check_element_enabled('我已阅读'))
+        self.assertFalse(single_chat.check_element_enabled('确定'))
+        single_chat.driver.back()
+        single_chat.click_back()
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0060():
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @unittest.skip('用例需要重置')
+    def test_msg_huangcaizui_A_0060(self):
+        """验证点选弹框中的“我已阅读”按钮后确定按钮是否会变高亮"""
+        self.enter_o2o_message_page()
+        single_chat = SingleChatPage()
+        self.assertTrue(single_chat.is_exist_dialog(timeout=8))
+        self.assertFalse(single_chat.check_element_enabled('确定'))
+        single_chat.click_only_i_have_read()
+        self.assertTrue(single_chat.check_element_enabled('确定'))
+        single_chat.driver.back()
+        single_chat.click_back()
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0061():
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @unittest.skip('用例需要重置')
+    def test_msg_huangcaizui_A_0061(self):
+        """验证点选弹框中的“我已阅读”按钮后确定按钮是否会变高亮"""
+        self.enter_o2o_message_page()
+        single_chat = SingleChatPage()
+        self.assertTrue(single_chat.is_exist_dialog(timeout=8))
+        self.assertFalse(single_chat.check_element_enabled('确定'))
+        single_chat.click_only_i_have_read()
+        self.assertTrue(single_chat.check_element_enabled('确定'))
+        single_chat.click_only_sure_button()
+        single_chat.wait_for_page_load()
+        self.assertTrue(single_chat.is_on_this_page)
+        single_chat.click_back()
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0062():
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page(reset=True)
+
+    @unittest.skip('用例需要重置')
+    def test_msg_huangcaizui_A_0062(self):
+        """验证不点击确定，使用手机系统返回，再次进入一对一聊天窗口是否会再次弹出使用须知"""
+        self.enter_o2o_message_page()
+        single_chat = SingleChatPage()
+        self.assertTrue(single_chat.is_exist_dialog(timeout=8))
+        self.assertFalse(single_chat.check_element_enabled('确定'))
+        single_chat.click_only_i_have_read()
+        self.assertTrue(single_chat.check_element_enabled('确定'))
+        single_chat.driver.back()
+        single_chat.click_back()
+        self.enter_o2o_message_page()
+        self.assertTrue(single_chat.is_exist_dialog(timeout=8))
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0103():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_private_chat_page()
+            return
+        chat = SingleChatPage()
+        if chat.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            Preconditions.enter_private_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0103(self):
+        """页面样式"""
+        single_chat_page = SingleChatPage()
+        if not single_chat_page.is_open_expression():
+            single_chat_page.open_expression()
+        time.sleep(2)
+        single_chat_page.page_should_contains_element('表情id')
+        single_chat_page.page_should_contains_element('翻页小圆点')
+        single_chat_page.page_should_contains_element('删除表情按钮')
+        single_chat_page.page_should_contains_element('表情集选择栏')
+        single_chat_page.page_should_contains_element('关闭表情')  # 键盘
+        single_chat_page.close_expression()
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0128():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_private_chat_page()
+            return
+        chat = SingleChatPage()
+        if chat.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            Preconditions.enter_private_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0128(self):
+        """进入发送页面"""
+        # 1、进入一对一天界面
+        single_chat_page = SingleChatPage()
+        # 2、选择短信功能，进入短信发送模式
+        single_chat_page.click_sms()
+        time.sleep(2)
+        if single_chat_page.wait_until(lambda x: single_chat_page.page_should_contain_text("欢迎使用免费短信"), timeout=8,
+                                       auto_accept_permission_alert=False):
+            single_chat_page.page_should_contain_text("欢迎使用免费短信")
+            single_chat_page.page_should_contain_text("免费给移动用户发送短信")
+            single_chat_page.page_should_contain_text("给非移动用户发短信将收取0.01元/条")
+            single_chat_page.page_should_contain_text("给港澳台等境外用户发短信将收取1元/条")
+            single_chat_page.driver.back()
+        else:
+            single_chat_page.wait_for_page_load()
+            self.assertTrue(single_chat_page.is_on_this_page())
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0129():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_private_chat_page()
+            return
+        chat = SingleChatPage()
+        if chat.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            Preconditions.enter_private_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0129(self):
+        """进入发送页面"""
+        # 1、进入一对一天界面
+        single_chat_page = SingleChatPage()
+        # 2、选择短信功能，进入短信发送模式
+        single_chat_page.click_sms()
+        time.sleep(2)
+        if single_chat_page.wait_until(lambda x: single_chat_page.page_should_contain_text("欢迎使用免费短信"), timeout=8,
+                                       auto_accept_permission_alert=False):
+            self.assertTrue(single_chat_page.check_cmcc_msg_two_button())
+            single_chat_page.driver.back()
+        else:
+            single_chat_page.wait_for_page_load()
+            self.assertTrue(single_chat_page.is_on_this_page())
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0147():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_private_chat_page()
+            return
+        chat = SingleChatPage()
+        if chat.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            Preconditions.enter_private_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0147(self):
+        """会话窗口中点击删除文本消息"""
+        single_chat_page = SingleChatPage()
+        single_chat_page.wait_for_page_load()
+        single_chat_page.input_text_message('this is a test message')
+        single_chat_page.send_text()
+        single_chat_page.delete_mess('this is a test message')
+        single_chat_page.page_should_not_contain_text('this is a test message')
+
+
 class MsgGroupChatTest(TestCase):
     """
     模块：消息->群聊
@@ -155,8 +424,12 @@ class MsgGroupChatTest(TestCase):
         Preconditions.select_mobile('Android-移动')
         mess = MessagePage()
         if mess.is_on_this_page():
-            Preconditions.enter_group_chat_page()
-            return
+            try:
+                mess.choose_chat_by_name(Preconditions.get_group_chat_name())
+                return
+            except:
+                Preconditions.enter_group_chat_page()
+                return
         scp = GroupChatPage()
         if scp.is_on_this_page():
             current_mobile().hide_keyboard_if_display()
@@ -938,7 +1211,7 @@ class MsgGroupChatTest(TestCase):
         select_file_type.click_music()
         local_file = ChatSelectLocalFilePage()
         # 进入预置文件目录，选择文件发送
-        local_file.select_file("2M_music.mp3")
+        local_file.select_file("喜欢你.mp3")
         local_file.click_single_send()
         self.assertTrue(local_file.check_10G_free_data_page())
         local_file.click_outside_element()
@@ -957,7 +1230,7 @@ class MsgGroupChatTest(TestCase):
         select_file_type.click_music()
         local_file = ChatSelectLocalFilePage()
         # 进入预置文件目录，选择文件发送
-        local_file.select_file("2M_music.mp3")
+        local_file.select_file("喜欢你.mp3")
         local_file.click_send()
         self.test_msg_weifenglian_qun_0047()
 
@@ -974,7 +1247,7 @@ class MsgGroupChatTest(TestCase):
         select_file_type.click_music()
         local_file = ChatSelectLocalFilePage()
         # 进入预置文件目录，选择文件发送
-        local_file.select_file("2M_music.mp3")
+        local_file.select_file("喜欢你.mp3")
         local_file.click_single_send()
         local_file.click_free_data_button()
         bol = local_file.wait_until(lambda x: ChatSelectLocalFilePage().is_text_present('和飞信'), timeout=15,
@@ -1243,11 +1516,6 @@ class MsgGroupChatTest(TestCase):
         """将自己发送的文件转发到在搜索框输入多种字符搜索到的群"""
         self.pubilic_group_search_text('float0.123')
 
-    # @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
-    # def test_msg_weifenglian_qun_0088(self):
-    #     """将自己发送的文件转发到在搜索框粘贴字符搜索到的群"""
-    #     self.pubilic_group_search_text('.;,')
-
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_weifenglian_qun_0089(self):
         """将自己发送的文件转发到搜索到的群时点击取消转发"""
@@ -1453,7 +1721,7 @@ class MsgGroupChatTest(TestCase):
         select_recent_chat.select_recent_chat_by_number(0)
         select_recent_chat.click_cancel_forward()
         # 转发成功并回到聊天页面
-        self.assertTrue(select_recent_chat.is_on_this_page)
+        self.assertTrue(select_recent_chat.is_on_this_page())
         select_recent_chat.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
@@ -1543,6 +1811,7 @@ class MsgGroupChatTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_weifenglian_qun_0191(self):
+        """群聊聊天文件列表页面显示正常"""
         self.press_group_file()
         GroupChatPage().click_setting()
         # 2. 点击下方的查找聊天内容按钮
@@ -1559,7 +1828,7 @@ class MsgGroupChatTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_weifenglian_qun_0194(self):
-        """群聊聊天文件列表页面显示正常"""
+        """群聊聊天文件列表页打开不可直接打开的文件时关闭第三方软件弹窗"""
         chat_more = ChatMorePage()
         chat_more.close_more()
         chat_more.click_file1()
@@ -1710,21 +1979,348 @@ class MsgGroupChatTest(TestCase):
         current_mobile().turn_on_wifi()
         current_mobile().turn_on_mobile_data()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0206(self):
+        """发送文件"""
+        self.public_enter_file_select_page()
+        file = ChatSelectLocalFilePage()
+        file.select_file('.xlsx')
+        self.assertTrue(file.check_element_is_exist('文件显示大小'))
+        self.assertTrue(file.check_element_is_enable('发送'))
+        file.click_send()
+        GroupChatPage().wait_for_page_load()
+        self.assertTrue(GroupChatPage().check_message_resend_success())
+        self.assertTrue(GroupChatPage().is_on_this_page())
 
-
-class MsgAllPrior(TestCase):
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0207(self):
+        """网络异常时发送文件"""
+        current_mobile().turn_off_wifi()
+        current_mobile().turn_off_mobile_data()
+        self.public_enter_file_select_page()
+        file = ChatSelectLocalFilePage()
+        file.select_file('.xlsx')
+        self.assertTrue(file.check_element_is_exist('文件显示大小'))
+        self.assertTrue(file.check_element_is_enable('发送'))
+        file.click_send()
+        GroupChatPage().wait_for_page_load()
+        self.assertTrue(GroupChatPage().is_on_this_page())
+        self.assertTrue(GroupChatPage().is_exist_msg_send_failed_button())
 
     @staticmethod
-    def setUp_test_msg_xiaoqiu_0605():
-        """确保在群聊聊天会话页面"""
+    def tearDown_test_msg_weifenglian_qun_0207():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    def make_sure_have_file_msg(self):
+        group_chat_page = GroupChatPage()
+        group_chat_page.wait_for_page_load()
+        if not group_chat_page.is_exist_msg_send_failed_button() and group_chat_page.is_exist_msg_file():
+            pass
+        else:
+            chat_more = ChatMorePage()
+            chat_more.close_more()
+            chat_more.click_file1()
+            select_file_type = ChatSelectFilePage()
+            select_file_type.wait_for_page_load()
+            select_file_type.click_local_file()
+            local_file = ChatSelectLocalFilePage()
+            # 进入预置文件目录，选择文件发送
+            local_file.enter_preset_file_dir()
+            local_file.select_file(".xlsx")
+            local_file.click_send()
+            GroupChatPage().wait_for_page_load()
+
+    def make_sure_have_file_send_fail(self):
+        group_chat_page = GroupChatPage()
+        group_chat_page.wait_for_page_load()
+        if group_chat_page.is_exist_msg_send_failed_button():
+            pass
+        else:
+            chat_more = ChatMorePage()
+            chat_more.mobile.turn_off_wifi()
+            chat_more.mobile.turn_off_mobile_data()
+            chat_more.close_more()
+            chat_more.click_file1()
+            select_file_type = ChatSelectFilePage()
+            select_file_type.wait_for_page_load()
+            select_file_type.click_local_file()
+            local_file = ChatSelectLocalFilePage()
+            # 进入预置文件目录，选择文件发送
+            local_file.enter_preset_file_dir()
+            local_file.select_file(".xlsx")
+            local_file.click_send()
+            GroupChatPage().wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0223(self):
+        """验证在群聊会话窗口点击文件按钮发送文件，文件消息发送失败时左侧是否有重发按钮"""
+        self.make_sure_have_file_send_fail()
+        self.assertTrue(GroupChatPage().is_exist_msg_send_failed_button())
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_qun_0223():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0224(self):
+        """验证在群聊会话窗口点击文件发送失败的重发按钮是否有弹窗询问"""
+        self.make_sure_have_file_send_fail()
+        group_chat_page = GroupChatPage()
+        group_chat_page.mobile.turn_on_wifi()
+        group_chat_page.mobile.turn_on_mobile_data()
+        group_chat_page.click_msg_send_failed_button()
+        bol = group_chat_page.wait_until(condition=lambda x: group_chat_page.is_text_present('是否重发该条信息'))
+        self.assertTrue(bol)
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_qun_0224():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0225(self):
+        """验证在群聊会话窗口点击文件发送失败的重发按钮，点击取消时是否正常"""
+        self.make_sure_have_file_send_fail()
+        group_chat_page = GroupChatPage()
+        group_chat_page.click_msg_send_failed_button()
+        group_chat_page.click_multiple_selection_delete_cancel()
+        group_chat_page.wait_for_page_load()
+        self.assertTrue((group_chat_page.is_on_this_page()))
+        time.sleep(10)
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_qun_0225():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0227(self):
+        """验证在群聊会话窗口点击发送失败的文件是否可以正常打开"""
+        chat_more = ChatMorePage()
+        chat_more.mobile.turn_off_wifi()
+        chat_more.mobile.turn_off_mobile_data()
+        chat_more.close_more()
+        chat_more.click_file1()
+        select_file_type = ChatSelectFilePage()
+        select_file_type.wait_for_page_load()
+        select_file_type.click_local_file()
+        local_file = ChatSelectLocalFilePage()
+        # 进入预置文件目录，选择文件发送
+        local_file.enter_preset_file_dir()
+        local_file.select_file(".xlsx")
+        local_file.click_send()
+        GroupChatPage().wait_for_page_load()
+        group_chat_page = GroupChatPage()
+        group_chat_page.click_last_file_send_fail()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_qun_0227():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0228(self):
+        """验证在群聊会话窗口有发送失败的文件时返回到消息列表是否有发送失败标识"""
+        self.make_sure_have_file_send_fail()
+        group_chat_page = GroupChatPage()
+        group_chat_page.click_back()
+        self.assertTrue(MessagePage().is_iv_fail_status_present())
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_qun_0228():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0237(self):
+        """验证转发文件到群聊会话窗口时发送失败，点击发送失败的文件是否可以正常打开"""
+        self.make_sure_have_file_send_fail()
+        current_mobile().turn_off_wifi()
+        current_mobile().turn_off_mobile_data()
+        group_chat_page = GroupChatPage()
+        ChatFilePage().forward_file('.xlsx')
+        SelectContactsPage().wait_for_page_load()
+        group_name = Preconditions.get_group_chat_name()
+        SelectContactsPage().select_one_recently_contact_by_name(group_name)
+        SelectContactsPage().click_sure_forward()
+        group_chat_page.wait_for_page_load()
+        group_chat_page.click_last_file_send_fail()
+        self.assertTrue(group_chat_page.is_exist_more_button())
+        group_chat_page.click_file_back()
+        group_chat_page.delete_group_all_file()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_qun_0237():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0238(self):
+        """验证在群聊会话窗口点击打开已下载的可预览文件时，标题显示是否正常"""
+        self.make_sure_have_file_msg()
+        group_chat_page = GroupChatPage()
+        group_chat_page.click_last_file_send_fail()
+        group_chat_page.wait_until(condition=lambda x: group_chat_page.is_text_present('测试用例.xlsx'),
+                                   auto_accept_permission_alert=False)
+        group_chat_page.click_file_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0239(self):
+        """验证在群聊会话窗口点击打开已下载的可预览文件时，右上角是否新增更多功能入口"""
+        self.make_sure_have_file_msg()
+        group_chat_page = GroupChatPage()
+        group_chat_page.click_last_file_send_fail()
+        self.assertTrue(group_chat_page.is_exist_more_button())
+        group_chat_page.click_file_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0240(self):
+        """验证在群聊会话窗口点击打开已下载的可预览文件时，点击右上角的更多按钮是否正常调起选项"""
+        self.make_sure_have_file_msg()
+        group_chat_page = GroupChatPage()
+        group_chat_page.click_last_file_send_fail()
+        group_chat_page.is_exist_more_button()
+        group_chat_page.click_more_button()
+        group_chat_page.wait_until(condition=lambda x: group_chat_page.is_text_present('收藏'),
+                                   auto_accept_permission_alert=False)
+        self.assertTrue(group_chat_page.check_options_is_enable())
+        group_chat_page.mobile.back()
+        group_chat_page.click_file_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0241(self):
+        """验证在群聊会话窗口点击打开已下载的可预览文件-右上角的更多按钮-转发-返回时页面是否正常"""
+        self.make_sure_have_file_msg()
+        group_chat_page = GroupChatPage()
+        group_chat_page.click_last_file_send_fail()
+        group_chat_page.is_exist_more_button()
+        group_chat_page.click_more_button()
+        group_chat_page.wait_until(condition=lambda x: group_chat_page.is_text_present('收藏'),
+                                   auto_accept_permission_alert=False)
+        group_chat_page.click_element_by_text('转发')
+        SelectContactPage().click_back()
+        self.assertTrue(group_chat_page.is_exist_more_button())
+        group_chat_page.click_file_back()
+
+    def public_open_file(self):
+        self.make_sure_have_file_msg()
+        group_chat_page = GroupChatPage()
+        group_chat_page.wait_for_page_load()
+        group_chat_page.click_last_file_send_fail()
+        group_chat_page.is_exist_more_button()
+
+    def public_open_file_click_more_button(self):
+        self.public_open_file()
+        GroupChatPage().click_more_button()
+        time.sleep(1)
+
+    def public_select_recent_chat_send(self):
+        select_recent_chat = SelectContactsPage()
+        select_recent_chat.wait_for_page_load()
+        select_recent_chat.select_recent_chat_by_number(0)
+        SelectContactsPage().click_sure_forward()
+        # 转发成功并回到聊天页面
+        self.assertTrue(GroupChatPage().is_exist_forward())
+        self.assertTrue(GroupChatPage().is_exist_more_button())
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0242(self):
+        """验证在群聊会话窗口点击打开已下载的可预览文件-右上角的更多按钮-转发-返回时页面是否正常"""
+        self.public_open_file_click_more_button()
+        GroupChatPage().click_element_by_text('转发')
+        self.public_select_recent_chat_send()
+        GroupChatPage().click_file_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0243(self):
+        """验证在群聊会话窗口点击打开已下载的可预览文件-右上角的更多按钮-转发时是否正常"""
+        self.public_open_file_click_more_button()
+        GroupChatPage().click_element_by_text('收藏')
+        GroupChatPage().click_file_back()
+        GroupChatPage().click_back()
+        message_page = MessagePage()
+        message_page.wait_for_page_load()
+        message_page.open_me_page()
+        MePage().is_on_this_page()
+        # 点击我的收藏,进入收藏页面
+        MePage().click_collection()
+        collection_page = MeCollectionPage()
+        collection_page.wait_for_page_load()
+        collection_page.element_contain_text("我", Preconditions.get_group_chat_name())
+        MePage().click_back()
+        MePage().open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0244(self):
+        """验证在群聊会话窗口点击打开已下载的可预览文件-右上角的更多按钮-其他应用打开时是否正常"""
+        self.public_open_file_click_more_button()
+        GroupChatPage().click_element_by_text('其他应用打开')
+        self.assertFalse(GroupChatPage().is_text_present('其他应用打开'))
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0245(self):
+        """验证在群聊会话窗口点击打开已下载的可预览文件-右上角的更多按钮-取消时是否正常"""
+        self.public_open_file_click_more_button()
+        current_mobile().back()
+        self.assertTrue(GroupChatPage().is_exist_more_button())
+
+    def public_find_group_chat_open_file(self):
+        self.make_sure_have_file_msg()
+        GroupChatPage().wait_for_page_load()
+        # 1. 点击右上角个人设置按钮
+        GroupChatPage().click_setting()
+        # 2. 点击下方的查找聊天内容按钮
+        GroupChatSetPage().click_search_chat_record()
+        current_mobile().hide_keyboard_if_display()
+        FindChatRecordPage().wait_for_page_loads()
+        FindChatRecordPage().click_file()
+        chat_file = ChatFilePage()
+        chat_file.wait_for_page_loads()
+        chat_file.click_file('.xlsx')
+        GroupChatPage().is_exist_more_button()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0246(self):
+        """验验证在群聊-查找聊天内容-文件页面点击打开已下载的可预览文件时，标题显示是否正常"""
+        self.public_find_group_chat_open_file()
+        group_chat_page = GroupChatPage()
+        self.assertTrue(group_chat_page.is_exist_more_button())
+        group_chat_page.wait_until(condition=lambda x: group_chat_page.is_text_present('测试用例.xlsx'),
+                                   auto_accept_permission_alert=False)
+        # 返回到聊天页面
+        ChatFilePage().click_back()
+        ChatFilePage().click_back()
+        FindChatRecordPage().click_back()
+        GroupChatSetPage().click_back()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0247(self):
+        """验证在群聊-查找聊天内容-文件页面点击打开已下载的可预览文件时，右上角是否新增更多功能入口"""
+        self.public_find_group_chat_open_file()
+        group_chat_page = GroupChatPage()
+        self.assertTrue(group_chat_page.is_exist_more_button())
+        # 返回到聊天页面
+        ChatFilePage().click_back()
+        ChatFilePage().click_back()
+        FindChatRecordPage().click_back()
+        GroupChatSetPage().click_back()
+
+
+class MsgGroupChatPrior(TestCase):
+
+    def default_setUp(self):
+        """确保每个用例运行前在群聊聊天会话页面"""
         Preconditions.select_mobile('Android-移动')
         mess = MessagePage()
         if mess.is_on_this_page():
-            if mess.get_top_news_name() == Preconditions.get_group_chat_name():
+            try:
                 mess.choose_chat_by_name(Preconditions.get_group_chat_name())
                 return
-            Preconditions.enter_group_chat_page()
-            return
+            except:
+                Preconditions.enter_group_chat_page()
+                return
         scp = GroupChatPage()
         if scp.is_on_this_page():
             current_mobile().hide_keyboard_if_display()
@@ -1733,241 +2329,114 @@ class MsgAllPrior(TestCase):
             current_mobile().launch_app()
             Preconditions.enter_group_chat_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior')
-    def test_msg_xiaoqiu_0605(self):
-        """开启免打扰后，在聊天页面在输入框输入内容-返回到消息列表页时，该消息列表窗口直接展示：草稿"""
-        # 1、点击消息免打扰的开关，是否可以打开消息免打扰开关
+    def default_tearDown(self):
+        pass
+
+    def make_sure_have_loc_msg(self):
         group_chat_page = GroupChatPage()
-        group_chat_page.click_setting()
-        group_set = GroupChatSetPage()
-        group_set.wait_for_page_load()
-        switch_status = group_set.get_switch_undisturb_status()
-        if not switch_status:
-            group_set.click_switch_undisturb()
-            time.sleep(2)
-        # 返回到聊天会话页面，页面上方是否会展示免打扰标志
-        group_set.click_back()
         group_chat_page.wait_for_page_load()
-        group_chat_page.input_message("this is a test message")
-        group_chat_page.click_back()
-        msg_page = MessagePage()
-        msg_page.wait_for_page_load()
-        self.assertTrue(msg_page.wait_until(lambda x: msg_page.is_text_present('草稿')))
-
-    def enter_o2o_message_page(self):
-        msg_page = MessagePage()
-        msg_page.open_message_page()
-        msg_page.click_add_icon()
-        msg_page.click_new_message()
-        select_contact = SelectContactsPage()
-        select_contact.wait_for_create_msg_page_load()
-        select_contact.click_one_local_contacts()
-
-    @staticmethod
-    def setUp_test_msg_huangcaizui_A_0058():
-        Flag = True
-        Preconditions.select_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page(reset=Flag)
-
-    @unittest.skip('用例需要重置')
-    def test_msg_huangcaizui_A_0058(self):
-        """新建消息入口首次进入一对一聊天页面是否有弹框出来"""
-        self.enter_o2o_message_page()
-        self.assertTrue(SingleChatPage().is_exist_dialog(timeout=8))
-        SingleChatPage().driver.back()
-        SingleChatPage().click_back()
-
-    @staticmethod
-    def setUp_test_msg_huangcaizui_A_0059():
-        Preconditions.select_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-
-    @unittest.skip('用例需要重置')
-    def test_msg_huangcaizui_A_0059(self):
-        """观察从新建消息入口出现的弹框页面"""
-        self.enter_o2o_message_page()
-        single_chat = SingleChatPage()
-        self.assertTrue(single_chat.is_exist_dialog(timeout=8))
-        self.assertTrue(single_chat.check_element_enabled('我已阅读'))
-        self.assertFalse(single_chat.check_element_enabled('确定'))
-        single_chat.driver.back()
-        single_chat.click_back()
-
-    @staticmethod
-    def setUp_test_msg_huangcaizui_A_0060():
-        Preconditions.select_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-
-    @unittest.skip('用例需要重置')
-    def test_msg_huangcaizui_A_0060(self):
-        """验证点选弹框中的“我已阅读”按钮后确定按钮是否会变高亮"""
-        self.enter_o2o_message_page()
-        single_chat = SingleChatPage()
-        self.assertTrue(single_chat.is_exist_dialog(timeout=8))
-        self.assertFalse(single_chat.check_element_enabled('确定'))
-        single_chat.click_only_i_have_read()
-        self.assertTrue(single_chat.check_element_enabled('确定'))
-        single_chat.driver.back()
-        single_chat.click_back()
-
-    @staticmethod
-    def setUp_test_msg_huangcaizui_A_0061():
-        Preconditions.select_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-
-    @unittest.skip('用例需要重置')
-    def test_msg_huangcaizui_A_0061(self):
-        """验证点选弹框中的“我已阅读”按钮后确定按钮是否会变高亮"""
-        self.enter_o2o_message_page()
-        single_chat = SingleChatPage()
-        self.assertTrue(single_chat.is_exist_dialog(timeout=8))
-        self.assertFalse(single_chat.check_element_enabled('确定'))
-        single_chat.click_only_i_have_read()
-        self.assertTrue(single_chat.check_element_enabled('确定'))
-        single_chat.click_only_sure_button()
-        single_chat.wait_for_page_load()
-        self.assertTrue(single_chat.is_on_this_page)
-        single_chat.click_back()
-
-    @staticmethod
-    def setUp_test_msg_huangcaizui_A_0062():
-        Preconditions.select_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page(reset=True)
-
-    @unittest.skip('用例需要重置')
-    def test_msg_huangcaizui_A_0062(self):
-        """验证不点击确定，使用手机系统返回，再次进入一对一聊天窗口是否会再次弹出使用须知"""
-        self.enter_o2o_message_page()
-        single_chat = SingleChatPage()
-        self.assertTrue(single_chat.is_exist_dialog(timeout=8))
-        self.assertFalse(single_chat.check_element_enabled('确定'))
-        single_chat.click_only_i_have_read()
-        self.assertTrue(single_chat.check_element_enabled('确定'))
-        single_chat.driver.back()
-        single_chat.click_back()
-        self.enter_o2o_message_page()
-        self.assertTrue(single_chat.is_exist_dialog(timeout=8))
-
-    @staticmethod
-    def setUp_test_msg_huangcaizui_A_0103():
-        Preconditions.select_mobile('Android-移动')
-        mess = MessagePage()
-        if mess.is_on_this_page():
-            Preconditions.enter_private_chat_page()
-            return
-        chat = SingleChatPage()
-        if chat.is_on_this_page():
-            current_mobile().hide_keyboard_if_display()
-            return
+        if group_chat_page.is_exist_loc_msg():
+            pass
         else:
-            current_mobile().launch_app()
-            Preconditions.enter_private_chat_page()
+            chat_more = ChatMorePage()
+            chat_more.close_more()
+            chat_more.click_location()
+            location_page = ChatLocationPage()
+            location_page.wait_for_page_load()
+            time.sleep(1)
+            # 点击发送按钮
+            if not location_page.send_btn_is_enabled():
+                raise AssertionError("位置页面发送按钮不可点击")
+            location_page.click_send()
+            group_chat_page.wait_for_page_load()
+            group_chat_page.click_more()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior')
-    def test_msg_huangcaizui_A_0103(self):
-        """页面样式"""
-        single_chat_page = SingleChatPage()
-        if not single_chat_page.is_open_expression():
-            single_chat_page.open_expression()
-        time.sleep(2)
-        single_chat_page.page_should_contains_element('表情id')
-        single_chat_page.page_should_contains_element('翻页小圆点')
-        single_chat_page.page_should_contains_element('删除表情按钮')
-        single_chat_page.page_should_contains_element('表情集选择栏')
-        single_chat_page.page_should_contains_element('关闭表情')  # 键盘
-        single_chat_page.close_expression()
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'level_high')
+    def test_msg_weifenglian_qun_0336(self):
+        """将自己发送的位置转发到手机联系人"""
+        self.make_sure_have_loc_msg()
+        GroupChatPage().press_message_to_do("转发")
+        SelectContactsPage().wait_for_page_load()
+        SelectContactsPage().select_local_contacts()
+        phone_contacts = SelectLocalContactsPage()
+        phone_contacts.wait_for_page_load()
+        phone_contacts.click_first_phone_contacts()
+        phone_contacts.click_sure_forward()
+        # 转发成功并回到聊天页面
+        self.assertTrue(GroupChatPage().is_exist_forward())
+        GroupChatPage().wait_for_page_load()
+        self.assertTrue(GroupChatPage().is_on_this_page())
 
-    @staticmethod
-    def setUp_test_msg_huangcaizui_A_0128():
-        Preconditions.select_mobile('Android-移动')
-        mess = MessagePage()
-        if mess.is_on_this_page():
-            Preconditions.enter_private_chat_page()
-            return
-        chat = SingleChatPage()
-        if chat.is_on_this_page():
-            current_mobile().hide_keyboard_if_display()
-            return
-        else:
-            current_mobile().launch_app()
-            Preconditions.enter_private_chat_page()
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'level_high')
+    def test_msg_weifenglian_qun_0369(self):
+        """将自己发送的位置转发到我的电脑"""
+        self.make_sure_have_loc_msg()
+        GroupChatPage().press_message_to_do("转发")
+        SelectContactsPage().wait_for_page_load()
+        SelectContactsPage().search('我的电脑')
+        SelectOneGroupPage().click_search_result()
+        SelectOneGroupPage().click_sure_forward()
+        # 转发成功并回到聊天页面
+        self.assertTrue(GroupChatPage().is_exist_forward())
+        GroupChatPage().wait_for_page_load()
+        self.assertTrue(GroupChatPage().is_on_this_page())
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior')
-    def test_msg_huangcaizui_A_0128(self):
-        """进入发送页面"""
-        # 1、进入一对一天界面
-        single_chat_page = SingleChatPage()
-        # 2、选择短信功能，进入短信发送模式
-        single_chat_page.click_sms()
-        time.sleep(2)
-        if single_chat_page.wait_until(lambda x: single_chat_page.page_should_contain_text("欢迎使用免费短信"), timeout=8,
-                                       auto_accept_permission_alert=False):
-            single_chat_page.page_should_contain_text("欢迎使用免费短信")
-            single_chat_page.page_should_contain_text("免费给移动用户发送短信")
-            single_chat_page.page_should_contain_text("给非移动用户发短信将收取0.01元/条")
-            single_chat_page.page_should_contain_text("给港澳台等境外用户发短信将收取1元/条")
-            single_chat_page.driver.back()
-        else:
-            single_chat_page.wait_for_page_load()
-            self.assertTrue(single_chat_page.is_on_this_page())
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'level_high')
+    def test_msg_weifenglian_qun_0370(self):
+        """将自己发送的位置转发到我的电脑"""
+        self.make_sure_have_loc_msg()
+        GroupChatPage().press_message_to_do("转发")
+        select_recent_chat = SelectContactsPage()
+        select_recent_chat.wait_for_page_load()
+        select_recent_chat.select_recent_chat_by_number(0)
+        SelectContactsPage().click_sure_forward()
+        # 转发成功并回到聊天页面
+        self.assertTrue(GroupChatPage().is_exist_forward())
+        GroupChatPage().wait_for_page_load()
+        self.assertTrue(GroupChatPage().is_on_this_page())
 
-    @staticmethod
-    def setUp_test_msg_huangcaizui_A_0129():
-        Preconditions.select_mobile('Android-移动')
-        mess = MessagePage()
-        if mess.is_on_this_page():
-            Preconditions.enter_private_chat_page()
-            return
-        chat = SingleChatPage()
-        if chat.is_on_this_page():
-            current_mobile().hide_keyboard_if_display()
-            return
-        else:
-            current_mobile().launch_app()
-            Preconditions.enter_private_chat_page()
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'level_high')
+    def test_msg_weifenglian_qun_0373(self):
+        """对自己发送出去的位置消息进行删除"""
+        self.make_sure_have_loc_msg()
+        GroupChatPage().press_message_to_do("删除")
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior')
-    def test_msg_huangcaizui_A_0129(self):
-        """进入发送页面"""
-        # 1、进入一对一天界面
-        single_chat_page = SingleChatPage()
-        # 2、选择短信功能，进入短信发送模式
-        single_chat_page.click_sms()
-        time.sleep(2)
-        if single_chat_page.wait_until(lambda x: single_chat_page.page_should_contain_text("欢迎使用免费短信"), timeout=8,
-                                       auto_accept_permission_alert=False):
-            self.assertTrue(single_chat_page.check_cmcc_msg_two_button())
-            single_chat_page.driver.back()
-        else:
-            single_chat_page.wait_for_page_load()
-            self.assertTrue(single_chat_page.is_on_this_page())
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'level_high')
+    def test_msg_weifenglian_qun_0374(self):
+        """对自己发送出去的位置消息进行十秒内撤回"""
+        group_chat_page = GroupChatPage()
+        group_chat_page.wait_for_page_load()
+        chat_more = ChatMorePage()
+        chat_more.close_more()
+        chat_more.click_location()
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        time.sleep(1)
+        # 点击发送按钮
+        if not location_page.send_btn_is_enabled():
+            raise AssertionError("位置页面发送按钮不可点击")
+        location_page.click_send()
+        group_chat_page.wait_for_page_load()
+        group_chat_page.click_more()
+        group_chat_page.recall_loc_msg()
 
-    @staticmethod
-    def setUp_test_msg_huangcaizui_A_0147():
-        Preconditions.select_mobile('Android-移动')
-        mess = MessagePage()
-        if mess.is_on_this_page():
-            Preconditions.enter_private_chat_page()
-            return
-        chat = SingleChatPage()
-        if chat.is_on_this_page():
-            current_mobile().hide_keyboard_if_display()
-            return
-        else:
-            current_mobile().launch_app()
-            Preconditions.enter_private_chat_page()
-
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior')
-    def test_msg_huangcaizui_A_0147(self):
-        """会话窗口中点击删除文本消息"""
-        single_chat_page = SingleChatPage()
-        single_chat_page.wait_for_page_load()
-        single_chat_page.input_text_message('this is a test message')
-        single_chat_page.send_text()
-        single_chat_page.delete_mess('this is a test message')
-        single_chat_page.page_should_not_contain_text('this is a test message')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'level_high')
+    def test_msg_weifenglian_qun_0375(self):
+        """对自己发送出去的位置消息进行收藏"""
+        self.make_sure_have_loc_msg()
+        group_chat_page = GroupChatPage()
+        group_chat_page.press_message_to_do("收藏")
+        GroupChatPage().is_exist_collection()
+        GroupChatPage().click_back()
+        message_page = MessagePage()
+        message_page.wait_for_page_load()
+        message_page.open_me_page()
+        MePage().is_on_this_page()
+        # 点击我的收藏,进入收藏页面
+        MePage().click_collection()
+        collection_page = MeCollectionPage()
+        collection_page.wait_for_page_load()
+        bol = collection_page.wait_until(condition=lambda x:collection_page.is_text_present('位置'))
+        self.assertTrue(bol)
+        MePage().click_back()
+        MePage().open_message_page()

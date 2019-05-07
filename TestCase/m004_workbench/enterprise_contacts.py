@@ -5,8 +5,7 @@ from selenium.common.exceptions import TimeoutException
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
 from library.core.utils.testcasefilter import tags
-from library.core.utils.applicationcache import current_mobile, switch_to_mobile, current_driver
-from pages import AgreementDetailPage
+from library.core.utils.applicationcache import current_mobile, current_driver
 from pages import CallPage
 from pages import ChatWindowPage
 from pages import ContactDetailsPage
@@ -14,10 +13,8 @@ from pages import ContactListSearchPage
 from pages import ContactsPage
 from pages import CreateContactPage
 from pages import GroupChatPage
-from pages import GuidePage
+from pages import GroupListPage
 from pages import MessagePage
-from pages import OneKeyLoginPage
-from pages import PermissionListPage
 from pages import SelectContactsPage
 from pages import SelectOneGroupPage
 from pages import SingleChatPage
@@ -25,6 +22,7 @@ from pages import WorkbenchPage
 from pages.components import BaseChatPage
 from pages.workbench.enterprise_contacts.EnterpriseContacts import EnterpriseContactsPage
 from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
+from preconditions.BasePreconditions import WorkbenchPreconditions
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -39,64 +37,8 @@ REQUIRED_MOBILES = {
 }
 
 
-class Preconditions(object):
+class Preconditions(WorkbenchPreconditions):
     """前置条件"""
-
-    @staticmethod
-    def select_mobile(category, reset=False):
-        """选择手机"""
-        client = switch_to_mobile(REQUIRED_MOBILES[category])
-        client.connect_mobile()
-        if reset:
-            current_mobile().reset_app()
-        return client
-
-    @staticmethod
-    def make_already_in_one_key_login_page():
-        """已经进入一键登录页"""
-        # 如果当前页面已经是一键登录页，不做任何操作
-        one_key = OneKeyLoginPage()
-        if one_key.is_on_this_page():
-            return
-
-        # 如果当前页不是引导页第一页，重新启动app
-        guide_page = GuidePage()
-        if not guide_page.is_on_the_first_guide_page():
-            # current_mobile().launch_app()
-            current_mobile().reset_app()
-            guide_page.wait_for_page_load(20)
-
-        # 跳过引导页
-        guide_page.wait_for_page_load(30)
-        guide_page.swipe_to_the_second_banner()
-        guide_page.swipe_to_the_third_banner()
-        current_mobile().hide_keyboard_if_display()
-        guide_page.click_start_the_experience()
-
-        # 点击权限列表页面的确定按钮
-        permission_list = PermissionListPage()
-        permission_list.click_submit_button()
-        one_key.wait_for_page_load(30)
-
-    @staticmethod
-    def login_by_one_key_login():
-        """
-        从一键登录页面登录
-        :return:
-        """
-        # 等待号码加载完成后，点击一键登录
-        one_key = OneKeyLoginPage()
-        one_key.wait_for_page_load()
-        # one_key.wait_for_tell_number_load(60)
-        one_key.click_one_key_login()
-        if one_key.have_read_agreement_detail():
-            one_key.click_read_agreement_detail()
-            # 同意协议
-            agreement = AgreementDetailPage()
-            agreement.click_agree_button()
-        # 等待消息页
-        message_page = MessagePage()
-        message_page.wait_login_success(60)
 
     @staticmethod
     def make_already_in_message_page(reset_required=False):
@@ -264,6 +206,61 @@ class EnterpriseContactsAllTest(TestCase):
     表格：工作台->企业通讯录
     Author：刘晓东
     """
+
+    @classmethod
+    def setUpClass(cls):
+
+        Preconditions.select_mobile('Android-移动')
+        # 导入测试联系人、群聊
+        fail_time1 = 0
+        flag1 = False
+        import dataproviders
+        while fail_time1 < 3:
+            try:
+                required_contacts = dataproviders.get_preset_contacts()
+                conts = ContactsPage()
+                current_mobile().hide_keyboard_if_display()
+                Preconditions.make_already_in_message_page()
+                conts.open_contacts_page()
+                try:
+                    if conts.is_text_present("发现SIM卡联系人"):
+                        conts.click_text("显示")
+                except:
+                    pass
+                for name, number in required_contacts:
+                    # 创建联系人
+                    conts.create_contacts_if_not_exits(name, number)
+                required_group_chats = dataproviders.get_preset_group_chats()
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    # 创建群
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
+                flag1 = True
+            except:
+                fail_time1 += 1
+            if flag1:
+                break
+
+        # 导入团队联系人
+        fail_time2 = 0
+        flag2 = False
+        while fail_time2 < 5:
+            try:
+                Preconditions.make_already_in_message_page()
+                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
+                Preconditions.create_he_contacts(contact_names)
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "13800137005"), ('郑海贵', "13802883296")]
+                Preconditions.create_he_contacts2(contact_names2)
+                flag2 = True
+            except:
+                fail_time2 += 1
+            if flag2:
+                break
 
     def default_setUp(self):
         """
@@ -661,7 +658,6 @@ class EnterpriseContactsAllTest(TestCase):
             ccp = CreateContactPage()
             ccp.wait_for_page_load()
             ccp.save_contact()
-            cdp.wait_for_page_load()
             time.sleep(2)
         # 1.是否显示用户的详情信息（副号拨打没做验证，需要提供满足条件的测试号码）
         self.assertEquals(cdp.is_exists_contacts_name(), True)
@@ -770,7 +766,7 @@ class EnterpriseContactsAllTest(TestCase):
         time.sleep(2)
         # 点击电话图标
         cdp.click_call_icon()
-        time.sleep(4)
+        time.sleep(5)
         # 验证是否在通话界面
         self.assertEquals(cdp.is_phone_in_calling_state(), True)
         cp = CallPage()
@@ -782,7 +778,10 @@ class EnterpriseContactsAllTest(TestCase):
         time.sleep(4)
         if cdp.is_text_present("继续拨打"):
             cdp.click_text("继续拨打")
-            time.sleep(2)
+            time.sleep(4)
+        if cdp.is_text_present("始终允许"):
+            cdp.click_text("始终允许")
+            time.sleep(4)
         if cdp.is_text_present("暂不开启"):
             cdp.click_text("暂不开启")
             time.sleep(2)
@@ -796,7 +795,7 @@ class EnterpriseContactsAllTest(TestCase):
         time.sleep(4)
         if cdp.is_text_present("继续拨打"):
             cdp.click_text("继续拨打")
-            time.sleep(2)
+            time.sleep(4)
         if cdp.is_text_present("暂不开启"):
             cdp.click_text("暂不开启")
             time.sleep(2)
@@ -809,13 +808,13 @@ class EnterpriseContactsAllTest(TestCase):
         time.sleep(2)
         if cdp.is_text_present("我知道了"):
             cdp.click_text("我知道了")
-            time.sleep(2)
+            time.sleep(4)
         if cdp.is_text_present("始终允许"):
             cdp.click_text("始终允许")
-            time.sleep(2)
+            time.sleep(4)
         if cdp.is_text_present("和飞信电话"):
             cp.hang_up_the_call()
-            time.sleep(2)
+            time.sleep(4)
         if cdp.is_text_present("暂不开启"):
             cdp.click_text("暂不开启")
             time.sleep(2)

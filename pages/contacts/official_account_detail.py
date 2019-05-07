@@ -34,8 +34,10 @@ class OfficialAccountDetailPage(MenuMore, BasePage):
         '查看历史资讯': (MobileBy.ID, ''),
         'com.chinasofti.rcs:id/my_group_name_right_arrow': (
             MobileBy.ID, 'com.chinasofti.rcs:id/my_group_name_right_arrow'),
+
         '进入公众号': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_into_public'),
         '时间显示': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_time"]'),
+        '历史资讯': (MobileBy.ID, 'com.chinasofti.rcs:id/pp_complex_1'),
     }
 
     # @TestLogger.log('点击返回')
@@ -89,13 +91,39 @@ class OfficialAccountDetailPage(MenuMore, BasePage):
     def click_read_old_message(self):
         self.click_element(self.__locators['com.chinasofti.rcs:id/my_group_name_right_arrow'])
 
+    def swipe_page_up(self):
+        """向上滑动"""
+        self.swipe_by_percent_on_screen(50, 70, 50, 50, 800)
+
+
+    @TestLogger.log()
+    def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
+        """等待历史资讯页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["时间显示"])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(message)
+        return self
+
     @TestLogger.log()
     def page_contain_time(self):
         """页面应该包含的元素-时间"""
-        return self.page_should_contain_element(self.__locators['时间显示'])
+        try:
+            pct=self.page_should_contain_element(self.__locators['时间显示'])
+        except:
+            self.swipe_page_up()
+            pct=self.page_should_contain_element(self.__locators['时间显示'])
+        return pct
 
     @TestLogger.log('点击进入公众号')
     def click_into_public(self):
         self.click_element(self.__locators['进入公众号'])
 
-
+    @TestLogger.log('页面是否有历史资讯')
+    def is_contain_old_mes(self):
+        return self._is_element_present(self.__locators['历史资讯'])

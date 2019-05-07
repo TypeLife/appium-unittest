@@ -1,10 +1,8 @@
 import os
 import traceback
 import unittest
+from library.core.utils import ConfigManager, common
 
-# from pip._internal import main as install_requirements
-
-# 自动安装依赖
 module_list = os.popen('pip freeze').readlines()
 with open('requirements.txt', 'r') as f:
     require_list = f.readlines()
@@ -12,40 +10,33 @@ with open('requirements.txt', 'r') as f:
         if require not in module_list:
             os.system('pip install -r requirements.txt')
             break
-# install_requirements(['install', '-r', 'requirements.txt'])
 
-if __name__ == '__main__':
+def get_case(cli_commands):
+    if cli_commands.suite:
+        sui = unittest.TestSuite()
+        for p in cli_commands.suite:
+            path_list = sorted([os.path.join(root, name) for root, dirs, files in os.walk(p) for name in files if os.path.join(root, name).endswith('.py') and not os.path.join(root, name).endswith('__init__.py')])
+            print(path_list)
+            for path in path_list:
+                loader = unittest.TestLoader()
+                print(path)
+                path, file = os.path.split(os.path.abspath(path))
+                s = loader.discover(path, file)
+                sui.addTest(s)
+    else:
+        case_path = ConfigManager.get_test_case_root()
+        sui = unittest.defaultTestLoader.discover(case_path, '*.py')
+    return sui
+
+def run():
     os.environ.setdefault('AVAILABLE_DEVICES_SETTING', 'AVAILABLE_DEVICES')
     from library.core.utils import CommandLineTool
-
     cli_commands = CommandLineTool.parse_and_store_command_line_params()
     if cli_commands.deviceConfig:
         os.environ['AVAILABLE_DEVICES_SETTING'] = cli_commands.deviceConfig
-
-    from library.core.utils import ConfigManager, common
-
-    report_path = ConfigManager.get_html_report_path()
-    s = cli_commands.suite
-    if cli_commands.suite:
-        suite = None
-        for p in cli_commands.suite:
-            if os.path.isdir(p):
-                s = unittest.defaultTestLoader.discover(os.path.abspath(p), '*.py')
-            elif os.path.isfile(p):
-                path, file = os.path.split(os.path.abspath(p))
-                s = unittest.defaultTestLoader.discover(path, file)
-            else:
-                raise ValueError('Path "{}" is not an valid file path!'.format(p))
-            if suite is None:
-                suite = s
-            else:
-                suite.addTest(s)
-    else:
-        case_path = ConfigManager.get_test_case_root()
-        suite = unittest.defaultTestLoader.discover(case_path, '*.py')
-    # RunTest
+    suite = get_case(cli_commands)
     from library.HTMLTestRunner import HTMLTestRunner
-
+    report_path = ConfigManager.get_html_report_path()
     with common.open_or_create(report_path, 'wb') as output:
         runner = HTMLTestRunner(
             stream=output, title='Test Report', verbosity=2)
@@ -70,3 +61,7 @@ if __name__ == '__main__':
             msg = traceback.format_exc()
             print(msg)
             print("报告Email发送失败")
+
+if __name__ == '__main__':
+    run()
+
