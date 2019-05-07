@@ -2474,7 +2474,7 @@ class MsgCommonGroupTest(TestCase):
         #点击“删除并退出”按钮
         if not gcsp.is_text_present("删除并退出"):
             gcsp.page_up()
-        gcsp.click_delete_and_exit()
+        gcsp.click_delete_and_exit2()
         time.sleep(2)
         #验证弹出弹窗
         if not gcsp.is_text_present("退出后不会再接收该群消息"):
@@ -2485,7 +2485,7 @@ class MsgCommonGroupTest(TestCase):
         if gcsp.is_text_present("退出后不会再接收该群信息"):
             raise AssertionError("不可以关闭弹窗")
         #点击确定
-        gcsp.click_delete_and_exit()
+        gcsp.click_delete_and_exit2()
         time.sleep(1)
         gcsp.click_sure()
         if not gcsp.is_toast_exist("已退出群聊"):
@@ -2582,6 +2582,9 @@ class MsgCommonGroupTest(TestCase):
         """聊天窗口，发送表情"""
         gcp = GroupChatPage()
         # 点击表情按钮
+        if gcp.is_element_exit_("关闭表情页"):
+            gcp.click_expression_page_close_button()
+        time.sleep(2)
         gcp.click_expression_button()
         time.sleep(2)
         # 判断是否可以展示表情页
@@ -2607,6 +2610,9 @@ class MsgCommonGroupTest(TestCase):
         """聊天窗口，放大发送表情"""
         gcp = GroupChatPage()
         # 点击表情按钮
+        if gcp.is_element_exit_("关闭表情页"):
+            gcp.click_expression_page_close_button()
+        time.sleep(2)
         gcp.click_expression_button()
         time.sleep(2)
         # 任意点击一个表情
@@ -2661,6 +2667,9 @@ class MsgCommonGroupTest(TestCase):
         """聊天窗口，缩小发送表情"""
         gcp = GroupChatPage()
         # 获取文本信息正常的宽度
+        if gcp.is_element_exit_("关闭表情页"):
+            gcp.click_expression_page_close_button()
+        time.sleep(2)
         gcp.click_expression_button()
         time.sleep(2)
         # 任意点击一个表情
@@ -2734,6 +2743,9 @@ class MsgCommonGroupTest(TestCase):
     def test_msg_common_group_0101(self):
         """聊天会话窗口的批量选择器页面展示"""
         gcp = GroupChatPage()
+        if gcp.is_element_exit_("关闭表情页"):
+            gcp.click_expression_page_close_button()
+        time.sleep(2)
         # 输入信息
         dex=0
         while dex<3:

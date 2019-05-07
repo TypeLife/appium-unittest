@@ -536,3 +536,8 @@ class GroupChatPage(BaseChatPage):
             condition=lambda x: self.get_elements(self.__locators['定位_地图']))
         self.press(el[-1])
         self.click_element(self.__class__.__locators['撤回'])
+
+    @TestLogger.log()
+    def is_element_exit_(self, text):
+        """指定元素是否存在"""
+        return self._is_element_present(self.__class__.__locators[text])
