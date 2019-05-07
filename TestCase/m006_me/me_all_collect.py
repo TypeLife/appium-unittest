@@ -1307,6 +1307,7 @@ class MeAllCollect(TestCase):
         # 5.点击关闭
         mcp.click_close()
         # 6.点击返回
+        mcp.wait_for_page_load_about()
         mcp.click_back()
         mess.open_message_page()
 
@@ -1336,6 +1337,7 @@ class MeAllCollect(TestCase):
         # 5.点击关闭
         mcp.click_close()
         # 6.点击返回
+        mcp.wait_for_page_load_about()
         mcp.click_back()
         mess.open_message_page()
 

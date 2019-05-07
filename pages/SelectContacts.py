@@ -46,7 +46,7 @@ class SelectContactsPage(BasePage):
         '取消转发': (MobileBy.XPATH, "//*[contains(@text, '取消')]"),
         '确定转发': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
         'local联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
-        '分享名片': (MobileBy.ID, 'com.chinasofti.rcs:id/send_tv'),
+        '发送名片': (MobileBy.ID,'com.chinasofti.rcs:id/send_tv'),
         '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
         '右侧字母索引': (MobileBy.XPATH,
                    '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView'),
@@ -226,7 +226,7 @@ class SelectContactsPage(BasePage):
     @TestLogger.log('点击分享名片')
     def click_share_card(self):
         """点击分享名片"""
-        self.click_element(self.__locators['分享名片'])
+        self.click_element(self.__class__.__locators['发送名片'])
 
     @TestLogger.log('搜索或输入手机号')
     def click_search_contact(self):
@@ -252,7 +252,7 @@ class SelectContactsPage(BasePage):
     @TestLogger.log('点击联系人头像')
     def click_cantact_avatar(self):
         """点击联系人头像"""
-        self.click_element(self.__locators['联系人头像'])
+        self.click_element(self.__locators['选中联系人头像'])
 
     @TestLogger.log()
     def click_select_one_group(self):
@@ -277,13 +277,19 @@ class SelectContactsPage(BasePage):
     @TestLogger.log()
     def click_one_local_contacts(self):
         """点击一个本地联系人"""
-        els = self.get_elements(self.__class__.__locators["local联系人"])
-        contactnames = []
-        if els:
-            for el in els:
-                contactnames.append(el.text)
-            self.select_one_contact_by_name(contactnames[0])
-        else:
+        # els = self.get_elements(self.__class__.__locators["local联系人"])
+        # contactnames = []
+        # if els:
+        #     for el in els:
+        #         contactnames.append(el.text)
+        #     self.select_one_contact_by_name(contactnames[0])
+        try:
+            self.wait_until(
+                condition=lambda x: self.get_elements(self.__class__.__locators["联系人列表"])[0],
+                auto_accept_permission_alert=False
+            ).click()
+        # else:
+        except:
             raise AssertionError("没有本地联系人可转发")
 
     @TestLogger.log()

@@ -1674,7 +1674,7 @@ class VoiceAnnouncementTest(TestCase):
         time.sleep(3)
         if not sc.is_text_present("和飞信电话"):
             raise AssertionError("搜索结果有误")
-        sc.click_text("和飞信电话")
+        sc.click_text("012560")
         time.sleep(2)
         if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
             raise AssertionError("不可成功选中")
@@ -1700,7 +1700,7 @@ class VoiceAnnouncementTest(TestCase):
         time.sleep(3)
         if not sc.is_text_present("和飞信电话"):
             raise AssertionError("搜索结果有误")
-        sc.click_text("和飞信电话")
+        sc.click_text("012560")
         time.sleep(2)
         if not sc.is_element_present_by_locator("搜索框左边选中联系人"):
             raise AssertionError("不可成功选中")
@@ -1710,7 +1710,7 @@ class VoiceAnnouncementTest(TestCase):
         time.sleep(3)
         if not sc.is_text_present("和飞信电话"):
             raise AssertionError("搜索结果有误")
-        sc.click_text("和飞信电话")
+        sc.click_text("012560")
         time.sleep(2)
         if sc.is_element_present_by_locator("搜索框左边选中联系人"):
             raise AssertionError("左侧选中联系人没有撤消")

@@ -176,7 +176,7 @@ class TeamTest(TestCase):
         workbench.click_create_team()
         team.wait_for_page_load()
 
-
+@unittest.skip("过滤")
 class WorkbenchGGXXTest(TestCase):
     """
     模块：工作台->公告信息

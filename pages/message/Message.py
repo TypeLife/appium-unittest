@@ -524,10 +524,9 @@ class MessagePage(FooterPage):
         self.click_element(self.__locators[locator])
 
     @TestLogger.log()
-    def choose_chat_by_name(self, name):
+    def choose_chat_by_name(self, name, max_try=20):
         """通过名字选择一个聊天"""
         locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % name)
-        max_try = 20
         current = 0
         while current < max_try:
             if self._is_element_present(locator):

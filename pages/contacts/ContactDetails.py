@@ -190,7 +190,7 @@ class ContactDetailsPage(BasePage):
     @TestLogger.log("点击头像查看大图")
     def click_avatar(self):
         """点击头像查看大图"""
-        self.click_element(self.__locators['头像'])
+        self.click_element(self.__locators['用户头像'])
 
     @TestLogger.log("点击大图")
     def click_big_avatar(self):
