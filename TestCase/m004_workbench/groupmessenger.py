@@ -227,7 +227,7 @@ class MassMessengerTest(TestCase):
             wp.open_message_page()
             return
         else:
-            current_mobile().reset_app()
+            current_mobile().launch_app()
             Preconditions.enter_message_page()
 
     def default_tearDown(self):
