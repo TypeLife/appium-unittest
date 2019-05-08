@@ -1,5 +1,6 @@
 from appium.webdriver.common.mobileby import MobileBy
 import re
+import time
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
@@ -223,6 +224,7 @@ class SelectLocalContactsPage(BasePage):
     @TestLogger.log()
     def swipe_select_one_member_by_name(self, name, times=15):
         """通过人名选择一个联系人"""
+        time.sleep(2)
         while times > 0:
             els = self.get_elements((MobileBy.XPATH, '//*[@text ="%s"]' % name))
             if els:

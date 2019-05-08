@@ -30,6 +30,11 @@ class CreateContactPage(Keyboard, BasePage):
         '输入邮箱': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/item_email"]//android.widget.EditText'),
     }
 
+    @TestLogger.log('点击保存')
+    def click_save(self):
+        """点击保存"""
+        self.click_element(self.__locators['保存'])
+
     @TestLogger.log('点击输入姓名')
     def click_input_name(self):
         """点击输入姓名"""

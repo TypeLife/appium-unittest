@@ -197,115 +197,137 @@ class ContactLocal(TestCase):
 class ContactsLocal(TestCase):
     """通讯录测试记录-陈继祥"""
 
-    #
-    # def default_setUp(self):
-    #     """确保每个用例运行前在通讯录页面"""
-    #     # Preconditions.connect_mobile('Android-移动')
-    #     # current_mobile().hide_keyboard_if_display()
-    #     Preconditions.make_already_in_message_page()
-    #     MessagePage().wait_for_page_load()
-    #     MessagePage().click_contacts()
-    #
-    #
-    # @tags('ALL', 'CONTACTS', 'CMCC')
-    # def test_contacts_chenjixiang_0001(self):
-    #     '''
-    #     搜索输入框校验，通过手机号码搜索，输入数字模糊查询（只搜索一条记录）
-    #     author:darcy
-    #
-    #     :return:
-    #     '''
-    #     lcontact=localContactPage()
-    #     lcontact.click_search_box()
-    #     lcontact.input_search_text(text='138005')
-    #     lcontact.page_contain_element()
-    #     lcontact.page_contain_element(text='联系人电话')
-    #     lcontact.page_contain_element(text='联系人名字')
-    #
-    # @tags('ALL', 'CONTACTS', 'CMCC')
-    # def test_contacts_chenjixiang_0002(self):
-    #     '''
-    #     搜索输入框校验，通过手机号码搜索，输入数字模糊查询（搜索多条记录）
-    #     auther:darcy
-    #     :return:
-    #     '''
-    #     lcontact = localContactPage()
-    #     lcontact.click_search_box()
-    #     time.sleep(1)
-    #     lcontact.input_search_text(text='138')
-    #     time.sleep(1)
-    #     lcontact.hide_keyboard()
-    #     time.sleep(3)
-    #     els=lcontact.get_element_number()
-    #     self.assertTrue(len(els)>1)
+    @classmethod
+    def setUpClass(cls):
+        # 创建联系人
+        fail_time = 0
+        import dataproviders
 
-    # @tags('ALL', 'CONTACTS', 'CMCC')
-    # def test_contacts_chenjixiang_0003(self):
-    #     '''
-    #     搜索输入框校验，通过手机号码搜索，输入手机号码全匹配查询
-    #     auther:darcy
-    #     :return:
-    #     '''
-    #     lcontact = localContactPage()
-    #     lcontact.click_search_box()
-    #     time.sleep(1)
-    #     lcontact.input_search_text(text='13800138001')
-    #     time.sleep(1)
-    #     lcontact.hide_keyboard()
-    #     time.sleep(3)
-    #     lcontact.page_contain_element()
-    #     lcontact.page_contain_element(text='联系人电话')
-    #     lcontact.page_contain_element(text='联系人名字')
-    #
-    # @tags('ALL', 'CONTACTS', 'CMCC')
-    # def test_contacts_chenjixiang_0004(self):
-    #     '''
-    #     搜索输入框校验，通过名称(中文)搜索(多条记录)
-    #     auther:darcy
-    #     :return:
-    #     '''
-    #     lcontact = localContactPage()
-    #     lcontact.click_search_box()
-    #     time.sleep(1)
-    #     lcontact.input_search_text(text='给个红包')
-    #     time.sleep(1)
-    #     lcontact.hide_keyboard()
-    #     time.sleep(3)
-    #     lcontact.page_contain_element()
-    #     lcontact.page_contain_element(text='联系人电话')
-    #     lcontact.page_contain_element(text='联系人名字')
-    #
-    # @tags('ALL', 'CONTACTS', 'CMCC')
-    # def test_contacts_chenjixiang_0005(self):
-    #     '''
-    #     搜索输入框校验，通过名称(英文)搜索(多条记录)
-    #     auther:darcy
-    #     :return:
-    #     '''
-    #     lcontact = localContactPage()
-    #     lcontact.click_search_box()
-    #     time.sleep(1)
-    #     lcontact.input_search_text(text='ABC')
-    #     time.sleep(1)
-    #     lcontact.hide_keyboard()
-    #     time.sleep(3)
-    #     lcontact.page_contain_element()
-    #     lcontact.page_contain_element(text='联系人电话')
-    #     lcontact.page_contain_element(text='联系人名字')
-    #
+        while fail_time < 3:
+            try:
+                # 获取需要导入的联系人数据
+                required_contacts = contact2.get_preset_contacts()
 
+                # 连接手机
+                Preconditions.connect_mobile('Android-移动')
+                current_mobile().hide_keyboard_if_display()
+                # 导入数据
+                for name, number in required_contacts:
+                    # Preconditions.create_contacts_if_not_exits(name, number)
+                    Preconditions.create_contacts_if_not_exits(name, number)
+
+                # # 推送resource文件到手机
+                # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
+                return
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
+
+    def default_setUp(self):
+        """确保每个用例运行前在通讯录页面"""
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        MessagePage().wait_for_page_load()
+        MessagePage().click_contacts()
+        time.sleep(2)
+
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0001(self):
+        '''
+        搜索输入框校验，通过手机号码搜索，输入数字模糊查询（只搜索一条记录）
+        author:darcy
+
+        :return:
+        '''
+        lcontact=localContactPage()
+        lcontact.click_search_box()
+        time.sleep(2)
+        lcontact.input_search_text(text='138006')
+        lcontact.hide_keyboard()
+        lcontact.page_contain_element()
+        lcontact.page_contain_element(text='联系人电话')
+        lcontact.page_contain_element(text='联系人名字')
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0002(self):
+        '''
+        搜索输入框校验，通过手机号码搜索，输入数字模糊查询（搜索多条记录）
+        auther:darcy
+        :return:
+        '''
+        lcontact = localContactPage()
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text(text='138')
+        time.sleep(1)
+        lcontact.hide_keyboard()
+        time.sleep(3)
+        els=lcontact.get_element_number()
+        self.assertTrue(len(els)>1)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0003(self):
+        '''
+        搜索输入框校验，通过手机号码搜索，输入手机号码全匹配查询
+        auther:darcy
+        :return:
+        '''
+        lcontact = localContactPage()
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text(text='13800138001')
+        time.sleep(1)
+        lcontact.hide_keyboard()
+        time.sleep(3)
+        lcontact.page_contain_element()
+        lcontact.page_contain_element(text='联系人电话')
+        lcontact.page_contain_element(text='联系人名字')
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0004(self):
+        '''
+        搜索输入框校验，通过名称(中文)搜索(多条记录)
+        '''
+        lcontact=localContactPage()
+        lcontact.click_search_box()
+        time.sleep(2)
+        lcontact.input_search_text(text='给个红包')
+        lcontact.hide_keyboard()
+        lcontact.page_contain_element()
+        lcontact.page_contain_element(text='联系人电话')
+        lcontact.page_contain_element(text='联系人名字')
+
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0005(self):
+        '''
+        搜索输入框校验，通过名称(英文)搜索(多条记录)
+        auther:darcy
+        :return:
+        '''
+        lcontact = localContactPage()
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text(text='ABC')
+        time.sleep(1)
+        lcontact.hide_keyboard()
+        time.sleep(3)
+        lcontact.page_contain_element()
+        lcontact.page_contain_element(text='联系人电话')
+        lcontact.page_contain_element(text='联系人名字')
 
 
     @staticmethod
     def setUp_test_contacts_chenjixiang_0019():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
+        Preconditions.make_already_in_message_page()
+        MessagePage().wait_for_page_load()
+        MessagePage().open_me_page()
         me_page = MePage()
-        me_page.open_me_page()
+        # me_page.open_me_page()
         me_page.click_menu('设置')
         me_page.click_menu('联系人管理')
         lcontact = localContactPage()
@@ -320,24 +342,21 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
+        # GroupPage = GroupListPage()
+        # GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
         lcontact.input_search_text("张无忌")
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(1)
-        lcontact.is_text_present("无该本地联系人")
+        lcontact.is_text_present("无搜索结果")
 
     @staticmethod
     def setUp_test_contacts_chenjixiang_0020():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
+        Preconditions.make_already_in_message_page()
         me_page = MePage()
         me_page.open_me_page()
         me_page.click_menu('设置')
@@ -358,7 +377,7 @@ class ContactsLocal(TestCase):
         GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text("xili")
+        lcontact.input_search_text("大佬")
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(3)
@@ -367,14 +386,11 @@ class ContactsLocal(TestCase):
 
     @staticmethod
     def setUp_test_contacts_chenjixiang_0021():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
+        Preconditions.make_already_in_message_page()
+        MessagePage().wait_for_page_load()
+        MessagePage().open_me_page()
         me_page = MePage()
-        me_page.open_me_page()
+        # me_page.open_me_page()
         me_page.click_menu('设置')
         me_page.click_menu('联系人管理')
         lcontact = localContactPage()
@@ -397,18 +413,18 @@ class ContactsLocal(TestCase):
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(3)
-        lcontact.is_text_present("无该本地联系人")
+        lcontact.is_text_present("无搜索结果")
 
     @staticmethod
     def setUp_test_contacts_chenjixiang_0022():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
+        Preconditions.make_already_in_message_page()
+        MessagePage().open_me_page()
+        # time.sleep(3)
+        # preconditions.launch_app()
+        # time.sleep(1)
         me_page = MePage()
-        me_page.open_me_page()
         me_page.click_menu('设置')
         me_page.click_menu('联系人管理')
         lcontact = localContactPage()
@@ -427,21 +443,13 @@ class ContactsLocal(TestCase):
         GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text("ximi")
+        lcontact.input_search_text("大佬")
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(3)
         els = lcontact.get_element_number()
         self.assertTrue(len(els) > 0)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0005():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0005(self):
@@ -451,25 +459,17 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
+        # GroupPage = GroupListPage()
+        # GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text(text='1-a')
+        lcontact.input_search_text(text='给个红包')
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(3)
         els = lcontact.get_element_number()
         self.assertTrue(len(els) > 1)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0006():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0006(self):
@@ -479,25 +479,17 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
+        # GroupPage = GroupListPage()
+        # GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text(text='1-a子')
+        lcontact.input_search_text(text='给个红包')
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(3)
         els = lcontact.get_element_number()
         self.assertTrue(len(els) > 0)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0004():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0004(self):
@@ -507,8 +499,8 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
+        # GroupPage = GroupListPage()
+        # GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
         lcontact.input_search_text(text='大佬')
@@ -518,16 +510,6 @@ class ContactsLocal(TestCase):
         els = lcontact.get_element_number()
         self.assertTrue(len(els) > 1)
 
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0007():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0007(self):
         '''
@@ -536,11 +518,9 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text(text='wa s')
+        lcontact.input_search_text(text='大佬  ')
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(3)
@@ -548,15 +528,6 @@ class ContactsLocal(TestCase):
         lcontact.page_contain_element(text='联系人电话')
         lcontact.page_contain_element(text='联系人名字')
 
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0008():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0008(self):
@@ -566,25 +537,14 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text(text='wa')
+        lcontact.input_search_text(text='dalao')
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(3)
         els = lcontact.get_element_number()
         self.assertTrue(len(els) > 1)
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0010():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0010(self):
@@ -594,25 +554,12 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
         name='aa'*100
         lcontact.input_search_text(text=name)
         time.sleep(1)
         lcontact.hide_keyboard()
-
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0012():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
-
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0012(self):
@@ -622,23 +569,14 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
+        # GroupPage = GroupListPage()
+        # GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
         name = 'aa' * 100
         lcontact.input_search_text(text=name)
         lcontact.click_delete_button()
         lcontact.is_text_present("搜索")
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0014():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0014(self):
@@ -649,24 +587,15 @@ class ContactsLocal(TestCase):
 
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
+        # GroupPage = GroupListPage()
+        # GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
         lcontact.input_search_text("13410889633")
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(1)
-        lcontact.is_text_present("无该本地联系人")
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0015():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
+        lcontact.is_text_present("无搜索结果")
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0015(self):
@@ -677,26 +606,23 @@ class ContactsLocal(TestCase):
 
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
+        # GroupPage = GroupListPage()
+        # GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text("张无忌")
+        lcontact.input_search_text("13410889633")
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(1)
-        lcontact.is_text_present("无该本地联系人")
+        lcontact.is_text_present("无搜索结果")
 
     @staticmethod
     def setUp_test_contacts_chenjixiang_0016():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(3)
+        Preconditions.make_already_in_message_page()
+        MessagePage().open_me_page()
         me_page = MePage()
-        me_page.open_me_page()
         me_page.click_menu('设置')
         me_page.click_menu('联系人管理')
         lcontact = localContactPage()
@@ -726,15 +652,10 @@ class ContactsLocal(TestCase):
     @staticmethod
     def setUp_test_contacts_chenjixiang_0017():
         Preconditions.connect_mobile('Android-移动')
-
         current_mobile().hide_keyboard_if_display()
         preconditions.make_already_in_message_page()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
+        MessagePage().open_me_page()
         me_page = MePage()
-        me_page.open_me_page()
         me_page.click_menu('设置')
         me_page.click_menu('联系人管理')
         lcontact = localContactPage()
@@ -757,18 +678,15 @@ class ContactsLocal(TestCase):
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(1)
-        lcontact.is_text_present("无该本地联系人")
+        lcontact.is_text_present("无搜索结果")
 
     @staticmethod
     def setUp_test_contacts_chenjixiang_0018():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
+        Preconditions.make_already_in_message_page()
+        MessagePage().open_me_page()
         me_page = MePage()
-        me_page.open_me_page()
         me_page.click_menu('设置')
         me_page.click_menu('联系人管理')
         lcontact = localContactPage()
@@ -798,12 +716,9 @@ class ContactsLocal(TestCase):
     def setUp_test_contacts_chenjixiang_0023():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
+        Preconditions.make_already_in_message_page()
+        MessagePage().open_me_page()
         me_page = MePage()
-        me_page.open_me_page()
         me_page.click_menu('设置')
         me_page.click_menu('联系人管理')
         lcontact = localContactPage()
@@ -822,33 +737,30 @@ class ContactsLocal(TestCase):
         GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text("xiaomi")
+        lcontact.input_search_text("dalao")
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(3)
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(1)
-        lcontact.is_text_present("无该本地联系人")
+        lcontact.is_text_present("无搜索结果")
 
 
     @staticmethod
     def setUp_test_contacts_chenjixiang_0024():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
+        Preconditions.make_already_in_message_page()
+        MessagePage().open_me_page()
         me_page = MePage()
-        me_page.open_me_page()
         me_page.click_menu('设置')
         me_page.click_menu('联系人管理')
         lcontact = localContactPage()
         lcontact.swich_sim_contact(flag=False)
         lcontact.click_back_by_android(times=2)
 
-    @tags('ALL', 'CONTACTS', 'CMCC')
+    @tags('ALL', 'CONTACTS', 'CMCC-双卡,跳过')
     def test_contacts_chenjixiang_0024(self):
         '''
        测试sim双卡，卡1有联系人，卡2无联系人，已开启“显示sim卡联系人”，分别搜索卡1、卡2、本地通讯录、和通讯录
@@ -867,16 +779,7 @@ class ContactsLocal(TestCase):
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(1)
-        lcontact.is_text_present("无该本地联系人")
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0030():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
+        lcontact.is_text_present("无搜索结果")
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0030(self):
@@ -886,8 +789,8 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
+        # GroupPage = GroupListPage()
+        # GroupPage.open_contacts_page()
         time.sleep(3)
         lcontact.click_search_box()
         time.sleep(1)
@@ -900,14 +803,6 @@ class ContactsLocal(TestCase):
         self.assertTrue(len(els)>0)
         lcontact.click_back_by_android(times=2)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0031():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0031(self):
@@ -916,9 +811,29 @@ class ContactsLocal(TestCase):
         auther:darcy
         :return:
         '''
+        # 添加手机联系人
+        time.sleep(2)
+        ContactsPage().click_add()
+        creat_contact = CreateContactPage()
+        creat_contact.click_input_name()
+        creat_contact.input_name('xili')
+        creat_contact.click_input_number()
+        creat_contact.input_number('13410669616')
+        creat_contact.click_save()
+        ContactDetailsPage().click_back()
+        # 添加第二个联系人
+        ContactsPage().click_add()
+        creat_contact = CreateContactPage()
+        creat_contact.click_input_name()
+        creat_contact.input_name('xili')
+        creat_contact.click_input_number()
+        creat_contact.input_number('13410669625')
+        creat_contact.click_save()
+        time.sleep(2)
+        ContactDetailsPage().click_back()
+        time.sleep(2)
+
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
         time.sleep(3)
         lcontact.click_search_box()
         time.sleep(1)
@@ -931,15 +846,6 @@ class ContactsLocal(TestCase):
         lcontact.is_text_present("13410669632")
         lcontact.is_text_present("13410669625")
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0032():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0032(self):
         '''
@@ -948,8 +854,8 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
+        # GroupPage = GroupListPage()
+        # GroupPage.open_contacts_page()
         time.sleep(3)
         lcontact.click_search_box()
         time.sleep(1)
@@ -958,14 +864,6 @@ class ContactsLocal(TestCase):
         time.sleep(2)
         lcontact.is_text_present("xili")
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0033():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0033(self):
@@ -974,9 +872,9 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        time.sleep(3)
+        # GroupPage = GroupListPage()
+        # GroupPage.open_contacts_page()
+        time.sleep(2)
         lcontact.click_search_box()
         time.sleep(1)
         lcontact.input_search_text("13410669616")
@@ -986,14 +884,6 @@ class ContactsLocal(TestCase):
         self.assertTrue(len(els) > 0)
         lcontact.click_back_by_android()
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0035():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0035(self):
@@ -1002,8 +892,8 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
+        # GroupPage = GroupListPage()
+        # GroupPage.open_contacts_page()
         time.sleep(3)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1016,14 +906,6 @@ class ContactsLocal(TestCase):
         lcontact.is_text_present("13410669625")
         lcontact.click_back_by_android()
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0036():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0036(self):
         '''
@@ -1032,9 +914,9 @@ class ContactsLocal(TestCase):
         '''
 
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+        # GroupPage = GroupListPage()
+        # time.sleep(3)
+        # GroupPage.open_contacts_page()
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1046,15 +928,6 @@ class ContactsLocal(TestCase):
         self.assertTrue(len(els) > 0)
         lcontact.click_back_by_android()
 
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0039():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0039(self):
         '''
@@ -1063,9 +936,9 @@ class ContactsLocal(TestCase):
         '''
 
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+        # GroupPage = GroupListPage()
+        # time.sleep(3)
+        # GroupPage.open_contacts_page()
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1080,13 +953,6 @@ class ContactsLocal(TestCase):
         lcontact.is_text_present("134 1066 9616")
         lcontact.click_back_by_android(times=2)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0040():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0040(self):
@@ -1096,9 +962,9 @@ class ContactsLocal(TestCase):
         '''
 
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+        # GroupPage = GroupListPage()
+        # time.sleep(3)
+        # GroupPage.open_contacts_page()
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1114,14 +980,6 @@ class ContactsLocal(TestCase):
         lcontact.click_back_by_android(times=2)
 
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0041():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0041(self):
         '''
@@ -1130,9 +988,9 @@ class ContactsLocal(TestCase):
         '''
 
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+        # GroupPage = GroupListPage()
+        # time.sleep(3)
+        # GroupPage.open_contacts_page()
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1148,15 +1006,6 @@ class ContactsLocal(TestCase):
         lcontact.click_back_by_android(times=2)
 
 
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0042():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0042(self):
         '''
@@ -1165,13 +1014,13 @@ class ContactsLocal(TestCase):
         '''
 
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+        # GroupPage = GroupListPage()
+        # time.sleep(3)
+        # GroupPage.open_contacts_page()
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text("67656004")
+        lcontact.input_search_text('67656004')
         lcontact.hide_keyboard()
         time.sleep(1)
         lcontact.is_text_present("1-a")
@@ -1182,13 +1031,6 @@ class ContactsLocal(TestCase):
         lcontact.is_text_present("6765 6004")
         lcontact.click_back_by_android(times=2)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0043():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0043(self):
@@ -1198,9 +1040,6 @@ class ContactsLocal(TestCase):
         '''
 
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1215,13 +1054,6 @@ class ContactsLocal(TestCase):
         lcontact.is_text_present("861 3410 5596 55")
         lcontact.click_back_by_android(times=2)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0044():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0044(self):
@@ -1230,9 +1062,6 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1247,13 +1076,6 @@ class ContactsLocal(TestCase):
         lcontact.is_text_present("+86 134 1055 9655")
         lcontact.click_back_by_android(times=2)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0045():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0045(self):
@@ -1262,30 +1084,21 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
         lcontact.input_search_text("+")
         lcontact.hide_keyboard()
         time.sleep(1)
-        lcontact.is_text_present("xika")
+        lcontact.check_keyword_if_exist(text="xika")
         time.sleep(1)
         lcontact.click_text("xika")
         time.sleep(1)
         lcontact.is_text_present("xika")
-        lcontact.is_text_present("+86 134 1055 9655")
+        lcontact.is_text_present("+8613410559655")
         lcontact.click_back_by_android(times=2)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0046():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0046(self):
@@ -1294,30 +1107,20 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
         lcontact.input_search_text("+86")
         lcontact.hide_keyboard()
         time.sleep(1)
-        lcontact.is_text_present("xika")
+        lcontact.check_keyword_if_exist(text="xika")
         time.sleep(1)
         lcontact.click_text("xika")
         time.sleep(1)
         lcontact.is_text_present("xika")
-        lcontact.is_text_present("+86 134 1055 9655")
+        lcontact.is_text_present("+8613410559655")
         lcontact.click_back_by_android(times=2)
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0047():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0047(self):
@@ -1326,30 +1129,19 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
         lcontact.input_search_text("613")
         lcontact.hide_keyboard()
         time.sleep(1)
-        lcontact.is_text_present("xika")
+        lcontact.check_keyword_if_exist(text="xika")
         time.sleep(1)
         lcontact.click_text("xika")
         time.sleep(1)
         lcontact.is_text_present("xika")
-        lcontact.is_text_present("+86 134 1055 9655")
+        lcontact.is_text_present("+8613410559655")
         lcontact.click_back_by_android(times=2)
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0048():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0048(self):
@@ -1358,9 +1150,7 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1372,16 +1162,8 @@ class ContactsLocal(TestCase):
         lcontact.click_text("xika")
         time.sleep(1)
         lcontact.is_text_present("xika")
-        lcontact.is_text_present("+86 134 1055 9655")
+        lcontact.is_text_present("+8613410559655")
         lcontact.click_back_by_android(times=2)
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0049():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0049(self):
@@ -1390,9 +1172,7 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1407,14 +1187,6 @@ class ContactsLocal(TestCase):
         lcontact.is_text_present("+86 134 1055 9655")
         lcontact.click_back_by_android(times=2)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0050():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0050(self):
         '''
@@ -1422,9 +1194,6 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1439,14 +1208,6 @@ class ContactsLocal(TestCase):
         lcontact.is_text_present("+852 134 1055 9644")
         lcontact.click_back_by_android(times=2)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0051():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0051(self):
         '''
@@ -1454,9 +1215,7 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1471,15 +1230,6 @@ class ContactsLocal(TestCase):
         lcontact.is_text_present("+852 134 1055 9644")
         lcontact.click_back_by_android(times=2)
 
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0052():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0052(self):
         '''
@@ -1487,9 +1237,7 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1504,13 +1252,6 @@ class ContactsLocal(TestCase):
         lcontact.is_text_present("+852 134 1055 9644")
         lcontact.click_back_by_android(times=2)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0053():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0053(self):
@@ -1519,9 +1260,7 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1536,13 +1275,6 @@ class ContactsLocal(TestCase):
         lcontact.is_text_present("+852 134 1055 9644")
         lcontact.click_back_by_android(times=2)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0054():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0054(self):
@@ -1551,9 +1283,7 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1568,13 +1298,6 @@ class ContactsLocal(TestCase):
         lcontact.is_text_present("+852 134 1055 9644")
         lcontact.click_back_by_android(times=2)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0055():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0055(self):
@@ -1583,9 +1306,7 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1596,13 +1317,6 @@ class ContactsLocal(TestCase):
         time.sleep(1)
         lcontact.click_back_by_android(1)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0056():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0056(self):
@@ -1611,9 +1325,7 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1625,14 +1337,6 @@ class ContactsLocal(TestCase):
         lcontact.click_back_by_android(1)
 
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0057():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0057(self):
         '''
@@ -1640,9 +1344,7 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1653,13 +1355,6 @@ class ContactsLocal(TestCase):
         time.sleep(1)
         lcontact.click_back_by_android(1)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0058():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0058(self):
@@ -1668,9 +1363,7 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1680,17 +1373,6 @@ class ContactsLocal(TestCase):
         lcontact.check_keyword_if_exist(text="香港大佬")
         lcontact.click_back_by_android(1)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0059():
-        Preconditions.connect_mobile('Android-移动')
-        lcontact = localContactPage()
-        lcontact.set_network_status(0)
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0059(self):
         '''
@@ -1698,9 +1380,7 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+        lcontact.set_network_status(0)
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1787,13 +1467,6 @@ class ContactsLocal(TestCase):
         lcontact.click_back_by_android(1)
 
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0063():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
 
     @tags('ALL', 'CONTACTS', 'CMCC')
@@ -1803,9 +1476,6 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1816,13 +1486,7 @@ class ContactsLocal(TestCase):
         self.assertTrue(len(els)==0)
         lcontact.click_back_by_android()
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0064():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
+
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0064(self):
         '''
@@ -1830,9 +1494,7 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1844,15 +1506,6 @@ class ContactsLocal(TestCase):
         lcontact.click_back_by_android()
 
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0065():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0065(self):
         '''
@@ -1860,9 +1513,7 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1873,13 +1524,6 @@ class ContactsLocal(TestCase):
         self.assertTrue(len(els)>0)
         lcontact.click_back_by_android()
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0066():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
 
     @tags('ALL', 'CONTACTS', 'CMCC')
@@ -1889,9 +1533,7 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
+
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -1902,14 +1544,6 @@ class ContactsLocal(TestCase):
         self.assertTrue(len(els)>0)
         lcontact.click_back_by_android()
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0067():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0067(self):
@@ -1918,14 +1552,9 @@ class ContactsLocal(TestCase):
         :return:
         '''
 
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
+        time.sleep(2)
+        ContactsPage().open_me_page()
         me_page = MePage()
-        me_page.open_me_page()
         me_page.click_menu('设置')
         me_page.click_menu('联系人管理')
         lcontact = localContactPage()
@@ -1944,18 +1573,9 @@ class ContactsLocal(TestCase):
         time.sleep(1)
         els = lcontact.get_element_number()
         self.assertTrue(len(els)>1)
-        els2 = lcontact.get_element_number(text='SIM_联系人')
-        self.assertTrue(len(els2) > 0)
+        # els2 = lcontact.get_element_number(text='SIM_联系人')
+        # self.assertTrue(len(els2) > 0)
         lcontact.click_back_by_android()
-
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0068():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
 
     @tags('ALL', 'CONTACTS', 'CMCC')
@@ -1964,15 +1584,11 @@ class ContactsLocal(TestCase):
         测试sim单卡有联系人情况下，未开启“显示sim卡联系人”，和飞信本地通讯录是否能读取到
         :return:
         '''
-
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
+        time.sleep(2)
+        ContactsPage().open_me_page()
         time.sleep(1)
         me_page = MePage()
-        me_page.open_me_page()
+        # me_page.open_me_page()
         me_page.click_menu('设置')
         me_page.click_menu('联系人管理')
         lcontact = localContactPage()
@@ -1993,14 +1609,6 @@ class ContactsLocal(TestCase):
         self.assertTrue(len(els)==3)
         lcontact.click_back_by_android()
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0069():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0069(self):
@@ -2008,14 +1616,11 @@ class ContactsLocal(TestCase):
         测试sim单卡无联系人情况下，开启“显示sim卡联系人”，和飞信本地通讯录是否能读取到
         :return:
         '''
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
+        time.sleep(2)
+        ContactsPage().open_me_page()
         time.sleep(1)
         me_page = MePage()
-        me_page.open_me_page()
+        # me_page.open_me_page()
         me_page.click_menu('设置')
         me_page.click_menu('联系人管理')
         lcontact = localContactPage()
@@ -2033,14 +1638,6 @@ class ContactsLocal(TestCase):
         self.assertTrue(len(els)>0)
         lcontact.click_back_by_android()
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0070():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0070(self):
@@ -2048,14 +1645,10 @@ class ContactsLocal(TestCase):
         测试sim单卡无联系人情况下，未开启“显示sim卡联系人”，和飞信本地通讯录是否能读取到
         :return:
         '''
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
+        time.sleep(2)
+        ContactsPage().open_me_page()
+        time.sleep(2)
         me_page = MePage()
-        me_page.open_me_page()
         me_page.click_menu('设置')
         me_page.click_menu('联系人管理')
         lcontact = localContactPage()
@@ -2074,21 +1667,11 @@ class ContactsLocal(TestCase):
         lcontact.click_back_by_android()
 
 
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0083():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
-
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_chenjixiang_0083(self):
         """测试点击联系人跳转到profile页"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
+        # GroupPage.open_contacts_page()
         time.sleep(1)
         GroupPage.click_contact_element()
         time.sleep(1)
@@ -2099,20 +1682,11 @@ class ContactsLocal(TestCase):
         GroupPage.click_back_by_android(times=2)
 
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0083():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-        time.sleep(1)
-
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_chenjixiang_0083(self):
         """测试点击联系人跳转到profile页"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
+        # GroupPage.open_contacts_page()
         time.sleep(1)
         GroupPage.click_contact_element()
         time.sleep(1)
@@ -2122,14 +1696,6 @@ class ContactsLocal(TestCase):
         GroupPage.click_share_button()
         GroupPage.click_back_by_android(times=2)
 
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0085():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
 
     @tags('ALL', 'CONTACTS', 'CMCC')
@@ -2139,9 +1705,6 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -2152,14 +1715,6 @@ class ContactsLocal(TestCase):
         self.assertTrue(len(els) > 0)
         lcontact.click_back_by_android(times=2)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0086():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0086(self):
@@ -2168,9 +1723,6 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
@@ -2181,43 +1733,24 @@ class ContactsLocal(TestCase):
         self.assertTrue(len(els) > 0)
         lcontact.click_back_by_android(times=2)
 
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0087():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
-
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0087(self):
         '''
         测试系统通讯录存在多个联系人，手机号码不一样
         :return:
         '''
+        #搜索
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text("dalao")
+        lcontact.input_search_text("xili")
         lcontact.hide_keyboard()
         time.sleep(2)
         els = lcontact.get_element_number()
         self.assertTrue(len(els) > 0)
         lcontact.click_back_by_android(times=2)
 
-
-    @staticmethod
-    def setUp_test_contacts_chenjixiang_0088():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.background_app()
-        time.sleep(3)
-        preconditions.launch_app()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0088(self):
@@ -2226,9 +1759,6 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        GroupPage = GroupListPage()
-        time.sleep(3)
-        GroupPage.open_contacts_page()
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
