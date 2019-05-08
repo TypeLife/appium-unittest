@@ -316,6 +316,7 @@ class EnterpriseContactsAllTest(TestCase):
         wbp.click_company_contacts()
         ecp = EnterpriseContactsPage()
         ecp.wait_for_page_load()
+        time.sleep(2)
         ecp.click_back()
         time.sleep(1)
         ecp.click_back()
@@ -345,6 +346,7 @@ class EnterpriseContactsAllTest(TestCase):
                 wbp.click_company_contacts()
                 ecp = EnterpriseContactsPage()
                 ecp.wait_for_page_load()
+                time.sleep(2)
                 ecp.click_back()
                 time.sleep(2)
                 if ecp.is_exist_department_name():
@@ -369,6 +371,7 @@ class EnterpriseContactsAllTest(TestCase):
         wbp.click_company_contacts()
         ecp = EnterpriseContactsPage()
         ecp.wait_for_page_load()
+        time.sleep(2)
         ecp.click_back()
         time.sleep(1)
         ecp.click_back()
@@ -398,6 +401,7 @@ class EnterpriseContactsAllTest(TestCase):
                 wbp.click_company_contacts()
                 ecp = EnterpriseContactsPage()
                 ecp.wait_for_page_load()
+                time.sleep(2)
                 ecp.click_back()
                 time.sleep(2)
                 if ecp.is_exist_department_name():
@@ -423,6 +427,7 @@ class EnterpriseContactsAllTest(TestCase):
         wbp.click_company_contacts()
         ecp = EnterpriseContactsPage()
         ecp.wait_for_page_load()
+        time.sleep(2)
         ecp.click_back()
         time.sleep(1)
         ecp.click_back()
@@ -453,6 +458,7 @@ class EnterpriseContactsAllTest(TestCase):
                 wbp.click_company_contacts()
                 ecp = EnterpriseContactsPage()
                 ecp.wait_for_page_load()
+                time.sleep(2)
                 ecp.click_back()
                 time.sleep(2)
                 if ecp.is_exist_department_name():

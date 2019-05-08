@@ -14,7 +14,7 @@ from pages.contacts.search_official_account import SearchOfficialAccountPage
 from pages.contacts.official_account_detail import OfficialAccountDetailPage
 from pages.contacts.EditContactPage import EditContactPage
 from pages.contacts.components.menu_more import MenuMore
-
+from preconditions.BasePreconditions import LoginPreconditions
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -22,7 +22,7 @@ REQUIRED_MOBILES = {
 }
 
 
-class Preconditions(object):
+class Preconditions(LoginPreconditions):
     """
     分解前置条件
     """
@@ -32,56 +32,6 @@ class Preconditions(object):
         client = switch_to_mobile(REQUIRED_MOBILES[category])
         client.connect_mobile()
         return client
-
-    @staticmethod
-    def make_already_in_one_key_login_page():
-        """
-        1、已经进入一键登录页
-        :return:
-        """
-        # 如果当前页面已经是一键登录页，不做任何操作
-        one_key = OneKeyLoginPage()
-        if one_key.is_on_this_page():
-            return
-
-        # 如果当前页不是引导页第一页，重新启动app
-        guide_page = GuidePage()
-        if not guide_page.is_on_the_first_guide_page():
-            current_mobile().launch_app()
-            guide_page.wait_for_page_load(20)
-
-        # 跳过引导页
-        guide_page.wait_for_page_load(30)
-        guide_page.swipe_to_the_second_banner()
-        guide_page.swipe_to_the_third_banner()
-        guide_page.click_start_the_experience()
-
-        # 点击权限列表页面的确定按钮
-        permission_list = PermissionListPage()
-        permission_list.click_submit_button()
-        one_key.wait_for_page_load(30)
-
-    @staticmethod
-    def login_by_one_key_login():
-        """
-        从一键登录页面登录
-        :return:
-        """
-        # 等待号码加载完成后，点击一键登录
-        one_key = OneKeyLoginPage()
-        one_key.wait_for_tell_number_load(60)
-        login_number = one_key.get_login_number()
-        one_key.click_one_key_login()
-        one_key.click_read_agreement_detail()
-
-        # 同意协议
-        agreement = AgreementDetailPage()
-        agreement.click_agree_button()
-
-        # 等待消息页
-        message_page = MessagePage()
-        message_page.wait_login_success(60)
-        return login_number
 
     @staticmethod
     def take_logout_operation_if_already_login():
@@ -122,36 +72,15 @@ class Preconditions(object):
         """后台运行"""
         current_mobile().press_home_key()
 
-
-    @staticmethod
-    def make_already_in_message_page(reset_required=False):
-        """
-        前置条件：
-        1.已登录客户端
-        2.当前在消息页面
-        """
-        if not reset_required:
-            message_page = MessagePage()
-            try:
-                message_page.wait_until(
-                    condition=lambda d: message_page.is_on_this_page(),
-                    timeout=3
-                )
-                return
-            except TimeoutException:
-                pass
-        Preconditions.reset_and_relaunch_app()
-        Preconditions.make_already_in_one_key_login_page()
-        login_num = Preconditions.login_by_one_key_login()
-        return login_num
-
-
     @staticmethod
     def init_and_enter_contacts_page():
         """预置通讯录,保证开始用例之前在通讯录页面"""
         Preconditions.make_already_in_message_page()
         mess=MessagePage()
         mess.click_contacts()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+        time.sleep(1)
 
 
 class ContactPage(TestCase):
@@ -162,40 +91,44 @@ class ContactPage(TestCase):
     表格:8.通讯录全量测试用例 曲新莉
 
     """
-    # @classmethod
-    # def setUpClass(cls):
-    #
-    #     # 创建联系人
-    #     fail_time = 0
-    #     import dataproviders
-    #     while fail_time < 3:
-    #         try:
-    #             required_contacts = dataproviders.get_preset_contacts()
-    #             conts = ContactsPage()
-    #             Preconditions.connect_mobile('Android-移动')
-    #             current_mobile().hide_keyboard_if_display()
-    #             for name, number in required_contacts:
-    #                 Preconditions.make_already_in_message_page()
-    #                 conts.open_contacts_page()
-    #                 conts.create_contacts_if_not_exits(name, number)
-    #
-    #             # 创建群
-    #             required_group_chats = dataproviders.get_preset_group_chats()
-    #
-    #             conts.open_group_chat_list()
-    #             group_list = GroupListPage()
-    #             for group_name, members in required_group_chats:
-    #                 group_list.wait_for_page_load()
-    #                 group_list.create_group_chats_if_not_exits(group_name, members)
-    #             group_list.click_back()
-    #             conts.open_message_page()
-    #             return
-    #         except:
-    #             fail_time += 1
-    #             import tracebac
-    #             msg = traceback.format_exc()
-    #             print(msg)
+    @classmethod
+    def setUpClass(cls):
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.init_and_enter_contacts_page()
 
+        fail_time = 0
+        import dataproviders
+
+        while fail_time < 3:
+            try:
+                # 获取需要导入的联系人数据
+                required_contacts = dataproviders.get_preset_contacts()
+                conts = ContactsPage()
+                # 连接手机
+                Preconditions.connect_mobile('Android-移动')
+                current_mobile().hide_keyboard_if_display()
+                # 导入数据
+                for name, number in required_contacts:
+                  # Preconditions.create_contacts_if_not_exits(name, number)
+                   conts.create_contacts_if_not_exits(name, number)
+
+                # 创建群
+                required_group_chats = dataproviders.get_preset_group_chats()
+
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
+
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
 
     @staticmethod
     def setUp_test_contacts_0001():
@@ -225,7 +158,6 @@ class ContactPage(TestCase):
         contacts.page_contain_element_add()
 
 
-
     @staticmethod
     def setUp_test_contacts_0002():
 
@@ -236,13 +168,12 @@ class ContactPage(TestCase):
         Preconditions.login_by_one_key_login()
         MessagePage().wait_for_page_load()
 
-    @tags('All', 'CMCC')
+    @tags('All', 'CMCC_RESET')
     def test_contacts_0002(self):
         """访问本地通讯录权限框,点击确定"""
         MessagePage().click_contacts()
         ContactsPage().click_always_allowed()
         time.sleep(2)
-
 
     @staticmethod
     def setUp_test_contacts_0003():
@@ -254,7 +185,7 @@ class ContactPage(TestCase):
         Preconditions.login_by_one_key_login()
         MessagePage().wait_for_page_load()
 
-    @tags('All', 'CMCC')
+    @tags('All', 'CMCC_RESET')
     def test_contacts_0003(self):
         """允许访问本地通讯录"""
         MessagePage().click_contacts()
@@ -270,38 +201,21 @@ class ContactPage(TestCase):
         time.sleep(1)
         if ContactsPage().is_text_present('需要使用通讯录权限'):
             ContactsPage().click_always_allowed()
-        ContactsPage().click_search_box()
-        ContactListSearchPage().input_search_keyword('测试1')
-        time.sleep(1)
-        if ContactListSearchPage().is_contact_in_list('测试1'):
-            ContactListSearchPage().click_back()
-        else:
-        # 创建联系人 测试1
-            ContactListSearchPage().click_back()
-            ContactsPage().click_add()
-            creat_contact = CreateContactPage()
-            creat_contact.click_input_name()
-            creat_contact.input_name('测试1')
-            creat_contact.click_input_number()
-            creat_contact.input_number('17324448507')
-            creat_contact.save_contact()
-            time.sleep(2)
-            ContactDetailsPage().click_back()
 
     @tags('All', 'CMCC')
     def test_contacts_0015(self):
         """已保存到本地的RCS用户的profile页"""
         ContactsPage().click_search_box()
-        # 搜索联系人:测试1
-        ContactListSearchPage().input_search_keyword('测试1')
-        ContactListSearchPage().click_contact('测试1')
+        # 搜索联系人:测试号码1
+        ContactListSearchPage().input_search_keyword('测试号码1')
+        ContactListSearchPage().click_contact('测试号码1')
         time.sleep(3)
         # 进入个人详情页
         # 页面包含的元素
         detailpage = ContactDetailsPage()
-        detailpage.page_should_contain_text('测试1')
-        detailpage.page_should_contain_text('173 2444 8507')
-        detailpage.page_should_contain_text('C')
+        detailpage.is_exists_contacts_name()
+        detailpage.is_exists_contacts_number()
+        # detailpage.page_should_contain_element_first_letter()
         if detailpage.is_text_present("公司"):
             detailpage.page_should_contain_text('公司')
         if detailpage.is_text_present("职位"):
@@ -316,7 +230,7 @@ class ContactPage(TestCase):
         detailpage.page_should_contain_text('分享名片')
         # 点击头像查看大图
         detailpage.click_avatar()
-        time.sleep(2)
+        time.sleep(4)
         detailpage.click_big_avatar()
         # 消息按钮可点击
         detailpage.click_message_icon()  # 进入消息页面
@@ -332,8 +246,9 @@ class ContactPage(TestCase):
         # 分享名片按钮可点击
         detailpage.click_share_business_card()
         SelectContactsPage().select_local_contacts()
-        SelectContactsPage().input_search_keyword('大佬1')
-        SelectContactsPage().click_cantact_avatar()
+        SelectContactsPage().select_one_contact_by_name('大佬1')
+        # SelectContactsPage().click_cantact_avatar()
+        time.sleep(2)
         SelectContactsPage().click_share_card()
         #返回通讯录页面
         detailpage.click_back_icon()
@@ -359,9 +274,9 @@ class ContactPage(TestCase):
         #进入个人详情页
         #页面包含的元素
         detailpage=ContactDetailsPage()
-        detailpage.page_should_contain_text('大佬1')
-        detailpage.page_should_contain_text('138 0013 8005')
-        detailpage.page_should_contain_text('D')
+        detailpage.is_exists_contacts_name()
+        detailpage.is_exists_contacts_number()
+        # detailpage.page_should_contain_text('D')
         if detailpage.is_text_present("公司"):
             detailpage.page_should_contain_text('公司')
         if detailpage.is_text_present("职位"):
@@ -374,7 +289,7 @@ class ContactPage(TestCase):
         detailpage.page_should_contain_text('视频通话')
         detailpage.page_should_contain_text('和飞信电话')
         detailpage.page_should_contain_text('分享名片')
-        detailpage.page_should_contain_text('邀请使用')
+        # detailpage.page_should_contain_text('邀请使用')
         time.sleep(2)
         #点击头像可查看大图
         detailpage.click_avatar()
@@ -394,8 +309,9 @@ class ContactPage(TestCase):
         #点击分享名片
         detailpage.click_share_business_card()
         SelectContactsPage().select_local_contacts()
-        SelectContactsPage().input_search_keyword('大佬2')
-        SelectContactsPage().click_cantact_avatar()
+        SelectContactsPage().select_one_contact_by_name('大佬1')
+        # SelectContactsPage().click_cantact_avatar()
+        time.sleep(2)
         SelectContactsPage().click_share_card()
         #邀请使用按钮可点击  暂时未做
 
@@ -441,10 +357,9 @@ class ContactPage(TestCase):
         # 进入个人详情页
         #判断页面包含的元素
         detailpage = ContactDetailsPage()
-        detailpage.page_should_contain_text('本机')
-        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)
-     #   detailpage.page_should_contain_text('198 4947 6421')
-        detailpage.page_should_contain_text('B')
+        detailpage.is_exists_contacts_name()
+        detailpage.is_exists_contacts_number()
+        # detailpage.page_should_contain_text('B')
         if detailpage.is_text_present("公司"):
             detailpage.page_should_contain_text('公司')
         if detailpage.is_text_present("职位"):
@@ -456,12 +371,13 @@ class ContactPage(TestCase):
         detailpage.page_should_contain_text('语音通话')
         detailpage.page_should_contain_text('视频通话')
         detailpage.page_should_contain_text('和飞信电话')
-        detailpage.page_should_contain_text('分享名片')
+        # detailpage.page_should_contain_text('分享名片')
         #点击分享名片进入选择联系人页面，可以成功的分享给人/群
         detailpage.click_share_business_card()
         SelectContactsPage().select_local_contacts()
-        SelectContactsPage().input_search_keyword('大佬1')
-        SelectContactsPage().click_cantact_avatar()
+        SelectContactsPage().select_one_contact_by_name('大佬1')
+        # SelectContactsPage().click_cantact_avatar()
+        time.sleep(2)
         SelectContactsPage().click_share_card()
         #消息、电话、语音视频、视频电话、副号拨打、和飞信电话置灰，不可点击
         time.sleep(2)
@@ -481,7 +397,7 @@ class ContactPage(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
 
-    @tags('All', 'CMCC')
+    @tags('和通讯录取消')
     def test_contacts_0036(self):
         """用户未加入任何企业"""
         contact=ContactsPage()
@@ -515,15 +431,17 @@ class ContactPage(TestCase):
         SelectOneGroupPage().is_text_present('搜索群组')
         #不存在搜索结果时,显示"无搜索结果
         SelectOneGroupPage().click_search_group()
-        SelectOneGroupPage().input_search_keyword('测试')
+        SelectOneGroupPage().input_search_keyword('wanduzi')
+        SelectOneGroupPage().hide_keyboard()
         SelectOneGroupPage().page_should_contain_text('无搜索结果')
         #存在搜索结果时,搜索结果包含关键字
         time.sleep(2)
         SelectOneGroupPage().click_back_icon()
         SelectOneGroupPage().click_search_group()
-        SelectOneGroupPage().input_search_keyword('给个红包1')
-        SelectOneGroupPage().is_group_in_list('给个红包1')
-        SelectOneGroupPage().select_one_group_by_name('给个红包1')
+        SelectOneGroupPage().input_search_keyword('群聊1')
+        # SelectOneGroupPage().is_group_in_list('群聊1')
+        SelectOneGroupPage().select_one_group_by_name('群聊1')
+        time.sleep(2)
         SelectOneGroupPage().click_share_business_card()
         SelectOneGroupPage().click_back_by_android(times=5)
 
@@ -544,7 +462,7 @@ class ContactPage(TestCase):
         """群聊列表展示页面选择一个群分享"""
         ContactListSearchPage().click_share_card()
         SelectContactsPage().click_select_one_group()
-        SelectOneGroupPage().select_one_group_by_name('给个红包1')
+        SelectOneGroupPage().selecting_one_group_by_name('群聊1')
         SelectOneGroupPage().is_text_present('发送名片')
         SelectOneGroupPage().click_share_business_card()
         #返回通讯录页面
@@ -571,7 +489,7 @@ class ContactPage(TestCase):
         SelectContactsPage().page_should_contain_text('搜索或输入手机号')
         #无搜索结果时,下方是否展示：无搜索结果
         SelectContactsPage().click_search_keyword()
-        SelectContactsPage().input_search_keyword('文本')
+        SelectContactsPage().input_search_keyword('wanduzi')
         SelectContactsPage().is_text_present('无搜索结果')
         time.sleep(2)
         #存在搜索结果时,判断显示是否正确
@@ -595,29 +513,13 @@ class ContactPage(TestCase):
         ContactsPage().click_search_box()
         ContactListSearchPage().input_search_keyword('大佬1')
         ContactListSearchPage().click_contact('大佬1')
-        ContactDetailsPage().click_share_business_card()
-
-
-    # @staticmethod
-    # def setUp_test_contacts_0006():
-    #     """
-    #     用户未加入任何企业
-    #     """
-    #     Preconditions.connect_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()  # 收起键盘
-    #     Preconditions.make_already_in_message_page()  # 当前已在消息界面
-    #     MessagePage().click_contacts()
-    #
-    # @tags('All', 'CMCC', "contacts")
-    # def test_contacts_0006(self):
-    #     contact = ContactsPage()
-    #     contact.click_and_address()
-    #     contact.click_search_box()
-    #     contact.input_text()
+        time.sleep(2)
 
     @tags('All', 'CMCC')
     def test_contacts_0198(self):
         """选择本地联系人分享名片"""
+        ContactDetailsPage().click_share_business_card()
+        time.sleep(2)
         select_contact=SelectContactsPage()
         select_contact.select_local_contacts()
         select_contact.select_one_contact_by_name('大佬2')
@@ -626,7 +528,6 @@ class ContactPage(TestCase):
         SelectOneGroupPage().click_share_business_card()
         SelectOneGroupPage().click_back_by_android(times=5)
         #返回通讯录页面
-
 
     @staticmethod
     def setUp_test_contacts_0201():
@@ -638,7 +539,7 @@ class ContactPage(TestCase):
         ContactsPage().select_people_by_name('大佬1')
         ContactListSearchPage().click_share_card()
 
-    @tags('All', 'CMCC')
+    @tags('和通讯录暂时取消')
     def test_contacts_0201(self):
         """选择和通讯录联系人联系人分享名片"""
         SelectContactsPage().click_he_contacts()
@@ -675,8 +576,8 @@ class ContactPage(TestCase):
         select_contacts.input_search_keyword('给个红包')
         select_contacts.hide_keyboard()
         time.sleep(2)
-        select_contacts.page_should_contain_text('搜索和通讯录联系人')
-        select_contacts.page_should_contain_text('本地联系人')
+        select_contacts.page_should_contain_text('搜索团队联系人')
+        select_contacts.page_should_contain_text('手机联系人')
         select_contacts.page_should_contain_text('查看更多')
         select_contacts.page_should_contain_text('群聊')
         #选择本地联系人是否会弹出弹框 #是否弹出弹框未检测
@@ -780,6 +681,7 @@ class ContactPage(TestCase):
         time.sleep(2)
         #返回通讯录页面
         SelectContactsPage().click_back()
+        SelectContactsPage().click_back()
         ContactDetailsPage().click_back()
         ContactListSearchPage().click_back()
 
@@ -795,7 +697,6 @@ class ContactPage(TestCase):
         ContactListSearchPage().click_contact('大佬1')
         ContactListSearchPage().click_share_card()
 
-
     @tags('ALL','CMCC')
     def test_contacts_0211(self):
         """联系人选择器  输入陌生手机号码"""
@@ -809,6 +710,7 @@ class ContactPage(TestCase):
         select_contact.get_element_text_net_number('tel:+86')
         time.sleep(2)
         #返回消息页面
+        SelectContactsPage().click_back()
         SelectContactsPage().click_back()
         ContactDetailsPage().click_back()
         ContactListSearchPage().click_back()
@@ -825,14 +727,14 @@ class ContactPage(TestCase):
     def test_contacts_0321(self):
         "公众号默认关注公众号检查"
         ContactsPage().click_official_account_icon()
-        time.sleep(1)
+        time.sleep(3)
         official_account = OfficialAccountPage()
         official_account.page_should_contain_text('中国移动10086')
         official_account.page_should_contain_text('和飞信')
         official_account.page_should_contain_text('和飞信团队')
+        official_account.page_should_contain_text('和飞信新闻')
         #返回通讯录页面
         official_account.click_back()
-
 
     @staticmethod
     def setUp_test_contacts_0322():
@@ -854,10 +756,9 @@ class ContactPage(TestCase):
         #返回通讯录页面
         official_account.click_back()
 
-
     @staticmethod
     def setUp_test_contacts_0323():
-        #用户已关注'中软国际一家亲'公众号
+
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -882,7 +783,6 @@ class ContactPage(TestCase):
         #返回通讯录页面
         official_account.click_back()
         OfficialAccountPage().click_back()
-
 
     @staticmethod
     def setUp_test_contacts_0324():
@@ -1005,7 +905,7 @@ class ContactPage(TestCase):
 
     @staticmethod
     def setUp_test_contacts_0328():
-        #用户已关注'中软国际一家亲'公众号
+
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -1089,6 +989,15 @@ class ContactPage(TestCase):
         #返回通讯录页面
         official_account.click_back()
         official_account.click_back()
+
+    @staticmethod
+    def tearDown_test_contacts_quxinli_0330(self):
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep = MePage()
+            mep.set_network_status(6)
 
 
     @staticmethod
@@ -1342,6 +1251,9 @@ class ContactPage(TestCase):
         #返回通讯录页面
         LabelGroupingPage().click_back()
 
+    @classmethod
+    def tearDownClass(cls):
+        pass
 
 
 

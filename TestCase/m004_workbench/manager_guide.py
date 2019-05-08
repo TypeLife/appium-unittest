@@ -138,7 +138,7 @@ class ManagerGuideAllTest(TestCase):
         mgp.wait_for_page_load()
         # 1、2.进入各个指引页
         mgp.click_guide_by_name("添加/邀请成员 壮大团队，提高协同办公效率")
-        mgp.wait_for_guide_page_load("快速建群")
+        mgp.wait_for_guide_page_load("添加/邀请成员")
         mgp.click_back()
         time.sleep(1)
         mgp.click_guide_by_name("快速建群 根据组织架构快速建群，方便快捷")
@@ -156,6 +156,7 @@ class ManagerGuideAllTest(TestCase):
         mgp.click_guide_by_name("后台登录指引 更多管理功能，登录和飞信企业管理后台")
         mgp.wait_for_guide_page_load("后台登录指引")
         mgp.click_back()
+        time.sleep(1)
         mgp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         mgp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         time.sleep(2)
@@ -185,7 +186,7 @@ class ManagerGuideAllTest(TestCase):
         mgp = ManagerGuidePage()
         # 1.进入各个指引页，点击顶部【<】
         mgp.click_guide_by_name("添加/邀请成员 壮大团队，提高协同办公效率")
-        mgp.wait_for_guide_page_load("快速建群")
+        mgp.wait_for_guide_page_load("添加/邀请成员")
         mgp.click_back()
         time.sleep(1)
         mgp.click_guide_by_name("快速建群 根据组织架构快速建群，方便快捷")
@@ -220,7 +221,7 @@ class ManagerGuideAllTest(TestCase):
         wbp = WorkbenchPage()
         # 1.进入各个指引页，点击顶部【X】
         mgp.click_guide_by_name("添加/邀请成员 壮大团队，提高协同办公效率")
-        mgp.wait_for_guide_page_load("快速建群")
+        mgp.wait_for_guide_page_load("添加/邀请成员")
         mgp.click_close()
         wbp.wait_for_workbench_page_load()
         wbp.click_manager_guide()
@@ -370,23 +371,29 @@ class ManagerGuideAllTest(TestCase):
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
 
-    @unittest.skip("用例描述有误,跳过")
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
     def test_QY_0010(self):
         """查看增值服务协议"""
 
         # 进入企业权益首页
         Preconditions.enter_enterprise_interests_page()
         eip = EnterpriseInterestsPage()
+        # 解决工作台不稳定问题
+        eip.click_back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_rights()
+        eip.wait_for_page_load()
         # 点击增值服务
         eip.click_service()
         eip.wait_for_service_page_load()
         # 点击增值服务协议
         eip.click_service_agreement()
+        time.sleep(2)
         # 1.是否打开协议内容
         self.assertEquals(eip.is_text_present("欢迎您使用中国移动和飞信增值服务"), True)
         eip.click_close()
         # 等待工作台首页加载
-        wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
 
     @tags('ALL', 'CMCC', 'workbench', 'LXD')

@@ -25,7 +25,7 @@ class SelectLocalContactsPage(BasePage):
                   'com.chinasofti.rcs:id/contact_selection_list_view': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/contact_selection_list_view'),
                   '容器列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list'),
-                  'com.chinasofti.rcs:id/contact_list_item': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
+                  '联系人列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
                   'com.chinasofti.rcs:id/asp_selecttion_contact_content': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/asp_selecttion_contact_content'),
                   'D': (MobileBy.ID, ''),
@@ -157,7 +157,8 @@ class SelectLocalContactsPage(BasePage):
     def search_and_select_one_member_by_name(self, name):
         """搜索选择联系人"""
         self.input_text(self.__class__.__locators["搜索或输入手机号"], name)
-        self.click_element(self.__class__.__locators["联系人名"])
+        # self.click_element(self.__class__.__locators["联系人名"])
+        self.click_element(self.__class__.__locators["联系人列表"])
 
     @TestLogger.log()
     def click_sure(self):
@@ -188,11 +189,11 @@ class SelectLocalContactsPage(BasePage):
         """向上滑动一页"""
         self.swipe_by_direction(self.__class__.__locators['容器列表'], 'up')
 
-    def swipe_to_top(self, times=100):
+    def swipe_to_top(self, times=20):
         """滑动到顶部"""
         while times > 0:
             self.swipe_by_direction(self.__class__.__locators['容器列表'], 'down')
-            flag = self.is_text_present("选择和通讯录联系人")
+            flag = self.is_text_present("选择团队联系人")
             if flag:
                 break
             times = times - 1
@@ -315,3 +316,5 @@ class SelectLocalContactsPage(BasePage):
             condition=lambda x: self.get_elements(('id', 'com.chinasofti.rcs:id/contact_list_item'))[0],
             auto_accept_permission_alert=False
         ).click()
+
+

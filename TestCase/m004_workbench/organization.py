@@ -161,9 +161,9 @@ class OrganizationTest(TestCase):
             slc.click_one_contact("和飞信电话")
             slc.click_sure()
             if not slc.is_toast_exist("1个联系人联系人在库中已存在"):
-                raise AssertionError("操作不成功")
+                print("和飞信电话已经加入")
             time.sleep(2)
-            if not osp.is_on_this_page():
+            if not osp.is_text_present("邀请成员加入团队"):
                 raise AssertionError("没有返回上一级")
         else:
             osp.click_text("添加联系人")
@@ -175,7 +175,7 @@ class OrganizationTest(TestCase):
             if not slc.is_toast_exist("操作成功"):
                 raise AssertionError("操作不成功")
             time.sleep(2)
-            if not osp.is_on_this_page():
+            if not osp.is_text_present("邀请成员加入团队"):
                 raise AssertionError("没有返回上一级")
 
     @tags('ALL', "CMCC", 'workbench', 'ZZJG')
@@ -206,7 +206,7 @@ class OrganizationTest(TestCase):
             if not slc.is_toast_exist("1个联系人联系人在库中已存在"):
                 raise AssertionError("操作不成功")
             time.sleep(2)
-            if not osp.is_on_this_page():
+            if not osp.is_text_present("邀请成员加入团队"):
                 raise AssertionError("没有返回上一级")
         else:
             osp.click_text("添加联系人")
@@ -223,7 +223,7 @@ class OrganizationTest(TestCase):
             if not slc.is_toast_exist("操作成功"):
                 raise AssertionError("操作不成功")
             time.sleep(2)
-            if not osp.is_on_this_page():
+            if not osp.is_text_present("邀请成员加入团队"):
                 raise AssertionError("没有返回上一级")
 
     @tags('ALL', "CMCC", 'workbench', 'ZZJG')
@@ -238,7 +238,7 @@ class OrganizationTest(TestCase):
         osp.wait_for_page_load()
         osp.click_text("添加联系人")
         time.sleep(1)
-        osp.click_text("邀请小伙伴")
+        osp.click_text("扫描二维码邀请")
         osp.wait_for_invite_page_load()
         osp.click_invite_mode_switch()
         time.sleep(2)
@@ -254,6 +254,7 @@ class OrganizationTest(TestCase):
         if not osp.is_exist_element_by_locatorname("点击右上角即可分享"):
             raise AssertionError("分享按钮不可用")
         current_mobile().back()
+        current_mobile().back()
         osp.wait_for_page_load()
 
     @tags('ALL', "CMCC", 'workbench', 'ZZJG')
@@ -266,9 +267,10 @@ class OrganizationTest(TestCase):
         osp.wait_for_page_load()
         osp.click_text("添加联系人")
         time.sleep(1)
-        osp.click_text("取消")
+        # osp.click_text("取消")
+        current_mobile().back()
         time.sleep(2)
-        if osp.is_text_present("邀请小伙伴"):
+        if osp.is_text_present("扫描二维码邀请"):
             raise AssertionError("弹窗隐藏失败")
 
     @tags('ALL', "CMCC", 'workbench', 'ZZJG')

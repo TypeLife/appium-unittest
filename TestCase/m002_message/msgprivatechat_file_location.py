@@ -986,7 +986,7 @@ class MsgPrivateChatAllTest(TestCase):
         Preconditions.send_file_by_type(file_type)
         # 3.验证是否发送成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
         time.sleep(2)
         # 获取发送的文件名称
         file_name = scp.get_current_file_name()
@@ -1013,7 +1013,7 @@ class MsgPrivateChatAllTest(TestCase):
         Preconditions.send_file_by_type(file_type)
         # 3.验证是否发送失败，是否存在重发按钮
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        cwp.wait_for_msg_send_status_become_to('发送失败', 30)
         self.assertEquals(scp.is_exist_msg_send_failed_button(), True)
 
     @staticmethod
@@ -1042,7 +1042,7 @@ class MsgPrivateChatAllTest(TestCase):
         Preconditions.send_file_by_type(file_type)
         # 1.验证是否发送失败，是否存在重发按钮
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        cwp.wait_for_msg_send_status_become_to('发送失败', 30)
         self.assertEquals(scp.is_exist_msg_send_failed_button(), True)
         scp.click_back()
         mp = MessagePage()
@@ -1076,7 +1076,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.click_sure()
         # 2.验证是否重发成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @staticmethod
     def tearDown_test_msg_0004():
@@ -1107,7 +1107,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.click_sure()
         # 2.验证是否重发成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
         scp.click_back()
         mp = MessagePage()
         mp.wait_for_page_load()
@@ -1382,7 +1382,7 @@ class MsgPrivateChatAllTest(TestCase):
         Preconditions.send_local_picture()
         # 3.验证是否发送失败，是否存在重发按钮
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        cwp.wait_for_msg_send_status_become_to('发送失败', 30)
         self.assertEquals(scp.is_exist_msg_send_failed_button(), True)
 
     @staticmethod
@@ -1412,7 +1412,7 @@ class MsgPrivateChatAllTest(TestCase):
         time.sleep(2)
         # 1.验证是否发送失败，是否存在重发按钮
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        cwp.wait_for_msg_send_status_become_to('发送失败', 30)
         self.assertEquals(scp.is_exist_msg_send_failed_button(), True)
         scp.click_back()
         mp = MessagePage()
@@ -1446,7 +1446,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.click_sure()
         # 2.验证是否重发成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @staticmethod
     def tearDown_test_msg_0017():
@@ -1477,7 +1477,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.click_sure()
         # 2.验证是否重发成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
         scp.click_back()
         mp = MessagePage()
         mp.wait_for_page_load()
@@ -1737,7 +1737,7 @@ class MsgPrivateChatAllTest(TestCase):
         Preconditions.send_local_video()
         # 3.验证是否发送失败，是否存在重发按钮
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        cwp.wait_for_msg_send_status_become_to('发送失败', 30)
         self.assertEquals(scp.is_exist_msg_send_failed_button(), True)
 
     @staticmethod
@@ -1766,7 +1766,7 @@ class MsgPrivateChatAllTest(TestCase):
         Preconditions.send_file_by_type(file_type)
         # 1.验证是否发送失败，是否存在重发按钮
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        cwp.wait_for_msg_send_status_become_to('发送失败', 30)
         self.assertEquals(scp.is_exist_msg_send_failed_button(), True)
         scp.click_back()
         mp = MessagePage()
@@ -1801,7 +1801,7 @@ class MsgPrivateChatAllTest(TestCase):
         time.sleep(2)
         # 2.验证是否重发成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @staticmethod
     def tearDown_test_msg_0031():
@@ -2095,7 +2095,7 @@ class MsgPrivateChatAllTest(TestCase):
         Preconditions.send_local_music()
         # 3.验证是否发送失败，是否存在重发按钮
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        cwp.wait_for_msg_send_status_become_to('发送失败', 30)
         self.assertEquals(scp.is_exist_msg_send_failed_button(), True)
 
     @staticmethod
@@ -2124,7 +2124,7 @@ class MsgPrivateChatAllTest(TestCase):
         Preconditions.send_file_by_type(file_type)
         # 1.验证是否发送失败，是否存在重发按钮
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        cwp.wait_for_msg_send_status_become_to('发送失败', 30)
         self.assertEquals(scp.is_exist_msg_send_failed_button(), True)
         scp.click_back()
         mp = MessagePage()
@@ -2158,7 +2158,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.click_sure()
         # 2.验证是否重发成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @staticmethod
     def tearDown_test_msg_0045():
@@ -2189,7 +2189,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.click_sure()
         # 2.验证是否重发成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
         scp.click_back()
         mp = MessagePage()
         mp.wait_for_page_load()

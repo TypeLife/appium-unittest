@@ -244,8 +244,8 @@ class Preconditions(WorkbenchPreconditions):
             mp.clear_fail_in_send_message()
 
     @staticmethod
-    def if_exists_multiple_enterprises_enter_group_chat():
-        """选择团队联系人时存在多个团队时返回获取当前团队名"""
+    def if_exists_multiple_enterprises_enter_group_chat(types):
+        """选择团队联系人时存在多个团队时返回获取当前团队名，再进入群聊转发图片/视频"""
 
         shc = SelectHeContactsDetailPage()
         # 测试号码是否存在多个团队
@@ -262,13 +262,18 @@ class Preconditions(WorkbenchPreconditions):
             mp.open_workbench_page()
             wbp = WorkbenchPage()
             wbp.wait_for_workbench_page_load()
+            time.sleep(2)
             # 获取当前团队名
             workbench_name = wbp.get_workbench_name()
             mp.open_message_page()
             mp.wait_for_page_load()
             group_name = "群聊1"
             Preconditions.get_into_group_chat_page(group_name)
-            gcp.forward_pic()
+            # 转发图片/视频
+            if types == "pic":
+                gcp.forward_pic()
+            elif types == "video":
+                gcp.forward_video()
             scg.wait_for_page_load()
             scg.click_he_contacts()
             shc.wait_for_he_contacts_page_load()
@@ -2225,7 +2230,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         gcp.wait_for_page_load()
         # 5.验证是否发送成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @tags('ALL', 'CMCC', 'LXD', 'high')
     def test_msg_group_chat_total_quantity_0042(self):
@@ -2348,7 +2353,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
             chat.click_i_have_read()
         # 5.验证是否发送成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
         # 返回消息页
         gcp.click_back()
 
@@ -2454,7 +2459,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个团队联系人
         # 需要考虑测试号码存在多个团队的情况
-        Preconditions.if_exists_multiple_enterprises_enter_group_chat()
+        Preconditions.if_exists_multiple_enterprises_enter_group_chat("pic")
         name = "大佬3"
         shc.selecting_he_contacts_by_name(name)
         # 确定转发
@@ -2476,7 +2481,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
             chat.click_i_have_read()
         # 5.验证是否发送成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
         # 返回消息页
         gcp.click_back()
 
@@ -2508,7 +2513,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个团队联系人
         # 需要考虑测试号码存在多个团队的情况
-        Preconditions.if_exists_multiple_enterprises_enter_group_chat()
+        Preconditions.if_exists_multiple_enterprises_enter_group_chat("pic")
         contact_name = "大佬3"
         shc.selecting_he_contacts_by_name(contact_name)
         # 确定转发
@@ -2551,7 +2556,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个团队联系人
         # 需要考虑测试号码存在多个团队的情况
-        Preconditions.if_exists_multiple_enterprises_enter_group_chat()
+        Preconditions.if_exists_multiple_enterprises_enter_group_chat("pic")
         name = "大佬3"
         shc.selecting_he_contacts_by_name(name)
         # 取消转发
@@ -2605,7 +2610,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
             chat.click_i_have_read()
         # 5.验证是否发送成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
         # 返回消息页
         gcp.click_back()
 
@@ -2723,7 +2728,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         time.sleep(2)
         # 5.验证是否发送成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
         # 返回消息页
         gcp.click_back()
 
@@ -2845,7 +2850,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         time.sleep(2)
         # 5.验证是否发送成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
         # 返回消息页
         gcp.click_back()
 
@@ -2972,7 +2977,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
             chat.click_i_have_read()
         # 5.验证是否发送成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
         # 返回消息页
         gcp.click_back()
 
@@ -3079,7 +3084,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个团队联系人
         # 需要考虑测试号码存在多个团队的情况
-        Preconditions.if_exists_multiple_enterprises_enter_group_chat()
+        Preconditions.if_exists_multiple_enterprises_enter_group_chat("video")
         name = "大佬3"
         shc.selecting_he_contacts_by_name(name)
         # 确定转发
@@ -3101,7 +3106,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
             chat.click_i_have_read()
         # 5.验证是否发送成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
         # 返回消息页
         gcp.click_back()
 
@@ -3133,7 +3138,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         shc.wait_for_he_contacts_page_load()
         # 3.选择一个团队联系人
         # 需要考虑测试号码存在多个团队的情况
-        Preconditions.if_exists_multiple_enterprises_enter_group_chat()
+        Preconditions.if_exists_multiple_enterprises_enter_group_chat("video")
         name = "大佬3"
         shc.selecting_he_contacts_by_name(name)
         # 确定转发
@@ -3176,7 +3181,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         shc.wait_for_he_contacts_page_load()
         # 3、4.选择一个团队联系人
         # 需要考虑测试号码存在多个团队的情况
-        Preconditions.if_exists_multiple_enterprises_enter_group_chat()
+        Preconditions.if_exists_multiple_enterprises_enter_group_chat("video")
         name = "大佬3"
         shc.selecting_he_contacts_by_name(name)
         # 取消转发
@@ -3231,7 +3236,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
             chat.click_i_have_read()
         # 5.验证是否发送成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
         # 返回消息页
         gcp.click_back()
 
@@ -3349,13 +3354,13 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         gcp.send_gif()
         cwp = ChatWindowPage()
         # 2.检验发送失败的标识
-        cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        cwp.wait_for_msg_send_status_become_to('发送失败', 30)
         # 重新连接网络
         gcp.set_network_status(6)
         # 点击重发
         gcp.click_send_again()
         # 3.验证是否发送成功
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @staticmethod
     def tearDown_test_msg_group_chat_total_quantity_0118():

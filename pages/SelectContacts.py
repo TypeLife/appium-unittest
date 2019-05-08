@@ -46,7 +46,7 @@ class SelectContactsPage(BasePage):
         '取消转发': (MobileBy.XPATH, "//*[contains(@text, '取消')]"),
         '确定转发': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
         'local联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
-        '分享名片': (MobileBy.ID, 'com.chinasofti.rcs:id/send_tv'),
+        '发送名片': (MobileBy.ID,'com.chinasofti.rcs:id/send_tv'),
         '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
         '右侧字母索引': (MobileBy.XPATH,
                    '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView'),
@@ -56,8 +56,8 @@ class SelectContactsPage(BasePage):
         "最近聊天消息名称": (MobileBy.ID, "com.chinasofti.rcs:id/tv_name"),
         "联系人横框": (MobileBy.ID, "com.chinasofti.rcs:id/contact_list_item"),
         "搜索框左边选中联系人": (MobileBy.ID, "com.chinasofti.rcs:id/image"),
-       # 'aaa':(MobileBy.XPATH,"*[@text='aaa']"),
-        'aaa':(MobileBy.ID,'com.chinasofti.rcs:id/contact_name'),
+       'aaa':(MobileBy.XPATH,"*[@text='aaa']"),
+        # 'aaa':(MobileBy.ID,'com.chinasofti.rcs:id/contact_name'),
 
         "搜索群组":(MobileBy.ID,'com.chinasofti.rcs:id/et_search'),
         "搜索1":(MobileBy.ID,'com.chinasofti.rcs:id/edit_query'),
@@ -226,7 +226,7 @@ class SelectContactsPage(BasePage):
     @TestLogger.log('点击分享名片')
     def click_share_card(self):
         """点击分享名片"""
-        self.click_element(self.__locators['分享名片'])
+        self.click_element(self.__class__.__locators['发送名片'])
 
     @TestLogger.log('搜索或输入手机号')
     def click_search_contact(self):
@@ -252,7 +252,7 @@ class SelectContactsPage(BasePage):
     @TestLogger.log('点击联系人头像')
     def click_cantact_avatar(self):
         """点击联系人头像"""
-        self.click_element(self.__locators['联系人头像'])
+        self.click_element(self.__locators['选中联系人头像'])
 
     @TestLogger.log()
     def click_select_one_group(self):
@@ -277,13 +277,19 @@ class SelectContactsPage(BasePage):
     @TestLogger.log()
     def click_one_local_contacts(self):
         """点击一个本地联系人"""
-        els = self.get_elements(self.__class__.__locators["local联系人"])
-        contactnames = []
-        if els:
-            for el in els:
-                contactnames.append(el.text)
-            self.select_one_contact_by_name(contactnames[0])
-        else:
+        # els = self.get_elements(self.__class__.__locators["local联系人"])
+        # contactnames = []
+        # if els:
+        #     for el in els:
+        #         contactnames.append(el.text)
+        #     self.select_one_contact_by_name(contactnames[0])
+        try:
+            self.wait_until(
+                condition=lambda x: self.get_elements(self.__class__.__locators["联系人列表"])[0],
+                auto_accept_permission_alert=False
+            ).click()
+        # else:
+        except:
             raise AssertionError("没有本地联系人可转发")
 
     @TestLogger.log()
@@ -534,6 +540,8 @@ class SelectContactsPage(BasePage):
             time.sleep(1)
             group_set.click_delete_and_exit()
             time.sleep(3)
+        else:
+            self.click_back_by_android()
         # mess.click_create_group()
         # 点击 +
         mess.click_add_icon()
@@ -579,7 +587,13 @@ class SelectContactsPage(BasePage):
             time.sleep(1)
             group_set.click_delete_and_exit()
             time.sleep(3)
-        mess.click_create_group()
+        else:
+            self.click_back_by_android()
+        # mess.click_create_group()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
         mess.click_contact_group()
         while times>0:
             self.page_up()
@@ -625,7 +639,13 @@ class SelectContactsPage(BasePage):
             sc.page_up()
             time.sleep(1)
             group_set.click_delete_and_exit()
-        mess.click_create_group()
+        else:
+            self.click_back_by_android()
+        # mess.click_create_group()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
         mess.click_contact_group()
         while times > 0:
             self.page_up()

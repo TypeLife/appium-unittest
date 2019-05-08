@@ -103,7 +103,7 @@ class Preconditions(WorkbenchPreconditions):
 
     @staticmethod
     def if_exists_multiple_enterprises_enter_single_chat():
-        """选择团队联系人时存在多个团队时返回获取当前团队名"""
+        """选择团队联系人时存在多个团队时返回获取当前团队名，再进入单聊转发图片"""
 
         shc = SelectHeContactsDetailPage()
         # 测试号码是否存在多个团队
@@ -120,6 +120,7 @@ class Preconditions(WorkbenchPreconditions):
             mp.open_workbench_page()
             wbp = WorkbenchPage()
             wbp.wait_for_workbench_page_load()
+            time.sleep(2)
             # 获取当前团队名
             workbench_name = wbp.get_workbench_name()
             mp.open_message_page()
@@ -1749,7 +1750,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         scp.wait_for_page_load()
         # 5.验证是否发送成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @tags('ALL', 'CMCC', 'LXD')
     def test_msg_privateChat_videoPic_total_quantity_0042(self):
@@ -1879,7 +1880,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
             bcp.click_i_have_read()
         # 5.验证是否发送成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
         # 返回消息页
         scp.click_back()
 
@@ -2007,7 +2008,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
             chat.click_i_have_read()
         # 5.验证是否发送成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
         # 返回消息页
         scp.click_back()
 
@@ -2136,7 +2137,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
             bcp.click_i_have_read()
         # 5.验证是否发送成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
         # 返回消息页
         scp.click_back()
 
@@ -2255,7 +2256,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         time.sleep(2)
         # 5.验证是否发送成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
         # 返回消息页
         scp.click_back()
 
@@ -2380,7 +2381,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         time.sleep(2)
         # 验证是否发送成功
         cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
         # 返回消息页
         scp.click_back()
 
