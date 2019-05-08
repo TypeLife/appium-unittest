@@ -317,6 +317,7 @@ class MessageScanTest(TestCase):
         time.sleep(2)
         # CheckPoint: 2.短信发送成功并返回短信编辑页面
         self.assertTrue(basepg.is_exist_exit_sms())
+        basepg.click_exit_sms()
         basepg.click_back_by_android()
 
     @staticmethod
@@ -341,6 +342,7 @@ class MessageScanTest(TestCase):
         Preconditions.enter_single_chat_page("测试号码")
         # Step: 1.点击下方发送短信按钮
         basepg = BaseChatPage()
+        time.sleep(3)
         basepg.click_free_msg()
         time.sleep(2)
         # CheckPoint: 1.直接进入短信编辑页面
@@ -492,7 +494,7 @@ class MessageScanTest(TestCase):
         basepg.click_collection()
         # CheckPoint: 短信成功收藏
         self.assertTrue(basepg.is_toast_exist("已收藏"))
-        time.sleep(2)
+        time.sleep(3)
         if basepg.is_exist_exit_sms():
             basepg.click_exit_sms()
             time.sleep(1)
