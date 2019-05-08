@@ -131,8 +131,8 @@ class CallAll(TestCase):
                 conts = ContactsPage()
                 preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
                 current_mobile().hide_keyboard_if_display()
+                preconditions.make_already_in_message_page()
                 for name, number in required_contacts:
-                    preconditions.make_already_in_message_page()
                     conts.open_contacts_page()
                     if conts.is_text_present("显示"):
                         conts.click_text("不显示")
