@@ -166,7 +166,8 @@ class BasePage(object):
                 _xpath = u'//*[@{}="{}"]'.format('text', text)
             else:
                 _xpath = u'//*[contains(@{},"{}")]'.format('text', text)
-            self.get_element((MobileBy.XPATH, _xpath)).click()
+            # self.get_element((MobileBy.XPATH, _xpath)).click()
+            self.click_element((MobileBy.XPATH, _xpath))
 
     def input_text(self, locator, text):
         self.mobile.input_text(locator, text)
@@ -284,7 +285,7 @@ class BasePage(object):
             self.driver.swipe(x_start, y_start, x_offset, y_offset, duration)
 
     def page_should_contain_text(self, text):
-        if not self.is_text_present(text):
+        if not self.wait_until(condition=lambda x: self.is_text_present(text)):
             raise AssertionError("Page should have contained text '{}' "
                                  "but did not" % text)
         return True

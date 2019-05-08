@@ -904,7 +904,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         # current_mobile().connect_mobile()
         Preconditions.enter_group_chat_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC_RESET', 'group_chat')
     def test_msg_group_chat_file_location_0018(self):
         """1、在当前文件列表页面长按任意未下载文件
             2、点击收藏按钮
