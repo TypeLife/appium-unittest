@@ -1297,6 +1297,7 @@ class MeAllCollect(TestCase):
         mcp.wait_for_page_load_about()
         mcp.click_new_guide()
         mcp.wait_for_page_new_guide()
+        time.sleep(1)
         mcp.click_text("即时消息")
         mcp.wait_for_page_new_guide_details()
         mcp.page_should_contain_text("即时消息")
@@ -1401,8 +1402,10 @@ class MeAllCollect(TestCase):
         mess.open_me_page()
         mep = MePage()
         mep.is_on_this_page()
-        self.assertEquals(mep._find_text_menu("推荐和飞信"), True)
-        self.assertEquals(mep._find_text_menu("分享和飞信"), False)
+        # self.assertEquals(mep._find_text_menu("推荐和飞信"), True)
+        # self.assertEquals(mep._find_text_menu("分享和飞信"), False)
+        self.assertTrue(mep.wait_until(condition=lambda x: mep.is_text_present("推荐和飞信")))
+        self.assertFalse(mep.is_text_present("分享和飞信"))
         # 3.返回到我的页面
         mess.open_message_page()
 
@@ -2061,11 +2064,6 @@ class MeAllCollect(TestCase):
         mfp.click_text_button("论坛互动")
         mfp.wait_for_page_load()
         mfp.page_contain_text("和飞信社区")
-        # 5.点击返回
-        mfp.click_back()
-        # mfp.click_back()
-        mep.wait_for_page_load()
-        mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     def test_me_all_page_594(self):

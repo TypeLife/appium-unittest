@@ -236,7 +236,7 @@ class TagsGroupingTest(TestCase):
 
                 # # 推送resource文件到手机
                 # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
-                # return
+                return
             except:
                 fail_time += 1
                 import traceback
