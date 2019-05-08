@@ -69,6 +69,8 @@ class Preconditions(WorkbenchPreconditions):
         mp.click_workbench()
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
+        # 查找并点击所有展开元素
+        wbp.find_and_click_open_element()
         wbp.click_add_attendance_card()
         acp = AttendanceCardPage()
         # 解决工作台不稳定问题
@@ -85,7 +87,10 @@ class Preconditions(WorkbenchPreconditions):
         # 确保已经加入考勤组
         if not acp.is_on_attendance_card_page():
             acp.click_text("新建考勤组")
-            time.sleep(3)
+            time.sleep(2)
+            if acp.is_text_present("始终允许"):
+                acp.click_text("始终允许")
+            time.sleep(2)
             acp.click_text("请选择")
             time.sleep(1)
             acp.click_text("全选")

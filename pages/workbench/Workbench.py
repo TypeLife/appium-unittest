@@ -100,20 +100,23 @@ class WorkbenchPage(FooterPage):
 
     def swipe_half_page_up(self):
         """向上滑动半页"""
-        self.swipe_by_percent_on_screen(50, 80, 50, 30, 800)
+        self.swipe_by_percent_on_screen(50, 70, 50, 30, 800)
 
     def swipe_half_page_down(self):
         """向下滑动半页"""
-        self.swipe_by_percent_on_screen(50, 30, 50, 80, 800)
+        self.swipe_by_percent_on_screen(50, 30, 50, 70, 800)
 
     def find_els(self, location):
         """查找元素"""
-        # 查找并点击所有展开元素
-        self.find_and_click_open_element()
         els = self.get_elements(location)
         if len(els) > 0:
             return els
+
+        current = 0
         while True:
+            current += 1
+            if current > 20:
+                return
             self.swipe_half_page_up()
             els = self.get_elements(location)
             if len(els) > 0:
@@ -122,7 +125,12 @@ class WorkbenchPage(FooterPage):
             els = self.get_elements(self.__class__.__locators['创建团队'])
             if len(els) > 0:
                 break
+
+        current = 0
         while True:
+            current += 1
+            if current > 20:
+                return
             self.swipe_half_page_down()
             els = self.get_elements(location)
             if len(els) > 0:
@@ -136,7 +144,11 @@ class WorkbenchPage(FooterPage):
     @TestLogger.log()
     def find_and_click_open_element(self):
         """查找并点击所有展开元素"""
+        current = 0
         while True:
+            current += 1
+            if current > 5:
+                return
             if self._is_element_present(self.__class__.__locators["展开"]):
                 self.click_element(self.__class__.__locators["展开"])
                 self.find_and_click_open_element()
@@ -145,7 +157,12 @@ class WorkbenchPage(FooterPage):
             # 滑动到底部还未找到元素则终止滑动
             if self._is_element_present(self.__class__.__locators["创建团队"]):
                 break
+
+        current = 0
         while True:
+            current += 1
+            if current > 5:
+                return
             if self._is_element_present(self.__class__.__locators["展开"]):
                 self.click_element(self.__class__.__locators["展开"])
                 self.find_and_click_open_element()

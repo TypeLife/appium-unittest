@@ -79,10 +79,12 @@ class MeCollectionPage(BasePage):
         """点击位置页面右下角导航按钮"""
         self.click_element(self.__class__.__locators['导航按钮'])
 
+    @TestLogger.log()
     def page_up(self):
         """向上滑动"""
         self.swipe_by_percent_on_screen(50, 80, 50, 30, 800)
 
+    @TestLogger.log()
     def page_down(self):
         """向下滑动"""
         self.swipe_by_percent_on_screen(50, 30, 50, 80, 800)
@@ -306,7 +308,11 @@ class MeCollectionPage(BasePage):
         else:
             return None
         flag = True
+        current = 0
         while flag:
+            current += 1
+            if current > 20:
+                return
             self.page_up()
             els = self.get_elements(self.__class__.__locators["收藏消息体"])
             for el in els:

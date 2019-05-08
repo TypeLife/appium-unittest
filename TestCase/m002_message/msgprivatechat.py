@@ -343,7 +343,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         if setting.is_on_this_page():
             return
         else:
-            current_mobile().reset_app()
+            current_mobile().launch_app()
             Preconditions.enter_private_chat_setting_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')

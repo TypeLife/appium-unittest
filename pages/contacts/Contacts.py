@@ -142,7 +142,11 @@ class ContactsPage(FooterPage):
         )
         if self._is_element_present(self.__locators['群聊']):
             return True
+        current = 0
         while True:
+            current += 1
+            if current > 20:
+                return
             self.swipe_by_direction(self.__locators['通讯录列表'], 'up')
             if self._is_element_present(self.__locators['群聊']):
                 break
@@ -190,7 +194,11 @@ class ContactsPage(FooterPage):
         else:
             raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
         flag = True
+        current = 0
         while flag:
+            current += 1
+            if current > 20:
+                return
             self.swipe_half_page_up()
             els = self.get_elements(self.__class__.__locators["联系人名"])
             for el in els:

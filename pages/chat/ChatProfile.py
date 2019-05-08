@@ -116,7 +116,11 @@ class ChatProfilePage(BasePage):
         else:
             raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
         flag = True
+        current = 0
         while flag:
+            current += 1
+            if current > 20:
+                return
             self.page_up()
             els = self.get_elements(self.__class__.__locators["联系人名"])
             for el in els:

@@ -324,7 +324,7 @@ class Preconditions(WorkbenchPreconditions):
                 gcs = GroupChatSetPage()
                 gcs.wait_for_page_load()
                 gcs.click_delete_and_exit()
-                gcs.click_sure()
+                # gcs.click_sure()
                 mess.click_add_icon()
                 mess.click_group_chat()
                 sc.wait_for_page_load()
@@ -478,7 +478,9 @@ class MsgGroupChatvedioTest(TestCase):
         # 5.点击发送,
         cpp.click_send()
         gcp.is_on_this_page()
-        self.assertEqual(gcp.is_send_sucess(), True)
+        # self.assertEqual(gcp.is_send_sucess(), True)
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0005(self):
@@ -580,7 +582,9 @@ class MsgGroupChatvedioTest(TestCase):
         # 6 点击发送后，判断在群聊首页,校验是否发送成功
         gcp.wait_for_page_load()
         gcp.is_on_this_page()
-        self.assertEqual(gcp.is_send_sucess(), True)
+        # self.assertEqual(gcp.is_send_sucess(), True)
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0008(self):
@@ -623,7 +627,9 @@ class MsgGroupChatvedioTest(TestCase):
         gcp.wait_for_page_load()
         time.sleep(1)
         gcp.is_on_this_page()
-        self.assertEqual(gcp.is_send_sucess(), True)
+        # self.assertEqual(gcp.is_send_sucess(), True)
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0009(self):
@@ -665,7 +671,9 @@ class MsgGroupChatvedioTest(TestCase):
         # 6 点击发送后，判断在群聊首页,校验是否发送成功
         gcp.wait_for_page_load()
         gcp.is_on_this_page()
-        self.assertEqual(gcp.is_send_sucess(), True)
+        # self.assertEqual(gcp.is_send_sucess(), True)
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk', 'high')
     def test_msg_group_chat_video_0010(self):
@@ -966,7 +974,8 @@ class MsgGroupChatvedioTest(TestCase):
         slc = SelectLocalContactsPage()
         slc.wait_for_page_load()
         # 4.选择第一个本地联系人发送
-        slc.swipe_select_one_member_by_name("和飞信电话")
+        # slc.swipe_select_one_member_by_name("和飞信电话")
+        slc.swipe_select_one_member_by_name("大佬1")
         slc.click_sure_forward()
         # 5.校验是否在消息聊天页面，是否提示已转发
         gcp.is_on_this_page()
@@ -1428,6 +1437,7 @@ class MsgGroupChatvedioTest(TestCase):
         # sct = SelectContactsPage()
         gcp.click_back()
         scp.click_one_contact("大佬2")
+        time.sleep(2)
         if gcp.is_exist_dialog():
             gcp.click_i_have_read()
         self.assertEquals(gcp.is_exist_msg_image(), True)
@@ -1742,6 +1752,7 @@ class MsgGroupChatvedioTest(TestCase):
         group_name = "a" + names[-4:]
         gsp.input_new_group_name(group_name)
         gsp.save_group_name()
+        time.sleep(2)
         self.assertEquals(gsp.is_toast_exist("修改成功"), True)
         # 3.返回群聊主页
         gsp.click_back()
@@ -1795,7 +1806,7 @@ class MsgGroupChatvedioTest(TestCase):
         gsp.wait_for_page_load()
         # 2.点击删除并退出
         gsp.click_delete_and_exit()
-        gsp.click_sure()
+        # gsp.click_sure()
         # 3.返回消息页，提示你已退出群
         mess = MessagePage()
         mess.wait_for_page_load()

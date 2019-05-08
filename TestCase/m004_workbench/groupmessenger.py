@@ -96,6 +96,8 @@ class Preconditions(WorkbenchPreconditions):
         mp.click_workbench()
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
+        # 查找并点击所有展开元素
+        wbp.find_and_click_open_element()
         wbp.click_add_group_messenger()
         n = 1
         # 解决工作台不稳定问题
@@ -556,6 +558,7 @@ class MassMessengerAllTest(TestCase):
         self.assertEquals(sccp.is_exist_select_contacts_name("佬3"), True)
         # 点击部门已选成员图像取消勾选
         sccp.click_contacts_image_by_name("大佬1")
+        time.sleep(2)
         # 点击顶部已选成员信息移除成员
         sccp.click_select_contacts_name("佬2")
         # 点击确定
