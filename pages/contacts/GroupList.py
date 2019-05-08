@@ -356,6 +356,15 @@ class GroupListPage(BasePage):
     def input_content(self,text='祝一路顺风幸福美满'):
         self.input_text(self.__class__.__locators['请输入标签分组名称'],text)
 
+    # @TestLogger.log("输入内容")
+    # def inputing_content(self,text):
+    #     self.input_text(self.__class__.__locators['请输入标签分组名称'],text)
+
+    @TestLogger.log("输入内容")
+    def get_text_of_lablegrouping_name(self):
+        self.get_text(self.__class__.__locators['请输入标签分组名称'])
+
+
     @TestLogger.log('使用坐标点击')
     def click_coordinate(self, x=1/2, y=15/16):
 
@@ -600,3 +609,60 @@ class GroupListPage(BasePage):
     def enter_mutil_video_call(self, message='aaaa'):
         time.sleep(1)
         self.click_element(self.__class__.__locators["多方视频"])
+
+    def page_down(self):
+        """向下滑动"""
+        self.swipe_by_percent_on_screen(50, 30, 50, 70, 800)
+
+    def find_star_by_name(self, locator, name, times=10):
+        """根据联系人名称查找星标"""
+        if self._is_element_present(locator):
+            els = self.get_elements(locator)
+            if els:
+                for el in els:
+                    if el.text.endswith(name):
+                        return el
+
+        c = 0
+        while c < times:
+            # self.page_down()
+            self.page_up()
+            if self._is_element_present(locator):
+                els = self.get_elements(locator)
+                if els:
+                    for el in els:
+                        if el.text.endswith(name):
+                            return el
+            c += 1
+        c = 0
+        while c < times:
+            # self.page_up()
+            self.page_down()
+            if self._is_element_present(locator):
+                els = self.get_elements(locator)
+                if els:
+                    for el in els:
+                        if el.text.endswith(name):
+                            return el
+            c += 1
+        return None
+
+
+    def page_contain_star(self, name):
+        """某联系人前是否存在星标"""
+        el=self.find_star_by_name((MobileBy.XPATH, '//*[contains(@text,"%s")]' % name), name)
+        if el:
+            return self.page_contain_element('星标图标')
+        else:
+            pass
+
+
+    # def swipe_select_one_member_by_name(self, name):
+    #     """通过人名选择一个联系人"""
+    #     el=self.get_element((MobileBy.XPATH, '//*[@text ="%s"]' % name)).text
+    #     if el:
+    #         self.click_text(el)
+    #     else:
+    #         self.find_star_by_name(el)
+    #         time.sleep(2)
+    #         self.click_text(el)

@@ -10,7 +10,7 @@ from pages.components import BaseChatPage
 from preconditions.BasePreconditions import WorkbenchPreconditions
 from library.core.utils.testcasefilter import tags
 from pages import *
-
+import unittest
 
 class Preconditions(WorkbenchPreconditions):
     """前置条件"""
@@ -377,7 +377,8 @@ class MsgPrivateChatVideoPicTest(TestCase):
         cpg.click_back()
         chat.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC')
+    # @tags('ALL', 'SMOKE', 'CMCC')
+    @unittest.skip('用例发生改变，点击图片编辑没有弹窗')
     def test_Msg_PrivateChat_VideoPic_0013(self):
         """单聊会话页面，预览已选中的图片，隐藏编辑按钮 """
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标
@@ -573,7 +574,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         slcp.wait_for_page_load()
         names = slcp.get_contacts_name()
         if names:
-            slcp.select_one_member_by_name(names[0])
+            slcp.select_one_member_by_name(list(names)[0])
             # 3、点击确定
             slcp.click_sure_forward()
             flag = slcp.is_toast_exist("已转发")
@@ -722,7 +723,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         scp.select_local_contacts()
         slcp = SelectLocalContactsPage()
         slcp.wait_for_page_load()
-        names = slcp.get_contacts_name()
+        names = list(slcp.get_contacts_name())
         if names:
             slcp.select_one_member_by_name(names[0])
             # 3、点击确定
@@ -1360,7 +1361,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         scp.select_local_contacts()
         slcp = SelectLocalContactsPage()
         slcp.wait_for_page_load()
-        names = slcp.get_contacts_name()
+        names = list(slcp.get_contacts_name())
         if "本机" in names:
             names.remove("本机")
         if not names:

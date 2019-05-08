@@ -377,7 +377,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting = SingleChatSetPage()
         setting.search_chat_record()
         fcrp = FindChatRecordPage()
-        fcrp.wait_for_page_load()
+        fcrp.wait_for_page_loads()
         fcrp.click_back()
         setting.wait_for_page_load()
 
@@ -396,7 +396,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.search_chat_record()
         # 2. 搜索已接收或发送消息的关键字
         fcrp = FindChatRecordPage()
-        fcrp.wait_for_page_load()
+        fcrp.wait_for_page_loads()
         fcrp.input_search_message(msg)
         self.assertTrue(fcrp.is_element_exit('发送人头像'))
         self.assertTrue(fcrp.is_element_exit('发送人名称'))
@@ -477,7 +477,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         fcrp = FindChatRecordPage()
         fcrp.click_file()
         file = ChatFilePage()
-        file.wait_for_page_load()
+        file.wait_for_page_loads()
         file.page_should_contain_file()
         file.click_back()
         fcrp.click_back()
@@ -494,7 +494,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         fcrp = FindChatRecordPage()
         fcrp.click_file()
         file = ChatFilePage()
-        file.wait_for_page_load()
+        time.sleep(2)
         file.clear_file_record()
         file.page_should_contain_text("暂无文件")
         file.click_back()
@@ -600,7 +600,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         slcp = SelectLocalContactsPage()
         slcp.wait_for_page_load()
         # 选择一个成员
-        names = slcp.get_contacts_name()
+        names = list(slcp.get_contacts_name())
         for name in names:
             slcp.select_one_member_by_name(name)
             if not slcp.is_toast_exist("该联系人不可选择", timeout=3):
@@ -608,7 +608,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         # 4.点击确定,进入群聊名称设置
         slcp.click_sure()
         name_set = CreateGroupNamePage()
-        name_set.wait_for_page_load()
+        time.sleep(1.5)
         name_set.click_back()
         slcp.click_back()
         setting.wait_for_page_load()
@@ -626,16 +626,14 @@ class MsgPrivateChatMsgSetting(TestCase):
         # 3.搜索选择一个或多个成员
         slcp = SelectLocalContactsPage()
         slcp.wait_for_page_load()
-        names = slcp.get_contacts_name()
+        names = list(slcp.get_contacts_name())
         for name in names:
             slcp.search_and_select_one_member_by_name(name)
         # 4.点击确定,进入群聊名称设置
         slcp.click_sure()
         name_set = CreateGroupNamePage()
-        name_set.wait_for_page_load()
         name_set.click_back()
         slcp.click_back()
-        setting.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0024(self):
@@ -651,7 +649,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         slcp = SelectLocalContactsPage()
         slcp.wait_for_page_load()
         # 选择一个成员
-        names = slcp.get_contacts_name()
+        names = list(slcp.get_contacts_name())
         for name in names:
             slcp.select_one_member_by_name(name)
             if not slcp.is_toast_exist("该联系人不可选择", timeout=3):
@@ -659,11 +657,10 @@ class MsgPrivateChatMsgSetting(TestCase):
         # 4.点击确定进入群聊名称设置
         slcp.click_sure()
         name_set = CreateGroupNamePage()
-        name_set.wait_for_page_load()
+        time.sleep(1)
         # 5.再点击返回聊天设置
         name_set.click_back()
         slcp.click_back()
-        setting.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0025(self):
@@ -672,6 +669,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.click_back()
         # 1.进入一对一聊天窗口
         chat = SingleChatPage()
+        chat.wait_for_page_load()
         chat.click_setting()
         # 2.点击进入聊天设置，再点击+添加成员
         setting.click_add_icon()
@@ -679,22 +677,23 @@ class MsgPrivateChatMsgSetting(TestCase):
         slcp = SelectLocalContactsPage()
         slcp.wait_for_page_load()
         # 选择多个成员
-        names = slcp.get_contacts_name()
+        names = list(slcp.get_contacts_name())
         for name in names:
             slcp.search_and_select_one_member_by_name(name)
         # 4.点击确定进入群聊名称设置
+        slcp.wait_for_page_load()
         slcp.click_sure()
         name_set = CreateGroupNamePage()
-        name_set.wait_for_page_load()
         # 5.再点击返回聊天设置
-        name_set.click_back()
+        time.sleep(1)
         slcp.click_back()
-        setting.wait_for_page_load()
+        current_mobile().launch_app()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0026(self):
         """ 一对一聊天设置创建群聊 """
         setting = SingleChatSetPage()
+        setting.wait_for_page_load()
         cur_name = setting.get_name()
         setting.click_back()
         # 1.进入一对一聊天窗口
@@ -706,7 +705,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         slcp = SelectLocalContactsPage()
         slcp.wait_for_page_load()
         # 选择一个成员
-        names = slcp.get_contacts_name()
+        names = list(slcp.get_contacts_name())
         if cur_name in names:
             names.remove(cur_name)
         if '本机' in names:
@@ -717,10 +716,11 @@ class MsgPrivateChatMsgSetting(TestCase):
                 if not slcp.contacts_is_selected(name):
                     raise AssertionError("联系人未被选中")
                 # 4.点击左上角选择的成员名称或再次点击列表里该成员名称
-                slcp.select_one_member_by_name(name)
-                if slcp.contacts_is_selected(name):
-                    raise AssertionError("搜索选择一个成员后再次点击列表里该成员，依然是选择状态")
+                # slcp.select_one_member_by_name(name)
+                # if slcp.contacts_is_selected(name):
+                #     raise AssertionError("搜索选择一个成员后再次点击列表里该成员，依然是选择状态")
                 break
+        slcp.wait_for_page_load()
         slcp.click_back()
         setting.wait_for_page_load()
 
@@ -739,7 +739,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         slcp = SelectLocalContactsPage()
         slcp.wait_for_page_load()
         # 选择一个成员
-        names = slcp.get_contacts_name()
+        names = list(slcp.get_contacts_name())
         if cur_name in names:
             names.remove(cur_name)
         if '本机' in names:
@@ -750,10 +750,11 @@ class MsgPrivateChatMsgSetting(TestCase):
                 if not slcp.contacts_is_selected(name):
                     raise AssertionError("联系人未被选中")
                 # 4.点击左上角选择的成员名称或再次点击列表里该成员名称
-                slcp.select_one_member_by_name(name)
-                if slcp.contacts_is_selected(name):
-                    raise AssertionError("搜索选择一个成员后再次点击列表里该成员，依然是选择状态")
+                # slcp.select_one_member_by_name(name)
+                # if slcp.contacts_is_selected(name):
+                #     raise AssertionError("搜索选择一个成员后再次点击列表里该成员，依然是选择状态")
                 break
+        slcp.wait_for_page_load()
         slcp.click_back()
         setting.wait_for_page_load()
 
@@ -771,7 +772,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         # 3.点击选择一个或多个成员
         slcp = SelectLocalContactsPage()
         slcp.wait_for_page_load()
-        names = slcp.get_contacts_name()
+        names = list(slcp.get_contacts_name())
         if cur_name in names:
             names.remove(cur_name)
         if '本机' in names:
@@ -785,7 +786,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         # 断网
         current_mobile().set_network_status(0)
         name_set = CreateGroupNamePage()
-        name_set.wait_for_page_load()
+        time.sleep(2)
         name_set.click_sure()
         if not name_set.is_toast_exist("网络不可用", timeout=6):
             raise AssertionError("无网络不可用提示")
@@ -812,7 +813,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         # 3.点击选择一个或多个成员
         slcp = SelectLocalContactsPage()
         slcp.wait_for_page_load()
-        names = slcp.get_contacts_name()
+        names = list(slcp.get_contacts_name())
         if cur_name in names:
             names.remove(cur_name)
         if '本机' in names:
@@ -824,7 +825,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         # 4.点击确定，统一群聊名称，再点击创建
         slcp.click_sure()
         name_set = CreateGroupNamePage()
-        name_set.wait_for_page_load()
+        time.sleep(2)
         group_name = 'testGroup'
         name_set.input_group_name(group_name)
         name_set.click_sure()
@@ -835,7 +836,8 @@ class MsgPrivateChatMsgSetting(TestCase):
         # 清除测试数据
         group_chat.click_setting()
         group_set = GroupChatSetPage()
-        group_set.click_delete_and_exit()
+        group_set.click_delete_and_exit2()
+        time.sleep(1)
         group_set.click_sure()
         chat.wait_for_page_load()
         chat.click_setting()
@@ -845,6 +847,7 @@ class MsgPrivateChatMsgSetting(TestCase):
     def test_Msg_PrivateChat_Setting_0031(self):
         """ 点对点建群"""
         setting = SingleChatSetPage()
+        setting.wait_for_page_load()
         setting.click_back()
         # 1.长按文本消息
         chat = SingleChatPage()
@@ -869,6 +872,7 @@ class MsgPrivateChatMsgSetting(TestCase):
     def test_Msg_PrivateChat_Setting_0033(self):
         """ 输入框中输入表情消息不发送，进入查找聊天内容后是否还显示草稿"""
         setting = SingleChatSetPage()
+        setting.wait_for_page_load()
         setting.click_back()
         # 1、进入一对一聊天界面
         chat = SingleChatPage()
@@ -885,7 +889,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.search_chat_record()
         # 5.输入框中输入已存在会话中的关键词
         fcrp = FindChatRecordPage()
-        fcrp.wait_for_page_load()
+        fcrp.wait_for_page_loads()
         fcrp.input_search_message('hello')
         # 6.点击任意一条搜索结果
         fcrp.click_record()
@@ -912,7 +916,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.search_chat_record()
         # 5.输入框中输入已存在会话中的关键词
         fcrp = FindChatRecordPage()
-        fcrp.wait_for_page_load()
+        fcrp.wait_for_page_loads()
         fcrp.input_search_message('hello')
         # 6.点击任意一条搜索结果
         fcrp.click_record()

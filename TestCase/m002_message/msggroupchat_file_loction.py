@@ -277,7 +277,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     def setUp_test_msg_group_chat_file_location_0001():
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-        current_mobile().reset_app()
+        current_mobile().launch_app()
         # current_mobile().connect_mobile()
         Preconditions.enter_group_chat_page()
 
@@ -900,11 +900,11 @@ class MsgGroupChatFileLocationTest(TestCase):
     def setUp_test_msg_group_chat_file_location_0018():
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-        current_mobile().reset_app()
-        # current_mobile().connect_mobile()
+        # current_mobile().reset_app()
+        current_mobile().launch_app()
         Preconditions.enter_group_chat_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    @tags('ALL', 'SMOKE', 'CMCC_RESET', 'group_chat')
     def test_msg_group_chat_file_location_0018(self):
         """1、在当前文件列表页面长按任意未下载文件
             2、点击收藏按钮

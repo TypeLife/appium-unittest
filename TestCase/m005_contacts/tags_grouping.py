@@ -14,13 +14,15 @@ from pages.components.dialogs import SuspendedTips, MutiVideoTipsPage
 import preconditions
 from pages.contacts.ContactDetails import ContactDetailsPage
 from pages.contacts.ContactDetails import add
+from preconditions.BasePreconditions import LoginPreconditions
+
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
 }
 
 
-class Preconditions(object):
+class Preconditions(LoginPreconditions):
     """
     分解前置条件
     """
@@ -121,35 +123,35 @@ class Preconditions(object):
         """后台运行"""
         current_mobile().press_home_key()
 
-    @staticmethod
-    def make_already_in_message_page(reset_required=False):
-        """
-        前置条件：
-        1.已登录客户端
-        2.当前在消息页面
-        """
-        if not reset_required:
-            message_page = MessagePage()
-            if message_page.is_on_this_page():
-                return
-            else:
-                try:
-                    current_mobile().terminate_app('com.chinasofti.rcs', timeout=2000)
-                except:
-                    pass
-                current_mobile().launch_app()
-            try:
-                message_page.wait_until(
-                    condition=lambda d: message_page.is_on_this_page(),
-                    timeout=3
-                )
-                return
-            except TimeoutException:
-                pass
-        Preconditions.reset_and_relaunch_app()
-        Preconditions.make_already_in_one_key_login_page()
-        login_num = Preconditions.login_by_one_key_login()
-        return login_num
+    # @staticmethod
+    # def make_already_in_message_page(reset_required=False):
+    #     """
+    #     前置条件：
+    #     1.已登录客户端
+    #     2.当前在消息页面
+    #     """
+    #     if not reset_required:
+    #         message_page = MessagePage()
+    #         if message_page.is_on_this_page():
+    #             return
+    #         else:
+    #             try:
+    #                 current_mobile().terminate_app('com.chinasofti.rcs', timeout=2000)
+    #             except:
+    #                 pass
+    #             current_mobile().launch_app()
+    #         try:
+    #             message_page.wait_until(
+    #                 condition=lambda d: message_page.is_on_this_page(),
+    #                 timeout=3
+    #             )
+    #             return
+    #         except TimeoutException:
+    #             pass
+    #     Preconditions.reset_and_relaunch_app()
+    #     Preconditions.make_already_in_one_key_login_page()
+    #     login_num = Preconditions.login_by_one_key_login()
+    #     return login_num
 
     @staticmethod
     def create_contacts_if_not_exits(name, number):
@@ -212,6 +214,7 @@ class Preconditions(object):
         detail_page.wait_for_page_load()
         detail_page.click_back_icon()
 
+
 class TagsGroupingTest(TestCase):
     """通讯录 - 标签分组"""
 
@@ -236,7 +239,7 @@ class TagsGroupingTest(TestCase):
 
                 # # 推送resource文件到手机
                 # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
-                # return
+                return
             except:
                 fail_time += 1
                 import traceback
@@ -301,17 +304,20 @@ class TagsGroupingTest(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0003(self):
         """新建分组"""
-        group_name = uuid.uuid4().__str__()
-        groups = [
-            [group_name, '给个红包1'],
-        ]
+        # group_name = uuid.uuid4().__str__()
+        # groups = [
+        #     [group_name, '给个红包1'],
+        # ]
         conts_page = ContactsPage()
         conts_page.open_contacts_page()
         conts_page.click_label_grouping()
         lg = LabelGroupingPage()
         lg.wait_for_page_load()
-        for g in groups:
-            lg.create_group(*g)
+        lg.click_new_create_group()
+        time.sleep(2)
+        GroupListPage().new_group(name='给个红包1')
+        # for g in groups:
+        #     lg.create_group(*g)
         lg.wait_for_page_load()
         lg.delete_all_label()
 
@@ -327,31 +333,33 @@ class TagsGroupingTest(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0004(self):
         """联系人选择器页面"""
-        group_name = uuid.uuid4().__str__()
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        GroupPage.new_group()
+        GroupPage.click_text('aaa')
+        time.sleep(1)
+        GroupPage.click_text('添加成员')
+        time.sleep(2)
+        GroupPage.page_should_contain_text('搜索或输入号码')
+        GroupPage.page_should_contain_text('选择联系人')
+        GroupPage.page_should_contain_text('确定')
+        GroupPage.page_should_contain_text('选择团队联系人')
 
-        conts_page = ContactsPage()
-        conts_page.open_contacts_page()
-        conts_page.click_label_grouping()
-        lg = LabelGroupingPage()
-        lg.click_new_create_group()
-        lg.wait_for_create_label_grouping_page_load()
-        real_name = lg.input_label_grouping_name(group_name)
-        lg.click_sure()
-        lg.wait_for_contacts_selector_page_load()
-        lg.assert_contacts_selector_page_title_is_right()
-        lg.assert_contacts_selector_page_display_ok_button()
-        lg.assert_contacts_selector_search_box_place_holder_is_right()
-        lg.assert_contacts_selector_page_contains_text('选择和通讯录联系人')
-        lg.assert_contacts_selector_page_contains_alphabet_nav()
+        GroupPage = GroupListPage()
+        GroupPage.click_back_button(times=2)
+        GroupPage.delete_group(name='aaa')
 
-        lg.click_back()
-        lg.click_back()
-        lg.wait_for_page_load()
-        lg.delete_label_groups(real_name)
-
-        lg.wait_for_page_load()
-        lg.click_back()
-        conts_page.open_message_page()
+        # lg.click_back()
+        # lg.click_back()
+        # lg.wait_for_page_load()
+        # lg.delete_label_groups(real_name)
+        #
+        # lg.wait_for_page_load()
+        # lg.click_back()
+        # conts_page.open_message_page()
 
     def setUp_test_Conts_TagsGrouping_0004(self):
         Preconditions.connect_mobile('Android-移动')
@@ -361,32 +369,50 @@ class TagsGroupingTest(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0006(self):
         """修改标签名称"""
-        group_name = uuid.uuid4().__str__()
+        GroupPage = GroupListPage()
+        cdp = ContactDetailsPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        GroupPage.new_group(name='aaa')
+        GroupPage.click_text('aaa')
+        GroupPage.tap_sure_box()
+        GroupPage.click_settings_button()
+        GroupPage.update_label_name(name='bbb')
+        GroupPage.click_back_button(times=2)
+        GroupPage.page_should_contain_text(text='bbb')
 
-        # 进入标签分组列表页面
-        conts_page = ContactsPage()
-        conts_page.open_contacts_page()
-        conts_page.click_label_grouping()
+        GroupPage = GroupListPage()
+        # GroupPage.click_back_button(times=2)
+        GroupPage.delete_group(name='aaa')
 
-        # 创建分组
-        lg = LabelGroupingPage()
-        old_group = lg.create_group(group_name)
+        group_name = '测试名称1'
 
-        # 修改名字
-        lg.wait_for_page_load()
-        new_name = 'TestData001'
-        actual = lg.rename_label_group(old_group, new_name)
-
-        # 验证检查点
-        self.assertEqual(new_name, actual, '检查点：标签名称修改成功')
-
-        # 返回到标签分组页面并删除该用例创建的分组数据
-        lg.wait_for_page_load()
-        lg.delete_label_groups(actual)
-
-        lg.wait_for_page_load()
-        lg.click_back()
-        conts_page.open_message_page()
+        # # 进入标签分组列表页面
+        # conts_page = ContactsPage()
+        # conts_page.open_contacts_page()
+        # conts_page.click_label_grouping()
+        #
+        # # 创建分组
+        # lg = LabelGroupingPage()
+        # old_group = lg.create_group(group_name)
+        #
+        # # 修改名字
+        # lg.wait_for_page_load()
+        # new_name = 'TestData001'
+        # actual = lg.rename_label_group(old_group, new_name)
+        #
+        # # 验证检查点
+        # self.assertEqual(new_name, actual, '检查点：标签名称修改成功')
+        #
+        # # 返回到标签分组页面并删除该用例创建的分组数据
+        # lg.wait_for_page_load()
+        # lg.delete_label_groups(actual)
+        #
+        # lg.wait_for_page_load()
+        # lg.click_back()
+        # conts_page.open_message_page()
 
     def setUp_test_Conts_TagsGrouping_0006(self):
         Preconditions.connect_mobile('Android-移动')
@@ -396,33 +422,66 @@ class TagsGroupingTest(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0007(self):
         """移除成员"""
-        group_name = uuid.uuid4().__str__()
-        members = ['给个红包1']
-        # 进入标签分组列表页面
-        conts_page = ContactsPage()
-        conts_page.open_contacts_page()
-        conts_page.click_label_grouping()
+        GroupPage = GroupListPage()
+        cdp = ContactDetailsPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        GroupPage.new_group(name='aaa')
+        # 添加联系人大佬1 大佬2
+        time.sleep(2)
+        GroupPage.click_text('aaa')
+        time.sleep(1)
+        LabelGroupingChatPage().click_text('添加成员')
+        slcp = SelectLocalContactsPage()
+        slcp.select_one_member_by_name('大佬1')
+        time.sleep(1)
+        slcp.select_one_member_by_name('大佬2')
+        slcp.click_sure()
+        time.sleep(2)
+        #判断页面元素
+        GroupPage.click_settings_button()
+        GroupPage.click_move_label()
+        GroupPage.click_text('大佬2')
+        time.sleep(1)
+        GroupPage.click_sure_element()
+        time.sleep(1)
+        GroupPage.click_move_label()
+        time.sleep(1)
+        GroupPage.page_should_not_contain_text("大佬2")
 
-        # 创建分组
-        lg = LabelGroupingPage()
-        real_name = lg.create_group(group_name, *members)
+        GroupPage = GroupListPage()
+        GroupPage.click_back_button(times=3)
+        GroupPage.delete_group(name='aaa')
 
-        # 修改名字
-        lg.wait_for_page_load()
-        lg.remove_group_members(real_name, *members)
-        lg.wait_for_page_load()
-        count = lg.get_group_member_count(real_name)
-
-        # 验证检查点
-        self.assertEqual(count, 0, '检查点：成员被移除')
-
-        # 返回到标签分组页面并删除该用例创建的分组数据
-        lg.wait_for_page_load()
-        lg.delete_label_groups(real_name)
-
-        lg.wait_for_page_load()
-        lg.click_back()
-        conts_page.open_message_page()
+        # group_name = uuid.uuid4().__str__()
+        # members = ['给个红包1']
+        # # 进入标签分组列表页面
+        # conts_page = ContactsPage()
+        # conts_page.open_contacts_page()
+        # conts_page.click_label_grouping()
+        #
+        # # 创建分组
+        # lg = LabelGroupingPage()
+        # real_name = lg.create_group(group_name, *members)
+        #
+        # # 修改名字
+        # lg.wait_for_page_load()
+        # lg.remove_group_members(real_name, *members)
+        # lg.wait_for_page_load()
+        # count = lg.get_group_member_count(real_name)
+        #
+        # # 验证检查点
+        # self.assertEqual(count, 0, '检查点：成员被移除')
+        #
+        # # 返回到标签分组页面并删除该用例创建的分组数据
+        # lg.wait_for_page_load()
+        # lg.delete_label_groups(real_name)
+        #
+        # lg.wait_for_page_load()
+        # lg.click_back()
+        # conts_page.open_message_page()
 
     def setUp_test_Conts_TagsGrouping_0007(self):
         Preconditions.connect_mobile('Android-移动')
@@ -432,27 +491,39 @@ class TagsGroupingTest(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0008(self):
         """删除标签"""
-        group_name = uuid.uuid4().__str__()
-        members = ['给个红包1']
-        # 进入标签分组列表页面
-        conts_page = ContactsPage()
-        conts_page.open_contacts_page()
-        conts_page.click_label_grouping()
 
-        # 创建分组
-        lg = LabelGroupingPage()
-        real_name = lg.create_group(group_name, *members)
+        GroupPage = GroupListPage()
+        cdp = ContactDetailsPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.new_group(name='ccc')
+        GroupPage.delete_group(name='ccc')
+        GroupPage.click_back_by_android(times=2)
 
-        # 删除点取消
-        lg.wait_for_page_load()
-        lg.cancel_delete_label_groups(real_name)
-        # 删除点确定
-        lg.wait_for_page_load()
-        lg.delete_label_groups(real_name)
 
-        lg.wait_for_page_load()
-        lg.click_back()
-        conts_page.open_message_page()
+        #
+        # group_name = uuid.uuid4().__str__()
+        # members = ['给个红包1']
+        # # 进入标签分组列表页面
+        # conts_page = ContactsPage()
+        # conts_page.open_contacts_page()
+        # conts_page.click_label_grouping()
+        #
+        # # 创建分组
+        # lg = LabelGroupingPage()
+        # real_name = lg.create_group(group_name, *members)
+        #
+        # # 删除点取消
+        # lg.wait_for_page_load()
+        # lg.cancel_delete_label_groups(real_name)
+        # # 删除点确定
+        # lg.wait_for_page_load()
+        # lg.delete_label_groups(real_name)
+        #
+        # lg.wait_for_page_load()
+        # lg.click_back()
+        # conts_page.open_message_page()
 
     def setUp_test_Conts_TagsGrouping_0008(self):
         Preconditions.connect_mobile('Android-移动')
@@ -462,36 +533,73 @@ class TagsGroupingTest(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0009(self):
         """群发信息"""
-        group_name = uuid.uuid4().__str__()
-        members = [
-            '给个红包1',
-            '给个红包2',
-        ]
-        # 进入标签分组列表页面
-        conts_page = ContactsPage()
-        conts_page.open_contacts_page()
-        conts_page.click_label_grouping()
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        GroupPage.new_group(name='aaa')
+        #添加小组成员
+        GroupPage.click_text('aaa')
+        time.sleep(1)
+        LabelGroupingChatPage().click_text('添加成员')
+        slcp = SelectLocalContactsPage()
+        time.sleep(2)
+        slcp.select_one_member_by_name('大佬1')
+        slcp.click_sure()
+        time.sleep(2)
+        message='aa aa'*20
+        GroupPage.send_message_to_group(message)
+        time.sleep(1)
+        GroupPage.page_contain_element('已转短信送达')
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.send_express_to_group()
+        time.sleep(1)
+        GroupPage.page_not_contain_element('发送失败')
+        GroupPage.click_back_button()
+        time.sleep(1)
+        GroupPage.send_picture_to_group()
+        time.sleep(1)
+        GroupPage.page_not_contain_element('发送失败')
+        time.sleep(1)
 
-        # 创建分组
-        lg = LabelGroupingPage()
-        real_name = lg.create_group(group_name, *members)
+        GroupPage = GroupListPage()
+        GroupPage.click_back_button(times=2)
+        GroupPage.delete_group(name='aaa')
 
-        # 删除点取消
-        lg.wait_for_page_load()
-        lg.click_label_group(real_name)
-
-        detail = LableGroupDetailPage()
-        detail.click_send_group_info()
-
-        chat = ChatWindowPage()
-        if chat.is_tips_display():
-            chat.directly_close_tips_alert()
-        chat.send_img_msgs({'pic': (1,)})
-        max_wait_time = 5  # in seconds
-        try:
-            chat.wait_for_msg_send_status_become_to('发送成功', max_wait_time)
-        except TimeoutException:
-            raise AssertionError('消息在 {}s 内没有发送成功'.format(max_wait_time))
+        #
+        #
+        # group_name = uuid.uuid4().__str__()
+        # members = [
+        #     '给个红包1',
+        #     '给个红包2',
+        # ]
+        # # 进入标签分组列表页面
+        # conts_page = ContactsPage()
+        # conts_page.open_contacts_page()
+        # conts_page.click_label_grouping()
+        #
+        # # 创建分组
+        # lg = LabelGroupingPage()
+        # real_name = lg.create_group(group_name, *members)
+        #
+        # # 删除点取消
+        # lg.wait_for_page_load()
+        # lg.click_label_group(real_name)
+        #
+        # detail = LableGroupDetailPage()
+        # detail.click_send_group_info()
+        #
+        # chat = ChatWindowPage()
+        # if chat.is_tips_display():
+        #     chat.directly_close_tips_alert()
+        # chat.send_img_msgs({'pic': (1,)})
+        # max_wait_time = 5  # in seconds
+        # try:
+        #     chat.wait_for_msg_send_status_become_to('发送成功', max_wait_time)
+        # except TimeoutException:
+        #     raise AssertionError('消息在 {}s 内没有发送成功'.format(max_wait_time))
 
     def setUp_test_Conts_TagsGrouping_0009(self):
         Preconditions.connect_mobile('Android-移动')
@@ -501,42 +609,70 @@ class TagsGroupingTest(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0010(self):
         """多方电话"""
-        group_name = uuid.uuid4().__str__()
-        members = [
-            '给个红包1',
-            '给个红包2',
-        ]
-        # 进入标签分组列表页面
-        conts_page = ContactsPage()
-        conts_page.open_contacts_page()
-        conts_page.click_label_grouping()
 
-        # 创建分组
-        lg = LabelGroupingPage()
-        real_name = lg.create_group(group_name, *members)
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        GroupPage.new_group(name='aaa')
+        #添加联系人大佬1 大佬2
+        time.sleep(2)
+        GroupPage.click_text('aaa')
+        time.sleep(1)
+        LabelGroupingChatPage().click_text('添加成员')
+        slcp = SelectLocalContactsPage()
+        slcp.select_one_member_by_name('大佬1')
+        time.sleep(1)
+        slcp.select_one_member_by_name('大佬2')
+        slcp.click_sure()
+        time.sleep(2)
+        #判断页面包含的元素
+        GroupPage.page_contain_element(locator='多方电话提示框')
+        GroupPage.page_contain_element(locator='多方视频图标')
+        GroupPage.click_coordinate(x=1 / 2, y=1 / 10)
 
-        # 进入分组
-        lg.wait_for_page_load()
-        lg.click_label_group(real_name)
+        GroupPage = GroupListPage()
+        GroupPage.click_back_button(times=2)
+        GroupPage.delete_group(name='aaa')
 
-        # 点击多方通话
-        detail = LableGroupDetailPage()
-        detail.click_multi_tel()
 
-        # 选择联系人
-        contacts_selector = ContactsSelector()
-        contacts_selector.select_local_contacts(*members)
-
-        mtc = MultipartyCallPage()
-        mtc.ignore_tips_if_tips_display()
-
-        # 检查点：进入多方通话主叫页面
-        mtc.assert_caller_tips_is_display()
-
-        # 等待来电
-        mtc.wait_for_call_back(max_wait_time=16)
-        # 挂断电话
-        current_mobile().hang_up_the_call()
+        # group_name = uuid.uuid4().__str__()
+        # members = [
+        #     '给个红包1',
+        #     '给个红包2',
+        # ]
+        # # 进入标签分组列表页面
+        # conts_page = ContactsPage()
+        # conts_page.open_contacts_page()
+        # conts_page.click_label_grouping()
+        #
+        # # 创建分组
+        # lg = LabelGroupingPage()
+        # real_name = lg.create_group(group_name, *members)
+        #
+        # # 进入分组
+        # lg.wait_for_page_load()
+        # lg.click_label_group(real_name)
+        #
+        # # 点击多方通话
+        # detail = LableGroupDetailPage()
+        # detail.click_multi_tel()
+        #
+        # # 选择联系人
+        # contacts_selector = ContactsSelector()
+        # contacts_selector.select_local_contacts(*members)
+        #
+        # mtc = MultipartyCallPage()
+        # mtc.ignore_tips_if_tips_display()
+        #
+        # # 检查点：进入多方通话主叫页面
+        # mtc.assert_caller_tips_is_display()
+        #
+        # # 等待来电
+        # mtc.wait_for_call_back(max_wait_time=16)
+        # # 挂断电话
+        # current_mobile().hang_up_the_call()
 
     def setUp_test_Conts_TagsGrouping_0010(self):
         Preconditions.connect_mobile('Android-移动')
@@ -546,52 +682,90 @@ class TagsGroupingTest(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0011(self):
         """多方视频"""
-        group_name = uuid.uuid4().__str__()
-        members = [
-            '给个红包1',
-            '给个红包2',
-        ]
-        # 进入标签分组列表页面
-        conts_page = ContactsPage()
-        conts_page.open_contacts_page()
-        conts_page.click_label_grouping()
+        GroupPage = GroupListPage()
+        cdp = ContactDetailsPage()
+        # preconditions.launch_app()
+        time.sleep(2)
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        GroupPage.new_group(name='aaa')
 
-        # 创建分组
-        lg = LabelGroupingPage()
-        real_name = lg.create_group(group_name, *members)
+        GroupPage.click_text('aaa')
+        GroupPage.tap_sure_box()
+        LabelGroupingChatPage().click_text('添加成员')
+        slcp = SelectLocalContactsPage()
+        time.sleep(1)
+        slcp.select_one_member_by_name('大佬1')
+        time.sleep(1)
+        slcp.click_sure()
+        time.sleep(1)
+        GroupPage.enter_mutil_video_call()
+        while GroupPage.is_text_present('始终允许'):
+            GroupPage.click_text('始终允许')
+        # if GroupPage.is_text_present('相机权限'):
+        #     GroupPage.click_text('始终允许')
+        time.sleep(1)
+        GroupPage.click_text("大佬1")
+        time.sleep(2)
+        cdp.send_call_number()
+        cdp.cancel_permission()
+        cdp.end_video_call()
 
-        # 进入分组
-        lg.wait_for_page_load()
-        lg.click_label_group(real_name)
+        GroupPage = GroupListPage()
+        time.sleep(1)
+        SelectOneGroupPage().click_back_by_android()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
 
-        # 点击多方视频
-        detail = LableGroupDetailPage()
-        detail.click_multiparty_videos()
-
-        # 选择联系人
-        contacts_selector = ContactsSelector()
-        current_mobile().wait_until(
-            condition=lambda d: current_mobile().is_text_present('多方视频'),
-            timeout=3,
-        )
-        contacts_selector.select_local_contacts(*members)
-
-        tips = MutiVideoTipsPage()
-        tips.go_on_if_tips_pop_out()
-
-        tips1 = SuspendedTips()
-        tips1.ignore_tips_if_tips_display()
-
-        mtv = MutiVideoPage()
-        mtv.wait_for_page_load()
+        # group_name = uuid.uuid4().__str__()
+        # members = [
+        #     '给个红包1',
+        #     '给个红包2',
+        # ]
+        # # 进入标签分组列表页面
+        # conts_page = ContactsPage()
+        # conts_page.open_contacts_page()
+        # conts_page.click_label_grouping()
+        #
+        # # 创建分组
+        # lg = LabelGroupingPage()
+        # real_name = lg.create_group(group_name, *members)
+        #
+        # # 进入分组
+        # lg.wait_for_page_load()
+        # lg.click_label_group(real_name)
+        #
+        # # 点击多方视频
+        # detail = LableGroupDetailPage()
+        # detail.click_multiparty_videos()
+        #
+        # # 选择联系人
+        # contacts_selector = ContactsSelector()
+        # current_mobile().wait_until(
+        #     condition=lambda d: current_mobile().is_text_present('多方视频'),
+        #     timeout=3,
+        # )
+        # contacts_selector.select_local_contacts(*members)
+        #
+        # tips = MutiVideoTipsPage()
+        # tips.go_on_if_tips_pop_out()
+        #
+        # tips1 = SuspendedTips()
+        # tips1.ignore_tips_if_tips_display()
+        #
+        # mtv = MutiVideoPage()
+        # mtv.wait_for_page_load()
 
     def setUp_test_Conts_TagsGrouping_0011(self):
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
-    # @classmethod
-    # def tearDownClass(cls):
+    @classmethod
+    def tearDownClass(cls):
+        pass
     #     try:
     #         Preconditions.connect_mobile('Android-移动')
     #         current_mobile().hide_keyboard_if_display()
@@ -614,7 +788,36 @@ class TagsGroupingTest(TestCase):
     #         traceback.print_exc()
 
 
+
 class Tag_Group(TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        # 创建联系人
+        fail_time = 0
+        import dataproviders
+
+        while fail_time < 3:
+            try:
+                # 获取需要导入的联系人数据
+                required_contacts = dataproviders.get_preset_contacts()
+
+                # 连接手机
+                Preconditions.connect_mobile('Android-移动')
+                current_mobile().hide_keyboard_if_display()
+                # 导入数据
+                for name, number in required_contacts:
+                  # Preconditions.create_contacts_if_not_exits(name, number)
+                   Preconditions.create_contacts_if_not_exits(name, number)
+
+                # # 推送resource文件到手机
+                # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
+                return
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
 
     def setUp_test_contacts_quxinli_0352(self):
         Preconditions.connect_mobile('Android-移动')
@@ -751,7 +954,7 @@ class Tag_Group(TestCase):
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
 
-    @tags('调试中')
+    @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0357(self):
         """新建分组,标签分组名称输入11个汉字"""
         GroupPage = GroupListPage()
@@ -759,14 +962,15 @@ class Tag_Group(TestCase):
         GroupPage.click_label_grouping()
         GroupPage.click_new_group()
         GroupPage.click_input_element()
+        time.sleep(3)
+        text="祝一路顺风和幸福美满啊"
+        GroupPage.input_content(text)
         time.sleep(1)
-        try:
-            GroupPage.input_content(text="祝一路顺风和幸福美满啊")
-            flag=False
-        except:
-            print("分组名不能超过10个汉字.")
-            flag=True
-        self.assertTrue(flag)
+        name=GroupPage.get_text_of_lablegrouping_name()
+        self.assertNotEqual(text,name)
+        #删除标签分组
+        time.sleep(1)
+        LabelGroupingPage().click_back()
 
     @staticmethod
     def setUp_test_contacts_quxinli_0358():
@@ -856,7 +1060,6 @@ class Tag_Group(TestCase):
         GroupPage = GroupListPage()
         GroupPage.click_back_button(times=2)
         GroupPage.delete_group(name='aaa')
-
 
     @staticmethod
     def setUp_test_contacts_quxinli_0370():
@@ -1001,7 +1204,7 @@ class Tag_Group(TestCase):
         time.sleep(1)
         LabelGroupingChatPage().click_text('添加成员')
         slcp = SelectLocalContactsPage()
-        slcp.select_one_member_by_name('大佬1')
+        slcp.swipe_select_one_member_by_name('大佬1')
         slcp.click_sure()
         time.sleep(1)
 
@@ -1029,7 +1232,7 @@ class Tag_Group(TestCase):
         time.sleep(1)
         LabelGroupingChatPage().click_text('添加成员')
         slcp = SelectLocalContactsPage()
-        slcp.select_one_member_by_name('大佬1')
+        slcp.swipe_select_one_member_by_name('大佬1')
         slcp.click_sure()
         # flag=GroupPage.add_member(times=2)
         # self.assertTrue(flag==2)
@@ -1039,7 +1242,6 @@ class Tag_Group(TestCase):
         GroupPage.click_back_button()
         GroupPage.click_back_button()
         GroupPage.delete_group(name='aaa')
-
 
     @staticmethod
     def setUp_test_contacts_quxinli_0387():
@@ -1060,11 +1262,12 @@ class Tag_Group(TestCase):
         time.sleep(1)
         LabelGroupingChatPage().click_text('添加成员')
         slcp = SelectLocalContactsPage()
-        slcp.select_one_member_by_name('大佬1')
+        slcp.swipe_select_one_member_by_name('大佬1')
         slcp.click_sure()
         time.sleep(2)
         GroupPage.send_message_to_group()
-        GroupPage.page_contain_element(locator='大佬2')
+        time.sleep(1)
+        GroupPage.page_should_contain_text('大佬1')
 
     def tearDown_test_contacts_quxinli_0387(self):
         GroupPage = GroupListPage()
@@ -1092,9 +1295,9 @@ class Tag_Group(TestCase):
         time.sleep(1)
         LabelGroupingChatPage().click_text('添加成员')
         slcp = SelectLocalContactsPage()
-        slcp.select_one_member_by_name('大佬1')
+        slcp.swipe_select_one_member_by_name('大佬1')
         time.sleep(1)
-        slcp.select_one_member_by_name('大佬2')
+        slcp.swipe_select_one_member_by_name('大佬2')
         slcp.click_sure()
         time.sleep(2)
         #验证页面元素
@@ -1125,9 +1328,12 @@ class Tag_Group(TestCase):
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
+        #添加小组成员
         GroupPage.click_text('aaa')
+        time.sleep(1)
         LabelGroupingChatPage().click_text('添加成员')
         slcp = SelectLocalContactsPage()
+        time.sleep(2)
         slcp.select_one_member_by_name('大佬1')
         slcp.click_sure()
         time.sleep(2)
@@ -1169,19 +1375,25 @@ class Tag_Group(TestCase):
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
+        #添加成员
         GroupPage.click_text('aaa')
+        time.sleep(2)
         LabelGroupingChatPage().click_text('添加成员')
+        time.sleep(2)
         slcp = SelectLocalContactsPage()
-        slcp.select_one_member_by_name('大佬1')
+        slcp.swipe_select_one_member_by_name('大佬1')
         time.sleep(1)
-        slcp.select_one_member_by_name('大佬2')
+        slcp.swipe_select_one_member_by_name('大佬2')
         slcp.click_sure()
         time.sleep(1)
+        #进入群发页面
         GroupPage.enter_group_message()
         GroupPage.click_divide_group_icon()
         time.sleep(1)
         GroupPage.page_contain_element(locator='分组联系人_标题')
         GroupPage.click_text("大佬1")
+        # time.sleep(1)
+        # GroupPage.click_star_icon()
         time.sleep(1)
         GroupPage.click_star_icon()
         GroupPage.is_toast_exist("已成功添加为星标联系人")
@@ -1194,21 +1406,26 @@ class Tag_Group(TestCase):
         GroupPage.click_back_button(times=2)
 
         time.sleep(1)
-        GroupPage.page_contain_element(locator='星标')
+        GroupPage.page_contain_star('大佬1')
 
     def tearDown_test_contacts_quxinli_0394(self):
+        #去除大佬1的星标
+        ContactsPage().select_contacts_by_name('大佬1')
+        time.sleep(1)
         GroupPage = GroupListPage()
+        GroupPage.click_star_icon()
+        #删除群组
+        GroupPage.click_back_button()
+        time.sleep(2)
         GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
-
 
     @staticmethod
     def setUp_test_contacts_quxinli_0395():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
-
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0395(self):
@@ -1224,8 +1441,8 @@ class Tag_Group(TestCase):
         time.sleep(1)
         LabelGroupingChatPage().click_text('添加成员')
         slcp = SelectLocalContactsPage()
+        time.sleep(2)
         slcp.select_one_member_by_name('大佬1')
-        time.sleep(1)
         slcp.select_one_member_by_name('大佬2')
         slcp.click_sure()
         time.sleep(1)
@@ -1242,7 +1459,7 @@ class Tag_Group(TestCase):
         cdp.click_sure_icon()
         time.sleep(1)
         GroupPage.is_toast_exist("保存成功")
-        cdp.is_text_present('138 0013 8006')
+        cdp.is_text_present('138 0013 8010')
 
     def tearDown_test_contacts_quxinli_0395(self):
         GroupPage = GroupListPage()
@@ -1250,465 +1467,502 @@ class Tag_Group(TestCase):
         GroupPage.click_back_button(times=2)
         GroupPage.delete_group(name='aaa')
 
-    # @staticmethod
-    # def setUp_test_contacts_quxinli_0396():
-    #     Preconditions.connect_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     Preconditions.background_app()
-    #     time.sleep(5)
-    #     preconditions.launch_app()
-    # #    Preconditions.make_already_in_message_page()
-    #
-    # @tags('ALL', 'CONTACT', 'CMCC')
-    # def test_contacts_quxinli_0396(self):
-    #     """分组联系人进入Profile页-编辑-删除联系人"""
-    #     GroupPage = GroupListPage()
-    #     cdp=ContactDetailsPage()
-    #     time.sleep(1)
-    #     GroupPage.open_contacts_page()
-    #     GroupPage.click_label_grouping()
-    #     time.sleep(1)
-    #     GroupPage.delete_group(name='aaa')
-    #     GroupPage.new_group(name='aaa')
-    #     GroupPage.click_text('aaa')
-    #     time.sleep(1)
-    #     GroupPage.tap_sure_box()
-    #     time.sleep(1)
-    #     LabelGroupingChatPage().click_text('添加成员')
-    #     slcp = SelectLocalContactsPage()
-    #     slcp.select_one_member_by_name('大佬5')
-    #     time.sleep(1)
-    #     slcp.select_one_member_by_name('大佬6')
-    #     slcp.click_sure()
-    #     time.sleep(1)
-    #     GroupPage.enter_group_message()
-    #     GroupPage.click_divide_group_icon()
-    #     time.sleep(1)
-    #     GroupPage.page_contain_element(locator='分组联系人_标题')
-    #     GroupPage.click_text("大佬5")
-    #     time.sleep(2)
-    #     cdp.click_edit_contact()
-    #     time.sleep(1)
-    #     cdp.hide_keyboard()
-    #     cdp.page_up()
-    #     cdp.change_delete_number()
-    #     cdp.click_sure_delete()
-    #     time.sleep(1)
-    #     GroupPage.is_toast_exist("删除成功")
-    #     time.sleep(1)
-    #
-    # def tearDown_test_contacts_quxinli_0396(self):
-    #     GroupPage = GroupListPage()
-    #  #   GroupPage.click_back_button(times=2)
-    #     GroupPage.click_back_by_android(times=2)
-    #     GroupPage.delete_group(name='aaa')
-    #
-    # @staticmethod
-    # def setUp_test_contacts_quxinli_0397():
-    #     Preconditions.connect_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     #Preconditions.make_already_in_message_page()
-    #     Preconditions.background_app()
-    #     time.sleep(5)
-    #
-    #
-    # @tags('ALL', 'CONTACT', 'CMCC')
-    # def test_contacts_quxinli_0397(self):
-    #     """“分组详情操作”界面-多方电话"""
-    #     GroupPage = GroupListPage()
-    #     cdp=ContactDetailsPage()
-    #     preconditions.launch_app()
-    #     time.sleep(1)
-    #     GroupPage.open_contacts_page()
-    #     GroupPage.click_label_grouping()
-    #     time.sleep(1)
-    #     GroupPage.delete_group(name='aaa')
-    #     GroupPage.new_group(name='aaa')
-    #     GroupPage.click_text('aaa')
-    #     GroupPage.tap_sure_box()
-    #
-    #     LabelGroupingChatPage().click_text('添加成员')
-    #     slcp = SelectLocalContactsPage()
-    #     slcp.select_one_member_by_name('大佬6')
-    #     time.sleep(1)
-    #     slcp.select_one_member_by_name('大佬7')
-    #     slcp.click_sure()
-    #     time.sleep(1)
-    #
-    #     GroupPage.enter_mutil_call()
-    #     time.sleep(1)
-    #     GroupPage.click_text("大佬6")
-    #     time.sleep(2)
-    #     cdp.send_call_number()
-    #     cdp.cancel_permission()
-    #     cdp.cancel_call()
-    #
-    # def tearDown_test_contacts_quxinli_0397(self):
-    #     GroupPage = GroupListPage()
-    #     GroupPage.click_back_button()
-    #     GroupPage.delete_group(name='aaa')
-    #
-    # @staticmethod
-    # def setUp_test_contacts_quxinli_0398():
-    #     Preconditions.connect_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     Preconditions.background_app()
-    #     time.sleep(5)
-    #     #Preconditions.make_already_in_message_page()
-    #
-    # @tags('ALL', 'CONTACT', 'CMCC')
-    # def test_contacts_quxinli_0398(self):
-    #     """“分组详情操作”界面-多方视频"""
-    #     GroupPage = GroupListPage()
-    #     cdp = ContactDetailsPage()
-    #     preconditions.launch_app()
-    #     time.sleep(2)
-    #     GroupPage.open_contacts_page()
-    #     GroupPage.click_label_grouping()
-    #     time.sleep(1)
-    #     GroupPage.delete_group(name='aaa')
-    #     GroupPage.new_group(name='aaa')
-    #     GroupPage.click_text('aaa')
-    #     GroupPage.tap_sure_box()
-    #     LabelGroupingChatPage().click_text('添加成员')
-    #     slcp = SelectLocalContactsPage()
-    #     slcp.select_one_member_by_name('大佬7')
-    #     time.sleep(1)
-    #     slcp.click_sure()
-    #     time.sleep(1)
-    #     GroupPage.enter_mutil_video_call()
-    #     time.sleep(1)
-    #     GroupPage.click_text("大佬7")
-    #     time.sleep(2)
-    #     cdp.send_call_number()
-    #     cdp.cancel_permission()
-    #     cdp.end_video_call()
-    #
-    # def tearDown_test_contacts_quxinli_0398(self):
-    #     GroupPage = GroupListPage()
-    #     time.sleep(1)
-    #     SelectOneGroupPage().click_back_by_android()
-    #     time.sleep(1)
-    #     GroupPage.delete_group(name='aaa')
-    #
-    # @staticmethod
-    # def setUp_test_contacts_quxinli_0407():
-    #     Preconditions.connect_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     Preconditions.make_already_in_message_page()
-    #
-    # @tags('ALL', 'CONTACT', 'CMCC')
-    # def test_contacts_quxinli_0407(self):
-    #     """“分组设置-特殊符号标签名称
-    #     auther:darcy
-    #     """
-    #     GroupPage = GroupListPage()
-    #     cdp = ContactDetailsPage()
-    #     GroupPage.open_contacts_page()
-    #     GroupPage.click_label_grouping()
-    #     time.sleep(1)
-    #     GroupPage.delete_group(name='aaa')
-    #     GroupPage.new_group(name='aaa')
-    #     GroupPage.click_text('aaa')
-    #     GroupPage.tap_sure_box()
-    #     GroupPage.click_settings_button()
-    #     GroupPage.update_label_name(name='*@!#')
-    #     GroupPage.click_back_button(times=2)
-    #     GroupPage.page_should_contain_text(text='*@!#')
-    #
-    # def tearDown_test_contacts_quxinli_0407(self):
-    #     GroupPage = GroupListPage()
-    #     GroupPage.delete_group(name='*@!#')
-    #
-    # @staticmethod
-    # def setUp_test_contacts_quxinli_0408():
-    #     Preconditions.connect_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     Preconditions.make_already_in_message_page()
-    #
-    # @tags('ALL', 'CONTACT', 'CMCC')
-    # def test_contacts_quxinli_0408(self):
-    #     """“分组设置-各种标签名称
-    #     auther:darcy
-    #     """
-    #     GroupPage = GroupListPage()
-    #     cdp = ContactDetailsPage()
-    #     GroupPage.open_contacts_page()
-    #     GroupPage.click_label_grouping()
-    #     time.sleep(1)
-    #     GroupPage.delete_group(name='aaa')
-    #     GroupPage.new_group(name='aaa')
-    #     GroupPage.click_text('aaa')
-    #     GroupPage.tap_sure_box()
-    #     GroupPage.click_settings_button()
-    #     GroupPage.update_label_name(name='*@!#123好')
-    #     GroupPage.click_back_button(times=2)
-    #     GroupPage.page_should_contain_text(text='*@!#123好')
-    #
-    # def tearDown_test_contacts_quxinli_0408(self):
-    #     GroupPage = GroupListPage()
-    #     GroupPage.delete_group(name='*@!#123好')
-    #
-    # @staticmethod
-    # def setUp_test_contacts_quxinli_0409():
-    #     Preconditions.connect_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     Preconditions.make_already_in_message_page()
-    #
-    # @tags('ALL', 'CONTACT', 'CMCC')
-    # def test_contacts_quxinli_0409(self):
-    #     """“分组设置-各种标签名称删除
-    #     auther:darcy
-    #     """
-    #     GroupPage = GroupListPage()
-    #     cdp = ContactDetailsPage()
-    #     GroupPage.open_contacts_page()
-    #     GroupPage.click_label_grouping()
-    #     time.sleep(1)
-    #     GroupPage.delete_group(name='aaa')
-    #     GroupPage.new_group(name='aaa')
-    #     GroupPage.click_text('aaa')
-    #     GroupPage.tap_sure_box()
-    #     GroupPage.click_settings_button()
-    #     GroupPage.delete_label_name(name='*@!#123好')
-    #     GroupPage.page_should_contain_text(text="请输入标签分组名称")
-    #     GroupPage.click_back_button(times=3)
-    #
-    # def tearDown_test_contacts_quxinli_0409(self):
-    #     GroupPage = GroupListPage()
-    #     GroupPage.delete_group(name='*@!#123好')
-    #
-    # @staticmethod
-    # def setUp_test_contacts_quxinli_0414():
-    #     Preconditions.connect_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     Preconditions.make_already_in_message_page()
-    #
-    # @tags('ALL', 'CONTACT-debug', 'CMCC')
-    # def test_contacts_quxinli_0414(self):
-    #     """分组设置-搜索移除成员
-    #     auther:darcy
-    #     """
-    #     GroupPage = GroupListPage()
-    #     cdp = ContactDetailsPage()
-    #     GroupPage.open_contacts_page()
-    #     GroupPage.click_label_grouping()
-    #     time.sleep(1)
-    #     GroupPage.delete_group(name='aaa')
-    #     GroupPage.new_group(name='aaa')
-    #     GroupPage.click_text('aaa')
-    #     time.sleep(1)
-    #     GroupPage.tap_sure_box()
-    #     GroupPage.add_member(name='dalao7')
-    #     time.sleep(2)
-    #     GroupPage.click_text('aaa')
-    #     GroupPage.tap_sure_box()
-    #     time.sleep(1)
-    #     GroupPage.click_settings_button()
-    #     GroupPage.click_move_label()
-    #     time.sleep(1)
-    #     GroupPage.search_menber_text(text='dalao7')
-    #     time.sleep(1)
-    #     GroupPage.click_text('大佬7')
-    #     time.sleep(1)
-    #     GroupPage.click_sure_element()
-    #     time.sleep(1)
-    #     GroupPage.click_move_label()
-    #     time.sleep(1)
-    #     GroupPage.page_should_not_contain_text("大佬7")
-    #
-    # def tearDown_test_contacts_quxinli_0414(self):
-    #     GroupPage = GroupListPage()
-    #     GroupPage.click_back_button(times=3)
-    #     GroupPage.delete_group(name='aaa')
-    #
-    #
-    # @staticmethod
-    # def setUp_test_contacts_quxinli_0415():
-    #     Preconditions.connect_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     Preconditions.make_already_in_message_page()
-    #
-    # @tags('ALL', 'CONTACT-debug', 'CMCC')
-    # def test_contacts_quxinli_0415(self):
-    #     """分组设置-删除标签
-    #     auther:darcy
-    #     """
-    #     GroupPage = GroupListPage()
-    #     cdp = ContactDetailsPage()
-    #     GroupPage.open_contacts_page()
-    #     GroupPage.click_label_grouping()
-    #     time.sleep(1)
-    #     GroupPage.new_group(name='ccc')
-    #     GroupPage.delete_group(name='ccc')
-    #     GroupPage.click_back_by_android(times=2)
-    #
-    #
-    # @staticmethod
-    # def setUp_test_contacts_quxinli_0416():
-    #     Preconditions.connect_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #   #  Preconditions.make_already_in_message_page()
-    #     Preconditions.background_app()
-    #     time.sleep(3)
-    #
-    #
-    # @tags('ALL', 'CONTACT-debug', 'CMCC')
-    # def test_contacts_quxinli_0416(self):
-    #     """分组详情操作页面进入Profile页"""
-    #     GroupPage = GroupListPage()
-    #     preconditions.launch_app()
-    #     time.sleep(2)
-    #     GroupPage.open_contacts_page()
-    #     GroupPage.click_label_grouping()
-    #     time.sleep(1)
-    #     GroupPage.delete_group(name='aaa')
-    #     GroupPage.new_group(name='aaa')
-    #     GroupPage.click_text('aaa')
-    #     GroupPage.tap_sure_box()
-    #     time.sleep(1)
-    #     GroupPage.add_member(name='dalao2')
-    #     time.sleep(2)
-    #     GroupPage.add_member(name='dalao3')
-    #     time.sleep(1)
-    #     GroupPage.click_send_message_to_group()
-    #     GroupPage.click_divide_group_icon()
-    #     time.sleep(1)
-    #     GroupPage.page_contain_element(locator='分组联系人_标题')
-    #     GroupPage.click_text("大佬3")
-    #     time.sleep(1)
-    #     GroupPage.page_contain_element(locator='语音通话')
-    #     GroupPage.page_contain_element(locator='视频通话')
-    #     GroupPage.page_contain_element(locator='分享名片')
-    #     GroupPage.click_share_button()
-    #     time.sleep(1)
-    #     SelectContactsPage().click_select_one_group()
-    #     time.sleep(1)
-    #     SelectOneGroupPage().click_search_group()
-    #     SelectOneGroupPage().input_search_keyword('给个红包1')
-    #     SelectOneGroupPage().select_one_group_by_name('给个红包1')
-    #     SelectOneGroupPage().click_share_business_card()
-    #     time.sleep(2)
-    #     GroupPage.click_innvation_button()
-    #
-    # def tearDown_test_contacts_quxinli_0416(self):
-    #     GroupPage = GroupListPage()
-    #
-    #     GroupPage.background_app(seconds=10)
-    #     time.sleep(10)
-    #     preconditions.launch_app()
-    #     time.sleep(1)
-    #     GroupPage.open_contacts_page()
-    #     GroupPage.click_label_grouping()
-    #     time.sleep(1)
-    #     GroupPage.delete_group(name='aaa')
-    #
-    # @staticmethod
-    # def setUp_test_contacts_quxinli_0417():
-    #     Preconditions.connect_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #    # Preconditions.make_already_in_message_page()
-    #     Preconditions.background_app()
-    #     time.sleep(5)
-    #
-    # @tags('ALL', 'CONTACT-debug', 'CMCC')
-    # def test_contacts_quxinli_0417(self):
-    #     """分组详情操作页面进入Profile页_星标
-    #     auther:darcy"""
-    #     GroupPage = GroupListPage()
-    #     preconditions.launch_app()
-    #     time.sleep(2)
-    #     GroupPage.open_contacts_page()
-    #     GroupPage.click_label_grouping()
-    #     time.sleep(1)
-    #     GroupPage.delete_group(name='aaa')
-    #     GroupPage.new_group(name='aaa')
-    #     GroupPage.click_text('aaa')
-    #     GroupPage.tap_sure_box()
-    #     time.sleep(1)
-    #     GroupPage.add_member(name='dalao2')
-    #     time.sleep(2)
-    #     GroupPage.add_member(name='dalao3')
-    #     time.sleep(1)
-    #     GroupPage.enter_group_message()
-    #     GroupPage.click_divide_group_icon()
-    #     time.sleep(1)
-    #     GroupPage.page_contain_element(locator='分组联系人_标题')
-    #     GroupPage.click_text("大佬3")
-    #     time.sleep(1)
-    #     GroupPage.click_star_icon()
-    #     GroupPage.is_toast_exist("已成功添加为星标联系人")
-    #     time.sleep(1)
-    #     GroupPage.click_star_icon()
-    #     GroupPage.is_toast_exist("已取消添加为星标联系人")
-    #     GroupPage.click_star_icon()
-    #    # GroupPage.click_back_button(times=3)
-    #     GroupPage.click_back_by_android(times=3)
-    #     time.sleep(2)
-    #    # GroupPage.click_back_button(times=2)
-    #     GroupPage.click_back_by_android(times=2)
-    #
-    #     time.sleep(1)
-    #     GroupPage.page_contain_element(locator='星标')
-    #
-    # def tearDown_test_contacts_quxinli_0417(self):
-    #     GroupPage = GroupListPage()
-    #     GroupPage.click_label_grouping()
-    #     time.sleep(1)
-    #     GroupPage.delete_group(name='aaa')
-    #
-    #
-    # @staticmethod
-    # def setUp_test_contacts_quxinli_0421():
-    #     Preconditions.connect_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     Preconditions.make_already_in_message_page()
-    #
-    # @tags('ALL', 'CONTACT', 'CMCC')
-    # def test_contacts_quxinli_0421(self):
-    #     """安卓手机：手机系统本地新建分组名称超过30个字符的分组
-    #     auther:darcy"""
-    #     GroupPage = GroupListPage()
-    #     GroupPage.open_contacts_page()
-    #     GroupPage.click_label_grouping()
-    #     time.sleep(1)
-    #     GroupPage.delete_group(name='aaa')
-    #     name="a"*30
-    #     GroupPage.new_group(name=name)
-    #     GroupPage.click_text(name)
-    #     time.sleep(1)
-    #     GroupPage.tap_sure_box()
-    #     GroupPage.click_settings_button()
-    #     GroupPage.update_label_name(name='aaa')
-    #     GroupPage.click_back_button(times=2)
-    #     time.sleep(1)
-    #     GroupPage.page_should_contain_text(text='aaa')
-    #     GroupPage.click_text("aaa")
-    #     time.sleep(1)
-    #     GroupPage.tap_sure_box()
-    #     time.sleep(1)
-    #     GroupPage.add_member(name='dalao2')
-    #     time.sleep(2)
-    #     GroupPage.add_member(name='dalao3')
-    #     time.sleep(1)
-    #     GroupPage.click_settings_button()
-    #     time.sleep(1)
-    #     GroupPage.click_move_label()
-    #     time.sleep(1)
-    #     GroupPage.click_text('大佬2')
-    #     time.sleep(1)
-    #     GroupPage.click_sure_element()
-    #     time.sleep(1)
-    #     GroupPage.click_move_label()
-    #     time.sleep(1)
-    #     GroupPage.page_should_not_contain_text("大佬2")
-    #
-    #
-    # def tearDown_test_contacts_quxinli_0421(self):
-    #     GroupPage = GroupListPage()
-    #     GroupPage.click_back_button(times=3)
-    #     time.sleep(1)
-    #     GroupPage.delete_group(name='aaa')
+    @staticmethod
+    def setUp_test_contacts_quxinli_0396():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        # Preconditions.background_app()
+        # time.sleep(5)
+        # preconditions.launch_app()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_quxinli_0396(self):
+        """分组联系人进入Profile页-编辑-删除联系人"""
+        GroupPage = GroupListPage()
+        cdp=ContactDetailsPage()
+        time.sleep(1)
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        GroupPage.new_group(name='aaa')
+        #进入分组 添加成员
+        GroupPage.click_text('aaa')
+        time.sleep(1)
+        GroupPage.tap_sure_box()
+        time.sleep(1)
+        LabelGroupingChatPage().click_text('添加成员')
+        slcp = SelectLocalContactsPage()
+        time.sleep(2)
+        slcp.select_one_member_by_name('大佬1')
+        time.sleep(1)
+        slcp.select_one_member_by_name('大佬2')
+        slcp.click_sure()
+        time.sleep(1)
+        #进入群发消息页面
+        GroupPage.enter_group_message()
+        GroupPage.click_divide_group_icon()
+        time.sleep(1)
+        GroupPage.page_contain_element(locator='分组联系人_标题')
+        GroupPage.click_text("大佬2")
+        time.sleep(2)
+        cdp.click_edit_contact()
+        time.sleep(1)
+        cdp.hide_keyboard()
+        cdp.page_up()
+        cdp.change_delete_number()
+        cdp.click_sure_delete()
+        time.sleep(1)
+        GroupPage.is_toast_exist("删除成功")
+        time.sleep(1)
+
+    def tearDown_test_contacts_quxinli_0396(self):
+        GroupPage = GroupListPage()
+     #   GroupPage.click_back_button(times=2)
+        GroupPage.click_back_by_android(times=2)
+        GroupPage.delete_group(name='aaa')
+
+    @staticmethod
+    def setUp_test_contacts_quxinli_0397():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        # Preconditions.background_app()
+        # time.sleep(5)
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_quxinli_0397(self):
+        """“分组详情操作”界面-多方电话"""
+        GroupPage = GroupListPage()
+        cdp=ContactDetailsPage()
+        # preconditions.launch_app()
+        time.sleep(1)
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        GroupPage.new_group(name='aaa')
+        #进入群组,添加联系人
+        GroupPage.click_text('aaa')
+        GroupPage.tap_sure_box()
+        LabelGroupingChatPage().click_text('添加成员')
+        slcp = SelectLocalContactsPage()
+        time.sleep(2)
+        slcp.select_one_member_by_name('大佬1')
+        slcp.select_one_member_by_name('大佬2')
+        slcp.click_sure()
+        time.sleep(1)
+        #多方通话
+        GroupPage.enter_mutil_call()
+        time.sleep(1)
+        GroupPage.click_text("大佬1")
+        time.sleep(2)
+        cdp.send_call_number()
+        cdp.cancel_permission()
+        cdp.cancel_call()
+
+    def tearDown_test_contacts_quxinli_0397(self):
+        GroupPage = GroupListPage()
+        GroupPage.click_back_button()
+        GroupPage.delete_group(name='aaa')
+
+    @staticmethod
+    def setUp_test_contacts_quxinli_0398():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        # Preconditions.background_app()
+        # time.sleep(5)
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_quxinli_0398(self):
+        """“分组详情操作”界面-多方视频"""
+        GroupPage = GroupListPage()
+        cdp = ContactDetailsPage()
+        # preconditions.launch_app()
+        time.sleep(2)
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        GroupPage.new_group(name='aaa')
+
+        GroupPage.click_text('aaa')
+        GroupPage.tap_sure_box()
+        LabelGroupingChatPage().click_text('添加成员')
+        slcp = SelectLocalContactsPage()
+        time.sleep(1)
+        slcp.select_one_member_by_name('大佬1')
+        time.sleep(1)
+        slcp.click_sure()
+        time.sleep(1)
+        GroupPage.enter_mutil_video_call()
+        while GroupPage.is_text_present('始终允许'):
+            GroupPage.click_text('始终允许')
+        # if GroupPage.is_text_present('相机权限'):
+        #     GroupPage.click_text('始终允许')
+        time.sleep(1)
+        GroupPage.click_text("大佬1")
+        time.sleep(2)
+        cdp.send_call_number()
+        cdp.cancel_permission()
+        cdp.end_video_call()
+
+    def tearDown_test_contacts_quxinli_0398(self):
+        GroupPage = GroupListPage()
+        time.sleep(1)
+        SelectOneGroupPage().click_back_by_android()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+
+    @staticmethod
+    def setUp_test_contacts_quxinli_0407():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_quxinli_0407(self):
+        """“分组设置-特殊符号标签名称
+        auther:darcy
+        """
+        GroupPage = GroupListPage()
+        cdp = ContactDetailsPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        GroupPage.new_group(name='aaa')
+        GroupPage.click_text('aaa')
+        GroupPage.tap_sure_box()
+        GroupPage.click_settings_button()
+        GroupPage.update_label_name(name='*@!#')
+        GroupPage.click_back_button(times=2)
+        GroupPage.page_should_contain_text(text='*@!#')
+
+    def tearDown_test_contacts_quxinli_0407(self):
+        GroupPage = GroupListPage()
+        GroupPage.delete_group(name='*@!#')
+
+    @staticmethod
+    def setUp_test_contacts_quxinli_0408():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_quxinli_0408(self):
+        """“分组设置-各种标签名称
+        auther:darcy
+        """
+        GroupPage = GroupListPage()
+        cdp = ContactDetailsPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        GroupPage.new_group(name='aaa')
+        GroupPage.click_text('aaa')
+        GroupPage.tap_sure_box()
+        GroupPage.click_settings_button()
+        GroupPage.update_label_name(name='*@!#123好')
+        GroupPage.click_back_button(times=2)
+        GroupPage.page_should_contain_text(text='*@!#123好')
+
+    def tearDown_test_contacts_quxinli_0408(self):
+        GroupPage = GroupListPage()
+        GroupPage.delete_group(name='*@!#123好')
+
+    @staticmethod
+    def setUp_test_contacts_quxinli_0409():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_quxinli_0409(self):
+        """“分组设置-各种标签名称删除
+        auther:darcy
+        """
+        GroupPage = GroupListPage()
+        cdp = ContactDetailsPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        GroupPage.new_group(name='aaa')
+        GroupPage.click_text('aaa')
+        GroupPage.tap_sure_box()
+        GroupPage.click_settings_button()
+        GroupPage.delete_label_name(name='*@!#123好')
+        GroupPage.page_should_contain_text(text="请输入标签分组名称")
+        GroupPage.click_back_button(times=3)
+
+    def tearDown_test_contacts_quxinli_0409(self):
+        GroupPage = GroupListPage()
+        GroupPage.delete_group(name='*@!#123好')
+
+    @staticmethod
+    def setUp_test_contacts_quxinli_0414():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT-debug', 'CMCC')
+    def test_contacts_quxinli_0414(self):
+        """分组设置-搜索移除成员
+        auther:darcy
+        """
+        GroupPage = GroupListPage()
+        cdp = ContactDetailsPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        GroupPage.new_group(name='aaa')
+        #添加成员
+        GroupPage.click_text('aaa')
+        GroupPage.tap_sure_box()
+        time.sleep(1)
+        LabelGroupingChatPage().click_text('添加成员')
+        slcp = SelectLocalContactsPage()
+        time.sleep(1)
+        slcp.select_one_member_by_name('大佬1')
+        slcp.click_sure()
+        time.sleep(2)
+        #移除成员
+        GroupPage.click_settings_button()
+        GroupPage.click_move_label()
+        time.sleep(1)
+        GroupPage.search_menber_text(text='dalao1')
+        time.sleep(1)
+        GroupPage.click_text('大佬1')
+        time.sleep(1)
+        GroupPage.click_sure_element()
+        time.sleep(1)
+        GroupPage.click_move_label()
+        time.sleep(1)
+        GroupPage.page_should_not_contain_text("大佬1")
+
+    def tearDown_test_contacts_quxinli_0414(self):
+        GroupPage = GroupListPage()
+        GroupPage.click_back_button(times=3)
+        GroupPage.delete_group(name='aaa')
+
+
+    @staticmethod
+    def setUp_test_contacts_quxinli_0415():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT-debug', 'CMCC')
+    def test_contacts_quxinli_0415(self):
+        """分组设置-删除标签
+        auther:darcy
+        """
+        GroupPage = GroupListPage()
+        cdp = ContactDetailsPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.new_group(name='ccc')
+        GroupPage.delete_group(name='ccc')
+        GroupPage.click_back_by_android(times=2)
+
+
+    @staticmethod
+    def setUp_test_contacts_quxinli_0416():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+      #   Preconditions.background_app()
+      #   time.sleep(3)
+
+
+    @tags('ALL', 'CONTACT-debug', 'CMCC')
+    def test_contacts_quxinli_0416(self):
+        """分组详情操作页面进入Profile页"""
+        GroupPage = GroupListPage()
+        # preconditions.launch_app()
+        # time.sleep(2)
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        GroupPage.new_group(name='aaa')
+        #添加成员
+        GroupPage.click_text('aaa')
+        GroupPage.tap_sure_box()
+        time.sleep(1)
+        LabelGroupingChatPage().click_text('添加成员')
+        slcp = SelectLocalContactsPage()
+        time.sleep(1)
+        slcp.select_one_member_by_name('大佬1')
+        # slcp.select_one_member_by_name('大佬2')
+        slcp.select_one_member_by_name('大佬3')
+        slcp.click_sure()
+        time.sleep(2)
+
+        GroupPage.click_send_message_to_group()
+        GroupPage.click_divide_group_icon()
+        time.sleep(1)
+        GroupPage.page_contain_element(locator='分组联系人_标题')
+        GroupPage.click_text("大佬3")
+        time.sleep(1)
+        GroupPage.page_contain_element(locator='语音通话')
+        GroupPage.page_contain_element(locator='视频通话')
+        GroupPage.page_contain_element(locator='分享名片')
+        GroupPage.click_share_button()
+        time.sleep(1)
+        SelectContactsPage().click_select_one_group()
+        time.sleep(1)
+        SelectOneGroupPage().click_search_group()
+        SelectOneGroupPage().input_search_keyword('给个红包1')
+        SelectOneGroupPage().select_one_group_by_name('给个红包1')
+        SelectOneGroupPage().click_share_business_card()
+        time.sleep(2)
+        # GroupPage.click_innvation_button()
+
+    def tearDown_test_contacts_quxinli_0416(self):
+        GroupPage = GroupListPage()
+
+        GroupPage.background_app(seconds=10)
+        time.sleep(10)
+        preconditions.launch_app()
+        time.sleep(1)
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+
+    @staticmethod
+    def setUp_test_contacts_quxinli_0417():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+       # Preconditions.make_already_in_message_page()
+        Preconditions.background_app()
+        time.sleep(5)
+
+    @tags('ALL', 'CONTACT-debug', 'CMCC')
+    def test_contacts_quxinli_0417(self):
+        """分组详情操作页面进入Profile页_星标
+        auther:darcy"""
+        GroupPage = GroupListPage()
+        preconditions.launch_app()
+        time.sleep(2)
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        GroupPage.new_group(name='aaa')
+        #添加成员
+        GroupPage.click_text('aaa')
+        GroupPage.tap_sure_box()
+        time.sleep(1)
+        LabelGroupingChatPage().click_text('添加成员')
+        slcp = SelectLocalContactsPage()
+        time.sleep(1)
+        slcp.select_one_member_by_name('大佬1')
+        slcp.select_one_member_by_name('大佬3')
+        slcp.click_sure()
+        time.sleep(2)
+
+        GroupPage.enter_group_message()
+        GroupPage.click_divide_group_icon()
+        time.sleep(1)
+        GroupPage.page_contain_element(locator='分组联系人_标题')
+        GroupPage.click_text("大佬3")
+        time.sleep(1)
+        GroupPage.click_star_icon()
+        GroupPage.is_toast_exist("已成功添加为星标联系人")
+        time.sleep(1)
+        GroupPage.click_star_icon()
+        GroupPage.is_toast_exist("已取消添加为星标联系人")
+        GroupPage.click_star_icon()
+       # GroupPage.click_back_button(times=3)
+        GroupPage.click_back_by_android(times=3)
+        time.sleep(2)
+       # GroupPage.click_back_button(times=2)
+        GroupPage.click_back_by_android(times=2)
+
+        time.sleep(1)
+        GroupPage.page_contain_star('大佬3')
+
+    def tearDown_test_contacts_quxinli_0417(self):
+        #去除大佬1的星标
+        ContactsPage().select_contacts_by_name('大佬3')
+        time.sleep(1)
+        GroupPage = GroupListPage()
+        GroupPage.click_star_icon()
+        #删除群组
+        GroupPage = GroupListPage()
+        GroupPage.click_back_button()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+
+
+    @staticmethod
+    def setUp_test_contacts_quxinli_0421():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACT', 'CMCC')
+    def test_contacts_quxinli_0421(self):
+        """安卓手机：手机系统本地新建分组名称超过30个字符的分组
+        auther:darcy"""
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        GroupPage.click_label_grouping()
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+        name="a"*30
+        GroupPage.new_group(name=name)
+        GroupPage.click_text(name)
+        time.sleep(1)
+        GroupPage.tap_sure_box()
+        GroupPage.click_settings_button()
+        GroupPage.update_label_name(name='aaa')
+        GroupPage.click_back_button(times=2)
+        time.sleep(1)
+        GroupPage.page_should_contain_text(text='aaa')
+        #添加成员
+        GroupPage.click_text('aaa')
+        GroupPage.tap_sure_box()
+        time.sleep(1)
+        LabelGroupingChatPage().click_text('添加成员')
+        slcp = SelectLocalContactsPage()
+        time.sleep(1)
+        slcp.select_one_member_by_name('大佬1')
+        slcp.select_one_member_by_name('大佬3')
+        slcp.click_sure()
+        time.sleep(2)
+        #进入设置界面
+        GroupPage.click_settings_button()
+        time.sleep(1)
+        GroupPage.click_move_label()
+        time.sleep(1)
+        GroupPage.click_text('大佬3')
+        time.sleep(1)
+        GroupPage.click_sure_element()
+        time.sleep(1)
+        GroupPage.click_move_label()
+        time.sleep(1)
+        GroupPage.page_should_not_contain_text("大佬3")
+
+
+    def tearDown_test_contacts_quxinli_0421(self):
+        GroupPage = GroupListPage()
+        GroupPage.click_back_button(times=3)
+        time.sleep(1)
+        GroupPage.delete_group(name='aaa')
+
+
+
+
 
     @staticmethod
     def setUp_test_contacts_0359():
@@ -1723,6 +1977,7 @@ class Tag_Group(TestCase):
         GroupPage.open_contacts_page()
         GroupPage.click_label_grouping()
         time.sleep(1)
+        LabelGroupingPage().delete_all_label()
         GroupPage.click_new_group()
         GroupPage.click_input_element()
         time.sleep(1)
@@ -2504,6 +2759,8 @@ class Tag_Group(TestCase):
         GroupPage = GroupListPage()
         GroupPage.click_back_button(times=3)
         GroupPage.delete_group(name='aaa')
+
+
 
 if __name__ == '__main__':
     unittest.main()

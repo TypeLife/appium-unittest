@@ -57,7 +57,6 @@ class Preconditions(LoginPreconditions):
             chat.wait_for_page_load()
 
 
-
 class MsgMyPCChating(TestCase):
     """
     文件位置：全量/115 和飞信测试用例(分)-消息(4294).xlsx

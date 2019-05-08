@@ -159,8 +159,6 @@ class CallAll(TestCase):
     def tearDownClass(cls):
         current_mobile().hide_keyboard_if_display()
         preconditions.make_already_in_message_page()
-        cdp = ContactDetailsPage()
-        cdp.delete_all_contact()
 
     def default_setUp(self):
         """进入Call页面,清空通话记录"""
@@ -2900,11 +2898,12 @@ class CallAll(TestCase):
         # 1.登录和飞信：消息tab-群聊会话窗口-富媒体面板
         # 2.已弹出系统选择弹窗多方电话和多方视频
         ContactsPage().click_message_icon()
-        Preconditions.enter_group_chat_page("群聊")
+        Preconditions.enter_group_chat_page("群聊1")
         # Step:1.点击多方电话
         gpg = GroupListPage()
         gpg.click_mult_call_icon()
         CallPage().click_mutil_call()
+        GrantPemissionsPage().allow_contacts_permission()
         # CheckPoint:1.调起联系人选择器
         time.sleep(1)
         gpg.page_should_contain_text("搜索成员")
@@ -2913,6 +2912,7 @@ class CallAll(TestCase):
         gpg = GroupListPage()
         gpg.click_mult_call_icon()
         CallPage().click_mutil_video_call()
+        GrantPemissionsPage().allow_contacts_permission()
         # CheckPoint:2.调起联系人选择器
         time.sleep(1)
         gpg.page_should_contain_text("搜索成员")
