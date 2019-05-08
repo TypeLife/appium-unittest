@@ -146,8 +146,6 @@ class MessageScanTest(TestCase):
     def tearDownClass(cls):
         current_mobile().hide_keyboard_if_display()
         preconditions.make_already_in_message_page()
-        cdp = ContactDetailsPage()
-        cdp.delete_all_contact()
 
     def default_setUp(self):
         """确保进入消息界面"""
@@ -312,12 +310,15 @@ class MessageScanTest(TestCase):
         # Step: 2.编辑好短信，点击发送按钮
         basepg.input_free_message("测试短信，请勿回复")
         basepg.click_send_sms()
+        time.sleep(1)
         if basepg.is_exist_send_button():
             basepg.click_send_button()
 
         time.sleep(2)
         # CheckPoint: 2.短信发送成功并返回短信编辑页面
         self.assertTrue(basepg.is_exist_exit_sms())
+        basepg.click_exit_sms()
+        basepg.click_back_by_android()
 
     @staticmethod
     def tearDown_test_msg_huangcaizui_B_0023():
@@ -341,6 +342,7 @@ class MessageScanTest(TestCase):
         Preconditions.enter_single_chat_page("测试号码")
         # Step: 1.点击下方发送短信按钮
         basepg = BaseChatPage()
+        time.sleep(3)
         basepg.click_free_msg()
         time.sleep(2)
         # CheckPoint: 1.直接进入短信编辑页面
@@ -349,6 +351,7 @@ class MessageScanTest(TestCase):
         # Step: 2.编辑好短信，点击发送按钮
         basepg.input_free_message("测试短信，请勿回复")
         basepg.click_send_sms()
+        time.sleep(1)
         if basepg.is_exist_send_button():
             basepg.click_send_button()
 
@@ -411,6 +414,7 @@ class MessageScanTest(TestCase):
         time.sleep(2)
         if basepg.is_exist_exit_sms():
             basepg.click_exit_sms()
+        time.sleep(1)
         basepg.click_back_by_android()
 
     @staticmethod
@@ -439,6 +443,7 @@ class MessageScanTest(TestCase):
         time.sleep(2)
         if basepg.is_exist_exit_sms():
             basepg.click_exit_sms()
+        time.sleep(1)
         basepg.click_back_by_android()
 
     @staticmethod
@@ -465,6 +470,7 @@ class MessageScanTest(TestCase):
         time.sleep(2)
         if basepg.is_exist_exit_sms():
             basepg.click_exit_sms()
+            time.sleep(1)
         basepg.click_back_by_android()
 
     @staticmethod
@@ -488,9 +494,10 @@ class MessageScanTest(TestCase):
         basepg.click_collection()
         # CheckPoint: 短信成功收藏
         self.assertTrue(basepg.is_toast_exist("已收藏"))
-        time.sleep(2)
+        time.sleep(3)
         if basepg.is_exist_exit_sms():
             basepg.click_exit_sms()
+            time.sleep(1)
         basepg.click_back_by_android()
 
     @staticmethod
@@ -520,6 +527,7 @@ class MessageScanTest(TestCase):
         basepg.click_back_by_android()
         if basepg.is_exist_exit_sms():
             basepg.click_exit_sms()
+            time.sleep(1)
         basepg.click_back_by_android()
 
     @staticmethod

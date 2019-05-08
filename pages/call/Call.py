@@ -400,10 +400,9 @@ class CallPage(BasePage):
     @TestLogger.log("清空通话记录")
     def delete_all_call_entry(self):
         """前置条件：当前已进入call界面"""
-        flag = True
         ret = True
         if self.check_multiparty_video():
-            while flag:
+            for i in range(20):
                 el = self.get_elements(self.__locators["通话记录"])
                 if len(el) > 0:
                     self.press(el[0])
@@ -413,8 +412,8 @@ class CallPage(BasePage):
                             self.click_allow_button(auto_accept_permission_alert=False)
                         ret = False
                 else:
-                    print("已清空通话记录")
-                    flag = False
+                    print("已删除通话记录")
+                    break
         else:
             raise AttributeError
 
