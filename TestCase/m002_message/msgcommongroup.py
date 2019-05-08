@@ -393,8 +393,8 @@ class MsgCommonGroupTest(TestCase):
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-        # current_mobile().launch_app()
-        current_mobile().reset_app()
+        current_mobile().launch_app()
+        # current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.enter_group_chat_page()
 

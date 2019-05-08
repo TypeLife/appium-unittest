@@ -301,7 +301,10 @@ class SelectLocalContactsPage(BasePage):
 
     @TestLogger.log("点击第一个联系人")
     def click_first_phone_contacts(self):
-        self.get_elements(self.__locators['电话号码'])[0].click()
+        self.wait_until(
+            condition=lambda x: self.get_elements(self.__locators['电话号码'])[0],
+            auto_accept_permission_alert=False
+        ).click()
 
     @TestLogger.log("当前页面是否在选择联系人页")
     def is_on_this_page(self):

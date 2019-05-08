@@ -415,7 +415,7 @@ class MsgPrivateChatFileLocationTest(TestCase):
         local_file = ChatSelectLocalFilePage()
         # 页面没有加载出视频，则循环6次
         for i in range(6):
-            el = local_file.select_file2("视频")
+            el = local_file.select_file(".mp4")
             if el:
                 local_file.click_send()
                 chat.wait_for_page_load()
@@ -468,7 +468,7 @@ class MsgPrivateChatFileLocationTest(TestCase):
         local_file = ChatSelectLocalFilePage()
         # 页面没有加载出照片，则循环6次
         for i in range(6):
-            el = local_file.select_file2("照片")
+            el = local_file.select_file(".jpg")
             if el:
                 local_file.click_send()
                 chat.wait_for_page_load()
@@ -521,7 +521,7 @@ class MsgPrivateChatFileLocationTest(TestCase):
         local_file = ChatSelectLocalFilePage()
         # 页面没有加载出音乐，则循环6次
         for i in range(6):
-            el = local_file.select_file2("音乐")
+            el = local_file.select_file(".mp3")
             if el:
                 local_file.click_send()
                 chat.wait_for_page_load()
@@ -549,7 +549,7 @@ class MsgPrivateChatFileLocationTest(TestCase):
         # 点击文件
         search.click_file()
         chat_file = ChatFilePage()
-        chat_file.wait_for_page_load()
+        chat_file.wait_for_page_loads()
         chat_file.delete_file(".xlsx")
         # 返回聊天会话页面
         chat_file.click_back()
@@ -698,7 +698,7 @@ class MsgPrivateChatFileLocationTest(TestCase):
         scp.select_local_contacts()
         slcp = SelectLocalContactsPage()
         slcp.wait_for_page_load()
-        names = slcp.get_contacts_name()
+        names = list(slcp.get_contacts_name())
         if names:
             slcp.select_one_member_by_name(names[0])
             # 3、点击确定
