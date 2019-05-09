@@ -90,6 +90,8 @@ class ContactsPage(FooterPage):
             contacts_name.remove("和通讯录")
         if "和飞信电话" in contacts_name:
             contacts_name.remove("和飞信电话")
+        if "本机" in contacts_name:
+            contacts_name.remove("本机")
         return contacts_name
 
     @TestLogger.log()

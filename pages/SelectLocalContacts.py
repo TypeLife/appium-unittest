@@ -65,6 +65,7 @@ class SelectLocalContactsPage(BasePage):
                   '确定转发': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
                   '被选中的联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/avator'),
                   '搜索结果展示': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
+                  '已选联系人名': (MobileBy.ID, 'com.chinasofti.rcs:id/image_text'),
                   }
 
     @TestLogger.log()
@@ -185,6 +186,11 @@ class SelectLocalContactsPage(BasePage):
             return True
         else:
             return False
+
+    @TestLogger.log()
+    def is_exist_select_contacts_name(self):
+        """是否存在已选联系人名"""
+        return self._is_element_present(self.__class__.__locators["已选联系人名"])
 
     def page_up(self):
         """向上滑动一页"""
