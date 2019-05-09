@@ -101,6 +101,14 @@ class LabelGroupingChatPage(BaseChatPage):
         el = self.get_element(self.__class__.__locators['文件名'])
         self.press(el)
 
+    @TestLogger.log()
+    def press_last_file(self):
+        """长按最后一个文件"""
+        el = self.get_elements(self.__class__.__locators['文件名'])[-1]
+        self.press(el)
+
+
+
     @TestLogger.log("删除当前分组发送的文件")
     def delete_group_all_file(self):
         msg_file = self.get_elements(('id', 'com.chinasofti.rcs:id/ll_msg'))

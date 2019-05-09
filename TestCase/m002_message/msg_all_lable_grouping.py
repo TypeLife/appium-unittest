@@ -231,6 +231,7 @@ class Preconditions(LoginPreconditions):
         csfp.wait_for_page_load()
         # 点击本地音乐
         csfp.click_music()
+        time.sleep(2)
 
     @staticmethod
     def send_large_music_file():
@@ -1247,21 +1248,39 @@ class MsgLabelGroupingAll(TestCase):
         #断网
         local_file = ChatSelectLocalFilePage()
         local_file.set_network_status(0)
+        time.sleep(1)
         local_file.select_file('.mp3')
         local_file.click_send()
+        time.sleep(2)
         #重发按钮是否存在
         ChatWindowPage().wait_for_page_load()
         ChatWindowPage().is_element_present_resend()
 
+    @staticmethod
+    def tearDown_test_msg_weifenglian_fenzu_0043():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep = MePage()
+            mep.set_network_status(6)
+
     @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0044(self):
         """断网音乐发送失败,消息列表有显示"""
+        chat=ChatWindowPage()
+        if chat.is_element_present_resend():
+            while chat.is_element_present_resend():
+                chat.click_resend_button()
+                chat.click_resend_sure()
+                time.sleep(2)
         Preconditions.enter_local_music_catalog()
         #断网
         local_file = ChatSelectLocalFilePage()
         local_file.set_network_status(0)
         local_file.select_file('.mp3')
         local_file.click_send()
+        time.sleep(2)
         #重发按钮是否存在
         cwp=ChatWindowPage()
         cwp.wait_for_page_load()
@@ -1495,7 +1514,7 @@ class MsgLabelGroupingAll(TestCase):
         # 页面调起功能菜单
         chat.page_should_contain_text('转发')
         chat.page_should_contain_text('收藏')
-        chat.page_should_contain_text('撤回')
+        # chat.page_should_contain_text('撤回')
         chat.page_should_contain_text('删除')
         chat.page_should_contain_text('多选')
         # 点击转发
@@ -1535,11 +1554,12 @@ class MsgLabelGroupingAll(TestCase):
         time.sleep(2)
         chat.page_should_contain_text('转发')
         chat.page_should_contain_text('收藏')
-        chat.page_should_contain_text('撤回')
+        # chat.page_should_contain_text('撤回')
         chat.page_should_contain_text('删除')
         chat.page_should_contain_text('多选')
         # 断网状态点击转发
         chat.click_forward()
+        time.sleep(1)
         SelectContactsPage().set_network_status(0)
         SelectContactsPage().wait_for_page_load()
         scp = SelectContactsPage()
@@ -1596,7 +1616,7 @@ class MsgLabelGroupingAll(TestCase):
         # 页面调起功能菜单
         chat.page_should_contain_text('转发')
         chat.page_should_contain_text('收藏')
-        chat.page_should_contain_text('撤回')
+        # chat.page_should_contain_text('撤回')
         chat.page_should_contain_text('删除')
         chat.page_should_contain_text('多选')
         # 点击转发
@@ -1902,15 +1922,16 @@ class MsgLabelGroupingAll(TestCase):
     def test_msg_weifenglian_fenzu_0070(self):
         """选择群后,取消转发文件"""
         chat = LabelGroupingChatPage()
-        if LabelGroupingChatPage().is_element_present_file():
-            chat.wait_for_page_load()
-        else:
-            Preconditions.enter_local_file_catalog()
-            local_file = ChatSelectLocalFilePage()
-            local_file.select_file(".txt")
-            local_file.click_send()
+        # if LabelGroupingChatPage().is_element_present_file():
+        #     chat.wait_for_page_load()
+        # else:
+        Preconditions.enter_local_file_catalog()
+        local_file = ChatSelectLocalFilePage()
+        local_file.select_file(".txt")
+        local_file.click_send()
+        time.sleep(2)
         # 2、转发，选择一个群
-        chat.press_mess(".txt")
+        chat.press_last_file()
         #点击转发
         chat.click_forward()
         SelectContactsPage().wait_for_page_load()
@@ -1946,7 +1967,7 @@ class MsgLabelGroupingAll(TestCase):
             local_file.select_file(".txt")
             local_file.click_send()
         #点击转发
-        chat.press_mess(".txt")
+        chat.press_last_file()
         chat.click_forward()
         SelectContactsPage().wait_for_page_load()
         scp = SelectContactsPage()
