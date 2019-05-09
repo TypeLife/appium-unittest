@@ -441,7 +441,7 @@ class MeTest(TestCase):
         )
         self.assertEqual('已发送', toast.text)
 
-
+@unittest.skip('用例需要重置，影响后续自动化')
 class MeMsgSettingTest(TestCase):
     """
     模块：我-消息设置
@@ -617,7 +617,7 @@ class MeMsgSettingTest(TestCase):
         msg_setting.turn_on('接收OA消息')
         msg_setting.assert_menu_item_has_been_turn_on('接收OA消息')
 
-
+@unittest.skip('用例需要重置，影响后续自动化')
 class MeSmsSettingTest(TestCase):
     """
     模块：我-短信设置

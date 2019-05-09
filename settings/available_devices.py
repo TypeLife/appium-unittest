@@ -484,7 +484,7 @@ DEVICES_CONFIG_nova3 = {
         'CARDS': [
             {
                 'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '19876463625'
+                'CARD_NUMBER': '19876463626'
             },
         ]
     },
