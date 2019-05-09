@@ -224,6 +224,7 @@ class VoiceAnnouncementTest(TestCase):
         sc = SelectContactsPage()
         sc.click_text("选择企业通讯录联系人")
         time.sleep(5)
+        ''
         if sc.swipe_and_find_element("bm1"):
             time.sleep(2)
             sc.click_element_("bm1")
