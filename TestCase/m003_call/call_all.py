@@ -1679,7 +1679,8 @@ class CallAll(TestCase):
 
         cpg.click_call()
 
-    @tags('ALL', 'CMCC', 'Call')
+    # @tags('ALL', 'CMCC', 'Call')
+    @unittest.skip("标签分组入口待实现")
     def test_call_shenlisi_0226(self):
         """检查同时获取相机权限以及麦克风权限可发起视频通话"""
         # 1.和飞信系统已获取相机、麦克风权限
