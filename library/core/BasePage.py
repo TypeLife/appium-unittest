@@ -592,3 +592,12 @@ class BasePage(object):
     def is_locked(self):
         """判断设备是否锁屏"""
         return self.driver.is_locked()
+
+    @TestLogger.log()
+    def is_exit_element_by_text_swipe(self, contactName):
+        """滑动判断特定元素是否存在"""
+        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[@text="%s"]' % contactName))
+        if el:
+            return True
+        else:
+            return False

@@ -12,10 +12,11 @@ class WorkBenchManagerPage(BasePage):
         '返回': (MobileBy.ID, "com.chinasofti.rcs:id/btn_back_actionbar"),
         '应用': (MobileBy.XPATH, '//*[@text ="javascript:void(0);"]'),
         'X号': (MobileBy.ID, "com.chinasofti.rcs:id/btn_close_actionbar"),
-        '加号': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[2]/android.view.View[6]/android.view.View'),
+        '加号': (MobileBy.XPATH, '//*[contains(@text,"javascript:addAppInBench")]'),
         '搜索应用': (MobileBy.XPATH, "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]/android.view.View/android.widget.EditText"),
         '搜索框': (MobileBy.XPATH, '//*[@class ="android.widget.EditText"]'),
         '搜索': (MobileBy.XPATH, '//*[@text ="搜索"]'),
+
     }
 
     @TestLogger.log()

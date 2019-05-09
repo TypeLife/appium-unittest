@@ -297,6 +297,8 @@ class WorkbenchPreconditions(LoginPreconditions):
             current_mobile().back()
             workbench = WorkbenchPage()
             workbench.wait_for_page_load()
+            time.sleep(3)
+            current_mobile().back()
             workbench.open_message_page()
 
     @staticmethod
