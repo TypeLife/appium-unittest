@@ -69,6 +69,8 @@ class Preconditions(WorkbenchPreconditions):
         mp.click_workbench()
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
+        # 查找并点击所有展开元素
+        wbp.find_and_click_open_element()
         wbp.click_add_mobile_attendance()
         # 解决工作台不稳定问题
         map = MobileAttendancePage()

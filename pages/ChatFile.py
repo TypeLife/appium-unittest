@@ -73,7 +73,11 @@ class ChatFilePage(BasePage):
     @TestLogger.log()
     def clear_file_record(self):
         """清除文件记录"""
+        current = 0
         while True:
+            current += 1
+            if current > 20:
+                return
             els = self.get_elements(self.__class__.__locators['文件名'])
             if not els:
                 break

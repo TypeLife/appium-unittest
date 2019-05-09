@@ -1718,7 +1718,11 @@ class MsgLabelGroupingTest(TestCase):
         """标签分组会话窗，删除自己发送的视频"""
         # 删除会话窗口之前发送的视频消息
         chat = LabelGroupingChatPage()
+        current = 0
         while True:
+            current += 1
+            if current > 20:
+                return
             chat.wait_for_page_load()
             if not chat.is_exist_video_msg():
                 break
@@ -1874,7 +1878,11 @@ class MsgLabelGroupingTest(TestCase):
     def delete_media_msg():
         """删除标签分组会话窗的图片，gif消息"""
         chat = LabelGroupingChatPage()
+        current = 0
         while True:
+            current += 1
+            if current > 20:
+                return
             chat.wait_for_page_load()
             if not chat.is_exist_pic_msg():
                 break

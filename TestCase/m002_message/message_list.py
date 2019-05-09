@@ -157,7 +157,6 @@ class Preconditions(WorkbenchPreconditions):
         gcsp = GroupChatSetPage()
         gcsp.wait_for_page_load()
         gcsp.click_delete_and_exit()
-        gcsp.click_sure()
         mp.wait_for_message_list_load()
 
     @staticmethod

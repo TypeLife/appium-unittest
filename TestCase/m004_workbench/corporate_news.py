@@ -74,6 +74,8 @@ class Preconditions(WorkbenchPreconditions):
         mp.click_workbench()
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
+        # 查找并点击所有展开元素
+        wbp.find_and_click_open_element()
         wbp.click_add_corporate_news()
 
     @staticmethod
@@ -115,6 +117,7 @@ class Preconditions(WorkbenchPreconditions):
             cnitp.input_news_title(title)
             # 输入图文新闻内容
             cnitp.input_news_content("123")
+            time.sleep(1)
             # 点击发布
             cnitp.click_release()
             time.sleep(2)

@@ -945,7 +945,11 @@ class MsgPrivateChatVideoPicTest(TestCase):
     def delete_media_msg():
         """删除在单聊会话窗的图片，gif消息"""
         chat = SingleChatPage()
+        current = 0
         while True:
+            current += 1
+            if current > 20:
+                return
             chat.wait_for_page_load()
             if not chat.is_exist_pic_msg():
                 break

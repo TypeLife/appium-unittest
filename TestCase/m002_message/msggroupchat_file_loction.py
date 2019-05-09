@@ -277,7 +277,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     def setUp_test_msg_group_chat_file_location_0001():
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-        current_mobile().launch_app()
+        current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.enter_group_chat_page()
 

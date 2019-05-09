@@ -131,8 +131,8 @@ class CallAll(TestCase):
                 conts = ContactsPage()
                 preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
                 current_mobile().hide_keyboard_if_display()
+                preconditions.make_already_in_message_page()
                 for name, number in required_contacts:
-                    preconditions.make_already_in_message_page()
                     conts.open_contacts_page()
                     if conts.is_text_present("显示"):
                         conts.click_text("不显示")
@@ -874,7 +874,7 @@ class CallAll(TestCase):
         # （11位数）0202376987
         # （12位数）0987345690209
         # 1.点击拨号按钮
-        lst = ["+860223786543","+860202376987","+860987345690209"]
+        lst = ["+860223786543", "+860202376987", "+860987345690209"]
         cpg = CallPage()
         cpg.setting_dial_mode_and_go_back_call()
         for i in range(3):
@@ -885,6 +885,155 @@ class CallAll(TestCase):
             # 1.调起系统电话后，系统电话拨打失败
             self.assertTrue(cpg.is_phone_in_calling_state())
             cpg.hang_up_the_call()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0045(self):
+        """拨号盘呼叫普通电话"""
+        # 1.用户已登录和飞信：通话 - 拨号盘
+        # 2.在拨号盘已输入合法手机号 / 固号
+        # 3.无副号
+        cpg = CallPage()
+        cpg.click_call()
+        cpg.dial_number("0731210086")
+        # Step:1.点击拨号按钮
+        cpg.click_call_phone()
+        # CheckPoint:1.弹出拨号方式
+        time.sleep(2)
+        CallTypeSelectPage().click_sure()
+        cpg.page_should_contain_text("普通电话")
+        # Step:2.点击“普通电话”
+        CallTypeSelectPage().click_call_by_general()
+        time.sleep(1)
+        GrantPemissionsPage().allow_contacts_permission()
+        time.sleep(2)
+        # CheckPoint:2.调起系统电话，呼叫成功
+        flag = cpg.is_phone_in_calling_state()
+        self.assertTrue(flag)
+        # Step:3.查看通话记录
+        time.sleep(1)
+        cpg.hang_up_the_call()
+        # CheckPoint:3.通话记录列表新增一条普通电话通话记录
+        cpg.page_should_contain_text("0731210086")
+        cpg.page_should_contain_text("刚刚")
+
+        cpg.click_call()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0046(self):
+        """拨号盘呼叫语音通话"""
+        # 1.用户已登录和飞信：通话 - 拨号盘
+        # 2.在拨号盘已输入合法手机号
+        # 3.无副号
+        cpg = CallPage()
+        cpg.click_call()
+        cpg.dial_number("14775970982")
+        # Step:1.点击拨号按钮
+        cpg.click_call_phone()
+        # CheckPoint:1.弹出拨号方式
+        time.sleep(2)
+        cpg.page_should_contain_text("普通电话")
+        # Step:2.点击“语音通话”
+        CallTypeSelectPage().click_call_by_voice()
+        time.sleep(1)
+        GrantPemissionsPage().allow_contacts_permission()
+        time.sleep(1)
+        if cpg.is_text_present("现在去开启"):
+            cpg.click_text("暂不开启")
+        time.sleep(2)
+
+        # CheckPoint:2.语音电话呼叫成功
+        cpg.page_should_contain_text("正在呼叫")
+        # Step:3.查看通话记录
+        cpg.wait_for_dial_pad()
+        # CheckPoint:3.通话记录列表新增一条语音通话记录
+        cpg.page_should_contain_text("14775970982")
+        cpg.page_should_contain_text("语音通话")
+
+        cpg.click_call()
+
+    # @tags('ALL', 'CMCC', 'Call')
+    @unittest.skip("和飞信电话拨打失败，后续再执行")
+    def test_call_shenlisi_0047(self):
+        """拨号盘呼叫和飞信通话"""
+        # 1.用户已登录和飞信：通话 - 拨号盘
+        # 2.在拨号盘已输入合法手机号/固号
+        # 3.无副号
+        cpg = CallPage()
+        cpg.click_call()
+        cpg.dial_number("14775970982")
+        # Step:1.点击拨号按钮
+        cpg.click_call_phone()
+        # CheckPoint:1.弹出拨号方式
+        time.sleep(2)
+        cpg.page_should_contain_text("普通电话")
+        # Step:2.点击“和飞信电话”
+        CallTypeSelectPage().click_call_by_app()
+        time.sleep(1)
+        GrantPemissionsPage().allow_contacts_permission()
+        time.sleep(2)
+        CallTypeSelectPage().click_i_know()
+        CallTypeSelectPage().wait_for_app_call()
+        # CheckPoint:2.可收到本机回呼，呼叫成功
+        cpg.page_should_contain_text("我 (主叫)")
+        # Step:3.查看通话记录
+        time.sleep(2)
+        # CallTypeSelectPage().click_app_call_end()
+        cpg.wait_for_dial_pad()
+        # CheckPoint:3.通话记录列表新增一条和飞信电话通话记录
+        cpg.page_should_contain_text("14775970982")
+        cpg.page_should_contain_text("和飞信电话")
+
+        cpg.click_call()
+
+    @staticmethod
+    def setUp_test_call_shenlisi_0048():
+        # 清除应用app缓存，并登陆和飞信
+        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
+        current_mobile().hide_keyboard_if_display()
+        preconditions.reset_and_relaunch_app()
+        preconditions.make_already_in_one_key_login_page()
+        preconditions.login_by_one_key_login()
+        Preconditions.make_already_in_call()
+        CalllogBannerPage().skip_multiparty_call()
+        CallPage().delete_all_call_entry()
+
+    # @tags('ALL', 'CMCC_RESET', 'Call')
+    @unittest.skip("跳过")
+    def test_call_shenlisi_0048(self):
+        """检查拨号盘首次呼叫和飞信电话"""
+        # 1.用户已登录和飞信：通话-拨号盘
+        # 2.在拨号盘已输入合法手机号/固号
+        # 3.无副号
+        # 4.首次呼叫
+        cpg = CallPage()
+        cpg.click_call()
+        cpg.dial_number("15343038867")
+        cpg.click_call_phone()
+
+        # Step:1.拨打和飞信电话
+        CallTypeSelectPage().click_call_by_app()
+        time.sleep(1)
+        cpg.click_i_know()
+        time.sleep(1)
+        # CheckPoint:1.弹出：和飞信电话时长使用提示
+        cpg.page_should_contain_text("使用和飞信电话拨打将会消耗您的多方电话可用时长")
+
+        # Step:2.点击空白处
+        cpg.tap_coordinate([100, 20])
+        time.sleep(1)
+        # CheckPoint:2.无反应
+        cpg.page_should_contain_text("使用和飞信电话拨打将会消耗您的多方电话可用时长")
+
+        # Step:3.点击：我知道了
+        time.sleep(1)
+        cpg.click_i_know()
+        # CheckPoint:3.点击：我知道了
+        time.sleep(1)
+        cpg.page_should_not_contain_text("知道了")
+
+        CallTypeSelectPage().wait_for_app_call()
+        cpg.wait_for_dial_pad()
+        cpg.click_call()
 
     @tags('ALL', 'CMCC', 'Call')
     def test_call_shenlisi_0050(self):
@@ -962,6 +1111,7 @@ class CallAll(TestCase):
         cpg.page_should_contain_text("自动推荐")
         cpg.click_back_by_android(2)
 
+    @tags('ALL', 'CMCC', 'Call')
     def test_call_shenlisi_0053(self):
         """多方电话时长大于0时调起的通话方式选择【和飞信电话】右侧新增【设置为默认】按钮"""
         # 多方电话时长大于0且拨号方式设置为总是询问
@@ -1030,7 +1180,7 @@ class CallAll(TestCase):
         cpg.click_call()
 
     @tags('ALL', 'CMCC', 'Call')
-    def test_call_shenlisi_0066 (self):
+    def test_call_shenlisi_0066(self):
         """检查拨号盘搜索功能---香港本地联系人"""
         # 1.用户已登录和飞信：通话记录列表页面
         # 2.拨号盘输入的香港号本地已保存
@@ -1679,7 +1829,8 @@ class CallAll(TestCase):
 
         cpg.click_call()
 
-    @tags('ALL', 'CMCC', 'Call')
+    # @tags('ALL', 'CMCC', 'Call')
+    @unittest.skip("标签分组入口待实现")
     def test_call_shenlisi_0226(self):
         """检查同时获取相机权限以及麦克风权限可发起视频通话"""
         # 1.和飞信系统已获取相机、麦克风权限
@@ -1862,7 +2013,7 @@ class CallAll(TestCase):
         CallPage().delete_all_call_entry()
         CallPage().set_network_status(6)
 
-    # @tags('ALL', 'CMCC', 'Call')
+    @tags('ALL', 'CMCC', 'Call')
     def test_call_shenlisi_0234(self):
         """检查视频呼叫-未订购每月10G用户--用户在WiFi环境下不提示此类弹窗"""
         # 1.客户端已登录

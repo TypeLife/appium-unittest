@@ -96,6 +96,8 @@ class Preconditions(WorkbenchPreconditions):
         mp.click_workbench()
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
+        # 查找并点击所有展开元素
+        wbp.find_and_click_open_element()
         wbp.click_add_group_messenger()
         n = 1
         # 解决工作台不稳定问题
@@ -227,7 +229,7 @@ class MassMessengerTest(TestCase):
             wp.open_message_page()
             return
         else:
-            current_mobile().reset_app()
+            current_mobile().launch_app()
             Preconditions.enter_message_page()
 
     def default_tearDown(self):
@@ -306,14 +308,16 @@ class MassMessengerTest(TestCase):
         wp.click_organization()
         org=Organization()
         org.wait_for_page_load()
-        org.click_text("添加联系人")
-        time.sleep(2)
-        org.click_text("从手机通讯录添加")
-        sccp = SelectCompanyContactsPage()
-        sccp.wait_for_page_load()
-        sccp.click_one_contact("和飞信电话")
-        sccp.click_sure()
-        org.wait_for_page_load()
+        if not org.is_exit_element_by_text_swipe("和飞信电话"):
+            org.click_text("添加联系人")
+            time.sleep(2)
+            org.click_text("从手机通讯录添加")
+            sccp = SelectCompanyContactsPage()
+            sccp.wait_for_page_load()
+            sccp.click_one_contact("和飞信电话")
+            sccp.click_sure()
+            org.click_back()
+            org.wait_for_page_load()
         org.click_back()
         wp.wait_for_page_load()
         # 点击群发信使
@@ -329,7 +333,7 @@ class MassMessengerTest(TestCase):
         # 点击指定联系人
         sccp = SelectCompanyContactsPage()
         sccp.wait_for_page_load()
-        sccp.click_text("和飞信电话")
+        sccp.click_one_contact("和飞信电话")
         time.sleep(3)
         sccp.click_text("和飞信电话")
         if sccp.is_left_head_exit():
@@ -362,7 +366,7 @@ class MassMessengerTest(TestCase):
         # 点击指定联系人
         sccp = SelectCompanyContactsPage()
         sccp.wait_for_page_load()
-        sccp.click_text("和飞信电话")
+        sccp.click_one_contact("和飞信电话")
         if not sccp.is_left_head_exit():
             raise AssertionError("找不到搜索栏左侧被点击人员人名和头像")
         #返回
@@ -556,6 +560,7 @@ class MassMessengerAllTest(TestCase):
         self.assertEquals(sccp.is_exist_select_contacts_name("佬3"), True)
         # 点击部门已选成员图像取消勾选
         sccp.click_contacts_image_by_name("大佬1")
+        time.sleep(2)
         # 点击顶部已选成员信息移除成员
         sccp.click_select_contacts_name("佬2")
         # 点击确定

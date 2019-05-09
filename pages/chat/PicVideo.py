@@ -66,7 +66,11 @@ class PicVideoPage(BasePage):
     @TestLogger.log()
     def delete_video(self):
         """删除视频"""
+        current = 0
         while True:
+            current += 1
+            if current > 20:
+                return
             if not self.is_exist_video():
                 break
             self.press_video_to_do("删除")
@@ -83,7 +87,11 @@ class PicVideoPage(BasePage):
     @TestLogger.log()
     def clear_record(self):
         """清除图片与视频记录"""
+        current = 0
         while True:
+            current += 1
+            if current > 20:
+                return
             if not self._is_element_present(self.__class__.__locators['图片与视频']):
                 break
             el = self.get_element(self.__class__.__locators['图片与视频'])

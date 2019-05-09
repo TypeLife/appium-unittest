@@ -616,29 +616,32 @@ class MsgGroupChatTest(TestCase):
         cpp.wait_for_card_page_load()
         cpp.send_card()
 
-    # @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
-    # def test_msg_group_chat_0030(self):
-    #     """在群聊聊天会话页面，发送名片消息"""
-    #     # 1.在当前聊天会话页面，点击输入框上方的名片图标，可进入到名片详情页面
-    #     gcp = GroupChatPage()
-    #     gcp.click_profile()
-    #     # 2.在名片详情页面，不可以搜索选择陌生联系人名片，进行发送
-    #     cpp = ChatProfilePage()
-    #     cpp.wait_for_page_load()
-    #     # names = cpp.get_contacts_name()
-    #     names = cpp.get_first_page_contacts_name()
-    #     # 构造陌生联系人名
-    #     name = ""
-    #     while True:
-    #         info = "在名片详情页面，不可以搜索选择陌生联系人名片，进行发送"
-    #         name = random.choices(info, k=3)
-    #         if name not in names:
-    #             break
-    #     cpp.search(name)
-    #     flag = cpp.select_card()
-    #     self.assertFalse(flag)
-    #     cpp.click_back()
-    #     gcp.wait_for_page_load()
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_group_chat_0030(self):
+        """在群聊聊天会话页面，发送名片消息"""
+        # 1.在当前聊天会话页面，点击输入框上方的名片图标，可进入到名片详情页面
+        gcp = GroupChatPage()
+        gcp.click_profile()
+        # 2.在名片详情页面，不可以搜索选择陌生联系人名片，进行发送
+        cpp = ChatProfilePage()
+        cpp.wait_for_page_load()
+        # names = cpp.get_contacts_name()
+        names = cpp.get_first_page_contacts_name()
+        # 构造陌生联系人名
+        name = ""
+        while True:
+            info = "在名片详情页面，不可以搜索选择陌生联系人名片，进行发送"
+            name = random.choices(info, k=3)
+            if name not in names:
+                break
+        cpp.search(name)
+        # flag = cpp.select_card()
+        # self.assertFalse(flag)
+        time.sleep(1)
+        # 由于页面元素原因，拿“手机联系人”文本做判断是否搜索成功
+        self.assertEquals(cpp.is_text_present("手机联系人"), False)
+        cpp.click_back()
+        gcp.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_group_chat_0033(self):

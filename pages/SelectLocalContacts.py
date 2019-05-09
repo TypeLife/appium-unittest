@@ -1,5 +1,6 @@
 from appium.webdriver.common.mobileby import MobileBy
 import re
+import time
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 
@@ -187,7 +188,7 @@ class SelectLocalContactsPage(BasePage):
 
     def page_up(self):
         """向上滑动一页"""
-        self.swipe_by_direction(self.__class__.__locators['容器列表'], 'up')
+        self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
 
     def swipe_to_top(self, times=20):
         """滑动到顶部"""
@@ -209,7 +210,11 @@ class SelectLocalContactsPage(BasePage):
         else:
             raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
         flag = True
+        current = 0
         while flag:
+            current += 1
+            if current > 20:
+                return
             self.page_up()
             els = self.get_elements(self.__class__.__locators["联系人名"])
             for el in els:
@@ -223,6 +228,7 @@ class SelectLocalContactsPage(BasePage):
     @TestLogger.log()
     def swipe_select_one_member_by_name(self, name, times=15):
         """通过人名选择一个联系人"""
+        time.sleep(2)
         while times > 0:
             els = self.get_elements((MobileBy.XPATH, '//*[@text ="%s"]' % name))
             if els:

@@ -59,7 +59,7 @@ class ContactDetailsPage(BasePage):
 
     @TestLogger.log("更改手机号码")
     def change_mobile_number(self):
-        self.input_text(self.__locators["电话号码"], "13800138006")
+        self.input_text(self.__locators["电话号码"], "13800138010")
 
     @TestLogger.log("点击呼叫")
     def send_call_number(self):

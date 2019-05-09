@@ -523,7 +523,11 @@ class BaseChatPage(BasePage):
     @TestLogger.log()
     def clear_msg(self):
         """清除会话窗的消息"""
+        current = 0
         while True:
+            current += 1
+            if current > 20:
+                return
             els = self.get_elements(self.__class__.__locators["消息文本内容"])
             if not els:
                 break
