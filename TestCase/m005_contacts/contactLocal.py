@@ -210,7 +210,10 @@ class ContactsLocal(TestCase):
 
                 # 连接手机
                 Preconditions.connect_mobile('Android-移动')
+                Preconditions.make_already_in_message_page()
                 current_mobile().hide_keyboard_if_display()
+                conts = ContactsPage()
+                conts.open_contacts_page()
                 # 导入数据
                 for name, number in required_contacts:
                     # Preconditions.create_contacts_if_not_exits(name, number)
@@ -342,8 +345,8 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        # GroupPage = GroupListPage()
-        # GroupPage.open_contacts_page()
+        GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
         lcontact.input_search_text("张无忌")
@@ -994,15 +997,15 @@ class ContactsLocal(TestCase):
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text("1-a")
+        lcontact.input_search_text("给个红包1")
         lcontact.hide_keyboard()
         time.sleep(1)
-        lcontact.is_text_present("1-a")
+        lcontact.is_text_present("给个红包1")
         time.sleep(1)
-        lcontact.click_text("1-a")
+        lcontact.click_text("给个红包1")
         time.sleep(1)
-        lcontact.is_text_present("1-a")
-        lcontact.is_text_present("6765 6004")
+        lcontact.is_text_present("给个红包1")
+        lcontact.is_text_present("13800138000")
         lcontact.click_back_by_android(times=2)
 
 
@@ -1020,15 +1023,15 @@ class ContactsLocal(TestCase):
         time.sleep(1)
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text('67656004')
+        lcontact.input_search_text('13800138000')
         lcontact.hide_keyboard()
         time.sleep(1)
-        lcontact.is_text_present("1-a")
+        lcontact.is_text_present("给个红包1")
         time.sleep(1)
-        lcontact.click_text("1-a")
+        lcontact.click_text("给个红包1")
         time.sleep(1)
-        lcontact.is_text_present("1-a")
-        lcontact.is_text_present("6765 6004")
+        lcontact.is_text_present("给个红包1")
+        lcontact.is_text_present("13800138000")
         lcontact.click_back_by_android(times=2)
 
 
@@ -1673,29 +1676,13 @@ class ContactsLocal(TestCase):
         GroupPage = GroupListPage()
         # GroupPage.open_contacts_page()
         time.sleep(1)
-        GroupPage.click_contact_element()
-        time.sleep(1)
+        ContactsPage().select_contacts_by_name('大佬4')
+        time.sleep(2)
         GroupPage.page_contain_element(locator='语音通话')
         GroupPage.page_contain_element(locator='视频通话')
         GroupPage.page_contain_element(locator='分享名片')
         GroupPage.click_share_button()
         GroupPage.click_back_by_android(times=2)
-
-
-    @tags('ALL', 'CONTACT', 'CMCC')
-    def test_contacts_chenjixiang_0083(self):
-        """测试点击联系人跳转到profile页"""
-        GroupPage = GroupListPage()
-        # GroupPage.open_contacts_page()
-        time.sleep(1)
-        GroupPage.click_contact_element()
-        time.sleep(1)
-        GroupPage.page_contain_element(locator='语音通话')
-        GroupPage.page_contain_element(locator='视频通话')
-        GroupPage.page_contain_element(locator='分享名片')
-        GroupPage.click_share_button()
-        GroupPage.click_back_by_android(times=2)
-
 
 
     @tags('ALL', 'CONTACTS', 'CMCC')

@@ -94,7 +94,7 @@ class VoiceAnnouncementTest(TestCase):
         # 3、查看本月剩余通知条数权益是否正常减去已发送的数量
         vnp = VoiceNoticePage()
         vnp.wait_for_page_loads()
-        time.sleep(2)
+        time.sleep(3)
         if vnp.is_text_present("本月剩余通知 50 条"):
             #创建语音通知
             vnp.click_text("创建语音通知")
@@ -111,6 +111,7 @@ class VoiceAnnouncementTest(TestCase):
             vnp.click_send()
             vnp = VoiceNoticePage()
             vnp.wait_for_page_loads()
+            time.sleep(5)
             if not vnp.is_text_present("本月剩余通知 49 条"):
                 raise AssertionError("剩余条数无法正常减1")
         else:
@@ -180,6 +181,7 @@ class VoiceAnnouncementTest(TestCase):
             raise AssertionError("不可正常跳转到充值页面")
         current_mobile().back()
         vnp.wait_for_page_loads()
+        time.sleep(3)
 
     @tags('ALL', "CMCC", 'workbench', 'YYTZ')
     def test_YYTZ_0008(self):
@@ -221,15 +223,16 @@ class VoiceAnnouncementTest(TestCase):
         time.sleep(2)
         sc = SelectContactsPage()
         sc.click_text("选择企业通讯录联系人")
-        time.sleep(2)
-        if sc.is_text_present("bm1"):
+        time.sleep(5)
+        ''
+        if sc.swipe_and_find_element("bm1"):
             time.sleep(2)
-            sc.click_text("bm1")
+            sc.click_element_("bm1")
             time.sleep(2)
             aa = sc.get_firm_contacts_name_list()
             sc.click_text(aa[0])
             current_mobile().back()
-            sc.click_text("bm2")
+            sc.click_element_("bm2")
             time.sleep(2)
             sc.click_text(aa[1])
             if not sc.is_text_present("2/1000"):
@@ -1767,7 +1770,7 @@ class VoiceAnnouncementTest(TestCase):
         sc = SelectContactsPage()
         sc.click_text("选择企业通讯录联系人")
         time.sleep(2)
-        if sc.is_text_present("bm1"):
+        if sc.swipe_and_find_element("bm1"):
             time.sleep(2)
             sc.click_text("bm1")
             time.sleep(2)
@@ -1796,6 +1799,7 @@ class VoiceAnnouncementTest(TestCase):
             workbench.open_message_page()
             Preconditions.create_sub_department("bm1")
             Preconditions.create_sub_department("bm2")
+            time.sleep(5)
             workbench.open_workbench_page()
             time.sleep(2)
             if workbench.is_on_welcome_page():
@@ -1820,12 +1824,12 @@ class VoiceAnnouncementTest(TestCase):
             sc = SelectContactsPage()
             sc.click_text("选择企业通讯录联系人")
             time.sleep(2)
-            sc.click_text("bm1")
+            sc.click_one_contact("bm1")
             time.sleep(2)
             aa = sc.get_firm_contacts_name_list()
             sc.click_text(aa[0])
             current_mobile().back()
-            sc.click_text("bm2")
+            sc.click_one_contact("bm2")
             time.sleep(2)
             sc.click_text(aa[1])
             if not sc.is_text_present("2/1000"):

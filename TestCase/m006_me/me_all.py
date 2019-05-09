@@ -16,6 +16,7 @@ from pages.me.MeCardName import MeCardNamePage
 from pages.me.MeEditUserProfile import MeEditUserProfilePage
 from pages.me.MeViewUserProfile import MeViewUserProfilePage
 from pages.me.MeWefare import MeSetWefarePage
+from preconditions.BasePreconditions import WorkbenchPreconditions
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -30,7 +31,7 @@ REQUIRED_MOBILES = {
 }
 
 
-class Preconditions(object):
+class Preconditions(WorkbenchPreconditions):
     """前置条件"""
 
     @staticmethod
@@ -376,6 +377,23 @@ class Preconditions(object):
         GroupChatPage().wait_for_page_load()
         GroupChatPage().click_back()
 
+    @staticmethod
+    def make_sure_group_have_member():
+        fail_time = 5
+        Preconditions.make_already_in_message_page()
+        while fail_time:
+            try:
+                Preconditions.make_already_in_message_page()
+                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
+                Preconditions.create_he_contacts(contact_names)
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "13800137005"), ('郑海贵', "13802883296")]
+                Preconditions.create_he_contacts2(contact_names2)
+                fail_time = 0
+            except:
+                fail_time -= 1
+        Preconditions.make_already_in_me_all_page()
+
 
 class MeAllTest(TestCase):
     """_
@@ -385,6 +403,61 @@ class MeAllTest(TestCase):
     表格：我页面
 
     """
+
+    # @classmethod
+    # def setUpClass(cls):
+        # Preconditions.select_mobile('Android-移动')
+        # # 导入测试联系人、群聊
+        # fail_time1 = 0
+        # flag1 = False
+        # from dataproviders import contact2
+        # while fail_time1 < 3:
+        #     try:
+        #         required_contacts = contact2.get_preset_contacts()
+        #         required_contacts.append(('自己号码', current_mobile().get_cards(CardType.CHINA_MOBILE)[0]))
+        #         conts = ContactsPage()
+        #         current_mobile().hide_keyboard_if_display()
+        #         Preconditions.make_already_in_message_page()
+        #         conts.open_contacts_page()
+        #         try:
+        #             if conts.is_text_present("发现SIM卡联系人"):
+        #                 conts.click_text("显示")
+        #         except:
+        #             pass
+        #         for name, number in required_contacts:
+        #             # 创建联系人
+        #             conts.create_contacts_if_not_exits(name, number)
+        #         required_group_chats = contact2.get_preset_group_chats()
+        #         conts.open_group_chat_list()
+        #         group_list = GroupListPage()
+        #         for group_name, members in required_group_chats:
+        #             group_list.wait_for_page_load()
+        #             # 创建群
+        #             group_list.create_group_chats_if_not_exits(group_name, members)
+        #         group_list.click_back()
+        #         conts.open_message_page()
+        #         flag1 = True
+        #     except:
+        #         fail_time1 += 1
+        #     if flag1:
+        #         break
+    #
+    #     # 导入团队联系人
+    #     fail_time2 = 0
+    #     flag2 = False
+    #     while fail_time2 < 5:
+    #         try:
+    #             Preconditions.make_already_in_message_page()
+    #             contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
+    #             Preconditions.create_he_contacts(contact_names)
+    #             contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+    #                               ('陈丹丹', "13800137004"), ('alice', "13800137005"), ('郑海贵', "13802883296")]
+    #             Preconditions.create_he_contacts2(contact_names2)
+    #             flag2 = True
+    #         except:
+    #             fail_time2 += 1
+    #         if flag2:
+    #             break
 
     def default_setUp(self):
         """确保每个用例运行前在我的会话页面"""
@@ -625,7 +698,7 @@ class MeAllTest(TestCase):
         scp.click_he_contacts()
         shp = SelectHeContactsPage()
         shp.wait_for_page_load()
-        team_name = shp.get_team_names()[3]
+        team_name = shp.get_team_names()[1]
         if not len(team_name) > 0:
             raise AssertionError("团队名为空，请新建团队")
         # 3.点击任意和通讯录名称
@@ -633,7 +706,7 @@ class MeAllTest(TestCase):
         sdp = SelectHeContactsDetailPage()
         sdp.wait_for_page_load()
         name = sdp.get_contacts_names()[1]
-        if not len(name) > 0:
+        if not len(name) > 1:
             raise AssertionError("和通讯录为空，请新建通讯录")
         sdp.select_one_linkman(name)
         mnp = MeCardNamePage()
@@ -676,7 +749,7 @@ class MeAllTest(TestCase):
         scp.click_he_contacts()
         shp = SelectHeContactsPage()
         shp.wait_for_page_load()
-        team_name = shp.get_team_names()[3]
+        team_name = shp.get_team_names()[1]
         if not len(team_name) > 0:
             raise AssertionError("群名为空，请新建群聊")
         # 3.点击任意和通讯录团队名称
@@ -1140,7 +1213,7 @@ class MeAllTest(TestCase):
         Preconditions.make_already_in_message_page()
         Preconditions.make_already_delete_my_group()
 
-    @unittest.skip('  ')
+    @unittest.skip('包含企业群无法删除')
     def test_me_all_028(self):
         """分享名片-选择一个群-用户未加入任何群聊"""
         # 0.检验是否跳转到我页面,点击进入查看并编辑资料
@@ -1368,7 +1441,7 @@ class MeAllTest(TestCase):
         mep1.click_cancel_mod()
         mup.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    @unittest.skip('用例跳过，后台无法保存')
     def test_me_all_035(self):
         """“编辑资料” 头像设置"""
         # 0-1.检验是否跳转到我页面
@@ -1427,7 +1500,7 @@ class MeAllTest(TestCase):
         mep1.click_back()
         mup.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    @unittest.skip('用例跳过，后台无法保存')
     def test_me_all_038(self):
         """“编辑资料” 头像设置-修改头像"""
         # 0-1.检验是否跳转到我页面
@@ -1455,7 +1528,7 @@ class MeAllTest(TestCase):
         self.assertEquals(mep1.is_toast_save_success(), True)
         mup.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    @unittest.skip('用例跳过，后台无法保存')
     def test_me_all_039(self):
         """“编辑资料” 头像设置-多次选择图片"""
         # 0-1.检验是否跳转到我页面
@@ -1544,7 +1617,7 @@ class MeAllTest(TestCase):
         mep1.click_cancel_mod()
         mup.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    @unittest.skip('用例跳过，后台无法保存')
     def test_me_all_044(self):
         """“编辑资料” 除了姓名,其他为空"""
         # 1.检验是否跳转到我页面
@@ -1567,7 +1640,7 @@ class MeAllTest(TestCase):
         self.assertEquals(mep1.is_toast_save_success(), True)
         mup.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    @unittest.skip('用例跳过，后台无法保存')
     def test_me_all_045(self):
         """“验证我-个人资料-编辑-编辑名称"""
         # 1.检验是否跳转到我页面
@@ -1710,7 +1783,7 @@ class MeAllTest(TestCase):
         mep1.click_cancel_mod()
         mup.click_back()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    @unittest.skip('用例跳过，后台无法保存')
     def test_me_all_051(self):
         """“编辑资料” 邮箱字段输入特殊字符"""
         # 1.检验是否跳转到我页面
@@ -1760,7 +1833,7 @@ class MeAllTest(TestCase):
         else:
             pass
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
+    @unittest.skip('用例跳过，后台无法保存')
     def test_me_all_053(self):
         """编辑个人资料-编辑之后返回"""
         # 1.检验是否跳转到我页面
@@ -2210,7 +2283,7 @@ class MeAllTest(TestCase):
         Preconditions.make_already_in_message_page()
         Preconditions.make_already_delete_my_group()
 
-    @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
+    @unittest.skip('包含企业群无法删除')
     def test_me_all_076(self):
         """我的二维码分享-用户未加入或创建任何群组"""
         # 0.检验是否跳转到我页面,点击进入查看并编辑资料
@@ -2442,7 +2515,7 @@ class MeAllTest(TestCase):
             mep.set_network_status(6)
 
     # @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me0')
-    @unittest.skip('错误状态描述不同')
+    @unittest.skip('错误状态页面不加载')
     def test_me_all_396(self):
         """多方电话网络异常展示"""
         # 0.检验是否跳转到我页面
@@ -2568,7 +2641,6 @@ class MeAllTest(TestCase):
         # 3.点击任意一个福利活动
         mwp.click_welfare_activities()
         mwp.wait_for_page_load_welfare_activities()
-        # mwp.page_should_contain_text("网页无法打开")
         time.sleep(15)
         mwp.page_should_contain_text("网络出错")
         mwp.click_back()
@@ -2614,8 +2686,8 @@ class MeAllTest(TestCase):
         slp.selecting_local_contacts_by_name("和飞信电话")
         slp.click_sure_forward()
         self.assertEquals(slp.is_toast_exist("已转发"), True)
-        mwp.wait_for_page_load_welfare_activities()
-        mwp.page_should_contain_text("活动规则")
+        # mwp.wait_for_page_load_welfare_activities()
+        # mwp.page_should_contain_text("活动规则")
         # 7.点击返回
         mwp.click_close_welfare_activities()
 

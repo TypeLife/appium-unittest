@@ -108,6 +108,9 @@ class ContactPage(TestCase):
                 # 连接手机
                 Preconditions.connect_mobile('Android-移动')
                 current_mobile().hide_keyboard_if_display()
+                Preconditions.make_already_in_message_page()
+                conts = ContactsPage()
+                conts.open_contacts_page()
                 # 导入数据
                 for name, number in required_contacts:
                   # Preconditions.create_contacts_if_not_exits(name, number)
@@ -153,7 +156,7 @@ class ContactPage(TestCase):
         contacts.page_should_contain_text('群聊')
         contacts.page_should_contain_text('标签分组')
         contacts.page_should_contain_text('公众号')
-        contacts.page_should_contain_text('创建团队')
+        contacts.page_contain_element('创建团队')
         #右上角
         contacts.page_contain_element_add()
 
@@ -522,7 +525,7 @@ class ContactPage(TestCase):
         time.sleep(2)
         select_contact=SelectContactsPage()
         select_contact.select_local_contacts()
-        select_contact.select_one_contact_by_name('大佬2')
+        select_contact.swipe_and_find_element('大佬2')
         time.sleep(2)
         select_contact.page_should_contain_text('发送名片')
         SelectOneGroupPage().click_share_business_card()

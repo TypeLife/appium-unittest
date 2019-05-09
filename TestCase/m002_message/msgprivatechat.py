@@ -34,10 +34,10 @@ class MsgPrivateChatMsgList(TestCase):
     表格：单聊
     """
 
-    @classmethod
-    def setUpClass(cls):
-        Preconditions.select_mobile('Android-移动')
-        current_mobile().launch_app()
+    # @classmethod
+    # def setUpClass(cls):
+    #     Preconditions.select_mobile('Android-移动')
+    #     current_mobile().launch_app()
 
     def default_setUp(self):
         """确保每个用例运行前在消息页面"""
@@ -354,7 +354,6 @@ class MsgPrivateChatMsgSetting(TestCase):
         chat = SingleChatPage()
         # 1.点击右上角的设置按钮,进入聊天设置页面
         chat.click_setting()
-        setting.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0002(self):
@@ -508,6 +507,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.click_back()
         chat = SingleChatPage()
         # 点击图片按钮
+        chat.wait_for_page_load()
         chat.click_pic()
         cpp = ChatPicPage()
         cpp.wait_for_page_load()
@@ -839,9 +839,9 @@ class MsgPrivateChatMsgSetting(TestCase):
         group_set.click_delete_and_exit2()
         time.sleep(1)
         group_set.click_sure()
-        chat.wait_for_page_load()
+        chat.wait_for_page_load(timeout=60)
         chat.click_setting()
-        setting.wait_for_page_load()
+        current_mobile().launch_app()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0031(self):

@@ -374,5 +374,10 @@ class ContactsPage(FooterPage):
     @TestLogger.log()
     def page_contain_element(self,locator):
         """页面包含元素"""
-        # self.find_element_by_swipe()
-        self.page_should_contain_element(self.__class__.__locators[locator])
+        self.find_element_by_swipe(locator)
+        return self.page_should_contain_element(self.__class__.__locators[locator])
+
+
+    # @TestLogger.log('判断元素是否存在')
+    # def page_contain_element(self, locator='创建团队'):
+    #     return self.page_should_contain_element(self.__class__.__locators[locator])

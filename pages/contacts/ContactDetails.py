@@ -59,7 +59,7 @@ class ContactDetailsPage(BasePage):
 
     @TestLogger.log("更改手机号码")
     def change_mobile_number(self):
-        self.input_text(self.__locators["电话号码"], "13800138010")
+        self.input_text(self.__locators["电话号码"],'13800138789')
 
     @TestLogger.log("点击呼叫")
     def send_call_number(self):
@@ -69,7 +69,7 @@ class ContactDetailsPage(BasePage):
 
     @TestLogger.log("设置授权窗口")
     def cancel_permission(self):
-        time.sleep(3)
+        time.sleep(1)
         self.click_element(self.__locators["暂不开启"])
 
     @TestLogger.log("挂断通话")

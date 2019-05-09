@@ -113,7 +113,6 @@ class LoginPreconditions(object):
         mess.open_contacts_page()
         contacts = ContactsPage()
         time.sleep(4)
-        contacts.wait_for_page_load()
         names = contacts.get_contacts_name()
         if '本机' in names:
             names.remove('本机')
@@ -297,6 +296,8 @@ class WorkbenchPreconditions(LoginPreconditions):
             current_mobile().back()
             workbench = WorkbenchPage()
             workbench.wait_for_page_load()
+            time.sleep(3)
+            current_mobile().back()
             workbench.open_message_page()
 
     @staticmethod

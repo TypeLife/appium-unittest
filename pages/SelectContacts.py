@@ -85,6 +85,8 @@ class SelectContactsPage(BasePage):
         'A':(MobileBy.XPATH,'//*[@text ="A"]'),
         'K': (MobileBy.XPATH, '//*[@text ="K"]'),
         "字母栏":(MobileBy.ID,'	com.chinasofti.rcs:id/contact_index_bar_container'),
+        'bm1': (MobileBy.XPATH, "//*[contains(@text, 'bm1')]"),
+        'bm2': (MobileBy.XPATH, "//*[contains(@text, 'bm2')]"),
 
     }
 
@@ -352,7 +354,7 @@ class SelectContactsPage(BasePage):
     @TestLogger.log()
     def click_one_contact(self, contactName):
         """选择特定联系人"""
-        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[@text="%s"]' % contactName))
+        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[contains(@text, "%s")]' % contactName))
         if el:
             el.click()
             return el

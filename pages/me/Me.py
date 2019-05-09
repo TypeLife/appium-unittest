@@ -274,9 +274,11 @@ class MePage(FooterPage):
 
     @TestLogger.log()
     def _find_text_menu(self, locator):
+        import time
         if not self.is_text_present(locator):
             # 找不到就翻页找到菜单再点击，
             self.scroll_to_top()
+            time.sleep(1.5)
             if self.is_text_present(locator):
                 return True
             max_try = 5
@@ -284,6 +286,7 @@ class MePage(FooterPage):
             while current < max_try:
                 current += 1
                 self.page_down()
+                time.sleep(1.5)
                 if self.is_text_present(locator):
                     return True
                 if self._is_on_the_end_of_menu_view():

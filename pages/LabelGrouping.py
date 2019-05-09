@@ -331,6 +331,24 @@ class LabelGroupingPage(ContactsSelector, BasePage):
         self.select_local_contacts(*member_list)
         return actual
 
+    @TestLogger.log('创建分组')
+    def create_a_group(self, group_name):
+        """
+        创建分组
+        :param group_name: 分组名
+        :return:
+        """
+        self.click_new_create_group()
+        self.wait_for_create_label_grouping_page_load()
+        self.input_label_grouping_name(group_name)
+        self.click_sure()
+        if self.is_text_present('群组已存在'):
+            self.click_back()
+        else:
+            self.click_back_by_android(times=2)
+
+
+
     @TestLogger.log('判断点击确定后“群组已存在”提示是否弹出')
     def is_group_exist_tips_popup(self):
         try:

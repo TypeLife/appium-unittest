@@ -308,14 +308,16 @@ class MassMessengerTest(TestCase):
         wp.click_organization()
         org=Organization()
         org.wait_for_page_load()
-        org.click_text("添加联系人")
-        time.sleep(2)
-        org.click_text("从手机通讯录添加")
-        sccp = SelectCompanyContactsPage()
-        sccp.wait_for_page_load()
-        sccp.click_one_contact("和飞信电话")
-        sccp.click_sure()
-        org.wait_for_page_load()
+        if not org.is_exit_element_by_text_swipe("和飞信电话"):
+            org.click_text("添加联系人")
+            time.sleep(2)
+            org.click_text("从手机通讯录添加")
+            sccp = SelectCompanyContactsPage()
+            sccp.wait_for_page_load()
+            sccp.click_one_contact("和飞信电话")
+            sccp.click_sure()
+            org.click_back()
+            org.wait_for_page_load()
         org.click_back()
         wp.wait_for_page_load()
         # 点击群发信使
@@ -331,7 +333,7 @@ class MassMessengerTest(TestCase):
         # 点击指定联系人
         sccp = SelectCompanyContactsPage()
         sccp.wait_for_page_load()
-        sccp.click_text("和飞信电话")
+        sccp.click_one_contact("和飞信电话")
         time.sleep(3)
         sccp.click_text("和飞信电话")
         if sccp.is_left_head_exit():
@@ -364,7 +366,7 @@ class MassMessengerTest(TestCase):
         # 点击指定联系人
         sccp = SelectCompanyContactsPage()
         sccp.wait_for_page_load()
-        sccp.click_text("和飞信电话")
+        sccp.click_one_contact("和飞信电话")
         if not sccp.is_left_head_exit():
             raise AssertionError("找不到搜索栏左侧被点击人员人名和头像")
         #返回

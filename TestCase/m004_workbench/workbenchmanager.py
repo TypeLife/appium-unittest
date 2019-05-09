@@ -125,4 +125,5 @@ class WorkBenchManagerTest(TestCase):
         # 重连网络
         gcp = GroupChatPage()
         gcp.set_network_status(6)
+        time.sleep(8)
 

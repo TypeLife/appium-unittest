@@ -580,9 +580,8 @@ class MsgGroupChatTest(TestCase):
         local_file.click_send()
         self.test_msg_weifenglian_qun_0006()
         GroupChatPage().click_back()
-        group_name = Preconditions.get_group_chat_name()
         MessagePage().wait_for_page_load()
-        MessagePage().delete_message_record_by_name(group_name)
+        MessagePage().clear_message_record()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_weifenglian_qun_0009(self):
@@ -2617,7 +2616,6 @@ class MsgGroupChatTest(TestCase):
     def tearDown_test_msg_weifenglian_qun_0286():
         current_mobile().turn_on_wifi()
         current_mobile().turn_on_mobile_data()
-
 
 
 class MsgGroupChatPrior(TestCase):
