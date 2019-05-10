@@ -237,7 +237,6 @@ class ContactsLocal(TestCase):
         MessagePage().click_contacts()
         time.sleep(2)
 
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0001(self):
         '''
@@ -486,7 +485,7 @@ class ContactsLocal(TestCase):
         # GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text(text='给个红包')
+        lcontact.input_search_text(text='测试号码')
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(3)
@@ -579,6 +578,7 @@ class ContactsLocal(TestCase):
         name = 'aa' * 100
         lcontact.input_search_text(text=name)
         lcontact.click_delete_button()
+        time.sleep(2)
         lcontact.is_text_present("搜索")
 
     @tags('ALL', 'CONTACTS', 'CMCC')
@@ -749,7 +749,6 @@ class ContactsLocal(TestCase):
         time.sleep(1)
         lcontact.is_text_present("无搜索结果")
 
-
     @staticmethod
     def setUp_test_contacts_chenjixiang_0024():
         Preconditions.connect_mobile('Android-移动')
@@ -816,25 +815,25 @@ class ContactsLocal(TestCase):
         '''
         # 添加手机联系人
         time.sleep(2)
-        ContactsPage().click_add()
-        creat_contact = CreateContactPage()
-        creat_contact.click_input_name()
-        creat_contact.input_name('xili')
-        creat_contact.click_input_number()
-        creat_contact.input_number('13410669616')
-        creat_contact.click_save()
-        ContactDetailsPage().click_back()
-        # 添加第二个联系人
-        ContactsPage().click_add()
-        creat_contact = CreateContactPage()
-        creat_contact.click_input_name()
-        creat_contact.input_name('xili')
-        creat_contact.click_input_number()
-        creat_contact.input_number('13410669625')
-        creat_contact.click_save()
-        time.sleep(2)
-        ContactDetailsPage().click_back()
-        time.sleep(2)
+        # 添加联系人
+        ContactsPage().click_search_box()
+        contact_search = ContactListSearchPage()
+        contact_search.wait_for_page_load()
+        contact_search.input_search_keyword('13410669625')
+        if contact_search.is_exist_contacts():
+            contact_search.click_back()
+        else:
+            contact_search.click_back()
+            ContactsPage().click_add()
+            creat_contact = CreateContactPage()
+            creat_contact.click_input_name()
+            creat_contact.input_name('xili')
+            creat_contact.click_input_number()
+            creat_contact.input_number('13410669625')
+            creat_contact.click_save()
+            time.sleep(2)
+            ContactDetailsPage().click_back()
+            time.sleep(2)
 
         lcontact = localContactPage()
         time.sleep(3)
@@ -880,7 +879,7 @@ class ContactsLocal(TestCase):
         time.sleep(2)
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text("13410669616")
+        lcontact.input_search_text("13410669625")
         lcontact.hide_keyboard()
         time.sleep(2)
         els = lcontact.get_element_number()
@@ -1470,8 +1469,6 @@ class ContactsLocal(TestCase):
         lcontact.click_back_by_android(1)
 
 
-
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0063(self):
         '''
@@ -1609,7 +1606,7 @@ class ContactsLocal(TestCase):
         lcontact.hide_keyboard()
         time.sleep(1)
         els = lcontact.get_element_number()
-        self.assertTrue(len(els)==3)
+        self.assertTrue(len(els)==2)
         lcontact.click_back_by_android()
 
 
@@ -1755,6 +1752,7 @@ class ContactsLocal(TestCase):
         els = lcontact.get_element_number()
         self.assertTrue(len(els) > 0)
         lcontact.click_back_by_android(times=2)
+
 
 if __name__=="__main__":
     unittest.main()
