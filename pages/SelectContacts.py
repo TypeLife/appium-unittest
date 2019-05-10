@@ -56,8 +56,8 @@ class SelectContactsPage(BasePage):
         "最近聊天消息名称": (MobileBy.ID, "com.chinasofti.rcs:id/tv_name"),
         "联系人横框": (MobileBy.ID, "com.chinasofti.rcs:id/contact_list_item"),
         "搜索框左边选中联系人": (MobileBy.ID, "com.chinasofti.rcs:id/image"),
-       'aaa':(MobileBy.XPATH,"*[@text='aaa']"),
-        # 'aaa':(MobileBy.ID,'com.chinasofti.rcs:id/contact_name'),
+       # 'aaa':(MobileBy.XPATH,"*[@text='aaa']"),
+        'aaa':(MobileBy.ID,'com.chinasofti.rcs:id/contact_name'),
 
         "搜索群组":(MobileBy.ID,'com.chinasofti.rcs:id/et_search'),
         "搜索1":(MobileBy.ID,'com.chinasofti.rcs:id/edit_query'),

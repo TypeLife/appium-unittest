@@ -130,6 +130,7 @@ class CallAll(TestCase):
                 required_contacts = dataproviders.get_preset_contacts()
                 conts = ContactsPage()
                 preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
+                preconditions.make_already_in_message_page()
                 current_mobile().hide_keyboard_if_display()
                 preconditions.make_already_in_message_page()
                 for name, number in required_contacts:

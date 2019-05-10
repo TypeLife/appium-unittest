@@ -90,6 +90,8 @@ class ContactsPage(FooterPage):
             contacts_name.remove("和通讯录")
         if "和飞信电话" in contacts_name:
             contacts_name.remove("和飞信电话")
+        if "本机" in contacts_name:
+            contacts_name.remove("本机")
         return contacts_name
 
     @TestLogger.log()
@@ -372,5 +374,20 @@ class ContactsPage(FooterPage):
     @TestLogger.log()
     def page_contain_element(self,locator):
         """页面包含元素"""
-        # self.find_element_by_swipe()
-        self.page_should_contain_element(self.__class__.__locators[locator])
+        self.find_element_by_swipe(locator)
+        return self.page_should_contain_element(self.__class__.__locators[locator])
+
+
+    @TestLogger.log('判断元素是否存在')
+    def is_page_contain_element(self, locator,times=10):
+        # el=self.find_element_by_swipe(self.__class__.__locators[locator])
+        if self._is_element_present(self.__class__.__locators[locator]):
+            return self.page_should_contain_element(self.__class__.__locators[locator])
+        else:
+            c = 0
+            while c < times:
+                self.page_up()
+                if self._is_element_present(self.__class__.__locators[locator]):
+                    return self.page_should_contain_element(self.__class__.__locators[locator])
+                c += 1
+            return None
