@@ -25,7 +25,7 @@ class EnterpriseContactsPage(BasePage):
     }
 
     @TestLogger.log()
-    def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
+    def wait_for_page_load(self, timeout=60, auto_accept_alerts=True):
         """等待企业通讯录首页加载"""
         try:
             self.wait_until(

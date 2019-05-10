@@ -402,7 +402,7 @@ DEVICES_CONFIG_LXD = {
         "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
-            "platformVersion": "8.1.0",
+            "platformVersion": "9",
             "deviceName": "7XB4C18907018917",
             "udid": "7XB4C18907018917",
             "automationName": "UiAutomator2",

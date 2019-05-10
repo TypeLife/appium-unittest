@@ -352,9 +352,10 @@ class AppStoreAllTest(TestCase):
     def test_YYSC_0007(self):
         """个人专区添加应用"""
 
-        # 确保不存在指定个人应用
+        # 确保不存在指定应用
         app_name = "帮助中心"
-        Preconditions.ensure_not_exists_personal_app_by_name(app_name)
+        # Preconditions.ensure_not_exists_personal_app_by_name(app_name)
+        Preconditions.ensure_not_exists_app_by_name(app_name)
         # 添加工作台里的应用
         wbp = WorkbenchPage()
         wbp.click_app_store()
@@ -362,18 +363,18 @@ class AppStoreAllTest(TestCase):
         asp.wait_for_page_load()
         # 1.点击个人专区
         asp.click_personal_area()
-        time.sleep(5)
+        asp.wait_for_personal_area_page_load()
         # 2.添加指定应用
         asp.add_app_by_name(app_name)
         time.sleep(2)
-        asp.click_sure()
-        time.sleep(5)
+        asp.click_add_app()
+        asp.wait_for_personal_area_page_load()
         # 3.添加按钮是否变化为打开按钮
         self.assertEquals(asp.get_app_button_text_by_name(app_name), "打开")
         asp.click_back()
         wbp.wait_for_workbench_page_load()
         # 4.工作台新增个人应用分组，是否存在指定应用图标
-        self.assertEquals(wbp.is_exists_app_by_name("个人应用"), True)
+        # self.assertEquals(wbp.is_exists_app_by_name("个人应用"), True)
         self.assertEquals(wbp.is_exists_app_by_name(app_name), True)
 
     @tags('ALL', 'CMCC', 'workbench', 'LXD')
@@ -390,7 +391,7 @@ class AppStoreAllTest(TestCase):
         asp.wait_for_page_load()
         # 1.点击个人专区
         asp.click_personal_area()
-        time.sleep(5)
+        asp.wait_for_personal_area_page_load()
         # 进入应用介绍页
         asp.click_text(app_name)
         # 2.等待应用介绍详情页加载
@@ -402,7 +403,7 @@ class AppStoreAllTest(TestCase):
         asp.click_sure()
         time.sleep(2)
         asp.click_back()
-        time.sleep(5)
+        asp.wait_for_personal_area_page_load()
         # 4.添加按钮是否变化为打开按钮
         self.assertEquals(asp.get_app_button_text_by_name(app_name), "打开")
         asp.click_back()
