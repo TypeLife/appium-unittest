@@ -98,14 +98,14 @@ class MeCollectionPage(BasePage):
                 file_names.append(el.text)
         else:
             return None
-        flag = 30
+        flag = 5
         while flag:
             self.page_up()
             els = self.get_elements(self.__class__.__locators["文件名"])
+            flag -= 1
             for el in els:
                 if el.text not in file_names:
                     file_names.append(el.text)
-                    flag -= 1
                 else:
                     flag = 0
         return file_names

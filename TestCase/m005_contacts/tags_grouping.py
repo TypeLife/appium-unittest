@@ -123,36 +123,6 @@ class Preconditions(LoginPreconditions):
         """后台运行"""
         current_mobile().press_home_key()
 
-    # @staticmethod
-    # def make_already_in_message_page(reset_required=False):
-    #     """
-    #     前置条件：
-    #     1.已登录客户端
-    #     2.当前在消息页面
-    #     """
-    #     if not reset_required:
-    #         message_page = MessagePage()
-    #         if message_page.is_on_this_page():
-    #             return
-    #         else:
-    #             try:
-    #                 current_mobile().terminate_app('com.chinasofti.rcs', timeout=2000)
-    #             except:
-    #                 pass
-    #             current_mobile().launch_app()
-    #         try:
-    #             message_page.wait_until(
-    #                 condition=lambda d: message_page.is_on_this_page(),
-    #                 timeout=3
-    #             )
-    #             return
-    #         except TimeoutException:
-    #             pass
-    #     Preconditions.reset_and_relaunch_app()
-    #     Preconditions.make_already_in_one_key_login_page()
-    #     login_num = Preconditions.login_by_one_key_login()
-    #     return login_num
-
     @staticmethod
     def create_contacts_if_not_exits(name, number):
         """
@@ -553,7 +523,7 @@ class TagsGroupingTest(TestCase):
         time.sleep(2)
         message='aa aa'*20
         GroupPage.send_message_to_group(message)
-        time.sleep(1)
+        time.sleep(5)
         GroupPage.page_contain_element('已转短信送达')
         GroupPage.click_back_button()
         time.sleep(1)
@@ -769,26 +739,28 @@ class TagsGroupingTest(TestCase):
     @classmethod
     def tearDownClass(cls):
         pass
-    #     try:
-    #         Preconditions.connect_mobile('Android-移动')
-    #         current_mobile().hide_keyboard_if_display()
-    #         Preconditions.make_already_in_message_page()
-    #         conts_page = ContactsPage()
-    #         conts_page.open_contacts_page()
-    #         conts_page.click_label_grouping()
-    #         lg = LabelGroupingPage()
-    #         lg.wait_for_page_load()
-    #         lg.delete_all_label()
-    #     except:
-    #         import traceback
-    #         traceback.print_exc()
-    #     try:
-    #         current_mobile().hide_keyboard_if_display()
-    #         Preconditions.make_already_in_message_page()
-    #         cdp=ContactDetailsPage()
-    #         cdp.delete_all_contact()
-    #     except:
-    #         traceback.print_exc()
+
+
+        # try:
+        #     Preconditions.connect_mobile('Android-移动')
+        #     current_mobile().hide_keyboard_if_display()
+        #     Preconditions.make_already_in_message_page()
+        #     conts_page = ContactsPage()
+        #     conts_page.open_contacts_page()
+        #     conts_page.click_label_grouping()
+        #     lg = LabelGroupingPage()
+        #     lg.wait_for_page_load()
+        #     lg.delete_all_label()
+        # except:
+        #     import traceback
+        #     traceback.print_exc()
+        # try:
+        #     current_mobile().hide_keyboard_if_display()
+        #     Preconditions.make_already_in_message_page()
+        #     cdp=ContactDetailsPage()
+        #     cdp.delete_all_contact()
+        # except:
+        #     traceback.print_exc()
 
 
 

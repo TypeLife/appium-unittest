@@ -126,6 +126,7 @@ class ContactPage(TestCase):
                     group_list.create_group_chats_if_not_exits(group_name, members)
                 group_list.click_back()
                 conts.open_message_page()
+                return
 
             except:
                 fail_time += 1
@@ -156,7 +157,7 @@ class ContactPage(TestCase):
         contacts.page_should_contain_text('群聊')
         contacts.page_should_contain_text('标签分组')
         contacts.page_should_contain_text('公众号')
-        contacts.page_contain_element('创建团队')
+        contacts.is_page_contain_element('创建团队')
         #右上角
         contacts.page_contain_element_add()
 
@@ -525,7 +526,7 @@ class ContactPage(TestCase):
         time.sleep(2)
         select_contact=SelectContactsPage()
         select_contact.select_local_contacts()
-        select_contact.swipe_and_find_element('大佬2')
+        select_contact.click_one_contact('大佬2')
         time.sleep(2)
         select_contact.page_should_contain_text('发送名片')
         SelectOneGroupPage().click_share_business_card()
@@ -1221,7 +1222,7 @@ class ContactPage(TestCase):
 
 
     @tags('ALL', 'CMCC')
-    def test_contacts_0351(self):
+    def test_contacts_0345(self):
         """公众号详情-清空消息"""
         time.sleep(2)
         official_account_detail=OfficialAccountDetailPage()

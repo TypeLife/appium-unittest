@@ -221,6 +221,7 @@ class Preconditions(LoginPreconditions):
         """进入本地音乐目录"""
 
         # 在当前聊天会话页面，点击更多富媒体的文件按钮
+
         lgcp = LabelGroupingChatPage()
         lgcp.wait_for_page_load()
         lgcp.click_more()
@@ -1290,7 +1291,8 @@ class MsgLabelGroupingAll(TestCase):
         LableGroupDetailPage().click_back()
         LabelGroupingPage().click_back()
         ContactsPage().click_message_icon()
-        MessagePage().wait_for_page_load()
+        # MessagePage().wait_for_page_load()
+        time.sleep(5)
         MessagePage().is_iv_fail_status_present()
 
     @staticmethod
@@ -1579,11 +1581,13 @@ class MsgLabelGroupingAll(TestCase):
         else:
             sogp.page_should_contain_text('无搜索结果')
         # 返回消息页面,查看文件是否发送成功
+        time.sleep(2)
         ChatWindowPage().click_back()
         LableGroupDetailPage().click_back()
         LabelGroupingPage().click_back()
         ContactsPage().click_message_icon()
-        MessagePage().wait_for_page_load()
+        # MessagePage().wait_for_page_load()
+        time.sleep(2)
         MessagePage().is_iv_fail_status_present()
 
     @staticmethod
@@ -1975,7 +1979,7 @@ class MsgLabelGroupingAll(TestCase):
         sogp = SelectOneGroupPage()
         sogp.wait_for_page_load()
         sogp.choose_index_bar_click_element()
-        time.sleep(1)
+        time.sleep(2)
         sogp.page_should_contain_text('取消')
         sogp.page_should_contain_text('确定')
         sogp.click_sure_forward()
@@ -2125,7 +2129,8 @@ class MsgLabelGroupingAll(TestCase):
     @tags('ALL', 'CMCC', 'DEBUG_1', 'label_grouping')
     def test_msg_weifenglian_fenzu_0157(self):
         """发送位置信息"""
-        Preconditions.enter_label_grouping_chat_page()
+        # Preconditions.enter_label_grouping_chat_page()
+        time.sleep(2)
         chat=LabelGroupingChatPage()
         chat.click_more()
         ChatMorePage().click_location()

@@ -1017,9 +1017,8 @@ class MsgGroupChatTest(TestCase):
         local_file.click_send()
         self.test_msg_weifenglian_qun_0033()
         GroupChatPage().click_back()
-        group_name = Preconditions.get_group_chat_name()
         MessagePage().wait_for_page_load()
-        MessagePage().delete_message_record_by_name(group_name)
+        MessagePage().clear_message_record()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_weifenglian_qun_0036(self):
