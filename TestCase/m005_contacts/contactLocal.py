@@ -3,7 +3,7 @@ import uuid
 import time
 import threading
 from preconditions.BasePreconditions import LoginPreconditions
-from library.core.common.simcardtype import CardType
+from library.core.mobile.mobiledriver import MobileDriver
 from selenium.common.exceptions import TimeoutException
 from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
@@ -107,6 +107,14 @@ class Preconditions(LoginPreconditions):
         current_mobile().press_home_key()
 
     @staticmethod
+    def activate_app(app_id=None):
+        """激活APP"""
+        if not app_id:
+            app_id = current_mobile().driver.desired_capabilities['appPackage']
+        current_mobile().driver.activate_app(app_id)
+
+
+    @staticmethod
     def create_contacts_if_not_exits(name, number):
         """
         不存在就导入联系人数据
@@ -139,10 +147,13 @@ class Preconditions(LoginPreconditions):
             detail_page.click_back_icon()
 
 @unittest.skip("本地调试不执行")
-class ContactLocal(TestCase):
-    '''
-    通讯录测试记录-陈计祥
-    '''
+class ContactLocalhigh(TestCase):
+    """
+    模块：联系-本地联系人
+    文件位置：全量/115全量测试用例-联系(1322).xlsx--高等级用例(优先编写)
+    表格：通讯录-本地通讯录
+    author: 余梦思
+    """
     # @classmethod
     # def setUpClass(cls):
     #     # 创建联系人
@@ -193,6 +204,7 @@ class ContactLocal(TestCase):
     #         cdp.delete_all_contact()
     #     except:
     #         traceback.print_exc()
+
 
 class ContactsLocal(TestCase):
     """通讯录测试记录-陈继祥"""
@@ -1075,7 +1087,7 @@ class ContactsLocal(TestCase):
         lcontact.click_text("xika")
         time.sleep(1)
         lcontact.is_text_present("xika")
-        lcontact.is_text_present("+86 134 1055 9655")
+        lcontact.is_text_present("+8613410559655")
         lcontact.click_back_by_android(times=2)
 
 
@@ -1605,10 +1617,10 @@ class ContactsLocal(TestCase):
         lcontact.input_search_text("xili")
         lcontact.hide_keyboard()
         time.sleep(1)
-        els = lcontact.get_element_number()
-        self.assertTrue(len(els)==2)
+        els = lcontact.get_contacts_name()
+        time.sleep(1)
+        self.assertTrue(len(els)>1)
         lcontact.click_back_by_android()
-
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0069(self):
@@ -1634,7 +1646,8 @@ class ContactsLocal(TestCase):
         time.sleep(1)
         GroupPage.page_up()
         time.sleep(1)
-        els = lcontact.get_element_number()
+        els = lcontact.get_contacts_name()
+        time.sleep(1)
         self.assertTrue(len(els)>0)
         lcontact.click_back_by_android()
 
@@ -1735,7 +1748,6 @@ class ContactsLocal(TestCase):
         self.assertTrue(len(els) > 0)
         lcontact.click_back_by_android(times=2)
 
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0088(self):
         '''
@@ -1752,6 +1764,28 @@ class ContactsLocal(TestCase):
         els = lcontact.get_element_number()
         self.assertTrue(len(els) > 0)
         lcontact.click_back_by_android(times=2)
+    #
+    #
+    # @tags('ALL', 'CONTACTS', 'CMCC')
+    # def test_contacts_00001(self):
+    #     ContactsPage().select_contacts_by_name('大佬2')
+    #     contact_detail=ContactDetailsPage()
+    #     contact_detail.click_add_desktop_shortcut()
+    #     time.sleep(2)
+    #     contact_detail.click_I_know()
+    #     time.sleep(1)
+    #     if contact_detail.is_text_present('添加到主屏幕'):
+    #         contact_detail.click_sure_add_desktop_shortcut()
+    #     time.sleep(2)
+    #     Preconditions.background_app()
+    #     time.sleep(2)
+    #     contact_detail.click_text('大佬2')
+    #     time.sleep(2)
+    #     contact_detail.page_should_contain_text('添加桌面快捷方式')
+    #
+
+
+
 
 
 if __name__=="__main__":

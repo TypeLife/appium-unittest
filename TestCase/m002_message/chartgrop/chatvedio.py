@@ -1381,9 +1381,17 @@ class MsgGroupChatvedioTest(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk')
     def test_msg_group_chat_video_0073(self):
         """转发聊天内容中的已下载的图片（放大图）"""
-        # 1.检验是否当前聊天会话页面且有图片
-        Preconditions.make_already_have_my_picture()
+        # # 1.检验是否当前聊天会话页面且有图片
+        # Preconditions.make_already_have_my_picture()
         gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        # 给当前会话页面发送一张图片,保证转发的为图片
+        gcp.click_picture()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_pic_fk(1)
+        cpg.click_send()
+        time.sleep(5)
         gcp.is_on_this_page()
         # 2.打开设置-查找聊天内容
         gcp.click_setting()
@@ -1714,9 +1722,17 @@ class MsgGroupChatvedioTest(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk1')
     def test_msg_group_chat_video_0083(self):
         """保存聊天内容中的图片到本地"""
-        # 1.检验是否当前聊天会话页面且有图片
-        Preconditions.make_already_have_my_picture()
+        # # 1.检验是否当前聊天会话页面且有图片
+        # Preconditions.make_already_have_my_picture()
         gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        # 给当前会话页面发送一张图片,保证保存的为图片
+        gcp.click_picture()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_pic_fk(1)
+        cpg.click_send()
+        time.sleep(5)
         gcp.is_on_this_page()
         # 2.打开设置-查找聊天内容
         gcp.click_setting()
@@ -1786,9 +1802,17 @@ class MsgGroupChatvedioTest(TestCase):
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'debug_fk1')
     def test_msg_group_chat_video_0085(self):
         """编辑聊天内容中的图片，并发送"""
-        # 1.检验是否当前聊天会话页面且有图片
-        Preconditions.make_already_have_my_picture()
+        # # 1.检验是否当前聊天会话页面且有图片
+        # Preconditions.make_already_have_my_picture()
         gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        # 给当前会话页面发送一张图片,保证编辑的为图片
+        gcp.click_picture()
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_pic_fk(1)
+        cpg.click_send()
+        time.sleep(5)
         gcp.is_on_this_page()
         gcp.click_clean_video()
         # 2.打开设置-查找聊天内容
@@ -1851,7 +1875,6 @@ class MsgGroupChatvedioTest(TestCase):
         group_name = "a" + names[-4:]
         gsp.input_new_group_name(group_name)
         gsp.save_group_name()
-        time.sleep(2)
         self.assertEquals(gsp.is_toast_exist("修改成功"), True)
         # 3.返回群聊主页
         gsp.click_back()
@@ -2135,7 +2158,8 @@ class MsgGroupChatvedioTest(TestCase):
             gcp.wait_for_page_load()
             gcp.click_back()
 
-    @tags('ALL', 'CMCC', 'message114', 'debug_fk1', 'high')
+    # @tags('ALL', 'CMCC', 'message114', 'debug_fk1', 'high')
+    @unittest.skip("用例重复，跳过")
     def test_msg_xiaoqiu_0548(self):
         """创建10一个普通群"""
         # 1. 普通群，分享群聊邀请口令

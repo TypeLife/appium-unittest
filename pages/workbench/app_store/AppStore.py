@@ -29,7 +29,7 @@ class AppStorePage(BasePage):
     }
 
     @TestLogger.log()
-    def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
+    def wait_for_page_load(self, timeout=60, auto_accept_alerts=True):
         """等待应用商城首页加载"""
         try:
             self.wait_until(
@@ -171,6 +171,19 @@ class AppStorePage(BasePage):
         return self
 
     @TestLogger.log()
+    def wait_for_personal_area_page_load(self, timeout=30, auto_accept_alerts=True):
+        """等待个人专区页加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("网易考拉")
+            )
+        except:
+            raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
+        return self
+
+    @TestLogger.log()
     def click_personal_area(self):
         """点击个人专区"""
         self.click_element(self.__class__.__locators["个人专区"])
@@ -223,8 +236,12 @@ class AppStorePage(BasePage):
         max_try = 20
         current = 0
         while current < max_try:
+            time.sleep(5)
             if self._is_element_present(locator):
                 break
             current += 1
             self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        # 解决滑动找不到应用问题
+        time.sleep(2)
+        self.swipe_by_percent_on_screen(50, 50, 50, 30, 700)
         self.click_element(locator)

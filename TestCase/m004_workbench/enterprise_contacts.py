@@ -1,4 +1,5 @@
 import time
+import unittest
 
 from selenium.common.exceptions import TimeoutException
 
@@ -725,7 +726,7 @@ class EnterpriseContactsAllTest(TestCase):
         mp.open_workbench_page()
         wbp.wait_for_workbench_page_load()
 
-    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    @unittest.skip("用例不稳定，暂时跳过")
     def test_QYTXL_0016(self):
         """点击搜索结果未保存到本地的RCS用户进入Profile页"""
 
