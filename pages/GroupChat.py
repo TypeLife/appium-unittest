@@ -119,7 +119,7 @@ class GroupChatPage(BaseChatPage):
         self.click_element(self.__class__.__locators["设置"])
 
     @TestLogger.log()
-    def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
+    def wait_for_page_load(self, timeout=60, auto_accept_alerts=True):
         """等待群聊页面加载"""
         try:
             self.wait_until(

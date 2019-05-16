@@ -92,7 +92,7 @@ class Preconditions(WorkbenchPreconditions):
                 acp.click_text("始终允许")
             time.sleep(2)
             acp.click_text("请选择")
-            time.sleep(1)
+            time.sleep(5)
             acp.click_text("全选")
             time.sleep(1)
             acp.click_text("确认")

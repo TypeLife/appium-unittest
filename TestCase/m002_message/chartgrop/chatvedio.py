@@ -1876,6 +1876,7 @@ class MsgGroupChatvedioTest(TestCase):
         gsp.input_new_group_name(group_name)
         gsp.save_group_name()
         self.assertEquals(gsp.is_toast_exist("修改成功"), True)
+        gsp.wait_for_page_load()
         # 3.返回群聊主页
         gsp.click_back()
         gcp.wait_for_page_load()
@@ -1893,6 +1894,7 @@ class MsgGroupChatvedioTest(TestCase):
         group_name = Preconditions.get_group_chat_name()
         gsp.input_new_group_name(group_name)
         gsp.save_group_name()
+        gsp.wait_for_page_load()
         gsp.click_back()
         gcp.wait_for_page_load()
 
@@ -2321,6 +2323,9 @@ class MsgGroupChatVideoPicAllTest(TestCase):
 
     def default_tearDown(self):
         pass
+        # Preconditions.make_already_in_message_page()
+        # cdp = ContactDetailsPage()
+        # cdp.delete_all_contact()
 
     @tags('ALL', 'CMCC', 'LXD', 'high')
     def test_msg_group_chat_total_quantity_0021(self):

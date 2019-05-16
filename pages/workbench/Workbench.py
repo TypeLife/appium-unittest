@@ -549,6 +549,17 @@ class WorkbenchPage(FooterPage):
             self.click_attendance_card()
 
     @TestLogger.log()
+    def click_add_important_matters(self):
+        """点击重要事项"""
+        els = self.find_els(self.__class__.__locators['重要事项'])
+        if els:
+            els[0].click()
+        else:
+            self.add_workbench_app("重要事项")
+            time.sleep(2)
+            self.click_important_items()
+
+    @TestLogger.log()
     def add_workbench_app(self, name):
         """添加工作台里的应用"""
         self.wait_for_workbench_page_load()
