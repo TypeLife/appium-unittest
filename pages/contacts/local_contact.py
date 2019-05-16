@@ -126,6 +126,32 @@ class localContactPage(BasePage):
     def get_element_number(self,text="联系人头像"):
         return  self.get_elements(self.__locators[text])
 
+    @TestLogger.log("获取所有联系人名")
+    def get_contacts_name(self):
+        """获取所有联系人名"""
+        max_try = 8
+        current = 0
+        while current < max_try:
+            if self._is_element_present(self.__class__.__locators["联系人名"]):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        els = self.get_elements(self.__class__.__locators["联系人名"])
+        contacts_name = []
+        if els:
+            for el in els:
+                contacts_name.append(el.text)
+        else:
+            raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
+        if "和通讯录" in contacts_name:
+            contacts_name.remove("和通讯录")
+        if "和飞信电话" in contacts_name:
+            contacts_name.remove("和飞信电话")
+        if "本机" in contacts_name:
+            contacts_name.remove("本机")
+        return contacts_name
+
+
     TestLogger.log("点击搜索框")
     def click_search_box(self):
         time.sleep(1)

@@ -1808,6 +1808,7 @@ class Tag_Group(TestCase):
         slcp.click_sure()
         time.sleep(2)
         GroupPage.click_send_message_to_group()
+        time.sleep(2)
         GroupPage.click_divide_group_icon()
         time.sleep(1)
         GroupPage.page_contain_element(locator='分组联系人_标题')
@@ -1863,6 +1864,7 @@ class Tag_Group(TestCase):
         time.sleep(2)
 
         GroupPage.enter_group_message()
+        time.sleep(1)
         GroupPage.click_divide_group_icon()
         time.sleep(1)
         GroupPage.page_contain_element(locator='分组联系人_标题')
@@ -1892,6 +1894,7 @@ class Tag_Group(TestCase):
         #删除群组
         GroupPage = GroupListPage()
         GroupPage.click_back_button()
+        time.sleep(1)
         GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')

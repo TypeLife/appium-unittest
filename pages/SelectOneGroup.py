@@ -77,6 +77,17 @@ class SelectOneGroupPage(BasePage):
             (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text ="%s"]' % name))
 
     @TestLogger.log()
+    def click_one_contact(self, contactName):
+        """选择特定联系人"""
+        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[contains(@text, "%s")]' % contactName))
+        if el:
+            el.click()
+            return el
+        else:
+            print("本地联系人中无%s ，请添加此联系人再操作" % contactName)
+
+
+    @TestLogger.log()
     def click_search_group(self):
         """点击搜索群组"""
         self.click_element(self.__class__.__locators['搜索群组'])

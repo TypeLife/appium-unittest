@@ -698,7 +698,7 @@ class MeAllTest(TestCase):
         scp.click_he_contacts()
         shp = SelectHeContactsPage()
         shp.wait_for_page_load()
-        team_name = shp.get_team_names()[1]
+        team_name = shp.get_team_names()[0]
         if not len(team_name) > 0:
             raise AssertionError("团队名为空，请新建团队")
         # 3.点击任意和通讯录名称
@@ -749,7 +749,7 @@ class MeAllTest(TestCase):
         scp.click_he_contacts()
         shp = SelectHeContactsPage()
         shp.wait_for_page_load()
-        team_name = shp.get_team_names()[1]
+        team_name = shp.get_team_names()[0]
         if not len(team_name) > 0:
             raise AssertionError("群名为空，请新建群聊")
         # 3.点击任意和通讯录团队名称
@@ -2762,7 +2762,7 @@ class MeAllTest(TestCase):
         # mwp.wait_for_page_load_welfare_activities()
         # mwp.page_should_contain_text("活动规则")
         self.assertEquals(mwp.is_toast_exist("内容已经复制到剪贴板"), True)
-        time.sleep(5)
+        time.sleep(3)
         mwp.click_close_welfare_activities()
         mep.open_message_page()
         # 5.将复制内容转发到群里面

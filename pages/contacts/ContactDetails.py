@@ -55,7 +55,29 @@ class ContactDetailsPage(BasePage):
         "用户名称": (MobileBy.ID, "com.chinasofti.rcs:id/tv_profile_name"),
         "用户头像": (MobileBy.ID, "com.chinasofti.rcs:id/recyclesafeimageview_profile_photo"),
         "用户号码": (MobileBy.ID, "com.chinasofti.rcs:id/tv_phone"),
+        '添加桌面快捷方式': (MobileBy.XPATH, '//*[@text="添加桌面快捷方式"]'),
+        '我知道了': (MobileBy.XPATH, '//*[@text="我知道了"]'),
+        '快捷方式-确定添加': (MobileBy.ID, "android:id/button1"),
+        '快捷方式-取消添加': (MobileBy.ID, "android:id/button2"),
+
     }
+
+    @TestLogger.log("添加桌面快捷方式")
+    def click_add_desktop_shortcut(self):
+        time.sleep(1)
+        self.click_element(self.__locators["添加桌面快捷方式"])
+
+    @TestLogger.log("点击我知道了")
+    def click_I_know(self):
+        time.sleep(1)
+        self.click_element(self.__locators["我知道了"])
+
+    @TestLogger.log("点击确定添加快捷方式")
+    def click_sure_add_desktop_shortcut(self):
+        time.sleep(1)
+        self.click_element(self.__locators["快捷方式-确定添加"])
+
+
 
     @TestLogger.log("更改手机号码")
     def change_mobile_number(self):
@@ -272,6 +294,12 @@ class ContactDetailsPage(BasePage):
         return self._is_element_present(self.__class__.__locators["用户号码"])
 
     @TestLogger.log()
+    def is_exists_contacts_image(self):
+        """是否存在联系人头像"""
+        return self._is_element_present(self.__class__.__locators["用户头像"])
+
+
+    @TestLogger.log()
     def is_exists_message_icon(self):
         """是否存在消息图标"""
         return self._is_element_present(self.__class__.__locators["消息"])
@@ -396,3 +424,5 @@ def add(func):
             # raise ArithmeticError
 
     return wrapper
+
+
