@@ -235,7 +235,10 @@ class MassMessengerTest(TestCase):
     def default_tearDown(self):
         pass
 
-    @tags('ALL', 'CMCC', 'workbench')
+
+
+    # @tags('ALL', 'CMCC', 'workbench')
+    @unittest.skip("不稳定")
     def test_QFXS_0008(self):
         """1、点击用户本人头像"""
         mess = MessagePage()

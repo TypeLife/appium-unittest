@@ -988,7 +988,7 @@ class MsgContactSelector(TestCase):
         # 选择和通讯录联系人；下方为本地联系人列表
         scp.page_should_contain_text("选择联系人")
         scp.page_should_contain_text("搜索或输入手机号")
-        scp.page_should_contain_text("选择和通讯录联系人")
+        # scp.page_should_contain_text("选择和通讯录联系人")
         scp.page_contain_element("local联系人")
         scp.click_back()
         mess.wait_for_page_load()
@@ -1016,7 +1016,7 @@ class MsgContactSelector(TestCase):
         # 选择和通讯录联系人；下方为本地联系人列表
         scp.page_should_contain_text("选择联系人")
         scp.page_should_contain_text("搜索或输入手机号")
-        scp.page_should_contain_text("选择和通讯录联系人")
+        # scp.page_should_contain_text("选择和通讯录联系人")
         scp.page_contain_element("local联系人")
         scp.click_back()
         mess.wait_for_page_load()
@@ -1104,7 +1104,7 @@ class MsgContactSelector(TestCase):
         slcp.page_should_contain_text("选择联系人")
         # 3、顶部搜索框中，默认展示的文案是否是：搜索或输入手机号
         slcp.page_should_contain_text('搜索或输入手机号')
-        names = slcp.get_contacts_name()
+        names = list(slcp.get_contacts_name())
         # 4、在搜索框中输入搜索条件，检查不存在搜索结果时，下方是否展示：无搜索结果
         times = 60
         while times > 0:

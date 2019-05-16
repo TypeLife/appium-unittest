@@ -1496,7 +1496,10 @@ class MsgCommonGroupTest(TestCase):
         if not gcp.is_text_present("呼叫"):
             raise AssertionError("不会弹出呼叫，复制号码窗体")
         gcp.click_text("呼叫")
-        time.sleep(2)
+        time.sleep(5)
+        if gcp.is_text_present('始终允许'):
+            gcp.click_text("始终允许")
+        time.sleep(5)
         if gcp.is_text_present('始终允许'):
             gcp.click_text("始终允许")
         time.sleep(2)
@@ -5729,8 +5732,11 @@ class MsgCommonGroupAllTest(TestCase):
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
         gcp.hide_keyboard()
-        gcp.click_audio_btn()
         audio = ChatAudioPage()
+        if gcp.is_text_present("退出"):
+            audio.click_exit()
+            time.sleep(2)
+        gcp.click_audio_btn()
         if audio.wait_for_audio_type_select_page_load():
             # 点击只发送语言模式
             audio.click_only_voice()
@@ -5766,12 +5772,16 @@ class MsgCommonGroupAllTest(TestCase):
         time.sleep(8)
         Preconditions.delete_record_group_chat()
         gcp.hide_keyboard()
-        gcp.click_audio_btn()
         audio = ChatAudioPage()
+        if gcp.is_text_present("退出"):
+            audio.click_exit()
+            time.sleep(2)
+        gcp.click_audio_btn()
         if audio.wait_for_audio_type_select_page_load():
             # 点击只发送语言模式
             audio.click_only_voice()
             audio.click_sure()
+            time.sleep(2)
             if gcp.is_text_present("允许"):
                 audio.click_allow()
             time.sleep(3)
@@ -5800,8 +5810,11 @@ class MsgCommonGroupAllTest(TestCase):
         time.sleep(2)
         Preconditions.delete_record_group_chat()
         gcp.hide_keyboard()
-        gcp.click_audio_btn()
         audio = ChatAudioPage()
+        if gcp.is_text_present("退出"):
+            audio.click_exit()
+            time.sleep(2)
+        gcp.click_audio_btn()
         if audio.wait_for_audio_type_select_page_load():
             # 点击只发送语言模式
             audio.click_only_voice()
@@ -5831,8 +5844,11 @@ class MsgCommonGroupAllTest(TestCase):
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
         gcp.hide_keyboard()
-        gcp.click_audio_btn()
         audio = ChatAudioPage()
+        if gcp.is_text_present("退出"):
+            audio.click_exit()
+            time.sleep(2)
+        gcp.click_audio_btn()
         if audio.wait_for_audio_type_select_page_load():
             # 点击只发送语言模式
             audio.click_only_voice()
@@ -5878,8 +5894,11 @@ class MsgCommonGroupAllTest(TestCase):
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
         gcp.hide_keyboard()
-        gcp.click_audio_btn()
         audio = ChatAudioPage()
+        if gcp.is_text_present("退出"):
+            audio.click_exit()
+            time.sleep(2)
+        gcp.click_audio_btn()
         if audio.wait_for_audio_type_select_page_load():
             # 点击只发送语言模式
             audio.click_only_voice()
@@ -5975,6 +5994,10 @@ class MsgCommonGroupAllTest(TestCase):
         gcp = GroupChatPage()
         gcp.wait_for_page_load()
         Preconditions.delete_record_group_chat()
+        if gcp.is_text_present("退出"):
+            audio = ChatAudioPage()
+            audio.click_exit()
+            time.sleep(2)
         gcp.click_picture()
         time.sleep(2)
         if not gcp.is_text_present("原图"):

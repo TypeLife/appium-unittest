@@ -55,6 +55,12 @@ class CreateContactPage(Keyboard, BasePage):
         """输入号码"""
         self.input_text(self.__locators['输入号码'], name)
 
+    @TestLogger.log('点击输入公司')
+    def click_input_company(self):
+        """点击输入公司"""
+        self.click_element(self.__locators['输入公司'])
+
+
     @TestLogger.log('输入公司')
     def input_company(self, name):
         self.input_text(self.__locators['输入公司'], name)
@@ -63,9 +69,21 @@ class CreateContactPage(Keyboard, BasePage):
     def input_company(self, name):
         self.input_text(self.__locators['输入公司'], name)
 
+    @TestLogger.log('点击输入职位')
+    def click_input_position(self):
+        """点击输入职位"""
+        self.click_element(self.__locators['输入职位'])
+
+
     @TestLogger.log('输入职位')
     def input_position(self, name):
         self.input_text(self.__locators['输入职位'], name)
+
+    @TestLogger.log('点击输入邮箱')
+    def click_input_email(self):
+        """点击输入邮箱"""
+        self.click_element(self.__locators['输入邮箱'])
+
 
     @TestLogger.log('输入邮箱')
     def input_email_address(self, name):
