@@ -188,36 +188,36 @@ class Preconditions(LoginPreconditions):
 class TagsGroupingTest(TestCase):
     """通讯录 - 标签分组"""
 
-    @classmethod
-    def setUpClass(cls):
-        #创建联系人
-        fail_time = 0
-        import dataproviders
-
-        while fail_time < 3:
-            try:
-                # 获取需要导入的联系人数据
-                required_contacts = contact2.get_preset_contacts()
-
-                # 连接手机
-                Preconditions.connect_mobile('Android-移动')
-                Preconditions.make_already_in_message_page()
-                current_mobile().hide_keyboard_if_display()
-                conts = ContactsPage()
-                conts.open_contacts_page()
-                # 导入数据
-                for name, number in required_contacts:
-                    # Preconditions.create_contacts_if_not_exits(name, number)
-                    Preconditions.create_contacts_if_not_exits(name, number)
-
-                # # 推送resource文件到手机
-                # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
-                return
-            except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
+    # @classmethod
+    # def setUpClass(cls):
+    #     #创建联系人
+    #     fail_time = 0
+    #     import dataproviders
+    #
+    #     while fail_time < 3:
+    #         try:
+    #             # 获取需要导入的联系人数据
+    #             required_contacts = contact2.get_preset_contacts()
+    #
+    #             # 连接手机
+    #             Preconditions.connect_mobile('Android-移动')
+    #             Preconditions.make_already_in_message_page()
+    #             current_mobile().hide_keyboard_if_display()
+    #             conts = ContactsPage()
+    #             conts.open_contacts_page()
+    #             # 导入数据
+    #             for name, number in required_contacts:
+    #                 # Preconditions.create_contacts_if_not_exits(name, number)
+    #                 Preconditions.create_contacts_if_not_exits(name, number)
+    #
+    #             # # 推送resource文件到手机
+    #             # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
+    #             return
+    #         except:
+    #             fail_time += 1
+    #             import traceback
+    #             msg = traceback.format_exc()
+    #             print(msg)
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0001(self):
@@ -427,34 +427,6 @@ class TagsGroupingTest(TestCase):
         GroupPage = GroupListPage()
         GroupPage.click_back_button(times=3)
         GroupPage.delete_group(name='aaa')
-
-        # group_name = uuid.uuid4().__str__()
-        # members = ['给个红包1']
-        # # 进入标签分组列表页面
-        # conts_page = ContactsPage()
-        # conts_page.open_contacts_page()
-        # conts_page.click_label_grouping()
-        #
-        # # 创建分组
-        # lg = LabelGroupingPage()
-        # real_name = lg.create_group(group_name, *members)
-        #
-        # # 修改名字
-        # lg.wait_for_page_load()
-        # lg.remove_group_members(real_name, *members)
-        # lg.wait_for_page_load()
-        # count = lg.get_group_member_count(real_name)
-        #
-        # # 验证检查点
-        # self.assertEqual(count, 0, '检查点：成员被移除')
-        #
-        # # 返回到标签分组页面并删除该用例创建的分组数据
-        # lg.wait_for_page_load()
-        # lg.delete_label_groups(real_name)
-        #
-        # lg.wait_for_page_load()
-        # lg.click_back()
-        # conts_page.open_message_page()
 
     def setUp_test_Conts_TagsGrouping_0007(self):
         Preconditions.connect_mobile('Android-移动')
@@ -683,7 +655,8 @@ class TagsGroupingTest(TestCase):
         GroupPage.click_text("大佬1")
         time.sleep(2)
         cdp.send_call_number()
-        cdp.cancel_permission()
+        if cdp.is_text_present('暂不开启'):
+            cdp.cancel_permission()
         cdp.end_video_call()
 
         GroupPage = GroupListPage()
@@ -766,36 +739,36 @@ class TagsGroupingTest(TestCase):
 
 class Tag_Group(TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        # 创建联系人
-        fail_time = 0
-        import dataproviders
-
-        while fail_time < 3:
-            try:
-                # 获取需要导入的联系人数据
-                required_contacts = contact2.get_preset_contacts()
-
-                # 连接手机
-                Preconditions.connect_mobile('Android-移动')
-                Preconditions.make_already_in_message_page()
-                current_mobile().hide_keyboard_if_display()
-                conts = ContactsPage()
-                conts.open_contacts_page()
-                # 导入数据
-                for name, number in required_contacts:
-                  # Preconditions.create_contacts_if_not_exits(name, number)
-                   Preconditions.create_contacts_if_not_exits(name, number)
-
-                # # 推送resource文件到手机
-                # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
-                return
-            except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
+    # @classmethod
+    # def setUpClass(cls):
+    #     # 创建联系人
+    #     fail_time = 0
+    #     import dataproviders
+    #
+    #     while fail_time < 3:
+    #         try:
+    #             # 获取需要导入的联系人数据
+    #             required_contacts = contact2.get_preset_contacts()
+    #
+    #             # 连接手机
+    #             Preconditions.connect_mobile('Android-移动')
+    #             Preconditions.make_already_in_message_page()
+    #             current_mobile().hide_keyboard_if_display()
+    #             conts = ContactsPage()
+    #             conts.open_contacts_page()
+    #             # 导入数据
+    #             for name, number in required_contacts:
+    #               # Preconditions.create_contacts_if_not_exits(name, number)
+    #                Preconditions.create_contacts_if_not_exits(name, number)
+    #
+    #             # # 推送resource文件到手机
+    #             # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
+    #             return
+    #         except:
+    #             fail_time += 1
+    #             import traceback
+    #             msg = traceback.format_exc()
+    #             print(msg)
 
     def setUp_test_contacts_quxinli_0352(self):
         Preconditions.connect_mobile('Android-移动')
@@ -1434,25 +1407,30 @@ class Tag_Group(TestCase):
         time.sleep(1)
         cdp.change_mobile_number()
         time.sleep(1)
-        cdp.click_sure_icon()
-        time.sleep(1)
-        GroupPage.is_toast_exist("保存成功")
-        cdp.is_text_present('13800138789')
+        number=CreateContactPage().get_contant_number()
+        if number == '13800138789':
+            CreateContactPage().click_back()
+        else:
+            cdp.click_sure_icon()
+            time.sleep(1)
+            GroupPage.is_toast_exist("保存成功")
+            cdp.is_text_present('13800138789')
 
     def tearDown_test_contacts_quxinli_0395(self):
         GroupPage = GroupListPage()
         GroupPage.click_back_button(times=2)
         GroupPage.click_back_button(times=2)
         GroupPage.delete_group(name='aaa')
-        # #恢复修改的联系人号码
-        # GroupPage.click_back_button()
-        # ContactsPage().select_contacts_by_name('大佬1')
-        # ContactDetailsPage().click_edit_contact()
-        # time.sleep(1)
-        # ContactDetailsPage().change_mobile_number(text='138001380005')
-        # time.sleep(1)
-        # ContactDetailsPage().click_sure_icon()
-
+        #恢复修改的联系人号码
+        GroupPage.click_back_button()
+        ContactsPage().select_contacts_by_name('大佬1')
+        ContactDetailsPage().click_edit_contact()
+        time.sleep(1)
+        CreateContactPage().click_input_number()
+        CreateContactPage().change_mobile_number()
+        time.sleep(1)
+        CreateContactPage().click_save()
+        time.sleep(2)
 
     @staticmethod
     def setUp_test_contacts_quxinli_0396():
@@ -1612,7 +1590,8 @@ class Tag_Group(TestCase):
         GroupPage.click_text("大佬1")
         time.sleep(2)
         cdp.send_call_number()
-        cdp.cancel_permission()
+        if cdp.is_text_present('暂不开启'):
+            cdp.cancel_permission()
         cdp.end_video_call()
 
     def tearDown_test_contacts_quxinli_0398(self):
@@ -1828,6 +1807,9 @@ class Tag_Group(TestCase):
         time.sleep(2)
 
     def tearDown_test_contacts_quxinli_0416(self):
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+
         GroupPage = GroupListPage()
         GroupPage.click_back_button(times=4)
         time.sleep(1)
@@ -1886,6 +1868,8 @@ class Tag_Group(TestCase):
         GroupPage.page_contain_star('大佬3')
 
     def tearDown_test_contacts_quxinli_0417(self):
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
         #去除大佬1的星标
         ContactsPage().select_contacts_by_name('大佬3')
         time.sleep(1)
@@ -1951,14 +1935,12 @@ class Tag_Group(TestCase):
 
 
     def tearDown_test_contacts_quxinli_0421(self):
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
         GroupPage = GroupListPage()
-        GroupPage.click_back_button(times=3)
+        GroupPage.click_back_button(times=4)
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
-
-
-
-
 
     @staticmethod
     def setUp_test_contacts_0359():
