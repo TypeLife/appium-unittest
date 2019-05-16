@@ -200,11 +200,11 @@ class WorkbenchPreconditions(LoginPreconditions):
             workbench.click_now_create_team()
         else:
             a = 0
-            while a < 10:
+            while a < 20:
                 workbench.wait_for_page_load()
                 workbench.click_organization()
-                time.sleep(5)
-                if workbench.is_text_present("认证失败"):
+                # time.sleep(5)
+                if not workbench.page_should_contain_text2("添加联系人"):
                     current_mobile().back()
                     a += 1
                 else:

@@ -166,8 +166,8 @@ class BasePage(object):
                 _xpath = u'//*[@{}="{}"]'.format('text', text)
             else:
                 _xpath = u'//*[contains(@{},"{}")]'.format('text', text)
-            # self.get_element((MobileBy.XPATH, _xpath)).click()
-            self.click_element((MobileBy.XPATH, _xpath))
+            self.get_element((MobileBy.XPATH, _xpath)).click()
+            # self.click_element((MobileBy.XPATH, _xpath))
 
     def input_text(self, locator, text):
         self.mobile.input_text(locator, text)
@@ -289,6 +289,12 @@ class BasePage(object):
             raise AssertionError("Page should have contained text '{}' "
                                  "but did not" % text)
         return True
+
+    def page_should_contain_text2(self, text):
+        try:
+            return self.wait_until(condition=lambda x: self.is_text_present(text))
+        except:
+            return False
 
     def page_should_not_contain_text(self, text):
         if self.is_text_present(text):
