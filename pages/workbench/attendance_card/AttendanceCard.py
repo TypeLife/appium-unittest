@@ -30,7 +30,7 @@ class AttendanceCardPage(BasePage):
         return self
 
     @TestLogger.log()
-    def is_on_attendance_card_page(self, timeout=20, auto_accept_alerts=True):
+    def is_on_attendance_card_page(self, timeout=10, auto_accept_alerts=True):
         """当前页面是否在考勤打卡首页"""
 
         try:
