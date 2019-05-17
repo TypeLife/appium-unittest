@@ -132,11 +132,11 @@ class localContactPage(BasePage):
         max_try = 8
         current = 0
         while current < max_try:
-            if self._is_element_present(self.__class__.__locators["联系人名"]):
+            if self._is_element_present(self.__class__.__locators["联系人名字"]):
                 break
             current += 1
             self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
-        els = self.get_elements(self.__class__.__locators["联系人名"])
+        els = self.get_elements(self.__class__.__locators["联系人名字"])
         contacts_name = []
         if els:
             for el in els:

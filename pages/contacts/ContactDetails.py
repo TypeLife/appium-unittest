@@ -18,6 +18,10 @@ class ContactDetailsPage(BasePage):
         '星标图标': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_star'),
         '返回上一页': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_back'),
         '名片标题': (MobileBy.ID, 'com.chinasofti.rcs:id/profile_name'),
+
+        '标题': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_profile_name'),
+        '手机号': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_phone'),
+
         '星标': (MobileBy.ID, 'com.chinasofti.rcs:id/star'),
         '编辑': (MobileBy.ID, 'com.chinasofti.rcs:id/txt_call_detail_edit'),
         '好久不见~打个招呼吧': (MobileBy.ID, 'com.chinasofti.rcs:id/recent_contact_hint'),
@@ -41,7 +45,7 @@ class ContactDetailsPage(BasePage):
         'com.chinasofti.rcs:id/btn_share_card_line': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_share_card_line'),
         '邀请使用': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_invitation_to_use'),
         '大图': (MobileBy.ID, 'com.chinasofti.rcs:id/img_smooth'),
-        '电话号码': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/et" and @text="13800138005"]'),
+        '电话号码': (MobileBy.XPATH, '//*[@text="电话"]/../android.widget.EditText[@resource-id="com.chinasofti.rcs:id/et"]'),
         "确定": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_save_or_sure'),
         "确定删除": (MobileBy.ID, 'com.chinasofti.rcs:id/bt_button2'),
         "删除联系人": (MobileBy.ID, "com.chinasofti.rcs:id/tv_delete_contact"),
@@ -77,11 +81,9 @@ class ContactDetailsPage(BasePage):
         time.sleep(1)
         self.click_element(self.__locators["快捷方式-确定添加"])
 
-
-
     @TestLogger.log("更改手机号码")
-    def change_mobile_number(self):
-        self.input_text(self.__locators["电话号码"],'13800138789')
+    def change_mobile_number(self,text='13800138789'):
+        self.input_text(self.__locators["电话号码"],text)
 
     @TestLogger.log("点击呼叫")
     def send_call_number(self):
@@ -159,12 +161,12 @@ class ContactDetailsPage(BasePage):
 
     @TestLogger.log("点击确定")
     def click_sure_icon(self):
-        """点击返回"""
+        """点击确定"""
         self.click_element(self.__locators['确定'])
 
     @TestLogger.log("确定删除")
     def click_sure_delete(self):
-        """点击返回"""
+        """确定删除"""
         time.sleep(3)
         self.click_element(self.__locators['确定删除'])
 
@@ -403,6 +405,17 @@ class ContactDetailsPage(BasePage):
             os.makedirs(path)
         os.popen("adb pull /data/local/tmp/tmp.png " + path + "/" + timestamp + ".png")
         os.popen("adb shell rm /data/local/tmp/tmp.png")
+
+    @TestLogger.log()
+    def get_people_name(self):
+        time.sleep(2)
+        el = self.get_element(self.__class__.__locators['标题'])
+        return el.text
+
+    @TestLogger.log()
+    def get_people_number(self):
+        time.sleep(2)
+        return self.get_element(self.__class__.__locators['手机号']).text
 
 
 def add(func):

@@ -270,6 +270,74 @@ class BasePage(object):
                 y_offset = height
                 self.driver.swipe(x_start, y_start, x_offset, y_offset, duration)
 
+    def swipe_by_direction2(self, locator, direction, number, duration=None):
+        """
+        在元素内滑动
+        :param locator: 定位器
+        :param direction: 方向（left,right,up,down）
+        :param duration: 持续时间ms
+        :return:
+        """
+        elements = self.get_elements(locator)
+        element = elements[number]
+        rect = element.rect
+        left, right = int(rect['x']) + 1, int(rect['x'] + rect['width']) - 1
+        top, bottom = int(rect['y']) + 1, int(rect['y'] + rect['height']) - 1
+        width = int(rect['width']) - 2
+        height = int(rect['height']) - 2
+
+        if self._get_platform() == 'android':
+            if direction.lower() == 'left':
+                x_start = right
+                x_end = left
+                y_start = (top + bottom) // 2
+                y_end = (top + bottom) // 2
+                self.driver.swipe(x_start, y_start, x_end, y_end, duration)
+            elif direction.lower() == 'right':
+                x_start = left
+                x_end = right
+                y_start = (top + bottom) // 2
+                y_end = (top + bottom) // 2
+                self.driver.swipe(x_start, y_start, x_end, y_end, duration)
+            elif direction.lower() == 'up':
+                x_start = (left + right) // 2
+                x_end = (left + right) // 2
+                y_start = bottom
+                y_end = top
+                self.driver.swipe(x_start, y_start, x_end, y_end, duration)
+            elif direction.lower() == 'down':
+                x_start = (left + right) // 2
+                x_end = (left + right) // 2
+                y_start = top
+                y_end = bottom
+                self.driver.swipe(x_start, y_start, x_end, y_end, duration)
+
+        else:
+            if direction.lower() == 'left':
+                x_start = right
+                x_offset = width
+                y_start = (top + bottom) // 2
+                y_offset = 0
+                self.driver.swipe(x_start, y_start, x_offset, y_offset, duration)
+            elif direction.lower() == 'right':
+                x_start = left
+                x_offset = width
+                y_start = -(top + bottom) // 2
+                y_offset = 0
+                self.driver.swipe(x_start, y_start, x_offset, y_offset, duration)
+            elif direction.lower() == 'up':
+                x_start = (left + right) // 2
+                x_offset = 0
+                y_start = bottom
+                y_offset = -height
+                self.driver.swipe(x_start, y_start, x_offset, y_offset, duration)
+            elif direction.lower() == 'down':
+                x_start = (left + right) // 2
+                x_offset = 0
+                y_start = top
+                y_offset = height
+                self.driver.swipe(x_start, y_start, x_offset, y_offset, duration)
+
     def swipe_by_percent_on_screen(self, start_x, start_y, end_x, end_y, duration):
         width = self.driver.get_window_size()["width"]
         height = self.driver.get_window_size()["height"]

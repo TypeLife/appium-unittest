@@ -180,6 +180,50 @@ class ContactsPage(FooterPage):
             raise AssertionError("m005_contacts is empty!")
         return phones
 
+
+    def get_all_phone_number(self,times=10):
+        els = self.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/tv_number'))
+        time=0
+        phones=[]
+        while time < times:
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+            if els:
+                for el in els:
+                    phones.append(el.text)
+
+            time += 1
+            return phones
+
+    @TestLogger.log()
+    def get_all_contacts_number(self):
+        """获取所有联系人电话号码"""
+        els = self.get_elements(self.__class__.__locators["18681151872"])
+        contacts_name = []
+        if els:
+            for el in els:
+                contacts_name.append(el.text)
+        else:
+            raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
+        flag = True
+        current = 0
+        while flag:
+            current += 1
+            if current > 20:
+                return
+            self.swipe_half_page_up()
+            els = self.get_elements(self.__class__.__locators["联系人名"])
+            for el in els:
+                if el.text not in contacts_name:
+                    contacts_name.append(el.text)
+                    flag = True
+                else:
+                    flag = False
+        return contacts_name
+
+
+
+
+
     def page_up(self):
         """向上滑动一页"""
         self.swipe_by_direction(self.__class__.__locators['通讯录列表'], 'up')
@@ -407,29 +451,31 @@ class ContactsPage(FooterPage):
     def input_contact_text(self,text):
         self.input_text(self.__class__.__locators["新建手机联系人-姓名"],text)
 
+
     @TestLogger.log()
-    def select_contacts_by_name_number(self, name,number):
-        """根据名字选择一个联系人"""
-        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text ="%s"]' % name)
-        contact_number=(MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_phone" and @text ="%s"]' % number)
+    def select_contacts_by_number(self, number):
+        """根据号码选择一个联系人"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_number" and @text ="%s"]' % number)
         max_try = 20
         current = 0
         while current < max_try:
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
             if self._is_element_present(locator):
-                if self._is_element_present(contact_number):
-                    self.click_element(contact_number)
-                else:
-                    current += 1
-                    self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+                break
+            current += 1
+        self.click_element(locator)
+
+    @TestLogger.log()
+    def is_exit_element_by_text_swipe(self, number):
+        """滑动判断特定元素是否存在"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_number" and @text ="%s"]' % number)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+            if self._is_element_present(locator):
+                return self.page_should_contain_element(locator)
             else:
+                # break
                 current += 1
-                self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
-        #     current += 1
-        #     self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
-        # self.click_element(locator)
-
-
-
-
-
 
