@@ -99,15 +99,13 @@ class Preconditions(WorkbenchPreconditions):
             wbp.click_app_manage()
             amp = AppManagePage()
             # 解决工作台不稳定问题
-            time.sleep(5)
             n = 1
-            while amp.is_text_present("获取用户信息失败"):
+            while not amp.page_should_contain_text2("排序"):
                 amp.click_back()
                 wbp.wait_for_workbench_page_load()
                 wbp.click_app_manage()
-                time.sleep(5)
                 n += 1
-                if n > 10:
+                if n > 20:
                     break
             amp.wait_for_page_load()
             amp.click_remove_icon_by_name(name)

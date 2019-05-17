@@ -105,16 +105,14 @@ class Preconditions(WorkbenchPreconditions):
         wbp.wait_for_workbench_page_load()
         wbp.click_organization()
         osp = OrganizationStructurePage()
-        time.sleep(5)
         n = 1
         # 解决工作台不稳定问题
-        while osp.is_text_present("账号认证失败"):
+        while not osp.page_should_contain_text2("添加联系人"):
             osp.click_back()
             wbp.wait_for_workbench_page_load()
             wbp.click_organization()
-            time.sleep(5)
             n += 1
-            if n > 10:
+            if n > 20:
                 break
         phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
         time.sleep(3)
@@ -146,16 +144,14 @@ class Preconditions(WorkbenchPreconditions):
         wbp.wait_for_workbench_page_load()
         wbp.click_organization()
         osp = OrganizationStructurePage()
-        time.sleep(5)
         n = 1
         # 解决工作台不稳定问题
-        while osp.is_text_present("账号认证失败"):
+        while not osp.page_should_contain_text2("添加联系人"):
             osp.click_back()
             wbp.wait_for_workbench_page_load()
             wbp.click_organization()
-            time.sleep(5)
             n += 1
-            if n > 10:
+            if n > 20:
                 break
         time.sleep(5)
         if osp.is_exist_specify_element_by_name(department_name):
@@ -178,16 +174,14 @@ class Preconditions(WorkbenchPreconditions):
         wbp.wait_for_workbench_page_load()
         wbp.click_organization()
         osp = OrganizationStructurePage()
-        time.sleep(5)
         n = 1
         # 解决工作台不稳定问题
-        while osp.is_text_present("账号认证失败"):
+        while not osp.page_should_contain_text2("添加联系人"):
             osp.click_back()
             wbp.wait_for_workbench_page_load()
             wbp.click_organization()
-            time.sleep(5)
             n += 1
-            if n > 10:
+            if n > 20:
                 break
         phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
         time.sleep(3)

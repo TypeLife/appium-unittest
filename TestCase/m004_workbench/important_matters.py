@@ -76,15 +76,13 @@ class Preconditions(WorkbenchPreconditions):
         wbp.click_add_important_matters()
         imp = ImportantMattersPage()
         # 解决工作台不稳定问题
-        time.sleep(5)
         n = 1
-        while imp.is_text_present("统一认证接口返回异常"):
+        while not imp.page_should_contain_text2("新建事项"):
             imp.click_back()
             wbp.wait_for_workbench_page_load()
             wbp.click_important_items()
-            time.sleep(5)
             n += 1
-            if n > 10:
+            if n > 20:
                 break
 
     @staticmethod

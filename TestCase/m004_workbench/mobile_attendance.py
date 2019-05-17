@@ -74,15 +74,13 @@ class Preconditions(WorkbenchPreconditions):
         wbp.click_add_mobile_attendance()
         # 解决工作台不稳定问题
         map = MobileAttendancePage()
-        time.sleep(5)
         n = 1
-        while map.is_text_present("自动登录"):
+        while not map.page_should_contain_text2("考勤签到"):
             map.click_back()
             wbp.wait_for_workbench_page_load()
             wbp.click_mobile_attendance()
-            time.sleep(5)
             n += 1
-            if n > 10:
+            if n > 20:
                 break
 
 
