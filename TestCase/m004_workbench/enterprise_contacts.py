@@ -251,7 +251,7 @@ class EnterpriseContactsAllTest(TestCase):
                 contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
                 Preconditions.create_he_contacts(contact_names)
                 contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
-                                  ('陈丹丹', "13800137004"), ('alice', "13800137005"), ('郑海贵', "13802883296")]
+                                  ('陈丹丹', "13800137004"), ('alice', "13800137005"), ('郑海', "13802883296")]
                 Preconditions.create_he_contacts2(contact_names2)
                 flag2 = True
             except:
@@ -529,11 +529,11 @@ class EnterpriseContactsAllTest(TestCase):
         time.sleep(2)
         # 1.检查搜索结果是否模糊匹配关键字
         self.assertEquals(ecp.is_search_contacts_name_match(search_name), True)
-        search_name2 = "zhg"
+        search_name2 = "zh"
         ecp.input_search_message(search_name2)
         time.sleep(2)
         # 2.检查搜索结果是否模糊匹配关键字
-        self.assertEquals(ecp.is_search_contacts_name_match("郑海贵"), True)
+        self.assertEquals(ecp.is_search_contacts_name_match("郑海"), True)
         search_number = "138028"
         ecp.input_search_message(search_number)
         time.sleep(2)
