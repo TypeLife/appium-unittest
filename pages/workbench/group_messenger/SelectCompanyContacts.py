@@ -27,7 +27,7 @@ class SelectCompanyContactsPage(BasePage):
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):
-        """等待群发信使->新建短信->选择联系人页面加载"""
+        """等待选择联系人页面加载"""
         try:
             self.wait_until(
                 timeout=timeout,

@@ -235,7 +235,10 @@ class MassMessengerTest(TestCase):
     def default_tearDown(self):
         pass
 
-    @tags('ALL', 'CMCC', 'workbench')
+
+
+    # @tags('ALL', 'CMCC', 'workbench')
+    @unittest.skip("不稳定")
     def test_QFXS_0008(self):
         """1、点击用户本人头像"""
         mess = MessagePage()
@@ -661,8 +664,9 @@ class MassMessengerAllTest(TestCase):
         ecp.wait_for_page_load()
         time.sleep(2)
         ecp.click_back()
-        time.sleep(1)
-        ecp.click_back()
+        time.sleep(2)
+        if ecp.is_exist_department_name():
+            ecp.click_back()
         wbp.wait_for_workbench_page_load()
         wbp.click_group_messenger()
         gmp.wait_for_page_load()
@@ -741,8 +745,9 @@ class MassMessengerAllTest(TestCase):
         ecp.wait_for_page_load()
         time.sleep(2)
         ecp.click_back()
-        time.sleep(1)
-        ecp.click_back()
+        time.sleep(2)
+        if ecp.is_exist_department_name():
+            ecp.click_back()
         wbp.wait_for_workbench_page_load()
         wbp.click_group_messenger()
         gmp.wait_for_page_load()
@@ -822,8 +827,9 @@ class MassMessengerAllTest(TestCase):
         ecp.wait_for_page_load()
         time.sleep(2)
         ecp.click_back()
-        time.sleep(1)
-        ecp.click_back()
+        time.sleep(2)
+        if ecp.is_exist_department_name():
+            ecp.click_back()
         wbp.wait_for_workbench_page_load()
         wbp.click_group_messenger()
         gmp.wait_for_page_load()

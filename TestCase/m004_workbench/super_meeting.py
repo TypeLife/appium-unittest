@@ -104,6 +104,7 @@ class SuperMeetingTest(TestCase):
             current_mobile().back()
             wbp.wait_for_page_load()
         else:
+            time.sleep(2)
             current_mobile().back()
             wbp.wait_for_page_load()
         wbp.click_super_meeting()
@@ -932,8 +933,12 @@ class SuperMeetingTest(TestCase):
             sc.input_search_keyword(phone_number)
             time.sleep(2)
             if not sc.is_text_present("本机"):
-                raise AssertionError("搜索结果有误")
-            sc.click_text("本机")
+                if not sc.is_text_present("aa"):
+                    raise AssertionError("搜索结果有误")
+                else:
+                    sc.click_text("aa")
+            else:
+                sc.click_text("本机")
             if not sc.is_toast_exist("该联系人不可选择"):
                 raise AssertionError("没有toast提示该联系人不可选择")
             current_mobile().back()
@@ -946,8 +951,12 @@ class SuperMeetingTest(TestCase):
             sc.input_search_keyword(phone_number)
             time.sleep(2)
             if not sc.is_text_present("本机"):
-                raise AssertionError("搜索结果有误")
-            sc.click_text("本机")
+                if not sc.is_text_present("aa"):
+                    raise AssertionError("搜索结果有误")
+                else:
+                    sc.click_text("aa")
+            else:
+                sc.click_text("本机")
             if not sc.is_toast_exist("该联系人不可选择"):
                 raise AssertionError("没有toast提示该联系人不可选择")
             current_mobile().back()
