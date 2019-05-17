@@ -408,12 +408,14 @@ class ContactDetailsPage(BasePage):
 
     @TestLogger.log()
     def get_people_name(self):
-        self.get_text(self.__class__.__locators['标题'])
+        time.sleep(2)
+        el = self.get_element(self.__class__.__locators['标题'])
+        return el.text
 
     @TestLogger.log()
     def get_people_number(self):
-        el = self.get_element(self.__class__.__locators['手机号'])
-        return el.text
+        time.sleep(2)
+        return self.get_element(self.__class__.__locators['手机号']).text
 
 
 def add(func):

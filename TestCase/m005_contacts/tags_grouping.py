@@ -188,36 +188,36 @@ class Preconditions(LoginPreconditions):
 class TagsGroupingTest(TestCase):
     """通讯录 - 标签分组"""
 
-    # @classmethod
-    # def setUpClass(cls):
-    #     #创建联系人
-    #     fail_time = 0
-    #     import dataproviders
-    #
-    #     while fail_time < 3:
-    #         try:
-    #             # 获取需要导入的联系人数据
-    #             required_contacts = contact2.get_preset_contacts()
-    #
-    #             # 连接手机
-    #             Preconditions.connect_mobile('Android-移动')
-    #             Preconditions.make_already_in_message_page()
-    #             current_mobile().hide_keyboard_if_display()
-    #             conts = ContactsPage()
-    #             conts.open_contacts_page()
-    #             # 导入数据
-    #             for name, number in required_contacts:
-    #                 # Preconditions.create_contacts_if_not_exits(name, number)
-    #                 Preconditions.create_contacts_if_not_exits(name, number)
-    #
-    #             # # 推送resource文件到手机
-    #             # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
-    #             return
-    #         except:
-    #             fail_time += 1
-    #             import traceback
-    #             msg = traceback.format_exc()
-    #             print(msg)
+    @classmethod
+    def setUpClass(cls):
+        #创建联系人
+        fail_time = 0
+        import dataproviders
+
+        while fail_time < 3:
+            try:
+                # 获取需要导入的联系人数据
+                required_contacts = contact2.get_preset_contacts()
+
+                # 连接手机
+                Preconditions.connect_mobile('Android-移动')
+                Preconditions.make_already_in_message_page()
+                current_mobile().hide_keyboard_if_display()
+                conts = ContactsPage()
+                conts.open_contacts_page()
+                # 导入数据
+                for name, number in required_contacts:
+                    # Preconditions.create_contacts_if_not_exits(name, number)
+                    Preconditions.create_contacts_if_not_exits(name, number)
+
+                # # 推送resource文件到手机
+                # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
+                return
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0001(self):
@@ -739,36 +739,36 @@ class TagsGroupingTest(TestCase):
 
 class Tag_Group(TestCase):
 
-    # @classmethod
-    # def setUpClass(cls):
-    #     # 创建联系人
-    #     fail_time = 0
-    #     import dataproviders
-    #
-    #     while fail_time < 3:
-    #         try:
-    #             # 获取需要导入的联系人数据
-    #             required_contacts = contact2.get_preset_contacts()
-    #
-    #             # 连接手机
-    #             Preconditions.connect_mobile('Android-移动')
-    #             Preconditions.make_already_in_message_page()
-    #             current_mobile().hide_keyboard_if_display()
-    #             conts = ContactsPage()
-    #             conts.open_contacts_page()
-    #             # 导入数据
-    #             for name, number in required_contacts:
-    #               # Preconditions.create_contacts_if_not_exits(name, number)
-    #                Preconditions.create_contacts_if_not_exits(name, number)
-    #
-    #             # # 推送resource文件到手机
-    #             # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
-    #             return
-    #         except:
-    #             fail_time += 1
-    #             import traceback
-    #             msg = traceback.format_exc()
-    #             print(msg)
+    @classmethod
+    def setUpClass(cls):
+        # 创建联系人
+        fail_time = 0
+        import dataproviders
+
+        while fail_time < 3:
+            try:
+                # 获取需要导入的联系人数据
+                required_contacts = contact2.get_preset_contacts()
+
+                # 连接手机
+                Preconditions.connect_mobile('Android-移动')
+                Preconditions.make_already_in_message_page()
+                current_mobile().hide_keyboard_if_display()
+                conts = ContactsPage()
+                conts.open_contacts_page()
+                # 导入数据
+                for name, number in required_contacts:
+                  # Preconditions.create_contacts_if_not_exits(name, number)
+                   Preconditions.create_contacts_if_not_exits(name, number)
+
+                # # 推送resource文件到手机
+                # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
+                return
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
 
     def setUp_test_contacts_quxinli_0352(self):
         Preconditions.connect_mobile('Android-移动')

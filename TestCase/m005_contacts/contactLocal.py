@@ -147,7 +147,7 @@ class Preconditions(LoginPreconditions):
             detail_page.click_back_icon()
 
 @unittest.skip("本地调试不执行")
-class ContactLocalhigh(TestCase):
+class ContactLocal(TestCase):
     """
     模块：联系-本地联系人
     文件位置：全量/115全量测试用例-联系(1322).xlsx--高等级用例(优先编写)
@@ -209,36 +209,36 @@ class ContactLocalhigh(TestCase):
 class ContactsLocal(TestCase):
     """通讯录测试记录-陈继祥"""
 
-    # @classmethod
-    # def setUpClass(cls):
-    #     # 创建联系人
-    #     fail_time = 0
-    #     import dataproviders
-    #
-    #     while fail_time < 3:
-    #         try:
-    #             # 获取需要导入的联系人数据
-    #             required_contacts = contact2.get_preset_contacts()
-    #
-    #             # 连接手机
-    #             Preconditions.connect_mobile('Android-移动')
-    #             Preconditions.make_already_in_message_page()
-    #             current_mobile().hide_keyboard_if_display()
-    #             conts = ContactsPage()
-    #             conts.open_contacts_page()
-    #             # 导入数据
-    #             for name, number in required_contacts:
-    #                 # Preconditions.create_contacts_if_not_exits(name, number)
-    #                 Preconditions.create_contacts_if_not_exits(name, number)
-    #
-    #             # # 推送resource文件到手机
-    #             # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
-    #             return
-    #         except:
-    #             fail_time += 1
-    #             import traceback
-    #             msg = traceback.format_exc()
-    #             print(msg)
+    @classmethod
+    def setUpClass(cls):
+        # 创建联系人
+        fail_time = 0
+        import dataproviders
+
+        while fail_time < 3:
+            try:
+                # 获取需要导入的联系人数据
+                required_contacts = contact2.get_preset_contacts()
+
+                # 连接手机
+                Preconditions.connect_mobile('Android-移动')
+                Preconditions.make_already_in_message_page()
+                current_mobile().hide_keyboard_if_display()
+                conts = ContactsPage()
+                conts.open_contacts_page()
+                # 导入数据
+                for name, number in required_contacts:
+                    # Preconditions.create_contacts_if_not_exits(name, number)
+                    Preconditions.create_contacts_if_not_exits(name, number)
+
+                # # 推送resource文件到手机
+                # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
+                return
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
 
     def default_setUp(self):
         """确保每个用例运行前在通讯录页面"""
@@ -1994,9 +1994,10 @@ class ContactsLocalhigh(TestCase):
         input_number='12345678901'
         creat_contact.input_number(input_number)
         creat_contact.click_save()
-        time.sleep(1)
+        time.sleep(2)
         contact_detail=ContactDetailsPage()
         contact_detail.page_should_contain_text('和飞信电话')
+        time.sleep(1)
         contact_name1=contact_detail.get_people_name()
         contact_number1=contact_detail.get_people_number()
         time.sleep(1)
@@ -2004,7 +2005,7 @@ class ContactsLocalhigh(TestCase):
         contact_detail.click_back_icon()
         time.sleep(1)
         ContactsPage().select_contacts_by_number('13800138005')
-        time.sleep(1)
+        time.sleep(2)
         contact_name2 = contact_detail.get_people_name()
         contact_number2 = contact_detail.get_people_number()
         #判断新增名称一样,号码与头像不一样
@@ -2027,12 +2028,53 @@ class ContactsLocalhigh(TestCase):
         else:
             pass
 
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0175(self):
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        cdp.wait_for_page_load()
+        contact_name=cdp.get_people_name()
+        self.assertEqual(contact_name,'大佬1')
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0177(self):
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        cdp.wait_for_page_load()
+        contact_name=cdp.get_people_number()
+        self.assertEqual(contact_name,'13800138005')
+
+
+
     # @tags('ALL', 'CONTACTS', 'CMCC')
-    # def test_contacts_chenjixiang_0175(self):
+    # def test_contacts_chenjixiang_00001(self):
     #     ContactsPage().select_contacts_by_name('大佬1')
-    #     contact_name=ContactDetailsPage().get_people_number()
-    #     # self.assertEqual(contact_name,'大佬1')
+    #     time.sleep(2)
+    #     ContactDetailsPage().click_message_icon()
+    #     chat=ChatWindowPage()
+    #     chat.click_msg_input_box()
+    #     chat.input_message_text('asasa')
+    #     chat.click_send_button()
+    #     #更改手机时间,使最后一条消息发送时间超过10分钟
+    #     Preconditions.background_app()
+    #     time.sleep(3)
+    #     chat.click_text('设置')
+    #     chat.page_up()
+    #     chat.click_text('系统')
+    #     time.sleep(3)
+    #     chat.click_text('日期和时间')
+    #     time.sleep(2)
+    #     chat.swich_automatic_time(flag=False)
+    #     chat.click_date_in_setting()
+    #     time.sleep(1)
+    #     chat.swipe_month("2021", 0)
+    #     time.sleep(1)
+    #     chat.swipe_month("9", 1)
+    #     time.sleep(1)
+    #     chat.swipe_month("26", 2)
     #
+
+
 
 
 if __name__=="__main__":

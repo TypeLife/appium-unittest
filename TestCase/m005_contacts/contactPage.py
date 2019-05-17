@@ -91,48 +91,48 @@ class ContactPage(TestCase):
     表格:8.通讯录全量测试用例 曲新莉
 
     """
-    # @classmethod
-    # def setUpClass(cls):
-    #     Preconditions.connect_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     Preconditions.init_and_enter_contacts_page()
-    #
-    #     fail_time = 0
-    #     import dataproviders
-    #
-    #     while fail_time < 3:
-    #         try:
-    #             # 获取需要导入的联系人数据
-    #             required_contacts = dataproviders.get_preset_contacts()
-    #             conts = ContactsPage()
-    #             # 连接手机
-    #             Preconditions.connect_mobile('Android-移动')
-    #             current_mobile().hide_keyboard_if_display()
-    #             Preconditions.make_already_in_message_page()
-    #             conts = ContactsPage()
-    #             conts.open_contacts_page()
-    #             # 导入数据
-    #             for name, number in required_contacts:
-    #               # Preconditions.create_contacts_if_not_exits(name, number)
-    #                conts.create_contacts_if_not_exits(name, number)
-    #
-    #             # 创建群
-    #             required_group_chats = dataproviders.get_preset_group_chats()
-    #
-    #             conts.open_group_chat_list()
-    #             group_list = GroupListPage()
-    #             for group_name, members in required_group_chats:
-    #                 group_list.wait_for_page_load()
-    #                 group_list.create_group_chats_if_not_exits(group_name, members)
-    #             group_list.click_back()
-    #             conts.open_message_page()
-    #             return
-    #
-    #         except:
-    #             fail_time += 1
-    #             import traceback
-    #             msg = traceback.format_exc()
-    #             print(msg)
+    @classmethod
+    def setUpClass(cls):
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.init_and_enter_contacts_page()
+
+        fail_time = 0
+        import dataproviders
+
+        while fail_time < 3:
+            try:
+                # 获取需要导入的联系人数据
+                required_contacts = dataproviders.get_preset_contacts()
+                conts = ContactsPage()
+                # 连接手机
+                Preconditions.connect_mobile('Android-移动')
+                current_mobile().hide_keyboard_if_display()
+                Preconditions.make_already_in_message_page()
+                conts = ContactsPage()
+                conts.open_contacts_page()
+                # 导入数据
+                for name, number in required_contacts:
+                  # Preconditions.create_contacts_if_not_exits(name, number)
+                   conts.create_contacts_if_not_exits(name, number)
+
+                # 创建群
+                required_group_chats = dataproviders.get_preset_group_chats()
+
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
+                return
+
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
 
     @staticmethod
     def setUp_test_contacts_0001():
