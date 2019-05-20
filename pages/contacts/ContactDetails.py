@@ -26,7 +26,8 @@ class ContactDetailsPage(BasePage):
         '编辑': (MobileBy.ID, 'com.chinasofti.rcs:id/txt_call_detail_edit'),
         '好久不见~打个招呼吧': (MobileBy.ID, 'com.chinasofti.rcs:id/recent_contact_hint'),
         '名片号码': (MobileBy.ID, 'com.chinasofti.rcs:id/phone'),
-        '名片首字母': (MobileBy.ID, 'com.chinasofti.rcs:id/profile_photo_tv'),
+        '名片首字母': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_profile_photo_tv'),
+        '联系人头像图片': (MobileBy.ID, 'com.chinasofti.rcs:id/recyclesafeimageview_profile_photo'),
         '头像': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_profile_photo_tv'),
         '消息': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_normal_message'),
         '电话': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_normal_call'),
@@ -65,6 +66,12 @@ class ContactDetailsPage(BasePage):
         '快捷方式-取消添加': (MobileBy.ID, "android:id/button2"),
 
     }
+
+    @TestLogger.log("是否在当前页面")
+    def is_on_this_page(self):
+        time.sleep(2)
+        return self.is_text_present('分享名片')
+
 
     @TestLogger.log("添加桌面快捷方式")
     def click_add_desktop_shortcut(self):
@@ -273,7 +280,13 @@ class ContactDetailsPage(BasePage):
     @TestLogger.log()
     def page_should_contain_element_first_letter(self):
         """页面应该包含首字母"""
-        return self.page_should_contain_element("名片首字母")
+        return self.page_should_contain_element(self.__class__.__locators['名片首字母'])
+
+    @TestLogger.log()
+    def page_contain_contacts_avatar(self):
+        """页面应该包含联系人头像"""
+        return self.page_should_contain_element(self.__class__.__locators['联系人头像图片'])
+
 
     @TestLogger.log()
     def is_exists_contacts_image(self):

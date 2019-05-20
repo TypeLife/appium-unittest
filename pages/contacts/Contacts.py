@@ -220,10 +220,6 @@ class ContactsPage(FooterPage):
                     flag = False
         return contacts_name
 
-
-
-
-
     def page_up(self):
         """向上滑动一页"""
         self.swipe_by_direction(self.__class__.__locators['通讯录列表'], 'up')
@@ -467,7 +463,7 @@ class ContactsPage(FooterPage):
 
     @TestLogger.log()
     def is_exit_element_by_text_swipe(self, number):
-        """滑动判断特定元素是否存在"""
+        """通过电话号码,滑动判断特定元素是否存在"""
         locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_number" and @text ="%s"]' % number)
         max_try = 20
         current = 0
@@ -478,4 +474,27 @@ class ContactsPage(FooterPage):
             else:
                 # break
                 current += 1
+
+    @TestLogger.log()
+    def is_contacts_exist(self, name):
+        """通过联系人名判断联系人是否存在"""
+        max_try = 10
+        current = 0
+        while current < max_try:
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+            if self.is_text_present(name):
+                return True
+            current += 1
+            # self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        return False
+
+            #
+            # for group in groups:
+            #     if group:
+            #
+            #         return True
+            #     current += 1
+            # return False
+
+
 
