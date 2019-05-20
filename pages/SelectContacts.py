@@ -87,6 +87,7 @@ class SelectContactsPage(BasePage):
         "字母栏":(MobileBy.ID,'	com.chinasofti.rcs:id/contact_index_bar_container'),
         'bm1': (MobileBy.XPATH, "//*[contains(@text, 'bm1')]"),
         'bm2': (MobileBy.XPATH, "//*[contains(@text, 'bm2')]"),
+        "部门名称": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_department'),
 
     }
 
