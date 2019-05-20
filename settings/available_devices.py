@@ -501,7 +501,7 @@ DEVICES_CONFIG_YMS2 = {
         "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
-            "platformVersion": "8.0.0",
+            "platformVersion": "9",
             "deviceName": "RKKDU18321000975",
             "udid": "RKKDU18321000975",
             "automationName": "UiAutomator2",

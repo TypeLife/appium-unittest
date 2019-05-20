@@ -2030,6 +2030,7 @@ class ContactsLocalhigh(TestCase):
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0175(self):
+        """个人profile页,名称正常显示"""
         ContactsPage().select_contacts_by_name('大佬1')
         cdp = ContactDetailsPage()
         cdp.wait_for_page_load()
@@ -2038,15 +2039,103 @@ class ContactsLocalhigh(TestCase):
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0177(self):
+        """个人profile页,手机号码正常显示"""
         ContactsPage().select_contacts_by_name('大佬1')
         cdp = ContactDetailsPage()
         cdp.wait_for_page_load()
         contact_name=cdp.get_people_number()
         self.assertEqual(contact_name,'13800138005')
 
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0179(self):
+        """个人profile页,头像首字母正常显示"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        cdp.wait_for_page_load()
+        time.sleep(2)
+        cdp.page_should_contain_element_first_letter()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0180(self):
+        """个人profile页,头像正常显示"""
+        ContactsPage().select_contacts_by_name('测试号码1')
+        cdp = ContactDetailsPage()
+        cdp.wait_for_page_load()
+        time.sleep(2)
+        cdp.page_contain_contacts_avatar()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0181(self):
+        """个人profile页,显示大图片(未上传头像)"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        cdp.wait_for_page_load()
+        time.sleep(2)
+        cdp.click_avatar()
+        cdp.is_exists_big_avatar()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0182(self):
+        """个人profile页,显示大图片(上传头像)"""
+        ContactsPage().select_contacts_by_name('测试号码1')
+        cdp = ContactDetailsPage()
+        cdp.wait_for_page_load()
+        time.sleep(2)
+        cdp.click_avatar()
+        cdp.is_exists_big_avatar()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0193(self):
+        """个人profile页,编辑联系人"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        time.sleep(2)
+        cdp.click_edit_contact()
+        time.sleep(1)
+        #编辑手机号码
+        creat_contact=CreateContactPage()
+        creat_contact.click_input_number()
+        creat_contact.change_mobile_number(text='13800138789')
+        contact_number=creat_contact.get_contant_number()
+        creat_contact.click_save()
+        time.sleep(2)
+        #查看改变后的联系人
+        cdp.click_back_icon()
+        ContactsPage().select_contacts_by_name('大佬1')
+        contact_number2=cdp.get_people_number()
+        self.assertNotEqual(contact_number, contact_number2)
+
+    def tearDown_test_contacts_chenjixiang_0193(self):
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        time.sleep(2)
+        ContactsPage().select_contacts_by_name('大佬1')
+        #恢复联系人电话号码
+        number=ContactDetailsPage().get_people_number()
+        if number == '13800138005':
+            ContactDetailsPage().click_back_icon()
+        else:
+            ContactDetailsPage().click_edit_contact()
+            creat_contact = CreateContactPage()
+            creat_contact.click_input_number()
+            creat_contact.change_mobile_number(text='13800138005')
+            creat_contact.click_save()
 
 
-    # @tags('ALL', 'CONTACTS', 'CMCC')
+
+
+
+
+
+
+
+
+
+
+
+
+
+            # @tags('ALL', 'CONTACTS', 'CMCC')
     # def test_contacts_chenjixiang_00001(self):
     #     ContactsPage().select_contacts_by_name('大佬1')
     #     time.sleep(2)
@@ -2073,6 +2162,26 @@ class ContactsLocalhigh(TestCase):
     #     time.sleep(1)
     #     chat.swipe_month("26", 2)
     #
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0194(self):
+        """个人profile页,编辑联系人-姓名不为空"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        time.sleep(2)
+        cdp.click_edit_contact()
+        time.sleep(1)
+        #姓名为空,保存按钮不可点击
+        creat_contact=CreateContactPage()
+        creat_contact.click_input_name()
+        creat_contact.input_name('')
+        creat_contact.is_save_icon_is_clickable()
+        #姓名为必填项
+        creat_contact.click_input_number()
+        creat_contact.page_should_contain_text('姓名不能为空，请输入')
+        time.sleep(2)
+        creat_contact.click_back()
+
 
 
 

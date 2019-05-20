@@ -736,7 +736,6 @@ class TagsGroupingTest(TestCase):
         #     traceback.print_exc()
 
 
-
 class Tag_Group(TestCase):
 
     @classmethod
@@ -862,16 +861,19 @@ class Tag_Group(TestCase):
         GroupPage.click_label_grouping()
         GroupPage.click_new_group()
         GroupPage.click_input_element()
-        time.sleep(3)
+        time.sleep(1)
         GroupPage.input_content()
         GroupPage.click_sure_element()
+        time.sleep(2)
         GroupPage.click_allow_button()
         GroupPage.page_should_contain_text('选择联系人')
 
     def tearDown_test_contacts_quxinli_0355(self):
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        ContactsPage().click_label_grouping()
+        time.sleep(1)
         GroupPage = GroupListPage()
-        GroupPage.click_back_button()
-        GroupPage.click_back_button()
         GroupPage.delete_group()
 
     @staticmethod
@@ -1582,10 +1584,9 @@ class Tag_Group(TestCase):
         slcp.click_sure()
         time.sleep(1)
         GroupPage.enter_mutil_video_call()
+        time.sleep(2)
         while GroupPage.is_text_present('始终允许'):
             GroupPage.click_text('始终允许')
-        # if GroupPage.is_text_present('相机权限'):
-        #     GroupPage.click_text('始终允许')
         time.sleep(1)
         GroupPage.click_text("大佬1")
         time.sleep(2)
@@ -1786,7 +1787,7 @@ class Tag_Group(TestCase):
         slcp.swipe_select_one_member_by_name('大佬4')
         slcp.click_sure()
         time.sleep(2)
-        GroupPage.click_send_message_to_group()
+        LableGroupDetailPage().click_send_group_info()
         time.sleep(2)
         GroupPage.click_divide_group_icon()
         time.sleep(1)
@@ -1809,10 +1810,9 @@ class Tag_Group(TestCase):
     def tearDown_test_contacts_quxinli_0416(self):
         Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
-
-        GroupPage = GroupListPage()
-        GroupPage.click_back_button(times=4)
+        ContactsPage().click_label_grouping()
         time.sleep(1)
+        GroupPage = GroupListPage()
         GroupPage.delete_group(name='aaa')
 
     @staticmethod
@@ -1875,9 +1875,13 @@ class Tag_Group(TestCase):
         time.sleep(1)
         GroupPage = GroupListPage()
         GroupPage.click_star_icon()
+        if GroupPage.is_text_present('已取消添加为星标联系人'):
+            GroupPage.click_back_button()
+        elif GroupPage.is_text_present('已成功添加为星标联系人'):
+            GroupPage.click_star_icon()
+            GroupPage.click_back_button()
         #删除群组
         GroupPage = GroupListPage()
-        GroupPage.click_back_button()
         time.sleep(1)
         GroupPage.click_label_grouping()
         time.sleep(1)
@@ -1937,8 +1941,10 @@ class Tag_Group(TestCase):
     def tearDown_test_contacts_quxinli_0421(self):
         Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
+        time.sleep(2)
+        ContactsPage().click_label_grouping()
         GroupPage = GroupListPage()
-        GroupPage.click_back_button(times=4)
+        # GroupPage.click_back_button(times=4)
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
 
@@ -2561,29 +2567,6 @@ class Tag_Group(TestCase):
     def tearDown_test_contacts_0406(self):
         GroupPage = GroupListPage()
         GroupPage.delete_group(name='？？？')
-
-    # @staticmethod
-    # def setUp_test_contacts_0407():
-    #     Preconditions.connect_mobile('Android-移动')
-    #     current_mobile().hide_keyboard_if_display()
-    #     Preconditions.make_already_in_message_page()
-    #
-    # @tags('ALL', 'CONTACT', 'CMCC')
-    # def test_contacts_0407(self):
-    #     """“分组设置-符号标签名称
-    #     auther:darcy
-    #     """
-    #     try:
-    #         cdp = ContactDetailsPage()
-    #         cdp.change_delete_number()
-    #         cdp.delete_all_contact()
-    #     except:
-    #         cdp = ContactDetailsPage()
-    #         cdp.take_screen_out()
-
-    def tearDown_test_contacts_0407(self):
-        GroupPage = GroupListPage()
-        #     GroupPage.delete_group(name='？？？')
 
     @staticmethod
     def setUp_test_contacts_0410():

@@ -98,6 +98,12 @@ class CreateContactPage(Keyboard, BasePage):
     def save_contact(self):
         self.click_element(self.__locators['保存'])
 
+    @TestLogger.log('保存按钮是否可点击')
+    def is_save_icon_is_clickable(self):
+        """保存按钮是否可点击"""
+        self._is_clickable(self.__locators['保存'])
+
+
     @TestLogger.log('点击返回')
     def click_back(self):
         self.click_element(self.__locators['返回'])

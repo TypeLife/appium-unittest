@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as ec
 from library.core.TestLogger import TestLogger
 from pages.components.Footer import FooterPage
 import time
+from pages.contacts.Contacts import ContactsPage
 
 
 class MessagePage(FooterPage):
@@ -186,6 +187,7 @@ class MessagePage(FooterPage):
     def click_contacts(self):
         """点击通讯录"""
         self.click_element(self.__locators['通讯录'])
+        ContactsPage().click_sim_contact()
 
     @TestLogger.log()
     def assert_group_chat_text_equal_to(self, expect):
