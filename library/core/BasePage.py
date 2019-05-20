@@ -80,6 +80,7 @@ class BasePage(object):
     def get_element_attribute(self, locator, attr, wait_time=0):
         return self.mobile.get_element_attribute(locator, attr, wait_time)
 
+    @TestLogger.log()
     def is_text_present(self, text):
         """检查屏幕是否包含文本"""
         return self.mobile.is_text_present(text)

@@ -109,7 +109,30 @@ class Preconditions(WorkbenchPreconditions):
             imp.click_create_item()
             imp.wait_for_page_load()
 
-@unittest.skip("跳过")
+    @staticmethod
+    def create_new_item():
+        """创建新事项"""
+
+        imp = ImportantMattersPage()
+        imp.click_new_item()
+        # 等待创建事项页面加载
+        imp.wait_for_create_item_page_load()
+        # 输入创建事项标题
+        title = "测试事项"
+        imp.input_create_item_title(title)
+        # 输入创建事项描述
+        imp.input_create_item_describe("描述内容12345")
+        imp.click_add_icon()
+        sccp = SelectCompanyContactsPage()
+        sccp.wait_for_page_load()
+        # 选择参与人
+        sccp.click_contacts_by_name("大佬1")
+        sccp.click_sure_button()
+        imp.wait_for_create_item_page_load()
+        imp.click_create_item()
+        imp.wait_for_page_load()
+
+
 class ImportantMattersAllTest(TestCase):
     """
     模块：工作台->重要事项
@@ -190,9 +213,8 @@ class ImportantMattersAllTest(TestCase):
         imp = ImportantMattersPage()
         imp.wait_for_page_load()
         # 确保已有事项
-        # Preconditions.ensure_have_item()
-        # imp.click_first_item()
-        imp.click_text("创建")
+        Preconditions.ensure_have_item()
+        imp.click_first_item()
         # 1.等待查看事项页面加载
         imp.wait_for_check_item_page_load()
         # 2.点击查看事项页面标题
@@ -261,6 +283,11 @@ class ImportantMattersAllTest(TestCase):
         self.assertEquals(imp.is_toast_exist("添加成功"), True)
         imp.wait_for_personnel_status_page_load()
         self.assertEquals(imp.is_text_present("佬2"), True)
+        imp.click_back()
+        imp.wait_for_check_item_page_load()
+        imp.click_back()
+        # 等待重要事项首页加载
+        imp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'workbench', 'LXD')
     def test_ZYSX_0006(self):
@@ -299,6 +326,64 @@ class ImportantMattersAllTest(TestCase):
         # 等待重要事项首页加载
         imp.wait_for_page_load()
 
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_ZYSX_0007(self):
+        """添加评论"""
 
+        imp = ImportantMattersPage()
+        imp.wait_for_page_load()
+        # 创建新事项
+        Preconditions.create_new_item()
+        imp.click_first_item()
+        # 1.等待查看事项页面加载
+        imp.wait_for_check_item_page_load()
+        # 2.打开评论编辑页
+        imp.click_comment()
+        time.sleep(2)
+        comment = "测试评论0007"
+        # 输入评论内容
+        imp.input_modify_content(comment)
+        imp.click_submit_comments()
+        # 3.等待查看事项页面加载，界面底部显示刚刚的评论内容
+        imp.wait_for_check_item_page_load()
+        imp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        self.assertEquals(imp.is_text_present(comment), True)
+        imp.click_back()
+        # 等待重要事项首页加载
+        imp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_ZYSX_0008(self):
+        """删除评论"""
+
+        imp = ImportantMattersPage()
+        imp.wait_for_page_load()
+        # 创建新事项
+        Preconditions.create_new_item()
+        imp.click_first_item()
+        # 1.等待查看事项页面加载
+        imp.wait_for_check_item_page_load()
+        # 确保有评论可删除
+        imp.click_comment()
+        time.sleep(2)
+        comment = "测试评论0008"
+        imp.input_modify_content(comment)
+        imp.click_submit_comments()
+        imp.wait_for_check_item_page_load()
+        imp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        # 2.收起事项信息，显示事项动态栏信息
+        imp.click_text("收起详情")
+        # 点击指定评论后的删除图标
+        imp.click_delete_icon_by_comment(comment)
+        time.sleep(1)
+        # 3.弹出删除评论确认弹窗
+        imp.click_sure()
+        # 4.评论删除成功，评论从界面消失
+        self.assertEquals(imp.is_toast_exist("删除成功"), True)
+        imp.wait_for_check_item_page_load()
+        self.assertEquals(imp.is_text_present(comment), False)
+        imp.click_back()
+        # 等待重要事项首页加载
+        imp.wait_for_page_load()
 
 

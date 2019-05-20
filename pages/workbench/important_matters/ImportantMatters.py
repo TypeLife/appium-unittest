@@ -19,6 +19,8 @@ class ImportantMattersPage(BasePage):
         '确定': (MobileBy.XPATH, '//*[@text="确定"]'),
         '保存': (MobileBy.XPATH, '//*[@text="保存"]'),
         '人员状态': (MobileBy.XPATH, '//*[@text="人员状态"]'),
+        '评论': (MobileBy.XPATH, '//*[@text="评论"]'),
+        '提交评论': (MobileBy.XPATH, '//*[@text="提交评论"]'),
         '添加人员': (MobileBy.XPATH, '//*[@text="添加人员"]'),
         '删除人员': (MobileBy.XPATH, '//*[@text="删除人员"]'),
         '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back_actionbar'),
@@ -174,6 +176,16 @@ class ImportantMattersPage(BasePage):
         self.click_element(self.__class__.__locators["人员状态"])
 
     @TestLogger.log()
+    def click_comment(self):
+        """点击评论"""
+        self.click_element(self.__class__.__locators["评论"])
+
+    @TestLogger.log()
+    def click_submit_comments(self):
+        """点击提交评论"""
+        self.click_element(self.__class__.__locators["提交评论"])
+
+    @TestLogger.log()
     def click_add_personnel(self):
         """点击添加人员"""
         self.click_element(self.__class__.__locators["添加人员"])
@@ -204,6 +216,12 @@ class ImportantMattersPage(BasePage):
     def click_delete_icon_by_name(self, name):
         """点击指定联系人删除图标"""
         locator = (MobileBy.XPATH, '//*[@text="%s"]/../android.view.View[2]' % name)
+        self.click_element(locator)
+
+    @TestLogger.log()
+    def click_delete_icon_by_comment(self, comment):
+        """点击指定评论删除图标"""
+        locator = (MobileBy.XPATH, '//*[contains(@text,"%s")]/../android.view.View[3]/android.view.View[2]/android.view.View/android.view.View[@text="删除"]' % comment)
         self.click_element(locator)
 
     @TestLogger.log()
