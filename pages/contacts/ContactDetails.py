@@ -53,6 +53,7 @@ class ContactDetailsPage(BasePage):
         "呼叫(1/8)": (MobileBy.ID, "com.chinasofti.rcs:id/tv_sure"),
         "暂不开启": (MobileBy.ID, "android:id/button2"),
         "挂断电话": (MobileBy.ID, "com.chinasofti.rcs:id/ivDecline"),
+        "结束通话": (MobileBy.ID, "com.chinasofti.rcs:id/smart_call_out_term"),
         "视频通话呼叫中": (MobileBy.XPATH, "//*[@text='	视频通话呼叫中']"),
         "挂断视频通话": (MobileBy.ID, "com.chinasofti.rcs:id/iv_out_Cancel"),
         "取消拨打": (MobileBy.XPATH, "//*[@text='取消拨打']"),
@@ -107,6 +108,12 @@ class ContactDetailsPage(BasePage):
     def cancel_call(self):
         time.sleep(7)
         self.click_element(self.__locators["挂断电话"])
+
+    @TestLogger.log("结束通话")
+    def click_end_call(self):
+        time.sleep(2)
+        self.click_element(self.__locators["结束通话"])
+
 
     @TestLogger.log("删除联系人")
     def change_delete_number(self):

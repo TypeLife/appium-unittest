@@ -70,6 +70,8 @@ class ContactsPage(FooterPage):
         '索引字母容器': (MobileBy.ID, 'com.chinasofti.rcs:id/indexbarview'),
         '新建手机联系人-确定': (MobileBy.ID, 'android:id/icon2'),
         "新建手机联系人-姓名": (MobileBy.XPATH, "//*[@text='姓名']"),
+        '新建手机联系人': (MobileBy.ID, 'com.android.contacts:id/hw_fab'),
+
     }
 
     @TestLogger.log("获取所有联系人名")
@@ -440,12 +442,18 @@ class ContactsPage(FooterPage):
     @TestLogger.log('点击新建SIM联系人界面-确定')
     def click_sure_SIM(self):
         """点击确定"""
-        self.click_element(self.__locators['新建手机联系人-确定'])
+        self.click_element(self.__class__.__locators['新建手机联系人-确定'])
 
 
     @TestLogger.log('点击新建SIM联系人界面-确定')
     def input_contact_text(self,text):
         self.input_text(self.__class__.__locators["新建手机联系人-姓名"],text)
+
+    @TestLogger.log('点击新建SIM联系人界面-确定')
+    def click_creat_contacts(self):
+        """点击新建联系人"""
+        self.click_element(self.__class__.__locators['新建手机联系人'])
+
 
 
     @TestLogger.log()
