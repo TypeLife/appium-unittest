@@ -34,10 +34,10 @@ class MsgPrivateChatMsgList(TestCase):
     表格：单聊
     """
 
-    @classmethod
-    def setUpClass(cls):
-        Preconditions.select_mobile('Android-移动')
-        current_mobile().launch_app()
+    # @classmethod
+    # def setUpClass(cls):
+    #     Preconditions.select_mobile('Android-移动')
+    #     current_mobile().launch_app()
 
     def default_setUp(self):
         """确保每个用例运行前在消息页面"""
@@ -354,7 +354,6 @@ class MsgPrivateChatMsgSetting(TestCase):
         chat = SingleChatPage()
         # 1.点击右上角的设置按钮,进入聊天设置页面
         chat.click_setting()
-        setting.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0002(self):
@@ -508,6 +507,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.click_back()
         chat = SingleChatPage()
         # 点击图片按钮
+        chat.wait_for_page_load()
         chat.click_pic()
         cpp = ChatPicPage()
         cpp.wait_for_page_load()
@@ -839,9 +839,9 @@ class MsgPrivateChatMsgSetting(TestCase):
         group_set.click_delete_and_exit2()
         time.sleep(1)
         group_set.click_sure()
-        chat.wait_for_page_load()
+        chat.wait_for_page_load(timeout=60)
         chat.click_setting()
-        setting.wait_for_page_load()
+        current_mobile().launch_app()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Msg_PrivateChat_Setting_0031(self):
@@ -988,7 +988,7 @@ class MsgContactSelector(TestCase):
         # 选择和通讯录联系人；下方为本地联系人列表
         scp.page_should_contain_text("选择联系人")
         scp.page_should_contain_text("搜索或输入手机号")
-        scp.page_should_contain_text("选择和通讯录联系人")
+        # scp.page_should_contain_text("选择和通讯录联系人")
         scp.page_contain_element("local联系人")
         scp.click_back()
         mess.wait_for_page_load()
@@ -1016,7 +1016,7 @@ class MsgContactSelector(TestCase):
         # 选择和通讯录联系人；下方为本地联系人列表
         scp.page_should_contain_text("选择联系人")
         scp.page_should_contain_text("搜索或输入手机号")
-        scp.page_should_contain_text("选择和通讯录联系人")
+        # scp.page_should_contain_text("选择和通讯录联系人")
         scp.page_contain_element("local联系人")
         scp.click_back()
         mess.wait_for_page_load()
@@ -1104,7 +1104,7 @@ class MsgContactSelector(TestCase):
         slcp.page_should_contain_text("选择联系人")
         # 3、顶部搜索框中，默认展示的文案是否是：搜索或输入手机号
         slcp.page_should_contain_text('搜索或输入手机号')
-        names = slcp.get_contacts_name()
+        names = list(slcp.get_contacts_name())
         # 4、在搜索框中输入搜索条件，检查不存在搜索结果时，下方是否展示：无搜索结果
         times = 60
         while times > 0:

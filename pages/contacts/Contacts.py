@@ -67,6 +67,9 @@ class ContactsPage(FooterPage):
         '企业群标识': (MobileBy.ID, 'com.chinasofti.rcs:id/group_ep'),
         '群聊列表返回': (MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn'),
         '团队名称': (MobileBy.ID, 'com.chinasofti.rcs:id/img_icon_department'),
+        '索引字母容器': (MobileBy.ID, 'com.chinasofti.rcs:id/indexbarview'),
+        '新建手机联系人-确定': (MobileBy.ID, 'android:id/icon2'),
+        "新建手机联系人-姓名": (MobileBy.XPATH, "//*[@text='姓名']"),
     }
 
     @TestLogger.log("获取所有联系人名")
@@ -90,6 +93,8 @@ class ContactsPage(FooterPage):
             contacts_name.remove("和通讯录")
         if "和飞信电话" in contacts_name:
             contacts_name.remove("和飞信电话")
+        if "本机" in contacts_name:
+            contacts_name.remove("本机")
         return contacts_name
 
     @TestLogger.log()
@@ -174,6 +179,46 @@ class ContactsPage(FooterPage):
         else:
             raise AssertionError("m005_contacts is empty!")
         return phones
+
+
+    def get_all_phone_number(self,times=10):
+        els = self.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/tv_number'))
+        time=0
+        phones=[]
+        while time < times:
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+            if els:
+                for el in els:
+                    phones.append(el.text)
+
+            time += 1
+            return phones
+
+    @TestLogger.log()
+    def get_all_contacts_number(self):
+        """获取所有联系人电话号码"""
+        els = self.get_elements(self.__class__.__locators["18681151872"])
+        contacts_name = []
+        if els:
+            for el in els:
+                contacts_name.append(el.text)
+        else:
+            raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
+        flag = True
+        current = 0
+        while flag:
+            current += 1
+            if current > 20:
+                return
+            self.swipe_half_page_up()
+            els = self.get_elements(self.__class__.__locators["联系人名"])
+            for el in els:
+                if el.text not in contacts_name:
+                    contacts_name.append(el.text)
+                    flag = True
+                else:
+                    flag = False
+        return contacts_name
 
     def page_up(self):
         """向上滑动一页"""
@@ -284,7 +329,7 @@ class ContactsPage(FooterPage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_element_present(self.__class__.__locators["群聊"])
+                condition=lambda d: self._is_element_present(self.__class__.__locators["+号"])
             )
         except:
             raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
@@ -369,8 +414,87 @@ class ContactsPage(FooterPage):
         """页面包含元素+号"""
         self.page_should_contain_element(self.__class__.__locators['+号'])
 
+
+    @TestLogger.log('判断元素是否存在')
+    def is_page_contain_element(self, locator,times=10):
+        # el=self.find_element_by_swipe(self.__class__.__locators[locator])
+        if self._is_element_present(self.__class__.__locators[locator]):
+             self.page_should_contain_element(self.__class__.__locators[locator])
+        else:
+            c = 0
+            while c < times:
+                self.page_up()
+                if self._is_element_present(self.__class__.__locators[locator]):
+                    return self.page_should_contain_element(self.__class__.__locators[locator])
+                c += 1
+            return self.page_should_contain_element(self.__class__.__locators[locator])
+
+
+    @TestLogger.log("根据导航栏的第一个字母定位")
+    def choose_index_bar_click_element(self):
+        self.click_element(
+            ('xpath','//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView[1]'))
+        elements = self.get_elements(self.__class__.__locators["群聊名"])
+        elements[0].click()
+
+    @TestLogger.log('点击新建SIM联系人界面-确定')
+    def click_sure_SIM(self):
+        """点击确定"""
+        self.click_element(self.__locators['新建手机联系人-确定'])
+
+
+    @TestLogger.log('点击新建SIM联系人界面-确定')
+    def input_contact_text(self,text):
+        self.input_text(self.__class__.__locators["新建手机联系人-姓名"],text)
+
+
     @TestLogger.log()
-    def page_contain_element(self,locator):
-        """页面包含元素"""
-        # self.find_element_by_swipe()
-        self.page_should_contain_element(self.__class__.__locators[locator])
+    def select_contacts_by_number(self, number):
+        """根据号码选择一个联系人"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_number" and @text ="%s"]' % number)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+            if self._is_element_present(locator):
+                break
+            current += 1
+        self.click_element(locator)
+
+    @TestLogger.log()
+    def is_exit_element_by_text_swipe(self, number):
+        """通过电话号码,滑动判断特定元素是否存在"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_number" and @text ="%s"]' % number)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+            if self._is_element_present(locator):
+                return self.page_should_contain_element(locator)
+            else:
+                # break
+                current += 1
+
+    @TestLogger.log()
+    def is_contacts_exist(self, name):
+        """通过联系人名判断联系人是否存在"""
+        max_try = 10
+        current = 0
+        while current < max_try:
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+            if self.is_text_present(name):
+                return True
+            current += 1
+            # self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        return False
+
+            #
+            # for group in groups:
+            #     if group:
+            #
+            #         return True
+            #     current += 1
+            # return False
+
+
+

@@ -277,7 +277,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     def setUp_test_msg_group_chat_file_location_0001():
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
-        current_mobile().launch_app()
+        current_mobile().reset_app()
         # current_mobile().connect_mobile()
         Preconditions.enter_group_chat_page()
 
@@ -1022,7 +1022,8 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 长按刚刚发送的文件撤回
         gcp.press_file_to_do(".html", "撤回")
         time.sleep(2)
-        # gcp.click_i_know()
+        if gcp.is_text_present("我知道了"):
+            gcp.click_i_know()
         # 验证撤回成功
         time.sleep(3)
         if not gcp.is_text_present("你撤回了一条信息"):

@@ -18,11 +18,16 @@ class ContactDetailsPage(BasePage):
         '星标图标': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_star'),
         '返回上一页': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_back'),
         '名片标题': (MobileBy.ID, 'com.chinasofti.rcs:id/profile_name'),
+
+        '标题': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_profile_name'),
+        '手机号': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_phone'),
+
         '星标': (MobileBy.ID, 'com.chinasofti.rcs:id/star'),
         '编辑': (MobileBy.ID, 'com.chinasofti.rcs:id/txt_call_detail_edit'),
         '好久不见~打个招呼吧': (MobileBy.ID, 'com.chinasofti.rcs:id/recent_contact_hint'),
         '名片号码': (MobileBy.ID, 'com.chinasofti.rcs:id/phone'),
-        '名片首字母': (MobileBy.ID, 'com.chinasofti.rcs:id/profile_photo_tv'),
+        '名片首字母': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_profile_photo_tv'),
+        '联系人头像图片': (MobileBy.ID, 'com.chinasofti.rcs:id/recyclesafeimageview_profile_photo'),
         '头像': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_profile_photo_tv'),
         '消息': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_normal_message'),
         '电话': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_normal_call'),
@@ -41,7 +46,7 @@ class ContactDetailsPage(BasePage):
         'com.chinasofti.rcs:id/btn_share_card_line': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_share_card_line'),
         '邀请使用': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_invitation_to_use'),
         '大图': (MobileBy.ID, 'com.chinasofti.rcs:id/img_smooth'),
-        '电话号码': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/et" and @text="13800138005"]'),
+        '电话号码': (MobileBy.XPATH, '//*[@text="电话"]/../android.widget.EditText[@resource-id="com.chinasofti.rcs:id/et"]'),
         "确定": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_save_or_sure'),
         "确定删除": (MobileBy.ID, 'com.chinasofti.rcs:id/bt_button2'),
         "删除联系人": (MobileBy.ID, "com.chinasofti.rcs:id/tv_delete_contact"),
@@ -55,11 +60,37 @@ class ContactDetailsPage(BasePage):
         "用户名称": (MobileBy.ID, "com.chinasofti.rcs:id/tv_profile_name"),
         "用户头像": (MobileBy.ID, "com.chinasofti.rcs:id/recyclesafeimageview_profile_photo"),
         "用户号码": (MobileBy.ID, "com.chinasofti.rcs:id/tv_phone"),
+        '添加桌面快捷方式': (MobileBy.XPATH, '//*[@text="添加桌面快捷方式"]'),
+        '我知道了': (MobileBy.XPATH, '//*[@text="我知道了"]'),
+        '快捷方式-确定添加': (MobileBy.ID, "android:id/button1"),
+        '快捷方式-取消添加': (MobileBy.ID, "android:id/button2"),
+
     }
 
+    @TestLogger.log("是否在当前页面")
+    def is_on_this_page(self):
+        time.sleep(2)
+        return self.is_text_present('分享名片')
+
+
+    @TestLogger.log("添加桌面快捷方式")
+    def click_add_desktop_shortcut(self):
+        time.sleep(1)
+        self.click_element(self.__locators["添加桌面快捷方式"])
+
+    @TestLogger.log("点击我知道了")
+    def click_I_know(self):
+        time.sleep(1)
+        self.click_element(self.__locators["我知道了"])
+
+    @TestLogger.log("点击确定添加快捷方式")
+    def click_sure_add_desktop_shortcut(self):
+        time.sleep(1)
+        self.click_element(self.__locators["快捷方式-确定添加"])
+
     @TestLogger.log("更改手机号码")
-    def change_mobile_number(self):
-        self.input_text(self.__locators["电话号码"], "13800138010")
+    def change_mobile_number(self,text='13800138789'):
+        self.input_text(self.__locators["电话号码"],text)
 
     @TestLogger.log("点击呼叫")
     def send_call_number(self):
@@ -69,7 +100,7 @@ class ContactDetailsPage(BasePage):
 
     @TestLogger.log("设置授权窗口")
     def cancel_permission(self):
-        time.sleep(3)
+        time.sleep(1)
         self.click_element(self.__locators["暂不开启"])
 
     @TestLogger.log("挂断通话")
@@ -137,12 +168,12 @@ class ContactDetailsPage(BasePage):
 
     @TestLogger.log("点击确定")
     def click_sure_icon(self):
-        """点击返回"""
+        """点击确定"""
         self.click_element(self.__locators['确定'])
 
     @TestLogger.log("确定删除")
     def click_sure_delete(self):
-        """点击返回"""
+        """确定删除"""
         time.sleep(3)
         self.click_element(self.__locators['确定删除'])
 
@@ -249,7 +280,13 @@ class ContactDetailsPage(BasePage):
     @TestLogger.log()
     def page_should_contain_element_first_letter(self):
         """页面应该包含首字母"""
-        return self.page_should_contain_element("名片首字母")
+        return self.page_should_contain_element(self.__class__.__locators['名片首字母'])
+
+    @TestLogger.log()
+    def page_contain_contacts_avatar(self):
+        """页面应该包含联系人头像"""
+        return self.page_should_contain_element(self.__class__.__locators['联系人头像图片'])
+
 
     @TestLogger.log()
     def is_exists_contacts_image(self):
@@ -270,6 +307,12 @@ class ContactDetailsPage(BasePage):
     def is_exists_contacts_number(self):
         """是否存在联系人号码"""
         return self._is_element_present(self.__class__.__locators["用户号码"])
+
+    @TestLogger.log()
+    def is_exists_contacts_image(self):
+        """是否存在联系人头像"""
+        return self._is_element_present(self.__class__.__locators["用户头像"])
+
 
     @TestLogger.log()
     def is_exists_message_icon(self):
@@ -376,6 +419,17 @@ class ContactDetailsPage(BasePage):
         os.popen("adb pull /data/local/tmp/tmp.png " + path + "/" + timestamp + ".png")
         os.popen("adb shell rm /data/local/tmp/tmp.png")
 
+    @TestLogger.log()
+    def get_people_name(self):
+        time.sleep(2)
+        el = self.get_element(self.__class__.__locators['标题'])
+        return el.text
+
+    @TestLogger.log()
+    def get_people_number(self):
+        time.sleep(2)
+        return self.get_element(self.__class__.__locators['手机号']).text
+
 
 def add(func):
     def wrapper(*args):
@@ -396,3 +450,5 @@ def add(func):
             # raise ArithmeticError
 
     return wrapper
+
+

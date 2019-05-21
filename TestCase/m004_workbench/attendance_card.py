@@ -74,15 +74,13 @@ class Preconditions(WorkbenchPreconditions):
         wbp.click_add_attendance_card()
         acp = AttendanceCardPage()
         # 解决工作台不稳定问题
-        time.sleep(5)
         n = 1
-        while acp.is_text_present("返回重试"):
-            acp.click_text("返回重试")
+        while not acp.page_should_contain_text2("考勤组"):
+            acp.click_back_by_android()
             wbp.wait_for_workbench_page_load()
             wbp.click_attendance_card()
-            time.sleep(5)
             n += 1
-            if n > 10:
+            if n > 20:
                 break
         # 确保已经加入考勤组
         if not acp.is_on_attendance_card_page():
@@ -92,7 +90,7 @@ class Preconditions(WorkbenchPreconditions):
                 acp.click_text("始终允许")
             time.sleep(2)
             acp.click_text("请选择")
-            time.sleep(1)
+            time.sleep(5)
             acp.click_text("全选")
             time.sleep(1)
             acp.click_text("确认")
@@ -177,15 +175,13 @@ class AttendanceCardAllTest(TestCase):
         wbp.wait_for_workbench_page_load()
         wbp.click_attendance_card()
         # 解决工作台不稳定问题
-        time.sleep(5)
         n = 1
-        while acp.is_text_present("返回重试"):
-            acp.click_text("返回重试")
+        while not acp.page_should_contain_text2("考勤组"):
+            acp.click_back_by_android()
             wbp.wait_for_workbench_page_load()
             wbp.click_attendance_card()
-            time.sleep(5)
             n += 1
-            if n > 10:
+            if n > 20:
                 break
         acp.wait_for_page_load()
         acp.click_help_icon()

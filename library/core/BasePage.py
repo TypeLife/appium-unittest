@@ -80,6 +80,7 @@ class BasePage(object):
     def get_element_attribute(self, locator, attr, wait_time=0):
         return self.mobile.get_element_attribute(locator, attr, wait_time)
 
+    @TestLogger.log()
     def is_text_present(self, text):
         """检查屏幕是否包含文本"""
         return self.mobile.is_text_present(text)
@@ -166,8 +167,8 @@ class BasePage(object):
                 _xpath = u'//*[@{}="{}"]'.format('text', text)
             else:
                 _xpath = u'//*[contains(@{},"{}")]'.format('text', text)
-            # self.get_element((MobileBy.XPATH, _xpath)).click()
-            self.click_element((MobileBy.XPATH, _xpath))
+            self.get_element((MobileBy.XPATH, _xpath)).click()
+            # self.click_element((MobileBy.XPATH, _xpath))
 
     def input_text(self, locator, text):
         self.mobile.input_text(locator, text)
@@ -270,6 +271,74 @@ class BasePage(object):
                 y_offset = height
                 self.driver.swipe(x_start, y_start, x_offset, y_offset, duration)
 
+    def swipe_by_direction2(self, locator, direction, number, duration=None):
+        """
+        在元素内滑动
+        :param locator: 定位器
+        :param direction: 方向（left,right,up,down）
+        :param duration: 持续时间ms
+        :return:
+        """
+        elements = self.get_elements(locator)
+        element = elements[number]
+        rect = element.rect
+        left, right = int(rect['x']) + 1, int(rect['x'] + rect['width']) - 1
+        top, bottom = int(rect['y']) + 1, int(rect['y'] + rect['height']) - 1
+        width = int(rect['width']) - 2
+        height = int(rect['height']) - 2
+
+        if self._get_platform() == 'android':
+            if direction.lower() == 'left':
+                x_start = right
+                x_end = left
+                y_start = (top + bottom) // 2
+                y_end = (top + bottom) // 2
+                self.driver.swipe(x_start, y_start, x_end, y_end, duration)
+            elif direction.lower() == 'right':
+                x_start = left
+                x_end = right
+                y_start = (top + bottom) // 2
+                y_end = (top + bottom) // 2
+                self.driver.swipe(x_start, y_start, x_end, y_end, duration)
+            elif direction.lower() == 'up':
+                x_start = (left + right) // 2
+                x_end = (left + right) // 2
+                y_start = bottom
+                y_end = top
+                self.driver.swipe(x_start, y_start, x_end, y_end, duration)
+            elif direction.lower() == 'down':
+                x_start = (left + right) // 2
+                x_end = (left + right) // 2
+                y_start = top
+                y_end = bottom
+                self.driver.swipe(x_start, y_start, x_end, y_end, duration)
+
+        else:
+            if direction.lower() == 'left':
+                x_start = right
+                x_offset = width
+                y_start = (top + bottom) // 2
+                y_offset = 0
+                self.driver.swipe(x_start, y_start, x_offset, y_offset, duration)
+            elif direction.lower() == 'right':
+                x_start = left
+                x_offset = width
+                y_start = -(top + bottom) // 2
+                y_offset = 0
+                self.driver.swipe(x_start, y_start, x_offset, y_offset, duration)
+            elif direction.lower() == 'up':
+                x_start = (left + right) // 2
+                x_offset = 0
+                y_start = bottom
+                y_offset = -height
+                self.driver.swipe(x_start, y_start, x_offset, y_offset, duration)
+            elif direction.lower() == 'down':
+                x_start = (left + right) // 2
+                x_offset = 0
+                y_start = top
+                y_offset = height
+                self.driver.swipe(x_start, y_start, x_offset, y_offset, duration)
+
     def swipe_by_percent_on_screen(self, start_x, start_y, end_x, end_y, duration):
         width = self.driver.get_window_size()["width"]
         height = self.driver.get_window_size()["height"]
@@ -289,6 +358,12 @@ class BasePage(object):
             raise AssertionError("Page should have contained text '{}' "
                                  "but did not" % text)
         return True
+
+    def page_should_contain_text2(self, text):
+        try:
+            return self.wait_until(condition=lambda x: self.is_text_present(text))
+        except:
+            return False
 
     def page_should_not_contain_text(self, text):
         if self.is_text_present(text):
@@ -592,3 +667,12 @@ class BasePage(object):
     def is_locked(self):
         """判断设备是否锁屏"""
         return self.driver.is_locked()
+
+    @TestLogger.log()
+    def is_exit_element_by_text_swipe(self, contactName):
+        """滑动判断特定元素是否存在"""
+        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[@text="%s"]' % contactName))
+        if el:
+            return True
+        else:
+            return False

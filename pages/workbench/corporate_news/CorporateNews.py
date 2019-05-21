@@ -26,7 +26,7 @@ class CorporateNewsPage(BasePage):
     }
 
     @TestLogger.log()
-    def is_on_corporate_news_page(self, timeout=20, auto_accept_alerts=True):
+    def is_on_corporate_news_page(self, timeout=60, auto_accept_alerts=True):
         """当前页面是否在企业新闻首页"""
 
         try:

@@ -5,7 +5,7 @@ import unittest
 import uuid
 
 import preconditions
-from preconditions.BasePreconditions import LoginPreconditions
+from preconditions.BasePreconditions import  WorkbenchPreconditions
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile
@@ -14,61 +14,9 @@ from pages import *
 from pages.contacts.local_contact import localContactPage
 from pages.workbench.create_group.CreateGroup import CreateGroupPage
 from pages.workbench.create_group.SelectEnterpriseContacts import SelectEnterpriseContactsPage
-class Preconditions(LoginPreconditions):
+
+class Preconditions(WorkbenchPreconditions):
     """前置条件"""
-
-    @staticmethod
-    def create_enterprise_group(name):
-        """创建企业群"""
-
-        mp = MessagePage()
-        mp.wait_for_page_load()
-        mp.open_workbench_page()
-        wbp = WorkbenchPage()
-        wbp.wait_for_workbench_page_load()
-        wbp.click_add_create_group()
-        cgp = CreateGroupPage()
-        # 等待创建群首页加载
-        cgp.wait_for_page_load()
-
-        cgp.click_create_group()
-        sec = SelectEnterpriseContactsPage()
-        sec.wait_for_page_load()
-        # 创建企业群
-        sec.click_contacts_by_name("大佬1")
-        sec.click_contacts_by_name("大佬2")
-        sec.click_sure()
-        cgp.input_group_name(name)
-        cgp.click_create_group()
-        time.sleep(2)
-        # 返回消息列表
-        cgp.click_back()
-        wbp.wait_for_workbench_page_load()
-        mp.open_message_page()
-        mp.wait_for_page_load()
-
-    @staticmethod
-    def ensure_have_enterprise_group():
-        """确保有企业群"""
-
-        mp = MessagePage()
-        mp.wait_for_page_load()
-        mp.open_contacts_page()
-        cp = ContactsPage()
-        cp.wait_for_page_load()
-        cp.open_group_chat_list()
-        time.sleep(2)
-        if cp.is_exist_enterprise_group():
-            cp.click_return()
-            cp.wait_for_page_load()
-            mp.open_message_page()
-            mp.wait_for_page_load()
-        else:
-            cp.click_return()
-            cp.wait_for_page_load()
-            mp.open_message_page()
-            mp.wait_for_page_load()
-            Preconditions.create_enterprise_group("测试企业群")
 
     @staticmethod
     def make_already_delete_my_group():
@@ -114,7 +62,7 @@ class Preconditions(LoginPreconditions):
                 gcs = GroupChatSetPage()
                 gcs.wait_for_page_load()
                 gcs.click_delete_and_exit()
-                gcs.click_sure()
+                # gcs.click_sure()
                 mess.click_add_icon()
                 mess.click_group_chat()
                 sc.wait_for_page_load()
@@ -223,6 +171,40 @@ class Preconditions(LoginPreconditions):
         group_name = "ag" + phone_number[-4:]
         return group_name
 
+    @staticmethod
+    def get_into_group_chat_page(name):
+        """进入群聊聊天会话页面"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 点击 +
+        mp.click_add_icon()
+        # 点击发起群聊
+        mp.click_group_chat()
+        scg = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            # 等待选择联系人页面加载
+            flag = scg.wait_for_page_load()
+            if not flag:
+                scg.click_back()
+                time.sleep(2)
+                mp.click_add_icon()
+                mp.click_group_chat()
+            else:
+                break
+            n += 1
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        # 选择一个普通群
+        sog.selecting_one_group_by_name(name)
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+
 
 class MsgGroupChatTest(TestCase):
     """
@@ -233,8 +215,41 @@ class MsgGroupChatTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
+
         Preconditions.select_mobile('Android-移动')
-        current_mobile().launch_app()
+        # 导入测试联系人、群聊
+        fail_time1 = 0
+        flag1 = False
+        import dataproviders
+        while fail_time1 < 3:
+            try:
+                required_contacts = dataproviders.get_preset_contacts()
+                conts = ContactsPage()
+                current_mobile().hide_keyboard_if_display()
+                Preconditions.make_already_in_message_page()
+                conts.open_contacts_page()
+                try:
+                    if conts.is_text_present("发现SIM卡联系人"):
+                        conts.click_text("显示")
+                except:
+                    pass
+                for name, number in required_contacts:
+                    # 创建联系人
+                    conts.create_contacts_if_not_exits(name, number)
+                required_group_chats = dataproviders.get_preset_group_chats()
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    # 创建群
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
+                flag1 = True
+            except:
+                fail_time1 += 1
+            if flag1:
+                break
 
     def default_setUp(self):
         """确保每个用例运行前在群聊聊天会话页面"""
@@ -640,6 +655,8 @@ class MsgGroupChatTest(TestCase):
         time.sleep(1)
         # 由于页面元素原因，拿“手机联系人”文本做判断是否搜索成功
         self.assertEquals(cpp.is_text_present("手机联系人"), False)
+        cpp.click_back()
+        time.sleep(1)
         cpp.click_back()
         gcp.wait_for_page_load()
 
@@ -1140,17 +1157,23 @@ class MsgGroupChatTest(TestCase):
         contacts_page = SelectLocalContactsPage()
         contacts_page.wait_for_page_load()
         names = contacts_page.get_contacts_name_list()
+        if "本机" in names:
+            names.remove("本机")
         contacts_page.select_one_member_by_name(names[0])
-        flag = contacts_page.contacts_is_selected(names[0])
+        # flag = contacts_page.contacts_is_selected(names[0])
+        time.sleep(1)
+        flag = contacts_page.is_exist_select_contacts_name()
         if not flag:
             raise AssertionError("在联系人选择器页面，单击不可以选择联系人")
         # 3.在联系人选择器页面，点击是否可以取消联系人的选择状态
         contacts_page.select_one_member_by_name(names[0])
+        # flag2 = contacts_page.contacts_is_selected(names[0])
         time.sleep(1)
-        flag2 = contacts_page.contacts_is_selected(names[0])
+        flag2 = contacts_page.is_exist_select_contacts_name()
         if flag2:
             raise AssertionError("在联系人选择器页面，单击不可以取消联系人的选择状态")
         contacts_page.click_back()
+        group_set.wait_for_page_load()
         group_set.click_back()
         gcp.wait_for_page_load()
 
@@ -1606,6 +1629,11 @@ class MsgGroupChatTest(TestCase):
         group_set = GroupChatSetPage()
         group_set.wait_for_page_load()
         group_set.click_QRCode()
+        time.sleep(5)
+        if group_set.is_text_present("二维码加载失败"):
+            group_set.click_back()
+            group_set.wait_for_page_load()
+            group_set.click_QRCode()
         code_page = GroupChatSetSeeQRCodePage()
         code_page.wait_for_page_load()
         # 2、在当前群聊展示页面，点击左下角的分享按钮，是否会跳转到联系人选择器页面
@@ -1616,12 +1644,15 @@ class MsgGroupChatTest(TestCase):
         scp.select_local_contacts()
         local_contacts = SelectLocalContactsPage()
         names = local_contacts.get_contacts_name_list()
+        if "本机" in names:
+            names.remove("本机")
         local_contacts.select_one_member_by_name(names[0])
         # 4、点击确定是否可以分享成功
         local_contacts.click_sure_share()
         flag = code_page.is_toast_exist("已转发")
         self.assertTrue(flag)
         code_page.click_back()
+        time.sleep(1)
         group_set.click_back()
         gcp.wait_for_page_load()
 
@@ -1634,6 +1665,11 @@ class MsgGroupChatTest(TestCase):
         group_set = GroupChatSetPage()
         group_set.wait_for_page_load()
         group_set.click_QRCode()
+        time.sleep(5)
+        if group_set.is_text_present("二维码加载失败"):
+            group_set.click_back()
+            group_set.wait_for_page_load()
+            group_set.click_QRCode()
         code_page = GroupChatSetSeeQRCodePage()
         code_page.wait_for_page_load()
         # 2、在当前群聊展示页面，点击右下角的下载按钮，是否会提示下载成功
@@ -1999,6 +2035,7 @@ class MsgGroupChatTest(TestCase):
         group_set.click_back()
         gcp.wait_for_page_load()
 
+@unittest.skip("暂时跳过")
 class messagegroupchat(TestCase):
 
     # @classmethod
@@ -2011,49 +2048,127 @@ class messagegroupchat(TestCase):
     # def tearDownClass(cls):
     #     Preconditions.delete_contact()
 
+    @classmethod
+    def setUpClass(cls):
 
-    @staticmethod
-    def setUp_test_msg_xiaoqiu_0173():
         Preconditions.select_mobile('Android-移动')
-        Preconditions.make_already_in_message_page()
-        scp = SelectContactsPage()
-        scp.create_message_group()
-        time.sleep(1)
-        scp.click_back_by_android()
+        # 导入测试联系人、群聊
+        fail_time1 = 0
+        flag1 = False
+        import dataproviders
+        while fail_time1 < 3:
+            try:
+                required_contacts = dataproviders.get_preset_contacts()
+                conts = ContactsPage()
+                current_mobile().hide_keyboard_if_display()
+                Preconditions.make_already_in_message_page()
+                conts.open_contacts_page()
+                try:
+                    if conts.is_text_present("发现SIM卡联系人"):
+                        conts.click_text("显示")
+                except:
+                    pass
+                for name, number in required_contacts:
+                    # 创建联系人
+                    conts.create_contacts_if_not_exits(name, number)
+                required_group_chats = dataproviders.get_preset_group_chats()
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    # 创建群
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
+                flag1 = True
+            except:
+                fail_time1 += 1
+            if flag1:
+                break
+
+        # 导入团队联系人
+        fail_time2 = 0
+        flag2 = False
+        while fail_time2 < 5:
+            try:
+                Preconditions.make_already_in_message_page()
+                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
+                Preconditions.create_he_contacts(contact_names)
+                flag2 = True
+            except:
+                fail_time2 += 1
+            if flag2:
+                break
+
+    def default_setUp(self):
+        """
+        1、成功登录和飞信
+        2、确保当前页面在群聊聊天会话页面
+        """
+
+        Preconditions.select_mobile('Android-移动')
+        mp = MessagePage()
+        name = "群聊1"
+        if mp.is_on_this_page():
+            Preconditions.get_into_group_chat_page(name)
+            return
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+        else:
+            current_mobile().launch_app()
+            Preconditions.make_already_in_message_page()
+            Preconditions.get_into_group_chat_page(name)
+
+    # @staticmethod
+    # def setUp_test_msg_xiaoqiu_0173():
+    #     Preconditions.select_mobile('Android-移动')
+    #     Preconditions.make_already_in_message_page()
+    #     scp = SelectContactsPage()
+    #     scp.create_message_group()
+    #     time.sleep(1)
+    #     scp.click_back_by_android()
 
     @tags('ALL','CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0173(self):
         """分享群二维码——搜索选择一个群 """
 
         gcp = GroupChatPage()
-        scp = SelectContactsPage()
-        time.sleep(1)
-        mess = MessagePage()
-        # 点击 +
-        mess.click_add_icon()
-        # 点击 发起群聊
-        mess.click_group_chat()
-        time.sleep(1)
-        scp = SelectContactsPage()
-        scp.click_select_one_group()
-        scp.click_group_search()
-        scp.group_search()
-        time.sleep(1)
-        scp.click_group_name()
-        time.sleep(1)
+        gcp.wait_for_page_load()
         gcp.click_setting()
+        gcs = GroupChatSetPage()
+        gcs.wait_for_page_load()
+        gcs.click_QRCode()
+        time.sleep(5)
+        if gcs.is_text_present("二维码加载失败"):
+            gcs.click_back()
+            gcs.wait_for_page_load()
+            gcs.click_QRCode()
+        code_page = GroupChatSetSeeQRCodePage()
+        code_page.wait_for_page_load()
+        gcs.click_qecode_share_button()
         time.sleep(1)
-        group_set = GroupChatSetPage()
-        group_set.wait_for_page_load()
-        group_set.click_QRCode()
-        group_set.click_qecode_share_button()
-        time.sleep(1)
+        scp = SelectContactsPage()
         scp.click_select_one_group()
         time.sleep(1)
-        scp.click_text('aaa')
-        time.sleep(2)
-        scp.click_text("取消")
-        scp.click_back_by_android(times=5)
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        name = "群聊2"
+        sog.input_search_keyword(name)
+        time.sleep(1)
+        sog.selecting_one_group_by_name(name)
+        time.sleep(1)
+        self.assertEquals(gcp.is_text_present("确定"), True)
+        sog.click_cancel_forward()
+        time.sleep(1)
+        sog.selecting_one_group_by_name(name)
+        sog.click_sure_forward()
+        self.assertEquals(gcp.is_exist_forward(), True)
+        sog.click_back_by_android()
+        gcs.wait_for_page_load()
+        scp.click_back_by_android()
+        gcp.wait_for_page_load()
 
     @staticmethod
     def setUp_test_msg_xiaoqiu_0174():
@@ -2555,7 +2670,7 @@ class messagegroupchat(TestCase):
         sc = SelectContactsPage()
         sc.click_select_one_group()
         time.sleep(1)
-        mess.click_create_group()
+        # mess.click_create_group()
         mess.click_contact_group()
         mess.click_text("大佬2")
         time.sleep(1)
@@ -3187,7 +3302,7 @@ class messagegroupchat(TestCase):
     def setUp_test_msg_xiaoqiu_0259():
         Preconditions.select_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
-        Preconditions.make_already_delete_my_group()
+        # Preconditions.make_already_delete_my_group()
         Preconditions.ensure_have_enterprise_group()
 
 

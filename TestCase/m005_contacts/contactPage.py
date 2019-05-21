@@ -108,6 +108,9 @@ class ContactPage(TestCase):
                 # 连接手机
                 Preconditions.connect_mobile('Android-移动')
                 current_mobile().hide_keyboard_if_display()
+                Preconditions.make_already_in_message_page()
+                conts = ContactsPage()
+                conts.open_contacts_page()
                 # 导入数据
                 for name, number in required_contacts:
                   # Preconditions.create_contacts_if_not_exits(name, number)
@@ -123,6 +126,7 @@ class ContactPage(TestCase):
                     group_list.create_group_chats_if_not_exits(group_name, members)
                 group_list.click_back()
                 conts.open_message_page()
+                return
 
             except:
                 fail_time += 1
@@ -153,7 +157,7 @@ class ContactPage(TestCase):
         contacts.page_should_contain_text('群聊')
         contacts.page_should_contain_text('标签分组')
         contacts.page_should_contain_text('公众号')
-        contacts.page_should_contain_text('创建团队')
+        contacts.is_page_contain_element('创建团队')
         #右上角
         contacts.page_contain_element_add()
 
@@ -246,7 +250,7 @@ class ContactPage(TestCase):
         # 分享名片按钮可点击
         detailpage.click_share_business_card()
         SelectContactsPage().select_local_contacts()
-        SelectContactsPage().select_one_contact_by_name('大佬1')
+        SelectContactsPage().click_one_contact('大佬1')
         # SelectContactsPage().click_cantact_avatar()
         time.sleep(2)
         SelectContactsPage().click_share_card()
@@ -309,7 +313,7 @@ class ContactPage(TestCase):
         #点击分享名片
         detailpage.click_share_business_card()
         SelectContactsPage().select_local_contacts()
-        SelectContactsPage().select_one_contact_by_name('大佬1')
+        SelectContactsPage().click_one_contact('大佬1')
         # SelectContactsPage().click_cantact_avatar()
         time.sleep(2)
         SelectContactsPage().click_share_card()
@@ -375,7 +379,7 @@ class ContactPage(TestCase):
         #点击分享名片进入选择联系人页面，可以成功的分享给人/群
         detailpage.click_share_business_card()
         SelectContactsPage().select_local_contacts()
-        SelectContactsPage().select_one_contact_by_name('大佬1')
+        SelectContactsPage().click_one_contact('大佬1')
         # SelectContactsPage().click_cantact_avatar()
         time.sleep(2)
         SelectContactsPage().click_share_card()
@@ -407,7 +411,6 @@ class ContactPage(TestCase):
         #返回通讯录页面
         HeContactsPage().click_back_icon()
         ContactsPage().click_message_icon()
-
 
     @staticmethod
     def setUp_test_contacts_0195():
@@ -522,7 +525,7 @@ class ContactPage(TestCase):
         time.sleep(2)
         select_contact=SelectContactsPage()
         select_contact.select_local_contacts()
-        select_contact.select_one_contact_by_name('大佬2')
+        select_contact.click_one_contact('大佬2')
         time.sleep(2)
         select_contact.page_should_contain_text('发送名片')
         SelectOneGroupPage().click_share_business_card()
@@ -536,7 +539,8 @@ class ContactPage(TestCase):
         Preconditions.init_and_enter_contacts_page()
         if ContactsPage().is_text_present('需要使用通讯录权限'):
             ContactsPage().click_always_allowed()
-        ContactsPage().select_people_by_name('大佬1')
+        ContactsPage().select_contacts_by_name('大佬1')
+        time.sleep(1)
         ContactListSearchPage().click_share_card()
 
     @tags('和通讯录暂时取消')
@@ -548,7 +552,7 @@ class ContactPage(TestCase):
         #选择联系人选择器页面的任意联系人
         SelectContactsPage().click_he_back()
         SelectContactsPage().select_local_contacts()
-        SelectContactsPage().select_one_contact_by_name('大佬2')
+        SelectContactsPage().click_one_contact('大佬2')
         SelectOneGroupPage().click_share_business_card()
         SelectOneGroupPage().click_back_by_android(times=5)
         #返回通讯录页面
@@ -581,7 +585,7 @@ class ContactPage(TestCase):
         select_contacts.page_should_contain_text('查看更多')
         select_contacts.page_should_contain_text('群聊')
         #选择本地联系人是否会弹出弹框 #是否弹出弹框未检测
-        select_contacts.select_one_contact_by_name('给个红包1')
+        select_contacts.click_one_contact('给个红包1')
         select_contacts.is_text_present('发送名片')
         select_contacts.click_share_card()
         #选择群联系人是否会出现弹框  是否弹出弹框未检测
@@ -600,7 +604,7 @@ class ContactPage(TestCase):
         select_contacts.click_read_more()
         time.sleep(2)
         select_contacts.page_should_contain_text('给个红包4')
-        select_contacts.select_one_contact_by_name('给个红包4')
+        select_contacts.click_one_contact('给个红包4')
         select_contacts.click_share_card()
         #返回通讯录页面
         ContactDetailsPage().click_back_icon()
@@ -650,7 +654,7 @@ class ContactPage(TestCase):
         time.sleep(1)
         select_contacts.click_select_one_group()
         time.sleep(2)
-        select_contacts.click_text("给个红包1")
+        SelectOneGroupPage().click_one_contact("给个红包1")
         time.sleep(1)
         select_contacts.page_should_contain_text('发送名片')
         select_contacts.click_share_card()
@@ -1218,7 +1222,7 @@ class ContactPage(TestCase):
 
 
     @tags('ALL', 'CMCC')
-    def test_contacts_0351(self):
+    def test_contacts_0345(self):
         """公众号详情-清空消息"""
         time.sleep(2)
         official_account_detail=OfficialAccountDetailPage()

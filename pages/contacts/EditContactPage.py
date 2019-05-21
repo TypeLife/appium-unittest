@@ -16,6 +16,12 @@ class EditContactPage(BasePage):
         '删除联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_delete_contact'),
         '取消删除联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/bt_button1'),
         '确定删除联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/bt_button2'),
+
+        '姓名': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/item_name"]//android.widget.TextView'),
+        '输入姓名': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/item_name"]//android.widget.EditText'),
+
+        '电话': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/item_nu mber"]//android.widget.TextView'),
+        '输入号码': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/item_number"]//android.widget.EditText'),
     }
 
     @TestLogger.log('删除联系人')
@@ -32,3 +38,13 @@ class EditContactPage(BasePage):
     def click_sure_delete(self):
         """确定删除联系人"""
         self.click_element(self.__locators['确定删除联系人'])
+
+    @TestLogger.log('点击输入号码')
+    def click_input_number(self):
+        """点击输入号码"""
+        self.click_element(self.__locators['输入号码'])
+
+    @TestLogger.log('输入号码')
+    def input_number(self, name):
+        """输入号码"""
+        self.input_text(self.__locators['输入号码'], name)

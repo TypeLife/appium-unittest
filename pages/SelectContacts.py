@@ -56,8 +56,8 @@ class SelectContactsPage(BasePage):
         "最近聊天消息名称": (MobileBy.ID, "com.chinasofti.rcs:id/tv_name"),
         "联系人横框": (MobileBy.ID, "com.chinasofti.rcs:id/contact_list_item"),
         "搜索框左边选中联系人": (MobileBy.ID, "com.chinasofti.rcs:id/image"),
-       'aaa':(MobileBy.XPATH,"*[@text='aaa']"),
-        # 'aaa':(MobileBy.ID,'com.chinasofti.rcs:id/contact_name'),
+       # 'aaa':(MobileBy.XPATH,"*[@text='aaa']"),
+        'aaa':(MobileBy.ID,'com.chinasofti.rcs:id/contact_name'),
 
         "搜索群组":(MobileBy.ID,'com.chinasofti.rcs:id/et_search'),
         "搜索1":(MobileBy.ID,'com.chinasofti.rcs:id/edit_query'),
@@ -85,6 +85,10 @@ class SelectContactsPage(BasePage):
         'A':(MobileBy.XPATH,'//*[@text ="A"]'),
         'K': (MobileBy.XPATH, '//*[@text ="K"]'),
         "字母栏":(MobileBy.ID,'	com.chinasofti.rcs:id/contact_index_bar_container'),
+        'bm1': (MobileBy.XPATH, "//*[contains(@text, 'bm1')]"),
+        'bm2': (MobileBy.XPATH, "//*[contains(@text, 'bm2')]"),
+        "联系人姓名": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name'),
+        "部门名称": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_department'),
 
     }
 
@@ -94,7 +98,7 @@ class SelectContactsPage(BasePage):
 
     @TestLogger.log("检查控件是否存在")
     def check_if_element_exist(self,text='发送人头像'):
-        self.page_should_contain_element(self.__locators[text])
+        self.page_should_contain_element(self.__class__.__locators[text])
 
     @TestLogger.log("点击群二维码")
     def click_group_code(self, text='群二维码'):
@@ -352,7 +356,7 @@ class SelectContactsPage(BasePage):
     @TestLogger.log()
     def click_one_contact(self, contactName):
         """选择特定联系人"""
-        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[@text="%s"]' % contactName))
+        el = self.find_element_by_swipe((MobileBy.XPATH, '//*[contains(@text, "%s")]' % contactName))
         if el:
             el.click()
             return el

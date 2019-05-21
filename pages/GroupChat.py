@@ -73,6 +73,7 @@ class GroupChatPage(BaseChatPage):
                   "预览文件_返回": (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
                   '预览文件_更多': (MobileBy.ID, 'com.chinasofti.rcs:id/menu'),
                   '定位_地图': ('id', 'com.chinasofti.rcs:id/location_info_view'),
+                  '始终允许': (MobileBy.XPATH, "//*[contains(@text, '始终允许')]"),
                   }
 
     def is_exist_msg_videos(self):
@@ -119,7 +120,7 @@ class GroupChatPage(BaseChatPage):
         self.click_element(self.__class__.__locators["设置"])
 
     @TestLogger.log()
-    def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
+    def wait_for_page_load(self, timeout=60, auto_accept_alerts=True):
         """等待群聊页面加载"""
         try:
             self.wait_until(
@@ -481,7 +482,7 @@ class GroupChatPage(BaseChatPage):
                 self.press(file)
                 self.click_element(self.__class__.__locators['删除'])
         else:
-            raise AssertionError('当前窗口没有可以删除的消息')
+            print('当前窗口没有可以删除的消息')
 
     @TestLogger.log("撤回文件")
     def recall_file(self, file):
@@ -541,3 +542,8 @@ class GroupChatPage(BaseChatPage):
     def is_element_exit_(self, text):
         """指定元素是否存在"""
         return self._is_element_present(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def click_element_(self, text):
+        """点击元素"""
+        self.click_element(self.__class__.__locators[text])

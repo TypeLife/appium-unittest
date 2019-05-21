@@ -171,6 +171,7 @@ class VoiceNoticeTest(TestCase):
         vnp.wait_for_page_loads("语音通知使用指引")
         # 2.在其他有关闭按钮页面，点击顶部【x】
         vnp.click_close_more()
+        time.sleep(3)
         self.assertEquals(wbp.is_on_this_page(), True)
 
     @tags('ALL', 'CMCC', 'workbench', 'debug_fk')

@@ -608,7 +608,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
                 print("WARN: Please add m005_contacts in %s." % teams[0])
             for name in names:
                 detail_page.select_one_linkman(name)
-                flag = detail_page.is_toast_exist("该联系人不可选", timeout=3)
+                flag = detail_page.is_toast_exist("该联系人不可选择", timeout=3)
                 if not flag:
                     break
             # 3、点击确定
@@ -684,7 +684,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         mcp.click_back()
         mess.open_contacts_page()
         contacts = ContactsPage()
-        contacts.wait_for_page_load()
+        time.sleep(2)
         names = contacts.get_contacts_name()
         contacts.select_people_by_name(names[0])
         cdp.wait_for_page_load()
@@ -760,7 +760,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
                 print("WARN: Please add m005_contacts in %s." % teams[0])
             for name in names:
                 detail_page.select_one_linkman(name)
-                flag = detail_page.is_toast_exist("该联系人不可选", timeout=3)
+                flag = detail_page.is_toast_exist("该联系人不可选择", timeout=3)
                 if not flag:
                     break
             # 3、点击确定
@@ -837,7 +837,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         mcp.click_back()
         mess.open_contacts_page()
         contacts = ContactsPage()
-        contacts.wait_for_page_load()
+        time.sleep(2)
         names = contacts.get_contacts_name()
         contacts.select_people_by_name(names[0])
         cdp.wait_for_page_load()
@@ -1240,7 +1240,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         scp.select_local_contacts()
         slcp = SelectLocalContactsPage()
         slcp.wait_for_page_load()
-        names = slcp.get_contacts_name()
+        names = list(slcp.get_contacts_name())
         if "本机" in names:
             names.remove("本机")
         if not names:
@@ -1392,7 +1392,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         # 从消息页面进入单聊页面
         mess.open_contacts_page()
         contacts = ContactsPage()
-        contacts.wait_for_page_load()
+        time.sleep(3)
         names = contacts.get_contacts_name()
         chat = SingleChatPage()
         contacts.select_people_by_name(names[0])
@@ -1445,7 +1445,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         mcp.click_back()
         mess.open_contacts_page()
         contacts = ContactsPage()
-        contacts.wait_for_page_load()
+        time.sleep(3)
         names = contacts.get_contacts_name()
         contacts.select_people_by_name(names[0])
         cdp.wait_for_page_load()
@@ -1663,9 +1663,6 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
                 Preconditions.make_already_in_message_page()
                 contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
                 Preconditions.create_he_contacts(contact_names)
-                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
-                                  ('陈丹丹', "13800137004"), ('alice', "13800137005"), ('郑海贵', "13802883296")]
-                Preconditions.create_he_contacts2(contact_names2)
                 flag2 = True
             except:
                 fail_time2 += 1
