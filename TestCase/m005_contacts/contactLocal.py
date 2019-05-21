@@ -497,7 +497,7 @@ class ContactsLocal(TestCase):
         # GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text(text='测试号码')
+        lcontact.input_search_text(text='大佬')
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(3)
@@ -673,6 +673,7 @@ class ContactsLocal(TestCase):
         me_page = MePage()
         me_page.click_menu('设置')
         me_page.click_menu('联系人管理')
+        time.sleep(2)
         lcontact = localContactPage()
         lcontact.swich_sim_contact(flag=False)
         lcontact.click_back_by_android(times=2)
@@ -1793,6 +1794,37 @@ class ContactsLocalhigh(TestCase):
     author: 余梦思
     """
 
+    @classmethod
+    def setUpClass(cls):
+        # 创建联系人
+        fail_time = 0
+        import dataproviders
+
+        while fail_time < 3:
+            try:
+                # 获取需要导入的联系人数据
+                required_contacts = dataproviders.get_preset_contacts()
+
+                # 连接手机
+                Preconditions.connect_mobile('Android-移动')
+                Preconditions.make_already_in_message_page()
+                current_mobile().hide_keyboard_if_display()
+                conts = ContactsPage()
+                conts.open_contacts_page()
+                # 导入数据
+                for name, number in required_contacts:
+                    # Preconditions.create_contacts_if_not_exits(name, number)
+                    Preconditions.create_contacts_if_not_exits(name, number)
+
+                # # 推送resource文件到手机
+                # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
+                return
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
+
     def default_setUp(self):
         """确保每个用例执行前在通讯录页面"""
         Preconditions.connect_mobile('Android-移动')
@@ -1813,7 +1845,7 @@ class ContactsLocalhigh(TestCase):
         time.sleep(2)
         contact.click_text('联系人')
         time.sleep(1)
-        contact.click_text('新建联系人')
+        contact.click_creat_contacts()
         time.sleep(1)
         contact.click_text('姓名')
         text='无手机号'
@@ -1833,10 +1865,10 @@ class ContactsLocalhigh(TestCase):
         time.sleep(2)
 
     def tearDown_test_contacts_chenjixiang_0123(self):
-        # Preconditions.make_already_in_message_page()
-        # MessagePage().click_contacts()
-        # ContactsPage().select_contacts_by_name('无手机号')
-        # time.sleep(2)
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        ContactsPage().select_contacts_by_name('无手机号')
+        time.sleep(2)
         contant_detail = ContactDetailsPage()
         contant_detail.click_edit_contact()
         time.sleep(2)
@@ -2121,21 +2153,27 @@ class ContactsLocalhigh(TestCase):
             creat_contact.change_mobile_number(text='13800138005')
             creat_contact.click_save()
 
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0194(self):
+        """个人profile页,编辑联系人-姓名不为空"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        time.sleep(2)
+        cdp.click_edit_contact()
+        time.sleep(1)
+        # 姓名为空,保存按钮不可点击
+        creat_contact = CreateContactPage()
+        creat_contact.click_input_name()
+        creat_contact.input_name('')
+        creat_contact.is_save_icon_is_clickable()
+        # 姓名为必填项
+        creat_contact.click_input_number()
+        creat_contact.page_should_contain_text('姓名不能为空，请输入')
+        time.sleep(2)
+        creat_contact.click_back()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-            # @tags('ALL', 'CONTACTS', 'CMCC')
+    # @tags('ALL', 'CONTACTS', 'CMCC')
     # def test_contacts_chenjixiang_00001(self):
     #     ContactsPage().select_contacts_by_name('大佬1')
     #     time.sleep(2)
@@ -2164,24 +2202,17 @@ class ContactsLocalhigh(TestCase):
     #
 
     @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_chenjixiang_0194(self):
-        """个人profile页,编辑联系人-姓名不为空"""
+    def test_contacts_chenjixiang_0238(self):
+        """测试和飞信电话，登录本网卡显示，可拨打成功"""
         ContactsPage().select_contacts_by_name('大佬1')
         cdp = ContactDetailsPage()
         time.sleep(2)
-        cdp.click_edit_contact()
+        cdp.click_voice_call_icon()
         time.sleep(1)
-        #姓名为空,保存按钮不可点击
-        creat_contact=CreateContactPage()
-        creat_contact.click_input_name()
-        creat_contact.input_name('')
-        creat_contact.is_save_icon_is_clickable()
-        #姓名为必填项
-        creat_contact.click_input_number()
-        creat_contact.page_should_contain_text('姓名不能为空，请输入')
-        time.sleep(2)
-        creat_contact.click_back()
-
+        if cdp.is_text_present('暂不开启'):
+            cdp.click_text('暂不开启')
+        time.sleep(1)
+        cdp.click_end_call()
 
 
 
