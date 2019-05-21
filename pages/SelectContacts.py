@@ -89,6 +89,8 @@ class SelectContactsPage(BasePage):
         'bm2': (MobileBy.XPATH, "//*[contains(@text, 'bm2')]"),
         "联系人姓名": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name'),
         "部门名称": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_department'),
+        "禁止": (MobileBy.ID, 'com.android.packageinstaller:id/permission_deny_button'),
+        "联系人栏": (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
 
     }
 
@@ -761,3 +763,8 @@ class SelectContactsPage(BasePage):
     def select_recent_chat_by_number(self, num):
         elements_list = self.get_elements(('id', 'com.chinasofti.rcs:id/item_rl'))
         elements_list[num].click()
+
+    @TestLogger.log()
+    def get_element_(self, text):
+        """点击元素"""
+        return self.get_element(self.__class__.__locators[text])
