@@ -253,7 +253,7 @@ class MessageListAllTest(TestCase):
         pass
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_message_list_total_quantity_0024(self):
+    def test_msg_xiaoliping_B_0003(self):
         """消息列表进入"""
 
         mp = MessagePage()
@@ -269,7 +269,7 @@ class MessageListAllTest(TestCase):
         mp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_message_list_total_quantity_0025(self):
+    def test_msg_xiaoliping_B_0004(self):
         """登录之后消息列表进入"""
 
         # 重启客户端
@@ -281,7 +281,7 @@ class MessageListAllTest(TestCase):
         self.assertEquals(mp.message_icon_is_selected(), True)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_message_list_total_quantity_0026(self):
+    def test_msg_xiaoliping_B_0005(self):
         """消息列表载入"""
 
         mp = MessagePage()
@@ -303,14 +303,14 @@ class MessageListAllTest(TestCase):
         self.assertEquals(mp.message_icon_is_selected(), True)
 
     @staticmethod
-    def tearDown_test_message_list_total_quantity_0026():
+    def tearDown_test_msg_xiaoliping_B_0005():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_message_list_total_quantity_0027(self):
+    def test_msg_xiaoliping_B_0006(self):
         """消息列表进入到会话页面"""
 
         mp = MessagePage()
@@ -333,7 +333,7 @@ class MessageListAllTest(TestCase):
         scp.click_back()
 
     @tags('ALL', 'CMCC_RESET', 'LXD_RESET')
-    def test_message_list_total_quantity_0029(self):
+    def test_msg_xiaoliping_B_0008(self):
         """消息列表未读消息清空"""
 
         # 重置当前app
@@ -348,7 +348,7 @@ class MessageListAllTest(TestCase):
         self.assertEquals(mp.is_exist_unread_messages(), False)
 
     @unittest.skip("暂时难以实现,跳过")
-    def test_message_list_total_quantity_0034(self):
+    def test_msg_xiaoliping_B_0013(self):
         """消息列表订阅号红点显示"""
 
         mp = MessagePage()
@@ -370,7 +370,7 @@ class MessageListAllTest(TestCase):
         soap.input_search_key(name)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_message_list_total_quantity_0038(self):
+    def test_msg_xiaoliping_B_0017(self):
         """消息列表网络异常显示"""
 
         mp = MessagePage()
@@ -383,14 +383,14 @@ class MessageListAllTest(TestCase):
         mp.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_message_list_total_quantity_0038():
+    def tearDown_test_msg_xiaoliping_B_0017():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_message_list_total_quantity_0040(self):
+    def test_msg_xiaoliping_B_0019(self):
         """消息列表显示未发送成功"""
 
         mp = MessagePage()
@@ -417,14 +417,14 @@ class MessageListAllTest(TestCase):
         self.assertEquals(mp.is_iv_fail_status_present(), True)
 
     @staticmethod
-    def tearDown_test_message_list_total_quantity_0040():
+    def tearDown_test_msg_xiaoliping_B_0019():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_message_list_total_quantity_0043(self):
+    def test_msg_xiaoliping_B_0022(self):
         """消息列表网络异常显示"""
 
         mp = MessagePage()
@@ -437,14 +437,14 @@ class MessageListAllTest(TestCase):
         mp.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_message_list_total_quantity_0043():
+    def tearDown_test_msg_xiaoliping_B_0022():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_message_list_total_quantity_0044(self):
+    def test_msg_xiaoliping_B_0023(self):
         """导航栏-点击导航条切换页签"""
 
         mp = MessagePage()
@@ -480,7 +480,7 @@ class MessageListAllTest(TestCase):
         mp.wait_for_page_load()
 
     @tags('ALL', 'CMCC_RESET', 'LXD_RESET')
-    def test_message_list_total_quantity_0045(self):
+    def test_msg_xiaoliping_B_0024(self):
         """导航栏-首次进入查看导航栏"""
 
         # 重置当前app
@@ -498,7 +498,7 @@ class MessageListAllTest(TestCase):
         self.assertEquals(mp.message_icon_is_selected(), True)
 
     @tags('ALL', 'CMCC_RESET', 'LXD_RESET')
-    def test_message_list_total_quantity_0046(self):
+    def test_msg_xiaoliping_B_0025(self):
         """验证首次登陆和飞信，进入消息页面（聊天为空），查看页面元素"""
 
         # 重置当前app
@@ -514,7 +514,7 @@ class MessageListAllTest(TestCase):
         self.assertEquals(mp.is_exist_words(), True)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_message_list_total_quantity_0048(self):
+    def test_msg_xiaoliping_B_0027(self):
         """消息列表界面消息列表页面元素检查"""
 
         mp = MessagePage()
@@ -555,7 +555,7 @@ class MessageListAllTest(TestCase):
         self.assertEquals(mp.message_list_is_exist_name(name), True)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_message_list_total_quantity_0049(self):
+    def test_msg_xiaoliping_B_0028(self):
         """消息列表界面新建消息页面返回操作"""
 
         mp = MessagePage()
@@ -573,7 +573,7 @@ class MessageListAllTest(TestCase):
         mp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_message_list_total_quantity_0054(self):
+    def test_msg_xiaoliping_B_0033(self):
         """消息列表非第一个窗口长按置顶（Android）"""
 
         mp = MessagePage()
@@ -601,7 +601,7 @@ class MessageListAllTest(TestCase):
         mp.cancel_stick_message_recording_by_number(0)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_message_list_total_quantity_0055(self):
+    def test_msg_xiaoliping_B_0034(self):
         """消息列表窗口长按取消置顶（Android）"""
 
         mp = MessagePage()
@@ -633,7 +633,7 @@ class MessageListAllTest(TestCase):
         self.assertEquals(cancel_stick_name, current_second_name)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_message_list_total_quantity_0056(self):
+    def test_msg_xiaoliping_B_0035(self):
         """消息列表窗口长按删除（Android）"""
 
         mp = MessagePage()
@@ -649,7 +649,7 @@ class MessageListAllTest(TestCase):
         self.assertEquals(mp.current_message_list_is_exist_name(messages[0][0]), False)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_message_list_total_quantity_0065(self):
+    def test_msg_xiaoliping_B_0044(self):
         """已开启免打扰的单聊，未收到新消息"""
 
         mp = MessagePage()
@@ -686,7 +686,7 @@ class MessageListAllTest(TestCase):
         self.assertEquals(mp.is_clear_no_disturb_icon(), False)
 
     @staticmethod
-    def tearDown_test_message_list_total_quantity_0065():
+    def tearDown_test_msg_xiaoliping_B_0044():
         """消息免打扰关闭"""
 
         mess = MessagePage()
@@ -710,7 +710,7 @@ class MessageListAllTest(TestCase):
         mess.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_message_list_total_quantity_0069(self):
+    def test_msg_xiaoliping_B_0048(self):
         """已开启免打扰的群聊，未收到新消息"""
 
         mp = MessagePage()
@@ -749,7 +749,7 @@ class MessageListAllTest(TestCase):
         self.assertEquals(mp.is_clear_no_disturb_icon(), False)
 
     @staticmethod
-    def tearDown_test_message_list_total_quantity_0069():
+    def tearDown_test_msg_xiaoliping_B_0048():
         """消息免打扰关闭"""
 
         mp = MessagePage()
@@ -773,7 +773,7 @@ class MessageListAllTest(TestCase):
         mp.wait_for_page_load()
 
     @unittest.skip("新版本系统消息为气泡提示，暂时跳过")
-    def test_message_list_total_quantity_0072(self):
+    def test_msg_xiaoliping_B_0051(self):
         """在消息列表页面，接收到新的系统消息"""
 
         mp = MessagePage()
@@ -791,7 +791,7 @@ class MessageListAllTest(TestCase):
         self.assertEquals(mp.is_clear_news_red_dot(), False)
 
     @staticmethod
-    def tearDown_test_message_list_total_quantity_0072():
+    def tearDown_test_msg_xiaoliping_B_0051():
         """清除系统消息"""
 
         mp = MessagePage()
@@ -804,7 +804,7 @@ class MessageListAllTest(TestCase):
             mp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_message_list_total_quantity_0073(self):
+    def test_msg_xiaoliping_B_0052(self):
         """在消息列表页面，未接收到新的系统消息"""
 
         mp = MessagePage()

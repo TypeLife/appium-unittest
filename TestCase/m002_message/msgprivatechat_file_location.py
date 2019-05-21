@@ -1,5 +1,6 @@
 import random
 import time
+import unittest
 
 from selenium.common.exceptions import TimeoutException
 
@@ -972,7 +973,7 @@ class MsgPrivateChatAllTest(TestCase):
         pass
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0001(self):
+    def test_msg_weifenglian_1V1_0001(self):
         """勾选本地文件内任意文件点击发送按钮"""
 
         scp = SingleChatPage()
@@ -994,7 +995,7 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(mp.is_message_content_match_file_name(file_name), True)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0002(self):
+    def test_msg_weifenglian_1V1_0002(self):
         """网络异常时勾选本地文件内任意文件点击发送按钮"""
 
         scp = SingleChatPage()
@@ -1014,14 +1015,14 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(scp.is_exist_msg_send_failed_button(), True)
 
     @staticmethod
-    def tearDown_test_msg_0002():
+    def tearDown_test_msg_weifenglian_1V1_0002():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0003(self):
+    def test_msg_weifenglian_1V1_0003(self):
         """会话页面有文件发送失败时查看消息列表是否有消息发送失败的标识"""
 
         scp = SingleChatPage()
@@ -1048,14 +1049,14 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(mp.is_iv_fail_status_present(), True)
 
     @staticmethod
-    def tearDown_test_msg_0003():
+    def tearDown_test_msg_weifenglian_1V1_0003():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0004(self):
+    def test_msg_weifenglian_1V1_0004(self):
         """对发送失败的文件进行重发"""
 
         scp = SingleChatPage()
@@ -1076,14 +1077,14 @@ class MsgPrivateChatAllTest(TestCase):
         cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @staticmethod
-    def tearDown_test_msg_0004():
+    def tearDown_test_msg_weifenglian_1V1_0004():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0005(self):
+    def test_msg_weifenglian_1V1_0005(self):
         """对发送失败的文件进行重发后，消息列表页面的消息发送失败的标识消失"""
 
         scp = SingleChatPage()
@@ -1112,14 +1113,14 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(mp.is_iv_fail_status_present(), False)
 
     @staticmethod
-    def tearDown_test_msg_0005():
+    def tearDown_test_msg_weifenglian_1V1_0005():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0006(self):
+    def test_msg_weifenglian_1V1_0006(self):
         """点击取消重发文件消失，停留在当前页面"""
 
         scp = SingleChatPage()
@@ -1139,14 +1140,14 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_msg_0006():
+    def tearDown_test_msg_weifenglian_1V1_0006():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0007(self):
+    def test_msg_weifenglian_1V1_0007(self):
         """未订购每月10G的用户发送大于2M的文件时有弹窗提示"""
 
         scp = SingleChatPage()
@@ -1173,14 +1174,14 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_msg_0007():
+    def tearDown_test_msg_weifenglian_1V1_0007():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0008(self):
+    def test_msg_weifenglian_1V1_0008(self):
         """直接点击“继续发送”：关闭弹窗，拨出，下次继续提示"""
 
         scp = SingleChatPage()
@@ -1214,14 +1215,14 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_msg_0008():
+    def tearDown_test_msg_weifenglian_1V1_0008():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC_RESET', 'LXD_RESET')
-    def test_msg_0009(self):
+    def test_msg_weifenglian_1V1_0009(self):
         """勾选“以后不再提示”再点击“继续发送”"""
 
         scp = SingleChatPage()
@@ -1249,7 +1250,7 @@ class MsgPrivateChatAllTest(TestCase):
         cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @staticmethod
-    def tearDown_test_msg_0009():
+    def tearDown_test_msg_weifenglian_1V1_0009():
         """恢复网络，重置app，确保不影响其他用例执行"""
 
         mp = MessagePage()
@@ -1257,7 +1258,7 @@ class MsgPrivateChatAllTest(TestCase):
         Preconditions.make_already_in_message_page(True)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0010(self):
+    def test_msg_weifenglian_1V1_0010(self):
         """点击订购免流特权后可正常返回"""
 
         scp = SingleChatPage()
@@ -1285,14 +1286,14 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_msg_0010():
+    def tearDown_test_msg_weifenglian_1V1_0010():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0012(self):
+    def test_msg_weifenglian_1V1_0012(self):
         """在文件列表页选择文件后再点击取消按钮，停留在当前页面"""
 
         scp = SingleChatPage()
@@ -1318,7 +1319,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0013(self):
+    def test_msg_weifenglian_1V1_0013(self):
         """在文件列表页点击返回按钮时可正常逐步返回到会话页面"""
 
         scp = SingleChatPage()
@@ -1346,7 +1347,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0014(self):
+    def test_msg_weifenglian_1V1_0014(self):
         """勾选本地照片内任意相册的图片点击发送按钮"""
 
         scp = SingleChatPage()
@@ -1364,7 +1365,7 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(mp.is_message_content_match_picture(), True)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0015(self):
+    def test_msg_weifenglian_1V1_0015(self):
         """网络异常时勾选本地照片内任意相册的图片点击发送按钮"""
 
         scp = SingleChatPage()
@@ -1383,14 +1384,14 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(scp.is_exist_msg_send_failed_button(), True)
 
     @staticmethod
-    def tearDown_test_msg_0015():
+    def tearDown_test_msg_weifenglian_1V1_0015():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0016(self):
+    def test_msg_weifenglian_1V1_0016(self):
         """会话页面有图片发送失败时查看消息列表是否有消息发送失败的标识"""
 
         scp = SingleChatPage()
@@ -1418,14 +1419,14 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(mp.is_iv_fail_status_present(), True)
 
     @staticmethod
-    def tearDown_test_msg_0016():
+    def tearDown_test_msg_weifenglian_1V1_0016():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0017(self):
+    def test_msg_weifenglian_1V1_0017(self):
         """对发送失败的图片文件进行重发"""
 
         scp = SingleChatPage()
@@ -1446,14 +1447,14 @@ class MsgPrivateChatAllTest(TestCase):
         cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @staticmethod
-    def tearDown_test_msg_0017():
+    def tearDown_test_msg_weifenglian_1V1_0017():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0018(self):
+    def test_msg_weifenglian_1V1_0018(self):
         """对发送失败的图片进行重发后，消息列表页面的消息发送失败的标识消失"""
 
         scp = SingleChatPage()
@@ -1482,14 +1483,14 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(mp.is_iv_fail_status_present(), False)
 
     @staticmethod
-    def tearDown_test_msg_0018():
+    def tearDown_test_msg_weifenglian_1V1_0018():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0019(self):
+    def test_msg_weifenglian_1V1_0019(self):
         """点击取消重发图片消息，停留在当前页面"""
 
         scp = SingleChatPage()
@@ -1509,14 +1510,14 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_msg_0019():
+    def tearDown_test_msg_weifenglian_1V1_0019():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0020(self):
+    def test_msg_weifenglian_1V1_0020(self):
         """未订购每月10G的用户发送大于2M的图片时有弹窗提示"""
 
         scp = SingleChatPage()
@@ -1542,14 +1543,14 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_msg_0020():
+    def tearDown_test_msg_weifenglian_1V1_0020():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0021(self):
+    def test_msg_weifenglian_1V1_0021(self):
         """直接点击“继续发送”：关闭弹窗，拨出，下次继续提示"""
 
         scp = SingleChatPage()
@@ -1582,14 +1583,14 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_msg_0021():
+    def tearDown_test_msg_weifenglian_1V1_0021():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC_RESET', 'LXD_RESET')
-    def test_msg_0022(self):
+    def test_msg_weifenglian_1V1_0022(self):
         """勾选“以后不再提示”再点击“继续发送”"""
 
         scp = SingleChatPage()
@@ -1617,7 +1618,7 @@ class MsgPrivateChatAllTest(TestCase):
         cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @staticmethod
-    def tearDown_test_msg_0022():
+    def tearDown_test_msg_weifenglian_1V1_0022():
         """恢复网络，重置app，确保不影响其他用例执行"""
 
         mp = MessagePage()
@@ -1625,7 +1626,7 @@ class MsgPrivateChatAllTest(TestCase):
         Preconditions.make_already_in_message_page(True)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0023(self):
+    def test_msg_weifenglian_1V1_0023(self):
         """点击订购免流特权后可正常返回"""
 
         scp = SingleChatPage()
@@ -1652,14 +1653,14 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_msg_0023():
+    def tearDown_test_msg_weifenglian_1V1_0023():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0025(self):
+    def test_msg_weifenglian_1V1_0025(self):
         """在选择图片页面选择文件后再点击取消按钮，停留在当前页面"""
 
         scp = SingleChatPage()
@@ -1683,7 +1684,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0026(self):
+    def test_msg_weifenglian_1V1_0026(self):
         """在选择图片页面点击返回按钮时可正常逐步返回到会话页面"""
 
         scp = SingleChatPage()
@@ -1701,7 +1702,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0028(self):
+    def test_msg_weifenglian_1V1_0028(self):
         """勾选本地视频内任意视频点击发送按钮"""
 
         scp = SingleChatPage()
@@ -1719,7 +1720,7 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(mp.is_message_content_match_video(), True)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0029(self):
+    def test_msg_weifenglian_1V1_0029(self):
         """网络异常时勾选本地文件内任意视频点击发送按钮"""
 
         scp = SingleChatPage()
@@ -1738,14 +1739,14 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(scp.is_exist_msg_send_failed_button(), True)
 
     @staticmethod
-    def tearDown_test_msg_0029():
+    def tearDown_test_msg_weifenglian_1V1_0029():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0030(self):
+    def test_msg_weifenglian_1V1_0030(self):
         """会话页面有视频发送失败时查看消息列表是否有消息发送失败的标识"""
 
         scp = SingleChatPage()
@@ -1772,14 +1773,14 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(mp.is_iv_fail_status_present(), True)
 
     @staticmethod
-    def tearDown_test_msg_0030():
+    def tearDown_test_msg_weifenglian_1V1_0030():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0031(self):
+    def test_msg_weifenglian_1V1_0031(self):
         """对发送失败的视频进行重发"""
 
         scp = SingleChatPage()
@@ -1801,14 +1802,14 @@ class MsgPrivateChatAllTest(TestCase):
         cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @staticmethod
-    def tearDown_test_msg_0031():
+    def tearDown_test_msg_weifenglian_1V1_0031():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0032(self):
+    def test_msg_weifenglian_1V1_0032(self):
         """对发送失败的视频进行重发后，消息列表页面的消息发送失败的标识消失"""
 
         scp = SingleChatPage()
@@ -1837,14 +1838,14 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(mp.is_iv_fail_status_present(), False)
 
     @staticmethod
-    def tearDown_test_msg_0032():
+    def tearDown_test_msg_weifenglian_1V1_0032():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0033(self):
+    def test_msg_weifenglian_1V1_0033(self):
         """点击取消重发视频文件消失，停留在当前页面"""
 
         scp = SingleChatPage()
@@ -1864,14 +1865,14 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_msg_0033():
+    def tearDown_test_msg_weifenglian_1V1_0033():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0034(self):
+    def test_msg_weifenglian_1V1_0034(self):
         """未订购每月10G的用户发送大于2M的视频时有弹窗提示"""
 
         scp = SingleChatPage()
@@ -1897,14 +1898,14 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_msg_0034():
+    def tearDown_test_msg_weifenglian_1V1_0034():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0035(self):
+    def test_msg_weifenglian_1V1_0035(self):
         """直接点击“继续发送”：关闭弹窗，拨出，下次继续提示"""
 
         scp = SingleChatPage()
@@ -1937,14 +1938,14 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_msg_0035():
+    def tearDown_test_msg_weifenglian_1V1_0035():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC_RESET', 'LXD_RESET')
-    def test_msg_0036(self):
+    def test_msg_weifenglian_1V1_0036(self):
         """勾选“以后不再提示”再点击“继续发送”"""
 
         scp = SingleChatPage()
@@ -1972,7 +1973,7 @@ class MsgPrivateChatAllTest(TestCase):
         cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @staticmethod
-    def tearDown_test_msg_0036():
+    def tearDown_test_msg_weifenglian_1V1_0036():
         """恢复网络，重置app，确保不影响其他用例执行"""
 
         mp = MessagePage()
@@ -1980,7 +1981,7 @@ class MsgPrivateChatAllTest(TestCase):
         Preconditions.make_already_in_message_page(True)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0037(self):
+    def test_msg_weifenglian_1V1_0037(self):
         """点击订购免流特权后可正常返回"""
 
         scp = SingleChatPage()
@@ -2007,14 +2008,14 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_msg_0037():
+    def tearDown_test_msg_weifenglian_1V1_0037():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0039(self):
+    def test_msg_weifenglian_1V1_0039(self):
         """在视频列表页选择文件后再点击取消按钮，停留在当前页面"""
 
         scp = SingleChatPage()
@@ -2038,7 +2039,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0040(self):
+    def test_msg_weifenglian_1V1_0040(self):
         """在视频列表页点击返回按钮时可正常逐步返回到会话页面"""
 
         scp = SingleChatPage()
@@ -2056,7 +2057,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0042(self):
+    def test_msg_weifenglian_1V1_0042(self):
         """勾选音乐列表页面任意音乐点击发送按钮"""
 
         scp = SingleChatPage()
@@ -2077,7 +2078,7 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(mp.is_message_content_match_file_name(file_name), True)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0043(self):
+    def test_msg_weifenglian_1V1_0043(self):
         """网络异常时勾选音乐列表页面任意音乐点击发送按钮"""
 
         scp = SingleChatPage()
@@ -2096,14 +2097,14 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(scp.is_exist_msg_send_failed_button(), True)
 
     @staticmethod
-    def tearDown_test_msg_0043():
+    def tearDown_test_msg_weifenglian_1V1_0043():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0044(self):
+    def test_msg_weifenglian_1V1_0044(self):
         """会话页面有音乐文件发送失败时查看消息列表是否有消息发送失败的标识"""
 
         scp = SingleChatPage()
@@ -2130,14 +2131,14 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(mp.is_iv_fail_status_present(), True)
 
     @staticmethod
-    def tearDown_test_msg_0044():
+    def tearDown_test_msg_weifenglian_1V1_0044():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0045(self):
+    def test_msg_weifenglian_1V1_0045(self):
         """对发送失败的音乐进行重发"""
 
         scp = SingleChatPage()
@@ -2158,14 +2159,14 @@ class MsgPrivateChatAllTest(TestCase):
         cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @staticmethod
-    def tearDown_test_msg_0045():
+    def tearDown_test_msg_weifenglian_1V1_0045():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0046(self):
+    def test_msg_weifenglian_1V1_0046(self):
         """对发送失败的音乐进行重发后，消息列表页面的消息发送失败的标识消失"""
 
         scp = SingleChatPage()
@@ -2194,14 +2195,14 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(mp.is_iv_fail_status_present(), False)
 
     @staticmethod
-    def tearDown_test_msg_0046():
+    def tearDown_test_msg_weifenglian_1V1_0046():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0047(self):
+    def test_msg_weifenglian_1V1_0047(self):
         """点击取消重发音乐文件消失，停留在当前页面"""
 
         scp = SingleChatPage()
@@ -2221,14 +2222,14 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_msg_0047():
+    def tearDown_test_msg_weifenglian_1V1_0047():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0048(self):
+    def test_msg_weifenglian_1V1_0048(self):
         """未订购每月10G的用户发送大于2M的音乐时有弹窗提示"""
 
         scp = SingleChatPage()
@@ -2254,14 +2255,14 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_msg_0048():
+    def tearDown_test_msg_weifenglian_1V1_0048():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0049(self):
+    def test_msg_weifenglian_1V1_0049(self):
         """直接点击“继续发送”：关闭弹窗，拨出，下次继续提示"""
 
         scp = SingleChatPage()
@@ -2294,14 +2295,14 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_msg_0049():
+    def tearDown_test_msg_weifenglian_1V1_0049():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC_RESET', 'LXD_RESET')
-    def test_msg_0050(self):
+    def test_msg_weifenglian_1V1_0050(self):
         """勾选“以后不再提示”再点击“继续发送”"""
 
         scp = SingleChatPage()
@@ -2329,7 +2330,7 @@ class MsgPrivateChatAllTest(TestCase):
         cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @staticmethod
-    def tearDown_test_msg_0050():
+    def tearDown_test_msg_weifenglian_1V1_0050():
         """恢复网络，重置app，确保不影响其他用例执行"""
 
         mp = MessagePage()
@@ -2337,7 +2338,7 @@ class MsgPrivateChatAllTest(TestCase):
         Preconditions.make_already_in_message_page(True)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0051(self):
+    def test_msg_weifenglian_1V1_0051(self):
         """点击订购免流特权后可正常返回"""
 
         scp = SingleChatPage()
@@ -2364,14 +2365,14 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_msg_0051():
+    def tearDown_test_msg_weifenglian_1V1_0051():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0053(self):
+    def test_msg_weifenglian_1V1_0053(self):
         """在音乐列表页选择文件后再点击取消按钮，停留在当前页面"""
 
         scp = SingleChatPage()
@@ -2395,7 +2396,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0054(self):
+    def test_msg_weifenglian_1V1_0054(self):
         """在音乐列表页点击返回按钮时可正常逐步返回到会话页面"""
 
         scp = SingleChatPage()
@@ -2413,7 +2414,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0074(self):
+    def test_msg_weifenglian_1V1_0074(self):
         """在单聊将自己发送的文件转发到当前会话窗口"""
 
         # 在当前会话页面发送文件,确保最近聊天中有记录
@@ -2442,7 +2443,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0075(self):
+    def test_msg_weifenglian_1V1_0075(self):
         """将自己发送的文件转发到普通群"""
 
         scp = SingleChatPage()
@@ -2472,7 +2473,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0076(self):
+    def test_msg_weifenglian_1V1_0076(self):
         """将自己发送的文件转发到企业群"""
 
         scp = SingleChatPage()
@@ -2501,7 +2502,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0077(self):
+    def test_msg_weifenglian_1V1_0077(self):
         """将自己发送的文件转发到普通群时失败"""
 
         scp = SingleChatPage()
@@ -2544,14 +2545,14 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(mp.is_iv_fail_status_present(), True)
 
     @staticmethod
-    def tearDown_test_msg_0077():
+    def tearDown_test_msg_weifenglian_1V1_0077():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0078(self):
+    def test_msg_weifenglian_1V1_0078(self):
         """将自己发送的文件转发到企业群时失败"""
 
         scp = SingleChatPage()
@@ -2593,14 +2594,14 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(mp.is_iv_fail_status_present(), True)
 
     @staticmethod
-    def tearDown_test_msg_0078():
+    def tearDown_test_msg_weifenglian_1V1_0078():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0079(self):
+    def test_msg_weifenglian_1V1_0079(self):
         """将自己发送的文件转发到普通群时点击取消转发"""
 
         scp = SingleChatPage()
@@ -2634,7 +2635,7 @@ class MsgPrivateChatAllTest(TestCase):
         scg.click_back()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0080(self):
+    def test_msg_weifenglian_1V1_0080(self):
         """将自己发送的文件转发到企业群时点击取消转发"""
 
         scp = SingleChatPage()
@@ -2667,7 +2668,7 @@ class MsgPrivateChatAllTest(TestCase):
         scg.click_back()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0081(self):
+    def test_msg_weifenglian_1V1_0081(self):
         """将自己发送的文件转发到在搜索框输入文字搜索到的群"""
 
         scp = SingleChatPage()
@@ -2703,7 +2704,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0082(self):
+    def test_msg_weifenglian_1V1_0082(self):
         """将自己发送的文件转发到在搜索框输入英文字母搜索到的群"""
 
         scp = SingleChatPage()
@@ -2739,7 +2740,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0083(self):
+    def test_msg_weifenglian_1V1_0083(self):
         """将自己发送的文件转发到在搜索框输入数字搜索到的群"""
 
         scp = SingleChatPage()
@@ -2775,7 +2776,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0084(self):
+    def test_msg_weifenglian_1V1_0084(self):
         """将自己发送的文件转发到在搜索框输入标点符号搜索到的群"""
 
         scp = SingleChatPage()
@@ -2811,7 +2812,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0085(self):
+    def test_msg_weifenglian_1V1_0085(self):
         """将自己发送的文件转发到在搜索框输入特殊字符搜索到的群"""
 
         scp = SingleChatPage()
@@ -2847,7 +2848,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0086(self):
+    def test_msg_weifenglian_1V1_0086(self):
         """将自己发送的文件转发到在搜索框输入空格搜索到的群"""
 
         scp = SingleChatPage()
@@ -2883,7 +2884,7 @@ class MsgPrivateChatAllTest(TestCase):
         scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0087(self):
+    def test_msg_weifenglian_1V1_0087(self):
         """将自己发送的文件转发到在搜索框输入多种字符搜索到的群"""
 
         scp = SingleChatPage()
@@ -2918,8 +2919,8 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(scp.is_exist_forward(), True)
         scp.wait_for_page_load()
 
-    @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_0088(self):
+    @unittest.skip("用例重复，跳过")
+    def test_msg_weifenglian_1V1_0088(self):
         """将自己发送的文件转发到在搜索框输入多种字符搜索到的群"""
 
         scp = SingleChatPage()

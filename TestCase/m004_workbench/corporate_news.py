@@ -157,7 +157,7 @@ class CorporateNewsTest(TestCase):
         pass
 
     @tags('ALL', 'CMCC', 'workbench', 'LXD')
-    def test_QYXW_0005(self):
+    def test_QYXW_0034(self):
         """保存新闻"""
 
         cnp = CorporateNewsPage()
@@ -173,7 +173,7 @@ class CorporateNewsTest(TestCase):
         cnlp.wait_for_page_load()
         time.sleep(2)
         # 输入链接新闻标题
-        cnlp.input_news_title("测试新闻0005")
+        cnlp.input_news_title("测试新闻0034")
         # 输入链接新闻网址
         cnlp.input_link_url("https://10086.com")
         # 点击保存
@@ -185,20 +185,21 @@ class CorporateNewsTest(TestCase):
         cnp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'workbench', 'LXD')
-    def test_QYXW_0007(self):
-        """验证删除未发新闻是否正确"""
+    def test_QYXW_0019(self):
+        """管理员删除未发布新闻，删除成功"""
 
         cnp = CorporateNewsPage()
-        # 等待企业新闻首页加载
+        # 1、2.等待企业新闻首页加载
         cnp.wait_for_page_load()
         # 点击未发新闻
         cnp.click_no_news()
         cnnp = CorporateNewsNoNewsPage()
+        # 3.等待未发新闻页加载
         cnnp.wait_for_page_load()
         time.sleep(2)
         cnnp.clear_no_news()
         # 确保未发新闻列表存在数据
-        news = [("测试新闻0007", "测试内容0007")]
+        news = [("测试新闻0019", "测试内容0019")]
         cnnp.click_close()
         wbp = WorkbenchPage()
         wbp.wait_for_workbench_page_load()
@@ -210,16 +211,16 @@ class CorporateNewsTest(TestCase):
         title = cnnp.click_no_news_by_number(0)
         time.sleep(2)
         cndp = CorporateNewsDetailsPage()
+        # 4.等待未发布新闻详情页加载
         cndp.wait_for_page_load()
         time.sleep(2)
         # 点击删除
         cndp.click_delete()
-        # 点击确定
+        # 5.点击确定
         cndp.click_sure()
-        # 1.是否提示删除成功,等待未发新闻页面加载
+        # 6.是否提示删除成功，未发新闻列表不存在该记录信息
         self.assertEquals(cndp.is_exist_delete_successfully(), True)
         cnnp.wait_for_page_load()
-        # 2.验证未发新闻列表是否存在该记录信息
         self.assertEquals(cnnp.is_exist_no_news_by_name(title), False)
 
 

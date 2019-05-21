@@ -1706,7 +1706,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         pass
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_privateChat_videoPic_total_quantity_0041(self):
+    def test_msg_xiaoliping_C_0041(self):
         """单聊会话页面，转发自己发送的图片到当前会话窗口"""
 
         scp = SingleChatPage()
@@ -1755,7 +1755,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         cwp.wait_for_msg_send_status_become_to('发送成功', 30)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_privateChat_videoPic_total_quantity_0042(self):
+    def test_msg_xiaoliping_C_0042(self):
         """单聊会话页面，转发自己发送的图片到当前会话窗口时失败"""
 
         scp = SingleChatPage()
@@ -1796,14 +1796,14 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         self.assertEquals(mp.is_iv_fail_status_present(), True)
 
     @staticmethod
-    def tearDown_test_msg_privateChat_videoPic_total_quantity_0042():
+    def tearDown_test_msg_xiaoliping_C_0042():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_privateChat_videoPic_total_quantity_0043(self):
+    def test_msg_xiaoliping_C_0043(self):
         """单聊会话页面，转发自己发送的图片到当前会话窗口时点击取消转发"""
 
         scp = SingleChatPage()
@@ -1835,7 +1835,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         scg.click_back()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_privateChat_videoPic_total_quantity_0044(self):
+    def test_msg_xiaoliping_C_0044(self):
         """单聊会话页面，转发自己发送的图片给手机联系人"""
 
         # 确保当前聊天页面已有图片
@@ -1887,7 +1887,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         scp.click_back()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_privateChat_videoPic_total_quantity_0045(self):
+    def test_msg_xiaoliping_C_0045(self):
         """单聊会话页面，转发自己发送的图片到手机联系人时失败"""
 
         scp = SingleChatPage()
@@ -1930,14 +1930,14 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         self.assertEquals(mp.is_iv_fail_status_present(), True)
 
     @staticmethod
-    def tearDown_test_msg_privateChat_videoPic_total_quantity_0045():
+    def tearDown_test_msg_xiaoliping_C_0045():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_privateChat_videoPic_total_quantity_0046(self):
+    def test_msg_xiaoliping_C_0046(self):
         """单聊会话页面，转发自己发送的图片到手机联系人时点击取消转发"""
 
         # 确保当前聊天页面已有图片
@@ -1968,7 +1968,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         scg.click_back()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_privateChat_videoPic_total_quantity_0047(self):
+    def test_msg_xiaoliping_C_0047(self):
         """单聊会话页面，转发自己发送的图片给团队联系人"""
 
         scp = SingleChatPage()
@@ -2015,7 +2015,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         scp.click_back()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_privateChat_videoPic_total_quantity_0048(self):
+    def test_msg_xiaoliping_C_0048(self):
         """单聊会话页面，转发自己发送的图片到团队联系人时失败"""
 
         scp = SingleChatPage()
@@ -2058,14 +2058,14 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         self.assertEquals(mp.is_iv_fail_status_present(), True)
 
     @staticmethod
-    def tearDown_test_msg_privateChat_videoPic_total_quantity_0048():
+    def tearDown_test_msg_xiaoliping_C_0048():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_privateChat_videoPic_total_quantity_0049(self):
+    def test_msg_xiaoliping_C_0049(self):
         """单聊会话页面，转发自己发送的图片到团队联系人时点击取消转发"""
 
         scp = SingleChatPage()
@@ -2100,7 +2100,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_privateChat_videoPic_total_quantity_0050(self):
+    def test_msg_xiaoliping_C_0050(self):
         """单聊会话页面，转发自己发送的图片给陌生人"""
 
         # 确保当前聊天页面已有图片
@@ -2144,7 +2144,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         scp.click_back()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_privateChat_videoPic_total_quantity_0051(self):
+    def test_msg_xiaoliping_C_0051(self):
         """单聊会话页面，转发自己发送的图片到陌生人时失败"""
 
         scp = SingleChatPage()
@@ -2186,14 +2186,14 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         self.assertEquals(mp.is_iv_fail_status_present(), True)
 
     @staticmethod
-    def tearDown_test_msg_privateChat_videoPic_total_quantity_0051():
+    def tearDown_test_msg_xiaoliping_C_0051():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_privateChat_videoPic_total_quantity_0052(self):
+    def test_msg_xiaoliping_C_0052(self):
         """单聊会话页面，转发自己发送的图片到陌生人时点击取消转发"""
 
         # 确保当前聊天页面已有图片
@@ -2221,7 +2221,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         scg.click_back()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_privateChat_videoPic_total_quantity_0053(self):
+    def test_msg_xiaoliping_C_0053(self):
         """单聊会话页面，转发自己发送的图片到普通群"""
 
         # 确保当前聊天页面已有图片
@@ -2263,7 +2263,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         scp.click_back()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_privateChat_videoPic_total_quantity_0054(self):
+    def test_msg_xiaoliping_C_0054(self):
         """单聊会话页面，转发自己发送的图片到普通群时失败"""
 
         scp = SingleChatPage()
@@ -2306,14 +2306,14 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         self.assertEquals(mp.is_iv_fail_status_present(), True)
 
     @staticmethod
-    def tearDown_test_msg_privateChat_videoPic_total_quantity_0054():
+    def tearDown_test_msg_xiaoliping_C_0054():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_privateChat_videoPic_total_quantity_0055(self):
+    def test_msg_xiaoliping_C_0055(self):
         """单聊会话页面，转发自己发送的图片到普通群时点击取消转发"""
 
         # 确保当前聊天页面已有图片
@@ -2345,7 +2345,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         scg.click_back()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_privateChat_videoPic_total_quantity_0056(self):
+    def test_msg_xiaoliping_C_0056(self):
         """单聊会话页面，转发自己发送的图片到企业群"""
 
         scp = SingleChatPage()
@@ -2388,7 +2388,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         scp.click_back()
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_privateChat_videoPic_total_quantity_0057(self):
+    def test_msg_xiaoliping_C_0057(self):
         """单聊会话页面，转发自己发送的图片到企业群时失败"""
 
         scp = SingleChatPage()
@@ -2430,14 +2430,14 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         self.assertEquals(mp.is_iv_fail_status_present(), True)
 
     @staticmethod
-    def tearDown_test_msg_privateChat_videoPic_total_quantity_0057():
+    def tearDown_test_msg_xiaoliping_C_0057():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'LXD')
-    def test_msg_privateChat_videoPic_total_quantity_0058(self):
+    def test_msg_xiaoliping_C_0058(self):
         """单聊会话页面，转发自己发送的图片到企业群时点击取消转发"""
 
         scp = SingleChatPage()

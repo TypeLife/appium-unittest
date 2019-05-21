@@ -477,7 +477,6 @@ class AppStoreAllTest(TestCase):
         # 8.工作台是否存在指定应用图标
         self.assertEquals(wbp.is_exists_app_by_name(app_name), True)
 
-    # @tags('ALL', 'CMCC', 'workbench', 'LXD')
     @unittest.skip("工作台页面不稳定，跳过")
     def test_YYSC_0013(self):
         """分类-管理员添加应用"""
