@@ -1514,8 +1514,9 @@ class MsgGroupChatvedioTest(TestCase):
         scp.wait_for_page_load()
         # 6.点击返回到群聊页面
         scp.click_back()
-        gcv.wait_for_page_load()
-        gcv.click_back()
+        time.sleep(1)
+        if gcv._is_element_present(["id", 'com.chinasofti.rcs:id/title']):
+            gcv.click_back()
         gcf.wait_for_page_load()
         gcf.click_back()
         gcs.wait_for_page_load()
