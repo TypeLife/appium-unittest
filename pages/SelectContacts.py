@@ -469,6 +469,12 @@ class SelectContactsPage(BasePage):
             self.click_element(locator)
 
     @TestLogger.log()
+    def is_exists_recent_chat_by_name(self, name):
+        """是否存在指定最近聊天记录"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text="%s"]' % name)
+        return self._is_element_present(locator)
+
+    @TestLogger.log()
     def select_recent_chat_by_number(self, number):
         """选择某一条最近聊天记录"""
         if self._is_element_present(self.__class__.__locators["最近聊天消息名称"]):
