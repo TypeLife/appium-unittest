@@ -10,7 +10,8 @@ TEST_CASE_ROOT = os.path.join(PROJECT_PATH, 'TestCase')
 # 测试报告目录
 REPORT_PATH = os.path.join(PROJECT_PATH, 'report')
 # 测试报告HTML文件
-REPORT_HTML_PATH = os.path.join(REPORT_PATH, 'TestReport.html')
+REPORT_HTML_PATH = os.path.join(REPORT_PATH, 'TestReport', NOW.date().strftime('%Y-%m-%d'),
+                                'TestReport' + NOW.time().strftime('-%H-%M-%S') + '.html')
 # 屏幕截图存储路径
 SCREEN_SHOT_PATH = os.path.join(REPORT_PATH, 'screen-shot', NOW.date().strftime('%Y-%m-%d'),
                                 NOW.time().strftime("T%H-%M-%S-%f"))

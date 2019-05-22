@@ -19,6 +19,7 @@ class CreateContactPage(Keyboard, BasePage):
 
         '电话': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/item_nu mber"]//android.widget.TextView'),
         '输入号码': (MobileBy.XPATH,'//*[@resource-id="com.chinasofti.rcs:id/item_number"]//android.widget.EditText'),
+        '电话号码': (MobileBy.XPATH, '//*[@text="电话"]/../android.widget.EditText[@resource-id="com.chinasofti.rcs:id/et"]'),
 
         '公司': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/item_company"]//android.widget.TextView'),
         '输入公司': (MobileBy.XPATH,'//*[@resource-id="com.chinasofti.rcs:id/item_company"]//android.widget.EditText'),
@@ -56,10 +57,14 @@ class CreateContactPage(Keyboard, BasePage):
         self.input_text(self.__locators['输入号码'], name)
 
     @TestLogger.log('点击输入公司')
+    def get_contant_number(self):
+        """获取联系人手机号码"""
+        return self.get_element(self.__locators['输入号码'])
+
+    @TestLogger.log('点击输入公司')
     def click_input_company(self):
         """点击输入公司"""
         self.click_element(self.__locators['输入公司'])
-
 
     @TestLogger.log('输入公司')
     def input_company(self, name):
@@ -93,6 +98,12 @@ class CreateContactPage(Keyboard, BasePage):
     def save_contact(self):
         self.click_element(self.__locators['保存'])
 
+    @TestLogger.log('保存按钮是否可点击')
+    def is_save_icon_is_clickable(self):
+        """保存按钮是否可点击"""
+        self._is_clickable(self.__locators['保存'])
+
+
     @TestLogger.log('点击返回')
     def click_back(self):
         self.click_element(self.__locators['返回'])
@@ -122,3 +133,7 @@ class CreateContactPage(Keyboard, BasePage):
         self.wait_until(
             condition=lambda d: self._is_element_present(self.__locators['输入姓名'])
         )
+
+    @TestLogger.log("更改手机号码")
+    def change_mobile_number(self,text='13800138005'):
+        return self.input_text(self.__locators["电话号码"],text)

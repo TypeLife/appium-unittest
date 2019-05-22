@@ -87,6 +87,10 @@ class SelectContactsPage(BasePage):
         "字母栏":(MobileBy.ID,'	com.chinasofti.rcs:id/contact_index_bar_container'),
         'bm1': (MobileBy.XPATH, "//*[contains(@text, 'bm1')]"),
         'bm2': (MobileBy.XPATH, "//*[contains(@text, 'bm2')]"),
+        "联系人姓名": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name'),
+        "部门名称": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_department'),
+        "禁止": (MobileBy.ID, 'com.android.packageinstaller:id/permission_deny_button'),
+        "联系人栏": (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
 
     }
 
@@ -96,7 +100,7 @@ class SelectContactsPage(BasePage):
 
     @TestLogger.log("检查控件是否存在")
     def check_if_element_exist(self,text='发送人头像'):
-        self.page_should_contain_element(self.__locators[text])
+        self.page_should_contain_element(self.__class__.__locators[text])
 
     @TestLogger.log("点击群二维码")
     def click_group_code(self, text='群二维码'):
@@ -759,3 +763,8 @@ class SelectContactsPage(BasePage):
     def select_recent_chat_by_number(self, num):
         elements_list = self.get_elements(('id', 'com.chinasofti.rcs:id/item_rl'))
         elements_list[num].click()
+
+    @TestLogger.log()
+    def get_element_(self, text):
+        """点击元素"""
+        return self.get_element(self.__class__.__locators[text])

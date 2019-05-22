@@ -1022,7 +1022,8 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 长按刚刚发送的文件撤回
         gcp.press_file_to_do(".html", "撤回")
         time.sleep(2)
-        # gcp.click_i_know()
+        if gcp.is_text_present("我知道了"):
+            gcp.click_i_know()
         # 验证撤回成功
         time.sleep(3)
         if not gcp.is_text_present("你撤回了一条信息"):

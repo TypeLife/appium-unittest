@@ -484,7 +484,7 @@ class BaseChatPage(BasePage):
     def input_gif(self, message):
         """输入gif搜索框信息"""
         self.input_text(self.__class__.__locators["gif趣图搜索框"], message)
-        self.driver.hide_keyboard()
+        # self.driver.hide_keyboard()
         return self
 
     @TestLogger.log()

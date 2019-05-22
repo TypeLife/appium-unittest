@@ -138,11 +138,6 @@ class EnterpriseContactsPage(BasePage):
     def input_search_message(self, message):
         """输入查找信息"""
         self.input_text(self.__class__.__locators["搜索输入框"], message)
-        try:
-            self.driver.hide_keyboard()
-        except:
-            pass
-        return self
 
     @TestLogger.log()
     def click_search_box(self):

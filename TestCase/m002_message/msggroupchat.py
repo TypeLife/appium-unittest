@@ -1629,7 +1629,7 @@ class MsgGroupChatTest(TestCase):
         group_set = GroupChatSetPage()
         group_set.wait_for_page_load()
         group_set.click_QRCode()
-        time.sleep(3)
+        time.sleep(5)
         if group_set.is_text_present("二维码加载失败"):
             group_set.click_back()
             group_set.wait_for_page_load()
@@ -1665,7 +1665,7 @@ class MsgGroupChatTest(TestCase):
         group_set = GroupChatSetPage()
         group_set.wait_for_page_load()
         group_set.click_QRCode()
-        time.sleep(3)
+        time.sleep(5)
         if group_set.is_text_present("二维码加载失败"):
             group_set.click_back()
             group_set.wait_for_page_load()
@@ -2139,7 +2139,7 @@ class messagegroupchat(TestCase):
         gcs = GroupChatSetPage()
         gcs.wait_for_page_load()
         gcs.click_QRCode()
-        time.sleep(3)
+        time.sleep(5)
         if gcs.is_text_present("二维码加载失败"):
             gcs.click_back()
             gcs.wait_for_page_load()

@@ -200,11 +200,11 @@ class WorkbenchPreconditions(LoginPreconditions):
             workbench.click_now_create_team()
         else:
             a = 0
-            while a < 10:
+            while a < 20:
                 workbench.wait_for_page_load()
                 workbench.click_organization()
-                time.sleep(5)
-                if workbench.is_text_present("认证失败"):
+                # time.sleep(5)
+                if not workbench.page_should_contain_text2("添加联系人"):
                     current_mobile().back()
                     a += 1
                 else:
@@ -328,16 +328,14 @@ class WorkbenchPreconditions(LoginPreconditions):
         wbp.wait_for_workbench_page_load()
         wbp.click_organization()
         osp = OrganizationStructurePage()
-        time.sleep(5)
         n = 1
         # 解决工作台不稳定问题
-        while osp.is_text_present("账号认证失败"):
+        while not osp.page_should_contain_text2("添加联系人"):
             osp.click_back()
             wbp.wait_for_workbench_page_load()
             wbp.click_organization()
-            time.sleep(5)
             n += 1
-            if n > 10:
+            if n > 20:
                 break
         time.sleep(3)
         for name in names:
@@ -368,16 +366,14 @@ class WorkbenchPreconditions(LoginPreconditions):
         wbp.wait_for_workbench_page_load()
         wbp.click_organization()
         osp = OrganizationStructurePage()
-        time.sleep(5)
         n = 1
         # 解决工作台不稳定问题
-        while osp.is_text_present("账号认证失败"):
+        while not osp.page_should_contain_text2("添加联系人"):
             osp.click_back()
             wbp.wait_for_workbench_page_load()
             wbp.click_organization()
-            time.sleep(5)
             n += 1
-            if n > 10:
+            if n > 20:
                 break
         time.sleep(3)
         for name, number in contacts:
@@ -459,16 +455,14 @@ class WorkbenchPreconditions(LoginPreconditions):
         wbp.wait_for_workbench_page_load()
         wbp.click_organization()
         osp = OrganizationStructurePage()
-        time.sleep(5)
         n = 1
         # 解决工作台不稳定问题
-        while osp.is_text_present("账号认证失败"):
+        while not osp.page_should_contain_text2("添加联系人"):
             osp.click_back()
             wbp.wait_for_workbench_page_load()
             wbp.click_organization()
-            time.sleep(5)
             n += 1
-            if n > 10:
+            if n > 20:
                 break
         time.sleep(3)
         for department_name in department_names:

@@ -2645,7 +2645,7 @@ class CallAll(TestCase):
         self.assertTrue(flag)
         cpg.click_back_by_android(2)
 
-    @tags('ALL', 'CMCC', 'Call')
+    @tags('ALL', 'CMCC', 'Call1')
     def test_call_shenlisi_0369(self):
         """检查新建联系人功能--修改手机号"""
         # 1.已登录和飞信
@@ -2681,7 +2681,7 @@ class CallAll(TestCase):
         """删除指定联系人"""
         ContactDetailsPage().delete_contact("中国移动")
 
-    @tags('ALL', 'CMCC', 'Call')
+    @tags('ALL', 'CMCC', 'Call1')
     def test_call_shenlisi_0370(self):
         """检查新建联系人功能--不修改手机号"""
         # 1.已登录和飞信
@@ -2718,7 +2718,7 @@ class CallAll(TestCase):
         """删除指定联系人"""
         ContactDetailsPage().delete_contact("中国移动")
 
-    @tags('ALL', 'CMCC', 'Call')
+    @tags('ALL', 'CMCC', 'Call1')
     def test_call_shenlisi_0371(self):
         """检查编辑本地联系人-修改手机号"""
         # 1.已登录和飞信
@@ -2749,7 +2749,18 @@ class CallAll(TestCase):
         # CheckPoint4：返回到通话记录列表
         self.assertTrue(cpg.check_multiparty_video())
 
-    @tags('ALL', 'CMCC', 'Call')
+    @staticmethod
+    def tearDown_test_call_shenlisi_0371():
+        """恢复联系人"""
+        ContactDetailsPage().delete_contact("大佬4")
+        conts = ContactsPage()
+        Preconditions.make_already_in_call()
+        conts.open_contacts_page()
+        if conts.is_text_present("显示"):
+            conts.click_text("不显示")
+        conts.create_contacts_if_not_exits("大佬4", "13800138008")
+
+    @tags('ALL', 'CMCC', 'Call1')
     def test_call_shenlisi_0372(self):
         """检查编辑本地联系人-修改名称、公司、职位、邮箱字段"""
         # 1.已登录和飞信
@@ -2781,7 +2792,18 @@ class CallAll(TestCase):
         self.assertTrue(cpg.check_multiparty_video())
         cpg.page_should_contain_text("中软国际")
 
-    @tags('ALL', 'CMCC', 'Call')
+    @staticmethod
+    def tearDown_test_call_shenlisi_0372():
+        """恢复联系人信息"""
+        ContactDetailsPage().delete_contact("中软国际")
+        conts = ContactsPage()
+        Preconditions.make_already_in_call()
+        conts.open_contacts_page()
+        if conts.is_text_present("显示"):
+            conts.click_text("不显示")
+        conts.create_contacts_if_not_exits("大佬3", "13800138007")
+
+    @tags('ALL', 'CMCC', 'Call1')
     def test_call_shenlisi_0373(self):
         """检查编辑联系人界面-删除功能"""
         # 1.已登录和飞信
@@ -2803,6 +2825,16 @@ class CallAll(TestCase):
         time.sleep(2)
         self.assertTrue(cpg.check_multiparty_video())
         cpg.page_should_contain_text("13800138006")
+
+    @staticmethod
+    def tearDown_test_call_shenlisi_0373():
+        """恢复联系人信息"""
+        conts = ContactsPage()
+        Preconditions.make_already_in_call()
+        conts.open_contacts_page()
+        if conts.is_text_present("显示"):
+            conts.click_text("不显示")
+        conts.create_contacts_if_not_exits("大佬2", "13800138006")
 
     # @tags('ALL', 'CMCC', 'Call')
     @unittest.skip("和飞信电话拨打失败，后续再执行")

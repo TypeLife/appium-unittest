@@ -404,6 +404,9 @@ DEVICES_CONFIG_LXD = {
             "platformName": "Android",
             "platformVersion": "9",
             "deviceName": "7XB4C18907018917",
+            # "deviceName": "DWT7N18614014715",
+            # "deviceName": "JUBNU18816112025",
+            # "deviceName": "RKKDU18321000975",
             "udid": "7XB4C18907018917",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 6000,
@@ -414,7 +417,9 @@ DEVICES_CONFIG_LXD = {
             {
                 'TYPE': CardType.CHINA_MOBILE,
                 'CARD_NUMBER': '19874361585'
-                # 'CARD_NUMBER': '15875537278'
+                # 'CARD_NUMBER': '19876283465'
+                # 'CARD_NUMBER': '19864759568'
+                # 'CARD_NUMBER': '19849476421'
             },
         ]
     },
@@ -496,7 +501,7 @@ DEVICES_CONFIG_YMS2 = {
         "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
-            "platformVersion": "8.0.0",
+            "platformVersion": "9",
             "deviceName": "RKKDU18321000975",
             "udid": "RKKDU18321000975",
             "automationName": "UiAutomator2",

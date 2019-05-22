@@ -7,6 +7,7 @@ from library.core.TestLogger import TestLogger
 from pages.components import ChatNoticeDialog
 from pages.components.selectors import PictureSelector
 from pages.components.BaseChat import BaseChatPage
+import time
 
 
 class ChatWindowPage(ChatNoticeDialog, PictureSelector, BaseChatPage,BasePage):
@@ -58,11 +59,32 @@ class ChatWindowPage(ChatNoticeDialog, PictureSelector, BaseChatPage,BasePage):
         '重新发送': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
         '取消重发': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
         '确定重发': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
+        '月': (MobileBy.ID, 'android:id/numberpicker_input'),
+        #手机系统设置界面-事件与日期
+        '自动时间-开关按钮': (MobileBy.ID, 'android:id/switch_widget'),
+        '日期': (MobileBy.XPATH, '//*[@text="日期"]/../android.widget.TextView[@resource-id="android:id/summary"]'),
+        '时间': (MobileBy.XPATH, '//*[@text="时间"]/../android.widget.TextView[@resource-id="android:id/summary"]'),
+
+
+
     }
 
     @TestLogger.log('点击返回')
     def click_back(self):
         self.click_element(self.__locators['返回'])
+
+    @TestLogger.log()
+    def swipe_month(self, text, number):
+        max_try = 30
+        current = 0
+        while current < max_try:
+            time.sleep(1)
+            new_text = self.get_elements(self.__class__.__locators["月"])[number].text
+            if new_text == text:
+                break
+            current += 1
+            self.swipe_by_direction2(self.__class__.__locators["月"], "up", number, 700)
+
 
     @TestLogger.log('点击返回箭头')
     def click_back1(self):
@@ -193,3 +215,29 @@ class ChatWindowPage(ChatNoticeDialog, PictureSelector, BaseChatPage,BasePage):
             return True
         else:
             return False
+
+
+
+
+    TestLogger.log("开启或关闭")
+    def swich_automatic_time(self,flag=True):
+        time.sleep(1)
+        bool=self.is_selected(self.__locators["自动时间-开关按钮"])
+        if not bool and flag:
+            #打开
+            self.click_element(self.__locators["自动时间-开关按钮"])
+        elif bool and  not flag:
+            #关闭
+            self.click_element(self.__locators["自动时间-开关按钮"])
+        else:
+            print(bool)
+            print("找不到开关")
+
+    @TestLogger.log('点击设置界面-日期')
+    def click_date_in_setting(self):
+        self.click_element(self.__locators['日期'])
+
+    @TestLogger.log('点击设置界面-时间')
+    def click_time_in_setting(self):
+        self.click_element(self.__locators['时间'])
+
