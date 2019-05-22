@@ -488,6 +488,11 @@ class SelectContactsPage(BasePage):
         self.click_element(self.__class__.__locators['确定'])
 
     @TestLogger.log()
+    def sure_icon_is_checkable(self):
+        """点击确定"""
+        return self._is_clickable(self.__class__.__locators['确定'])
+
+    @TestLogger.log()
     def result_is_more_tree(self):
         """点击确定"""
         els = self.get_elements(self.__class__.__locators["local联系人"])
