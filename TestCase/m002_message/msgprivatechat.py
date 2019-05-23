@@ -50,7 +50,7 @@ class MsgPrivateChatMsgList(TestCase):
             Preconditions.enter_message_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_MsgList_0001(self):
+    def test_msg_huangcaizui_A_0044(self):
         """消息-消息列表进入"""
         # 1、点击消息
         mess = MessagePage()
@@ -59,7 +59,7 @@ class MsgPrivateChatMsgList(TestCase):
             raise AssertionError("未成功进入消息列表页面")
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_MsgList_0002(self):
+    def test_msg_huangcaizui_A_0045(self):
         """消息-消息列表界面+功能页面元素检查"""
         # 1、点击消息
         mess = MessagePage()
@@ -76,7 +76,7 @@ class MsgPrivateChatMsgList(TestCase):
         mess.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_MsgList_0004(self):
+    def test_msg_huangcaizui_A_0048(self):
         """消息-消息列表界面新建消息页面元素检查"""
         # 1、点击消息右上角+按钮
         mess = MessagePage()
@@ -105,7 +105,7 @@ class MsgPrivateChatMsgList(TestCase):
         mess.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_MsgList_0005(self):
+    def test_msg_huangcaizui_A_0049(self):
         """消息-消息列表界面新建消息页面返回操作"""
         # 1、点击右上角的+号按钮，成功进入新建消息界面
         mess = MessagePage()
@@ -118,7 +118,7 @@ class MsgPrivateChatMsgList(TestCase):
         mess.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_MsgList_0006(self):
+    def test_msg_huangcaizui_A_0050(self):
         """消息-消息列表界面新建消息页面返回操作"""
         # 1、点击右上角的+号按钮
         mess = MessagePage()
@@ -131,7 +131,7 @@ class MsgPrivateChatMsgList(TestCase):
         mess.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_MsgList_0007(self):
+    def test_msg_huangcaizui_A_0051(self):
         """资料页发起聊天"""
         # 1、在“联系人资料”页 点击【消息】,进入“个人会话”窗口
         Preconditions.enter_private_chat_page()
@@ -144,7 +144,7 @@ class MsgPrivateChatMsgList(TestCase):
         mess.wait_for_page_load()
 
     @staticmethod
-    def setUp_test_Msg_PrivateChat_MsgList_0008():
+    def setUp_test_msg_huangcaizui_A_0052():
         """消息列表点击消息记录前，先发送一条消息"""
         Preconditions.enter_private_chat_page()
         chat = SingleChatPage()
@@ -157,7 +157,7 @@ class MsgPrivateChatMsgList(TestCase):
         mess.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_MsgList_0008(self):
+    def test_msg_huangcaizui_A_0052(self):
         """消息-消息列表进入到会话页面"""
         # 1、在消息列表点击消息记录，进入到会话页面
         mess = MessagePage()
@@ -168,7 +168,7 @@ class MsgPrivateChatMsgList(TestCase):
         mess.wait_for_page_load()
 
     @staticmethod
-    def setUp_test_Msg_PrivateChat_MsgList_0010():
+    def setUp_test_msg_huangcaizui_A_0054():
         """消息列表点击消息记录前，先发送一条消息"""
         Preconditions.enter_private_chat_page()
         chat = SingleChatPage()
@@ -181,7 +181,7 @@ class MsgPrivateChatMsgList(TestCase):
         mess.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_MsgList_0010(self):
+    def test_msg_huangcaizui_A_0054(self):
         """消息-消息列表-消息列表显示未发送成功"""
         # 1、 在会话页面输入文本消息
         mess = MessagePage()
@@ -202,12 +202,12 @@ class MsgPrivateChatMsgList(TestCase):
             raise AssertionError("断网发送消息，在消息列表无发送失败标志")
 
     @staticmethod
-    def tearDown_test_Msg_PrivateChat_MsgList_0010():
+    def tearDown_test_msg_huangcaizui_A_0054():
         """恢复网络连接"""
         current_mobile().set_network_status(6)
 
     @staticmethod
-    def setUp_test_Msg_PrivateChat_MsgList_0012():
+    def setUp_test_msg_huangcaizui_A_0056():
         """消息列表点击消息记录前，先发送一条消息"""
         Preconditions.enter_private_chat_page()
         chat = SingleChatPage()
@@ -222,7 +222,7 @@ class MsgPrivateChatMsgList(TestCase):
         mess.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_MsgList_0012(self):
+    def test_msg_huangcaizui_A_0056(self):
         """消息-消息列表-消息列表显示未发送成功"""
         # 1、 在会话页面输入文本消息
         mess = MessagePage()
@@ -252,12 +252,12 @@ class MsgPrivateChatMsgList(TestCase):
             raise AssertionError("恢复网络重发消息，在消息列表依然存在发送失败标志")
 
     @staticmethod
-    def tearDown_test_Msg_PrivateChat_MsgList_0012():
+    def tearDown_test_msg_huangcaizui_A_0056():
         """恢复网络连接"""
         current_mobile().set_network_status(6)
 
     @staticmethod
-    def setUp_test_Msg_PrivateChat_MsgList_0013():
+    def setUp_test_msg_huangcaizui_A_0057():
         """消息列表点击消息记录前，先发送一条消息"""
         Preconditions.enter_private_chat_page()
         chat = SingleChatPage()
@@ -271,7 +271,7 @@ class MsgPrivateChatMsgList(TestCase):
         mess.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_MsgList_0013(self):
+    def test_msg_huangcaizui_A_0057(self):
         """消息-消息列表-消息列表中文本消息预览"""
         # 1、查看消息列表中一对一文本消息记录
         mess = MessagePage()
@@ -284,7 +284,7 @@ class MsgPrivateChatMsgList(TestCase):
         mess.msg_is_contain_ellipsis()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_msg_1315(self):
+    def test_msg_huangcaizui_A_0140(self):
         """新建消息"""
         # 1、点击右上角+号 - 新建消息
         mess = MessagePage()
@@ -302,7 +302,7 @@ class MsgPrivateChatMsgList(TestCase):
         scp.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_msg_1317(self):
+    def test_msg_huangcaizui_A_0142(self):
         """新建消息"""
         # 1、点击右上角+号 - 新建消息
         mess = MessagePage()
@@ -347,7 +347,7 @@ class MsgPrivateChatMsgSetting(TestCase):
             Preconditions.enter_private_chat_setting_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0001(self):
+    def test_msg_huangcaizui_A_0064(self):
         """消息—一对一消息会话—设置"""
         setting = SingleChatSetPage()
         setting.click_back()
@@ -356,7 +356,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         chat.click_setting()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0002(self):
+    def test_msg_huangcaizui_A_0065(self):
         """消息—一对一消息会话—设置页面头像转跳"""
         # 1. 点击联系人头像,进入到联系人详情页。
         setting = SingleChatSetPage()
@@ -370,7 +370,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0007(self):
+    def test_msg_huangcaizui_A_0070(self):
         """消息-一对一消息会话-设置页面查找聊天内容"""
         # 1. 点击下方的查找聊天内容按钮, 跳到搜索页面
         setting = SingleChatSetPage()
@@ -381,7 +381,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0008(self):
+    def test_msg_huangcaizui_A_0071(self):
         """消息-一对一消息会话-设置页面查找聊天内容"""
         # 先发送消息
         setting = SingleChatSetPage()
@@ -407,7 +407,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0009(self):
+    def test_msg_huangcaizui_A_0078(self):
         """消息-一对一消息会话-设置页面查找不存在的聊天内容"""
         # 1. 点击下方的查找聊天内容按钮
         setting = SingleChatSetPage()
@@ -463,7 +463,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0010(self):
+    def test_msg_huangcaizui_A_0079(self):
         """消息-一对一消息会话-设置页面查找聊天文件"""
         self.public_send_file('.txt')
         chat = SingleChatPage()
@@ -483,7 +483,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0011(self):
+    def test_msg_huangcaizui_A_0080(self):
         """消息-一对一消息会话-设置页面查找聊天文件"""
         # 1. 点击右上角个人设置按钮
         setting = SingleChatSetPage()
@@ -517,7 +517,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0012(self):
+    def test_msg_huangcaizui_A_0081(self):
         """消息-一对一消息会话-设置页面查找聊天图片与视频"""
         self.public_send_video()
         chat = SingleChatPage()
@@ -537,7 +537,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0013(self):
+    def test_msg_huangcaizui_A_0082(self):
         """消息-一对一消息会话-设置页面查找聊天图片与视频"""
         # 1.点击查找聊天内容
         setting = SingleChatSetPage()
@@ -554,7 +554,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0020(self):
+    def test_msg_huangcaizui_A_0089(self):
         """ 一对一聊天设置创建群聊 """
         # 1.点击+添加成员,进入选择成员页面
         setting = SingleChatSetPage()
@@ -565,7 +565,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0021(self):
+    def test_msg_huangcaizui_A_0090(self):
         """ 一对一聊天设置创建群聊 """
         setting = SingleChatSetPage()
         setting.click_back()
@@ -587,7 +587,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0022(self):
+    def test_msg_huangcaizui_A_0091(self):
         """ 一对一聊天设置创建群聊 """
         setting = SingleChatSetPage()
         setting.click_back()
@@ -614,7 +614,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0023(self):
+    def test_msg_huangcaizui_A_0092(self):
         """ 一对一聊天设置创建群聊 """
         setting = SingleChatSetPage()
         setting.click_back()
@@ -636,7 +636,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         slcp.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0024(self):
+    def test_msg_huangcaizui_A_0093(self):
         """ 一对一聊天设置创建群聊 """
         setting = SingleChatSetPage()
         setting.click_back()
@@ -663,7 +663,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         slcp.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0025(self):
+    def test_msg_huangcaizui_A_0094(self):
         """ 一对一聊天设置创建群聊 """
         setting = SingleChatSetPage()
         setting.click_back()
@@ -690,7 +690,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         current_mobile().launch_app()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0026(self):
+    def test_msg_huangcaizui_A_0095(self):
         """ 一对一聊天设置创建群聊 """
         setting = SingleChatSetPage()
         setting.wait_for_page_load()
@@ -725,7 +725,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0027(self):
+    def test_msg_huangcaizui_A_0096(self):
         """ 一对一聊天设置创建群聊 """
         setting = SingleChatSetPage()
         cur_name = setting.get_name()
@@ -759,7 +759,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0028(self):
+    def test_msg_huangcaizui_A_0097(self):
         """ 一对一聊天设置创建群聊,无网络 """
         setting = SingleChatSetPage()
         cur_name = setting.get_name()
@@ -795,13 +795,13 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_Msg_PrivateChat_Setting_0028():
+    def tearDown_test_msg_huangcaizui_A_0097():
         """恢复网络连接"""
         current_mobile().set_network_status(6)
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0029(self):
-        """ 一对一聊天设置创建群聊,无网络 """
+    def test_msg_huangcaizui_A_0098(self):
+        """ 一对一聊天设置创建群聊 """
         setting = SingleChatSetPage()
         cur_name = setting.get_name()
         setting.click_back()
@@ -844,7 +844,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         current_mobile().launch_app()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0031(self):
+    def test_msg_huangcaizui_A_0099(self):
         """ 点对点建群"""
         setting = SingleChatSetPage()
         setting.wait_for_page_load()
@@ -869,7 +869,7 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0033(self):
+    def test_msg_huangcaizui_A_0072(self):
         """ 输入框中输入表情消息不发送，进入查找聊天内容后是否还显示草稿"""
         setting = SingleChatSetPage()
         setting.wait_for_page_load()
@@ -926,27 +926,27 @@ class MsgPrivateChatMsgSetting(TestCase):
         setting.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0034(self):
+    def test_msg_huangcaizui_A_0073(self):
         """ 输入框中输入文字不发送，进入查找聊天内容后是否还显示草稿"""
         self.public_input_mess("您好")
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0035(self):
+    def test_msg_huangcaizui_A_0074(self):
         """ 输入框中输入数字消息不发送，进入查找聊天内容后是否还显示草稿"""
         self.public_input_mess("123456789")
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0036(self):
+    def test_msg_huangcaizui_A_0075(self):
         """ 输入框中输入字母消息不发送，进入查找聊天内容后是否还显示草稿"""
         self.public_input_mess("abcdef")
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0037(self):
+    def test_msg_huangcaizui_A_0076(self):
         """ 输入框中输入字符消息不发送，进入查找聊天内容后是否还显示草稿"""
         self.public_input_mess("@#$%%%^&")
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_Setting_0038(self):
+    def test_msg_huangcaizui_A_0077(self):
         """ 输入框中输入各种混合消息体不发送，进入查找聊天内容后是否还显示草稿"""
         self.public_input_mess("abc123@#$%^&")
 
@@ -974,7 +974,7 @@ class MsgContactSelector(TestCase):
             Preconditions.enter_message_page()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_1183(self):
+    def test_msg_huangcaizui_A_0001(self):
         """ 进入新建消息是否正常"""
         # 1.点击右上角的+
         mess = MessagePage()
@@ -994,7 +994,7 @@ class MsgContactSelector(TestCase):
         mess.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_1194(self):
+    def test_msg_huangcaizui_B_0061(self):
         """ 进入免费/发送短信查看展示页面"""
         # 1.点击右上角的+
         mess = MessagePage()
@@ -1022,7 +1022,7 @@ class MsgContactSelector(TestCase):
         mess.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_1205(self):
+    def test_msg_huangcaizui_A_0023(self):
         """ 最近聊天选择器：单聊内转发消息"""
         # 1、在聊天会话页面，长按可转发的消息，是否可以跳转到联系人选择器页面
         Preconditions.enter_private_chat_page()
@@ -1039,7 +1039,7 @@ class MsgContactSelector(TestCase):
         ContactsPage().open_message_page()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_1206(self):
+    def test_msg_huangcaizui_A_0024(self):
         """ 最近聊天选择器：单聊内转发消息--选择一个群"""
         Preconditions.enter_private_chat_page()
         chat = SingleChatPage()
@@ -1086,7 +1086,7 @@ class MsgContactSelector(TestCase):
         ContactsPage().open_message_page()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_1207(self):
+    def test_msg_huangcaizui_A_0025(self):
         """ 最近聊天选择器：单聊内转发消息--选择本地联系人"""
         Preconditions.enter_private_chat_page()
         chat = SingleChatPage()
@@ -1159,14 +1159,14 @@ class MsgPrivateChatDialog(TestCase):
             Preconditions.enter_private_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_1277(self):
+    def test_msg_huangcaizui_A_0102(self):
         """ 页面样式"""
         # 1、进入一对一天聊天界面,页面右下角出现表情选择按钮
         chat = SingleChatPage()
         chat.page_should_contains_element('打开表情')
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_1278(self):
+    def test_msg_huangcaizui_A_0103(self):
         """ 页面样式"""
         # 1、进入一对一聊天界面
         chat = SingleChatPage()
@@ -1183,7 +1183,7 @@ class MsgPrivateChatDialog(TestCase):
         chat.close_expression()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_1279(self):
+    def test_msg_huangcaizui_A_0104(self):
         """ 表情列表按钮"""
         # 1、进入一对一聊天界面
         chat = SingleChatPage()
@@ -1200,7 +1200,7 @@ class MsgPrivateChatDialog(TestCase):
         chat.input_message('')
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_1280(self):
+    def test_msg_huangcaizui_A_0105(self):
         """ 表情列表按钮"""
         # 1、进入一对一聊天界面
         chat = SingleChatPage()
@@ -1222,7 +1222,7 @@ class MsgPrivateChatDialog(TestCase):
         chat.input_message('')
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_1282(self):
+    def test_msg_huangcaizui_A107(self):
         """ 表情列表按钮"""
         # 1、进入一对一聊天界面
         chat = SingleChatPage()
@@ -1242,7 +1242,7 @@ class MsgPrivateChatDialog(TestCase):
         current_mobile().hide_keyboard_if_display()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_1301(self):
+    def test_msg_huangcaizui_A_0126(self):
         """发送超长内容处理"""
         # 1、进入一对一聊天界面
         chat = SingleChatPage()
@@ -1256,7 +1256,7 @@ class MsgPrivateChatDialog(TestCase):
             raise AssertionError("输入框文本不是 ‘说点什么...’")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_1302(self):
+    def test_msg_huangcaizui_A_0127(self):
         """发送超长内容处理"""
         # 1、进入一对一聊天界面
         chat = SingleChatPage()
@@ -1270,7 +1270,7 @@ class MsgPrivateChatDialog(TestCase):
             raise AssertionError("输入框文本不是 ‘说点什么...’")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_1303(self):
+    def test_msg_huangcaizui_A_0128(self):
         """进入发送页面"""
         # 1、进入一对一天界面
         chat = SingleChatPage()
@@ -1293,12 +1293,12 @@ class MsgPrivateChatDialog(TestCase):
         chat.click_text("退出短信")
 
     @staticmethod
-    def setUp_test_msg_1304():
+    def setUp_test_msg_huangcaizui_A_0129():
         """该账号未开启过和飞信短信功能"""
         Preconditions.enter_private_chat_page(reset=True)
 
     @tags('ALL', 'SMOKE', 'CMCC_RESET', 'DEBUG')
-    def test_msg_1304(self):
+    def test_msg_huangcaizui_A_0129(self):
         """进入发送页面"""
         # 1、进入一对一天界面
         chat = SingleChatPage()
@@ -1311,31 +1311,12 @@ class MsgPrivateChatDialog(TestCase):
         chat.page_should_contain_text("给港澳台等境外用户发短信将收取1元/条")
 
     @staticmethod
-    def setUp_test_msg_1305():
+    def setUp_test_msg_huangcaizui_B_0073():
         """该账号未开启过和飞信短信功能"""
         Preconditions.enter_private_chat_page(reset=True)
 
     @tags('ALL', 'SMOKE', 'CMCC_RESET', 'DEBUG')
-    def test_msg_1305(self):
-        """进入发送页面"""
-        # 1、进入一对一天界面
-        chat = SingleChatPage()
-        # 2、选择短信功能，进入短信发送模式
-        chat.click_sms()
-        time.sleep(1)
-        chat.page_should_contain_text("欢迎使用免费短信")
-        chat.page_should_contain_text("免费给移动用户发送短信")
-        chat.page_should_contain_text("给非移动用户发短信将收取0.01元/条")
-        chat.page_should_contain_text("给港澳台等境外用户发短信将收取1元/条")
-        chat.driver.back()
-
-    @staticmethod
-    def setUp_test_msg_1306():
-        """该账号未开启过和飞信短信功能"""
-        Preconditions.enter_private_chat_page(reset=True)
-
-    @tags('ALL', 'SMOKE', 'CMCC_RESET', 'DEBUG')
-    def test_msg_1306(self):
+    def test_msg_huangcaizui_B_0073(self):
         """进入发送页面"""
         # 1、进入一对一天界面
         chat = SingleChatPage()
@@ -1354,7 +1335,7 @@ class MsgPrivateChatDialog(TestCase):
         chat.click_text("退出短信")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_1307(self):
+    def test_msg_huangcaizui_B_0074(self):
         """进入发送页面"""
         # 1、进入一对一天界面
         chat = SingleChatPage()
@@ -1379,7 +1360,7 @@ class MsgPrivateChatDialog(TestCase):
         chat.click_text("退出短信")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_1308(self):
+    def test_msg_huangcaizui_B_0075(self):
         """发送机制"""
         # 1、进入一对一天界面
         chat = SingleChatPage()
@@ -1412,7 +1393,7 @@ class MsgPrivateChatDialog(TestCase):
         mess.page_should_contain_text('[短信]')
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_1313(self):
+    def test_msg_huangcaizui_B_0080(self):
         """发送机制"""
         # 1、进入一对一天界面
         chat = SingleChatPage()
@@ -1444,17 +1425,17 @@ class MsgPrivateChatDialog(TestCase):
         chat.click_text("退出短信")
 
     @staticmethod
-    def tearDown_test_msg_1313():
+    def tearDown_test_msg_huangcaizui_B_0080():
         """恢复网络连接"""
         current_mobile().set_network_status(6)
 
     @staticmethod
-    def setUp_test_msg_1314():
+    def setUp_test_msg_huangcaizui_B_0081():
         """该账号未开启过和飞信短信功能"""
         Preconditions.enter_private_chat_page(reset=True)
 
     @tags('ALL', 'SMOKE', 'CMCC_RESET', 'DEBUG')
-    def test_msg_1314(self):
+    def test_msg_huangcaizui_B_0081(self):
         """发送机制"""
         # 1、进入客户端通知类短信聊天窗口
         chat = SingleChatPage()
@@ -1513,7 +1494,7 @@ class MsgPrivateChatDialog(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_1322(self):
+    def test_msg_huangcaizui_A_0147(self):
         """会话窗口中点击删除文本消息"""
         self.public_send_file('.txt')
         # 1.长按文本消息
@@ -1524,12 +1505,12 @@ class MsgPrivateChatDialog(TestCase):
         chat.page_should_not_contain_text(msg)
 
     @staticmethod
-    def setUp_test_msg_1323():
+    def setUp_test_msg_huangcaizui_A_0148():
         """该账号未开启过和飞信短信功能"""
         Preconditions.enter_private_chat_page(reset=True)
 
     @tags('ALL', 'SMOKE', 'CMCC_RESET', 'DEBUG')
-    def test_msg_1323(self):
+    def test_msg_huangcaizui_A_0148(self):
         """会话窗口中首次点击撤回文本消息"""
         self.public_send_file('.txt')
         # 1.长按文本消息
@@ -1551,7 +1532,7 @@ class MsgPrivateChatDialog(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_1324(self):
+    def test_msg_huangcaizui_A_0149(self):
         """会话窗口中非首次点击撤回文本消息"""
         self.public_send_file('.txt')
         # 1.长按文本消息
@@ -1566,7 +1547,7 @@ class MsgPrivateChatDialog(TestCase):
         chat.page_should_contain_text("你撤回了一条信息")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG_1')
-    def test_msg_1325(self):
+    def test_msg_huangcaizui_A_0150(self):
         """会话窗口中点击收藏文本消息"""
         self.public_send_file('.txt')
         # 1.长按文本消息
@@ -1578,7 +1559,7 @@ class MsgPrivateChatDialog(TestCase):
             raise AssertionError("收藏文件无'已收藏'提示！")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG_1')
-    def test_msg_1326(self):
+    def test_msg_huangcaizui_A_0151(self):
         """进入到单聊天会话页面，发送一条字符等于5000的文本消息"""
         # 1、在输入框中输入5000个字符，右边的语音按钮是否自动变为发送按钮
         chat = SingleChatPage()
@@ -1590,7 +1571,7 @@ class MsgPrivateChatDialog(TestCase):
         chat.page_should_contain_text("呵呵")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG_1')
-    def test_msg_1327(self):
+    def test_msg_huangcaizui_A_0152(self):
         """进入到单聊天会话页面，发送一条字符等于5001的文本消息"""
         # 1、在输入框中输入5001个字符，是否可以可以输入此段字符
         chat = SingleChatPage()
