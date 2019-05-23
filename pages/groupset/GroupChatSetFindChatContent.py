@@ -49,6 +49,11 @@ class GroupChatSetFindChatContentPage(BasePage):
         self.input_text(self.__class__.__locators["输入关键词快速搜索"], chat_context)
 
     @TestLogger.log()
+    def click_search_box(self):
+        """点击搜索框"""
+        self.click_element(self.__class__.__locators["输入关键词快速搜索"])
+
+    @TestLogger.log()
     def click_x_icon(self):
         """点击X"""
         self.click_element(self.__class__.__locators["X"])
@@ -62,4 +67,17 @@ class GroupChatSetFindChatContentPage(BasePage):
     def click_pic_video(self):
         """点击图片与视频"""
         self.click_element(self.__class__.__locators["图片与视频"])
+
+    @TestLogger.log()
+    def select_message_record_by_text(self, text):
+        """根据文本消息选择一条消息记录"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_content" and @text="%s"]' % text)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        self.click_element(locator)
 
