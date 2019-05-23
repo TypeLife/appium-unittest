@@ -1207,7 +1207,7 @@ class MsgCommonGroupTest(TestCase):
         # current_mobile().connect_mobile()
         Preconditions.enter_group_chat_page()
 
-    @tags('ALL', 'SMOKE', 'CMCC-RESET', 'group_chat','428','high')
+    @tags('ALL', 'SMOKE', 'CMCC-RESET', 'group_chat','4281','high')
     def test_msg_common_group_0019(self):
         """未获取权限时，点击输入框右边的语音按钮，检查是否会弹出提示权限"""
         gcp = GroupChatPage()
@@ -1224,7 +1224,7 @@ class MsgCommonGroupTest(TestCase):
         audio.click_exit()
         gcp.wait_for_page_load()
 
-    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','428','high')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','4281','high')
     def test_msg_common_group_0020(self):
         """首次使用语音功能"""
         gcp = GroupChatPage()
@@ -4361,7 +4361,7 @@ class MsgCommonGroupAllTest(TestCase):
         # current_mobile().disconnect_mobile()
 
     @staticmethod
-    def setUp_test_msg_common_group_all_0001():
+    def setUp_test_msg_xiaoqiu_0001():
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -4371,7 +4371,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.make_already_in_message_page()
 
     @tags('ALL','CMCC','group_chat','full','high')
-    def test_msg_common_group_all_0001(self):
+    def test_msg_xiaoqiu_0001(self):
         """消息列表——发起群聊——选择已有群"""
         # 1、点击右上角的+号，发起群聊
         # 2、点击选择一个群，是否可以进入到群聊列表展示页面
@@ -4401,7 +4401,7 @@ class MsgCommonGroupAllTest(TestCase):
         # sc.click_back()
 
     @staticmethod
-    def setUp_test_msg_common_group_all_0002():
+    def setUp_test_msg_xiaoqiu_0002():
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -4414,7 +4414,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CMCC', 'group_chat','full','high')
-    def test_msg_common_group_all_0002(self):
+    def test_msg_xiaoqiu_0002(self):
         """消息列表——发起群聊——选择已有群"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("啊测测试试")
@@ -4440,7 +4440,7 @@ class MsgCommonGroupAllTest(TestCase):
         # sc.click_back()
 
     @staticmethod
-    def setUp_test_msg_common_group_all_0003():
+    def setUp_test_msg_xiaoqiu_0003():
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -4453,7 +4453,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CMCC', 'group_chat','full','high')
-    def test_msg_common_group_all_0003(self):
+    def test_msg_xiaoqiu_0003(self):
         """群聊列表展示页面——中文精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("啊测测试试")
@@ -4480,7 +4480,7 @@ class MsgCommonGroupAllTest(TestCase):
         # sc.click_back()
 
     @staticmethod
-    def setUp_test_msg_common_group_all_0004():
+    def setUp_test_msg_xiaoqiu_0004():
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -4493,7 +4493,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CMCC', 'group_chat','full')
-    def test_msg_common_group_all_0004(self):
+    def test_msg_xiaoqiu_0004(self):
         """群聊列表展示页面——中文精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("啊测测试试")
@@ -4519,7 +4519,7 @@ class MsgCommonGroupAllTest(TestCase):
         # sc.click_back()
 
     @staticmethod
-    def setUp_test_msg_common_group_all_0005():
+    def setUp_test_msg_xiaoqiu_0005():
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -4532,7 +4532,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CMCC', 'group_chat','full')
-    def test_msg_common_group_all_0005(self):
+    def test_msg_xiaoqiu_0005(self):
         """群聊列表展示页面——英文精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("atteesstt")
@@ -4559,7 +4559,7 @@ class MsgCommonGroupAllTest(TestCase):
         # sc.click_back()
 
     @staticmethod
-    def setUp_test_msg_common_group_all_0006():
+    def setUp_test_msg_xiaoqiu_0006():
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -4572,7 +4572,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CMCC', 'group_chat','full')
-    def test_msg_common_group_all_0006(self):
+    def test_msg_xiaoqiu_0006(self):
         """群聊列表展示页面——英文精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("atteesstt")
@@ -4598,7 +4598,7 @@ class MsgCommonGroupAllTest(TestCase):
         # sc.click_back()
 
     @staticmethod
-    def setUp_test_msg_common_group_all_0007():
+    def setUp_test_msg_xiaoqiu_0007():
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -4611,7 +4611,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CMCC', 'group_chat','full')
-    def test_msg_common_group_all_0007(self):
+    def test_msg_xiaoqiu_0007(self):
         """群聊列表展示页面——空格精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("a a")
@@ -4638,7 +4638,7 @@ class MsgCommonGroupAllTest(TestCase):
         # sc.click_back()
 
     @staticmethod
-    def setUp_test_msg_common_group_all_0008():
+    def setUp_test_msg_xiaoqiu_0008():
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -4651,7 +4651,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CMCC', 'group_chat','full')
-    def test_msg_common_group_all_0008(self):
+    def test_msg_xiaoqiu_0008(self):
         """群聊列表展示页面——空格精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("a a")
@@ -4677,7 +4677,7 @@ class MsgCommonGroupAllTest(TestCase):
         # sc.click_back()
 
     @staticmethod
-    def setUp_test_msg_common_group_all_0009():
+    def setUp_test_msg_xiaoqiu_0009():
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -4690,7 +4690,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CMCC', 'group_chat','full')
-    def test_msg_common_group_all_0009(self):
+    def test_msg_xiaoqiu_0009(self):
         """群聊列表展示页面——数字精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("112233445566")
@@ -4717,7 +4717,7 @@ class MsgCommonGroupAllTest(TestCase):
         # sc.click_back()
 
     @staticmethod
-    def setUp_test_msg_common_group_all_0010():
+    def setUp_test_msg_xiaoqiu_0010():
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -4730,7 +4730,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CMCC', 'group_chat','full')
-    def test_msg_common_group_all_0010(self):
+    def test_msg_xiaoqiu_0010(self):
         """群聊列表展示页面——数字精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("112233445566")
@@ -4756,7 +4756,7 @@ class MsgCommonGroupAllTest(TestCase):
         # sc.click_back()
 
     @staticmethod
-    def setUp_test_msg_common_group_all_0011():
+    def setUp_test_msg_xiaoqiu_0011():
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -4769,7 +4769,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CMCC', 'group_chat', 'full')
-    def test_msg_common_group_all_0011(self):
+    def test_msg_xiaoqiu_0011(self):
         """群聊列表展示页面——数字精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("112233445566")
@@ -4796,7 +4796,7 @@ class MsgCommonGroupAllTest(TestCase):
         # sc.click_back()
 
     @staticmethod
-    def setUp_test_msg_common_group_all_0012():
+    def setUp_test_msg_xiaoqiu_0012():
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -4809,7 +4809,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CMCC', 'group_chat', 'full')
-    def test_msg_common_group_all_0012(self):
+    def test_msg_xiaoqiu_0012(self):
         """群聊列表展示页面——数字精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("112233445566")
@@ -4835,7 +4835,7 @@ class MsgCommonGroupAllTest(TestCase):
         # sc.click_back()
 
     @staticmethod
-    def setUp_test_msg_common_group_all_0013():
+    def setUp_test_msg_xiaoqiu_0013():
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -4848,7 +4848,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CMCC', 'group_chat', 'full')
-    def test_msg_common_group_all_0013(self):
+    def test_msg_xiaoqiu_0013(self):
         """群聊列表展示页面——字符精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("$$")
@@ -4875,7 +4875,7 @@ class MsgCommonGroupAllTest(TestCase):
         # sc.click_back()
 
     @staticmethod
-    def setUp_test_msg_common_group_all_0014():
+    def setUp_test_msg_xiaoqiu_0014():
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -4888,7 +4888,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CMCC', 'group_chat', 'full')
-    def test_msg_common_group_all_0014(self):
+    def test_msg_xiaoqiu_0014(self):
         """群聊列表展示页面——字符精确搜索"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("$$")
@@ -4914,7 +4914,7 @@ class MsgCommonGroupAllTest(TestCase):
         # sc.click_back()
 
     @staticmethod
-    def setUp_test_msg_common_group_all_0015():
+    def setUp_test_msg_xiaoqiu_0015():
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -4927,7 +4927,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.make_already_in_message_page()
 
     @tags('ALL', 'CMCC', 'group_chat', 'full')
-    def test_msg_common_group_all_0015(self):
+    def test_msg_xiaoqiu_0015(self):
         """群聊列表展示页面——索引字母定位选择"""
         # 先保证有特定名称的群
         Preconditions.build_one_new_group("iiiiii")
@@ -4954,7 +4954,7 @@ class MsgCommonGroupAllTest(TestCase):
         # sc.click_back()
 
     @tags('ALL', 'CMCC', 'group_chat', 'full','high')
-    def test_msg_common_group_all_0017(self):
+    def test_msg_xiaoqiu_0017(self):
         """在群聊天会话页面，发送一条字符长度等于：1的，文本消息"""
         gcp = GroupChatPage()
         # 输入信息
@@ -4972,7 +4972,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
 
     @tags('ALL', 'CMCC', 'group_chat', 'full','high')
-    def test_msg_common_group_all_0018(self):
+    def test_msg_xiaoqiu_0018(self):
         """在群聊天会话页面，发送一条字符长度，大于1的文本消息"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -4992,7 +4992,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
 
     @tags('ALL', 'CMCC', 'group_chat', 'full','high')
-    def test_msg_common_group_all_0021(self):
+    def test_msg_xiaoqiu_0021(self):
         """在群聊天会话页面，输入框中录入1个字符，使用缩小功能发送"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5024,7 +5024,7 @@ class MsgCommonGroupAllTest(TestCase):
         #     raise AssertionError("文本消息没有缩小展示")
 
     @tags('ALL', 'CMCC', 'group_chat', 'full','high')
-    def test_msg_common_group_all_0022(self):
+    def test_msg_xiaoqiu_0022(self):
         """在群聊天会话页面，输入框中录入500个字符，使用缩小功能发送"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5056,7 +5056,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("文本消息没有缩小展示")
 
     @tags('ALL', 'CMCC', 'group_chat', 'full','high')
-    def test_msg_common_group_all_0023(self):
+    def test_msg_xiaoqiu_0023(self):
         """在群聊天会话页面，输入框中录入5000个字符，使用缩小功能发送"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5088,7 +5088,7 @@ class MsgCommonGroupAllTest(TestCase):
         #     raise AssertionError("文本消息没有缩小展示")
 
     @tags('ALL', 'CMCC', 'group_chat', 'full','high')
-    def test_msg_common_group_all_0024(self):
+    def test_msg_xiaoqiu_0024(self):
         """在群聊天会话页面，输入框中录入1个字符，使用放大功能发送"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5120,7 +5120,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("文本消息没有放大展示")
 
     @tags('ALL', 'CMCC', 'group_chat', 'full','high')
-    def test_msg_common_group_all_0025(self):
+    def test_msg_xiaoqiu_0025(self):
         """在群聊天会话页面，输入框中录入500个字符，使用放大功能发送"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5152,7 +5152,7 @@ class MsgCommonGroupAllTest(TestCase):
         #     raise AssertionError("文本消息没有放大展示")
 
     @tags('ALL', 'CMCC', 'group_chat', 'full','high')
-    def test_msg_common_group_all_0026(self):
+    def test_msg_xiaoqiu_0026(self):
         """在群聊天会话页面，输入框中录入5000个字符，使用放大功能发送"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5185,7 +5185,7 @@ class MsgCommonGroupAllTest(TestCase):
 
     # @tags('ALL', 'CMCC', 'group_chat', 'full')
     @unittest.skip("过")
-    def test_msg_common_group_all_0028(self):
+    def test_msg_xiaoqiu_0028(self):
         """进入到群聊天会话页面，录入500个表情字符，缩小发送"""
         gcp=GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5215,7 +5215,7 @@ class MsgCommonGroupAllTest(TestCase):
 
     # @tags('ALL', 'CMCC', 'group_chat', 'full')
     @unittest.skip("过")
-    def test_msg_common_group_all_0032(self):
+    def test_msg_xiaoqiu_0032(self):
         """进入到群聊天会话页面，录入500个表情字符，放大发送"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5244,7 +5244,7 @@ class MsgCommonGroupAllTest(TestCase):
         gcp.hide_keyboard()
 
     @tags('ALL', 'CMCC', 'group_chat', 'full','high')
-    def test_msg_common_group_all_0035(self):
+    def test_msg_xiaoqiu_0035(self):
         """进入到群聊天会话页面，录入文字+表情字符，放大发送"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5286,7 +5286,7 @@ class MsgCommonGroupAllTest(TestCase):
         gcp.hide_keyboard()
 
     @tags('ALL', 'CMCC', 'group_chat', 'full','high')
-    def test_msg_common_group_all_0036(self):
+    def test_msg_xiaoqiu_0036(self):
         """进入到群聊天会话页面，录入文字+表情字符，缩小发送"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5328,7 +5328,7 @@ class MsgCommonGroupAllTest(TestCase):
         gcp.hide_keyboard()
 
     @tags('ALL', 'CMCC', 'group_chat', 'full','a','high')
-    def test_msg_common_group_all_0037(self):
+    def test_msg_xiaoqiu_0037(self):
         """在群聊天会话页面，长按消息体，点击收藏"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5343,7 +5343,7 @@ class MsgCommonGroupAllTest(TestCase):
         self.assertTrue(flag)
 
     @tags('ALL', 'CMCC', 'group_chat', 'full','a','high')
-    def test_msg_common_group_all_0038(self):
+    def test_msg_xiaoqiu_0038(self):
         """我——收藏——收藏内容展示"""
         gcp = GroupChatPage()
         time.sleep(2)
@@ -5370,7 +5370,7 @@ class MsgCommonGroupAllTest(TestCase):
         me.open_message_page()
 
     @tags('ALL', 'CMCC', 'group_chat', 'full','a','high')
-    def test_msg_common_group_all_0039(self):
+    def test_msg_xiaoqiu_0039(self):
         """我——收藏——收藏内展示——点击收藏内容"""
         gcp = GroupChatPage()
         time.sleep(2)
@@ -5402,7 +5402,7 @@ class MsgCommonGroupAllTest(TestCase):
         me.open_message_page()
 
     @tags('ALL', 'CMCC', 'group_chat', 'full','a','high')
-    def test_msg_common_group_all_0040(self):
+    def test_msg_xiaoqiu_0040(self):
         """我——收藏——收藏内展示——点击收藏内容——点击播放收藏语音文件"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5459,7 +5459,7 @@ class MsgCommonGroupAllTest(TestCase):
         me.open_message_page()
 
     @tags('ALL', 'CMCC', 'group_chat', 'full','a','high')
-    def test_msg_common_group_all_0041(self):
+    def test_msg_xiaoqiu_0041(self):
         """我——收藏——收藏内展示——点击收藏内容——点击删除收藏内容"""
         gcp = GroupChatPage()
         time.sleep(2)
@@ -5501,7 +5501,7 @@ class MsgCommonGroupAllTest(TestCase):
 
 
     @tags('ALL', 'CMCC', 'group_chat', 'full','a','high')
-    def test_msg_common_group_all_0050(self):
+    def test_msg_xiaoqiu_0050(self):
         """发送一组数字：95533，发送失败的状态展示"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5552,14 +5552,14 @@ class MsgCommonGroupAllTest(TestCase):
             except TimeoutException:
                 raise AssertionError('消息未在 {}s 内发送成功'.format(10))
 
-    def tearDown_test_msg_common_group_all_0050(self):
+    def tearDown_test_msg_xiaoqiu_0050(self):
         #重连网络
         gcp = GroupChatPage()
         gcp.set_network_status(6)
         time.sleep(5)
 
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx','high')
-    def test_msg_common_group_all_0072(self):
+    def test_msg_xiaoqiu_0072(self):
         """仅语音模式，录制时长等于1秒时，点击发送按钮"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5601,7 +5601,7 @@ class MsgCommonGroupAllTest(TestCase):
                 raise AssertionError("语音模式选择页面加载失败")
 
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx','high')
-    def test_msg_common_group_all_0073(self):
+    def test_msg_xiaoqiu_0073(self):
         """仅语音模式，发送录制时长大于1秒的语音"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5645,7 +5645,7 @@ class MsgCommonGroupAllTest(TestCase):
                 raise AssertionError("语音模式选择页面加载失败")
 
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx','high')
-    def test_msg_common_group_all_0074(self):
+    def test_msg_xiaoqiu_0074(self):
         """仅语音模式，录制时长大于10秒——发送"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5681,7 +5681,7 @@ class MsgCommonGroupAllTest(TestCase):
                 raise AssertionError("语音模式选择页面加载失败")
 
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx','high')
-    def test_msg_common_group_all_0075(self):
+    def test_msg_xiaoqiu_0075(self):
         """仅语音模式，录制时长等于60秒—自动发送"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5727,7 +5727,7 @@ class MsgCommonGroupAllTest(TestCase):
                 raise AssertionError("语音模式选择页面加载失败")
 
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx','high')
-    def test_msg_common_group_all_0076(self):
+    def test_msg_xiaoqiu_0076(self):
         """仅语音模式，录制时长超过60秒"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5764,7 +5764,7 @@ class MsgCommonGroupAllTest(TestCase):
                 raise AssertionError("语音模式选择页面加载失败")
 
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx','high')
-    def test_msg_common_group_all_0085(self):
+    def test_msg_xiaoqiu_0085(self):
         """在聊天会话页面——点击语音ICON"""
         gcp = GroupChatPage()
         #断网
@@ -5796,13 +5796,13 @@ class MsgCommonGroupAllTest(TestCase):
             audio.click_exit()
             gcp.hide_keyboard()
 
-    def tearDown_test_msg_common_group_all_0085(self):
+    def tearDown_test_msg_xiaoqiu_0085(self):
         #重连网络
         gcp = GroupChatPage()
         gcp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx','high')
-    def test_msg_common_group_all_0088(self):
+    def test_msg_xiaoqiu_0088(self):
         """进入到语音录制页——网络异常"""
         gcp = GroupChatPage()
         # 断网
@@ -5833,13 +5833,13 @@ class MsgCommonGroupAllTest(TestCase):
             audio.click_exit()
             gcp.hide_keyboard()
 
-    def tearDown_test_msg_common_group_all_0088(self):
+    def tearDown_test_msg_xiaoqiu_0088(self):
         #重连网络
         gcp = GroupChatPage()
         gcp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx','high')
-    def test_msg_common_group_all_0089(self):
+    def test_msg_xiaoqiu_0089(self):
         """语音录制中途——网络异常"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5883,13 +5883,13 @@ class MsgCommonGroupAllTest(TestCase):
             else:
                 raise AssertionError("语音模式选择页面加载失败")
 
-    def tearDown_test_msg_common_group_all_0089(self):
+    def tearDown_test_msg_xiaoqiu_0089(self):
         #重连网络
         gcp = GroupChatPage()
         gcp.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx','high')
-    def test_msg_common_group_all_0090(self):
+    def test_msg_xiaoqiu_0090(self):
         """语音录制完成——网络异常"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
@@ -5941,13 +5941,13 @@ class MsgCommonGroupAllTest(TestCase):
             else:
                 raise AssertionError("语音模式选择页面加载失败")
 
-    def tearDown_test_msg_common_group_all_0090(self):
+    def tearDown_test_msg_xiaoqiu_0090(self):
         #重连网络
         gcp = GroupChatPage()
         gcp.set_network_status(6)
 
     @staticmethod
-    def setUp_test_msg_common_group_all_0095():
+    def setUp_test_msg_xiaoqiu_0095():
         Preconditions.select_mobile('Android-移动')
         # current_mobile().launch_app()
         current_mobile().reset_app()
@@ -5955,7 +5955,7 @@ class MsgCommonGroupAllTest(TestCase):
 
     # @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
     @unittest.skip("跳过")
-    def test_msg_common_group_all_0095(self):
+    def test_msg_xiaoqiu_0095(self):
         """当前版本，消息语音icon上红点展示后，清除数据重新登录"""
         gcp = GroupChatPage()
         gcp.click_more()
@@ -5975,7 +5975,7 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("清除数据重新登陆,语音icon不存在红点提示")
 
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
-    def test_msg_common_group_all_0098(self):
+    def test_msg_xiaoqiu_0098(self):
         """在群聊会话窗口，点击页面顶部的通话按钮"""
         # 1、点击页面顶部的通话按钮，是否会调起通话选择项弹窗
         gcp = GroupChatPage()
@@ -5987,7 +5987,7 @@ class MsgCommonGroupAllTest(TestCase):
         gcp.tap_coordinate([(100, 20), (100, 60), (100,100)])
 
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
-    def test_msg_common_group_all_0101(self):
+    def test_msg_xiaoqiu_0101(self):
         """在群聊会话窗口，点击输入框上方的图片ICON，进入到图片展示列表"""
         # 1、点击输入框上方的图片ICON，是否可以进入到相册列表页
         # 2、任意选中一张照片，点击右下角的发送按钮，是否可以发送成功

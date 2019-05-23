@@ -2288,3 +2288,55 @@ class SuperMeetingTest(TestCase):
         time.sleep(2)
         current_mobile().back()
         wbp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0057(self):
+        """断网提示"""
+        # 1、断开网络
+        # 2、点击页面其他元素
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        smp.set_network_status(0)
+        time.sleep(8)
+        smp.click_enter_more()
+        time.sleep(2)
+        if not smp.is_text_present("网络出错，轻触屏幕重新加载"):
+            raise AssertionError("没有出现‘网络出错，轻触屏幕重新加载’字段")
+        smp.click_text("网络出错，轻触屏幕重新加载")
+        if not smp.is_toast_exist("网络不可用，请检查网络设置"):
+            raise AssertionError("没有出现tosat提示‘网络不可用，请检查网络设置’")
+        time.sleep(2)
+        smp.set_network_status(6)
+        time.sleep(8)
+        current_mobile().back()
+        current_mobile().back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_page_load()
+
+    def tearDown_test_CJHY_0057(self):
+        #重新连接网络
+        gcp = GroupChatPage()
+        gcp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0058(self):
+        """点击顶部返回键"""
+        # 1、在任意页面点击顶部【 < 】
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        smp.click_element_("返回")
+        wbp = WorkbenchPage()
+        wbp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'CJHY')
+    def test_CJHY_0059(self):
+        """点击顶部关闭按钮"""
+        # 在其他有关闭按钮页面，点击顶部【x】
+        smp = SuperMeetingPage()
+        smp.wait_for_page_loads()
+        time.sleep(3)
+        smp.click_text("2人")
+        time.sleep(3)
+        smp.click_close_more()
+        wbp = WorkbenchPage()
+        wbp.wait_for_page_load()
