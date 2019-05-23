@@ -124,6 +124,11 @@ class SelectOneGroupPage(BasePage):
         self.input_text(self.__locators['群-搜索'], keyword)
 
     @TestLogger.log()
+    def is_exists_group_search_box(self):
+        """是否存在群搜索输入框"""
+        return self._is_element_present(self.__class__.__locators['群-搜索'])
+
+    @TestLogger.log()
     def click_back_icon(self):
         """点击返回按钮"""
         self.click_element(self.__class__.__locators['搜索-返回'])

@@ -87,6 +87,18 @@ class GroupChatPage(BaseChatPage):
         return len(el) > 0
 
     @TestLogger.log()
+    def click_msg_image(self, number):
+        """点击图片消息"""
+        els = self.get_elements(self.__class__.__locators["消息图片"])
+        els[number].click()
+
+    @TestLogger.log()
+    def is_exists_group_by_name(self, name):
+        """是否存在指定群聊名"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/title" and contains(@text, "%s")]' % name)
+        return self._is_element_present(locator)
+
+    @TestLogger.log()
     def is_exist_collection(self):
         """是否存在消息已收藏"""
         return self.is_toast_exist("已收藏")

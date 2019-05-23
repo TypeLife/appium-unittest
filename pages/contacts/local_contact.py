@@ -95,8 +95,9 @@ class localContactPage(BasePage):
         time.sleep(1)
         self.input_text(self.__locators[text],text2)
 
-
-
+    @TestLogger.log("点击新信息")
+    def get_input_box_text(self):
+        return self.get_text(self.__class__.__locators['搜索2'])
 
 
     TestLogger.log("开启或关闭")
@@ -112,8 +113,6 @@ class localContactPage(BasePage):
         else:
             print(bool)
             print("找不到开关")
-
-
 
 
     @TestLogger.log("删除按钮")
@@ -218,3 +217,18 @@ class localContactPage(BasePage):
                 self.page_up()
                 mark-=1
         return False
+
+    @TestLogger.log()
+    def get_all_contacts_name(self):
+        """获取所有的联系人名字"""
+        return self.get_elements(self.__class__.__locators["联系人名字"])
+
+    @TestLogger.log()
+    def get_all_contacts_head(self):
+        """获取所有的联系人头像"""
+        return self.get_elements(self.__class__.__locators['联系人头像'])
+
+    @TestLogger.log()
+    def get_all_contacts_number(self):
+        """获取所有的联系人电话"""
+        return self.get_elements(self.__class__.__locators['联系人电话'])

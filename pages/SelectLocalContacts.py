@@ -275,7 +275,7 @@ class SelectLocalContactsPage(BasePage):
     @TestLogger.log()
     def selecting_local_contacts_by_name(self, name):
         """根据名字选择一个手机联系人"""
-        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text ="%s"]' % name)
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="%s"]' % name)
         max_try = 20
         current = 0
         while current < max_try:
@@ -284,6 +284,12 @@ class SelectLocalContactsPage(BasePage):
             current += 1
             self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         self.click_element(locator)
+
+    @TestLogger.log()
+    def is_exists_local_contacts_by_name(self, name):
+        """是否存在指定手机联系人"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="%s"]' % name)
+        return self._is_element_present(locator)
 
     @TestLogger.log()
     def is_search_result(self, msg):
