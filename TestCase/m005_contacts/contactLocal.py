@@ -282,6 +282,10 @@ class ContactsLocal(TestCase):
         time.sleep(3)
         els=lcontact.get_element_number()
         self.assertTrue(len(els)>1)
+        lcontact.page_contain_element()
+        lcontact.page_contain_element(text='联系人电话')
+        lcontact.page_contain_element(text='联系人名字')
+
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0003(self):
@@ -300,40 +304,6 @@ class ContactsLocal(TestCase):
         lcontact.page_contain_element()
         lcontact.page_contain_element(text='联系人电话')
         lcontact.page_contain_element(text='联系人名字')
-
-    @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_chenjixiang_0004(self):
-        '''
-        搜索输入框校验，通过名称(中文)搜索(多条记录)
-        '''
-        lcontact=localContactPage()
-        lcontact.click_search_box()
-        time.sleep(2)
-        lcontact.input_search_text(text='给个红包')
-        lcontact.hide_keyboard()
-        lcontact.page_contain_element()
-        lcontact.page_contain_element(text='联系人电话')
-        lcontact.page_contain_element(text='联系人名字')
-
-
-    @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_chenjixiang_0005(self):
-        '''
-        搜索输入框校验，通过名称(英文)搜索(多条记录)
-        auther:darcy
-        :return:
-        '''
-        lcontact = localContactPage()
-        lcontact.click_search_box()
-        time.sleep(1)
-        lcontact.input_search_text(text='ABC')
-        time.sleep(1)
-        lcontact.hide_keyboard()
-        time.sleep(3)
-        lcontact.page_contain_element()
-        lcontact.page_contain_element(text='联系人电话')
-        lcontact.page_contain_element(text='联系人名字')
-
 
     @staticmethod
     def setUp_test_contacts_chenjixiang_0019():
@@ -397,6 +367,10 @@ class ContactsLocal(TestCase):
         time.sleep(3)
         els = lcontact.get_element_number()
         self.assertTrue(len(els) > 0)
+        time.sleep(1)
+        lcontact.page_contain_element()
+        lcontact.page_contain_element(text='联系人电话')
+        lcontact.page_contain_element(text='联系人名字')
 
     @staticmethod
     def setUp_test_contacts_chenjixiang_0021():
@@ -468,7 +442,7 @@ class ContactsLocal(TestCase):
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0005(self):
         '''
-        搜索输入框校验，通过名称搜索，输入名称模糊查询（搜索多条记录）
+        搜索输入框校验，通过名称搜索（英文），输入名称模糊查询（搜索多条记录）
         auther:darcy
         :return:
         '''
@@ -477,18 +451,21 @@ class ContactsLocal(TestCase):
         # GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text(text='给个红包')
+        lcontact.input_search_text(text='dalao')
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(3)
         els = lcontact.get_element_number()
         self.assertTrue(len(els) > 1)
+        lcontact.page_contain_element()
+        lcontact.page_contain_element(text='联系人电话')
+        lcontact.page_contain_element(text='联系人名字')
 
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0006(self):
         '''
-        搜索输入框校验，通过名称搜索，输入名称全匹配搜索（搜索多条记录）
+        搜索输入框校验，通过名称搜索（特殊字符）,输入名称模糊查询（搜索多条记录）
         auther:darcy
         :return:
         '''
@@ -497,12 +474,15 @@ class ContactsLocal(TestCase):
         # GroupPage.open_contacts_page()
         lcontact.click_search_box()
         time.sleep(1)
-        lcontact.input_search_text(text='大佬')
+        lcontact.input_search_text(text='#')
         time.sleep(1)
         lcontact.hide_keyboard()
         time.sleep(3)
         els = lcontact.get_element_number()
         self.assertTrue(len(els) > 0)
+        lcontact.page_contain_element()
+        lcontact.page_contain_element(text='联系人电话')
+        lcontact.page_contain_element(text='联系人名字')
 
 
     @tags('ALL', 'CONTACTS', 'CMCC')
@@ -523,9 +503,13 @@ class ContactsLocal(TestCase):
         time.sleep(3)
         els = lcontact.get_element_number()
         self.assertTrue(len(els) > 1)
+        lcontact.page_contain_element()
+        lcontact.page_contain_element(text='联系人电话')
+        lcontact.page_contain_element(text='联系人名字')
+
 
     @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_chenjixiang_0007(self):
+    def test_contacts_chenjixiang_0008(self):
         '''
         测试空格+文本进行搜索
         auther:darcy
@@ -542,24 +526,6 @@ class ContactsLocal(TestCase):
         lcontact.page_contain_element(text='联系人电话')
         lcontact.page_contain_element(text='联系人名字')
 
-
-    @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_chenjixiang_0008(self):
-        '''
-        搜索输入框校验，通过名称搜索（英文），输入名称模糊查询（搜索多条记录）
-        auther:darcy
-        :return:
-        '''
-        lcontact = localContactPage()
-        lcontact.click_search_box()
-        time.sleep(1)
-        lcontact.input_search_text(text='dalao')
-        time.sleep(1)
-        lcontact.hide_keyboard()
-        time.sleep(3)
-        els = lcontact.get_element_number()
-        self.assertTrue(len(els) > 1)
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0010(self):
         '''
@@ -574,6 +540,9 @@ class ContactsLocal(TestCase):
         lcontact.input_search_text(text=name)
         time.sleep(1)
         lcontact.hide_keyboard()
+        text=lcontact.get_input_box_text()
+        time.sleep(1)
+        self.assertEqual(name,text)
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0012(self):
@@ -615,7 +584,7 @@ class ContactsLocal(TestCase):
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0015(self):
         '''
-        搜索一个不存在本地的正常的11位号码
+        搜索不存在本地通讯录的联系人
         auther:darcy
         :return:
 
@@ -663,6 +632,10 @@ class ContactsLocal(TestCase):
         time.sleep(3)
         els = lcontact.get_element_number()
         self.assertTrue(len(els) > 1)
+        lcontact.page_contain_element()
+        lcontact.page_contain_element(text='联系人电话')
+        lcontact.page_contain_element(text='联系人名字')
+
 
     @staticmethod
     def setUp_test_contacts_chenjixiang_0017():
@@ -727,6 +700,10 @@ class ContactsLocal(TestCase):
         time.sleep(3)
         els = lcontact.get_element_number()
         self.assertTrue(len(els) > 1)
+        lcontact.page_contain_element()
+        lcontact.page_contain_element(text='联系人电话')
+        lcontact.page_contain_element(text='联系人名字')
+
 
     @staticmethod
     def setUp_test_contacts_chenjixiang_0023():
@@ -857,7 +834,7 @@ class ContactsLocal(TestCase):
         time.sleep(2)
         els=lcontact.get_element_number()
         self.assertTrue(len(els)>0)
-        lcontact.click_back_by_android(times=1)
+        time.sleep(1)
         lcontact.is_text_present("13410669632")
         lcontact.is_text_present("13410669625")
 
@@ -886,6 +863,29 @@ class ContactsLocal(TestCase):
        测试系统通讯录联系人拥有多个手机号码，手机号码一致的情况，通过名称搜索
         :return:
         '''
+        # 添加手机联系人
+        time.sleep(2)
+        # 添加联系人
+        ContactsPage().click_search_box()
+        contact_search = ContactListSearchPage()
+        contact_search.wait_for_page_load()
+        contact_search.input_search_keyword('13410669625')
+        els = localContactPage().get_element_number()
+        if len(els) > 1:
+            contact_search.click_back()
+        else:
+            contact_search.click_back()
+            ContactsPage().click_add()
+            creat_contact = CreateContactPage()
+            creat_contact.click_input_name()
+            creat_contact.input_name('xili')
+            creat_contact.click_input_number()
+            creat_contact.input_number('13410669625')
+            creat_contact.click_save()
+            time.sleep(2)
+            ContactDetailsPage().click_back()
+            time.sleep(2)
+
         lcontact = localContactPage()
         # GroupPage = GroupListPage()
         # GroupPage.open_contacts_page()
@@ -895,9 +895,75 @@ class ContactsLocal(TestCase):
         lcontact.input_search_text("13410669625")
         lcontact.hide_keyboard()
         time.sleep(2)
+        #显示多条结果，姓名,头像、手机号码一样
         els = lcontact.get_element_number()
-        self.assertTrue(len(els) > 0)
-        lcontact.click_back_by_android()
+        self.assertTrue(len(els) == 2)
+        name1=lcontact.get_all_contacts_name()[0].text
+        name2 = lcontact.get_all_contacts_name()[1].text
+        self.assertEqual(name1,name2)
+        time.sleep(1)
+        number1 = lcontact.get_all_contacts_number()[0].text
+        number2 = lcontact.get_all_contacts_number()[1].text
+        self.assertEqual(number1, number2)
+        time.sleep(1)
+        #联系人头像是否一样无法判断
+        # head1=lcontact.get_all_contacts_head()[0].text
+        # head2 = lcontact.get_all_contacts_head()[1].text
+        # self.assertEqual(head1,head2)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0034(self):
+        '''
+       测试系统通讯录联系人拥有多个手机号码，手机号码一致的情况，通过手机号码搜索
+        :return:
+        '''
+        # 添加手机联系人
+        time.sleep(2)
+        # 添加联系人
+        ContactsPage().click_search_box()
+        contact_search = ContactListSearchPage()
+        contact_search.wait_for_page_load()
+        contact_search.input_search_keyword('13410669616')
+        els = localContactPage().get_element_number()
+        if len(els) > 1:
+            contact_search.click_back()
+        else:
+            contact_search.click_back()
+            ContactsPage().click_add()
+            creat_contact = CreateContactPage()
+            creat_contact.click_input_name()
+            creat_contact.input_name('xili')
+            creat_contact.click_input_number()
+            creat_contact.input_number('13410669616')
+            creat_contact.click_save()
+            time.sleep(2)
+            ContactDetailsPage().click_back()
+            time.sleep(2)
+
+        lcontact = localContactPage()
+        # GroupPage = GroupListPage()
+        # GroupPage.open_contacts_page()
+        time.sleep(2)
+        lcontact.click_search_box()
+        time.sleep(1)
+        lcontact.input_search_text("13410669616")
+        lcontact.hide_keyboard()
+        time.sleep(2)
+        #显示多条结果，姓名不一样，头像、手机号码一样
+        els = lcontact.get_element_number()
+        self.assertTrue(len(els) == 2)
+        name1=lcontact.get_all_contacts_name()[0].text
+        name2 = lcontact.get_all_contacts_name()[1].text
+        self.assertNotEqual(name1,name2)
+        time.sleep(1)
+        number1 = lcontact.get_all_contacts_number()[0].text
+        number2 = lcontact.get_all_contacts_number()[1].text
+        self.assertEqual(number1, number2)
+        time.sleep(1)
+        # 联系人头像是否一样无法判断
+        # head1=lcontact.get_all_contacts_head()[0]
+        # head2 = lcontact.get_all_contacts_head()[1]
+        # self.assertEqual(head1,head2)
 
 
     @tags('ALL', 'CONTACTS', 'CMCC')
@@ -907,19 +973,27 @@ class ContactsLocal(TestCase):
         :return:
         '''
         lcontact = localContactPage()
-        # GroupPage = GroupListPage()
-        # GroupPage.open_contacts_page()
         time.sleep(3)
         lcontact.click_search_box()
         time.sleep(1)
         lcontact.input_search_text("xili")
         lcontact.hide_keyboard()
         time.sleep(2)
+        #显示多条结果，姓名一样，头像、手机号码不一样
         els = lcontact.get_element_number()
-        self.assertTrue(len(els) > 0)
-        lcontact.is_text_present("13410669632")
-        lcontact.is_text_present("13410669625")
-        lcontact.click_back_by_android()
+        self.assertTrue(len(els) > 1)
+        name1=lcontact.get_all_contacts_name()[0].text
+        name2 = lcontact.get_all_contacts_name()[1].text
+        self.assertEqual(name1,name2)
+        time.sleep(1)
+        number1 = lcontact.get_all_contacts_number()[0].text
+        number2 = lcontact.get_all_contacts_number()[1].text
+        self.assertNotEqual(number1, number2)
+        time.sleep(1)
+        # 联系人头像是否一样无法判断
+        # head1=lcontact.get_all_contacts_head()[0]
+        # head2 = lcontact.get_all_contacts_head()[1]
+        # self.assertNotEqual(head1,head2)
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0036(self):
@@ -941,6 +1015,9 @@ class ContactsLocal(TestCase):
         lcontact.is_text_present("xili")
         els = lcontact.get_element_number()
         self.assertTrue(len(els) > 0)
+        lcontact.page_contain_element()
+        lcontact.page_contain_element(text='联系人电话')
+        lcontact.page_contain_element(text='联系人名字')
         lcontact.click_back_by_android()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
@@ -1118,7 +1195,7 @@ class ContactsLocal(TestCase):
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0046(self):
         '''
-      测试+86的手机号码，通过+搜索
+      测试+86的手机号码，通过+86搜索
         :return:
         '''
         lcontact = localContactPage()
@@ -1699,7 +1776,7 @@ class ContactsLocal(TestCase):
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0085(self):
         '''
-        测试系统通讯录一个联系人拥有多个手机号码，手机号码都不一样的情况下，显示多条
+        测试系统通讯录一个联系人拥有多个手机号码，手机号码都不一样的情况下，显示多条（不去重）
         :return:
         '''
         lcontact = localContactPage()
@@ -2062,7 +2139,7 @@ class ContactsLocalhigh(TestCase):
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0175(self):
-        """个人profile页,名称正常显示"""
+        """测试页面信息展示，名称正常长度显示"""
         ContactsPage().select_contacts_by_name('大佬1')
         cdp = ContactDetailsPage()
         cdp.wait_for_page_load()
@@ -2071,7 +2148,7 @@ class ContactsLocalhigh(TestCase):
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0177(self):
-        """个人profile页,手机号码正常显示"""
+        """测试页面信息展示，手机号码正常长度显示"""
         ContactsPage().select_contacts_by_name('大佬1')
         cdp = ContactDetailsPage()
         cdp.wait_for_page_load()
@@ -2080,7 +2157,7 @@ class ContactsLocalhigh(TestCase):
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0179(self):
-        """个人profile页,头像首字母正常显示"""
+        """测试页面信息展示，未上传头像"""
         ContactsPage().select_contacts_by_name('大佬1')
         cdp = ContactDetailsPage()
         cdp.wait_for_page_load()
@@ -2089,7 +2166,7 @@ class ContactsLocalhigh(TestCase):
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0180(self):
-        """个人profile页,头像正常显示"""
+        """测试页面信息展示，已上传头像"""
         ContactsPage().select_contacts_by_name('测试号码1')
         cdp = ContactDetailsPage()
         cdp.wait_for_page_load()
@@ -2098,7 +2175,7 @@ class ContactsLocalhigh(TestCase):
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0181(self):
-        """个人profile页,显示大图片(未上传头像)"""
+        """测试点击联系人头像，未上传头像"""
         ContactsPage().select_contacts_by_name('大佬1')
         cdp = ContactDetailsPage()
         cdp.wait_for_page_load()
@@ -2108,7 +2185,7 @@ class ContactsLocalhigh(TestCase):
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0182(self):
-        """个人profile页,显示大图片(上传头像)"""
+        """测试点击联系人头像，已上传头像"""
         ContactsPage().select_contacts_by_name('测试号码1')
         cdp = ContactDetailsPage()
         cdp.wait_for_page_load()
@@ -2118,7 +2195,7 @@ class ContactsLocalhigh(TestCase):
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0193(self):
-        """个人profile页,编辑联系人"""
+        """测试编辑联系人信息，正常"""
         ContactsPage().select_contacts_by_name('大佬1')
         cdp = ContactDetailsPage()
         time.sleep(2)
@@ -2155,7 +2232,7 @@ class ContactsLocalhigh(TestCase):
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0194(self):
-        """个人profile页,编辑联系人-姓名不为空"""
+        """测试表单字段，姓名非空校验"""
         ContactsPage().select_contacts_by_name('大佬1')
         cdp = ContactDetailsPage()
         time.sleep(2)

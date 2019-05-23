@@ -81,6 +81,12 @@ class GroupListPage(BasePage):
         '大佬2': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
         '搜索或输入手机号':(MobileBy.XPATH,"//*[@text='搜索或输入号码']"),
         '选择联系人':(MobileBy.ID,"com.chinasofti.rcs:id/title"),
+        '清空搜索框': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect'),
+        '已选择的联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/hor_contact_selection'),
+        '分组联系人-姓名': (MobileBy.ID, 'com.chinasofti.rcs:id/group_member_name'),
+        '分组联系人-电话号码': (MobileBy.ID, 'com.chinasofti.rcs:id/group_member_number'),
+        '移除-已选择联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/image_text'),
+
         '选择和通讯录联系人':(MobileBy.ID,'com.chinasofti.rcs:id/text_hint'),
         '删除-搜索':(MobileBy.ID,'com.chinasofti.rcs:id/iv_delect'),
         '联系人头像':(MobileBy.ID,'com.chinasofti.rcs:id/contact_icon'),
@@ -128,6 +134,30 @@ class GroupListPage(BasePage):
         time.sleep(1)
         self.click_element(self.__locators['移除成员'])
         time.sleep(1)
+
+    @TestLogger.log("清空搜索框")
+    def clear_input_box(self):
+        time.sleep(1)
+        self.click_element(self.__locators['清空搜索框'])
+        time.sleep(1)
+
+    @TestLogger.log("清空搜索框")
+    def is_element_present(self, locator='清空搜索框'):
+        """判断元素是否存在,默认清空搜索框"""
+        time.sleep(1)
+        return self._is_element_present(self.__locators[locator])
+
+    @TestLogger.log()
+    def sure_icon_is_checkable(self):
+        """点击确定"""
+        return self._is_clickable(self.__class__.__locators['确定'])
+
+    @TestLogger.log("点击已选择联系人头像")
+    def click_selected_contacts(self):
+        time.sleep(1)
+        self.click_element(self.__class__.__locators['已选择的联系人'])
+        time.sleep(1)
+
 
     @TestLogger.log("删除输入标签名称")
     def delete_label_name(self, name='bbb'):
@@ -261,7 +291,7 @@ class GroupListPage(BasePage):
     @TestLogger.log()
     def check_if_contains_element(self,text="确定"):
         '''检查指定元素是否存在，默认是确定按钮'''
-        return self.page_should_contain_element(self.__locators['确定'])
+        return self.page_should_contain_element(self.__locators[text])
 
     @TestLogger.log("点击确定")
     def click_sure_element(self):

@@ -78,8 +78,6 @@ class Preconditions(LoginPreconditions):
         Preconditions.make_already_in_message_page()
         mess=MessagePage()
         mess.click_contacts()
-        if ContactsPage().is_text_present('需要使用通讯录权限'):
-            ContactsPage().click_always_allowed()
         time.sleep(1)
 
 
@@ -135,10 +133,10 @@ class ContactPage(TestCase):
                 print(msg)
 
     @staticmethod
-    def setUp_test_contacts_0001():
+    def setUp_test_contacts_quxinli_0003():
 
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
+        # Preconditions.connect_mobile('Android-移动')
+        # current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
         time.sleep(1)
         if ContactsPage().is_text_present('需要使用通讯录权限'):
@@ -146,8 +144,8 @@ class ContactPage(TestCase):
         time.sleep(1)
 
     @tags('All','CMCC')
-    def test_contacts_0001(self):
-        """验证通讯录页面元素"""
+    def test_contacts_quxinli_0003(self):
+        """用户已加入团队时联系页面"""
         contacts = ContactsPage()
         #顶部入口
         contacts.page_should_contain_text('搜索')
@@ -157,13 +155,16 @@ class ContactPage(TestCase):
         contacts.page_should_contain_text('群聊')
         contacts.page_should_contain_text('标签分组')
         contacts.page_should_contain_text('公众号')
+        contacts.is_page_contain_element('团队名称')
         contacts.is_page_contain_element('创建团队')
         #右上角
         contacts.page_contain_element_add()
+        #显示所有联系人
+        contacts.is_page_contain_element('联系人名')
 
 
     @staticmethod
-    def setUp_test_contacts_0002():
+    def setUp_test_contacts_quxinli_0005():
 
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -173,42 +174,38 @@ class ContactPage(TestCase):
         MessagePage().wait_for_page_load()
 
     @tags('All', 'CMCC_RESET')
-    def test_contacts_0002(self):
-        """访问本地通讯录权限框,点击确定"""
-        MessagePage().click_contacts()
-        ContactsPage().click_always_allowed()
-        time.sleep(2)
-
-    @staticmethod
-    def setUp_test_contacts_0003():
-
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.reset_and_relaunch_app()
-        Preconditions.make_already_in_one_key_login_page()
-        Preconditions.login_by_one_key_login()
-        MessagePage().wait_for_page_load()
-
-    @tags('All', 'CMCC_RESET')
-    def test_contacts_0003(self):
-        """允许访问本地通讯录"""
-        MessagePage().click_contacts()
+    def test_contacts_quxinli_0005(self):
+        """用户未开启联系权限首次进入联系页面"""
+        MessagePage().click_contacts_only()
         contact=ContactsPage()
-        contact.click_forbidden()
         time.sleep(1)
+        #权限框点击禁止,不显示联系人
+        contact.page_should_contain_text('“和飞信”将访问您的通讯录')
+        contact.click_forbidden()
+        contact.click_sim_contact()
+        time.sleep(2)
+        contact.is_page_contain_element('联系人名')
+        #点击允许,显示联系人
+        contact.click_message_icon()
+        time.sleep(2)
+        MessagePage().click_contacts_only()
+        contact.page_should_contain_text('“和飞信”将访问您的通讯录')
+        contact.click_always_allowed()
+        contact.click_sim_contact()
+        time.sleep(1)
+        contact.is_page_contain_element('联系人名')
+
 
     @staticmethod
-    def setUp_test_contacts_0015():
+    def setUp_contacts_quxinli_0019():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
         time.sleep(1)
-        if ContactsPage().is_text_present('需要使用通讯录权限'):
-            ContactsPage().click_always_allowed()
 
     @tags('All', 'CMCC')
-    def test_contacts_0015(self):
-        """已保存到本地的RCS用户的profile页"""
+    def test_contacts_quxinli_0019(self):
+        """点击搜索结果已保存到本地的RCS用户进入Profile页"""
         ContactsPage().click_search_box()
         # 搜索联系人:测试号码1
         ContactListSearchPage().input_search_keyword('测试号码1')
@@ -259,7 +256,7 @@ class ContactPage(TestCase):
         ContactListSearchPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0016():
+    def setUp_test_contacts_quxinli_0020():
 
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -268,8 +265,8 @@ class ContactPage(TestCase):
             ContactsPage().click_always_allowed()
 
     @tags('All', 'CMCC')
-    def test_contacts_0016(self):
-        """已保存到本地的非RCS用户的profile页"""
+    def test_contacts_quxinli_0020(self):
+        """点击搜索结果已保存到本地的非RCS用户进入Profile页"""
         ContactsPage().click_search_box()
         #搜索联系人:大佬1
         ContactListSearchPage().input_search_keyword('大佬1')
@@ -324,7 +321,7 @@ class ContactPage(TestCase):
         ContactListSearchPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0017():
+    def setUp_test_contacts_quxinli_0021():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -351,8 +348,8 @@ class ContactPage(TestCase):
             ContactDetailsPage().click_back_icon()
 
     @tags('All', 'CMCC')
-    def test_contacts_0017(self):
-        """已保存到本地的本机用户的profile页"""
+    def test_contacts_quxinli_0021(self):
+        """点击搜索结果已保存到本地的本机用户进入Profile页"""
         ContactsPage().click_search_box()
         # 搜索联系人:本机
         ContactListSearchPage().input_search_keyword('本机')
@@ -396,24 +393,7 @@ class ContactPage(TestCase):
         ContactListSearchPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0036():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.init_and_enter_contacts_page()
-
-    @tags('和通讯录取消')
-    def test_contacts_0036(self):
-        """用户未加入任何企业"""
-        contact=ContactsPage()
-        contact.click_and_address()
-        time.sleep(3)
-        HeContactsPage().page_should_contain_text('未加入企业')
-        #返回通讯录页面
-        HeContactsPage().click_back_icon()
-        ContactsPage().click_message_icon()
-
-    @staticmethod
-    def setUp_test_contacts_0195():
+    def setUp_test_contacts_quxinli_0196():
         #进入通讯录页面
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -426,8 +406,8 @@ class ContactPage(TestCase):
         time.sleep(2)
 
     @tags('All', 'CMCC')
-    def test_contacts_0195(self):
-        """分享名片,搜索选择一个群分享名片,弹框确认是否分享"""
+    def test_contacts_quxinli_0196(self):
+        """在联系人选择器页面，选择一个群"""
         ContactListSearchPage().click_share_card()
         SelectContactsPage().click_select_one_group()
         #搜索框文本显示'搜索群组'
@@ -449,7 +429,7 @@ class ContactPage(TestCase):
         SelectOneGroupPage().click_back_by_android(times=5)
 
     @staticmethod
-    def setUp_test_contacts_0196():
+    def setUp_test_contacts_quxinli_0197():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -461,8 +441,8 @@ class ContactPage(TestCase):
         time.sleep(2)
 
     @tags('All', 'CMCC')
-    def test_contacts_0196(self):
-        """群聊列表展示页面选择一个群分享"""
+    def test_contacts_quxinli_0197(self):
+        """在联系人选择器页面，选择一个群"""
         ContactListSearchPage().click_share_card()
         SelectContactsPage().click_select_one_group()
         SelectOneGroupPage().selecting_one_group_by_name('群聊1')
@@ -473,7 +453,7 @@ class ContactPage(TestCase):
         ContactListSearchPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0197():
+    def setUp_test_contacts_quxinli_0198():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -485,8 +465,8 @@ class ContactPage(TestCase):
         ContactDetailsPage().click_share_business_card()
 
     @tags('All', 'CMCC')
-    def test_contacts_0197(self):
-        """群聊列表展示页面选择本地联系人分享"""
+    def test_contacts_quxinli_0198(self):
+        """在联系人选择器页面，选择本地联系人"""
         SelectContactsPage().select_local_contacts()
         SelectContactsPage().page_should_contain_text('选择联系人')
         SelectContactsPage().page_should_contain_text('搜索或输入手机号')
@@ -507,7 +487,7 @@ class ContactPage(TestCase):
         ContactListSearchPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0198():
+    def setUp_test_contacts_quxinli_0199():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -519,8 +499,8 @@ class ContactPage(TestCase):
         time.sleep(2)
 
     @tags('All', 'CMCC')
-    def test_contacts_0198(self):
-        """选择本地联系人分享名片"""
+    def test_contacts_quxinli_0199(self):
+        """在联系人选择器页面，选择本地联系人"""
         ContactDetailsPage().click_share_business_card()
         time.sleep(2)
         select_contact=SelectContactsPage()
@@ -533,33 +513,8 @@ class ContactPage(TestCase):
         #返回通讯录页面
 
     @staticmethod
-    def setUp_test_contacts_0201():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.init_and_enter_contacts_page()
-        if ContactsPage().is_text_present('需要使用通讯录权限'):
-            ContactsPage().click_always_allowed()
-        ContactsPage().select_contacts_by_name('大佬1')
-        time.sleep(1)
-        ContactListSearchPage().click_share_card()
-
-    @tags('和通讯录暂时取消')
-    def test_contacts_0201(self):
-        """选择和通讯录联系人联系人分享名片"""
-        SelectContactsPage().click_he_contacts()
-        time.sleep(2)
-        SelectContactsPage().page_should_contain_text('未加入企业')
-        #选择联系人选择器页面的任意联系人
-        SelectContactsPage().click_he_back()
-        SelectContactsPage().select_local_contacts()
-        SelectContactsPage().click_one_contact('大佬2')
-        SelectOneGroupPage().click_share_business_card()
-        SelectOneGroupPage().click_back_by_android(times=5)
-        #返回通讯录页面
-
-    @staticmethod
     #和飞信联系人里面已经有超过3个已测试开始的联系人,同时有超过3个群名称包含测试字段的群组
-    def setUp_test_contacts_0207():
+    def setUp_test_contacts_quxinli_0208():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
@@ -572,8 +527,8 @@ class ContactPage(TestCase):
         ContactDetailsPage().click_share_business_card()
 
     @tags('All', 'CMCC')
-    def test_contacts_0207(self):
-        """分享名片时,搜索结果多于3人"""
+    def test_contacts_quxinli_0208(self):
+        """在联系人选择器页面，搜索联系人"""
         select_contacts=SelectContactsPage()
         #输入'测试'进行搜索,搜索结果显示情况
         select_contacts.click_search_keyword()
@@ -611,7 +566,7 @@ class ContactPage(TestCase):
         ContactListSearchPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0208():
+    def setUp_test_contacts_quxinli_0209():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -623,8 +578,8 @@ class ContactPage(TestCase):
         ContactListSearchPage().click_share_card()
 
     @tags('All', 'CMCC')
-    def test_contacts_0208(self):
-        """选择最近聊天中的联系人,可分享名片"""
+    def test_contacts_quxinli_0209(self):
+        """在联系人选择器页面，选择最近聊天联系人"""
         select_contacts = SelectContactsPage()
         select_contacts.select_one_recently_contact_by_name('大佬2')
         time.sleep(1)
@@ -635,7 +590,7 @@ class ContactPage(TestCase):
         ContactListSearchPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0209():
+    def setUp_test_contacts_quxinli_0210():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
@@ -648,8 +603,8 @@ class ContactPage(TestCase):
         ContactListSearchPage().click_share_card()
 
     @tags('All', 'CMCC')
-    def test_contacts_0209(self):
-        """选择最近聊天中的群,可分享名片"""
+    def test_contacts_quxinli_0210(self):
+        """在联系人选择器页面，选择最近聊天群聊"""
         select_contacts = SelectContactsPage()
         time.sleep(1)
         select_contacts.click_select_one_group()
@@ -664,7 +619,7 @@ class ContactPage(TestCase):
         ContactListSearchPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0210():
+    def setUp_test_contacts_quxinli_0211():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -676,8 +631,8 @@ class ContactPage(TestCase):
         ContactListSearchPage().click_share_card()
 
     @tags('ALL','CMCC')
-    def test_contacts_0210(self):
-        """联系人选择器 搜索我的电脑"""
+    def test_contacts_quxinli_0211(self):
+        """在联系人选择器页面，搜索我的电脑"""
         time.sleep(1)
         SelectContactsPage().click_search_contact()
         SelectContactsPage().input_search_keyword('我的电脑')
@@ -690,7 +645,7 @@ class ContactPage(TestCase):
         ContactListSearchPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0211():
+    def setUp_test_contacts_quxinli_0212():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -702,8 +657,8 @@ class ContactPage(TestCase):
         ContactListSearchPage().click_share_card()
 
     @tags('ALL','CMCC')
-    def test_contacts_0211(self):
-        """联系人选择器  输入陌生手机号码"""
+    def test_contacts_quxinli_0212(self):
+        """在联系人选择器页面，搜索11位陌生号码"""
         time.sleep(1)
         select_contact=SelectContactsPage()
         select_contact.click_search_contact()
@@ -720,7 +675,7 @@ class ContactPage(TestCase):
         ContactListSearchPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0321():
+    def setUp_test_contacts_quxinli_0322():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -728,8 +683,8 @@ class ContactPage(TestCase):
             ContactsPage().click_always_allowed()
 
     @tags('ALL', 'CMCC')
-    def test_contacts_0321(self):
-        "公众号默认关注公众号检查"
+    def test_contacts_quxinli_0322(self):
+        """订阅号/服务号列表显示"""
         ContactsPage().click_official_account_icon()
         time.sleep(3)
         official_account = OfficialAccountPage()
@@ -741,7 +696,7 @@ class ContactPage(TestCase):
         official_account.click_back()
 
     @staticmethod
-    def setUp_test_contacts_0322():
+    def setUp_test_contacts_quxinli_0323():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -749,8 +704,8 @@ class ContactPage(TestCase):
             ContactsPage().click_always_allowed()
 
     @tags('ALL', 'CMCC')
-    def test_contacts_0322(self):
-        """公众号列表为空"""
+    def test_contacts_quxinli_0323(self):
+        """企业号列表显示为空"""
         ContactsPage().click_official_account_icon()
         official_account = OfficialAccountPage()
         official_account.click_tag("企业号")
@@ -761,7 +716,7 @@ class ContactPage(TestCase):
         official_account.click_back()
 
     @staticmethod
-    def setUp_test_contacts_0323():
+    def setUp_test_contacts_quxinli_0324():
 
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -770,8 +725,8 @@ class ContactPage(TestCase):
             ContactsPage().click_always_allowed()
 
     @tags('ALL', 'CMCC')
-    def test_contacts_0323(self):
-        """未配置底部菜单栏的公众号"""
+    def test_contacts_quxinli_0324(self):
+        """公众号会话页面-未配置底部菜单栏的公众号"""
         ContactsPage().click_official_account_icon()
         time.sleep(1)
         OfficialAccountPage().select_one_account_by_name('和飞信新闻')
@@ -789,7 +744,7 @@ class ContactPage(TestCase):
         OfficialAccountPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0324():
+    def setUp_test_contacts_quxinli_0325():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -797,8 +752,8 @@ class ContactPage(TestCase):
             ContactsPage().click_always_allowed()
 
     @tags('ALL', 'CMCC')
-    def test_contacts_0324(self):
-        """已配置底部菜单栏的公众号"""
+    def test_contacts_quxinli_0325(self):
+        """公众号会话页面-已配置底部菜单栏的公众号"""
         ContactsPage().click_official_account_icon()
         time.sleep(1)
         OfficialAccountPage().select_one_account_by_name('和飞信')
@@ -833,7 +788,7 @@ class ContactPage(TestCase):
         ContactsPage().click_message_icon()
 
     @staticmethod
-    def setUp_test_contacts_0325():
+    def setUp_test_contacts_quxinli_0326():
 
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -845,8 +800,8 @@ class ContactPage(TestCase):
         OfficialAccountPage().select_one_account_by_name('和飞信新闻')
 
     @tags('ALL', 'CMCC')
-    def test_contacts_0325(self):
-        """文本消息发送成功"""
+    def test_contacts_quxinli_0326(self):
+        """公众号会话页面发送文本消息"""
         official_account = OfficialAccountPage()
         official_account.click_input_box()
         official_account.input_message('和飞信')
@@ -859,7 +814,7 @@ class ContactPage(TestCase):
         ContactsPage().click_message_icon()
 
     @staticmethod
-    def setUp_test_contacts_0326():
+    def setUp_test_contacts_quxinli_0327():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -870,8 +825,8 @@ class ContactPage(TestCase):
         OfficialAccountPage().select_one_account_by_name('和飞信新闻')
 
     @tags('ALL', 'CMCC')
-    def test_contacts_0326(self):
-        """表情符号发送成功"""
+    def test_contacts_quxinli_0327(self):
+        """公众号会话页面发送表情消息"""
         official_account = OfficialAccountPage()
         official_account.click_expression()
         official_account.click_expression_detail()
@@ -882,7 +837,7 @@ class ContactPage(TestCase):
         OfficialAccountPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0327():
+    def setUp_test_contacts_quxinli_0328():
         #用户已关注'中软国际一家亲'公众号
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -894,8 +849,8 @@ class ContactPage(TestCase):
         OfficialAccountPage().select_one_account_by_name('和飞信新闻')
 
     @tags('ALL', 'CMCC')
-    def test_contacts_0327(self):
-        """文本消息和表情发送成功"""
+    def test_contacts_quxinli_0328(self):
+        """公众号会话页面，发送表情+信息"""
         official_account = OfficialAccountPage()
         official_account.click_input_box()
         official_account.input_message('和飞信')
@@ -908,7 +863,7 @@ class ContactPage(TestCase):
         OfficialAccountPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0328():
+    def setUp_test_contacts_quxinli_0329():
 
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -920,8 +875,8 @@ class ContactPage(TestCase):
         OfficialAccountPage().select_one_account_by_name('和飞信新闻')
 
     @tags('ALL', 'CMCC')
-    def test_contacts_0328(self):
-        """长文本消息发送成功"""
+    def test_contacts_quxinli_0329(self):
+        """公众号会话页面，发送长信息"""
         official_account = OfficialAccountPage()
         official_account.click_input_box()
         keyword=str("我"*255)
@@ -933,7 +888,7 @@ class ContactPage(TestCase):
         OfficialAccountPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0329():
+    def setUp_test_contacts_quxinli_0330():
         #用户已关注'中软国际一家亲'公众号
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -945,8 +900,8 @@ class ContactPage(TestCase):
         OfficialAccountPage().select_one_account_by_name('和飞信新闻')
 
     @tags('ALL', 'CMCC')
-    def test_contacts_0329(self):
-        """文本消息发送成功"""
+    def test_contacts_quxinli_0330(self):
+        """公众号会话页面发送链接消息"""
         official_account = OfficialAccountPage()
         official_account.click_input_box()
         keyword="https://www.baidu.com/"
@@ -961,7 +916,7 @@ class ContactPage(TestCase):
         OfficialAccountPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0330():
+    def setUp_test_contacts_quxinli_0331():
         #用户已关注'中软国际一家亲'公众号
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -973,8 +928,8 @@ class ContactPage(TestCase):
         OfficialAccountPage().select_one_account_by_name('和飞信新闻')
 
     @tags('ALL', 'CMCC')
-    def test_contacts_0330(self):
-        """断网状态发送文本不成功"""
+    def test_contacts_quxinli_0331(self):
+        """公众号会话页面网络异常情况下发送消息"""
         official_account = OfficialAccountPage()
         #断网
         official_account.set_network_status(0)
@@ -995,7 +950,7 @@ class ContactPage(TestCase):
         official_account.click_back()
 
     @staticmethod
-    def tearDown_test_contacts_quxinli_0330(self):
+    def tearDown_test_contacts_quxinli_0331():
         try:
             mep = MePage()
             mep.set_network_status(6)
@@ -1005,7 +960,7 @@ class ContactPage(TestCase):
 
 
     @staticmethod
-    def setUp_test_contacts_0331():
+    def setUp_test_contacts_quxinli_0332():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -1016,8 +971,8 @@ class ContactPage(TestCase):
         OfficialAccountPage().select_one_account_by_name('和飞信')
 
     @tags('ALL', 'CMCC')
-    def test_contacts_0331(self):
-        """公众号详情页面元素检查"""
+    def test_contacts_quxinli_0332(self):
+        """公众号会话页面右上角设置按钮"""
         OfficialAccountPage().click_setting()
         time.sleep(2)
         official_account_detail=OfficialAccountDetailPage()
@@ -1037,32 +992,7 @@ class ContactPage(TestCase):
         OfficialAccountPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0333():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.init_and_enter_contacts_page()
-        if ContactsPage().is_text_present('需要使用通讯录权限'):
-            ContactsPage().click_always_allowed()
-        ContactsPage().click_official_account_icon()
-        time.sleep(1)
-        OfficialAccountPage().select_one_account_by_name('和飞信新闻')
-
-    @tags('ALL', 'CMCC')
-    def test_contacts_0333(self):
-        """公众号详情-接收消息"""
-        OfficialAccountPage().click_setting()
-        time.sleep(2)
-        OfficialAccountDetailPage().click_to_be_top()
-        #判断是否置顶  不完全
-        OfficialAccountDetailPage().click_back()
-        OfficialAccountPage().click_back()
-        time.sleep(2)
-        #返回通讯录页面
-        OfficialAccountPage().click_back()
-
-
-    @staticmethod
-    def setUp_test_contacts_0334():
+    def setUp_test_contacts_quxinli_0335():
         #用户已关注'中软国际一家亲'公众号
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -1072,7 +1002,7 @@ class ContactPage(TestCase):
 
 
     @tags('ALL', 'CMCC')
-    def test_contacts_0334(self):
+    def test_contacts_quxinli_0335(self):
         """公众号详情-查看历史资讯"""
         ContactsPage().click_official_account_icon()
         time.sleep(25)
@@ -1102,7 +1032,7 @@ class ContactPage(TestCase):
         OfficialAccountPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0335():
+    def setUp_test_contacts_quxinli_0336():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -1113,8 +1043,8 @@ class ContactPage(TestCase):
         OfficialAccountPage().select_one_account_by_name('和飞信新闻')
 
     @tags('ALL', 'CMCC')
-    def test_contacts_0335(self):
-        """公众号详情-进入公众号回话页面"""
+    def test_contacts_quxinli_0336(self):
+        """公众号详情-进入公众号"""
         OfficialAccountPage().click_setting()
         time.sleep(2)
         OfficialAccountDetailPage().click_into_public()
@@ -1126,7 +1056,7 @@ class ContactPage(TestCase):
         OfficialAccountPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0336():
+    def setUp_test_contacts_quxinli_0337():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -1147,8 +1077,8 @@ class ContactPage(TestCase):
             OfficialAccountPage().click_setting()
 
     @tags('ALL', 'CMCC')
-    def test_contacts_0336(self):
-        """公众号详情-更多菜单"""
+    def test_contacts_quxinli_0337(self):
+        """公众号详情-进入公众号-更多"""
         time.sleep(2)
         official_account_detail=OfficialAccountDetailPage()
         official_account_detail.click_menu_more()
@@ -1179,7 +1109,7 @@ class ContactPage(TestCase):
         OfficialAccountPage().click_back()
 
     @staticmethod
-    def setUp_test_contacts_0337():
+    def setUp_test_contacts_quxinli_0338():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -1189,8 +1119,8 @@ class ContactPage(TestCase):
         time.sleep(1)
 
     @tags('ALL', 'CMCC')
-    def test_contacts_0337(self):
-        """点击+号,页面进入搜索公众号页面"""
+    def test_contacts_quxinli_0338(self):
+        """公众号列表-右上角的+"""
         OfficialAccountPage().click_add()
         time.sleep(2)
         SearchOfficialAccountPage().page_should_contain_text('搜索公众号')
@@ -1198,9 +1128,8 @@ class ContactPage(TestCase):
         SearchOfficialAccountPage().click_back()
         OfficialAccountPage().click_back()
 
-
     @staticmethod
-    def setUp_test_contacts_0345():
+    def setUp_test_contacts_quxinli_0346():
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -1220,9 +1149,8 @@ class ContactPage(TestCase):
             time.sleep(2)
             OfficialAccountPage().click_setting()
 
-
     @tags('ALL', 'CMCC')
-    def test_contacts_0345(self):
+    def test_contacts_quxinli_0346(self):
         """公众号详情-清空消息"""
         time.sleep(2)
         official_account_detail=OfficialAccountDetailPage()
@@ -1235,31 +1163,6 @@ class ContactPage(TestCase):
         #返回消息页面
         OfficialAccountPage().click_back()
         OfficialAccountPage().click_back()
-
-
-#通讯录--标签分组页面
-    @staticmethod
-    def setUp_test_contacts_0351():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.init_and_enter_contacts_page()
-        if ContactsPage().is_text_present('需要使用通讯录权限'):
-            ContactsPage().click_always_allowed()
-
-    @tags('ALL', 'CMCC')
-    def test_contacts_0351(self):
-        """标签分组页面元素检查"""
-        ContactsPage().click_label_grouping()
-        time.sleep(2)
-        LabelGroupingPage().page_should_contain_text('新建分组')
-        #返回通讯录页面
-        LabelGroupingPage().click_back()
-
-    @classmethod
-    def tearDownClass(cls):
-        pass
-
-
 
 
 
