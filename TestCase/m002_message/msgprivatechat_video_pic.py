@@ -163,7 +163,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
             Preconditions.enter_private_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0001(self):
+    def test_msg_xiaoliping_C_0001(self):
         """单聊会话页面，不勾选相册内图片点击发送按钮"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标
         chat = SingleChatPage()
@@ -179,7 +179,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0002(self):
+    def test_msg_xiaoliping_C_0002(self):
         """单聊会话页面，勾选相册内一张图片发送"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标
         chat = SingleChatPage()
@@ -195,7 +195,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0003(self):
+    def test_msg_xiaoliping_C_0003(self):
         """单聊会话页面，预览相册内图片"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标
         chat = SingleChatPage()
@@ -213,7 +213,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0004(self):
+    def test_msg_xiaoliping_C_0004(self):
         """单聊会话页面，预览相册内图片，不勾选原图发送"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标
         chat = SingleChatPage()
@@ -231,7 +231,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0005(self):
+    def test_msg_xiaoliping_C_0005(self):
         """单聊会话页面，预览相册数量与发送按钮数量一致"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标
         chat = SingleChatPage()
@@ -280,7 +280,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         pic.click_save()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0006(self):
+    def test_msg_xiaoliping_C_0006(self):
         """单聊会话页面，编辑图片发送"""
         self.public_edit_pic()
         chat = SingleChatPage()
@@ -292,7 +292,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0007(self):
+    def test_msg_xiaoliping_C_0007(self):
         """单聊会话页面，编辑图片不保存发送"""
         self.public_edit_pic()
         chat = SingleChatPage()
@@ -302,7 +302,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0008(self):
+    def test_msg_xiaoliping_C_0008(self):
         """单聊会话页面，编辑图片中途直接发送"""
         self.public_edit_pic()
         chat = SingleChatPage()
@@ -312,7 +312,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0009(self):
+    def test_msg_xiaoliping_C_0009(self):
         """单聊会话页面，编辑图片保存"""
         self.public_edit_pic()
         chat = SingleChatPage()
@@ -331,7 +331,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0010(self):
+    def test_msg_xiaoliping_C_0010(self):
         """单聊会话页面，取消编辑图片"""
         self.public_edit_pic()
         chat = SingleChatPage()
@@ -346,7 +346,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0011(self):
+    def test_msg_xiaoliping_C_0011(self):
         """单聊会话页面，取消编辑图片，点击发送按钮"""
         self.public_edit_pic()
         chat = SingleChatPage()
@@ -358,7 +358,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0012(self):
+    def test_msg_xiaoliping_C_0012(self):
         """单聊会话页面，发送相册内的图片 """
         # 1.在当前聊天会话页面，点击输入框左上方的相册图标
         chat = SingleChatPage()
@@ -379,7 +379,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
 
     # @tags('ALL', 'SMOKE', 'CMCC')
     @unittest.skip('用例发生改变，点击图片编辑没有弹窗')
-    def test_Msg_PrivateChat_VideoPic_0013(self):
+    def test_msg_xiaoliping_C_0013(self):
         """单聊会话页面，预览已选中的图片，隐藏编辑按钮 """
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标
         chat = SingleChatPage()
@@ -400,7 +400,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0014(self):
+    def test_msg_xiaoliping_C_0014(self):
         """单聊会话页面，勾选9张相册内图片发送"""
         # 1.在当前聊天会话页面，点击输入框左上方的相册图标
         chat = SingleChatPage()
@@ -413,7 +413,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0015(self):
+    def test_msg_xiaoliping_C_0015(self):
         """单聊会话页面，勾选超9张相册内图片发送"""
         # 1.在当前聊天会话页面，点击输入框左上方的相册图标
         chat = SingleChatPage()
@@ -429,7 +429,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0016(self):
+    def test_msg_xiaoliping_C_0016(self):
         """单聊会话页面，同时发送相册中的图片和视屏"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标
         chat = SingleChatPage()
@@ -446,7 +446,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0017(self):
+    def test_msg_xiaoliping_C_0017(self):
         """单聊会话页面，使用拍照功能并发送照片"""
         # 1、在当前聊天会话页面，点击富媒体行拍照图标
         chat = SingleChatPage()
@@ -459,7 +459,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0018(self):
+    def test_msg_xiaoliping_C_0018(self):
         """单聊会话页面，使用拍照功能拍照编辑后发送照片"""
         # 1、在当前聊天会话页面，点击富媒体行拍照图标
         chat = SingleChatPage()
@@ -477,7 +477,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0019(self):
+    def test_msg_xiaoliping_C_0019(self):
         """单聊会话页面，使用拍照功能拍照之后编辑并保存"""
         # 1、在当前聊天会话页面，点击富媒体行拍照图标
         chat = SingleChatPage()
@@ -499,7 +499,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0020(self):
+    def test_msg_xiaoliping_C_0020(self):
         """单聊会话页面，使用拍照功能拍照编辑图片，再取消编辑并发送"""
         # 1、在当前聊天会话页面，点击富媒体行拍照图标
         chat = SingleChatPage()
@@ -519,7 +519,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0021(self):
+    def test_msg_xiaoliping_C_0021(self):
         """单聊会话页面，打开拍照，立刻返回会话窗口"""
         # 1、在当前聊天会话页面，点击富媒体行拍照图标
         chat = SingleChatPage()
@@ -532,7 +532,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0022(self):
+    def test_msg_xiaoliping_C_0022(self):
         """单聊会话页面，打开拍照，拍照之后返回会话窗口"""
         # 1、在当前聊天会话页面，点击富媒体行拍照图标
         chat = SingleChatPage()
@@ -559,7 +559,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0026(self):
+    def test_msg_xiaoliping_C_0044(self):
         """单聊会话页面，转发自己发送的图片给本地联系人"""
         self.public_send_pic()
         # 1、在当前聊天会话页面，长按自己发送的图片
@@ -585,7 +585,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
             scp.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0027(self):
+    def test_msg_xiaoliping_C_0047(self):
         """单聊会话页面，转发自己发送的图片给和通讯录联系人"""
         self.public_send_pic()
         # 1、在当前聊天会话页面，长按自己发送的图片
@@ -621,7 +621,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
             scp.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0028(self):
+    def test_msg_xiaoliping_C_0050(self):
         """单聊会话页面，转发自己发送的图片给陌生人"""
         self.public_send_pic()
         # 1、在当前聊天会话页面，长按自己发送的图片
@@ -644,7 +644,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
             times = times - 1
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0030(self):
+    def test_msg_xiaoliping_C_0060(self):
         """单聊会话页面，删除自己发送的图片"""
         self.public_send_pic()
         # 1、在当前聊天会话页面，长按自己发送的图片
@@ -655,7 +655,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0032(self):
+    def test_msg_xiaoliping_C_0062(self):
         """单聊会话页面，收藏自己发送的照片"""
         # 1、在当前聊天会话页面，长按自己发送的图片
         self.public_send_pic()
@@ -710,7 +710,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0036(self):
+    def test_msg_xiaoliping_C_0066(self):
         """单聊会话页面，转发自己发送的视频给本地联系人"""
         self.public_send_video()
         # 1、在当前聊天会话页面，长按自己发送的视频
@@ -737,7 +737,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
             scp.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0037(self):
+    def test_msg_xiaoliping_C_0067(self):
         """单聊会话页面，转发自己发送的视频给和通讯录联系人"""
         self.public_send_video()
         # 1、在当前聊天会话页面，长按自己发送的视频
@@ -774,7 +774,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
             scp.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0038(self):
+    def test_msg_xiaoliping_C_0068(self):
         """单聊会话页面，转发自己发送的视频给陌生人"""
         self.public_send_video()
         # 1、在当前聊天会话页面，长按自己发送的视频
@@ -797,7 +797,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
             times = times - 1
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0040(self):
+    def test_msg_xiaoliping_C_0070(self):
         """单聊会话页面，删除自己发送的视频"""
         self.public_send_video()
         # 1、在当前聊天会话页面，长按自己发送的视频
@@ -808,7 +808,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0042(self):
+    def test_msg_xiaoliping_C_0072(self):
         """单聊会话页面，收藏自己发送的视频"""
         self.public_send_video()
         # 1、在当前聊天会话页面，长按自己发送的视频
@@ -850,7 +850,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0043(self):
+    def test_msg_xiaoliping_C_0073(self):
         """单聊会话页面，发送相册内的视频"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标
         chat = SingleChatPage()
@@ -870,7 +870,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0044(self):
+    def test_msg_xiaoliping_C_0074(self):
         """在单聊聊天会话页面，发送相册内一个视频"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标
         chat = SingleChatPage()
@@ -888,7 +888,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0045(self):
+    def test_msg_xiaoliping_C_0075(self):
         """在单聊聊天会话页面，发送相册内多个视频"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标
         chat = SingleChatPage()
@@ -906,7 +906,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0046(self):
+    def test_msg_xiaoliping_C_0076(self):
         """在单聊聊天会话页面，同时发送相册内视频和图片"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标
         chat = SingleChatPage()
@@ -924,7 +924,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0047(self):
+    def test_msg_xiaoliping_C_0077(self):
         """在单聊聊天会话页面，发送视频时预览视频"""
         # 1、在当前聊天会话页面，点击输入框左上方的相册图标
         chat = SingleChatPage()
@@ -957,7 +957,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
             chat.click_delete()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0115(self):
+    def test_msg_xiaoliping_C_0165(self):
         """在单聊会话窗，验证点击趣图搜搜入口"""
         # 1、点击GIF图标
         chat = SingleChatPage()
@@ -974,7 +974,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0116(self):
+    def test_msg_xiaoliping_C_0166(self):
         """在单聊会话窗，网络正常发送表情搜搜"""
         self.delete_media_msg()
         # 1、点击GIF图标
@@ -993,7 +993,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0117(self):
+    def test_Msg_PrivateChat_VideoPic_0167(self):
         """在单聊会话窗，断网情况下发送表情搜搜"""
         # 断网
         current_mobile().set_network_status(0)
@@ -1009,12 +1009,12 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @staticmethod
-    def tearDown_test_Msg_PrivateChat_VideoPic_0117():
+    def tearDown_test_msg_xiaoliping_C_0167():
         """恢复网络"""
         current_mobile().set_network_status(6)
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0118(self):
+    def test_msg_xiaoliping_C_0168(self):
         """在单聊会话窗，搜索数字关键字选择发送趣图"""
         self.delete_media_msg()
         # 1、点击GIF图标
@@ -1041,7 +1041,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         raise AssertionError("输入数字 " + ",".join(nums) + "无gif趣图 ")
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0119(self):
+    def test_msg_xiaoliping_C_0169(self):
         """在单聊会话窗，搜索特殊字符关键字发送趣图"""
         self.delete_media_msg()
         # 1、点击GIF图标
@@ -1068,7 +1068,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         raise AssertionError("搜索框输入特殊字符" + "、".join(chars) + "无gif搜索结果")
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0120(self):
+    def test_msg_xiaoliping_C_0170(self):
         """在单聊会话窗，搜索特殊字符关键字发送趣图"""
         self.delete_media_msg()
         # 1、点击GIF图标
@@ -1092,7 +1092,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         raise AssertionError("搜索框输入关键字" + "、".join(chars) + "有gif搜索结果，请换输入关键字试试")
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0121(self):
+    def test_msg_xiaoliping_C_0171(self):
         """在单聊会话窗，搜索趣图过程中返回至消息列表重新进入"""
         # 1、点击GIF图标
         chat = SingleChatPage()
@@ -1119,7 +1119,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         raise AssertionError("在单聊会话窗，搜索框输入特殊字符" + "、".join(chars) + "无gif搜索结果")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_Msg_PrivateChat_VideoPic_0122(self):
+    def test_msg_xiaoliping_C_0172(self):
         """在单聊会话窗，趣图发送成功后搜索结果依然保留"""
         self.delete_media_msg()
         # 1、点击GIF图标
@@ -1147,7 +1147,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         raise AssertionError("在单聊会话窗,搜索框输入特殊字符" + "、".join(chars) + "无gif搜索结果")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_Msg_PrivateChat_VideoPic_0124(self):
+    def test_msg_xiaoliping_C_0174(self):
         """在单聊会话窗，关闭GIF搜索框"""
         # 1、点击GIF图标
         chat = SingleChatPage()
@@ -1164,7 +1164,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_Msg_PrivateChat_VideoPic_0127(self):
+    def test_msg_xiaoliping_C_0195(self):
         """转发聊天内容中的已下载的图片（缩略图）"""
         self.public_send_pic()
         # 1.在聊天会话页面，点击右上角设置图标
@@ -1190,7 +1190,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         set_page.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_Msg_PrivateChat_VideoPic_0128(self):
+    def test_msg_xiaoliping_C_0196(self):
         """转发聊天内容中的已下载的图片（放大图）"""
         self.public_send_pic()
         # 1.在聊天会话页面，点击右上角设置图标
@@ -1218,7 +1218,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         set_page.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_Msg_PrivateChat_VideoPic_0129(self):
+    def test_msg_xiaoliping_C_0197(self):
         """转发聊天内容中的已下载的图片给任意对象"""
         self.public_send_pic()
         # 1.在聊天会话页面，点击右上角设置图标
@@ -1285,7 +1285,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_Msg_PrivateChat_VideoPic_0132(self):
+    def test_msg_xiaoliping_C_0200(self):
         """转发聊天内容中的已下载的视频（缩略图）"""
         self.public_send_video()
         # 1.在聊天会话页面，点击右上角设置图标
@@ -1311,7 +1311,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         set_page.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_Msg_PrivateChat_VideoPic_0133(self):
+    def test_msg_xiaoliping_C_0201(self):
         """转发聊天内容中的已下载的视频（放大图）"""
         self.public_send_video()
         # 1.在聊天会话页面，点击右上角设置图标
@@ -1339,7 +1339,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         set_page.click_back()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_Msg_PrivateChat_VideoPic_0134(self):
+    def test_msg_xiaoliping_C_0202(self):
         """转发聊天内容中的已下载的视频给任意对象"""
         self.public_send_video()
         # 1.在聊天会话页面，点击右上角设置图标
@@ -1406,7 +1406,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_Msg_PrivateChat_VideoPic_0136(self):
+    def test_msg_xiaoliping_C_0204(self):
         """收藏聊天内容中的已下载的图片"""
         self.public_send_pic()
         # 1.在聊天会话页面，点击右上角设置图标
@@ -1473,7 +1473,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_Msg_PrivateChat_VideoPic_0137(self):
+    def test_msg_xiaoliping_C_0205(self):
         """删除聊天内容中的图片"""
         self.clear_PicVideo_Record()
         self.public_send_pic()
@@ -1502,7 +1502,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG1')
-    def test_Msg_PrivateChat_VideoPic_0138(self):
+    def test_msg_xiaoliping_C_0206(self):
         """保存聊天内容中的图片到本地"""
         self.public_send_pic()
         # 1.在聊天会话页面，点击右上角设置图标
@@ -1538,7 +1538,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_Msg_PrivateChat_VideoPic_0139(self):
+    def test_msg_xiaoliping_C_0207(self):
         """保存聊天内容中的视频到本地"""
         self.public_send_video()
         # 1.在聊天会话页面，点击右上角设置图标
@@ -1567,7 +1567,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_Msg_PrivateChat_VideoPic_0140(self):
+    def test_msg_xiaoliping_C_0208(self):
         """编辑聊天内容中的图片，并发送"""
         self.public_send_pic()
         # 1.在聊天会话页面，点击右上角设置图标

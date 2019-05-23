@@ -2851,7 +2851,7 @@ class MeAll(TestCase):
     # current_mobile().disconnect_mobile()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_001(self):
+    def test_me_zhangshuli_001(self):
         """我页面跳转验证"""
         # 1.检验是否跳转到我页面
         mep = MePage()
@@ -2859,7 +2859,7 @@ class MeAll(TestCase):
         self.assertEquals(mep.is_on_this_page(), True)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_002(self):
+    def test_me_zhangshuli_002(self):
 
         """"我"模块页面信息显示验证"""
         # 0.确保卡的有名字
@@ -2890,7 +2890,7 @@ class MeAll(TestCase):
         mep.page_up()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_005(self):
+    def test_me_zhangshuli_005(self):
         """个人资料界面信息显示验证"""
         # 1.检验是否跳转到我页面
         mep = MePage()
@@ -2938,7 +2938,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_008(self):
+    def test_me_zhangshuli_008(self):
         """个人资料详情-部分完善资料"""
         Preconditions.make_already_in_me_save_part_page()
         # 1.检验是否跳转到我页面
@@ -2964,7 +2964,7 @@ class MeAll(TestCase):
         mep1.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_009(self):
+    def test_me_zhangshuli_009(self):
         """个人资料详情-全部完善资料"""
         Preconditions.make_already_in_me_save_all_page()
         # 1.检验是否跳转到我页面
@@ -2991,7 +2991,7 @@ class MeAll(TestCase):
         mep1.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_010(self):
+    def test_me_zhangshuli_010(self):
         """编辑个人资料-编辑状态"""
         Preconditions.make_already_in_me_save_all_page()
         # 1.检验是否跳转到我页面
@@ -3015,7 +3015,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_011(self):
+    def test_me_zhangshuli_029(self):
         """进入“编辑资料”界面信息"""
         Preconditions.make_already_in_me_save_all_page()
         # 1.检验是否跳转到我页面
@@ -3049,7 +3049,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_012(self):
+    def test_me_zhangshuli_030(self):
         """“编辑资料” 头像设置"""
         # 1.检验是否跳转到我页面
         mep = MePage()
@@ -3085,7 +3085,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_013(self):
+    def test_me_zhangshuli_031(self):
         """“编辑资料” 头像设置"""
         # 0-1.检验是否跳转到我页面
         mep = MePage()
@@ -3114,7 +3114,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_014(self):
+    def test_me_zhangshuli_032(self):
         """“编辑资料” 头像设置"""
         # 0-1.检验是否跳转到我页面
         mep = MePage()
@@ -3146,7 +3146,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_015(self):
+    def test_me_zhangshuli_033(self):
         """“编辑资料” 头像设置"""
         # 0-1.检验是否跳转到我页面
         mep = MePage()
@@ -3177,7 +3177,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_016(self):
+    def test_me_zhangshuli_034(self):
         """“编辑资料” 头像设置"""
         # 0-1.检验是否跳转到我页面
         mep = MePage()
@@ -3209,7 +3209,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_017(self):
+    def test_me_zhangshuli_035(self):
         """“编辑资料” 头像设置"""
         # 0-1.检验是否跳转到我页面
         mep = MePage()
@@ -3241,7 +3241,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_018(self):
+    def test_me_zhangshuli_036(self):
         """“编辑资料” 头像设置"""
         # 0-1.检验是否跳转到我页面
         mep = MePage()
@@ -3268,7 +3268,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_020(self):
+    def test_me_zhangshuli_038(self):
         """“编辑资料” 头像设置"""
         # 0-1.检验是否跳转到我页面
         mep = MePage()
@@ -3296,7 +3296,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_021(self):
+    def test_me_zhangshuli_039(self):
         """“编辑资料” 头像设置-多次选择图片"""
         # 0-1.检验是否跳转到我页面
         mep = MePage()
@@ -3328,7 +3328,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_024(self):
+    def test_me_zhangshuli_042(self):
         """“编辑资料” 头像设置-修改头像未保存退出编辑-取消"""
         # 0-1.检验是否跳转到我页面
         mep = MePage()
@@ -3359,7 +3359,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_025(self):
+    def test_me_zhangshuli_043(self):
         """“编辑资料” 所有输入栏 为空"""
         # 1.检验是否跳转到我页面
         mep = MePage()
@@ -3385,7 +3385,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_026(self):
+    def test_me_zhangshuli_044(self):
         """“编辑资料” 除了姓名,其他为空"""
         # 1.检验是否跳转到我页面
         mep = MePage()
@@ -3408,7 +3408,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_027(self):
+    def test_me_zhangshuli_045(self):
         """“验证我-个人资料-编辑-编辑名称"""
         # 1.检验是否跳转到我页面
         mep = MePage()
@@ -3428,7 +3428,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_028(self):
+    def test_me_zhangshuli_046(self):
         """“验证我-个人资料-编辑-编辑名称"""
         # 1.检验是否跳转到我页面
         mep = MePage()
@@ -3453,7 +3453,7 @@ class MeAll(TestCase):
         mup.set_network_status(6)
 
     @staticmethod
-    def tearDown_test_me_all_page_028():
+    def tearDown_test_me_zhangshuli_046():
         try:
             mep = MePage()
             mep.set_network_status(6)
@@ -3461,7 +3461,7 @@ class MeAll(TestCase):
             mep.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_029(self):
+    def test_me_zhangshuli_047(self):
         """“编辑资料” 姓名栏输入超长字符"""
         # 1.检验是否跳转到我页面
         mep = MePage()
@@ -3483,7 +3483,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_030(self):
+    def test_me_zhangshuli_048(self):
         """“编辑资料” 公司栏输入超长字符"""
         # 1.检验是否跳转到我页面
         mep = MePage()
@@ -3505,7 +3505,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_031(self):
+    def test_me_zhangshuli_049(self):
         """“编辑资料” 职位栏输入超长字符"""
         # 1.检验是否跳转到我页面
         mep = MePage()
@@ -3527,7 +3527,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_032(self):
+    def test_me_zhangshuli_050(self):
         """“编辑资料” 邮箱栏输入超长字符"""
         # 1.检验是否跳转到我页面
         mep = MePage()
@@ -3551,7 +3551,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_034(self):
+    def test_me_zhangshuli_052(self):
         """“编辑资料” “编辑资料” 邮箱字段空格"""
         # 1.检验是否跳转到我页面
         mep = MePage()
@@ -3578,7 +3578,7 @@ class MeAll(TestCase):
             pass
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_035(self):
+    def test_me_zhangshuli_053(self):
         """编辑个人资料-编辑之后返回"""
         # 1.检验是否跳转到我页面
         mep = MePage()
@@ -3611,7 +3611,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_036(self):
+    def test_me_zhangshuli_054(self):
         """编辑个人资料-编辑之后断网保存"""
         # 1.检验是否跳转到我页面
         mep = MePage()
@@ -3639,7 +3639,7 @@ class MeAll(TestCase):
         mup.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_037(self):
+    def test_me_zhangshuli_055(self):
         """我的二维码"""
         # 1.检验是否跳转到我页面
         mep = MePage()
@@ -3658,7 +3658,7 @@ class MeAll(TestCase):
         time.sleep(1)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_038(self):
+    def test_me_zhangshuli_056(self):
         """我的二维码-网络异常"""
         # 1.检验是否跳转到我页面
         mep = MePage()
@@ -3674,7 +3674,7 @@ class MeAll(TestCase):
         qr_code.click_back()
 
     @staticmethod
-    def tearDown_test_me_all_page_038():
+    def tearDown_test_me_zhangshuli_056():
         try:
             mep = MePage()
             mep.set_network_status(6)
@@ -3682,7 +3682,7 @@ class MeAll(TestCase):
             mep.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_039(self):
+    def test_me_zhangshuli_057(self):
         """我的二维码-分享"""
         # 0.检验是否跳转到我页面
         mep = MePage()
@@ -3700,7 +3700,7 @@ class MeAll(TestCase):
         qr_code.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_040(self):
+    def test_me_zhangshuli_058(self):
         """我的二维码分享-关键字搜索"""
         # 0.检验是否跳转到我页面
         mep = MePage()
@@ -3727,7 +3727,7 @@ class MeAll(TestCase):
         qr_code.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_041(self):
+    def test_me_zhangshuli_059(self):
         """我的二维码分享-号码搜索"""
         # 0.检验是否跳转到我页面
         mep = MePage()
@@ -3754,7 +3754,7 @@ class MeAll(TestCase):
         qr_code.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_042(self):
+    def test_me_zhangshuli_060(self):
         """我的二维码分享-非手机号码的数字搜索"""
         # 0.检验是否跳转到我页面
         mep = MePage()
@@ -3781,7 +3781,7 @@ class MeAll(TestCase):
         qr_code.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_043(self):
+    def test_me_zhangshuli_061(self):
         """我的二维码分享-无本地结果且二次查询无结果"""
         # 0.检验是否跳转到我页面
         mep = MePage()
@@ -3811,7 +3811,7 @@ class MeAll(TestCase):
         qr_code.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_044(self):
+    def test_me_zhangshuli_062(self):
         """我的二维码分享-搜索未保存在本地的手机号码"""
         # 0.检验是否跳转到我页面
         mep = MePage()
@@ -3851,7 +3851,7 @@ class MeAll(TestCase):
         qr_code.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_045(self):
+    def test_me_zhangshuli_063(self):
         """我的二维码分享-搜索字母特殊字符关数字，手机号等关键字有本地联系人结果"""
         # 0.检验是否跳转到我页面
         mep = MePage()
@@ -3891,7 +3891,7 @@ class MeAll(TestCase):
         qr_code.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me1')
-    def test_me_all_page_048(self):
+    def test_me_zhangshuli_077(self):
         """我的二维码-保存"""
         # 0.检验是否跳转到我页面
         mep = MePage()
@@ -3907,7 +3907,7 @@ class MeAll(TestCase):
         qr_code.click_back()
 
     @unittest.skip("和包支付的控件id需优化")
-    def test_me_all_page_101(self):
+    def test_me_zhangshuli_135(self):
         """和包支付—无流量时充到手机"""
         # 0.检验是否跳转到我页面
         mep = MePage()
@@ -3924,7 +3924,7 @@ class MeAll(TestCase):
         mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'], 15)
 
     @unittest.skip("和包支付的控件id需优化")
-    def test_me_all_page_108(self):
+    def test_me_zhangshuli_142(self):
         """网络异常时进入流量页面"""
         # 0.检验是否跳转到我页面
         mep = MePage()
@@ -3940,12 +3940,12 @@ class MeAll(TestCase):
         mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back', 15])
         mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back', 15])
 
-    def tearDown_test_me_all_page_108(self):
+    def tearDown_test_me_zhangshuli_142(self):
         mep = MePage()
         mep.set_network_status(6)
 
     @unittest.skip("和包支付的控件id需优化")
-    def test_me_all_page_111(self):
+    def test_me_zhangshuli_145(self):
         """银行卡页面展示-未绑定任何银行卡"""
         # 0.检验是否跳转到我页面
         mep = MePage()
@@ -3960,7 +3960,7 @@ class MeAll(TestCase):
         mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back', 15])
 
     @unittest.skip("和包支付的控件id需优化")
-    def test_me_all_page_112(self):
+    def test_me_zhangshuli_146(self):
         """银行卡页面填写0-14位银行卡号"""
         # 0.检验是否跳转到我页面
         mep = MePage()
@@ -3983,7 +3983,7 @@ class MeAll(TestCase):
         mep.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'], 15)
 
     @unittest.skip("和包支付的控件id需优化")
-    def test_me_all_page_113(self):
+    def test_me_zhangshuli_147(self):
         """银行卡页面填写15-19位无效的银行卡号"""
         # 0.检验是否跳转到我页面
         mep = MePage()
