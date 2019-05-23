@@ -993,7 +993,6 @@ class ContactPage(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0335():
-        #用户已关注'中软国际一家亲'公众号
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.init_and_enter_contacts_page()
@@ -1005,31 +1004,18 @@ class ContactPage(TestCase):
     def test_contacts_quxinli_0335(self):
         """公众号详情-查看历史资讯"""
         ContactsPage().click_official_account_icon()
-        time.sleep(25)
-        #无历史资讯的公众号
-        OfficialAccountPage().select_one_account_by_name('和飞信新闻')
+        official = OfficialAccountPage()
+        official.click_officel_account()
         time.sleep(1)
-        OfficialAccountPage().click_setting()
-        official_account_detail = OfficialAccountDetailPage()
-        official_account_detail.click_read_old_message()
-        time.sleep(2)
-       # official_account_detail.page_should_contain_text('无历史资讯')
-        #有历史资讯时的公众号
-        official_account_detail.click_back()
-        official_account_detail.click_back()
-        OfficialAccountPage().click_back()
-        OfficialAccountPage().select_one_account_by_name('和飞信')
-        time.sleep(1)
-        OfficialAccountPage().click_setting()
-        official_account_detail = OfficialAccountDetailPage()
-        official_account_detail.click_read_old_message()
-        time.sleep(5)
-     #   official_account_detail.page_contain_time()
-        #返回通讯录页面
-        OfficialAccountDetailPage().click_back()
-        OfficialAccountDetailPage().click_back()
-        OfficialAccountPage().click_back()
-        OfficialAccountPage().click_back()
+        official.click_setting_button()
+        official_detail = OfficialAccountDetailPage()
+
+        official_detail.click_read_old_message()
+        official_detail.wait_for_page_load()
+        if official_detail.is_contain_old_mes():
+            official_detail.page_contain_time()
+        else:
+            official_detail.page_should_contain_text('无历史推送资讯')
 
     @staticmethod
     def setUp_test_contacts_quxinli_0336():
