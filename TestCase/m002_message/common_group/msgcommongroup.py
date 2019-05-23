@@ -1199,7 +1199,7 @@ class MsgCommonGroupTest(TestCase):
         mess.open_message_page()
 
     @staticmethod
-    def setUp_test_msg_common_group_0019():
+    def setUp_test_msg_xiaoqiu_0056():
 
         Preconditions.select_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
@@ -1208,7 +1208,7 @@ class MsgCommonGroupTest(TestCase):
         Preconditions.enter_group_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC-RESET', 'group_chat','4281','high')
-    def test_msg_common_group_0019(self):
+    def test_msg_xiaoqiu_0056(self):
         """未获取权限时，点击输入框右边的语音按钮，检查是否会弹出提示权限"""
         gcp = GroupChatPage()
         gcp.click_audio_btn()
@@ -1225,7 +1225,7 @@ class MsgCommonGroupTest(TestCase):
         gcp.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','4281','high')
-    def test_msg_common_group_0020(self):
+    def test_msg_xiaoqiu_0057(self):
         """首次使用语音功能"""
         gcp = GroupChatPage()
         gcp.click_audio_btn()
@@ -1511,7 +1511,7 @@ class MsgCommonGroupTest(TestCase):
         gcp.hang_up_the_call()
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','428','high')
-    def test_msg_common_group_0043(self):
+    def test_msg_xiaoqiu_0044(self):
         """发送一组数字：12345678900，发送成功后，是否会被识别为号码"""
         gcp = GroupChatPage()
         # 输入信息
@@ -1533,7 +1533,7 @@ class MsgCommonGroupTest(TestCase):
         if gcp.is_text_present("呼叫"):
             raise AssertionError("12345678900被识别为号码,点击有弹窗")
 
-    def tearDown_test_msg_common_group_0043(self):
+    def tearDown_test_msg_xiaoqiu_0044(self):
         #删除聊天记录
         scp = GroupChatPage()
         if scp.is_on_this_page():
@@ -1560,7 +1560,7 @@ class MsgCommonGroupTest(TestCase):
                 raise e
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','428','high')
-    def test_msg_common_group_0044(self):
+    def test_msg_xiaoqiu_0045(self):
         """发送一组数字：123456，发送成功后，是否会被识别为号码"""
         gcp = GroupChatPage()
         # 输入信息
@@ -1588,7 +1588,7 @@ class MsgCommonGroupTest(TestCase):
 
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','428','high')
-    def test_msg_common_group_0045(self):
+    def test_msg_xiaoqiu_0046(self):
         """发送一组数字：18431931414，发送成功后，是否会被识别为号码"""
         gcp = GroupChatPage()
         # 输入信息
@@ -1610,7 +1610,7 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(2)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','428','high')
-    def test_msg_common_group_0046(self):
+    def test_msg_xiaoqiu_0047(self):
         """发送一组数字：+85267656003，发送成功后，是否会被识别为号码"""
         gcp = GroupChatPage()
         # 输入信息
@@ -1632,7 +1632,7 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(2)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','428','high')
-    def test_msg_common_group_0047(self):
+    def test_msg_xiaoqiu_0048(self):
         """发送一组数字：67656003，发送成功后，是否会被识别为号码"""
         gcp = GroupChatPage()
         # 输入信息
@@ -1654,7 +1654,7 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(2)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','428','high')
-    def test_msg_common_group_0048(self):
+    def test_msg_xiaoqiu_0049(self):
         """发送一组数字：95533，发送成功后，是否会被识别为号码"""
         gcp = GroupChatPage()
         # 输入信息
@@ -2058,7 +2058,7 @@ class MsgCommonGroupTest(TestCase):
         gcsp.click_my_card()
         time.sleep(1)
         # 点击“X”按钮
-        gcsp.click_iv_delete_button()
+        # gcsp.click_iv_delete_button()
         newName = "_(:3」∠❀)_"
         gcsp.input_new_group_name(newName)
         if not gcsp.is_toast_exist("不能包含特殊字符和表情"):
@@ -2875,7 +2875,7 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(1)
         gcp.press_file_to_do("哈哈26", "多选")
         a=0
-        while a<3:
+        while a<5:
             gcp.page_down()
             a+=1
         time.sleep(2)
@@ -3895,6 +3895,9 @@ class MsgCommonGroupTest(TestCase):
         gcp.hide_keyboard()
         time.sleep(1)
         gcp.press_voice_message_to_do("撤回")
+        if gcp.is_text_present("我知道了"):
+            gcp.click_text("我知道了")
+        time.sleep(2)
         if not gcp.is_text_present("你撤回了一条信息"):
             raise AssertionError("没有成功撤回信息")
 
@@ -3971,6 +3974,8 @@ class MsgCommonGroupTest(TestCase):
             print("{}分钟".format(a))
             a += 1
         gcp.press_voice_message_to_do("撤回")
+        if gcp.is_text_present("我知道了"):
+            gcp.click_text("我知道了")
         time.sleep(2)
         if not gcp.is_text_present("你撤回了一条信息"):
             raise AssertionError("没有成功撤回信息")
