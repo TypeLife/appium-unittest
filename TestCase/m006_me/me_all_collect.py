@@ -440,8 +440,8 @@ class MeAllCollect(TestCase):
         # current_mobile().disconnect_mobile()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_441(self):
-        """我页面跳转验证"""
+    def test_me_zhangshuli_445(self):
+        """收藏内容来自于个人私聊的展示"""
         Preconditions.make_already_set_message()
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -457,13 +457,13 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_441(self):
+    def tearDown_test_me_zhangshuli_445(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_442(self):
-        """我页面跳转验证"""
+    def test_me_zhangshuli_446(self):
+        """收藏内容来自于群聊的展示"""
         Preconditions.make_already_set_chart_group_message()
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -479,13 +479,13 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_442(self):
+    def tearDown_test_me_zhangshuli_446(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_443(self):
-        """我页面跳转验证"""
+    def test_me_zhangshuli_447(self):
+        """查看当天收藏内容的时间显示"""
         Preconditions.make_already_set_chart_group_message()
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -503,12 +503,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_443(self):
+    def tearDown_test_me_zhangshuli_447(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_447(self):
+    def test_me_zhangshuli_451(self):
         """查看收藏内容为短视频的展示"""
         Preconditions.make_already_set_chart_group_video()
         # 1.点击跳转到我的页面
@@ -529,12 +529,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_447(self):
+    def tearDown_test_me_zhangshuli_451(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_448(self):
+    def test_me_zhangshuli_452(self):
         """查看收藏内容为文字（含短信）的展示"""
         Preconditions.make_already_set_chart_group_message()
         # 1.点击跳转到我的页面
@@ -553,12 +553,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_448(self):
+    def tearDown_test_me_zhangshuli_452(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_449(self):
+    def test_me_zhangshuli_453(self):
         """查看收藏内容为语音消息的展示"""
         Preconditions.make_already_set_chart_group_voice()
         # 1.点击跳转到我的页面
@@ -579,12 +579,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_449(self):
+    def tearDown_test_me_zhangshuli_453(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_451(self):
+    def test_me_zhangshuli_455(self):
         """查看收藏内容为名片的展示"""
         Preconditions.make_already_set_chart_group_name_card()
         # 1.点击跳转到我的页面
@@ -615,12 +615,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_451(self):
+    def tearDown_test_me_zhangshuli_455(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_452(self):
+    def test_me_zhangshuli_456(self):
         """查看收藏内容为位置信息的展示"""
         Preconditions.make_already_set_chart_group_location()
         # 1.点击跳转到我的页面
@@ -651,12 +651,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_452(self):
+    def tearDown_test_me_zhangshuli_456(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_454(self):
+    def test_me_zhangshuli_458(self):
         """查看收藏内容为未知文件的展示"""
         Preconditions.make_already_set_chart_group_file(".log")
         # 1.点击跳转到我的页面
@@ -691,12 +691,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_454(self):
+    def tearDown_test_me_zhangshuli_458(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_455(self):
+    def test_me_zhangshuli_459(self):
         """查看收藏内容为已知文件的展示"""
         Preconditions.make_already_set_chart_group_file(".doc")
         Preconditions.make_already_set_chart_group_file(".txt")
@@ -734,12 +734,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_455(self):
+    def tearDown_test_me_zhangshuli_459(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_456(self):
+    def test_me_zhangshuli_460(self):
         """查看收藏内容为可识别的幻灯片格式"""
         Preconditions.make_already_set_chart_group_file(".ppt")
         Preconditions.make_already_set_chart_group_file(".pptx")
@@ -775,12 +775,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_456(self):
+    def tearDown_test_me_zhangshuli_460(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_457(self):
+    def test_me_zhangshuli_461(self):
         """查看收藏内容为可识别的表格格式"""
         Preconditions.make_already_set_chart_group_file(".xls")
         Preconditions.make_already_set_chart_group_file(".xlsx")
@@ -814,12 +814,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_457(self):
+    def tearDown_test_me_zhangshuli_461(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_458(self):
+    def test_me_zhangshuli_462(self):
         """查看收藏内容为可识别的PDF格式"""
         Preconditions.make_already_set_chart_group_file(".pdf")
         # 1.点击跳转到我的页面
@@ -851,12 +851,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_458(self):
+    def tearDown_test_me_zhangshuli_462(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_460(self):
+    def test_me_zhangshuli_464(self):
         """查看收藏内容为可识别的音频格式"""
         Preconditions.make_already_set_chart_group_file("18718.mp3")
         # 1.点击跳转到我的页面
@@ -888,12 +888,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_460(self):
+    def tearDown_test_me_zhangshuli_464(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_462(self):
+    def test_me_zhangshuli_466(self):
         """查看收藏内容为可识别的压缩格式"""
         Preconditions.make_already_set_chart_group_file(".rar")
         # 1.点击跳转到我的页面
@@ -925,12 +925,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_462(self):
+    def tearDown_test_me_zhangshuli_466(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_463(self):
+    def test_me_zhangshuli_467(self):
         """查看收藏内容为短视频的展示"""
         Preconditions.make_already_set_chart_group_video()
         # 1.点击跳转到我的页面
@@ -954,12 +954,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_463(self):
+    def tearDown_test_me_zhangshuli_467(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_464(self):
+    def test_me_zhangshuli_468(self):
         """在收藏列表中打开音频文件"""
         Preconditions.make_already_set_chart_group_file("18718.mp3")
         # 1.点击跳转到我的页面
@@ -985,12 +985,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_464(self):
+    def tearDown_test_me_zhangshuli_468(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_465(self):
+    def test_me_zhangshuli_469(self):
         """查看收藏内容为图片的展示"""
         Preconditions.make_already_set_chart_group_video(pic_video="pic")
         # 1.点击跳转到我的页面
@@ -1014,12 +1014,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_465(self):
+    def tearDown_test_me_zhangshuli_469(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_466(self):
+    def test_me_zhangshuli_470(self):
         """在收藏列表中打开文本文件"""
         Preconditions.make_already_set_chart_group_file(".txt")
         Preconditions.make_already_set_chart_group_file(".doc")
@@ -1049,13 +1049,13 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_466(self):
+    def tearDown_test_me_zhangshuli_470(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_467(self):
-        """在收藏列表中打开文本文件"""
+    def test_me_zhangshuli_471(self):
+        """打开幻灯片格式为.ppt .pptx"""
         Preconditions.make_already_set_chart_group_file(".ppt")
         Preconditions.make_already_set_chart_group_file(".pptx")
         # 1.点击跳转到我的页面
@@ -1084,12 +1084,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_467(self):
+    def tearDown_test_me_zhangshuli_471(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_468(self):
+    def test_me_zhangshuli_472(self):
         """打开表格格式为.xls  .xlsx"""
         Preconditions.make_already_set_chart_group_file(".xls")
         Preconditions.make_already_set_chart_group_file(".xlsx")
@@ -1119,12 +1119,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_468(self):
+    def tearDown_test_me_zhangshuli_472(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_469(self):
+    def test_me_zhangshuli_473(self):
         """打开文件PDF格式为.pdf"""
         Preconditions.make_already_set_chart_group_file(".pdf")
         # 1.点击跳转到我的页面
@@ -1150,12 +1150,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_469(self):
+    def tearDown_test_me_zhangshuli_473(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_472(self):
+    def test_me_zhangshuli_476(self):
         """打开收藏的位置信息"""
         Preconditions.make_already_set_chart_group_location()
         # 1.点击跳转到我的页面
@@ -1177,12 +1177,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_472(self):
+    def tearDown_test_me_zhangshuli_476(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_473(self):
+    def test_me_zhangshuli_477(self):
         """打开收藏的位置信息"""
         Preconditions.make_already_set_chart_group_location()
         # 1.点击跳转到我的页面
@@ -1206,12 +1206,12 @@ class MeAllCollect(TestCase):
         mep.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_473(self):
+    def tearDown_test_me_zhangshuli_477(self):
         Preconditions.make_already_in_me_all_page()
         Preconditions.delete_all_my_collection()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_482(self):
+    def test_me_zhangshuli_486(self):
         """关于和飞信入口"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1233,7 +1233,7 @@ class MeAllCollect(TestCase):
 
     # @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
     @unittest.skip("取决现网版本是否有跟新版本")
-    def test_me_all_page_483(self):
+    def test_me_zhangshuli_487(self):
         """已是最新版本-检查更新弹窗"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1256,7 +1256,7 @@ class MeAllCollect(TestCase):
         mcp.click_back()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_502(self):
+    def test_me_zhangshuli_506(self):
         """新手引导页面显示验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1282,7 +1282,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_503(self):
+    def test_me_zhangshuli_507(self):
         """关键词列表信息跳转到详情页验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1313,7 +1313,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_504(self):
+    def test_me_zhangshuli_508(self):
         """新手引导页面关键词分类功能验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1343,7 +1343,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_505(self):
+    def test_me_zhangshuli_509(self):
         """产品介绍页面跳转验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1364,7 +1364,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_506(self):
+    def test_me_zhangshuli_510(self):
         """网络异常下，产品介绍页面跳转验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1385,7 +1385,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @staticmethod
-    def tearDown_test_me_all_page_506():
+    def tearDown_test_me_zhangshuli_510():
         try:
             mep = MePage()
             mep.set_network_status(6)
@@ -1393,7 +1393,7 @@ class MeAllCollect(TestCase):
             mep.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_510(self):
+    def test_me_zhangshuli_514(self):
         """通用版本（内陆/移动用户）-我页面文案检查"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1411,7 +1411,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_511(self):
+    def test_me_zhangshuli_515(self):
         """通用版本覆盖安装-推荐和飞信页面跳转验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1430,7 +1430,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_525(self):
+    def test_me_zhangshuli_529(self):
         """通用版本-短信入口-本地联系人列表"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1452,7 +1452,7 @@ class MeAllCollect(TestCase):
         mrp.click_send()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_526(self):
+    def test_me_zhangshuli_530(self):
         """通用版本-短信入口-本机已登录号码"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1478,7 +1478,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_527(self):
+    def test_me_zhangshuli_531(self):
         """通用版本-短信入口-搜索结果界面"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1502,7 +1502,7 @@ class MeAllCollect(TestCase):
         scp.page_should_contain_text("联系人")
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_528(self):
+    def test_me_zhangshuli_532(self):
         """通用版本-短信入口-搜索结果大于3条"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1527,7 +1527,7 @@ class MeAllCollect(TestCase):
         self.assertEquals(scp.result_is_more_tree(), True)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_529(self):
+    def test_me_zhangshuli_533(self):
         """通用版本-短信入口-搜索手机号"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1551,7 +1551,7 @@ class MeAllCollect(TestCase):
         mrp.click_send()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_530(self):
+    def test_me_zhangshuli_534(self):
         """通用版本-短信入口-搜索姓名"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1577,7 +1577,7 @@ class MeAllCollect(TestCase):
         mrp.click_send()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_531(self):
+    def test_me_zhangshuli_535(self):
         """通用版本-短信入口-搜索姓名"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1603,7 +1603,7 @@ class MeAllCollect(TestCase):
         mrp.click_send()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_532(self):
+    def test_me_zhangshuli_535(self):
         """通用版本-短信入口-搜索姓名"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1629,7 +1629,7 @@ class MeAllCollect(TestCase):
         mrp.click_send()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_533(self):
+    def test_me_zhangshuli_536(self):
         """通用版本-短信入口-搜索特殊符号"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1655,7 +1655,7 @@ class MeAllCollect(TestCase):
         mrp.click_send()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_534(self):
+    def test_me_zhangshuli_538(self):
         """通用版本-短信入口-搜索+852开头"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1681,7 +1681,7 @@ class MeAllCollect(TestCase):
         mrp.click_send()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_535(self):
+    def test_me_zhangshuli_539(self):
         """通用版本-短信入口-搜索无本地联系人且为手机号"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1707,7 +1707,7 @@ class MeAllCollect(TestCase):
         mrp.click_send()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_536(self):
+    def test_me_zhangshuli_540(self):
         """通用版本-短信入口-1期"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1731,7 +1731,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_576(self):
+    def test_me_zhangshuli_580(self):
         """设置页面显示验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1751,7 +1751,7 @@ class MeAllCollect(TestCase):
         mep.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_579(self):
+    def test_me_zhangshuli_583(self):
         """验证我-设置-退出登录(正常网络)"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1772,7 +1772,7 @@ class MeAllCollect(TestCase):
         self.assertEquals(one_key.is_on_this_page(), True)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_580(self):
+    def test_me_zhangshuli_584(self):
         """验证我-设置-退出登录(异常网络)"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1797,13 +1797,13 @@ class MeAllCollect(TestCase):
         if not one_key.is_toast_exist("请检查网络设置"):
             raise AssertionError("没有此网络异常弹框")
 
-    def tearDown_test_me_all_page_580(self):
+    def tearDown_test_me_zhangshuli_584(self):
         # 1.打开网络
         mess = MessagePage()
         mess.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_582(self):
+    def test_me_zhangshuli_586(self):
         """设置-参与体验改善计划(异常网络)"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1826,13 +1826,13 @@ class MeAllCollect(TestCase):
         mess.click_back()
         mep.open_message_page()
 
-    def tearDown_test_me_all_page_582(self):
+    def tearDown_test_me_zhangshuli_586(self):
         # 1.打开网络
         mess = MessagePage()
         mess.set_network_status(6)
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_583(self):
+    def test_me_zhangshuli_587(self):
         """帮助与反馈跳转功能验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1851,7 +1851,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_584(self):
+    def test_me_zhangshuli_588(self):
         """帮助与反馈页面显示验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1872,7 +1872,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_585(self):
+    def test_me_zhangshuli_589(self):
         """常见问题列表信息跳转到详情页验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1898,7 +1898,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_586(self):
+    def test_me_zhangshuli_590(self):
         """常见问题更多跳转功能验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1921,7 +1921,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_587(self):
+    def test_me_zhangshuli_591(self):
         """常见问题更多页面显示验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1944,7 +1944,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_588(self):
+    def test_me_zhangshuli_592(self):
         """常见问题列表信息跳转到详情页验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -1973,7 +1973,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_589(self):
+    def test_me_zhangshuli_593(self):
         """常见问题页面问题分类功能验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -2005,7 +2005,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_590(self):
+    def test_me_zhangshuli_594(self):
         """在线咨询跳转功能验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -2027,7 +2027,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_592(self):
+    def test_me_zhangshuli_596(self):
         """企业专家服务跳转功能验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -2049,7 +2049,7 @@ class MeAllCollect(TestCase):
         mess.open_message_page()
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_593(self):
+    def test_me_zhangshuli_597(self):
         """论坛互动跳转功能验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()
@@ -2067,7 +2067,7 @@ class MeAllCollect(TestCase):
         mfp.page_contain_text("和飞信社区")
 
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me3')
-    def test_me_all_page_594(self):
+    def test_me_zhangshuli_598(self):
         """意见反馈页面显示验证"""
         # 1.点击跳转到我的页面
         mess = MessagePage()

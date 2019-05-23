@@ -196,31 +196,6 @@ class ContactsPage(FooterPage):
             time += 1
             return phones
 
-    @TestLogger.log()
-    def get_all_contacts_number(self):
-        """获取所有联系人电话号码"""
-        els = self.get_elements(self.__class__.__locators["18681151872"])
-        contacts_name = []
-        if els:
-            for el in els:
-                contacts_name.append(el.text)
-        else:
-            raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
-        flag = True
-        current = 0
-        while flag:
-            current += 1
-            if current > 20:
-                return
-            self.swipe_half_page_up()
-            els = self.get_elements(self.__class__.__locators["联系人名"])
-            for el in els:
-                if el.text not in contacts_name:
-                    contacts_name.append(el.text)
-                    flag = True
-                else:
-                    flag = False
-        return contacts_name
 
     def page_up(self):
         """向上滑动一页"""
@@ -425,7 +400,7 @@ class ContactsPage(FooterPage):
         else:
             c = 0
             while c < times:
-                self.page_up()
+                self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
                 if self._is_element_present(self.__class__.__locators[locator]):
                     return self.page_should_contain_element(self.__class__.__locators[locator])
                 c += 1

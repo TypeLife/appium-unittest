@@ -117,6 +117,11 @@ class SelectHeContactsDetailPage(BasePage):
         current_mobile().hide_keyboard_if_display()
 
     @TestLogger.log()
+    def is_exists_search_box(self):
+        """是否存在搜索输入框"""
+        return self._is_element_present(self.__class__.__locators['搜索'])
+
+    @TestLogger.log()
     def select_one_he_contact_by_name(self, name):
         """通过名称选择一个联系人"""
         self.click_element(
@@ -135,7 +140,7 @@ class SelectHeContactsDetailPage(BasePage):
         """根据名字选择一个团队联系人"""
         locator = (
             MobileBy.XPATH,
-            '//*[@resource-id="com.chinasofti.rcs:id/tv_name_personal_contactlist" and @text ="%s"]' % name)
+            '//*[@resource-id="com.chinasofti.rcs:id/tv_name_personal_contactlist" and contains(@text,"%s")]' % name)
         max_try = 20
         current = 0
         while current < max_try:
@@ -164,7 +169,7 @@ class SelectHeContactsDetailPage(BasePage):
     @TestLogger.log()
     def click_department_name(self, name):
         """点击指定企业/部门名称"""
-        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title_department" and @text ="%s"]' % name)
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title_department" and @text="%s"]' % name)
         max_try = 20
         current = 0
         while current < max_try:

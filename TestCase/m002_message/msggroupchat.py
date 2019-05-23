@@ -205,6 +205,53 @@ class Preconditions(WorkbenchPreconditions):
         gcp = GroupChatPage()
         gcp.wait_for_page_load()
 
+    @staticmethod
+    def if_exists_multiple_enterprises_enter_group_chat():
+        """选择团队联系人时存在多个团队时返回获取当前团队名，再进入群聊分享群二维码"""
+
+        shc = SelectHeContactsDetailPage()
+        # 测试号码是否存在多个团队
+        if not shc.is_exist_corporate_grade():
+            mp = MessagePage()
+            scg = SelectContactsPage()
+            gcp = GroupChatPage()
+            shc.click_back()
+            scg.wait_for_page_load()
+            scg.click_back()
+            gcp.wait_for_page_load()
+            gcp.click_back()
+            mp.wait_for_page_load()
+            mp.open_workbench_page()
+            wbp = WorkbenchPage()
+            wbp.wait_for_workbench_page_load()
+            time.sleep(2)
+            # 获取当前团队名
+            workbench_name = wbp.get_workbench_name()
+            mp.open_message_page()
+            mp.wait_for_page_load()
+            group_name = "群聊1"
+            Preconditions.get_into_group_chat_page(group_name)
+            gcp.click_setting()
+            gcs = GroupChatSetPage()
+            gcs.wait_for_page_load()
+            gcs.click_QRCode()
+            n = 1
+            while not gcs.page_should_contain_text2("该二维码7天内"):
+                gcs.click_back()
+                gcs.wait_for_page_load()
+                gcs.click_QRCode()
+                n += 1
+                if n > 10:
+                    break
+            code_page = GroupChatSetSeeQRCodePage()
+            code_page.wait_for_page_load()
+            gcs.click_qecode_share_button()
+            scg.wait_for_page_load()
+            scg.click_he_contacts()
+            shc.wait_for_he_contacts_page_load()
+            # 选择当前团队
+            shc.click_department_name(workbench_name)
+
 
 class MsgGroupChatTest(TestCase):
     """
@@ -1629,11 +1676,14 @@ class MsgGroupChatTest(TestCase):
         group_set = GroupChatSetPage()
         group_set.wait_for_page_load()
         group_set.click_QRCode()
-        time.sleep(5)
-        if group_set.is_text_present("二维码加载失败"):
+        n = 1
+        while not group_set.page_should_contain_text2("该二维码7天内"):
             group_set.click_back()
             group_set.wait_for_page_load()
             group_set.click_QRCode()
+            n += 1
+            if n > 10:
+                break
         code_page = GroupChatSetSeeQRCodePage()
         code_page.wait_for_page_load()
         # 2、在当前群聊展示页面，点击左下角的分享按钮，是否会跳转到联系人选择器页面
@@ -1665,11 +1715,14 @@ class MsgGroupChatTest(TestCase):
         group_set = GroupChatSetPage()
         group_set.wait_for_page_load()
         group_set.click_QRCode()
-        time.sleep(5)
-        if group_set.is_text_present("二维码加载失败"):
+        n = 1
+        while not group_set.page_should_contain_text2("该二维码7天内"):
             group_set.click_back()
             group_set.wait_for_page_load()
             group_set.click_QRCode()
+            n += 1
+            if n > 10:
+                break
         code_page = GroupChatSetSeeQRCodePage()
         code_page.wait_for_page_load()
         # 2、在当前群聊展示页面，点击右下角的下载按钮，是否会提示下载成功
@@ -2036,17 +2089,7 @@ class MsgGroupChatTest(TestCase):
         gcp.wait_for_page_load()
 
 @unittest.skip("暂时跳过")
-class messagegroupchat(TestCase):
-
-    # @classmethod
-    # def setUpClass(cls):
-    #     #Preconditions.select_mobile('Android-移动')
-    #     Preconditions.import_contacts()
-    #     current_mobile().launch_app()
-    #
-    # @classmethod
-    # def tearDownClass(cls):
-    #     Preconditions.delete_contact()
+class MessageGroupChatAllTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -2120,15 +2163,6 @@ class messagegroupchat(TestCase):
             Preconditions.make_already_in_message_page()
             Preconditions.get_into_group_chat_page(name)
 
-    # @staticmethod
-    # def setUp_test_msg_xiaoqiu_0173():
-    #     Preconditions.select_mobile('Android-移动')
-    #     Preconditions.make_already_in_message_page()
-    #     scp = SelectContactsPage()
-    #     scp.create_message_group()
-    #     time.sleep(1)
-    #     scp.click_back_by_android()
-
     @tags('ALL','CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0173(self):
         """分享群二维码——搜索选择一个群 """
@@ -2139,30 +2173,38 @@ class messagegroupchat(TestCase):
         gcs = GroupChatSetPage()
         gcs.wait_for_page_load()
         gcs.click_QRCode()
-        time.sleep(5)
-        if gcs.is_text_present("二维码加载失败"):
+        n = 1
+        while not gcs.page_should_contain_text2("该二维码7天内"):
             gcs.click_back()
             gcs.wait_for_page_load()
             gcs.click_QRCode()
+            n += 1
+            if n > 10:
+                break
         code_page = GroupChatSetSeeQRCodePage()
         code_page.wait_for_page_load()
+        # 1、点击左下角的分享按钮，会跳转到联系人选择器页面
         gcs.click_qecode_share_button()
-        time.sleep(1)
         scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2、点击选择一个群，可以进入到群聊列表展示页面
         scp.click_select_one_group()
-        time.sleep(1)
         sog = SelectOneGroupPage()
         sog.wait_for_page_load()
         sog.click_search_group()
+        # 3、搜索选中一个群，会弹出确认弹窗
         name = "群聊2"
         sog.input_search_keyword(name)
         time.sleep(1)
         sog.selecting_one_group_by_name(name)
         time.sleep(1)
         self.assertEquals(gcp.is_text_present("确定"), True)
+        # 4、点击取消，关闭弹窗，会停留在搜索结果展示页面
         sog.click_cancel_forward()
         time.sleep(1)
+        self.assertEquals(sog.is_exists_group_search_box(), True)
         sog.selecting_one_group_by_name(name)
+        # 5、点击确定，会关闭弹窗并弹出toast提示：已转发
         sog.click_sure_forward()
         self.assertEquals(gcp.is_exist_forward(), True)
         sog.click_back_by_android()
@@ -2170,280 +2212,414 @@ class messagegroupchat(TestCase):
         scp.click_back_by_android()
         gcp.wait_for_page_load()
 
-    @staticmethod
-    def setUp_test_msg_xiaoqiu_0174():
-        Preconditions.select_mobile('Android-移动')
-        Preconditions.make_already_in_message_page()
-        scp = SelectContactsPage()
-        scp.create_message_group()
-
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0174(self):
         """分享群二维码到——选择一个群 """
 
         gcp = GroupChatPage()
+        gcp.wait_for_page_load()
         gcp.click_setting()
-        time.sleep(1)
-        group_set = GroupChatSetPage()
-        group_set.wait_for_page_load()
-        group_set.click_QRCode()
-
-        group_set.click_qecode_share_button()
-        time.sleep(1)
+        gcs = GroupChatSetPage()
+        gcs.wait_for_page_load()
+        gcs.click_QRCode()
+        n = 1
+        while not gcs.page_should_contain_text2("该二维码7天内"):
+            gcs.click_back()
+            gcs.wait_for_page_load()
+            gcs.click_QRCode()
+            n += 1
+            if n > 10:
+                break
+        code_page = GroupChatSetSeeQRCodePage()
+        code_page.wait_for_page_load()
+        # 1、点击左下角的分享按钮，会跳转到联系人选择器页面
+        gcs.click_qecode_share_button()
         scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2、点击选择一个群，可以进入到群聊列表展示页面
         scp.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        # 3、点击选中一个群，会弹出确认弹窗
+        name = "群聊2"
+        sog.selecting_one_group_by_name(name)
         time.sleep(1)
-        scp.click_text('aaa')
-        time.sleep(2)
-        scp.click_text("取消")
-
-        scp.click_back_by_android(times=5)
-
-    @staticmethod
-    def setUp_test_msg_xiaoqiu_0175():
-        Preconditions.select_mobile('Android-移动')
-        Preconditions.make_already_in_message_page()
-        scp = SelectContactsPage()
-        scp.create_message_group()
+        self.assertEquals(gcp.is_text_present("确定"), True)
+        # 4、点击取消，关闭弹窗，会停留在群聊列表展示页面
+        sog.click_cancel_forward()
+        sog.wait_for_page_load()
+        sog.selecting_one_group_by_name(name)
+        # 5、点击确定，会关闭弹窗并弹出toast提示：已转发
+        sog.click_sure_forward()
+        self.assertEquals(gcp.is_exist_forward(), True)
+        sog.click_back_by_android()
+        gcs.wait_for_page_load()
+        scp.click_back_by_android()
+        gcp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0175(self):
         """分享群二维码到——选择选择团队联系人——搜索选择联系人 """
 
         gcp = GroupChatPage()
+        gcp.wait_for_page_load()
         gcp.click_setting()
-        time.sleep(1)
-        group_set = GroupChatSetPage()
-        group_set.wait_for_page_load()
-        group_set.click_QRCode()
-
-        group_set.click_qecode_share_button()
-        time.sleep(1)
+        gcs = GroupChatSetPage()
+        gcs.wait_for_page_load()
+        gcs.click_QRCode()
+        n = 1
+        while not gcs.page_should_contain_text2("该二维码7天内"):
+            gcs.click_back()
+            gcs.wait_for_page_load()
+            gcs.click_QRCode()
+            n += 1
+            if n > 10:
+                break
+        code_page = GroupChatSetSeeQRCodePage()
+        code_page.wait_for_page_load()
+        # 1、点击左下角的分享按钮，会跳转到联系人选择器页面
+        gcs.click_qecode_share_button()
         scp = SelectContactsPage()
-        scp.click_select_one_group()
+        scp.wait_for_page_load()
+        # 2、点击选择团队联系人，可以进入到企业展示列表
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 需要考虑测试号码存在多个团队的情况
+        Preconditions.if_exists_multiple_enterprises_enter_group_chat()
+        # 3、搜索选择团队联系人，会弹出确认弹窗
+        name = "大佬3"
+        shc.input_search(name)
+        shc.selecting_he_contacts_by_name(name)
         time.sleep(1)
-        scp.click_text('aaa')
-        time.sleep(2)
-        scp.click_text("确定")
-        scp.is_toast_exist("已转发")
-        scp.click_back_by_android(times=5)
-
-
-
-    @staticmethod
-    def setUp_test_msg_xiaoqiu_0176():
-        Preconditions.select_mobile('Android-移动')
-        Preconditions.make_already_in_message_page()
-        scp = SelectContactsPage()
-        scp.create_message_group()
+        self.assertEquals(shc.is_text_present("确定"), True)
+        # 4、点击取消，会关闭弹窗并停留在搜索结果展示页面
+        scp.click_cancel_forward()
+        time.sleep(1)
+        self.assertEquals(shc.is_exists_search_box(), True)
+        shc.selecting_he_contacts_by_name(name)
+        # 5、点击确定，会返回到群二维码分享页面并弹出toast提示：已转发
+        scp.click_sure_forward()
+        self.assertEquals(gcp.is_exist_forward(), True)
+        code_page.wait_for_page_load()
+        scp.click_back_by_android()
+        gcs.wait_for_page_load()
+        scp.click_back_by_android()
+        gcp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0176(self):
         """分享群二维码到——选择选择团队联系人——选择联系人 """
 
         gcp = GroupChatPage()
+        gcp.wait_for_page_load()
         gcp.click_setting()
-        time.sleep(1)
-        group_set = GroupChatSetPage()
-        group_set.wait_for_page_load()
-        group_set.click_QRCode()
-        group_set.click_qecode_share_button()
-        time.sleep(1)
+        gcs = GroupChatSetPage()
+        gcs.wait_for_page_load()
+        gcs.click_QRCode()
+        n = 1
+        while not gcs.page_should_contain_text2("该二维码7天内"):
+            gcs.click_back()
+            gcs.wait_for_page_load()
+            gcs.click_QRCode()
+            n += 1
+            if n > 10:
+                break
+        code_page = GroupChatSetSeeQRCodePage()
+        code_page.wait_for_page_load()
+        # 1、点击左下角的分享按钮，会跳转到联系人选择器页面
+        gcs.click_qecode_share_button()
         scp = SelectContactsPage()
-        scp.click_group_contact()
-        scp.click_group_chinasoft()
-        scp.click_group_contact_name()
-        scp.click_group_contact_member()
-        scp.click_text("取消")
+        scp.wait_for_page_load()
+        # 2、点击选择团队联系人，可以进入到企业展示列表
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 需要考虑测试号码存在多个团队的情况
+        Preconditions.if_exists_multiple_enterprises_enter_group_chat()
+        # 3、选择团队联系人，会弹出确认弹窗
+        name = "大佬3"
+        shc.selecting_he_contacts_by_name(name)
         time.sleep(1)
-        scp.click_group_contact_member()
-        scp.click_text("确定")
-        scp.is_toast_exist("已转发")
-        scp.click_back_by_android(times=5)
-
-    @staticmethod
-    def setUp_test_msg_xiaoqiu_0177():
-        Preconditions.select_mobile('Android-移动')
-        Preconditions.make_already_in_message_page()
-        scp = SelectContactsPage()
-        scp.create_message_group()
+        self.assertEquals(shc.is_text_present("确定"), True)
+        # 4、点击取消，会关闭弹窗并停留在搜索结果展示页面
+        scp.click_cancel_forward()
+        time.sleep(1)
+        self.assertEquals(shc.is_exists_search_box(), True)
+        shc.selecting_he_contacts_by_name(name)
+        # 5、点击确定，会返回到群二维码分享页面并弹出toast提示：已转发
+        scp.click_sure_forward()
+        self.assertEquals(gcp.is_exist_forward(), True)
+        code_page.wait_for_page_load()
+        scp.click_back_by_android()
+        gcs.wait_for_page_load()
+        scp.click_back_by_android()
+        gcp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0177(self):
         """分享群二维码到——选择手机联系人——搜索选择联系人 """
 
         gcp = GroupChatPage()
+        gcp.wait_for_page_load()
         gcp.click_setting()
-        time.sleep(1)
-        group_set = GroupChatSetPage()
-        group_set.wait_for_page_load()
-        group_set.click_QRCode()
-        group_set.click_qecode_share_button()
-        time.sleep(1)
+        gcs = GroupChatSetPage()
+        gcs.wait_for_page_load()
+        gcs.click_QRCode()
+        n = 1
+        while not gcs.page_should_contain_text2("该二维码7天内"):
+            gcs.click_back()
+            gcs.wait_for_page_load()
+            gcs.click_QRCode()
+            n += 1
+            if n > 10:
+                break
+        code_page = GroupChatSetSeeQRCodePage()
+        code_page.wait_for_page_load()
+        # 1、点击左下角的分享按钮，是否会跳转到联系人选择器页面
+        gcs.click_qecode_share_button()
         scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2、点击选择手机联系人，是否会进入到手机联系人展示列表
         scp.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        # 3、搜索选择手机联系人，是否会弹出确认弹窗
+        name = "大佬1"
+        slc.input_search_keyword(name)
         time.sleep(1)
-        scp.search(text='dalao')
-        scp.hide_keyboard()
-        time.sleep(2)
-        scp.click_cantact_avatar()
+        slc.selecting_local_contacts_by_name(name)
         time.sleep(1)
-        scp.click_text("取消")
+        self.assertEquals(gcp.is_text_present("确定"), True)
+        # 4、点击取消，会关闭弹窗，不会自动清除搜索结果
+        scp.click_cancel_forward()
         time.sleep(1)
-        scp.click_cantact_avatar()
-        time.sleep(1)
-        scp.click_text("确定")
-        scp.is_toast_exist("已转发")
-        scp.click_back_by_android(times=5)
-
-    @staticmethod
-    def setUp_test_msg_xiaoqiu_0178():
-        Preconditions.select_mobile('Android-移动')
-        Preconditions.make_already_in_message_page()
-        scp = SelectContactsPage()
-        scp.create_message_group()
+        self.assertEquals(slc.is_exists_local_contacts_by_name(name), True)
+        slc.selecting_local_contacts_by_name(name)
+        # 5、点击确定，会返回到群二维码分享页面并弹出toast提示：已转发
+        scp.click_sure_forward()
+        self.assertEquals(gcp.is_exist_forward(), True)
+        code_page.wait_for_page_load()
+        scp.click_back_by_android()
+        gcs.wait_for_page_load()
+        scp.click_back_by_android()
+        gcp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0178(self):
         """分享群二维码到——选择手机联系人——选择手机联系人 """
 
         gcp = GroupChatPage()
+        gcp.wait_for_page_load()
         gcp.click_setting()
-        time.sleep(1)
-        group_set = GroupChatSetPage()
-        group_set.wait_for_page_load()
-        group_set.click_QRCode()
-        group_set.click_qecode_share_button()
-        time.sleep(1)
+        gcs = GroupChatSetPage()
+        gcs.wait_for_page_load()
+        gcs.click_QRCode()
+        n = 1
+        while not gcs.page_should_contain_text2("该二维码7天内"):
+            gcs.click_back()
+            gcs.wait_for_page_load()
+            gcs.click_QRCode()
+            n += 1
+            if n > 10:
+                break
+        code_page = GroupChatSetSeeQRCodePage()
+        code_page.wait_for_page_load()
+        # 1、点击左下角的分享按钮，是否会跳转到联系人选择器页面
+        gcs.click_qecode_share_button()
         scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2、点击选择手机联系人，是否会进入到手机联系人展示列表
         scp.select_local_contacts()
-        time.sleep(2)
-        scp.click_one_local_contacts()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        # 3、选择手机联系人，是否会弹出确认弹窗
+        name = "大佬1"
+        slc.selecting_local_contacts_by_name(name)
         time.sleep(1)
-        scp.click_text("取消")
+        self.assertEquals(gcp.is_text_present("确定"), True)
+        # 4、点击取消，会关闭弹窗，不会自动清除搜索结果
+        scp.click_cancel_forward()
         time.sleep(1)
-        scp.click_one_local_contacts()
-        scp.click_text("确定")
-        scp.is_toast_exist("已转发")
-        scp.click_back_by_android(times=5)
-
-    @staticmethod
-    def setUp_test_msg_xiaoqiu_0179():
-        Preconditions.select_mobile('Android-移动')
-        Preconditions.make_already_in_message_page()
-        scp = SelectContactsPage()
-        scp.create_message_group()
+        self.assertEquals(slc.is_exists_local_contacts_by_name(name), True)
+        slc.selecting_local_contacts_by_name(name)
+        # 5、点击确定，会返回到群二维码分享页面并弹出toast提示：已转发
+        scp.click_sure_forward()
+        self.assertEquals(gcp.is_exist_forward(), True)
+        code_page.wait_for_page_load()
+        scp.click_back_by_android()
+        gcs.wait_for_page_load()
+        scp.click_back_by_android()
+        gcp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0179(self):
         """分享群二维码到——选择最近聊天 """
 
         gcp = GroupChatPage()
-        gcp.click_setting()
-        time.sleep(1)
-        group_set = GroupChatSetPage()
-        group_set.wait_for_page_load()
-        group_set.click_QRCode()
-        group_set.click_qecode_share_button()
-        time.sleep(1)
-        scp = SelectContactsPage()
-        scp.click_recent_contact()
+        gcp.wait_for_page_load()
+        # 给当前会话页面发送消息,确保最近聊天中有记录
+        gcp.input_text_message("111")
+        gcp.send_text()
         time.sleep(2)
-        scp.click_text("取消")
-        time.sleep(1)
-        scp.click_recent_contact()
-        time.sleep(1)
-        scp.click_text("确定")
-        scp.is_toast_exist("已转发")
-        scp.click_back_by_android(times=5)
-
-
-    @staticmethod
-    def setUp_test_msg_xiaoqiu_0180():
-        Preconditions.select_mobile('Android-移动')
-        Preconditions.make_already_in_message_page()
+        # 解决发送消息后，最近聊天窗口没有记录，需要退出刷新的问题
+        gcp.click_back()
+        group_name = "群聊1"
+        Preconditions.get_into_group_chat_page(group_name)
+        gcp.click_setting()
+        gcs = GroupChatSetPage()
+        gcs.wait_for_page_load()
+        gcs.click_QRCode()
+        n = 1
+        while not gcs.page_should_contain_text2("该二维码7天内"):
+            gcs.click_back()
+            gcs.wait_for_page_load()
+            gcs.click_QRCode()
+            n += 1
+            if n > 10:
+                break
+        code_page = GroupChatSetSeeQRCodePage()
+        code_page.wait_for_page_load()
+        # 1、点击左下角的分享按钮，是否会跳转到联系人选择器页面
+        gcs.click_qecode_share_button()
         scp = SelectContactsPage()
-        scp.create_message_group()
+        scp.wait_for_page_load()
+        # 2、点击选择最近聊天的联系人或者群聊，会弹出确认弹窗
+        scp.select_recent_chat_by_name(group_name)
+        time.sleep(1)
+        self.assertEquals(gcp.is_text_present("确定"), True)
+        # 3、点击取消，会关闭弹窗，不会自动清除搜索结果
+        scp.click_cancel_forward()
+        time.sleep(1)
+        self.assertEquals(scp.is_exists_recent_chat_by_name(group_name), True)
+        scp.select_recent_chat_by_name(group_name)
+        # 4、点击确定，会返回到群二维码分享页面并弹出toast提示：已转发
+        scp.click_sure_forward()
+        self.assertEquals(gcp.is_exist_forward(), True)
+        code_page.wait_for_page_load()
+        scp.click_back_by_android()
+        gcs.wait_for_page_load()
+        scp.click_back_by_android()
+        gcp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0180(self):
         """聊天会话窗口中——长按识别二维码 """
 
         gcp = GroupChatPage()
+        gcp.wait_for_page_load()
         gcp.click_setting()
-        time.sleep(1)
-        group_set = GroupChatSetPage()
-        group_set.wait_for_page_load()
-        group_set.click_QRCode()
-        group_set.click_qecode_share_button()
-        time.sleep(1)
+        gcs = GroupChatSetPage()
+        gcs.wait_for_page_load()
+        gcs.click_QRCode()
+        n = 1
+        while not gcs.page_should_contain_text2("该二维码7天内"):
+            gcs.click_back()
+            gcs.wait_for_page_load()
+            gcs.click_QRCode()
+            n += 1
+            if n > 10:
+                break
+        code_page = GroupChatSetSeeQRCodePage()
+        code_page.wait_for_page_load()
+        # 确保有群二维码图片可识别
+        gcs.click_qecode_share_button()
         scp = SelectContactsPage()
+        scp.wait_for_page_load()
         scp.click_select_one_group()
-        time.sleep(1)
-        scp.click_text('aaa')
-        time.sleep(2)
-        scp.click_text("确定")
-        time.sleep(1)
-        scp.click_back_by_android(times=2)
-        time.sleep(1)
-        scp.click_group_code()
-        time.sleep(1)
-        scp.press_xy()
-        time.sleep(2)
-        scp.click_recognize_code()
-        time.sleep(1)
-        scp.is_text_present("aaa")
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        name = "群聊2"
+        sog.selecting_one_group_by_name(name)
+        scp.click_sure_forward()
+        code_page.wait_for_page_load()
         scp.click_back_by_android()
-
-    @staticmethod
-    def setUp_test_msg_xiaoqiu_0182():
-        Preconditions.select_mobile('Android-移动')
-        Preconditions.make_already_in_message_page()
-        scp = SelectContactsPage()
-        scp.create_message_group(text='bbb')
+        gcs.wait_for_page_load()
+        scp.click_back_by_android()
+        gcp.wait_for_page_load()
+        scp.click_back_by_android()
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.choose_chat_by_name(name)
+        gcp.wait_for_page_load()
+        # 1、点击放大二维码图片
+        gcp.click_msg_image(-1)
+        time.sleep(1)
+        # 2、长按二维码图片，会弹出功能菜单列表
+        gcp.press_xy()
+        # 3、点击识别图中的二维码，识别成功后，会自动跳转到群聊会话页面
+        gcp.click_text("识别图中二维码")
+        gcp.wait_for_page_load()
+        group_name = "群聊1"
+        self.assertEquals(gcp.is_exists_group_by_name(group_name), True)
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0182(self):
         """聊天会话窗口中——长按识别二维码 """
 
         gcp = GroupChatPage()
-        scp = SelectContactsPage()
+        gcp.wait_for_page_load()
         gcp.click_setting()
-        time.sleep(1)
-        group_set = GroupChatSetPage()
-        group_set.wait_for_page_load()
-        group_set.click_QRCode()
-        group_set.click_qecode_download_button()
-        group_set.is_toast_exist("已保存")
+        gcs = GroupChatSetPage()
+        gcs.wait_for_page_load()
+        gcs.click_QRCode()
+        n = 1
+        while not gcs.page_should_contain_text2("该二维码7天内"):
+            gcs.click_back()
+            gcs.wait_for_page_load()
+            gcs.click_QRCode()
+            n += 1
+            if n > 10:
+                break
+        code_page = GroupChatSetSeeQRCodePage()
+        code_page.wait_for_page_load()
+        # 确保有群二维码图片可识别
+        gcs.click_qecode_share_button()
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        scp.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        name = "群聊2"
+        sog.selecting_one_group_by_name(name)
+        scp.click_sure_forward()
+        code_page.wait_for_page_load()
         scp.click_back_by_android()
+        gcs.wait_for_page_load()
+        gcs.click_delete_and_exit()
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.choose_chat_by_name(name)
+        gcp.wait_for_page_load()
+        # 1、点击放大二维码图片
+        gcp.click_msg_image(-1)
         time.sleep(1)
-        scp.page_up()
-        time.sleep(1)
-        group_set.click_delete_and_exit()
-        time.sleep(3)
-        group_set.click_sure()
-        time.sleep(1)
-        scp.create_message_group(text='aaa')
-        gcp = GroupChatPage()
-        # 点击图片按钮
-        gcp.click_pic()
-        cpg = ChatPicPage()
-        cpg.wait_for_page_load()
-        # 2.选择一张照片，点击右下角高亮展示的发送按钮，发送此照片
-        cpg.select_pic()
-        # 发送按钮可点击
-        self.assertTrue(cpg.send_btn_is_enabled())
-        cpg.click_send()
-        time.sleep(3)
-        scp.click_group_code()
-        time.sleep(1)
-        scp.press_xy()
-        time.sleep(2)
-        scp.click_recognize_code()
-        time.sleep(5)
-        scp.is_text_present("群已解散")
-        scp.click_back_by_android(times=4)
+        # 2、长按二维码图片
+        gcp.press_xy()
+        # 3、点击识别图中的二维码，识别成功后，会自动跳转到：群聊邀请详情页并展示：群聊已解散的提示
+        gcp.click_text("识别图中二维码")
+        self.assertEquals(gcp.page_should_contain_text2("群已解散"), True)
 
+    @staticmethod
+    def tearDown_test_msg_xiaoqiu_0182():
+        """恢复环境"""
+
+        Preconditions.make_already_in_message_page()
+        cp = ContactsPage()
+        cp.open_contacts_page()
+        if cp.is_text_present("发现SIM卡联系人"):
+            cp.click_text("显示")
+        cp.open_group_chat_list()
+        glp = GroupListPage()
+        glp.wait_for_page_load()
+        group_name = "群聊1"
+        glp.create_group_chats_if_not_exits(group_name, ['大佬1', '大佬2'])
+        time.sleep(1)
+        glp.click_back_by_android()
+        cp.open_message_page()
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        Preconditions.get_into_group_chat_page(group_name)
 
     @staticmethod
     def setUp_test_msg_xiaoqiu_0183():

@@ -146,6 +146,8 @@ class MsgAllPrior(TestCase):
         group_set.click_back()
         group_chat_page.wait_for_page_load()
         group_chat_page.input_message("this is a test message")
+        group_chat_page.send_text()
+        group_chat_page.input_message("this is a test message")
         group_chat_page.click_back()
         msg_page = MessagePage()
         msg_page.wait_for_page_load()

@@ -89,14 +89,14 @@ class OfficialAccountTest(TestCase):
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_contacts_quxinli_0323(self):
-        """公众号列表为空"""
+        """企业号列表显示为空"""
         official_account = OfficialAccountPage()
         official_account.click_tag('企业号')
         official_account.assert_enterprise_account_list_is_empty()
 
     @unittest.skip('脚本无法操作搜索公众号页面')
     def test_Conts_OfficialAccount_0002(self):
-        """公众号列表为空"""
+        """搜索公众号"""
         official_account = OfficialAccountPage()
         official_account.click_tag('订阅/服务号')
         official_account.click_add()
@@ -105,7 +105,6 @@ class OfficialAccountTest(TestCase):
         search.input_search_key('1')
         search.subscribe_first_items(12)
         print('test')
-
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_quxinli_0322(self):
@@ -118,32 +117,42 @@ class OfficialAccountTest(TestCase):
         conts_page.is_text_present('中国移动10086')
 
     @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_0323(self):
-        """公众号会话页面"""
+    def test_contacts_quxinli_0324(self):
+        """公众号会话页面(未配置底部菜单栏)"""
         official = OfficialAccountPage()
         official.click_officel_account()
         time.sleep(2)
         official.page_contain_expresssion()
         official.page_contain_send_button()
+        official.send_btn_is_clickable()
         official.page_contain_news()
         official.page_contain_setting()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_0324(self):
-        """公众号会话页面,查看输入框"""
+    def test_contacts_quxinli_0325(self):
+        """公众号会话页面(配置底部菜单栏)"""
         official = OfficialAccountPage()
-        official.click_officel_account()
+        official.select_one_account_by_name('和飞信')
         time.sleep(2)
-        official.page_contain_expresssion()
-        official.page_contain_send_button()
-        official.page_contain_news()
+        official.page_contain_element(text='公众号标题')
         official.page_contain_setting()
-        official.click_input_box()
+        official.page_contain_keyboard()
+        official.page_should_contain_element_menu()
+        #点击键盘
+        official.click_keyboard()
+        time.sleep(2)
         official.page_contain_input_box()
+        official.page_contain_expresssion()
+        official.page_contain_send_button()
+        official.send_btn_is_clickable()
+        #再次点击键盘图标
+        official.click_keyboard()
+        time.sleep(2)
+        official.page_should_contain_element_menu()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_0325(self):
-        """公众号会话页面,发送信息"""
+    def test_contacts_quxinli_0326(self):
+        """公众号会话页面发送文本消息"""
         official = OfficialAccountPage()
         official.click_officel_account()
         time.sleep(2)
@@ -154,8 +163,8 @@ class OfficialAccountTest(TestCase):
         official.page_should_contain_text('good news')
 
     @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_0326(self):
-        """公众号会话页面，发送表情"""
+    def test_contacts_quxinli_0327(self):
+        """公众号会话页面发送表情消息"""
         official = OfficialAccountPage()
         official.click_officel_account()
         time.sleep(2)
@@ -166,7 +175,6 @@ class OfficialAccountTest(TestCase):
         official.click_expression('expression_keyboard')
         official.page_should_not_contain_sendfail_element()
         official.page_should_contain_text('[微笑1]')
-
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_quxinli_0328(self):
@@ -186,7 +194,7 @@ class OfficialAccountTest(TestCase):
         official.page_should_contain_text('[微笑1]')
 
     @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_0328(self):
+    def test_contacts_quxinli_0329(self):
         """公众号会话页面，发送长信息"""
         official = OfficialAccountPage()
         official.click_officel_account()
@@ -199,7 +207,7 @@ class OfficialAccountTest(TestCase):
         official.page_should_contain_text(mesaage)
 
     @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_0329(self):
+    def test_contacts_quxinli_0330(self):
         """公众号会话页面发送链接消息"""
         official = OfficialAccountPage()
         official.click_officel_account()
@@ -217,7 +225,7 @@ class OfficialAccountTest(TestCase):
         official.page_should_contain_text("百度一下")
 
     @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_0330(self):
+    def test_contacts_quxinli_0331(self):
         """公众号会话页面网络异常情况下发送消息"""
         conts_page = ContactsPage()
         official = OfficialAccountPage()
@@ -237,7 +245,7 @@ class OfficialAccountTest(TestCase):
         official.page_should_not_contain_sendfail_element()
 
     @staticmethod
-    def tearDown_test_contacts_0330():
+    def tearDown_test_contacts_0331():
         # 初始化,恢复网络
         conts_page = ContactsPage()
         conts_page.set_network_status(6)
@@ -260,7 +268,7 @@ class OfficialAccountTest(TestCase):
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_quxinli_0334(self):
-        """公众号置顶"""
+        """公众号详情-置顶公众号"""
         official = OfficialAccountPage()
         official.click_officel_account()
         time.sleep(1)
@@ -289,7 +297,7 @@ class OfficialAccountTest(TestCase):
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_quxinli_0335(self):
-        """查看历史资讯"""
+        """公众号详情-查看历史资讯"""
         official = OfficialAccountPage()
         official.click_officel_account()
         time.sleep(1)
