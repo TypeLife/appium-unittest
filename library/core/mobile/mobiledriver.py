@@ -19,7 +19,7 @@ from library.core.TestLogger import TestLogger
 
 
 class MobileDriver(ABC):
-    def __init__(self, alis_name, model_info, command_executor='http://127.0.0.1:4724/wd/hub',
+    def __init__(self, alis_name, model_info, command_executor='http://127.0.0.1:4444/wd/hub',
                  desired_capabilities=None, browser_profile=None, proxy=None, keep_alive=False, card_slot=None):
         self._alis = alis_name
         self._model_info = model_info
