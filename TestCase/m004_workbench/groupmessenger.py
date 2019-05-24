@@ -101,11 +101,11 @@ class Preconditions(WorkbenchPreconditions):
         wbp.click_add_group_messenger()
         n = 1
         # 解决工作台不稳定问题
-        while wbp.is_on_workbench_page():
-            n += 1
-            if n > 10:
-                break
+        while not wbp.page_should_contain_text2("新建短信"):
             wbp.click_group_messenger()
+            n += 1
+            if n > 20:
+                break
 
     @staticmethod
     def add_phone_number_to_department(department_name):
@@ -694,6 +694,8 @@ class MassMessengerAllTest(TestCase):
                 mp.open_workbench_page()
                 wbp = WorkbenchPage()
                 Preconditions.delete_department_by_name("admin_department")
+                # 查找并点击所有展开元素
+                wbp.find_and_click_open_element()
                 # 解决用户部门变更后不能及时刷新的问题
                 wbp.click_company_contacts()
                 ecp = EnterpriseContactsPage()
@@ -705,14 +707,14 @@ class MassMessengerAllTest(TestCase):
                 if sccp.is_exist_department_name():
                     ecp.click_back()
                 wbp.wait_for_workbench_page_load()
-                # wbp.click_group_messenger()
-                # n = 1
-                # # 解决工作台不稳定问题
-                # while wbp.is_on_workbench_page():
-                #     n += 1
-                #     if n > 10:
-                #         break
-                #     wbp.click_group_messenger()
+                wbp.click_group_messenger()
+                n = 1
+                # 解决工作台不稳定问题
+                while not wbp.page_should_contain_text2("新建短信"):
+                    wbp.click_group_messenger()
+                    n += 1
+                    if n > 20:
+                        break
                 return
             except:
                 fail_time += 1
@@ -775,6 +777,8 @@ class MassMessengerAllTest(TestCase):
                 mp.open_workbench_page()
                 wbp = WorkbenchPage()
                 Preconditions.delete_department_by_name("admin_department")
+                # 查找并点击所有展开元素
+                wbp.find_and_click_open_element()
                 # 解决用户部门变更后不能及时刷新的问题
                 wbp.click_company_contacts()
                 ecp = EnterpriseContactsPage()
@@ -786,14 +790,14 @@ class MassMessengerAllTest(TestCase):
                 if sccp.is_exist_department_name():
                     ecp.click_back()
                 wbp.wait_for_workbench_page_load()
-                # wbp.click_group_messenger()
-                # n = 1
-                # # 解决工作台不稳定问题
-                # while wbp.is_on_workbench_page():
-                #     n += 1
-                #     if n > 10:
-                #         break
-                #     wbp.click_group_messenger()
+                wbp.click_group_messenger()
+                n = 1
+                # 解决工作台不稳定问题
+                while not wbp.page_should_contain_text2("新建短信"):
+                    wbp.click_group_messenger()
+                    n += 1
+                    if n > 20:
+                        break
                 return
             except:
                 fail_time += 1
@@ -858,6 +862,8 @@ class MassMessengerAllTest(TestCase):
                 wbp = WorkbenchPage()
                 Preconditions.delete_department_by_name("admin_department1")
                 Preconditions.delete_department_by_name("admin_department2")
+                # 查找并点击所有展开元素
+                wbp.find_and_click_open_element()
                 # 解决用户部门变更后不能及时刷新的问题
                 wbp.click_company_contacts()
                 ecp = EnterpriseContactsPage()
@@ -869,14 +875,14 @@ class MassMessengerAllTest(TestCase):
                 if sccp.is_exist_department_name():
                     ecp.click_back()
                 wbp.wait_for_workbench_page_load()
-                # wbp.click_group_messenger()
-                # n = 1
-                # # 解决工作台不稳定问题
-                # while wbp.is_on_workbench_page():
-                #     n += 1
-                #     if n > 10:
-                #         break
-                #     wbp.click_group_messenger()
+                wbp.click_group_messenger()
+                n = 1
+                # 解决工作台不稳定问题
+                while not wbp.page_should_contain_text2("新建短信"):
+                    wbp.click_group_messenger()
+                    n += 1
+                    if n > 20:
+                        break
                 return
             except:
                 fail_time += 1

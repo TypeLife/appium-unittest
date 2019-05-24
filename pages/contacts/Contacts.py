@@ -102,14 +102,14 @@ class ContactsPage(FooterPage):
     @TestLogger.log()
     def find_element_by_swipe(self, locator, times=15):
         """找不到元素就滑动"""
-        if self._is_element_present(locator):
-            return self.get_element(locator)
+        if self._is_element_present(self.__class__.__locators[locator]):
+            return self.get_element(self.__class__.__locators[locator])
         else:
             c = 0
             while c < times:
-                self.page_up()
-                if self._is_element_present(locator):
-                    return self.get_element(locator)
+                self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+                if self._is_element_present(self.__class__.__locators[locator]):
+                    return self.get_element(self.__class__.__locators[locator])
                 c += 1
             return None
 
@@ -181,21 +181,6 @@ class ContactsPage(FooterPage):
         else:
             raise AssertionError("m005_contacts is empty!")
         return phones
-
-
-    def get_all_phone_number(self,times=10):
-        els = self.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/tv_number'))
-        time=0
-        phones=[]
-        while time < times:
-            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
-            if els:
-                for el in els:
-                    phones.append(el.text)
-
-            time += 1
-            return phones
-
 
     def page_up(self):
         """向上滑动一页"""
@@ -438,9 +423,10 @@ class ContactsPage(FooterPage):
         max_try = 20
         current = 0
         while current < max_try:
-            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+
             if self._is_element_present(locator):
                 break
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
             current += 1
         self.click_element(locator)
 

@@ -2628,7 +2628,7 @@ class MessageGroupChatAllTest(TestCase):
         scp = SelectContactsPage()
         scp.create_message_group(text='bbb')
 
-    @tags('ALL', 'CMCC', 'group_chat',"high")
+    @unittest.skip("用例有误，跳过")
     def test_msg_xiaoqiu_0183(self):
         """聊天会话窗口中——长按识别二维码 """
 
@@ -2675,7 +2675,7 @@ class MessageGroupChatAllTest(TestCase):
         scp = SelectContactsPage()
         scp.create_message_group(text='bbb')
 
-    @tags('ALL', 'CMCC', 'group_chat',"high")
+    @unittest.skip("用例有误，跳过")
     def test_msg_xiaoqiu_0185(self):
         """聊天会话窗口中——长按识别二维码"""
 
@@ -2715,87 +2715,87 @@ class MessageGroupChatAllTest(TestCase):
         scp.is_text_present("群已解散")
         scp.click_back_by_android(times=4)
 
-    @staticmethod
-    def setUp_test_msg_xiaoqiu_0186():
-        Preconditions.select_mobile('Android-移动')
-        Preconditions.make_already_in_message_page()
-        scp = SelectContactsPage()
-        scp.create_message_group(text='bbb')
-
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0186(self):
         """群二维码详情页——保存二维码"""
 
         gcp = GroupChatPage()
-        scp = SelectContactsPage()
+        gcp.wait_for_page_load()
         gcp.click_setting()
-        time.sleep(1)
-        group_set = GroupChatSetPage()
-        group_set.wait_for_page_load()
-        group_set.click_QRCode()
-        group_set.click_qecode_download_button()
-        group_set.is_toast_exist("已保存")
-        scp.click_back_by_android()
-        time.sleep(1)
-        scp.page_up()
-        time.sleep(1)
-        group_set.click_delete_and_exit()
-        time.sleep(3)
-        group_set.click_sure()
-        time.sleep(1)
-        scp.click_back_by_android()
-
-    @staticmethod
-    def setUp_test_msg_xiaoqiu_0188():
-        Preconditions.select_mobile('Android-移动')
-        Preconditions.make_already_in_message_page()
-        scp = SelectContactsPage()
-        scp.create_message_group(text='bbb')
+        gcs = GroupChatSetPage()
+        gcs.wait_for_page_load()
+        gcs.click_QRCode()
+        n = 1
+        while not gcs.page_should_contain_text2("该二维码7天内"):
+            gcs.click_back()
+            gcs.wait_for_page_load()
+            gcs.click_QRCode()
+            n += 1
+            if n > 10:
+                break
+        code_page = GroupChatSetSeeQRCodePage()
+        code_page.wait_for_page_load()
+        code_page.click_qecode_save_btn()
+        # 1、在群二维码详情页，点击右下角的下载按钮，下载成功后，会弹出toast提示：已保存
+        self.assertEquals(code_page.is_toast_exist("已保存"), True)
+        code_page.click_back_by_android()
+        gcs.wait_for_page_load()
+        gcs.click_back_by_android()
+        gcp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0188(self):
         """群聊设置页面——进入到群管理详情页"""
-        gcp = GroupChatPage()
-        scp = SelectContactsPage()
-        gcp.click_setting()
-        time.sleep(1)
-        group_set = GroupChatSetPage()
-        group_set.wait_for_page_load()
-        group_set.click_group_manage()
-        group_set.click_group_manage_transfer_button()
-        group_set.is_toast_exist("暂无群成员")
-        scp.click_back_by_android(times=3)
 
-    @staticmethod
-    def setUp_test_msg_xiaoqiu_0195():
-        Preconditions.select_mobile('Android-移动')
-        Preconditions.make_already_in_message_page()
-        scp = SelectContactsPage()
-        scp.create_message_group()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gcs = GroupChatSetPage()
+        gcs.wait_for_page_load()
+        # 1、点击群管理，进入到群管理详情页
+        gcs.click_group_manage()
+        gcs.wait_for_group_manage_load()
+        # 2、点击群主管理权转让，会弹出toast提示：暂无群成员并且停留在当前页
+        gcs.click_group_manage_transfer_button()
+        self.assertEquals(gcs.is_toast_exist("暂无群成员"), True)
+        gcs.wait_for_group_manage_load()
+        # 3、点击左上角的返回按钮，可以返回到群聊设置页
+        gcs.click_group_manage_back_button()
+        gcs.wait_for_page_load()
+        gcs.click_back()
+        gcp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0195(self):
         """群聊设置页面——查找聊天内容"""
+
         gcp = GroupChatPage()
-        scp = SelectContactsPage()
-        info = "Hello everyone"
-        gcp.input_message(info)
-        # 2.点击输入框右边高亮展示的发送按钮，发送此段文本
-        gcp.page_should_contain_send_btn()
-        gcp.send_message()
-        gcp.page_should_contain_text(info)
-        scp.click_back_by_android(times=1)
-        time.sleep(1)
-        scp.click_text('aaa')
-        time.sleep(1)
-        gcp.page_should_contain_text(info)
-        scp.click_back_by_android(times=1)
-        time.sleep(1)
-        scp = SelectContactsPage()
-        scp.click_group_search()
-        scp.group_search(text='aaa')
-        gcp.page_should_contain_text("aaa")
-        scp.click_back_by_android(times=1)
+        gcp.wait_for_page_load()
+        text = "12345"
+        gcp.input_text_message(text)
+        gcp.send_text()
+        time.sleep(2)
+        gcp.click_setting()
+        gcs = GroupChatSetPage()
+        gcs.wait_for_page_load()
+        gcs.click_find_chat_record()
+        gcf = GroupChatSetFindChatContentPage()
+        gcf.wait_for_page_load()
+        gcf.search(text)
+        # 1、点击聊天内容入口，跳转到聊天内容页面
+        gcf.select_message_record_by_text(text)
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gcs.wait_for_page_load()
+        gcs.click_find_chat_record()
+        gcf.wait_for_page_load()
+        # 2、点击顶部的搜索框，调起小键盘
+        gcf.click_search_box()
+        self.assertEquals(gcf.is_keyboard_shown(), True)
+        gcf.click_back()
+        gcs.wait_for_page_load()
+        gcs.click_back()
+        gcp.wait_for_page_load()
 
     @staticmethod
     def setUp_test_msg_xiaoqiu_0197():

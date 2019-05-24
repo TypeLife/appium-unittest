@@ -65,6 +65,7 @@ class ContactDetailsPage(BasePage):
         '我知道了': (MobileBy.XPATH, '//*[@text="我知道了"]'),
         '快捷方式-确定添加': (MobileBy.ID, "android:id/button1"),
         '快捷方式-取消添加': (MobileBy.ID, "android:id/button2"),
+        "和飞信电话-挂断电话": (MobileBy.ID, "com.android.incallui:id/declinebutton"),
 
     }
 
@@ -108,6 +109,11 @@ class ContactDetailsPage(BasePage):
     def cancel_call(self):
         time.sleep(7)
         self.click_element(self.__locators["挂断电话"])
+
+    @TestLogger.log("挂断和飞信电话")
+    def cancel_hefeixin_call(self):
+        time.sleep(7)
+        self.click_element(self.__locators["和飞信电话-挂断电话"])
 
     @TestLogger.log("结束通话")
     def click_end_call(self):
