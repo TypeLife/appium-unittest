@@ -3407,6 +3407,8 @@ class MsgCommonGroupTest(TestCase):
             try:
                 cwp.wait_for_msg_send_status_become_to('发送成功', 10)
             except TimeoutException:
+                if cwp.is_text_present("退出"):
+                    cwp.click_text("退出")
                 raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
             audio.click_exit()
             gcp.hide_keyboard()
@@ -3456,6 +3458,8 @@ class MsgCommonGroupTest(TestCase):
             try:
                 cwp.wait_for_msg_send_status_become_to('发送成功', 10)
             except TimeoutException:
+                if cwp.is_text_present("退出"):
+                    cwp.click_text("退出")
                 raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
             dex += 1
         gcp.press_file_to_do("哈哈0", "多选")
@@ -3971,6 +3975,8 @@ class MsgCommonGroupTest(TestCase):
         try:
             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
         except TimeoutException:
+            if cwp.is_text_present("退出"):
+                cwp.click_text("退出")
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
         audio.click_exit()
         gcp.hide_keyboard()
@@ -4010,6 +4016,8 @@ class MsgCommonGroupTest(TestCase):
         try:
             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
         except TimeoutException:
+            if cwp.is_text_present("退出"):
+                cwp.click_text("退出")
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
         audio.click_exit()
         gcp.hide_keyboard()
@@ -4047,6 +4055,8 @@ class MsgCommonGroupTest(TestCase):
         try:
             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
         except TimeoutException:
+            if cwp.is_text_present("退出"):
+                cwp.click_text("退出")
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
         audio.click_exit()
         gcp.hide_keyboard()
