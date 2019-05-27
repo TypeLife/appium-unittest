@@ -107,10 +107,18 @@ class Preconditions(WorkbenchPreconditions):
         # 获取已有群名
         sog = SelectOneGroupPage()
         sog.wait_for_page_load()
-        group_names = sog.get_group_name()
-        # 有群返回，无群创建
-        if group_name in group_names:
+        sog.click_search_group()
+        time.sleep(2)
+        sog.input_search_keyword(group_name)
+        time.sleep(2)
+        if sog.is_element_exit("群聊名"):
+            current_mobile().back()
+            time.sleep(2)
+            current_mobile().back()
             return
+        current_mobile().back()
+        time.sleep(2)
+        current_mobile().back()
         sog.click_back()
         mess.wait_for_page_load()
         # 点击 +
@@ -157,7 +165,7 @@ class Preconditions(WorkbenchPreconditions):
         if sogp.is_on_this_page():
             group_name = Preconditions.get_group_chat_name()
             # 点击群名，进入群聊页面
-            sogp.select_one_group_by_name(group_name)
+            sogp.click_one_contact(group_name)
             scp.wait_for_page_load()
         if scp.is_on_this_page():
             return
