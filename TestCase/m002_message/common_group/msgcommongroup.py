@@ -5207,7 +5207,7 @@ class MsgCommonGroupAllTest(TestCase):
             #     raise AssertionError("文本消息没有放大展示")
 
     # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    @unittest.skip("过")
+    @unittest.skip("过跳过")
     def test_msg_xiaoqiu_0028(self):
         """进入到群聊天会话页面，录入500个表情字符，缩小发送"""
         gcp=GroupChatPage()
