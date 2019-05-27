@@ -189,7 +189,10 @@ class MessagePage(FooterPage):
         self.click_element(self.__locators['通讯录'])
         if ContactsPage().is_text_present('需要使用通讯录权限'):
             ContactsPage().click_always_allowed()
-        ContactsPage().click_sim_contact()
+        time.sleep(1)
+        if ContactsPage().is_text_present('发现SIM卡联系人'):
+            ContactsPage().click_text('显示')
+        time.sleep(2)
 
     @TestLogger.log()
     def click_contacts_only(self):

@@ -1860,7 +1860,7 @@ class MsgCommonGroupTest(TestCase):
         gcsp.wait_for_page_load()
         # 点击“-”按钮
         gcsp.click_del_member()
-        time.sleep(1)
+        time.sleep(3)
         if gcsp.is_text_present("移除群成员"):
             raise AssertionError("在一人情况下还可以进入移除群成员页面")
         gcsp.click_back()
@@ -3407,6 +3407,8 @@ class MsgCommonGroupTest(TestCase):
             try:
                 cwp.wait_for_msg_send_status_become_to('发送成功', 10)
             except TimeoutException:
+                if cwp.is_text_present("退出"):
+                    cwp.click_text("退出")
                 raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
             audio.click_exit()
             gcp.hide_keyboard()
@@ -3456,6 +3458,8 @@ class MsgCommonGroupTest(TestCase):
             try:
                 cwp.wait_for_msg_send_status_become_to('发送成功', 10)
             except TimeoutException:
+                if cwp.is_text_present("退出"):
+                    cwp.click_text("退出")
                 raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
             dex += 1
         gcp.press_file_to_do("哈哈0", "多选")
@@ -3971,6 +3975,8 @@ class MsgCommonGroupTest(TestCase):
         try:
             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
         except TimeoutException:
+            if cwp.is_text_present("退出"):
+                cwp.click_text("退出")
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
         audio.click_exit()
         gcp.hide_keyboard()
@@ -4010,6 +4016,8 @@ class MsgCommonGroupTest(TestCase):
         try:
             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
         except TimeoutException:
+            if cwp.is_text_present("退出"):
+                cwp.click_text("退出")
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
         audio.click_exit()
         gcp.hide_keyboard()
@@ -4047,6 +4055,8 @@ class MsgCommonGroupTest(TestCase):
         try:
             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
         except TimeoutException:
+            if cwp.is_text_present("退出"):
+                cwp.click_text("退出")
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
         audio.click_exit()
         gcp.hide_keyboard()
@@ -5197,7 +5207,7 @@ class MsgCommonGroupAllTest(TestCase):
             #     raise AssertionError("文本消息没有放大展示")
 
     # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    @unittest.skip("过")
+    @unittest.skip("过跳过")
     def test_msg_xiaoqiu_0028(self):
         """进入到群聊天会话页面，录入500个表情字符，缩小发送"""
         gcp=GroupChatPage()
@@ -5227,7 +5237,7 @@ class MsgCommonGroupAllTest(TestCase):
         gcp.hide_keyboard()
 
     # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    @unittest.skip("过")
+    @unittest.skip("先跳过")
     def test_msg_xiaoqiu_0032(self):
         """进入到群聊天会话页面，录入500个表情字符，放大发送"""
         gcp = GroupChatPage()
