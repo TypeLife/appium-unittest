@@ -1860,7 +1860,7 @@ class MsgCommonGroupTest(TestCase):
         gcsp.wait_for_page_load()
         # 点击“-”按钮
         gcsp.click_del_member()
-        time.sleep(1)
+        time.sleep(3)
         if gcsp.is_text_present("移除群成员"):
             raise AssertionError("在一人情况下还可以进入移除群成员页面")
         gcsp.click_back()
