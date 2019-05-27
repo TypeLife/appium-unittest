@@ -5977,7 +5977,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.enter_group_chat_page()
 
     # @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
-    @unittest.skip("跳过")
+    @unittest.skip("先跳过")
     def test_msg_xiaoqiu_0095(self):
         """当前版本，消息语音icon上红点展示后，清除数据重新登录"""
         gcp = GroupChatPage()
