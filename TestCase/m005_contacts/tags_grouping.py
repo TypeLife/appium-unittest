@@ -708,7 +708,9 @@ class Tag_Group(TestCase):
         """新建分组,标签分组名称输入9个汉字"""
         GroupPage = GroupListPage()
         GroupPage.open_contacts_page()
+        time.sleep(2)
         GroupPage.click_label_grouping()
+        GroupPage.delete_group(name='祝一路顺风幸福美满')
         GroupPage.click_new_group()
         GroupPage.click_input_element()
         time.sleep(1)
@@ -721,10 +723,11 @@ class Tag_Group(TestCase):
     def tearDown_test_contacts_quxinli_0356(self):
         Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
+        time.sleep(2)
         ContactsPage().click_label_grouping()
         time.sleep(1)
         GroupPage = GroupListPage()
-        GroupPage.delete_group(text='祝一路顺风幸福美满')
+        GroupPage.delete_group(name='祝一路顺风幸福美满')
 
     @staticmethod
     def setUp_test_contacts_quxinli_0357():

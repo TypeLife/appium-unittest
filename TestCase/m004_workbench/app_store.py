@@ -293,10 +293,10 @@ class AppStoreAllTest(TestCase):
     def test_YYSC_0007(self):
         """个人专区添加应用"""
 
-        # 确保不存在指定应用
+        # 确保不存在指定个人应用
         app_name = "帮助中心"
-        # Preconditions.ensure_not_exists_personal_app_by_name(app_name)
-        Preconditions.ensure_not_exists_app_by_name(app_name)
+        Preconditions.ensure_not_exists_personal_app_by_name(app_name)
+        # Preconditions.ensure_not_exists_app_by_name(app_name)
         # 添加工作台里的应用
         wbp = WorkbenchPage()
         wbp.click_app_store()
@@ -308,9 +308,10 @@ class AppStoreAllTest(TestCase):
         # 2.添加指定应用
         asp.add_app_by_name(app_name)
         time.sleep(2)
-        asp.click_add_app()
+        # asp.click_add_app()
+        asp.click_sure()
         # 3.添加成功，添加按钮是否变化为打开按钮
-        self.assertEquals(asp.is_toast_exist("添加应用成功"), True)
+        # self.assertEquals(asp.is_toast_exist("添加应用成功"), True)
         asp.wait_for_personal_area_page_load()
         self.assertEquals(asp.get_app_button_text_by_name(app_name), "打开")
         asp.click_back()
