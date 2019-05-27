@@ -133,6 +133,7 @@ class Preconditions(WorkbenchPreconditions):
             shc.wait_for_he_contacts_page_load()
             # 选择当前团队
             shc.click_department_name(workbench_name)
+            time.sleep(2)
 
 
 class MsgPrivateChatVideoPicTest(TestCase):

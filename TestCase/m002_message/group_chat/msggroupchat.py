@@ -884,6 +884,7 @@ class MsgGroupChatTest(TestCase):
         csf = ChatSelectFilePage()
         csf.wait_for_page_load()
         csf.click_pic()
+        time.sleep(2)
         local_file = ChatSelectLocalFilePage()
         self.assertFalse(local_file.send_btn_is_enabled())
         # 4、选择一张照片之后，左下角是否会展示当前选择照片的大小，右下角的发送按钮变成高亮展示
