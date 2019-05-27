@@ -5237,7 +5237,7 @@ class MsgCommonGroupAllTest(TestCase):
         gcp.hide_keyboard()
 
     # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    @unittest.skip("过")
+    @unittest.skip("先跳过")
     def test_msg_xiaoqiu_0032(self):
         """进入到群聊天会话页面，录入500个表情字符，放大发送"""
         gcp = GroupChatPage()
