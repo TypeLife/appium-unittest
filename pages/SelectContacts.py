@@ -495,7 +495,7 @@ class SelectContactsPage(BasePage):
 
     @TestLogger.log()
     def sure_icon_is_checkable(self):
-        """点击确定"""
+        """确定按钮是否可点击"""
         return self._is_clickable(self.__class__.__locators['确定'])
 
     @TestLogger.log()

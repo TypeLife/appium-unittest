@@ -61,6 +61,7 @@ class GroupListPage(BasePage):
         '标签名称':(MobileBy.XPATH,'//*[@text="标签名称"]'),
         '刪除按钮':(MobileBy.ID,'com.chinasofti.rcs:id/btn_ok'),
         'back_contact':(MobileBy.ID,'com.chinasofti.rcs:id/back'),
+        '联系人列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
 
         'back_gouppage':(MobileBy.ID,'com.chinasofti.rcs:id/rl_label_left_back'),
         "back_contact2":(MobileBy.ID,'com.chinasofti.rcs:id/label_group_left_back'),

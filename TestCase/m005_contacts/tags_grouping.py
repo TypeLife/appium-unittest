@@ -589,36 +589,36 @@ class TagsGroupingTest(TestCase):
 
 class Tag_Group(TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        # 创建联系人
-        fail_time = 0
-        import dataproviders
-
-        while fail_time < 3:
-            try:
-                # 获取需要导入的联系人数据
-                required_contacts = contact2.get_preset_contacts()
-
-                # 连接手机
-                Preconditions.connect_mobile('Android-移动')
-                Preconditions.make_already_in_message_page()
-                current_mobile().hide_keyboard_if_display()
-                conts = ContactsPage()
-                conts.open_contacts_page()
-                # 导入数据
-                for name, number in required_contacts:
-                  # Preconditions.create_contacts_if_not_exits(name, number)
-                   Preconditions.create_contacts_if_not_exits(name, number)
-
-                # # 推送resource文件到手机
-                # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
-                return
-            except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
+    # @classmethod
+    # def setUpClass(cls):
+    #     # 创建联系人
+    #     fail_time = 0
+    #     import dataproviders
+    #
+    #     while fail_time < 3:
+    #         try:
+    #             # 获取需要导入的联系人数据
+    #             required_contacts = contact2.get_preset_contacts()
+    #
+    #             # 连接手机
+    #             Preconditions.connect_mobile('Android-移动')
+    #             Preconditions.make_already_in_message_page()
+    #             current_mobile().hide_keyboard_if_display()
+    #             conts = ContactsPage()
+    #             conts.open_contacts_page()
+    #             # 导入数据
+    #             for name, number in required_contacts:
+    #               # Preconditions.create_contacts_if_not_exits(name, number)
+    #                Preconditions.create_contacts_if_not_exits(name, number)
+    #
+    #             # # 推送resource文件到手机
+    #             # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
+    #             return
+    #         except:
+    #             fail_time += 1
+    #             import traceback
+    #             msg = traceback.format_exc()
+    #             print(msg)
 
     def setUp_test_contacts_quxinli_0352(self):
         Preconditions.connect_mobile('Android-移动')
@@ -855,22 +855,27 @@ class Tag_Group(TestCase):
         lg = LabelGroupingPage()
         lg.wait_for_page_load()
         lg.delete_all_label()
-        #新建分组
-        GroupPage.click_new_group()
-        time.sleep(1)
-        GroupPage.click_input_element()
-        time.sleep(1)
-        GroupPage.input_content(text='aaa')
-        time.sleep(1)
-        GroupPage.click_sure_element()
+        GroupPage.new_group()
+        #点击该分组
+        GroupPage.click_text('aaa')
         time.sleep(2)
-        GroupPage.click_allow_button()
+        GroupPage.page_should_contain_text('我知道了')
+        GroupPage.page_should_contain_text('添加成员')
+        #点击我知道了
+        GroupPage.click_text('我知道了')
+        GroupPage.page_should_not_contain_text('我知道了')
+        #点击添加成员
+        GroupPage.click_back_button()
+        time.sleep(2)
+        GroupPage.click_text('aaa')
         time.sleep(1)
+        GroupPage.click_text('添加成员')
+        time.sleep(2)
         GroupPage.page_should_contain_text('选择联系人')
-
 
     def tearDown_test_contacts_quxinli_0370(self):
         GroupPage = GroupListPage()
+        GroupPage.click_back_button(times=2)
         GroupPage.delete_group(name='aaa')
 
     @staticmethod
@@ -886,6 +891,7 @@ class Tag_Group(TestCase):
         GroupPage.open_contacts_page()
         GroupPage.click_label_grouping()
         time.sleep(1)
+        GroupPage.delete_group(name='aaa')
         GroupPage.new_group()
         time.sleep(1)
         GroupPage.click_text('aaa')
@@ -928,7 +934,7 @@ class Tag_Group(TestCase):
         GroupPage.page_should_contain_text('确定')
         SelectContactsPage().sure_icon_is_checkable()
         GroupPage.page_should_contain_text('选择团队联系人')
-        GroupPage.check_if_contains_element(text='local联系人')
+        GroupPage.check_if_contains_element(text='联系人列表')
 
     def tearDown_test_contacts_quxinli_0372(self):
         GroupPage = GroupListPage()
@@ -1027,6 +1033,8 @@ class Tag_Group(TestCase):
     def test_contacts_quxinli_0375(self):
         """标签分组添加成员-选择本地联系人"""
         GroupPage = GroupListPage()
+        GroupPage.open_contacts_page()
+        time.sleep(2)
         GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
