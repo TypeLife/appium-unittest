@@ -251,3 +251,8 @@ class SelectOneGroupPage(BasePage):
             if name == t:
                 return True
         raise AssertionError('搜索结果"{}"没有找到与关键字"{}"完全匹配的文本'.format(texts, name))
+
+    @TestLogger.log()
+    def is_element_exit(self, text):
+        """指定元素是否存在"""
+        return self._is_element_present(self.__class__.__locators[text])
