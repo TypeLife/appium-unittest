@@ -3524,3 +3524,4 @@ class MsgGroupChatVideoPicAllTest(TestCase):
 
         mp = MessagePage()
         mp.set_network_status(6)
+
