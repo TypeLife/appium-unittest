@@ -2135,7 +2135,6 @@ class Tag_Group(TestCase):
         '''
         新建分组进入选择联系人页面后点击返回，重名检查
 
-
         '''
         GroupPage = GroupListPage()
         GroupPage.open_contacts_page()
@@ -2152,7 +2151,8 @@ class Tag_Group(TestCase):
         GroupPage.click_back_button()
         time.sleep(1)
         GroupPage.click_sure_element()
-        GroupPage.is_toast_exist('群组已存在')
+        LabelGroupingPage().is_group_exist_tips_popup()
+        # GroupPage.is_toast_exist('群组已存在')
 
     def tearDown_test_contacts_quxinli_0368(self):
         GroupPage = GroupListPage()

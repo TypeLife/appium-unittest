@@ -2238,32 +2238,104 @@ class ContactsLocalhigh(TestCase):
         creat_contact.click_back()
 
 
+    # @tags('ALL', 'CONTACTS', 'CMCC')
+    # def test_contacts_chenjixiang_00001(self):
+    #     ContactsPage().select_contacts_by_name('大佬1')
+    #     time.sleep(2)
+    #     ContactDetailsPage().click_message_icon()
+    #     chat=ChatWindowPage()
+    #     chat.click_msg_input_box()
+    #     chat.input_message_text('asasa')
+    #     chat.click_send_button()
+    #     #更改手机时间,使最后一条消息发送时间超过10分钟
+    #     Preconditions.background_app()
+    #     time.sleep(3)
+    #     chat.click_text('设置')
+    #     chat.page_up()
+    #     chat.click_text('系统')
+    #     time.sleep(3)
+    #     chat.click_text('日期和时间')
+    #     time.sleep(2)
+    #     chat.swich_automatic_time(flag=False)
+    #     chat.click_date_in_setting()
+    #     time.sleep(1)
+    #     chat.swipe_month("2021", 0)
+    #     time.sleep(1)
+    #     chat.swipe_month("9", 1)
+    #     time.sleep(1)
+    #     chat.swipe_month("26", 2)
+    #
+
     @tags('ALL', 'CONTACTS', 'CMCC')
-    def test_contacts_chenjixiang_00001(self):
+    def test_contacts_chenjixiang_0201(self):
+        """个人profile页,编辑联系人-手机号码不为空"""
         ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
         time.sleep(2)
-        ContactDetailsPage().click_message_icon()
-        chat=ChatWindowPage()
-        chat.click_msg_input_box()
-        chat.input_message_text('asasa')
-        chat.click_send_button()
-        #更改手机时间,使最后一条消息发送时间超过10分钟
-        Preconditions.background_app()
-        time.sleep(3)
-        chat.click_text('设置')
-        chat.page_up()
-        chat.click_text('系统')
-        time.sleep(3)
-        chat.click_text('日期和时间')
+        cdp.click_edit_contact()
+        time.sleep(1)
+        #手机号为空,保存按钮不可点击
+        creat_contact=CreateContactPage()
+        creat_contact.click_input_number()
+        creat_contact.input_number('')
+        creat_contact.is_save_icon_is_clickable()
+        #手机为必填项
+        creat_contact.click_input_name()
+        creat_contact.page_should_contain_text('电话不能为空，请输入')
         time.sleep(2)
-        chat.swich_automatic_time(flag=False)
-        chat.click_date_in_setting()
+        creat_contact.click_back()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0206(self):
+        """个人profile页,编辑联系人-公司为非必填项"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        time.sleep(2)
+        cdp.click_edit_contact()
         time.sleep(1)
-        chat.swipe_month("2021", 0)
+        #姓名为空,保存按钮不可点击
+        creat_contact=CreateContactPage()
+        creat_contact.click_input_number()
+        creat_contact.change_mobile_number(text='#')
+        creat_contact.page_should_contain_text('号码输入有误，请重新输入')
+        time.sleep(2)
+        creat_contact.click_back()
+
+    @tags('ALL', 'CONTACTS', 'CMCC',)
+    def test_contacts_chenjixiang_0209(self):
+        """个人profile页,编辑联系人-公司为非必填项"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        time.sleep(2)
+        cdp.click_edit_contact()
         time.sleep(1)
-        chat.swipe_month("9", 1)
+        #姓名为空,保存按钮不可点击
+        creat_contact=CreateContactPage()
+        creat_contact.click_input_company()
+        time.sleep(2)
+        creat_contact.click_input_name()
+        creat_contact.is_save_icon_is_clickable()
+        time.sleep(2)
+        creat_contact.click_save()
+        ContactDetailsPage().is_on_this_page()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0214(self):
+        """个人profile页,编辑联系人-公司为非必填项"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        time.sleep(2)
+        cdp.click_edit_contact()
         time.sleep(1)
-        chat.swipe_month("26", 2)
+        #姓名为空,保存按钮不可点击
+        creat_contact=CreateContactPage()
+        creat_contact.click_input_company()
+        creat_contact.input_company('#$sda我的123')
+        time.sleep(2)
+        creat_contact.is_save_icon_is_clickable()
+        creat_contact.click_save()
+        ContactDetailsPage().is_on_this_page()
+
 
 
     @tags('ALL', 'CONTACTS', 'CMCC')
@@ -2278,8 +2350,6 @@ class ContactsLocalhigh(TestCase):
             cdp.click_text('暂不开启')
         time.sleep(1)
         cdp.click_end_call()
-
-
 
 
 if __name__=="__main__":
