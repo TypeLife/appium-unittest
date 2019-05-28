@@ -2336,7 +2336,70 @@ class ContactsLocalhigh(TestCase):
         creat_contact.click_save()
         ContactDetailsPage().is_on_this_page()
 
+    def test_contacts_chenjixiang_0228(self):
+        """个人profile页,编辑联系人-公司为非必填项"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        time.sleep(2)
+        cdp.click_edit_contact()
+        time.sleep(1)
+        #姓名为空,保存按钮不可点击
+        creat_contact=CreateContactPage()
+        creat_contact.hide_keyboard()
+        creat_contact.click_input_email()
+        creat_contact.input_email_address('#$sda我的123')
+        time.sleep(2)
+        creat_contact.is_save_icon_is_clickable()
+        creat_contact.click_save()
+        ContactDetailsPage().is_on_this_page()
 
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0230(self):
+        """个人profile页,编辑联系人-删除联系人"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        name=cdp.get_people_name()
+        time.sleep(2)
+        cdp.click_edit_contact()
+        time.sleep(1)
+        cdp.hide_keyboard()
+        cdp.page_up()
+        cdp.change_delete_number()
+        cdp.click_sure_delete()
+        time.sleep(2)
+        ContactsPage().is_contacts_exist(name)
+
+    def tearDown_test_contacts_chenjixiang_0230(self):
+        #删除联系人后添加该联系人
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        ContactsPage().click_add()
+        time.sleep(2)
+        creat_contact=CreateContactPage()
+        creat_contact.click_input_name()
+        creat_contact.input_name('大佬1')
+        creat_contact.click_input_number()
+        creat_contact.input_number('13800138005')
+        creat_contact.click_save()
+
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0237(self):
+        """测试分享名片，跳转到联系人选择器"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        time.sleep(2)
+        cdp.click_share_card_icon()
+        time.sleep(2)
+        scp=SelectContactsPage()
+        scp.is_on_this_page()
+        scp.page_should_contain_text('搜索或输入手机号')
+        scp.page_should_contain_text('选择一个群')
+        scp.page_should_contain_text('选择团队联系人')
+        scp.page_should_contain_text('选择手机联系人')
+        if scp.check_if_element_exist(text='联系人姓名'):
+            scp.page_should_contain_text('最近聊天')
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0238(self):
