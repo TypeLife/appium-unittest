@@ -243,7 +243,65 @@ class MsgMyPCChating(TestCase):
         chat.hide_keyboard()
 
 
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0014(self):
+        """我的电脑-本地照片发送"""
+        #进入选择照片文件夹
+        chat = ChatWindowPage()
+        chat.click_more()
+        ChatMorePage().click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_pic()
+        #选择照片
+        local_file = ChatSelectLocalFilePage()
+        local_file.select_file('.jpg')
+        local_file.click_send()
+        chat.wait_for_msg_send_status_become_to('发送成功',10)
+        #返回消息页面
+        chat.click_back()
+        time.sleep(2)
+        MessagePage().page_should_contain_text('图片')
 
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0028(self):
+        """我的电脑-本地视频发送"""
+        #进入选择视频文件夹
+        chat = ChatWindowPage()
+        chat.click_more()
+        ChatMorePage().click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_video()
+        #选择视频
+        local_file = ChatSelectLocalFilePage()
+        local_file.select_file('.mp4')
+        local_file.click_send()
+        chat.wait_for_msg_send_status_become_to('发送成功',10)
+        #返回消息页面
+        chat.click_back()
+        time.sleep(2)
+        MessagePage().page_should_contain_text('视频')
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0042(self):
+        """我的电脑-本地音乐发送"""
+        #进入选择音乐文件夹
+        chat = ChatWindowPage()
+        chat.click_more()
+        ChatMorePage().click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_music()
+        #选择音乐
+        local_file = ChatSelectLocalFilePage()
+        local_file.select_file('.mp3')
+        local_file.click_send()
+        chat.wait_for_msg_send_status_become_to('发送成功',10)
+        #返回消息页面
+        chat.click_back()
+        time.sleep(2)
+        MessagePage().page_should_contain_text('文件')
 
 
 
