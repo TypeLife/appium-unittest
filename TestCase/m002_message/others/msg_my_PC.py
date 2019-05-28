@@ -182,7 +182,65 @@ class MsgMyPCChating(TestCase):
             mep.set_network_status(6)
 
 
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0306(self):
+        """断网 我的电脑预览文件页面,点击收藏"""
+        chat=ChatWindowPage()
+        Preconditions.make_sure_chatwindow_exist_file()
+        chat.set_network_status(0)
+        file_name=chat.get_file_info('文件名')
+        chat.open_file_in_chat_page(file_name)
+        chat.wait_for_open_file()
+        chat.click_more_Preview()
+        time.sleep(2)
+        chat.click_collection_Preview()
+        self.assertTrue(chat.is_toast_exist('已收藏'))
+        chat.click_back_in_open_file_page()
 
+
+    @tags('ALL', 'CMCC', 'DEBUG_1', 'my_PC')
+    def test_msg_weifenglian_PC_0307(self):
+        """断网 我的电脑预览文件页面,点击其他应用打开"""
+        chat=ChatWindowPage()
+        Preconditions.make_sure_chatwindow_exist_file()
+        chat.set_network_status(0)
+        file_name=chat.get_file_info('文件名')
+        chat.open_file_in_chat_page(file_name)
+        chat.wait_for_open_file()
+        chat.click_more_Preview()
+        time.sleep(2)
+        chat.click_other_App_open()
+        chat.page_should_contain_text('使用以下方式打开')
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0307():
+        try:
+            mep = MePage()
+            mep.set_network_status(6)
+        except:
+            mep = MePage()
+            mep.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0532(self):
+        """放大发送表情文本"""
+        #选择表情
+        chat=ChatWindowPage()
+        chat.open_expression()
+        chat.select_expression(n=5)
+        #放大发送表情
+        time.sleep(1)
+        chat.press_and_move_up('发送按钮')
+        # 验证是否发送成功
+        try:
+            chat.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 判断是否放大,一个表情文本框信息正常宽度为107
+        if not chat.get_width_of_msg_of_text() > 107:
+            raise AssertionError("表情没有放大展示")
+        chat.close_expression()
+        chat.hide_keyboard()
 
 
 
