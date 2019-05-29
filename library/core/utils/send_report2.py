@@ -164,7 +164,8 @@ def get_current_version():
         response = requests.post(url=PGYER_URL, data=PGYER_PAYLOAD)
         assert response.status_code == 200
         result = json.loads(response.text)
-        CURRENT_VERSION = 'V' + result['data']['list'][0]['buildVersion']
+        # CURRENT_VERSION = 'V' + result['data']['list'][0]['buildVersion']
+        CURRENT_VERSION = 'V6.2.9.0313'
     except:
         print("获取APP当前版本号失败")
         traceback.print_exc()

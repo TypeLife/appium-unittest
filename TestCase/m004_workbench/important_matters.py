@@ -274,7 +274,7 @@ class ImportantMattersAllTest(TestCase):
         # 2.点击查看事项页面标题
         imp.click_check_item_title()
         time.sleep(2)
-        modify_title = "修改后的测试事项标题0003"
+        modify_title = "事项标题0003"
         imp.input_modify_content(modify_title)
         imp.click_save()
         # 3.等待查看事项页面加载，界面事项标题显示为修改后的标题
@@ -298,7 +298,7 @@ class ImportantMattersAllTest(TestCase):
         # 2.点击查看事项页面描述
         imp.click_check_item_describe()
         time.sleep(2)
-        modify_describe = "修改后的测试事项描述0004"
+        modify_describe = "事项描述0004"
         imp.input_modify_content(modify_describe)
         imp.click_save()
         # 3.等待查看事项页面加载，界面事项描述显示为修改后的内容
