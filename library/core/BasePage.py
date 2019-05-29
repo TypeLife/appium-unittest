@@ -676,3 +676,30 @@ class BasePage(object):
             return True
         else:
             return False
+
+    def page_left(self):
+        """向右滑动"""
+        self.swipe_by_percent_on_screen(50, 70, 20, 70, 800)
+
+    def page_right(self):
+        """向左滑动"""
+        self.swipe_by_percent_on_screen(50, 70, 80, 70, 800)
+
+
+    @TestLogger.log()
+    def is_element_present_on_desktop(self, text):
+        max_try = 5
+        current = 0
+        while current < max_try:
+            if self.is_text_present(text):
+                return self.page_should_contain_text(text)
+            current += 1
+            self.page_left()
+
+        current=0
+        while current < max_try:
+            if self.is_text_present(text):
+                return self.page_should_contain_text(text)
+            current += 1
+            self.page_right()
+        return False

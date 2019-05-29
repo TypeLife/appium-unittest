@@ -1830,26 +1830,6 @@ class ContactsLocal(TestCase):
         # head2 = lcontact.get_all_contacts_head()[1]
         # self.assertEqual(head1,head2)
 
-    #
-    #
-    # @tags('ALL', 'CONTACTS', 'CMCC')
-    # def test_contacts_00001(self):
-    #     ContactsPage().select_contacts_by_name('大佬2')
-    #     contact_detail=ContactDetailsPage()
-    #     contact_detail.click_add_desktop_shortcut()
-    #     time.sleep(2)
-    #     contact_detail.click_I_know()
-    #     time.sleep(1)
-    #     if contact_detail.is_text_present('添加到主屏幕'):
-    #         contact_detail.click_sure_add_desktop_shortcut()
-    #     time.sleep(2)
-    #     Preconditions.background_app()
-    #     time.sleep(2)
-    #     contact_detail.click_text('大佬2')
-    #     time.sleep(2)
-    #     contact_detail.page_should_contain_text('添加桌面快捷方式')
-    #
-
 
 class ContactsLocalhigh(TestCase):
     """
@@ -1858,37 +1838,37 @@ class ContactsLocalhigh(TestCase):
     表格：通讯录-本地通讯录
     author: 余梦思
     """
-
-    @classmethod
-    def setUpClass(cls):
-        # 创建联系人
-        fail_time = 0
-        import dataproviders
-
-        while fail_time < 3:
-            try:
-                # 获取需要导入的联系人数据
-                required_contacts = dataproviders.get_preset_contacts()
-
-                # 连接手机
-                Preconditions.connect_mobile('Android-移动')
-                Preconditions.make_already_in_message_page()
-                current_mobile().hide_keyboard_if_display()
-                conts = ContactsPage()
-                conts.open_contacts_page()
-                # 导入数据
-                for name, number in required_contacts:
-                    # Preconditions.create_contacts_if_not_exits(name, number)
-                    Preconditions.create_contacts_if_not_exits(name, number)
-
-                # # 推送resource文件到手机
-                # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
-                return
-            except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
+    #
+    # @classmethod
+    # def setUpClass(cls):
+    #     # 创建联系人
+    #     fail_time = 0
+    #     import dataproviders
+    #
+    #     while fail_time < 3:
+    #         try:
+    #             # 获取需要导入的联系人数据
+    #             required_contacts = dataproviders.get_preset_contacts()
+    #
+    #             # 连接手机
+    #             Preconditions.connect_mobile('Android-移动')
+    #             Preconditions.make_already_in_message_page()
+    #             current_mobile().hide_keyboard_if_display()
+    #             conts = ContactsPage()
+    #             conts.open_contacts_page()
+    #             # 导入数据
+    #             for name, number in required_contacts:
+    #                 # Preconditions.create_contacts_if_not_exits(name, number)
+    #                 Preconditions.create_contacts_if_not_exits(name, number)
+    #
+    #             # # 推送resource文件到手机
+    #             # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
+    #             return
+    #         except:
+    #             fail_time += 1
+    #             import traceback
+    #             msg = traceback.format_exc()
+    #             print(msg)
 
     def default_setUp(self):
         """确保每个用例执行前在通讯录页面"""
@@ -2382,7 +2362,6 @@ class ContactsLocalhigh(TestCase):
         creat_contact.click_input_number()
         creat_contact.input_number('13800138005')
         creat_contact.click_save()
-
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0237(self):
