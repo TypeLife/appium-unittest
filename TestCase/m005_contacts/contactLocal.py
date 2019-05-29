@@ -1830,26 +1830,6 @@ class ContactsLocal(TestCase):
         # head2 = lcontact.get_all_contacts_head()[1]
         # self.assertEqual(head1,head2)
 
-    #
-    #
-    # @tags('ALL', 'CONTACTS', 'CMCC')
-    # def test_contacts_00001(self):
-    #     ContactsPage().select_contacts_by_name('大佬2')
-    #     contact_detail=ContactDetailsPage()
-    #     contact_detail.click_add_desktop_shortcut()
-    #     time.sleep(2)
-    #     contact_detail.click_I_know()
-    #     time.sleep(1)
-    #     if contact_detail.is_text_present('添加到主屏幕'):
-    #         contact_detail.click_sure_add_desktop_shortcut()
-    #     time.sleep(2)
-    #     Preconditions.background_app()
-    #     time.sleep(2)
-    #     contact_detail.click_text('大佬2')
-    #     time.sleep(2)
-    #     contact_detail.page_should_contain_text('添加桌面快捷方式')
-    #
-
 
 class ContactsLocalhigh(TestCase):
     """
@@ -1858,37 +1838,37 @@ class ContactsLocalhigh(TestCase):
     表格：通讯录-本地通讯录
     author: 余梦思
     """
-
-    @classmethod
-    def setUpClass(cls):
-        # 创建联系人
-        fail_time = 0
-        import dataproviders
-
-        while fail_time < 3:
-            try:
-                # 获取需要导入的联系人数据
-                required_contacts = dataproviders.get_preset_contacts()
-
-                # 连接手机
-                Preconditions.connect_mobile('Android-移动')
-                Preconditions.make_already_in_message_page()
-                current_mobile().hide_keyboard_if_display()
-                conts = ContactsPage()
-                conts.open_contacts_page()
-                # 导入数据
-                for name, number in required_contacts:
-                    # Preconditions.create_contacts_if_not_exits(name, number)
-                    Preconditions.create_contacts_if_not_exits(name, number)
-
-                # # 推送resource文件到手机
-                # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
-                return
-            except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
+    #
+    # @classmethod
+    # def setUpClass(cls):
+    #     # 创建联系人
+    #     fail_time = 0
+    #     import dataproviders
+    #
+    #     while fail_time < 3:
+    #         try:
+    #             # 获取需要导入的联系人数据
+    #             required_contacts = dataproviders.get_preset_contacts()
+    #
+    #             # 连接手机
+    #             Preconditions.connect_mobile('Android-移动')
+    #             Preconditions.make_already_in_message_page()
+    #             current_mobile().hide_keyboard_if_display()
+    #             conts = ContactsPage()
+    #             conts.open_contacts_page()
+    #             # 导入数据
+    #             for name, number in required_contacts:
+    #                 # Preconditions.create_contacts_if_not_exits(name, number)
+    #                 Preconditions.create_contacts_if_not_exits(name, number)
+    #
+    #             # # 推送resource文件到手机
+    #             # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
+    #             return
+    #         except:
+    #             fail_time += 1
+    #             import traceback
+    #             msg = traceback.format_exc()
+    #             print(msg)
 
     def default_setUp(self):
         """确保每个用例执行前在通讯录页面"""
@@ -2383,7 +2363,6 @@ class ContactsLocalhigh(TestCase):
         creat_contact.input_number('13800138005')
         creat_contact.click_save()
 
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0237(self):
         """测试分享名片，跳转到联系人选择器"""
@@ -2413,6 +2392,249 @@ class ContactsLocalhigh(TestCase):
             cdp.click_text('暂不开启')
         time.sleep(1)
         cdp.click_end_call()
+
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0242(self):
+        """测试星标点击"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        glp = GroupListPage()
+        time.sleep(2)
+        glp.click_star_icon()
+        glp.page_should_contain_text('已成功添加为星标联系人')
+
+    def tearDown_test_contacts_chenjixiang_0242(self):
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        ContactsPage().select_contacts_by_name('大佬1')
+        glp = GroupListPage()
+        time.sleep(2)
+        glp.click_star_icon()
+        if glp.is_text_present('已取消添加为星标联系人'):
+            pass
+        else:
+            glp.click_star_icon()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0243(self):
+        """测试取消星标"""
+        #添加联系人是星标联系人
+        ContactsPage().select_contacts_by_name('大佬1')
+        glp = GroupListPage()
+        time.sleep(2)
+        glp.click_star_icon()
+        glp.page_should_contain_text('已成功添加为星标联系人')
+        #取消添加星标联系人
+        glp.click_star_icon()
+        glp.page_should_contain_text('已取消添加为星标联系人')
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0246(self):
+        """测试消息，点击消息，跳转到对话框"""
+        #添加联系人是星标联系人
+        ContactsPage().select_contacts_by_name('大佬1')
+        glp = GroupListPage()
+        ContactDetailsPage().click_message_icon()
+        time.sleep(2)
+        if ChatWindowPage().is_text_present("用户须知"):
+            #如果存在用户须知,就点击已阅读,然后点击返回.如果不存在,就直接点击返回
+            ChatWindowPage().click_already_read()
+            ChatWindowPage().click_sure_icon()
+        SingleChatPage().is_on_this_page()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0247(self):
+        """测试电话，点击后调用系统通话，拨打电话"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        cdp.click_call_icon()
+        if cdp.is_text_present('始终允许'):
+            cdp.click_text('始终允许')
+        time.sleep(2)
+        cdp.cancel_call()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0248(self):
+        """测试语音通话，点击后弹出语音通话框"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        cdp.click_voice_call_icon()
+        if cdp.is_text_present('始终允许'):
+            cdp.click_text('始终允许')
+        if cdp.is_text_present('暂不开启'):
+            time.sleep(2)
+            cdp.click_text('暂不开启')
+        time.sleep(2)
+        cdp.click_end_call()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0264(self):
+        """测试和通讯录联系人profile，没有快捷方式功能"""
+        contact=ContactsPage()
+        contact.select_group_by_name('ateam7272')
+        contact.select_group_contact_by_name('alice')
+        ContactDetailsPage().page_should_not_contain_text('添加桌面快捷方式')
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0265(self):
+        """测试RCS用户，已设置和飞信头像时，添加桌面快捷方式的显示效果"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        contact_detail=ContactDetailsPage()
+        contact_detail.click_add_desktop_shortcut()
+        time.sleep(2)
+        contact_detail.click_I_know()
+        time.sleep(1)
+        if contact_detail.is_text_present('添加到主屏幕'):
+            contact_detail.click_sure_add_desktop_shortcut()
+        time.sleep(2)
+        Preconditions.background_app()
+        time.sleep(2)
+        contact_detail.is_element_present_on_desktop('大佬1')
+        contact_detail.click_text('大佬1')
+        time.sleep(2)
+        contact_detail.page_should_contain_text('添加桌面快捷方式')
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0268(self):
+        """测试非RCS用户，已设置和飞信头像时，添加桌面快捷方式的显示效果"""
+        ContactsPage().select_contacts_by_name('测试号码')
+        contact_detail=ContactDetailsPage()
+        #添加桌面快捷方式
+        contact_detail.click_add_desktop_shortcut()
+        time.sleep(2)
+        contact_detail.click_I_know()
+        time.sleep(1)
+        if contact_detail.is_text_present('添加到主屏幕'):
+            contact_detail.click_sure_add_desktop_shortcut()
+        time.sleep(2)
+        Preconditions.background_app()
+        time.sleep(2)
+        contact_detail.is_element_present_on_desktop('测试号码')
+        #快捷方式进入app
+        contact_detail.click_text('测试号码')
+        time.sleep(2)
+        contact_detail.page_should_contain_text('添加桌面快捷方式')
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0270(self):
+        """测试点击快捷方式跳转，进入profile页后进行功能操作，和页面返回跳转等"""
+        #从快捷方式进入页面
+        contact=ContactsPage()
+        time.sleep(2)
+        Preconditions.background_app()
+        contact.is_element_present_on_desktop('测试号码')
+        contact.click_text('测试号码')
+        #个人详情页
+        time.sleep(3)
+        glp=GroupListPage()
+        glp.page_should_contain_text('添加桌面快捷方式')
+        #星标
+        glp.click_star_icon()
+        glp.page_should_contain_text('已成功添加为星标联系人')
+        time.sleep(2)
+        glp.click_star_icon()
+        #点击编辑
+        ContactDetailsPage().click_edit_contact()
+        time.sleep(2)
+        creat_contact=CreateContactPage()
+        creat_contact.hide_keyboard()
+        if creat_contact.get_text_of_box() == None:
+            creat_contact.click_input_company()
+            creat_contact.hide_keyboard()
+            creat_contact.input_company('sds')
+            creat_contact.click_save()
+        else:
+            creat_contact.click_back()
+        #点击返回
+        time.sleep(2)
+        creat_contact.click_back()
+        MessagePage().is_on_this_page()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0277(self):
+        """测试客户端退出登陆后，点击快捷方式"""
+        #退出客户端
+        contact=ContactsPage()
+        time.sleep(2)
+        contact.open_me_page()
+        me=MePage()
+        me.page_up()
+        me.click_setting_menu()
+        me.page_down()
+        me.click_text('退出')
+        time.sleep(1)
+        me.click_sure_drop()
+        time.sleep(4)
+        #从快捷方式进入
+        Preconditions.background_app()
+        contact.is_element_present_on_desktop('测试号码')
+        contact.click_text('测试号码')
+        time.sleep(5)
+        #检查是否在登录界面
+        OneKeyLoginPage().is_on_this_page()
+
+    def tearDown_test_contacts_chenjixiang_0277(self):
+        Preconditions.login_by_one_key_login()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0250(self):
+        """测试视频通话，点击后弹出视频通话框"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        cdp.click_video_call_icon()
+        if cdp.is_text_present('始终允许'):
+            cdp.click_text('始终允许')
+        if cdp.is_text_present('暂不开启'):
+            time.sleep(1)
+            cdp.click_text('暂不开启')
+        time.sleep(2)
+        cdp.end_video_call()
+
+    def setUp_test_contacts_chenjixiang_0253(self):
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.click_menu('设置')
+        me_page.click_menu('联系人管理')
+        lcontact = localContactPage()
+        lcontact.swich_sim_contact(flag=True)
+        lcontact.click_back_by_android(times=2)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0253(self):
+        """测试sim联系人profile页显示是否正常"""
+        #确保有SIM卡联系人
+        GroupListPage().open_contacts_page()
+        contact = ContactsPage()
+        if ContactsPage().is_page_contain_element('sim标志'):
+            time.sleep(2)
+        else:
+            contact.add_SIM_contacts()
+            #激活App
+            Preconditions.activate_app()
+            time.sleep(2)
+            if contact.is_text_present('SIM卡联系人'):
+                contact.click_text('显示')
+        #查看SIM卡联系人的个人详情页
+        contact.click_SIM_identification()
+        time.sleep(2)
+        ContactDetailsPage().page_should_contain_text('来自SIM卡联系人')
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0259(self):
+        """测试本地联系人profile页，分享名片下方新增添加快捷方式"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        cdp.page_should_contain_text('添加桌面快捷方式')
+
+
+
+
+
+
+
 
 
 if __name__=="__main__":

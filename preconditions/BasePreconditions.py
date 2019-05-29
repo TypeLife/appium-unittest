@@ -26,6 +26,9 @@ REQUIRED_MOBILES = {
 class LoginPreconditions(object):
     """登录前置条件"""
 
+
+
+
     @staticmethod
     def select_mobile(category, reset=False):
         """选择手机"""

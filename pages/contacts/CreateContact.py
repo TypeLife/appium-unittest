@@ -89,6 +89,10 @@ class CreateContactPage(Keyboard, BasePage):
         """点击输入邮箱"""
         self.click_element(self.__locators['输入邮箱'])
 
+    @TestLogger.log('输入公司号码')
+    def get_text_of_box(self, locator='输入公司'):
+        return self.get_text(self.__locators[locator])
+
 
     @TestLogger.log('输入邮箱')
     def input_email_address(self, name):
