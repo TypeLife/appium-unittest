@@ -61,6 +61,7 @@ class GroupListPage(BasePage):
         '标签名称':(MobileBy.XPATH,'//*[@text="标签名称"]'),
         '刪除按钮':(MobileBy.ID,'com.chinasofti.rcs:id/btn_ok'),
         'back_contact':(MobileBy.ID,'com.chinasofti.rcs:id/back'),
+        '联系人列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
 
         'back_gouppage':(MobileBy.ID,'com.chinasofti.rcs:id/rl_label_left_back'),
         "back_contact2":(MobileBy.ID,'com.chinasofti.rcs:id/label_group_left_back'),
@@ -77,9 +78,9 @@ class GroupListPage(BasePage):
         '多方视频': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_fourth_colum'),
         '大佬1': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         '大佬3':(MobileBy.XPATH,'//*[@text="大佬3"]'),
-
         '大佬2': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
         '搜索或输入手机号':(MobileBy.XPATH,"//*[@text='搜索或输入号码']"),
+        '搜索框-搜索结果':(MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
         '选择联系人':(MobileBy.ID,"com.chinasofti.rcs:id/title"),
         '清空搜索框': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect'),
         '已选择的联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/hor_contact_selection'),
@@ -149,7 +150,7 @@ class GroupListPage(BasePage):
 
     @TestLogger.log()
     def sure_icon_is_checkable(self):
-        """点击确定"""
+        """确定按钮是否可点击"""
         return self._is_clickable(self.__class__.__locators['确定'])
 
     @TestLogger.log("点击已选择联系人头像")
@@ -390,9 +391,9 @@ class GroupListPage(BasePage):
     # def inputing_content(self,text):
     #     self.input_text(self.__class__.__locators['请输入标签分组名称'],text)
 
-    @TestLogger.log("输入内容")
+    @TestLogger.log("获取标签分组输入框文本")
     def get_text_of_lablegrouping_name(self):
-        self.get_text(self.__class__.__locators['请输入标签分组名称'])
+        return self.get_text(self.__class__.__locators['请输入标签分组名称'])
 
 
     @TestLogger.log('使用坐标点击')

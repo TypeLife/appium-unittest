@@ -22,6 +22,7 @@ class SearchPage(SearchBar, Keyboard, BasePage):
         '搜索结果列表': (MobileBy.ID, 'com.chinasofti.rcs:id/single_result_list'),
         '删除搜索框文本按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect01'),
         '搜索和通讯录联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/content'),
+        '搜索团队联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint'),
         '联系人分割线': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint'),
         '联系人项列表项': (MobileBy.ID, 'com.chinasofti.rcs:id/root_view'),
         '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_head'),
@@ -48,6 +49,10 @@ class SearchPage(SearchBar, Keyboard, BasePage):
     @TestLogger.log('检查搜索和通讯录联系人入口是否出现')
     def assert_hetongxunlu_entry_is_display(self):
         self.mobile.assert_screen_should_contain_element(self.__locators['搜索和通讯录联系人'])
+
+    @TestLogger.log('检查搜索团队联系人入口是否出现')
+    def assert_group_entry_is_display(self):
+        self.mobile.assert_screen_should_contain_element(self.__locators['搜索团队联系人'])
 
     @TestLogger.log('检查搜索到的联系人名字')
     def assert_contact_name_display(self, name, timeout=0):

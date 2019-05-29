@@ -20,7 +20,7 @@ PRESET_CONTACTS = [
     ('xihua', '13410669616'),
     ('xika','+8613410559655'),
     ('xiaowen','+85213410559644'),
-    ('aaaaaaaaaaaaaaaaaaaa','13410559633'),
+    ('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','13410559633'),
     ('wa ss', '075528233375'),
     ('waas ss', '67656022'),
     ('1-a', '67656004'),

@@ -340,6 +340,8 @@ class EnterpriseContactsAllTest(TestCase):
                 mp.open_workbench_page()
                 wbp = WorkbenchPage()
                 Preconditions.delete_department_by_name("admin_department")
+                # 查找并点击所有展开元素
+                wbp.find_and_click_open_element()
                 # 解决用户部门变更后不能及时刷新的问题
                 wbp.click_company_contacts()
                 ecp = EnterpriseContactsPage()
@@ -396,6 +398,8 @@ class EnterpriseContactsAllTest(TestCase):
                 mp.open_workbench_page()
                 wbp = WorkbenchPage()
                 Preconditions.delete_department_by_name("admin_department")
+                # 查找并点击所有展开元素
+                wbp.find_and_click_open_element()
                 # 解决用户部门变更后不能及时刷新的问题
                 wbp.click_company_contacts()
                 ecp = EnterpriseContactsPage()
@@ -454,6 +458,8 @@ class EnterpriseContactsAllTest(TestCase):
                 wbp = WorkbenchPage()
                 Preconditions.delete_department_by_name("admin_department1")
                 Preconditions.delete_department_by_name("admin_department2")
+                # 查找并点击所有展开元素
+                wbp.find_and_click_open_element()
                 # 解决用户部门变更后不能及时刷新的问题
                 wbp.click_company_contacts()
                 ecp = EnterpriseContactsPage()

@@ -5,6 +5,7 @@ import unittest
 import uuid
 
 import preconditions
+from pages.components import BaseChatPage
 from preconditions.BasePreconditions import  WorkbenchPreconditions
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
@@ -107,10 +108,18 @@ class Preconditions(WorkbenchPreconditions):
         # 获取已有群名
         sog = SelectOneGroupPage()
         sog.wait_for_page_load()
-        group_names = sog.get_group_name()
-        # 有群返回，无群创建
-        if group_name in group_names:
+        sog.click_search_group()
+        time.sleep(2)
+        sog.input_search_keyword(group_name)
+        time.sleep(2)
+        if sog.is_element_exit("群聊名"):
+            current_mobile().back()
+            time.sleep(2)
+            current_mobile().back()
             return
+        current_mobile().back()
+        time.sleep(2)
+        current_mobile().back()
         sog.click_back()
         mess.wait_for_page_load()
         # 点击 +
@@ -157,7 +166,7 @@ class Preconditions(WorkbenchPreconditions):
         if sogp.is_on_this_page():
             group_name = Preconditions.get_group_chat_name()
             # 点击群名，进入群聊页面
-            sogp.select_one_group_by_name(group_name)
+            sogp.click_one_contact(group_name)
             scp.wait_for_page_load()
         if scp.is_on_this_page():
             return
@@ -884,6 +893,7 @@ class MsgGroupChatTest(TestCase):
         csf = ChatSelectFilePage()
         csf.wait_for_page_load()
         csf.click_pic()
+        time.sleep(2)
         local_file = ChatSelectLocalFilePage()
         self.assertFalse(local_file.send_btn_is_enabled())
         # 4、选择一张照片之后，左下角是否会展示当前选择照片的大小，右下角的发送按钮变成高亮展示
@@ -2628,7 +2638,7 @@ class MessageGroupChatAllTest(TestCase):
         scp = SelectContactsPage()
         scp.create_message_group(text='bbb')
 
-    @tags('ALL', 'CMCC', 'group_chat',"high")
+    @unittest.skip("用例有误，跳过")
     def test_msg_xiaoqiu_0183(self):
         """聊天会话窗口中——长按识别二维码 """
 
@@ -2675,7 +2685,7 @@ class MessageGroupChatAllTest(TestCase):
         scp = SelectContactsPage()
         scp.create_message_group(text='bbb')
 
-    @tags('ALL', 'CMCC', 'group_chat',"high")
+    @unittest.skip("用例有误，跳过")
     def test_msg_xiaoqiu_0185(self):
         """聊天会话窗口中——长按识别二维码"""
 
@@ -2715,169 +2725,176 @@ class MessageGroupChatAllTest(TestCase):
         scp.is_text_present("群已解散")
         scp.click_back_by_android(times=4)
 
-    @staticmethod
-    def setUp_test_msg_xiaoqiu_0186():
-        Preconditions.select_mobile('Android-移动')
-        Preconditions.make_already_in_message_page()
-        scp = SelectContactsPage()
-        scp.create_message_group(text='bbb')
-
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0186(self):
         """群二维码详情页——保存二维码"""
 
         gcp = GroupChatPage()
-        scp = SelectContactsPage()
+        gcp.wait_for_page_load()
         gcp.click_setting()
-        time.sleep(1)
-        group_set = GroupChatSetPage()
-        group_set.wait_for_page_load()
-        group_set.click_QRCode()
-        group_set.click_qecode_download_button()
-        group_set.is_toast_exist("已保存")
-        scp.click_back_by_android()
-        time.sleep(1)
-        scp.page_up()
-        time.sleep(1)
-        group_set.click_delete_and_exit()
-        time.sleep(3)
-        group_set.click_sure()
-        time.sleep(1)
-        scp.click_back_by_android()
-
-    @staticmethod
-    def setUp_test_msg_xiaoqiu_0188():
-        Preconditions.select_mobile('Android-移动')
-        Preconditions.make_already_in_message_page()
-        scp = SelectContactsPage()
-        scp.create_message_group(text='bbb')
+        gcs = GroupChatSetPage()
+        gcs.wait_for_page_load()
+        gcs.click_QRCode()
+        n = 1
+        while not gcs.page_should_contain_text2("该二维码7天内"):
+            gcs.click_back()
+            gcs.wait_for_page_load()
+            gcs.click_QRCode()
+            n += 1
+            if n > 10:
+                break
+        code_page = GroupChatSetSeeQRCodePage()
+        code_page.wait_for_page_load()
+        code_page.click_qecode_save_btn()
+        # 1、在群二维码详情页，点击右下角的下载按钮，下载成功后，会弹出toast提示：已保存
+        self.assertEquals(code_page.is_toast_exist("已保存"), True)
+        code_page.click_back_by_android()
+        gcs.wait_for_page_load()
+        gcs.click_back_by_android()
+        gcp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0188(self):
         """群聊设置页面——进入到群管理详情页"""
-        gcp = GroupChatPage()
-        scp = SelectContactsPage()
-        gcp.click_setting()
-        time.sleep(1)
-        group_set = GroupChatSetPage()
-        group_set.wait_for_page_load()
-        group_set.click_group_manage()
-        group_set.click_group_manage_transfer_button()
-        group_set.is_toast_exist("暂无群成员")
-        scp.click_back_by_android(times=3)
 
-    @staticmethod
-    def setUp_test_msg_xiaoqiu_0195():
-        Preconditions.select_mobile('Android-移动')
-        Preconditions.make_already_in_message_page()
-        scp = SelectContactsPage()
-        scp.create_message_group()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gcs = GroupChatSetPage()
+        gcs.wait_for_page_load()
+        # 1、点击群管理，进入到群管理详情页
+        gcs.click_group_manage()
+        gcs.wait_for_group_manage_load()
+        # 2、点击群主管理权转让，会弹出toast提示：暂无群成员并且停留在当前页
+        gcs.click_group_manage_transfer_button()
+        self.assertEquals(gcs.is_toast_exist("暂无群成员"), True)
+        gcs.wait_for_group_manage_load()
+        # 3、点击左上角的返回按钮，可以返回到群聊设置页
+        gcs.click_group_manage_back_button()
+        gcs.wait_for_page_load()
+        gcs.click_back()
+        gcp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0195(self):
         """群聊设置页面——查找聊天内容"""
-        gcp = GroupChatPage()
-        scp = SelectContactsPage()
-        info = "Hello everyone"
-        gcp.input_message(info)
-        # 2.点击输入框右边高亮展示的发送按钮，发送此段文本
-        gcp.page_should_contain_send_btn()
-        gcp.send_message()
-        gcp.page_should_contain_text(info)
-        scp.click_back_by_android(times=1)
-        time.sleep(1)
-        scp.click_text('aaa')
-        time.sleep(1)
-        gcp.page_should_contain_text(info)
-        scp.click_back_by_android(times=1)
-        time.sleep(1)
-        scp = SelectContactsPage()
-        scp.click_group_search()
-        scp.group_search(text='aaa')
-        gcp.page_should_contain_text("aaa")
-        scp.click_back_by_android(times=1)
 
-    @staticmethod
-    def setUp_test_msg_xiaoqiu_0197():
-        Preconditions.select_mobile('Android-移动')
-        Preconditions.make_already_in_message_page()
-        scp = SelectContactsPage()
-        scp.create_message_group()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        text = "12345"
+        gcp.input_text_message(text)
+        gcp.send_text()
+        time.sleep(2)
+        gcp.click_setting()
+        gcs = GroupChatSetPage()
+        gcs.wait_for_page_load()
+        gcs.click_find_chat_record()
+        gcf = GroupChatSetFindChatContentPage()
+        gcf.wait_for_page_load()
+        gcf.search(text)
+        # 1、点击聊天内容入口，跳转到聊天内容页面
+        gcf.select_message_record_by_text(text)
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gcs.wait_for_page_load()
+        gcs.click_find_chat_record()
+        gcf.wait_for_page_load()
+        # 2、点击顶部的搜索框，调起小键盘
+        gcf.click_search_box()
+        self.assertEquals(gcf.is_keyboard_shown(), True)
+        gcf.click_back()
+        gcs.wait_for_page_load()
+        gcs.click_back()
+        gcp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0197(self):
         """群聊设置页面——查找聊天内容——数字搜索——搜索结果展示"""
-        gcp = GroupChatPage()
-        scp = SelectContactsPage()
-        info = "9999"
-        gcp.input_message(info)
-        # 2.点击输入框右边高亮展示的发送按钮，发送此段文本
-        gcp.page_should_contain_send_btn()
-        gcp.send_message()
-        gcp.page_should_contain_text(info)
-        scp.click_back_by_android(times=1)
-        time.sleep(1)
-        scp.click_text('aaa')
-        time.sleep(1)
-        gcp.page_should_contain_text(info)
-        scp.check_if_element_exist(text='发送人头像')
-        scp.check_if_element_exist(text='发送时间')
-        scp.click_back_by_android(times=1)
-        time.sleep(1)
 
-    @staticmethod
-    def setUp_test_msg_xiaoqiu_0254():
-        Preconditions.select_mobile('Android-移动')
-        Preconditions.make_already_in_message_page()
-        scp = SelectContactsPage()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        text = "197197"
+        gcp.input_text_message(text)
+        gcp.send_text()
+        time.sleep(2)
+        gcp.click_setting()
+        gcs = GroupChatSetPage()
+        gcs.wait_for_page_load()
+        gcs.click_find_chat_record()
+        gcf = GroupChatSetFindChatContentPage()
+        gcf.wait_for_page_load()
+        gcf.search(text)
+        time.sleep(2)
+        # 1、在查找聊天内容页面，输入框中，输入数字搜索条件，存在搜索结果时，搜索结果展示为：发送人头像、发送人名称、发送的内容、发送的时间
+        self.assertEquals(gcf.is_exists_sending_head(), True)
+        self.assertEquals(gcf.is_exists_sending_name(), True)
+        self.assertEquals(gcf.is_exists_send_content(), True)
+        self.assertEquals(gcf.is_exists_send_time(), True)
+        # 2、任意选中一条聊天记录，会跳转到聊天记录对应的位置
+        gcf.select_message_record_by_text(text)
+        gcp.wait_for_page_load()
+        self.assertEquals(gcp.is_text_present(text), True)
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0254(self):
         """消息列表——发起群聊——选择1个手机联系人"""
-        gcp = GroupChatPage()
-        time.sleep(2)
-        mess = MessagePage()
-        mess.wait_for_page_load()
-        # 点击 +
-        mess.click_add_icon()
-        # 点击 发起群聊
-        mess.click_group_chat()
-        # 选择联系人界面，选择一个群
-        sc = SelectContactsPage()
-        sc.click_select_one_group()
-        time.sleep(1)
-        # mess.click_create_group()
-        mess.click_contact_group()
-        mess.click_text("大佬2")
-        time.sleep(1)
-        mess.click_sure_button()
-        time.sleep(1)
-        scp = SelectContactsPage()
-        #一个人创建群聊失败
-        mess.check_group_name_exist()
-        gcp.click_back_by_android(times=2)
 
-    @staticmethod
-    def setUp_test_msg_xiaoqiu_0255():
-        Preconditions.select_mobile('Android-移动')
-        Preconditions.make_already_in_message_page()
+        current_mobile().launch_app()
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.click_add_icon()
+        mp.click_group_chat()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        # 选择1个手机联系人
+        name = "大佬1"
+        slc.selecting_local_contacts_by_name(name)
+        slc.click_sure()
         time.sleep(2)
+        chat = BaseChatPage()
+        if chat.is_exist_dialog():
+            # 点击我已阅读
+            chat.click_i_have_read()
+        scp = SingleChatPage()
+        # 1.等待一对一聊天会话页面加载
+        scp.wait_for_page_load()
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0255(self):
         """消息列表——发起群聊——选择5个手机联系人——创建群聊"""
-        scp = SelectContactsPage()
-        gcp = GroupChatPage()
-        scp.create_multi_contacts_group(groupname='aaa',num=5)
-        time.sleep(1)
-        gcp.click_setting()
-        time.sleep(1)
-        group_set = GroupChatSetPage()
-        scp.page_up()
-        time.sleep(1)
-        group_set.click_delete_and_exit()
-        gcp.click_back_by_android(times=2)
 
+        current_mobile().launch_app()
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.click_add_icon()
+        mp.click_group_chat()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        # 选择5个手机联系人
+        names = ["大佬1", "大佬2", "大佬3", "大佬4", "给个红包1"]
+        # 选择成员
+        for name in names:
+            slc.selecting_local_contacts_by_name(name)
+        slc.click_sure()
+        # 创建群
+        cgnp = CreateGroupNamePage()
+        cgnp.input_group_name("群聊255")
+        cgnp.click_sure()
+        # 等待群聊页面加载
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+
+    # @staticmethod
+    # def tearDown_test_msg_xiaoqiu_0255():
+    #     """恢复环境"""
+    #
+    #     pass
 
     @staticmethod
     def setUp_test_msg_xiaoqiu_0256():
@@ -2907,7 +2924,7 @@ class MessageGroupChatAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0258(self):
-        """消息列表——发起群聊——选择选择团队联系人——创建群聊"""
+        """消息列表——发起群聊——选择501个手机联系人——创建群聊"""
         scp = SelectContactsPage()
         gcp = GroupChatPage()
         scp.create_multi_contacts_group(groupname='aaa',num=6,times=3)
@@ -2929,7 +2946,7 @@ class MessageGroupChatAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0271(self):
-        """消息列表——发起群聊——选择2个手机联系人"""
+        """通讯录——发起群聊——选择手机联系人"""
         scp = SelectContactsPage()
         scp.create_message_group()
         time.sleep(1)
@@ -3136,7 +3153,7 @@ class MessageGroupChatAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0242(self):
-        """卸载重装——登录和飞信——查看置顶状态"""
+        """消息草稿-聊天列表显示-输入文本信息"""
         scp = SelectContactsPage()
         scp.create_message_group()
         time.sleep(1)
@@ -3166,7 +3183,7 @@ class MessageGroupChatAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0243(self):
-        """卸载重装——登录和飞信——查看置顶状态"""
+        """消息草稿-聊天列表显示-输入表情信息"""
         scp = SelectContactsPage()
         scp.create_message_group()
         time.sleep(1)
@@ -3196,7 +3213,7 @@ class MessageGroupChatAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0245(self):
-        """消息草稿-聊天列表显示-输入空格消息"""
+        """消息草稿-聊天列表显示-输入空格消息-网络异常"""
         scp = SelectContactsPage()
         scp.create_message_group()
         time.sleep(1)
@@ -3227,7 +3244,7 @@ class MessageGroupChatAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0246(self):
-        """消息草稿-聊天列表显示-输入文本信息"""
+        """消息草稿-聊天列表显示-输入文本信息-网络异常"""
         scp = SelectContactsPage()
         scp.create_message_group()
         time.sleep(1)
@@ -3518,7 +3535,7 @@ class MessageGroupChatAllTest(TestCase):
 
 
     @staticmethod
-    def setUp_test_msg_xiaoqiu_0225():
+    def setUp_test_msg_xiaoqiu_0228():
         Preconditions.select_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
         time.sleep(2)

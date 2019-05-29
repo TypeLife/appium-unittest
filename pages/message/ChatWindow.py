@@ -65,13 +65,16 @@ class ChatWindowPage(ChatNoticeDialog, PictureSelector, BaseChatPage,BasePage):
         '日期': (MobileBy.XPATH, '//*[@text="日期"]/../android.widget.TextView[@resource-id="android:id/summary"]'),
         '时间': (MobileBy.XPATH, '//*[@text="时间"]/../android.widget.TextView[@resource-id="android:id/summary"]'),
 
-
-
     }
 
     @TestLogger.log('点击返回')
     def click_back(self):
         self.click_element(self.__locators['返回'])
+
+    @TestLogger.log('点击返回')
+    def page_contain_element(self,locator='设置'):
+        """判断页面包含元素"""
+        self.page_should_contain_element(self.__locators[locator])
 
     @TestLogger.log()
     def swipe_month(self, text, number):

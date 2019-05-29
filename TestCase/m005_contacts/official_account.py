@@ -93,6 +93,7 @@ class OfficialAccountTest(TestCase):
         official_account = OfficialAccountPage()
         official_account.click_tag('企业号')
         official_account.assert_enterprise_account_list_is_empty()
+        official_account.page_should_contain_text('未关注任何企业号')
 
     @unittest.skip('脚本无法操作搜索公众号页面')
     def test_Conts_OfficialAccount_0002(self):
@@ -122,11 +123,12 @@ class OfficialAccountTest(TestCase):
         official = OfficialAccountPage()
         official.click_officel_account()
         time.sleep(2)
+        official.page_contain_news()
+        official.page_contain_setting()
+        official.page_contain_input_box()
         official.page_contain_expresssion()
         official.page_contain_send_button()
         official.send_btn_is_clickable()
-        official.page_contain_news()
-        official.page_contain_setting()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_quxinli_0325(self):
@@ -230,6 +232,7 @@ class OfficialAccountTest(TestCase):
         conts_page = ContactsPage()
         official = OfficialAccountPage()
         official.click_officel_account()
+        #断网发送失败
         conts_page.set_network_status(0)
         time.sleep(2)
         official.click_input_box()
@@ -237,6 +240,7 @@ class OfficialAccountTest(TestCase):
         official.click_send_button()
         time.sleep(1)
         official.page_should_contain_sendfail_element()
+        ##恢复网络,重发成功
         conts_page.set_network_status(6)
         time.sleep(5)
         official.click_repeat_button()
@@ -256,15 +260,18 @@ class OfficialAccountTest(TestCase):
         official = OfficialAccountPage()
         official.click_officel_account()
         official.click_setting_button()
-        time.sleep(3)
-        official.page_contain_element('进入公众号')
-        official.page_contain_element('查看历史资讯')
-        official.page_contain_element('认证主体')
-        official.page_contain_element('功能介绍')
-        official.page_contain_element('更多')
-        official.page_contain_element('公众号头像')
-        time.sleep(1)
-
+        time.sleep(2)
+        official_account_detail=OfficialAccountDetailPage()
+        official_account_detail.page_contain_public_title_name()
+        official_account_detail.page_contain_public_name()
+        official_account_detail.page_contain_public_header()
+        official_account_detail.page_contain_public_number()
+        official_account_detail.page_contain_features()
+        official_account_detail.page_contain_certification()
+        official_account_detail.page_should_contain_text('置顶公众号')
+        official_account_detail.page_should_contain_text('查看历史资讯')
+        official_account_detail.page_should_contain_text('进入公众号')
+        time.sleep(2)
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_quxinli_0334(self):

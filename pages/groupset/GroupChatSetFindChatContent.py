@@ -24,7 +24,11 @@ class GroupChatSetFindChatContentPage(BasePage):
                   'com.chinasofti.rcs:id/result_list': (MobileBy.ID, 'com.chinasofti.rcs:id/result_list'),
                   # 搜索无结果页
                   'X': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect'),
-                  '无搜索结果': (MobileBy.ID, 'com.chinasofti.rcs:id/empty_view')
+                  '无搜索结果': (MobileBy.ID, 'com.chinasofti.rcs:id/empty_view'),
+                  '发送人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/svd_head'),
+                  '发送人名称': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_conv_name'),
+                  '发送内容': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_content'),
+                  '发送时间': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_date'),
                   }
 
     @TestLogger.log()
@@ -49,6 +53,11 @@ class GroupChatSetFindChatContentPage(BasePage):
         self.input_text(self.__class__.__locators["输入关键词快速搜索"], chat_context)
 
     @TestLogger.log()
+    def click_search_box(self):
+        """点击搜索框"""
+        self.click_element(self.__class__.__locators["输入关键词快速搜索"])
+
+    @TestLogger.log()
     def click_x_icon(self):
         """点击X"""
         self.click_element(self.__class__.__locators["X"])
@@ -63,3 +72,35 @@ class GroupChatSetFindChatContentPage(BasePage):
         """点击图片与视频"""
         self.click_element(self.__class__.__locators["图片与视频"])
 
+    @TestLogger.log()
+    def select_message_record_by_text(self, text):
+        """根据文本消息选择一条消息记录"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_content" and @text="%s"]' % text)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        self.click_element(locator)
+
+    @TestLogger.log()
+    def is_exists_sending_head(self):
+        """是否存在发送人头像"""
+        return self._is_element_present(self.__class__.__locators["发送人头像"])
+
+    @TestLogger.log()
+    def is_exists_sending_name(self):
+        """是否存在发送人名称"""
+        return self._is_element_present(self.__class__.__locators["发送人名称"])
+
+    @TestLogger.log()
+    def is_exists_send_content(self):
+        """是否存在发送内容"""
+        return self._is_element_present(self.__class__.__locators["发送内容"])
+
+    @TestLogger.log()
+    def is_exists_send_time(self):
+        """是否存在发送时间"""
+        return self._is_element_present(self.__class__.__locators["发送时间"])

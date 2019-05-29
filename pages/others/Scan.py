@@ -25,3 +25,19 @@ class ScanPage(BasePage):
     @TestLogger.log('返回')
     def click_back(self):
         self.click_element(self.__locators['返回'])
+
+    @TestLogger.log()
+    def wait_for_page_load(self, timeout=30, auto_accept_alerts=True):
+        """等待消息页面加载（自动允许权限）"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["我的二维码"])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self

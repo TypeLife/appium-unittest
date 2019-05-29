@@ -30,10 +30,12 @@ if __name__ == '__main__':
         suite = None
         for p in cli_commands.suite:
             if os.path.isdir(p):
-                s = unittest.defaultTestLoader.discover(os.path.abspath(p), '*.py')
+                # s = unittest.defaultTestLoader.discover(os.path.abspath(p), '*.py')
+                s = unittest.TestLoader().discover(os.path.abspath(p), '*.py')
             elif os.path.isfile(p):
                 path, file = os.path.split(os.path.abspath(p))
-                s = unittest.defaultTestLoader.discover(path, file)
+                # s = unittest.defaultTestLoader.discover(path, file)
+                s = unittest.TestLoader().discover(path, file)
             else:
                 raise ValueError('Path "{}" is not an valid file path!'.format(p))
             if suite is None:
@@ -42,7 +44,8 @@ if __name__ == '__main__':
                 suite.addTest(s)
     else:
         case_path = ConfigManager.get_test_case_root()
-        suite = unittest.defaultTestLoader.discover(case_path, '*.py')
+        # suite = unittest.defaultTestLoader.discover(case_path, '*.py')
+        suite = unittest.TestLoader().discover(case_path, '*.py')
     # RunTest
     from library.HTMLTestRunner import HTMLTestRunner
 
