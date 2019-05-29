@@ -353,7 +353,7 @@ class LabelGroupingPage(ContactsSelector, BasePage):
     def is_group_exist_tips_popup(self):
         try:
             self.wait_condition_and_listen_unexpected(
-                condition=lambda d: self.is_text_present('选择和通讯录联系人'),
+                condition=lambda d: self.is_text_present('新建分组'),
                 unexpected=lambda: self.get_elements(['xpath', '//*[@text="群组已存在"]']),
             )
             return False
