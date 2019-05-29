@@ -3,7 +3,7 @@ from appium.webdriver.common.mobileby import MobileBy
 from library.core.TestLogger import TestLogger
 from pages.components import FooterPage
 import time
-
+from library.core.utils.applicationcache import current_mobile
 
 class ContactsPage(FooterPage):
     """通讯录页面"""
@@ -44,7 +44,7 @@ class ContactsPage(FooterPage):
         'H': (MobileBy.ID, ''),
         '和飞信电话': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         '12560': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_phone'),
-        'X': (MobileBy.ID, ''),
+        'sim标志': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_sim'),
         'xzq': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         'com.chinasofti.rcs:id/contact_index_bar_view': (
             MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_view'),
@@ -70,8 +70,14 @@ class ContactsPage(FooterPage):
         '索引字母容器': (MobileBy.ID, 'com.chinasofti.rcs:id/indexbarview'),
         '新建手机联系人-确定': (MobileBy.ID, 'android:id/icon2'),
         "新建手机联系人-姓名": (MobileBy.XPATH, "//*[@text='姓名']"),
+        "新建手机联系人-电话号码": (MobileBy.XPATH, "//*[@text='电话号码']"),
         '新建手机联系人': (MobileBy.ID, 'com.android.contacts:id/hw_fab'),
+        '新建手机联系人-下拉按钮': (MobileBy.ID, 'com.android.contacts:id/account_arrow'),
 
+
+
+        '已加入团队名称': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_department'),
+        '团队联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name_personal_contactlist'),
     }
 
     @TestLogger.log("获取所有联系人名")
@@ -372,6 +378,34 @@ class ContactsPage(FooterPage):
         self.click_element(locator)
 
     @TestLogger.log()
+    def select_group_by_name(self, name):
+        """根据名字选择一个团队"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title_department" and @text ="%s"]' % name)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        self.click_element(locator)
+
+    @TestLogger.log()
+    def select_group_contact_by_name(self, name):
+        """根据名字选择一个团队内的联系人"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name_personal_contactlist" and @text ="%s"]' % name)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        self.click_element(locator)
+
+
+
+    @TestLogger.log()
     def page_contain_element_add(self):
         """页面包含元素+号"""
         self.page_should_contain_element(self.__class__.__locators['+号'])
@@ -404,17 +438,18 @@ class ContactsPage(FooterPage):
         """点击确定"""
         self.click_element(self.__class__.__locators['新建手机联系人-确定'])
 
-
-    @TestLogger.log('点击新建SIM联系人界面-确定')
+    @TestLogger.log('输入文本内容-手机联系人姓名')
     def input_contact_text(self,text):
         self.input_text(self.__class__.__locators["新建手机联系人-姓名"],text)
+
+    @TestLogger.log('输入文本内容-手机联系人电话')
+    def input_contact_number(self,text):
+        self.input_text(self.__class__.__locators["新建手机联系人-电话号码"],text)
 
     @TestLogger.log('点击新建SIM联系人界面-确定')
     def click_creat_contacts(self):
         """点击新建联系人"""
         self.click_element(self.__class__.__locators['新建手机联系人'])
-
-
 
     @TestLogger.log()
     def select_contacts_by_number(self, number):
@@ -450,9 +485,9 @@ class ContactsPage(FooterPage):
         max_try = 10
         current = 0
         while current < max_try:
-            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
             if self.is_text_present(name):
                 return True
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
             current += 1
             # self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         return False
@@ -464,6 +499,53 @@ class ContactsPage(FooterPage):
             #         return True
             #     current += 1
             # return False
+
+    @TestLogger.log()
+    def click_SIM_identification(self):
+        """点击sim标志"""
+        self.click_element(self.__class__.__locators['sim标志'])
+
+    @TestLogger.log()
+    def click_drop_down_button(self):
+        """点击下拉按钮"""
+        self.click_element(self.__class__.__locators['新建手机联系人-下拉按钮'])
+
+
+
+    @staticmethod
+    def background_app():
+        """后台运行"""
+        current_mobile().press_home_key()
+
+    @TestLogger.log('添加系统联系人')
+    def add_system_contacts(self,name="系统1",number='13813813801'):
+        self.background_app()
+        time.sleep(2)
+        self.click_text('拨号')
+        time.sleep(2)
+        self.click_text('联系人')
+        time.sleep(1)
+        self.click_creat_contacts()
+        time.sleep(1)
+        self.hide_keyboard()
+        if self.is_text_present('保存至: 手机'):
+            pass
+        else:
+            self.click_drop_down_button()
+            time.sleep(1)
+            self.click_text('仅保存在手机')
+            time.sleep(2)
+        self.click_text('姓名')
+        self.input_contact_text(name)
+        self.click_text('电话号码')
+        self.input_contact_number(number)
+        self.click_sure_SIM()
+        time.sleep(2)
+
+    @TestLogger.log("是否在当前页面")
+    def is_on_this_page(self):
+        time.sleep(2)
+        return self.is_text_present('分享名片')
 
 
 

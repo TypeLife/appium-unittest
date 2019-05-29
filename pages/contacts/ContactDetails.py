@@ -52,7 +52,7 @@ class ContactDetailsPage(BasePage):
         "删除联系人": (MobileBy.ID, "com.chinasofti.rcs:id/tv_delete_contact"),
         "呼叫(1/8)": (MobileBy.ID, "com.chinasofti.rcs:id/tv_sure"),
         "暂不开启": (MobileBy.ID, "android:id/button2"),
-        "挂断电话": (MobileBy.ID, "com.chinasofti.rcs:id/ivDecline"),
+        "挂断电话": (MobileBy.ID, "com.android.incallui:id/endButton"),
         "结束通话": (MobileBy.ID, "com.chinasofti.rcs:id/smart_call_out_term"),
         "视频通话呼叫中": (MobileBy.XPATH, "//*[@text='	视频通话呼叫中']"),
         "挂断视频通话": (MobileBy.ID, "com.chinasofti.rcs:id/iv_out_Cancel"),
@@ -83,7 +83,7 @@ class ContactDetailsPage(BasePage):
     @TestLogger.log("点击我知道了")
     def click_I_know(self):
         time.sleep(1)
-        self.click_element(self.__locators["我知道了"])
+        self.click_element(self.__class__.__locators["我知道了"])
 
     @TestLogger.log("点击确定添加快捷方式")
     def click_sure_add_desktop_shortcut(self):
