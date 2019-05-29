@@ -440,4 +440,156 @@ class ImportantMattersAllTest(TestCase):
         # 等待重要事项首页加载
         imp.wait_for_page_load()
 
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_ZYSX_0009(self):
+        """添加子任务"""
 
+        imp = ImportantMattersPage()
+        imp.wait_for_page_load()
+        # 解决工作台不稳定的问题
+        imp.click_back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_important_items()
+        n = 1
+        while not imp.page_should_contain_text2("新建事项"):
+            imp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_important_items()
+            n += 1
+            if n > 20:
+                break
+        # 创建新事项
+        Preconditions.create_new_item()
+        imp.click_first_item()
+        # 1.等待查看事项页面加载
+        imp.wait_for_check_item_page_load()
+        imp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        imp.click_add_subtasks()
+        # 2.等待添加子任务页面加载
+        imp.wait_for_add_subtasks_page_load()
+        # 输入子任务标题
+        title = "子任务标题0009"
+        imp.input_subtasks_title(title)
+        # 输入子任务描述
+        imp.input_subtasks_describe("子任务描述0009")
+        imp.click_subtasks_add_icon()
+        sccp = SelectCompanyContactsPage()
+        # 3.等待选择联系人页面加载
+        sccp.wait_for_page_load()
+        search_name = "大佬1"
+        sccp.input_search_message(search_name)
+        time.sleep(2)
+        sccp.click_contacts_by_name(search_name)
+        sccp.click_sure_button()
+        # 4.返回添加子任务编辑界面，界面底部显示添加的联系人
+        imp.wait_for_add_subtasks_page_load()
+        self.assertEquals(imp.is_text_present("佬1"), True)
+        # 选择截止时间
+        imp.click_modify()
+        time.sleep(2)
+        imp.swipe_time_by_hour()
+        imp.click_sure()
+        time.sleep(1)
+        imp.click_save()
+        imp.wait_for_check_item_page_load()
+        imp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        # 5.中间子任务栏，显示刚刚添加的子任务
+        self.assertEquals(imp.is_text_present(title), True)
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_ZYSX_0010(self):
+        """添加子任务"""
+
+        imp = ImportantMattersPage()
+        imp.wait_for_page_load()
+        # 解决工作台不稳定的问题
+        imp.click_back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_important_items()
+        n = 1
+        while not imp.page_should_contain_text2("新建事项"):
+            imp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_important_items()
+            n += 1
+            if n > 20:
+                break
+        # 创建新事项
+        Preconditions.create_new_item()
+        imp.click_first_item()
+        # 1.等待查看事项页面加载
+        imp.wait_for_check_item_page_load()
+        imp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        imp.click_add_subtasks()
+        # 2.等待添加子任务页面加载
+        imp.wait_for_add_subtasks_page_load()
+        # 输入子任务标题
+        title = "子任务标题0010"
+        imp.input_subtasks_title(title)
+        # 输入子任务描述
+        imp.input_subtasks_describe("子任务描述0010")
+        imp.click_subtasks_add_icon()
+        sccp = SelectCompanyContactsPage()
+        # 3.等待选择联系人页面加载
+        sccp.wait_for_page_load()
+        search_name = "大佬1"
+        sccp.input_search_message(search_name)
+        time.sleep(2)
+        sccp.click_contacts_by_name(search_name)
+        sccp.click_sure_button()
+        # 4.返回添加子任务编辑界面，界面底部显示添加的联系人
+        imp.wait_for_add_subtasks_page_load()
+        self.assertEquals(imp.is_text_present("佬1"), True)
+        # 选择截止时间
+        imp.click_modify()
+        time.sleep(2)
+        imp.swipe_time_by_hour()
+        imp.click_sure()
+        time.sleep(1)
+        imp.click_save()
+        imp.wait_for_check_item_page_load()
+        imp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        # 5.中间子任务栏，显示刚刚添加的子任务
+        self.assertEquals(imp.is_text_present(title), True)
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_ZYSX_0011(self):
+        """修改子任务-修改任务标题"""
+
+        imp = ImportantMattersPage()
+        imp.wait_for_page_load()
+        # 创建新事项
+        Preconditions.create_new_item()
+        imp.click_first_item()
+        # 1.等待查看事项页面加载
+        imp.wait_for_check_item_page_load()
+        # 确保有子任务可修改
+        imp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        imp.click_add_subtasks()
+        imp.wait_for_add_subtasks_page_load()
+        title = "子任务标题0011"
+        imp.input_subtasks_title(title)
+        imp.input_subtasks_describe("子任务描述0011")
+        imp.click_subtasks_add_icon()
+        sccp = SelectCompanyContactsPage()
+        sccp.wait_for_page_load()
+        sccp.click_contacts_by_name("大佬1")
+        sccp.click_sure_button()
+        imp.wait_for_add_subtasks_page_load()
+        imp.click_save()
+        imp.wait_for_check_item_page_load()
+        imp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        # 2.打开查看子任务界面
+        imp.click_text(title)
+        time.sleep(2)
+        # 3.打开子任务标题编辑界面
+        imp.click_text(title)
+        time.sleep(2)
+        modify_title = "修改后的子任务标题0011"
+        imp.input_modify_content(modify_title)
+        imp.click_save()
+        # 4.修改成功，返回查看子任务详情界面，界面任务标题显示为刚刚修改的标题
+        self.assertEquals(imp.is_toast_exist("修改成功"), True)
+        self.assertEquals(imp.is_text_present(modify_title), True)
