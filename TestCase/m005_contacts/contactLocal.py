@@ -2467,7 +2467,114 @@ class ContactsLocalhigh(TestCase):
         time.sleep(2)
         cdp.click_end_call()
 
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0264(self):
+        """测试和通讯录联系人profile，没有快捷方式功能"""
+        contact=ContactsPage()
+        contact.select_group_by_name('ateam7272')
+        contact.select_group_contact_by_name('alice')
+        ContactDetailsPage().page_should_not_contain_text('添加桌面快捷方式')
 
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0265(self):
+        """测试RCS用户，已设置和飞信头像时，添加桌面快捷方式的显示效果"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        contact_detail=ContactDetailsPage()
+        contact_detail.click_add_desktop_shortcut()
+        time.sleep(2)
+        contact_detail.click_I_know()
+        time.sleep(1)
+        if contact_detail.is_text_present('添加到主屏幕'):
+            contact_detail.click_sure_add_desktop_shortcut()
+        time.sleep(2)
+        Preconditions.background_app()
+        time.sleep(2)
+        contact_detail.is_element_present_on_desktop('大佬1')
+        contact_detail.click_text('大佬1')
+        time.sleep(2)
+        contact_detail.page_should_contain_text('添加桌面快捷方式')
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0268(self):
+        """测试非RCS用户，已设置和飞信头像时，添加桌面快捷方式的显示效果"""
+        ContactsPage().select_contacts_by_name('测试号码')
+        contact_detail=ContactDetailsPage()
+        #添加桌面快捷方式
+        contact_detail.click_add_desktop_shortcut()
+        time.sleep(2)
+        contact_detail.click_I_know()
+        time.sleep(1)
+        if contact_detail.is_text_present('添加到主屏幕'):
+            contact_detail.click_sure_add_desktop_shortcut()
+        time.sleep(2)
+        Preconditions.background_app()
+        time.sleep(2)
+        contact_detail.is_element_present_on_desktop('测试号码')
+        #快捷方式进入app
+        contact_detail.click_text('测试号码')
+        time.sleep(2)
+        contact_detail.page_should_contain_text('添加桌面快捷方式')
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0270(self):
+        """测试点击快捷方式跳转，进入profile页后进行功能操作，和页面返回跳转等"""
+        #从快捷方式进入页面
+        contact=ContactsPage()
+        time.sleep(2)
+        Preconditions.background_app()
+        contact.is_element_present_on_desktop('测试号码')
+        contact.click_text('测试号码')
+        #个人详情页
+        time.sleep(3)
+        glp=GroupListPage()
+        glp.page_should_contain_text('添加桌面快捷方式')
+        #星标
+        glp.click_star_icon()
+        glp.page_should_contain_text('已成功添加为星标联系人')
+        time.sleep(2)
+        glp.click_star_icon()
+        #点击编辑
+        ContactDetailsPage().click_edit_contact()
+        time.sleep(2)
+        creat_contact=CreateContactPage()
+        creat_contact.hide_keyboard()
+        if creat_contact.get_text_of_box() == None:
+            creat_contact.click_input_company()
+            creat_contact.hide_keyboard()
+            creat_contact.input_company('sds')
+            creat_contact.click_save()
+        else:
+            creat_contact.click_back()
+        #点击返回
+        time.sleep(2)
+        creat_contact.click_back()
+        MessagePage().is_on_this_page()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0277(self):
+        """测试客户端退出登陆后，点击快捷方式"""
+        #退出客户端
+        contact=ContactsPage()
+        time.sleep(2)
+        contact.open_me_page()
+        me=MePage()
+        me.page_up()
+        me.click_setting_menu()
+        me.page_down()
+        me.click_text('退出')
+        time.sleep(1)
+        me.click_sure_drop()
+        time.sleep(4)
+        #从快捷方式进入
+        Preconditions.background_app()
+        contact.is_element_present_on_desktop('测试号码')
+        contact.click_text('测试号码')
+        time.sleep(5)
+        #检查是否在登录界面
+        OneKeyLoginPage().is_on_this_page()
+
+    def tearDown_test_contacts_chenjixiang_0277(self):
+        Preconditions.login_by_one_key_login()
 
 
 
