@@ -387,6 +387,113 @@ class CallMultipartyVideo(TestCase):
         cpg.click_back_by_android(3)
         cpg.click_call()
 
+    @staticmethod
+    def setUp_test_call_zhenyishan_0007_001():
+        # 关闭WiFi，打开4G网络
+        Preconditions.make_already_in_call()
+        CalllogBannerPage().skip_multiparty_call()
+        CallPage().delete_all_call_entry()
+        CallPage().set_network_status(4)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0007_001(self):
+        """未订购每月10G免流，使用移动网络发起多方视频，弹出每月10G免流特权提示窗口---普通群/企业群"""
+        # 1、登录的手机号码未订购每月10G免流
+        # 2、当前为移动网络连接
+        # Step:1、消息模块 — 普通群/企业群 — 点击视频按钮 — 点击多方视频
+        cpg = CallPage()
+        mp = MessagePage()
+        ContactsPage().click_message_icon()
+        mp.wait_for_page_load()
+        mp.click_add_icon()
+        mp.click_group_chat()
+        # 点击选择一个群
+        scg = SelectContactsPage()
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        # 选择一个普通群
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        sog.selecting_one_group_by_name("Test_" + phone_number)
+        # Step: 2、勾选2 - 8人，点击呼叫
+        gpg = GroupListPage()
+        gpg.click_mult_call_icon()
+        CallPage().click_mutil_video_call()
+        mppg = MultiPartyVideoPage()
+        for i in range(3):
+            mppg.click_contact_icon(i)
+        mppg.click_tv_sure()
+        # CheckPoint:发起多方视频，弹出每月10G免流特权提示弹窗
+        time.sleep(1)
+        cpg.page_should_contain_text("每月10G免流特权")
+        cpg.click_back_by_android(3)
+
+    @staticmethod
+    def tearDown_test_call_zhenyishan_0007_001():
+        # 打开网络
+        cpg = CallPage()
+        cpg.set_network_status(6)
+
+    @staticmethod
+    def setUp_test_call_zhenyishan_0007_002():
+        # 关闭WiFi，打开4G网络
+        Preconditions.make_already_in_call()
+        CalllogBannerPage().skip_multiparty_call()
+        CallPage().delete_all_call_entry()
+        CallPage().set_network_status(4)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0007_002(self):
+        """未订购每月10G免流，使用移动网络发起多方视频，弹出每月10G免流特权提示窗口---通话模块 — 发起视频 — 勾选2--8人 — 点击呼叫"""
+        # 1、登录的手机号码未订购每月10G免流
+        # 2、当前为移动网络连接
+        # Step:1、通话模块 — 发起视频 — 勾选2--8人 — 点击呼叫
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        mppg = MultiPartyVideoPage()
+        mppg.select_contacts_by_number("14775970982")
+        mppg.select_contacts_by_number("13800138006")
+        mppg.click_tv_sure()
+        # CheckPoint:发起多方视频，弹出每月10G免流特权提示弹窗
+        time.sleep(1)
+        cpg.page_should_contain_text("每月10G免流特权")
+        cpg.click_back_by_android(2)
+
+    @staticmethod
+    def tearDown_test_call_zhenyishan_0007_002():
+        # 打开网络
+        cpg = CallPage()
+        cpg.set_network_status(6)
+
+    @staticmethod
+    def setUp_test_call_zhenyishan_0007_003():
+        # 关闭WiFi，打开4G网络
+        Preconditions.make_already_in_call()
+        CalllogBannerPage().skip_multiparty_call()
+        CallPage().delete_all_call_entry()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0007_003(self):
+        """未订购每月10G免流，使用移动网络发起多方视频，弹出每月10G免流特权提示窗口---通话模块 — 通话记录列表 — 点击已有多方视频记录"""
+        # 1、登录的手机号码未订购每月10G免流
+        # 2、当前为移动网络连接
+        # Step:1、通话模块 — 通话记录列表 — 点击已有多方视频记录
+        self.test_call_zhenyishan_0002()
+        CallPage().set_network_status(4)
+        # CheckPoint:发起多方视频
+        cpg = CallPage()
+        cpg.click_call_history()
+        # CheckPoint:发起多方视频，弹出每月10G免流特权提示弹窗
+        time.sleep(1)
+        cpg.page_should_contain_text("每月10G免流特权")
+        cpg.click_back_by_android()
+
+    @staticmethod
+    def tearDown_test_call_zhenyishan_0007_003():
+        # 打开网络
+        cpg = CallPage()
+        cpg.set_network_status(6)
 
 
 
