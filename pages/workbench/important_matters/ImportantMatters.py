@@ -20,6 +20,8 @@ class ImportantMattersPage(BasePage):
         '保存': (MobileBy.XPATH, '//*[@text="保存"]'),
         '人员状态': (MobileBy.XPATH, '//*[@text="人员状态"]'),
         '评论': (MobileBy.XPATH, '//*[@text="评论"]'),
+        '修改': (MobileBy.XPATH, '//*[contains(@text,"修改")]'),
+        '+子任务': (MobileBy.XPATH, '//*[@text="+子任务"]'),
         '提交评论': (MobileBy.XPATH, '//*[@text="提交评论"]'),
         '添加人员': (MobileBy.XPATH, '//*[@text="添加人员"]'),
         '删除人员': (MobileBy.XPATH, '//*[@text="删除人员"]'),
@@ -32,6 +34,12 @@ class ImportantMattersPage(BasePage):
         '事项修改编辑框': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.widget.EditText'),
         '+号': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[4]/android.widget.ListView/android.view.View[2]/android.view.View[1]/android.view.View'),
         '事项标题栏三点': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]/android.view.View[1]/android.view.View[3]'),
+        '子任务标题输入框': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.widget.EditText[1]'),
+        '子任务描述输入框': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.widget.EditText[2]'),
+        '子任务添加负责人+号': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[4]/android.widget.ListView/android.view.View/android.view.View/android.view.View'),
+        '子任务截止时间_时': (MobileBy.XPATH, '	/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[7]/android.view.View/android.view.View[3]/android.view.View[4]/android.view.View/android.view.View[1]'),
+        '子任务截止时间_分1': (MobileBy.XPATH, '	/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[7]/android.view.View/android.view.View[3]/android.view.View[5]/android.view.View/android.view.View[1]'),
+        '子任务截止时间_分2': (MobileBy.XPATH, '	/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[7]/android.view.View/android.view.View[3]/android.view.View[5]/android.view.View/android.view.View[2]'),
     }
 
     @TestLogger.log()
@@ -121,6 +129,19 @@ class ImportantMattersPage(BasePage):
         return self
 
     @TestLogger.log()
+    def wait_for_add_subtasks_page_load(self, timeout=30, auto_accept_alerts=True):
+        """等待添加子任务页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["保存"])
+            )
+        except:
+            raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
+        return self
+
+    @TestLogger.log()
     def input_create_item_title(self, title):
         """输入创建事项页面标题"""
         self.input_text(self.__class__.__locators["创建事项页面标题输入框"], title)
@@ -134,6 +155,21 @@ class ImportantMattersPage(BasePage):
     def input_modify_content(self, content):
         """输入修改内容"""
         self.input_text(self.__class__.__locators["事项修改编辑框"], content)
+
+    @TestLogger.log()
+    def input_subtasks_title(self, title):
+        """输入子任务标题"""
+        self.input_text(self.__class__.__locators["子任务标题输入框"], title)
+
+    @TestLogger.log()
+    def input_subtasks_describe(self, describe):
+        """输入子任务描述"""
+        self.input_text(self.__class__.__locators["子任务描述输入框"], describe)
+
+    @TestLogger.log()
+    def click_subtasks_add_icon(self):
+        """点击子任务页面+号"""
+        self.click_element(self.__class__.__locators["子任务添加负责人+号"])
 
     @TestLogger.log()
     def click_check_item_title(self):
@@ -174,6 +210,11 @@ class ImportantMattersPage(BasePage):
     def click_personnel_status(self):
         """点击人员状态"""
         self.click_element(self.__class__.__locators["人员状态"])
+
+    @TestLogger.log()
+    def click_add_subtasks(self):
+        """点击+子任务"""
+        self.click_element(self.__class__.__locators["+子任务"])
 
     @TestLogger.log()
     def click_comment(self):
@@ -242,3 +283,28 @@ class ImportantMattersPage(BasePage):
                 time.sleep(1)
                 self.click_sure()
                 self.wait_for_page_load()
+
+    @TestLogger.log()
+    def swipe_time_by_hour(self):
+        """滑动子任务截止时间-时"""
+        self.swipe_by_direction(self.__class__.__locators["子任务截止时间_时"], "up", 700)
+
+    @TestLogger.log()
+    def swipe_time_by_minute(self):
+        """滑动子任务截止时间-分"""
+        self.swipe_by_direction(self.__class__.__locators["子任务截止时间_分1"], "up", 700)
+
+    @TestLogger.log()
+    def click_modify(self):
+        """点击修改"""
+        self.click_element(self.__class__.__locators["修改"])
+
+    @TestLogger.log()
+    def get_time_text(self):
+        """获取子任务当前滚动条时间"""
+        el1 = self.get_element(self.__class__.__locators["子任务截止时间_时"])
+        hour = el1.text[0:-1]
+        el2 = self.get_element(self.__class__.__locators["子任务截止时间_分2"])
+        minute = el2.text[0:-1]
+        print(hour + ":" + minute)
+        return hour + ":" + minute

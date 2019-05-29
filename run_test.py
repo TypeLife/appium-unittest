@@ -49,7 +49,6 @@ def get_content():
     return total_list
 
 def get_total():
-    total_list = []
     while True:
         total_list = get_content()
         if total_list:
@@ -58,12 +57,12 @@ def get_total():
             list.append(int(total_list[0][1]) + int(total_list[1][1]) + int(total_list[2][1]) + int(total_list[3][1]))
             list.append(int(total_list[0][2]) + int(total_list[1][2]) + int(total_list[2][2]) + int(total_list[3][2]))
             list.append(int(total_list[0][3]) + int(total_list[1][3]) + int(total_list[2][3]) + int(total_list[3][3]))
-            list.append(str((float(total_list[0][4]) + float(total_list[1][4]) + float(total_list[2][4]) + float(total_list[3][4]))/4))
+            list.append('%.2f' %((float(total_list[0][4]) + float(total_list[1][4]) + float(total_list[2][4]) + float(total_list[3][4]))/4))
             total_list.append(list)
             break
         elif total_list is None:
             print("等待中")
-            time.sleep(600)
+            time.sleep(1800)
     print("统计：")
     print(total_list)
     return total_list
