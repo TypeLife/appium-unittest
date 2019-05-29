@@ -446,7 +446,7 @@ class ContactsPage(FooterPage):
     def input_contact_number(self,text):
         self.input_text(self.__class__.__locators["新建手机联系人-电话号码"],text)
 
-    @TestLogger.log('点击新建SIM联系人界面-确定')
+    @TestLogger.log('点击新建SIM联系人')
     def click_creat_contacts(self):
         """点击新建联系人"""
         self.click_element(self.__class__.__locators['新建手机联系人'])
@@ -541,6 +541,32 @@ class ContactsPage(FooterPage):
         self.input_contact_number(number)
         self.click_sure_SIM()
         time.sleep(2)
+
+    @TestLogger.log('添加系统联系人')
+    def add_SIM_contacts(self,name="sim联系人",number='12345678912'):
+        self.background_app()
+        time.sleep(2)
+        self.click_text('拨号')
+        time.sleep(2)
+        self.click_text('联系人')
+        time.sleep(1)
+        self.click_creat_contacts()
+        time.sleep(1)
+        self.hide_keyboard()
+        if self.is_text_present('保存至: 手机'):
+            self.click_drop_down_button()
+            time.sleep(1)
+            self.click_text('SIM卡')
+            time.sleep(2)
+        else:
+            pass
+        self.click_text('姓名')
+        self.input_contact_text(name)
+        self.click_text('电话号码')
+        self.input_contact_number(number)
+        self.click_sure_SIM()
+        time.sleep(2)
+
 
     @TestLogger.log("是否在当前页面")
     def is_on_this_page(self):
