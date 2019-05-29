@@ -2629,7 +2629,99 @@ class ContactsLocalhigh(TestCase):
         cdp = ContactDetailsPage()
         cdp.page_should_contain_text('添加桌面快捷方式')
 
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0283(self):
+        """测试创建快捷方式后，删除联系人"""
+        contact=ContactsPage()
+        contact.select_contacts_by_name('测试号码')
+        time.sleep(1)
+        #删除联系人
+        ContactDetailsPage().click_edit_contact()
+        time.sleep(2)
+        edit_contact=EditContactPage()
+        edit_contact.hide_keyboard()
+        edit_contact.click_delete_contact()
+        time.sleep(1)
+        edit_contact.click_sure_delete()
+        time.sleep(2)
+        #从快捷方式进入
+        Preconditions.background_app()
+        contact.is_element_present_on_desktop('测试号码')
+        contact.click_text('测试号码')
+        time.sleep(2)
+        ContactsPage().page_should_contain_text('联系')
 
+    def tearDown_test_contacts_chenjixiang_0283(self):
+        #删除联系人后添加该联系人
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        if ContactsPage().is_contacts_exist('测试号码'):
+            pass
+        else:
+            ContactsPage().click_add()
+            time.sleep(2)
+            CreateContactPage().create_contact('测试号码','14775970982')
+
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0294(self):
+        """测试sim联系人profile页显示是否正常"""
+        #确保有SIM卡联系人
+        contact = ContactsPage()
+        if ContactsPage().is_page_contain_element('sim标志'):
+            time.sleep(2)
+        else:
+            contact.add_SIM_contacts()
+            #激活App
+            Preconditions.activate_app()
+            time.sleep(2)
+            if contact.is_text_present('SIM卡联系人'):
+                contact.click_text('显示')
+        #查看SIM卡联系人的个人详情页
+        contact.click_SIM_identification()
+        time.sleep(2)
+        contact_detail=ContactDetailsPage()
+        contact_detail.page_should_contain_text('来自SIM卡联系人')
+        name=contact_detail.get_people_name()
+        #添加桌面快捷方式
+        contact_detail.click_add_desktop_shortcut()
+        time.sleep(2)
+        contact_detail.click_I_know()
+        time.sleep(1)
+        if contact_detail.is_text_present('添加到主屏幕'):
+            contact_detail.click_sure_add_desktop_shortcut()
+        time.sleep(2)
+        Preconditions.background_app()
+        time.sleep(2)
+        contact_detail.is_element_present_on_desktop(name)
+        #快捷方式进入app
+        contact_detail.click_text(name)
+        time.sleep(2)
+        contact_detail.page_should_contain_text('添加桌面快捷方式')
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0308(self):
+        """号码过滤-空格过滤：和飞信通讯录联系人编辑页过滤系统通讯录联系人手机号码中间的空格"""
+        time.sleep(2)
+        #确保有SIM卡联系人
+        contact = ContactsPage()
+        if ContactsPage().is_contacts_exist('系统1'):
+            time.sleep(2)
+        else:
+            contact.add_system_contacts()
+            #激活App
+            Preconditions.activate_app()
+            time.sleep(2)
+            if contact.is_text_present('SIM卡联系人'):
+                contact.click_text('显示')
+        #查看SIM卡联系人的电话号码不显示空格
+        contact.select_contacts_by_name('系统1')
+        time.sleep(2)
+        contact_detail=ContactDetailsPage()
+        contact_detail.click_edit_contact()
+        time.sleep(2)
+        number =CreateContactPage().get_text_of_box(locator='输入号码')
+        self.assertEqual(number,'13813813801')
 
 
 
