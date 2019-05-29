@@ -2924,7 +2924,7 @@ class MessageGroupChatAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0258(self):
-        """消息列表——发起群聊——选择选择团队联系人——创建群聊"""
+        """消息列表——发起群聊——选择501个手机联系人——创建群聊"""
         scp = SelectContactsPage()
         gcp = GroupChatPage()
         scp.create_multi_contacts_group(groupname='aaa',num=6,times=3)
@@ -2946,7 +2946,7 @@ class MessageGroupChatAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0271(self):
-        """消息列表——发起群聊——选择2个手机联系人"""
+        """通讯录——发起群聊——选择手机联系人"""
         scp = SelectContactsPage()
         scp.create_message_group()
         time.sleep(1)
@@ -3153,7 +3153,7 @@ class MessageGroupChatAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0242(self):
-        """卸载重装——登录和飞信——查看置顶状态"""
+        """消息草稿-聊天列表显示-输入文本信息"""
         scp = SelectContactsPage()
         scp.create_message_group()
         time.sleep(1)
@@ -3183,7 +3183,7 @@ class MessageGroupChatAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0243(self):
-        """卸载重装——登录和飞信——查看置顶状态"""
+        """消息草稿-聊天列表显示-输入表情信息"""
         scp = SelectContactsPage()
         scp.create_message_group()
         time.sleep(1)
@@ -3213,7 +3213,7 @@ class MessageGroupChatAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0245(self):
-        """消息草稿-聊天列表显示-输入空格消息"""
+        """消息草稿-聊天列表显示-输入空格消息-网络异常"""
         scp = SelectContactsPage()
         scp.create_message_group()
         time.sleep(1)
@@ -3244,7 +3244,7 @@ class MessageGroupChatAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat',"high")
     def test_msg_xiaoqiu_0246(self):
-        """消息草稿-聊天列表显示-输入文本信息"""
+        """消息草稿-聊天列表显示-输入文本信息-网络异常"""
         scp = SelectContactsPage()
         scp.create_message_group()
         time.sleep(1)
@@ -3535,7 +3535,7 @@ class MessageGroupChatAllTest(TestCase):
 
 
     @staticmethod
-    def setUp_test_msg_xiaoqiu_0225():
+    def setUp_test_msg_xiaoqiu_0228():
         Preconditions.select_mobile('Android-移动')
         Preconditions.make_already_in_message_page()
         time.sleep(2)
