@@ -630,3 +630,7 @@ class CallPage(BasePage):
             timeout=30,
             auto_accept_permission_alert=True,
             condition=lambda d: self.is_text_present("说点什么..."))
+
+    def click_call_history(self):
+        """点击通话记录号码"""
+        self.click_element(self.__locators['通话记录'])

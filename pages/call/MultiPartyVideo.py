@@ -2,7 +2,7 @@ from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
-
+import time
 
 class MultiPartyVideoPage(BasePage):
     """MultipartyVideoPage"""
@@ -25,9 +25,9 @@ class MultiPartyVideoPage(BasePage):
         '联系人item': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
         'D': (MobileBy.ID, 'com.chinasofti.rcs:id/index_text'),
         '头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
-        'com.chinasofti.rcs:id/contact_icon': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_icon'),
+        '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_icon'),
         '大佬1': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
-        '13800138005': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),
+        '联系人号码': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),
         '大佬2': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         '13800138006': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),
         '大佬3': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
@@ -40,7 +40,11 @@ class MultiPartyVideoPage(BasePage):
         '给个红包2': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         '13800138001': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),
         '给个红包3': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
-        '已选择成员': (MobileBy.ID, 'com.chinasofti.rcs:id/hor_contact_selection')
+        '已选择成员': (MobileBy.ID, 'com.chinasofti.rcs:id/hor_contact_selection'),
+        '挂断多方视频': (MobileBy.ID, 'com.chinasofti.rcs:id/end_video_call_btn'),
+        '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
+        '取消': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
+        '再次呼叫': (MobileBy.ID, 'com.chinasofti.rcs:id/call_again')
     }
 
     @TestLogger.log()
@@ -73,3 +77,57 @@ class MultiPartyVideoPage(BasePage):
     def input_contact_search(self, text):
         """输入电话号码并搜索"""
         self.input_text(self.__locators["搜索或输入号码"], text)
+
+    @TestLogger.log()
+    def click_end_video_call(self):
+        """点击挂断多方通话"""
+        self.click_element(self.__locators["挂断多方视频"])
+
+    @TestLogger.log()
+    def is_exist_end_video_call(self):
+        """判断当前是否存在挂断多方通话"""
+        return self._is_element_present(self.__locators["挂断多方视频"])
+
+    @TestLogger.log()
+    def click_btn_ok(self):
+        """点击确定"""
+        self.click_element(self.__locators["确定"])
+
+    @TestLogger.log()
+    def click_call_again(self):
+        """点击再次呼叫"""
+        self.click_element(self.__locators["再次呼叫"])
+
+
+
+    @TestLogger.log()
+    def click_contact_icon(self, index=0):
+        """点击联系人头像"""
+        el = self.get_elements(self.__locators["联系人头像"])
+        el[index].click()
+
+    @TestLogger.log()
+    def select_contacts_by_number(self, number):
+        """根据号码选择一个联系人"""
+        time.sleep(1)
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_number" and @text ="%s"]' % number)
+        max_try = 20
+        current = 0
+        while current < max_try:
+
+            if self._is_element_present(locator):
+                break
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+            current += 1
+        self.click_element(locator)
+
+    def click_select_contacts(self, index):
+        """通过下标点击选择联系人"""
+        elements = self.get_elements(self.__locators["联系人号码"])
+        try:
+            if len(elements) > 0:
+                return elements[index].click()
+        except:
+            raise IndexError("元素超出索引")
+
+
