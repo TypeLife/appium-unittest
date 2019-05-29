@@ -2394,5 +2394,89 @@ class ContactsLocalhigh(TestCase):
         cdp.click_end_call()
 
 
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0242(self):
+        """测试星标点击"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        glp = GroupListPage()
+        time.sleep(2)
+        glp.click_star_icon()
+        glp.page_should_contain_text('已成功添加为星标联系人')
+
+    def tearDown_test_contacts_chenjixiang_0242(self):
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        ContactsPage().select_contacts_by_name('大佬1')
+        glp = GroupListPage()
+        time.sleep(2)
+        glp.click_star_icon()
+        if glp.is_text_present('已取消添加为星标联系人'):
+            pass
+        else:
+            glp.click_star_icon()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0243(self):
+        """测试取消星标"""
+        #添加联系人是星标联系人
+        ContactsPage().select_contacts_by_name('大佬1')
+        glp = GroupListPage()
+        time.sleep(2)
+        glp.click_star_icon()
+        glp.page_should_contain_text('已成功添加为星标联系人')
+        #取消添加星标联系人
+        glp.click_star_icon()
+        glp.page_should_contain_text('已取消添加为星标联系人')
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0246(self):
+        """测试消息，点击消息，跳转到对话框"""
+        #添加联系人是星标联系人
+        ContactsPage().select_contacts_by_name('大佬1')
+        glp = GroupListPage()
+        ContactDetailsPage().click_message_icon()
+        time.sleep(2)
+        if ChatWindowPage().is_text_present("用户须知"):
+            #如果存在用户须知,就点击已阅读,然后点击返回.如果不存在,就直接点击返回
+            ChatWindowPage().click_already_read()
+            ChatWindowPage().click_sure_icon()
+        SingleChatPage().is_on_this_page()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0247(self):
+        """测试电话，点击后调用系统通话，拨打电话"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        cdp.click_call_icon()
+        if cdp.is_text_present('始终允许'):
+            cdp.click_text('始终允许')
+        time.sleep(2)
+        cdp.cancel_call()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0248(self):
+        """测试语音通话，点击后弹出语音通话框"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        cdp.click_voice_call_icon()
+        if cdp.is_text_present('始终允许'):
+            cdp.click_text('始终允许')
+        if cdp.is_text_present('暂不开启'):
+            time.sleep(2)
+            cdp.click_text('暂不开启')
+        time.sleep(2)
+        cdp.click_end_call()
+
+
+
+
+
+
+
+
+
+
+
+
 if __name__=="__main__":
     unittest.main()
