@@ -2576,6 +2576,58 @@ class ContactsLocalhigh(TestCase):
     def tearDown_test_contacts_chenjixiang_0277(self):
         Preconditions.login_by_one_key_login()
 
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0250(self):
+        """测试视频通话，点击后弹出视频通话框"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        cdp.click_video_call_icon()
+        if cdp.is_text_present('始终允许'):
+            cdp.click_text('始终允许')
+        if cdp.is_text_present('暂不开启'):
+            time.sleep(1)
+            cdp.click_text('暂不开启')
+        time.sleep(2)
+        cdp.end_video_call()
+
+    def setUp_test_contacts_chenjixiang_0253(self):
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.click_menu('设置')
+        me_page.click_menu('联系人管理')
+        lcontact = localContactPage()
+        lcontact.swich_sim_contact(flag=True)
+        lcontact.click_back_by_android(times=2)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0253(self):
+        """测试sim联系人profile页显示是否正常"""
+        #确保有SIM卡联系人
+        GroupListPage().open_contacts_page()
+        contact = ContactsPage()
+        if ContactsPage().is_page_contain_element('sim标志'):
+            time.sleep(2)
+        else:
+            contact.add_SIM_contacts()
+            #激活App
+            Preconditions.activate_app()
+            time.sleep(2)
+            if contact.is_text_present('SIM卡联系人'):
+                contact.click_text('显示')
+        #查看SIM卡联系人的个人详情页
+        contact.click_SIM_identification()
+        time.sleep(2)
+        ContactDetailsPage().page_should_contain_text('来自SIM卡联系人')
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0259(self):
+        """测试本地联系人profile页，分享名片下方新增添加快捷方式"""
+        ContactsPage().select_contacts_by_name('大佬1')
+        cdp = ContactDetailsPage()
+        cdp.page_should_contain_text('添加桌面快捷方式')
 
 
 
