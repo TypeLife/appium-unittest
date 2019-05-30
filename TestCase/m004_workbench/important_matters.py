@@ -593,3 +593,180 @@ class ImportantMattersAllTest(TestCase):
         # 4.修改成功，返回查看子任务详情界面，界面任务标题显示为刚刚修改的标题
         self.assertEquals(imp.is_toast_exist("修改成功"), True)
         self.assertEquals(imp.is_text_present(modify_title), True)
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_ZYSX_0012(self):
+        """修改子任务-修改任务描述"""
+
+        imp = ImportantMattersPage()
+        imp.wait_for_page_load()
+        # 创建新事项
+        Preconditions.create_new_item()
+        imp.click_first_item()
+        # 1.等待查看事项页面加载
+        imp.wait_for_check_item_page_load()
+        # 确保有子任务可修改
+        imp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        imp.click_add_subtasks()
+        imp.wait_for_add_subtasks_page_load()
+        title = "子任务标题0012"
+        imp.input_subtasks_title(title)
+        content = "子任务描述0012"
+        imp.input_subtasks_describe(content)
+        imp.click_subtasks_add_icon()
+        sccp = SelectCompanyContactsPage()
+        sccp.wait_for_page_load()
+        sccp.click_contacts_by_name("大佬1")
+        sccp.click_sure_button()
+        imp.wait_for_add_subtasks_page_load()
+        imp.click_save()
+        imp.wait_for_check_item_page_load()
+        imp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        # 2.打开查看子任务界面
+        imp.click_text(title)
+        time.sleep(2)
+        # 3.打开子任务内容编辑界面
+        imp.click_text(content)
+        time.sleep(2)
+        modify_content = "修改后的子任务描述0012"
+        imp.input_modify_content(modify_content)
+        imp.click_save()
+        # 4.修改成功，返回查看子任务详情界面，界面任务描述显示为刚刚修改的信息
+        self.assertEquals(imp.is_toast_exist("修改成功"), True)
+        self.assertEquals(imp.is_text_present(modify_content), True)
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_ZYSX_0013(self):
+        """修改子任务-修改标题"""
+
+        imp = ImportantMattersPage()
+        imp.wait_for_page_load()
+        # 创建新事项
+        Preconditions.create_new_item()
+        imp.click_first_item()
+        # 1.等待查看事项页面加载
+        imp.wait_for_check_item_page_load()
+        # 确保有子任务可修改
+        imp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        imp.click_add_subtasks()
+        imp.wait_for_add_subtasks_page_load()
+        title = "子任务标题0013"
+        imp.input_subtasks_title(title)
+        imp.input_subtasks_describe("子任务描述0013")
+        imp.click_subtasks_add_icon()
+        sccp = SelectCompanyContactsPage()
+        sccp.wait_for_page_load()
+        sccp.click_contacts_by_name("大佬1")
+        sccp.click_sure_button()
+        imp.wait_for_add_subtasks_page_load()
+        imp.click_save()
+        imp.wait_for_check_item_page_load()
+        imp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        # 2.打开查看子任务界面
+        imp.click_text(title)
+        time.sleep(2)
+        # 3.打开子任务标题编辑界面
+        imp.click_text(title)
+        time.sleep(2)
+        modify_title = "修改后的子任务标题0013"
+        imp.input_modify_content(modify_title)
+        imp.click_save()
+        # 4.修改成功，返回查看子任务详情界面，界面任务标题显示为刚刚修改的标题
+        self.assertEquals(imp.is_toast_exist("修改成功"), True)
+        self.assertEquals(imp.is_text_present(modify_title), True)
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_ZYSX_0014(self):
+        """修改子任务-修改负责人"""
+
+        imp = ImportantMattersPage()
+        imp.wait_for_page_load()
+        # 创建新事项
+        Preconditions.create_new_item()
+        imp.click_first_item()
+        # 1.等待查看事项页面加载
+        imp.wait_for_check_item_page_load()
+        # 确保有子任务可修改
+        imp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        imp.click_add_subtasks()
+        imp.wait_for_add_subtasks_page_load()
+        title = "子任务标题0014"
+        imp.input_subtasks_title(title)
+        imp.input_subtasks_describe("子任务描述0014")
+        imp.click_subtasks_add_icon()
+        sccp = SelectCompanyContactsPage()
+        sccp.wait_for_page_load()
+        sccp.click_contacts_by_name("大佬1")
+        sccp.click_sure_button()
+        imp.wait_for_add_subtasks_page_load()
+        imp.click_save()
+        imp.wait_for_check_item_page_load()
+        imp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        # 2.打开查看子任务界面
+        imp.click_text(title)
+        time.sleep(2)
+        imp.click_text("佬1")
+        # 3.等待选择联系人页面加载
+        sccp.wait_for_page_load()
+        search_name = "大佬2"
+        sccp.input_search_message(search_name)
+        time.sleep(2)
+        sccp.click_contacts_by_name(search_name)
+        sccp.click_sure_button()
+        time.sleep(2)
+        # 4.界面负责人显示为刚刚修改的联系人
+        self.assertEquals(imp.is_text_present("佬2"), True)
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_ZYSX_0015(self):
+        """修改子任务-修改截止时间"""
+
+        imp = ImportantMattersPage()
+        imp.wait_for_page_load()
+        # 解决工作台不稳定的问题
+        imp.click_back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_important_items()
+        n = 1
+        while not imp.page_should_contain_text2("新建事项"):
+            imp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_important_items()
+            n += 1
+            if n > 20:
+                break
+        # 创建新事项
+        Preconditions.create_new_item()
+        imp.click_first_item()
+        # 1.等待查看事项页面加载
+        imp.wait_for_check_item_page_load()
+        # 确保有子任务可修改
+        imp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        imp.click_add_subtasks()
+        imp.wait_for_add_subtasks_page_load()
+        title = "子任务标题0015"
+        imp.input_subtasks_title(title)
+        imp.input_subtasks_describe("子任务描述0015")
+        imp.click_subtasks_add_icon()
+        sccp = SelectCompanyContactsPage()
+        sccp.wait_for_page_load()
+        sccp.click_contacts_by_name("大佬1")
+        sccp.click_sure_button()
+        imp.wait_for_add_subtasks_page_load()
+        imp.click_save()
+        imp.wait_for_check_item_page_load()
+        imp.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        # 2.打开查看子任务界面
+        imp.click_text(title)
+        # 3.打开时间选择弹窗
+        imp.click_modify()
+        time.sleep(2)
+        imp.swipe_time_by_minute()
+        time.sleep(2)
+        # 获取子任务当前滚动条时间（由于滚动条的时间xpath会随滑动变化，验证时间有局限性）
+        current_time = imp.get_time_text()
+        imp.click_sure()
+        # 4.修改成功，返回查看子任务详情界面，界面截止时间显示为刚刚修改的时间信息
+        self.assertEquals(imp.is_toast_exist("修改成功"), True)
+        self.assertEquals(imp.is_text_present(current_time), True)
