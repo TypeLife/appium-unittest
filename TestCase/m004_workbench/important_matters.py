@@ -846,3 +846,52 @@ class ImportantMattersAllTest(TestCase):
         # 等待重要事项首页加载
         imp.wait_for_page_load()
 
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_ZYSX_0019(self):
+        """事项删除"""
+
+        imp = ImportantMattersPage()
+        imp.wait_for_page_load()
+        # 清空进行中的事项，确保不影响验证
+        imp.clear_item()
+        # 确保有事项删除
+        imp.click_new_item()
+        imp.wait_for_create_item_page_load()
+        title = "测试事项0019"
+        imp.input_create_item_title(title)
+        imp.input_create_item_describe("描述内容0019")
+        imp.click_add_icon()
+        sccp = SelectCompanyContactsPage()
+        sccp.wait_for_page_load()
+        sccp.click_contacts_by_name("大佬1")
+        sccp.click_sure_button()
+        imp.wait_for_create_item_page_load()
+        imp.click_create_item()
+        imp.wait_for_page_load()
+        imp.click_first_item()
+        # 1.等待查看事项页面加载
+        imp.wait_for_check_item_page_load()
+        # 2.弹出删除事项弹窗
+        imp.click_three_points_icon()
+        time.sleep(2)
+        # 3.弹出删除事项确认弹窗
+        imp.click_delete_item()
+        time.sleep(1)
+        imp.click_sure()
+        # 4.事项删除成功，事项从进行中事项列表清除
+        self.assertEquals(imp.is_toast_exist("删除成功"), True)
+        imp.wait_for_page_load()
+        self.assertEquals(imp.is_text_present(title), False)
+
+    @tags('ALL', 'CMCC', 'workbench', 'LXD')
+    def test_ZYSX_0020(self):
+        """进行中事项列表和归档事项列表切换"""
+
+        imp = ImportantMattersPage()
+        imp.wait_for_page_load()
+        imp.click_filed_item()
+        # 1.切换到已归档事项列表
+        imp.wait_for_filed_list_page_load()
+        imp.click_check_having_item()
+        # 2.切换到进行中的事项列表
+        imp.wait_for_page_load()
