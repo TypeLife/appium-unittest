@@ -482,7 +482,7 @@ class ContactsPage(FooterPage):
     @TestLogger.log()
     def is_contacts_exist(self, name):
         """通过联系人名判断联系人是否存在"""
-        max_try = 10
+        max_try = 20
         current = 0
         while current < max_try:
             if self.is_text_present(name):
@@ -491,14 +491,6 @@ class ContactsPage(FooterPage):
             current += 1
             # self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         return False
-
-            #
-            # for group in groups:
-            #     if group:
-            #
-            #         return True
-            #     current += 1
-            # return False
 
     @TestLogger.log()
     def click_SIM_identification(self):
@@ -509,8 +501,6 @@ class ContactsPage(FooterPage):
     def click_drop_down_button(self):
         """点击下拉按钮"""
         self.click_element(self.__class__.__locators['新建手机联系人-下拉按钮'])
-
-
 
     @staticmethod
     def background_app():
@@ -553,13 +543,10 @@ class ContactsPage(FooterPage):
         self.click_creat_contacts()
         time.sleep(1)
         self.hide_keyboard()
-        if self.is_text_present('保存至: 手机'):
-            self.click_drop_down_button()
-            time.sleep(1)
-            self.click_text('SIM卡')
-            time.sleep(2)
-        else:
-            pass
+        self.click_drop_down_button()
+        time.sleep(1)
+        self.click_text('SIM卡')
+        time.sleep(2)
         self.click_text('姓名')
         self.input_contact_text(name)
         self.click_text('电话号码')
@@ -573,5 +560,12 @@ class ContactsPage(FooterPage):
         time.sleep(2)
         return self.is_text_present('分享名片')
 
-
-
+    @TestLogger.log("滚动通讯录顶部(显示搜索框)")
+    def swipe_to_page_top(self):
+        if self._is_element_present(self.__locators['搜索']):
+            return True
+        current = 0
+        while current < 20:
+            current += 1
+            self.swipe_by_percent_on_screen(50, 30, 50, 70, 700)
+        return True
