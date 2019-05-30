@@ -12,9 +12,8 @@ REPORT_PATH = os.path.join(PROJECT_PATH, 'report')
 # 测试报告HTML文件
 REPORT_HTML_PATH = os.path.join(REPORT_PATH, 'TestReport', NOW.date().strftime('%Y-%m-%d'),
                                 'TestReport' + NOW.time().strftime('-%H-%M-%S') + '.html')
-# REPORT_HTML_PATH = os.path.join(REPORT_PATH, 'TestReport2', 'TestReport1.html')
 
-# 测试报告HTML文件目录
+# 多台端口测试报告HTML文件目录
 REPORT_HTML_PATH2 = os.path.join(REPORT_PATH, 'TestReport2')
 
 # 屏幕截图存储路径

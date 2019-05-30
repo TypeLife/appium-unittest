@@ -27,6 +27,9 @@ class MessagePage(FooterPage):
             MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/pop_navi_text" and @text ="发起群聊"]'),
         '分组群发': (
             MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/pop_navi_text" and @text ="分组群发"]'),
+        '群发助手': (
+            MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/pop_navi_text" and @text ="群发助手"]'),
+
         '扫一扫': (
             MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/pop_navi_text" and @text ="扫一扫"]'),
         'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
@@ -213,6 +216,11 @@ class MessagePage(FooterPage):
     def click_group_mass(self):
         """点击分组群发"""
         self.click_element(self.__locators['分组群发'])
+
+    @TestLogger.log()
+    def click_mass_assistant(self):
+        """点击群发助手"""
+        self.click_element(self.__locators['群发助手'])
 
     @TestLogger.log()
     def assert_group_mass_text_equal_to(self, expect):

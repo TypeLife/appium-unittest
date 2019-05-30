@@ -21,6 +21,16 @@ class AnnouncementMessagePage(BasePage):
         '搜索输入框': (MobileBy.XPATH, '//*[@resource-id ="cBdTitle"]'),
         '发布': (MobileBy.XPATH, '//*[@resource-id ="publish"]'),
         '确定': (MobileBy.XPATH, '//*[@text="确定"]'),
+        '公告标题': (MobileBy.XPATH, '//*[@resource-id ="gg_title"]'),
+        '创建公告人': (MobileBy.XPATH, '//*[@resource-id ="gg_name"]'),
+        '创建时间': (MobileBy.XPATH, '//*[@resource-id ="gg_time"]'),
+        '浏览人数': (MobileBy.XPATH, '//*[@resource-id ="gg_traffic"]'),
+        '图文发布': (MobileBy.XPATH, '//*[@text="图文发布"]'),
+        '链接发布': (MobileBy.XPATH, '//*[@text="链接发布"]'),
+        '消息推送': (MobileBy.XPATH, '//*[@text="消息推送"]'),
+        '保存': (MobileBy.XPATH, '//*[@text="保存"]'),
+        '链接公告输入框': (MobileBy.XPATH, '//*[@resource-id ="linkUrl"]'),
+        '链接公告标题输入框': (MobileBy.XPATH, '//*[@resource-id ="title_link"]'),
     }
 
     @TestLogger.log()
@@ -110,6 +120,26 @@ class AnnouncementMessagePage(BasePage):
     def input_search_text(self, name):
         """输入搜索内容"""
         self.input_text(self.__class__.__locators["搜索输入框"], name)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+        return self
+
+    @TestLogger.log()
+    def input_link_title_text(self, name):
+        """输入链接公告标题"""
+        self.input_text(self.__class__.__locators["链接公告标题输入框"], name)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+        return self
+
+    @TestLogger.log()
+    def input_link_content_text(self, name):
+        """输入链接公告内容"""
+        self.input_text(self.__class__.__locators["链接公告输入框"], name)
         try:
             self.driver.hide_keyboard()
         except:

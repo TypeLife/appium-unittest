@@ -18,6 +18,7 @@ from pages.contacts.components.menu_more import MenuMore
 from pages.contacts.local_contact import localContactPage
 import preconditions
 from dataproviders import contact2
+from pages.message.MassAssistant import Massassistant
 
 
 REQUIRED_MOBILES = {
@@ -2723,6 +2724,206 @@ class ContactsLocalhigh(TestCase):
         number =CreateContactPage().get_text_of_box(locator='输入号码')
         self.assertEqual(number,'13813813801')
 
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0315(self):
+        """号码过滤-中英文、特殊符号：和飞信通讯录个人profile页过滤系统通讯录联系人手机号码中间的中英文、特殊符号（不包含+）"""
+        contact = ContactsPage()
+        # 创建sim联系人手机号含有英文等
+        local_name = '系统2'
+        local_number = '138aaa;1380'
+        if ContactsPage().is_contacts_exist(local_name):
+            time.sleep(2)
+        else:
+            contact.add_system_contacts(name=local_name, number=local_number)
+            # 激活App
+            Preconditions.activate_app()
+            time.sleep(2)
+            if contact.is_text_present('SIM卡联系人'):
+                contact.click_text('显示')
+        # 进入该联系人个人详情页查看
+        contact.select_contacts_by_name(local_name)
+        contact_detail = ContactDetailsPage()
+        contact_number = contact_detail.get_people_number()
+        self.assertNotEqual(local_number, contact_number)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0319(self):
+        """号码过滤-中英文、特殊符号：和飞信通讯录个人profile页过滤系统通讯录联系人手机号码所有的中英文、特殊符号（不包含+"""
+        contact = ContactsPage()
+        # 创建sim联系人手机号含有英文等
+        local_name = '系统3'
+        local_number = 'a138aa;138a'
+        if ContactsPage().is_contacts_exist(local_name):
+            time.sleep(2)
+        else:
+            contact.add_system_contacts(name=local_name, number=local_number)
+            # 激活App
+            Preconditions.activate_app()
+            time.sleep(2)
+            if contact.is_text_present('SIM卡联系人'):
+                contact.click_text('显示')
+        # 进入该联系人个人详情页查看
+        contact.select_contacts_by_name(local_name)
+        contact_detail = ContactDetailsPage()
+        contact_number = contact_detail.get_people_number()
+        self.assertNotEqual(local_number, contact_number)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0325(self):
+        """号码过滤：大陆号码+号过滤:和飞信通讯录个人frofile页过滤系统通讯录联系人大陆号码后面的+号"""
+        contact = ContactsPage()
+        # 创建sim联系人手机号含有英文等
+        local_name = '系统4'
+        local_number = '13801380+++'
+        if ContactsPage().is_contacts_exist(local_name):
+            time.sleep(2)
+        else:
+            contact.add_system_contacts(name=local_name, number=local_number)
+            # 激活App
+            Preconditions.activate_app()
+            time.sleep(2)
+            if contact.is_text_present('SIM卡联系人'):
+                contact.click_text('显示')
+        # 进入该联系人个人详情页查看
+        contact.select_contacts_by_name(local_name)
+        contact_detail = ContactDetailsPage()
+        contact_number = contact_detail.get_people_number()
+        self.assertNotEqual(local_number, contact_number)
+
+
+
+    def setUp_test_contacts_chenjixiang_0529(self):
+        Preconditions.connect_mobile()
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACTS', 'CMCC-reset')
+    def test_contacts_chenjixiang_0529(self):
+        """测试群发助手消息窗口，内容输入框有内容时，发送按钮状态"""
+        #进入群发助手页面
+        ContactsPage().click_message_icon()
+        mes=MessagePage()
+        mes.click_add_icon()
+        mes.click_mass_assistant()
+        mass_assistant=Massassistant()
+        mass_assistant.click_sure()
+        mass_assistant.click_contact_avatar()
+        #选择联系人,输入内容后发送
+        select_contact=SelectContactsPage()
+        select_contact.click_one_contact('大佬1')
+        select_contact.click_sure_bottom()
+        time.sleep(2)
+        mass_assistant.click_input_box()
+        mass_assistant.input_search_keyword('ceshi')
+        mass_assistant.check_element_is_clickable(locator='发送')
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0533(self):
+        """测试联系人选择器，搜索框校验，输入多位数字进行搜索"""
+        #进入群发助手页面
+        ContactsPage().click_message_icon()
+        mes=MessagePage()
+        mes.click_add_icon()
+        mes.click_mass_assistant()
+        mass_assistant=Massassistant()
+        mass_assistant.click_sure()
+        mass_assistant.click_contact_avatar()
+        #选择联系人,输入内容后发送
+        select_contact=SelectContactsPage()
+        select_contact.click_search_contact()
+        select_contact.input_search_keyword('大佬1')
+        result=select_contact.is_element_present_by_locator('联系人横框')
+        self.assertEqual(result,True)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0534(self):
+        """测试联系人选择器，搜索框校验，输入中文字符进行搜索"""
+        #进入群发助手页面
+        ContactsPage().click_message_icon()
+        mes=MessagePage()
+        mes.click_add_icon()
+        mes.click_mass_assistant()
+        mass_assistant=Massassistant()
+        mass_assistant.click_sure()
+        mass_assistant.click_contact_avatar()
+        #选择联系人,输入内容后发送
+        select_contact=SelectContactsPage()
+        select_contact.click_search_contact()
+        select_contact.input_search_keyword('大佬')
+        result=select_contact.get_contacts_name()
+        self.assertTrue(len(result)>0)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0346(self):
+        """号码过滤：香港号码00852不过滤
+和飞信通讯录联系人编辑页不过滤系统通讯录联系人香港号码前面的00852"""
+        contact = ContactsPage()
+        # 创建sim联系人手机号含有英文等
+        local_name = '系统7'
+        local_number = '0085261234567'
+        if ContactsPage().is_contacts_exist(local_name):
+            time.sleep(2)
+        else:
+            contact.add_system_contacts(name=local_name, number=local_number)
+            # 激活App
+            Preconditions.activate_app()
+            time.sleep(2)
+            if contact.is_text_present('SIM卡联系人'):
+                contact.click_text('显示')
+        # 进入该联系人编辑页查看
+        contact.select_contacts_by_name(local_name)
+        contact_detail = ContactDetailsPage()
+        contact_detail.click_edit_contact()
+        contact_number = CreateContactPage().get_text_of_box(locator='输入号码')
+        self.assertNotEqual(local_number, contact_number)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0349(self):
+        """测试SIM卡联系人姓名是否过滤空格"""
+        contact = ContactsPage()
+        # 创建sim联系人
+        local_name = 'sim 1'
+        local_number = '12345678902'
+        if ContactsPage().is_contacts_exist(local_name):
+            time.sleep(2)
+        else:
+            contact.add_SIM_contacts(name=local_name, number=local_number)
+            # 激活App
+            Preconditions.activate_app()
+            time.sleep(2)
+            if contact.is_text_present('SIM卡联系人'):
+                contact.click_text('显示')
+        # 进入该联系人编辑页查看
+        contact.swipe_to_page_top()
+        contact.click_search_box()
+        lcontact = localContactPage()
+        lcontact.input_search_text(" ")
+        time.sleep(1)
+        lcontact.hide_keyboard()
+        time.sleep(3)
+        els = lcontact.get_element_number()
+        self.assertTrue(len(els) == 0)
+
+    @tags('ALL', 'CONTACTS', 'CMCC-reset')
+    def test_contacts_chenjixiang_0672(self):
+        """测试群发消息输入框录入页面，发送成功后跳转到历史记录页"""
+        #进入群发助手页面
+        ContactsPage().click_message_icon()
+        mes=MessagePage()
+        mes.click_add_icon()
+        mes.click_mass_assistant()
+        mass_assistant=Massassistant()
+        mass_assistant.click_sure()
+        mass_assistant.click_contact_avatar()
+        #选择联系人,输入内容后发送
+        select_contact=SelectContactsPage()
+        select_contact.click_one_contact('大佬1')
+        select_contact.click_one_contact('大佬2')
+        select_contact.click_sure_bottom()
+        time.sleep(2)
+        mass_assistant.input_text_and_send('测shi123&&&')
+        time.sleep(5)
+        mass_assistant.page_contain_element(locator='新增')
 
 
 
