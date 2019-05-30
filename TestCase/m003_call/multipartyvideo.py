@@ -752,3 +752,73 @@ class CallMultipartyVideo(TestCase):
         cpg.page_should_contain_text("搜索成员")
         cpg.click_back_by_android(2)
 
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0053(self):
+        """从群聊发起多方视频，在多方视频管理界面点击“+”进入联系人选择页"""
+        # Step:1、从群聊发起多方视频
+        # Step:2、在多方视频管理界面点击“+”进入联系人选择页
+        # Step:3、检查联系人选择器
+        cpg = CallPage()
+        mp = MessagePage()
+        ContactsPage().click_message_icon()
+        mp.wait_for_page_load()
+        mp.click_add_icon()
+        mp.click_group_chat()
+        # 点击选择一个群
+        scg = SelectContactsPage()
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        # 选择一个普通群
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        sog.selecting_one_group_by_name("Test_" + phone_number)
+        # Step: 2、勾选2 - 8人，点击呼叫
+        gpg = GroupListPage()
+        gpg.click_mult_call_icon()
+        CallPage().click_mutil_video_call()
+        mppg = MultiPartyVideoPage()
+        for i in range(3):
+            mppg.click_contact_icon(i)
+        mppg.click_tv_sure()
+        time.sleep(1)
+        if cpg.is_text_present("现在去开启"):
+            cpg.click_text("暂不开启")
+        time.sleep(1)
+        self.assertTrue(mppg.is_exist_end_video_call())
+        # CheckPoint:1、展示群成员列表
+        MutiVideoPage().click_multi_video_add_person()
+        cpg.page_should_contain_text(phone_number)
+        cpg.click_back_by_android()
+        if mppg.is_exist_end_video_call():
+            mppg.click_end_video_call()
+        cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0057(self):
+        """通话模块：搜索栏--通过简/繁体中文搜索出结果"""
+        # 1、当前为多方视频联系人选择页
+        # 2、本地联系人中已有简体中文名称的联系人以及繁体中文名称的联系人
+        # Step:1、在输入框输入简体中文/繁体中文
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        # CheckPoint:1、根据输入条件，搜索出姓名中含有对应简/繁体字的结果
+        SelectContactsPage().search("测试号码")
+        time.sleep(1)
+        cpg.page_should_contain_text("14775970982")
+        mppg = MultiPartyVideoPage()
+        mppg.click_contact_icon(0)
+        time.sleep(1)
+        cpg.page_should_contain_text("搜索或输入号码")
+
+        # CheckPoint:2、搜索结果中，已匹配的内容高亮显示
+        SelectContactsPage().search("繁體")
+        time.sleep(1)
+        cpg.page_should_contain_text("13800138020")
+        # CheckPoint:3、点击可选中，并且清空输入内容
+        mppg = MultiPartyVideoPage()
+        mppg.click_contact_icon(0)
+        time.sleep(1)
+        cpg.page_should_contain_text("搜索或输入号码")
+        cpg.click_back_by_android()
+
