@@ -13,8 +13,8 @@ class CorporateNewsPage(BasePage):
 
     __locators = {
         '企业新闻': (MobileBy.ID, "com.chinasofti.rcs:id/tv_title_actionbar"),
-        '发布新闻': (MobileBy.XPATH, '//*[@resource-id="publishNews" and @text ="发布新闻"]'),
-        '未发新闻': (MobileBy.XPATH, '//*[@resource-id="toPublish" and @text ="未发新闻"]'),
+        '发布新闻': (MobileBy.XPATH, '//*[@resource-id="publishNews" and @text="发布新闻"]'),
+        '未发新闻': (MobileBy.XPATH, '//*[@resource-id="toPublish" and @text="未发新闻"]'),
         '新闻名称': (MobileBy.XPATH, '//*[@resource-id="news_title"]'),
         '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back_actionbar'),
         '关闭': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_close_actionbar'),

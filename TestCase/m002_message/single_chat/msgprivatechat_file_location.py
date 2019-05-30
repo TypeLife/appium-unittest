@@ -2919,7 +2919,7 @@ class MsgPrivateChatAllTest(TestCase):
         self.assertEquals(scp.is_exist_forward(), True)
         scp.wait_for_page_load()
 
-    @unittest.skip("用例重复，跳过")
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_weifenglian_1V1_0088(self):
         """将自己发送的文件转发到在搜索框输入多种字符搜索到的群"""
 
