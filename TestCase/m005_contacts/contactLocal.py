@@ -2791,5 +2791,72 @@ class ContactsLocalhigh(TestCase):
         self.assertNotEqual(local_number, contact_number)
 
 
+
+    def setUp_test_contacts_chenjixiang_0529(self):
+        Preconditions.connect_mobile()
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CONTACTS', 'CMCC-reset')
+    def test_contacts_chenjixiang_0529(self):
+        """测试群发助手消息窗口，内容输入框有内容时，发送按钮状态"""
+        #进入群发助手页面
+        ContactsPage().click_message_icon()
+        mes=MessagePage()
+        mes.click_add_icon()
+        mes.click_mass_assistant()
+        mass_assistant=Massassistant()
+        mass_assistant.click_sure()
+        mass_assistant.click_contact_avatar()
+        #选择联系人,输入内容后发送
+        select_contact=SelectContactsPage()
+        select_contact.click_one_contact('大佬1')
+        select_contact.click_sure_bottom()
+        time.sleep(2)
+        mass_assistant.click_input_box()
+        mass_assistant.input_search_keyword('ceshi')
+        mass_assistant.check_element_is_clickable(locator='发送')
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0533(self):
+        """测试联系人选择器，搜索框校验，输入多位数字进行搜索"""
+        #进入群发助手页面
+        ContactsPage().click_message_icon()
+        mes=MessagePage()
+        mes.click_add_icon()
+        mes.click_mass_assistant()
+        mass_assistant=Massassistant()
+        mass_assistant.click_sure()
+        mass_assistant.click_contact_avatar()
+        #选择联系人,输入内容后发送
+        select_contact=SelectContactsPage()
+        select_contact.click_search_contact()
+        select_contact.input_search_keyword('大佬1')
+        result=select_contact.is_element_present_by_locator('联系人横框')
+        self.assertEqual(result,True)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0534(self):
+        """测试联系人选择器，搜索框校验，输入中文字符进行搜索"""
+        #进入群发助手页面
+        ContactsPage().click_message_icon()
+        mes=MessagePage()
+        mes.click_add_icon()
+        mes.click_mass_assistant()
+        mass_assistant=Massassistant()
+        mass_assistant.click_sure()
+        mass_assistant.click_contact_avatar()
+        #选择联系人,输入内容后发送
+        select_contact=SelectContactsPage()
+        select_contact.click_search_contact()
+        select_contact.input_search_keyword('大佬')
+        result=select_contact.get_contacts_name()
+        self.assertTrue(len(result)>0)
+
+
+
+
+
+
 if __name__=="__main__":
     unittest.main()
