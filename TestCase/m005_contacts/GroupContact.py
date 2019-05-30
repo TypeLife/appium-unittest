@@ -8,6 +8,7 @@ from library.core.utils.applicationcache import current_mobile, current_driver, 
 from library.core.utils.testcasefilter import tags
 from pages import *
 from pages.SelectHeContacts import SelectHeContactsPage
+from pages.workbench.enterprise_contacts.EnterpriseContacts import EnterpriseContactsPage
 
 REQUIRED_MOBILES = {
     'Android-移动':'M960BDQN229CH',
@@ -140,6 +141,40 @@ class GroupcontactsSelectPage(TestCase):
     """
     模块:通讯录--企业联系人选择器
     """
+    def default_setUp(self):
+        """确保每个用例执行前在通讯录页面"""
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.make_already_in_message_page()
+        MessagePage().wait_for_page_load()
+        MessagePage().click_add_icon()
+        MessagePage().click_new_message()
+        time.sleep(2)
+        SelectContactsPage().click_group_contact()
+        time.sleep(3)
 
 
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0732(self):
+        """顶部标题为：选择联系人"""
+        select_group_contact=SelectHeContactsPage()
+        title=select_group_contact.get_element_text(locator='选择联系人')
+        self.assertEqual(title,'选择联系人')
+
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0769(self):
+        """搜索框默认提示语修改为：搜索或输入手机号"""
+        select_group_contact=SelectHeContactsPage()
+        title=select_group_contact.get_element_text(locator='搜索或输入手机号')
+        self.assertEqual(title,'搜索或输入手机号')
+
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0770(self):
+        """点击搜索框，光标在搜索框时自动弹出键盘，点击其他区域后，键盘自动收起"""
+        select_group_contact=SelectHeContactsPage()
+        #点击搜索框,键盘弹出
+        select_group_contact.click_input_box()
+        select_group_contact.is_keyboard_shown()
 
