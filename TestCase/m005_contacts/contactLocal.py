@@ -2853,56 +2853,56 @@ class ContactsLocalhigh(TestCase):
         result=select_contact.get_contacts_name()
         self.assertTrue(len(result)>0)
 
-        @tags('ALL', 'CONTACTS', 'CMCC')
-        def test_contacts_chenjixiang_0346(self):
-            """号码过滤：香港号码00852不过滤
-    和飞信通讯录联系人编辑页不过滤系统通讯录联系人香港号码前面的00852"""
-            contact = ContactsPage()
-            # 创建sim联系人手机号含有英文等
-            local_name = '系统7'
-            local_number = '0085261234567'
-            if ContactsPage().is_contacts_exist(local_name):
-                time.sleep(2)
-            else:
-                contact.add_system_contacts(name=local_name, number=local_number)
-                # 激活App
-                Preconditions.activate_app()
-                time.sleep(2)
-                if contact.is_text_present('SIM卡联系人'):
-                    contact.click_text('显示')
-            # 进入该联系人编辑页查看
-            contact.select_contacts_by_name(local_name)
-            contact_detail = ContactDetailsPage()
-            contact_detail.click_edit_contact()
-            contact_number = CreateContactPage().get_text_of_box(locator='输入号码')
-            self.assertNotEqual(local_number, contact_number)
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0346(self):
+        """号码过滤：香港号码00852不过滤
+和飞信通讯录联系人编辑页不过滤系统通讯录联系人香港号码前面的00852"""
+        contact = ContactsPage()
+        # 创建sim联系人手机号含有英文等
+        local_name = '系统7'
+        local_number = '0085261234567'
+        if ContactsPage().is_contacts_exist(local_name):
+            time.sleep(2)
+        else:
+            contact.add_system_contacts(name=local_name, number=local_number)
+            # 激活App
+            Preconditions.activate_app()
+            time.sleep(2)
+            if contact.is_text_present('SIM卡联系人'):
+                contact.click_text('显示')
+        # 进入该联系人编辑页查看
+        contact.select_contacts_by_name(local_name)
+        contact_detail = ContactDetailsPage()
+        contact_detail.click_edit_contact()
+        contact_number = CreateContactPage().get_text_of_box(locator='输入号码')
+        self.assertNotEqual(local_number, contact_number)
 
-        @tags('ALL', 'CONTACTS', 'CMCC')
-        def test_contacts_chenjixiang_0349(self):
-            """测试SIM卡联系人姓名是否过滤空格"""
-            contact = ContactsPage()
-            # 创建sim联系人
-            local_name = 'sim 1'
-            local_number = '12345678902'
-            if ContactsPage().is_contacts_exist(local_name):
-                time.sleep(2)
-            else:
-                contact.add_SIM_contacts(name=local_name, number=local_number)
-                # 激活App
-                Preconditions.activate_app()
-                time.sleep(2)
-                if contact.is_text_present('SIM卡联系人'):
-                    contact.click_text('显示')
-            # 进入该联系人编辑页查看
-            contact.swipe_to_page_top()
-            contact.click_search_box()
-            lcontact = localContactPage()
-            lcontact.input_search_text(" ")
-            time.sleep(1)
-            lcontact.hide_keyboard()
-            time.sleep(3)
-            els = lcontact.get_element_number()
-            self.assertTrue(len(els) == 0)
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0349(self):
+        """测试SIM卡联系人姓名是否过滤空格"""
+        contact = ContactsPage()
+        # 创建sim联系人
+        local_name = 'sim 1'
+        local_number = '12345678902'
+        if ContactsPage().is_contacts_exist(local_name):
+            time.sleep(2)
+        else:
+            contact.add_SIM_contacts(name=local_name, number=local_number)
+            # 激活App
+            Preconditions.activate_app()
+            time.sleep(2)
+            if contact.is_text_present('SIM卡联系人'):
+                contact.click_text('显示')
+        # 进入该联系人编辑页查看
+        contact.swipe_to_page_top()
+        contact.click_search_box()
+        lcontact = localContactPage()
+        lcontact.input_search_text(" ")
+        time.sleep(1)
+        lcontact.hide_keyboard()
+        time.sleep(3)
+        els = lcontact.get_element_number()
+        self.assertTrue(len(els) == 0)
 
     @tags('ALL', 'CONTACTS', 'CMCC-reset')
     def test_contacts_chenjixiang_0672(self):
