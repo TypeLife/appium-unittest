@@ -882,4 +882,58 @@ class CallMultipartyVideo(TestCase):
         cpg.page_should_contain_text("搜索或输入号码")
         cpg.click_back_by_android()
 
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0071(self):
+        """通话模块：进入多方视频联系人选择页，搜索出结果，搜索栏下方显示：【放大镜图标】搜索团队联系人：【搜索内容】     >，点击跳转到团队联系人搜索结果页面"""
+        # 1、当前为多方视频联系人选择页
+        # Step: 1、在输入框输入任意内容
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        # Step: 2、检查输入框下方
+        SelectContactsPage().search("大佬1")
+        time.sleep(1)
+        # CheckPoint:1、搜索栏下方显示：【放大镜图标】搜索团队联系人：【搜索内容】
+        # CheckPoint: 2、搜索超长内容时，后面...显示
+        cpg.page_should_contain_text("搜索团队联系人 : 大佬1")
+        # CheckPoint: 3、点击跳转到团队联系人搜索结果页面
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        cpg.page_should_contain_text("团队联系人")
+        cpg.click_back_by_android(3)
 
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0073(self):
+        """通话模块：进入多方视频联系人选择页，检查【选择团队联系人】入口"""
+        # 1、当前为多方视频联系人选择页
+        # 2、用户已加入企业
+        # Step: 1、点击【选择团队联系人】
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        # CheckPoint:1、跳转团队联系人选择页
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        cpg.page_should_contain_text("选择联系人")
+        cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0076(self):
+        """通话模块：检查团队联系人选择页的页面显示"""
+        # 1、当前为团队联系人选择页
+        # Step: 1、检查页面显示
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        # CheckPoint:1、返回按钮
+        mppg = MultiPartyVideoPage()
+        self.assertTrue(mppg.is_exist_back_button())
+
+        # CheckPoint:2、标题：选择联系人
+        cpg.page_should_contain_text("选择联系人")
+
+        # CheckPoint:3、搜索栏内置灰显示“搜索或输入手机号”
+        cpg.page_should_contain_text("搜索或输入手机号")
+
+        # CheckPoint:4、呼叫按钮，置灰显示
+        # CheckPoint:5、企业层级显示
+        self.assertFalse(mppg.is_enabled_tv_sure())
