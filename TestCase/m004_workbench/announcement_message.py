@@ -145,5 +145,375 @@ class AnnouncementMessageTest(TestCase):
         amp.click_element_("确定")
         amp.wait_for_page_loads()
 
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0007(self):
+        """管理员进入发布公告，公告搜索-按英文搜索"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、按英文搜索公告信息
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.input_title_text("hello")
+        amp.input_content_text("你好啊")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        amp.click_element_("发布")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        amp.click_element_("搜索")
+        time.sleep(2)
+        amp.click_element_("搜索输入框")
+        time.sleep(2)
+        amp.input_search_text("hel")
+        time.sleep(3)
+        amp.click_text("搜索")
+        time.sleep(2)
+        if not amp.is_text_present("hello"):
+            raise AssertionError("搜索不成功")
+        amp.click_text("hello")
+        time.sleep(2)
+        amp.click_text("下线")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0008(self):
+        """管理员进入发布公告，公告搜索-按特殊字符搜索"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、按特殊字符搜索公告信息
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.input_title_text("ha*")
+        amp.input_content_text("你好啊")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        amp.click_element_("发布")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        amp.click_element_("搜索")
+        time.sleep(2)
+        amp.click_element_("搜索输入框")
+        time.sleep(2)
+        amp.input_search_text("*")
+        time.sleep(3)
+        amp.click_text("搜索")
+        time.sleep(2)
+        if not amp.is_text_present("ha*"):
+            raise AssertionError("搜索不成功")
+        amp.click_text("ha*")
+        time.sleep(2)
+        amp.click_text("下线")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0009(self):
+        """管理员进入发布公告，公告搜索-空格搜索"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、带空格搜索公告信息
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.input_title_text("ha *")
+        amp.input_content_text("你好啊")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        amp.click_element_("发布")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        amp.click_element_("搜索")
+        time.sleep(2)
+        amp.click_element_("搜索输入框")
+        time.sleep(2)
+        amp.input_search_text(" *")
+        time.sleep(3)
+        amp.click_text("搜索")
+        time.sleep(2)
+        if not amp.is_text_present("ha *"):
+            raise AssertionError("搜索不成功")
+        amp.click_text("ha *")
+        time.sleep(2)
+        amp.click_text("下线")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0010(self):
+        """管理员进入发布公告，公告搜索-XSS安全"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、在搜索框输入 < imgsrc = 1onmouseover = alert(1) / >
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_element_("搜索")
+        time.sleep(2)
+        amp.click_element_("搜索输入框")
+        time.sleep(2)
+        amp.input_search_text("<img src=1 onmouseover=alert(1) />")
+        time.sleep(3)
+        amp.click_text("搜索")
+        time.sleep(2)
+        if not amp.is_text_present("未查询到公告数据"):
+            raise AssertionError("搜索不成功")
+        current_mobile().back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0011(self):
+        """管理员进入发布公告，公告搜索-按数字搜索"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、按数字搜索公告信息
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.input_title_text("ha6")
+        amp.input_content_text("你好啊")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        amp.click_element_("发布")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        amp.click_element_("搜索")
+        time.sleep(2)
+        amp.click_element_("搜索输入框")
+        time.sleep(2)
+        amp.input_search_text("6")
+        time.sleep(3)
+        amp.click_text("搜索")
+        time.sleep(2)
+        if not amp.is_text_present("ha6"):
+            raise AssertionError("搜索不成功")
+        amp.click_text("ha6")
+        time.sleep(2)
+        amp.click_text("下线")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0012(self):
+        """管理员检查搜索页面元素"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、搜索到多条公告信息
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.input_title_text("ha6")
+        amp.input_content_text("你好啊")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        amp.click_element_("发布")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        amp.click_element_("搜索")
+        time.sleep(2)
+        amp.click_element_("搜索输入框")
+        time.sleep(2)
+        amp.input_search_text("6")
+        time.sleep(3)
+        amp.click_text("搜索")
+        time.sleep(2)
+        if not amp.is_text_present("ha6"):
+            raise AssertionError("搜索不成功")
+        if not amp.is_element_exit("公告标题"):
+            raise AssertionError("没有公告标题")
+        if not amp.is_element_exit("创建公告人"):
+            raise AssertionError("没有创建公告人")
+        if not amp.is_element_exit("创建时间"):
+            raise AssertionError("没有创建时间")
+        if not amp.is_element_exit("浏览人数"):
+            raise AssertionError("没有浏览人数")
+        amp.click_text("ha6")
+        time.sleep(2)
+        amp.click_text("下线")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0013(self):
+        """发布公告页面元素检查"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、点击【发布公告】
+        # 4、检查发布公告页面是否默认选择图文方式
+        # 5、检查消息推送是否默认不推送
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        if not amp.is_element_exit("图文发布"):
+            raise AssertionError("没有图文发布")
+        if not amp.is_element_exit("链接发布"):
+            raise AssertionError("没有链接发布")
+        if not amp.is_element_exit("消息推送"):
+            raise AssertionError("没有消息推送")
+        if not amp.is_element_exit("保存"):
+            raise AssertionError("没有保存按钮")
+        if not amp.is_element_exit("发布"):
+            raise AssertionError("没有发布按钮")
+        if not amp.is_text_present("公告内容"):
+            raise AssertionError("没有默认选择图文发布")
+        current_mobile().back()
+        amp.wait_for_page_loads()
+
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0014(self):
+        """管理员通过图文发布方式新建公告，打开消息推送"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、点击【发布公告】
+        # 4、选择【图文发布】方式
+        # 5、正确填写公告标题和公告内容
+        # 6、开启消息推送
+        # 7、点击【发布】
+        # 8、点击【确定】
+        # 9、验证公告信息首页历史记录是否正确
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.input_title_text("ha6")
+        amp.input_content_text("你好啊")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        # 开启消息推送
+        time.sleep(2)
+        amp.click_element_("发布")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        if not amp.is_text_present("ha6"):
+            raise AssertionError("首页显示不成功")
+        amp.click_text("ha6")
+        time.sleep(2)
+        amp.click_text("下线")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0015(self):
+        """管理员通过图文发布方式新建公告，关闭消息推送"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、点击【发布公告】
+        # 4、选择【图文发布】方式
+        # 5、正确填写公告标题和公告内容
+        # 6、关闭消息推送
+        # 7、点击【发布】
+        # 8、点击【确定】
+        # 9、验证公告信息首页历史记录是否正确
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.input_title_text("ha6")
+        amp.input_content_text("你好啊")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        amp.click_element_("发布")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        if not amp.is_text_present("ha6"):
+            raise AssertionError("首页显示不成功")
+        amp.click_text("ha6")
+        time.sleep(2)
+        amp.click_text("下线")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0016(self):
+        """管理员通过链接发布方式新建公告，打开消息推送"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、点击【发布公告】
+        # 4、选择【链接发布】方式
+        # 5、正确填写公告标题和链接公告
+        # 6、开启消息推送
+        # 7、点击【发布】
+        # 8、点击【确定】
+        # 9、验证公告信息首页历史记录是否正确
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.click_element_("链接发布")
+        amp.input_link_title_text("哈哈")
+        amp.input_link_content_text("http://www.google.com")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        # 开启消息推送
+        amp.click_element_("发布")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        if not amp.is_text_present("哈哈"):
+            raise AssertionError("首页显示不成功")
+        amp.click_text("哈哈")
+        time.sleep(2)
+        amp.click_text("下线")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0017(self):
+        """管理员通过链接发布方式新建公告，关闭消息推送"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、点击【发布公告】
+        # 4、选择【链接发布】方式
+        # 5、正确填写公告标题和链接公告
+        # 6、关闭消息推送
+        # 7、点击【发布】
+        # 8、点击【确定】
+        # 9、验证公告信息首页历史记录是否正确
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.click_element_("链接发布")
+        amp.input_link_title_text("哈哈")
+        amp.input_link_content_text("http://www.google.com")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        amp.click_element_("发布")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        if not amp.is_text_present("哈哈"):
+            raise AssertionError("首页显示不成功")
+        amp.click_text("哈哈")
+        time.sleep(2)
+        amp.click_text("下线")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+
+
 
 
