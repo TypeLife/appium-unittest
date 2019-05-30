@@ -13,8 +13,14 @@ class AnnouncementMessagePage(BasePage):
         'X': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_close_actionbar'),
         '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back_actionbar'),
         '关闭': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_close_actionbar'),
-        '(2人)': (MobileBy.XPATH, '//*[@text="（2人）"]'),
+        '未发公告': (MobileBy.XPATH, '//*[@text="未发公告"]'),
         '(3人)': (MobileBy.XPATH, '//*[@text="（3人）"]'),
+        '公告标题输入框': (MobileBy.XPATH, '//*[@resource-id ="title"]'),
+        '公告内容输入框': (MobileBy.XPATH, '//*[@resource-id ="content"]'),
+        '搜索': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_right1'),
+        '搜索输入框': (MobileBy.XPATH, '//*[@resource-id ="cBdTitle"]'),
+        '发布': (MobileBy.XPATH, '//*[@resource-id ="publish"]'),
+        '确定': (MobileBy.XPATH, '//*[@text="确定"]'),
     }
 
     @TestLogger.log()
@@ -72,4 +78,40 @@ class AnnouncementMessagePage(BasePage):
         """点击关闭"""
         self.click_element(self.__class__.__locators["关闭"])
 
+    @TestLogger.log()
+    def is_on_this_page(self):
+        """当前页面是否在公告信息页"""
+        el = self.get_elements(self.__class__.__locators['未发公告'])
+        if len(el) > 0:
+            return True
+        return False
 
+    @TestLogger.log()
+    def input_title_text(self, name):
+        """输入公告标题"""
+        self.input_text(self.__class__.__locators["公告标题输入框"], name)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+        return self
+
+    @TestLogger.log()
+    def input_content_text(self, name):
+        """输入公告内容"""
+        self.input_text(self.__class__.__locators["公告内容输入框"], name)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+        return self
+
+    @TestLogger.log()
+    def input_search_text(self, name):
+        """输入搜索内容"""
+        self.input_text(self.__class__.__locators["搜索输入框"], name)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
+        return self
