@@ -12,9 +12,12 @@ class ImportantMattersPage(BasePage):
 
     __locators = {
         '新建事项': (MobileBy.XPATH, '//*[@text="新建事项"]'),
+        '查看进行中的事项': (MobileBy.XPATH, '//*[@class="android.view.View" and @text="查看进行中的事项"]'),
+        '查看已归档的事项': (MobileBy.XPATH, '//*[@class="android.view.View" and @text="查看已归档的事项"]'),
         '创建事项': (MobileBy.XPATH, '//*[@text="创建事项"]'),
         '归档事项': (MobileBy.XPATH, '//*[@text="归档事项"]'),
         '删除事项': (MobileBy.XPATH, '//*[@text="删除事项"]'),
+        '删除子任务': (MobileBy.XPATH, '//*[@text="删除子任务"]'),
         '进行中的事项标题': (MobileBy.XPATH, '//*[contains(@text,"创建")]/../../../android.view.View[1]/android.view.View'),
         '确定': (MobileBy.XPATH, '//*[@text="确定"]'),
         '保存': (MobileBy.XPATH, '//*[@text="保存"]'),
@@ -22,6 +25,7 @@ class ImportantMattersPage(BasePage):
         '评论': (MobileBy.XPATH, '//*[@text="评论"]'),
         '修改': (MobileBy.XPATH, '//*[contains(@text,"修改")]'),
         '+子任务': (MobileBy.XPATH, '//*[@text="+子任务"]'),
+        '查看子任务': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title_actionbar" and @text="查看子任务"]'),
         '提交评论': (MobileBy.XPATH, '//*[@text="提交评论"]'),
         '添加人员': (MobileBy.XPATH, '//*[@text="添加人员"]'),
         '删除人员': (MobileBy.XPATH, '//*[@text="删除人员"]'),
@@ -33,7 +37,7 @@ class ImportantMattersPage(BasePage):
         '查看事项页面描述输入框': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[3]'),
         '事项修改编辑框': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.widget.EditText'),
         '+号': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[4]/android.widget.ListView/android.view.View[2]/android.view.View[1]/android.view.View'),
-        '事项标题栏三点': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]/android.view.View[1]/android.view.View[3]'),
+        '标题栏三点': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]/android.view.View[1]/android.view.View[3]'),
         '子任务标题输入框': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.widget.EditText[1]'),
         '子任务描述输入框': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.widget.EditText[2]'),
         '子任务添加负责人+号': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View/android.view.View[4]/android.widget.ListView/android.view.View/android.view.View/android.view.View'),
@@ -49,11 +53,34 @@ class ImportantMattersPage(BasePage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_element_present(self.__class__.__locators["新建事项"])
+                condition=lambda d: self._is_element_present(self.__class__.__locators["查看已归档的事项"])
             )
         except:
             raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
         return self
+
+    @TestLogger.log()
+    def wait_for_filed_list_page_load(self, timeout=30, auto_accept_alerts=True):
+        """等待已归档事项列表加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["查看进行中的事项"])
+            )
+        except:
+            raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
+        return self
+
+    @TestLogger.log()
+    def click_check_having_item(self):
+        """点击查看进行中的事项"""
+        self.click_element(self.__class__.__locators["查看进行中的事项"])
+
+    @TestLogger.log()
+    def click_filed_item(self):
+        """点击查看已归档的事项"""
+        self.click_element(self.__class__.__locators["查看已归档的事项"])
 
     @TestLogger.log()
     def is_on_important_matters_page(self, timeout=20, auto_accept_alerts=True):
@@ -142,6 +169,19 @@ class ImportantMattersPage(BasePage):
         return self
 
     @TestLogger.log()
+    def wait_for_check_subtasks_page_load(self, timeout=30, auto_accept_alerts=True):
+        """等待查看子任务页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["查看子任务"])
+            )
+        except:
+            raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
+        return self
+
+    @TestLogger.log()
     def input_create_item_title(self, title):
         """输入创建事项页面标题"""
         self.input_text(self.__class__.__locators["创建事项页面标题输入框"], title)
@@ -188,13 +228,18 @@ class ImportantMattersPage(BasePage):
 
     @TestLogger.log()
     def click_three_points_icon(self):
-        """点击事项标题栏右侧三点"""
-        self.click_element(self.__class__.__locators["事项标题栏三点"])
+        """点击标题栏右侧三点"""
+        self.click_element(self.__class__.__locators["标题栏三点"])
 
     @TestLogger.log()
     def click_delete_item(self):
         """点击删除事项"""
         self.click_element(self.__class__.__locators["删除事项"])
+
+    @TestLogger.log()
+    def click_delete_subtasks(self):
+        """点击删除子任务"""
+        self.click_element(self.__class__.__locators["删除子任务"])
 
     @TestLogger.log()
     def click_sure(self):
@@ -308,3 +353,8 @@ class ImportantMattersPage(BasePage):
         minute = el2.text[0:-1]
         print(hour + ":" + minute)
         return hour + ":" + minute
+
+    @TestLogger.log()
+    def click_file_matters(self):
+        """点击归档事项"""
+        self.click_element(self.__class__.__locators["归档事项"])

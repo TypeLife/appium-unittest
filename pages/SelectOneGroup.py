@@ -253,6 +253,12 @@ class SelectOneGroupPage(BasePage):
         raise AssertionError('搜索结果"{}"没有找到与关键字"{}"完全匹配的文本'.format(texts, name))
 
     @TestLogger.log()
+    def is_exists_group_by_name(self, name):
+        """是否存在指定群聊"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and text="%s"]' % name)
+        return self._is_element_present(locator)
+
+    @TestLogger.log()
     def is_element_exit(self, text):
         """指定元素是否存在"""
         return self._is_element_present(self.__class__.__locators[text])
