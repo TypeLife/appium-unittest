@@ -2717,6 +2717,44 @@ class MsgGroupChatTest(TestCase):
         current_mobile().turn_on_wifi()
         current_mobile().turn_on_mobile_data()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0291(self):
+        """验证在群聊-查找聊天内容-文件页面点击打开已下载的可预览文件-右上角的更多按钮-取消时是否正常"""
+        current_mobile().turn_off_wifi()
+        current_mobile().turn_off_mobile_data()
+        self.public_open_find_file_click_more_button()
+        current_mobile().back()
+        self.assertTrue(GroupChatPage().is_exist_more_button())
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_qun_0291():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0293(self):
+        """验证在在群聊-查找聊天内容-文件页面点击打开已下载的不可预览文件时，点击右上角的更多按钮是否正常调起选项"""
+        current_mobile().turn_off_wifi()
+        current_mobile().turn_off_mobile_data()
+        self.public_find_group_chat_open_file(file_type='582.log')
+        group_chat_page = GroupChatPage()
+        self.assertTrue(group_chat_page.is_exist_more_button())
+        # 返回到聊天页面
+        group_chat_page.click_more_button()
+        group_chat_page.wait_until(condition=lambda x: group_chat_page.is_text_present('收藏'),
+                                   auto_accept_permission_alert=False)
+        self.assertTrue(group_chat_page.check_options_is_enable())
+        group_chat_page.mobile.back()
+        group_chat_page.click_file_back()
+        self.public_find_group_chat_back()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_qun_0293():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+
+
 class MsgGroupChatPrior(TestCase):
 
     def default_setUp(self):
