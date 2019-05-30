@@ -21,7 +21,9 @@ class EnterpriseContactsPage(BasePage):
         '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/img_icon_contactlist'),
         '联系人所在部门': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_position_personal_contactlist'),
         '搜索框': (MobileBy.ID, 'com.chinasofti.rcs:id/search_edit'),
-        '搜索输入框': (MobileBy.ID, 'com.chinasofti.rcs:id/et_search_view')
+        '搜索输入框': (MobileBy.ID, 'com.chinasofti.rcs:id/et_search_view'),
+        '搜索结果': (MobileBy.ID, 'com.chinasofti.rcs:id/lv_search_enterprise_activity'),
+
     }
 
     @TestLogger.log()
@@ -163,6 +165,12 @@ class EnterpriseContactsPage(BasePage):
     def is_exists_contacts_department(self):
         """是否存在联系人部门"""
         return self._is_element_present(self.__class__.__locators["联系人所在部门"])
+
+    @TestLogger.log()
+    def is_exists_contacts_search_result(self):
+        """是否存在搜索结果"""
+        return self._is_element_present(self.__class__.__locators["搜索结果"])
+
 
     @TestLogger.log()
     def click_contacts_by_name(self, name):

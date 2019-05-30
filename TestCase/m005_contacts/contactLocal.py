@@ -2790,7 +2790,76 @@ class ContactsLocalhigh(TestCase):
         contact_number = contact_detail.get_people_number()
         self.assertNotEqual(local_number, contact_number)
 
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0333(self):
+        """号码过滤：大陆号码086不过滤
+和飞信通讯录个人frofile页不过滤系统通讯录联系人大陆号码前面的086"""
+        contact = ContactsPage()
+        # 创建sim联系人手机号含有英文等
+        local_name = '系统5'
+        local_number = '08613801380123'
+        if ContactsPage().is_contacts_exist(local_name):
+            time.sleep(2)
+        else:
+            contact.add_system_contacts(name=local_name, number=local_number)
+            # 激活App
+            Preconditions.activate_app()
+            time.sleep(2)
+            if contact.is_text_present('SIM卡联系人'):
+                contact.click_text('显示')
+        # 进入该联系人个人详情页查看
+        contact.select_contacts_by_name(local_name)
+        contact_detail = ContactDetailsPage()
+        contact_number = contact_detail.get_people_number()
+        self.assertEqual(local_number, contact_number)
 
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0334(self):
+        """号码过滤：大陆号码086不过滤
+和飞信通讯录个人frofile页不过滤系统通讯录联系人大陆号码前面的086"""
+        contact = ContactsPage()
+        # 创建sim联系人手机号含有英文等
+        local_name = '系统5'
+        local_number = '08613801380123'
+        if ContactsPage().is_contacts_exist(local_name):
+            time.sleep(2)
+        else:
+            contact.add_system_contacts(name=local_name, number=local_number)
+            # 激活App
+            Preconditions.activate_app()
+            time.sleep(2)
+            if contact.is_text_present('SIM卡联系人'):
+                contact.click_text('显示')
+        # 进入该联系人编辑页查看
+        contact.select_contacts_by_name(local_name)
+        contact_detail = ContactDetailsPage()
+        contact_detail.click_edit_contact()
+        contact_number = CreateContactPage().get_text_of_box(locator='输入号码')
+        self.assertEqual(local_number, contact_number)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0340(self):
+        """号码过滤：香港号码+号过滤
+和飞信通讯录联系人编辑页过滤系统通讯录联系人香港号码后面的+号"""
+        contact = ContactsPage()
+        # 创建sim联系人手机号含有英文等
+        local_name = '系统6'
+        local_number = '61234567+++'
+        if ContactsPage().is_contacts_exist(local_name):
+            time.sleep(2)
+        else:
+            contact.add_system_contacts(name=local_name, number=local_number)
+            # 激活App
+            Preconditions.activate_app()
+            time.sleep(2)
+            if contact.is_text_present('SIM卡联系人'):
+                contact.click_text('显示')
+        # 进入该联系人编辑页查看
+        contact.select_contacts_by_name(local_name)
+        contact_detail = ContactDetailsPage()
+        contact_detail.click_edit_contact()
+        contact_number = CreateContactPage().get_text_of_box(locator='输入号码')
+        self.assertNotEqual(local_number, contact_number)
 
     def setUp_test_contacts_chenjixiang_0529(self):
         Preconditions.connect_mobile()
@@ -2850,6 +2919,60 @@ class ContactsLocalhigh(TestCase):
         select_contact=SelectContactsPage()
         select_contact.click_search_contact()
         select_contact.input_search_keyword('大佬')
+        result=select_contact.get_contacts_name()
+        self.assertTrue(len(result)>0)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0535(self):
+        """测试联系人选择器，搜索框校验，输入英文字符进行搜索"""
+        #进入群发助手页面
+        ContactsPage().click_message_icon()
+        mes=MessagePage()
+        mes.click_add_icon()
+        mes.click_mass_assistant()
+        mass_assistant=Massassistant()
+        mass_assistant.click_sure()
+        mass_assistant.click_contact_avatar()
+        #选择联系人,输入内容后发送
+        select_contact=SelectContactsPage()
+        select_contact.click_search_contact()
+        select_contact.input_search_keyword('dalao')
+        result=select_contact.get_contacts_name()
+        self.assertTrue(len(result)>0)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0536(self):
+        """测试联系人选择器，搜索框校验，输入特殊字符进行搜索"""
+        #进入群发助手页面
+        ContactsPage().click_message_icon()
+        mes=MessagePage()
+        mes.click_add_icon()
+        mes.click_mass_assistant()
+        mass_assistant=Massassistant()
+        mass_assistant.click_sure()
+        mass_assistant.click_contact_avatar()
+        #选择联系人,输入内容后发送
+        select_contact=SelectContactsPage()
+        select_contact.click_search_contact()
+        select_contact.input_search_keyword('茻')
+        result=select_contact.get_contacts_name()
+        self.assertTrue(len(result)>0)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0537(self):
+        """测试联系人选择器，搜索框校验，输入组合字符（中英文、数字、特殊字符）进行搜索"""
+        #进入群发助手页面
+        ContactsPage().click_message_icon()
+        mes=MessagePage()
+        mes.click_add_icon()
+        mes.click_mass_assistant()
+        mass_assistant=Massassistant()
+        mass_assistant.click_sure()
+        mass_assistant.click_contact_avatar()
+        #选择联系人,输入内容后发送
+        select_contact=SelectContactsPage()
+        select_contact.click_search_contact()
+        select_contact.input_search_keyword('dalao5茻')
         result=select_contact.get_contacts_name()
         self.assertTrue(len(result)>0)
 
