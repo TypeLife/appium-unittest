@@ -9,12 +9,14 @@ class MultiPartyVideoPage(BasePage):
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.ContactSelectorActivity'
 
     __locators = {
+        '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back'),
         'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
         'android:id/content': (MobileBy.ID, 'android:id/content'),
         'com.chinasofti.rcs:id/id_toolbar': (MobileBy.ID, 'com.chinasofti.rcs:id/id_toolbar'),
         'com.chinasofti.rcs:id/back': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
         '多方视频': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
         '呼叫': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_sure'),
+        '灰色呼叫': (MobileBy.ID, 'com.chinasofti.rcs:id/imagebutton_choose_file_cancel'),
         '搜索或输入号码': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_search_bar'),
         'com.chinasofti.rcs:id/contentFrame': (MobileBy.ID, 'com.chinasofti.rcs:id/contentFrame'),
         'com.chinasofti.rcs:id/local_contact_lv': (MobileBy.ID, 'com.chinasofti.rcs:id/local_contact_lv'),
@@ -44,7 +46,8 @@ class MultiPartyVideoPage(BasePage):
         '挂断多方视频': (MobileBy.ID, 'com.chinasofti.rcs:id/end_video_call_btn'),
         '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
         '取消': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
-        '再次呼叫': (MobileBy.ID, 'com.chinasofti.rcs:id/call_again')
+        '再次呼叫': (MobileBy.ID, 'com.chinasofti.rcs:id/call_again'),
+        '团队联系人图像': (MobileBy.ID, 'com.chinasofti.rcs:id/img_icon_contactlist')
     }
 
     @TestLogger.log()
@@ -98,8 +101,6 @@ class MultiPartyVideoPage(BasePage):
         """点击再次呼叫"""
         self.click_element(self.__locators["再次呼叫"])
 
-
-
     @TestLogger.log()
     def click_contact_icon(self, index=0):
         """点击联系人头像"""
@@ -121,6 +122,21 @@ class MultiPartyVideoPage(BasePage):
             current += 1
         self.click_element(locator)
 
+    @TestLogger.log()
+    def select_contacts_by_name(self, name):
+        """根据号码选择一个联系人"""
+        time.sleep(1)
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text ="%s"]' % name)
+        max_try = 20
+        current = 0
+        while current < max_try:
+
+            if self._is_element_present(locator):
+                break
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+            current += 1
+        self.click_element(locator)
+
     def click_select_contacts(self, index):
         """通过下标点击选择联系人"""
         elements = self.get_elements(self.__locators["联系人号码"])
@@ -129,5 +145,31 @@ class MultiPartyVideoPage(BasePage):
                 return elements[index].click()
         except:
             raise IndexError("元素超出索引")
+
+    @TestLogger.log()
+    def is_exist_back_button(self):
+        """判断当前是否存在返回按钮"""
+        return self._is_element_present(self.__locators["返回"])
+
+    @TestLogger.log()
+    def is_enabled_tv_sure(self):
+        """判断呼叫按钮是否可用"""
+        return self._is_enabled(self.__locators["灰色呼叫"])
+
+    def get_img_icon_contactlist(self, index):
+        """获取团队联系人图像Text"""
+        elements = self.get_elements(self.__locators["团队联系人图像"])
+        print(elements)
+        try:
+            if len(elements) > 0:
+                return elements[index].text
+        except:
+            raise IndexError("元素超出索引")
+
+    @TestLogger.log()
+    def click_img_icon_contactlist(self):
+        """点击团队联系人图像"""
+        self.click_element(self.__locators["团队联系人图像"])
+
 
 

@@ -17,7 +17,7 @@ class MutiVideoPage(BasePage):
         'com.chinasofti.rcs:id/call_setting_operation_layout': (
             MobileBy.ID, 'com.chinasofti.rcs:id/call_setting_operation_layout'),
         'com.chinasofti.rcs:id/iv_hide': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_hide'),
-        'com.chinasofti.rcs:id/multi_video_add_person': (MobileBy.ID, 'com.chinasofti.rcs:id/multi_video_add_person'),
+        '添加成员': (MobileBy.ID, 'com.chinasofti.rcs:id/multi_video_add_person'),
         'com.chinasofti.rcs:id/rv_show_video': (MobileBy.ID, 'com.chinasofti.rcs:id/rv_show_video'),
         'com.chinasofti.rcs:id/card': (MobileBy.ID, 'com.chinasofti.rcs:id/card'),
         'com.chinasofti.rcs:id/iv_item_small_switch_camera': (
@@ -34,3 +34,9 @@ class MutiVideoPage(BasePage):
         '免提': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_multi_speaker'),
         '静音': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_multi_mute')
     }
+
+    @TestLogger.log()
+    def click_multi_video_add_person(self):
+        """点击添加成员"""
+        self.click_element(self.__locators["添加成员"])
+

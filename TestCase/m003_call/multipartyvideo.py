@@ -937,3 +937,94 @@ class CallMultipartyVideo(TestCase):
         # CheckPoint:4、呼叫按钮，置灰显示
         # CheckPoint:5、企业层级显示
         self.assertFalse(mppg.is_enabled_tv_sure())
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0080(self):
+        """通话模块：团队联系人选择页搜索栏--通过中文搜索出结果"""
+        # 1、当前为团队联系人选择页
+        # 2、团队中已有简体中文名称的联系人以及繁体中文名称的联系人
+        # Step: 1、在输入框输入简体中文/繁体中文
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        # CheckPoint:1、根据搜索条件，搜索出姓名、公司名称中含有对应中文的联系人
+        # CheckPoint:2、规则：中文完全匹配>前部匹配>后部匹配
+        # 完全匹配
+        SelectContactsPage().search("大佬1")
+        cpg.page_should_contain_text("大佬1")
+        cpg.page_should_not_contain_text("大佬2")
+        cpg.page_should_not_contain_text("大佬3")
+        cpg.page_should_not_contain_text("大佬4")
+
+        # 部分匹配
+        SelectContactsPage().search("大佬")
+        cpg.page_should_contain_text("大佬1")
+        cpg.page_should_contain_text("大佬2")
+        cpg.page_should_contain_text("大佬3")
+        cpg.page_should_contain_text("大佬4")
+        # 先显示前半部分匹配，后显示后半部匹配
+        cpg.page_should_not_contain_text("香港大佬")
+
+        # CheckPoint:3、搜索结果中，已匹配的内容高亮显示
+        # CheckPoint:4、点击可选中，并且清空输入内容
+        cpg.click_text("大佬1")
+        cpg.page_should_contain_text("搜索或输入手机号")
+        cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0081(self):
+        """通话模块：团队联系人选择页搜索栏--通过字母搜索出结果"""
+        # 1、当前为团队联系人选择页
+        # 2、团队中已有英文名称的联系人
+        # Step: 1、在输入框输入英文
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        # CheckPoint:1、根据搜索条件，搜索出姓名、公司名称中含有对应字母的联系人
+        # CheckPoint:2、优先级：拼音>首字母
+        # CheckPoint:3、规则：完全匹配>前部匹配>后部匹配
+        # 完全匹配
+        SelectContactsPage().search("English")
+        cpg.page_should_contain_text("English")
+        cpg.page_should_not_contain_text("Lily")
+
+        # 部分匹配排序
+        SelectContactsPage().search("li")
+        mppg = MultiPartyVideoPage()
+        time.sleep(2)
+        self.assertTrue("Lily" == mppg.get_img_icon_contactlist(0))
+        self.assertTrue("English" == mppg.get_img_icon_contactlist(1))
+
+        # CheckPoint:4、搜索结果中，已匹配的内容高亮显示
+        # CheckPoint:5、点击可选中，并且清空输入内容
+        cpg.click_text("English")
+        cpg.page_should_contain_text("搜索或输入手机号")
+        cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0082(self):
+        """通话模块：团队联系人选择页搜索栏--通过数字搜索出结果"""
+        # 1、当前为团队联系人选择页
+        # 2、团队中已有名称含有数字的联系人
+        # Step: 1、在输入框输入数字
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        # CheckPoint:1、根据搜索条件，搜索出姓名、手机号码中含有对应数字的结果
+        # CheckPoint:2、优先级：手机>姓名>其它号码（含固话、短号）
+        # CheckPoint:3、规则：>=6位展示搜索结果（短号除外）
+        SelectContactsPage().search("大佬1")
+        cpg.page_should_contain_text("大佬1")
+        cpg.page_should_contain_text("13800138005")
+
+        # CheckPoint:4、结果：高亮匹配搜索数字，按所有搜索结果姓名首字母A-Z排序
+        # CheckPoint:5、点击可选中，并且清空输入内容
+        cpg.click_text("大佬1")
+        cpg.page_should_contain_text("搜索或输入手机号")
+        cpg.click_back_by_android(2)
+
+
+
