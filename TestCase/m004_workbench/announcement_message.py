@@ -215,3 +215,60 @@ class AnnouncementMessageTest(TestCase):
         amp.click_element_("确定")
         amp.wait_for_page_loads()
 
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0009(self):
+        """管理员进入发布公告，公告搜索-空格搜索"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、带空格搜索公告信息
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.input_title_text("ha *")
+        amp.input_content_text("你好啊")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        amp.click_element_("发布")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        amp.click_element_("搜索")
+        time.sleep(2)
+        amp.click_element_("搜索输入框")
+        time.sleep(2)
+        amp.input_search_text(" *")
+        time.sleep(3)
+        amp.click_text("搜索")
+        time.sleep(2)
+        if not amp.is_text_present("ha *"):
+            raise AssertionError("搜索不成功")
+        amp.click_text("ha *")
+        time.sleep(2)
+        amp.click_text("下线")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0010(self):
+        """管理员进入发布公告，公告搜索-XSS安全"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、在搜索框输入 < imgsrc = 1onmouseover = alert(1) / >
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_element_("搜索")
+        time.sleep(2)
+        amp.click_element_("搜索输入框")
+        time.sleep(2)
+        amp.input_search_text("<img src=1 onmouseover=alert(1) />")
+        time.sleep(3)
+        amp.click_text("搜索")
+        time.sleep(2)
+        if not amp.is_text_present("未查询到公告数据"):
+            raise AssertionError("搜索不成功")
+        current_mobile().back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_page_load()
+
