@@ -178,3 +178,52 @@ class GroupcontactsSelectPage(TestCase):
         select_group_contact.click_input_box()
         select_group_contact.is_keyboard_shown()
 
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0771(self):
+        """进入搜索状态，搜索框默认提示语“搜索”[搜索框文本应该为:搜索或输入手机号]"""
+        select_group_contact=SelectHeContactsPage()
+        #点击搜索框,键盘弹出
+        select_group_contact.click_input_box()
+        select_group_contact.input_search_keywords('大佬')
+        time.sleep(2)
+        select_group_contact.clear_input_box()
+        text=select_group_contact.get_element_text('搜索或输入手机号')
+        self.assertEqual(text,'搜索或输入手机号')
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0772(self):
+        """输入框为空时，右侧不显示 一键消除 X 按钮"""
+        select_group_contact=SelectHeContactsPage()
+        #点击搜索框,键盘弹出
+        select_group_contact.click_input_box()
+        self.assertFalse(select_group_contact.is_element_present(locator='清空搜索框'))
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0773(self):
+        """输入框有内容时，右侧显示 一键消除 X 按钮，点击X可清空内容"""
+        select_group_contact=SelectHeContactsPage()
+        #点击搜索框,键盘弹出
+        select_group_contact.click_input_box()
+        text='测试'
+        select_group_contact.input_search_keywords(text)
+        self.assertTrue(select_group_contact.is_element_present(locator='清空搜索框'))
+        time.sleep(2)
+        select_group_contact.clear_input_box()
+        text2 = select_group_contact.get_element_text('搜索或输入手机号')
+        self.assertNotEqual(text, text2)
+
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0724(self):
+        """测试搜索输入框的X按钮是否可以清空内容"""
+        select_group_contact=SelectHeContactsPage()
+        #点击搜索框,键盘弹出
+        select_group_contact.click_input_box()
+        text='测试'
+        select_group_contact.input_search_keywords(text)
+        time.sleep(2)
+        select_group_contact.clear_input_box()
+        text2 = select_group_contact.get_element_text('搜索或输入手机号')
+        self.assertNotEqual(text, text2)
+
+
