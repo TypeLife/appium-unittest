@@ -2724,7 +2724,71 @@ class ContactsLocalhigh(TestCase):
         number =CreateContactPage().get_text_of_box(locator='输入号码')
         self.assertEqual(number,'13813813801')
 
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0315(self):
+        """号码过滤-中英文、特殊符号：和飞信通讯录个人profile页过滤系统通讯录联系人手机号码中间的中英文、特殊符号（不包含+）"""
+        contact = ContactsPage()
+        # 创建sim联系人手机号含有英文等
+        local_name = '系统2'
+        local_number = '138aaa;1380'
+        if ContactsPage().is_contacts_exist(local_name):
+            time.sleep(2)
+        else:
+            contact.add_system_contacts(name=local_name, number=local_number)
+            # 激活App
+            Preconditions.activate_app()
+            time.sleep(2)
+            if contact.is_text_present('SIM卡联系人'):
+                contact.click_text('显示')
+        # 进入该联系人个人详情页查看
+        contact.select_contacts_by_name(local_name)
+        contact_detail = ContactDetailsPage()
+        contact_number = contact_detail.get_people_number()
+        self.assertNotEqual(local_number, contact_number)
 
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0319(self):
+        """号码过滤-中英文、特殊符号：和飞信通讯录个人profile页过滤系统通讯录联系人手机号码所有的中英文、特殊符号（不包含+"""
+        contact = ContactsPage()
+        # 创建sim联系人手机号含有英文等
+        local_name = '系统3'
+        local_number = 'a138aa;138a'
+        if ContactsPage().is_contacts_exist(local_name):
+            time.sleep(2)
+        else:
+            contact.add_system_contacts(name=local_name, number=local_number)
+            # 激活App
+            Preconditions.activate_app()
+            time.sleep(2)
+            if contact.is_text_present('SIM卡联系人'):
+                contact.click_text('显示')
+        # 进入该联系人个人详情页查看
+        contact.select_contacts_by_name(local_name)
+        contact_detail = ContactDetailsPage()
+        contact_number = contact_detail.get_people_number()
+        self.assertNotEqual(local_number, contact_number)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0325(self):
+        """号码过滤：大陆号码+号过滤:和飞信通讯录个人frofile页过滤系统通讯录联系人大陆号码后面的+号"""
+        contact = ContactsPage()
+        # 创建sim联系人手机号含有英文等
+        local_name = '系统4'
+        local_number = '13801380+++'
+        if ContactsPage().is_contacts_exist(local_name):
+            time.sleep(2)
+        else:
+            contact.add_system_contacts(name=local_name, number=local_number)
+            # 激活App
+            Preconditions.activate_app()
+            time.sleep(2)
+            if contact.is_text_present('SIM卡联系人'):
+                contact.click_text('显示')
+        # 进入该联系人个人详情页查看
+        contact.select_contacts_by_name(local_name)
+        contact_detail = ContactDetailsPage()
+        contact_number = contact_detail.get_people_number()
+        self.assertNotEqual(local_number, contact_number)
 
 
 if __name__=="__main__":
