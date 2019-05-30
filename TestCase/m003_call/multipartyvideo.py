@@ -822,3 +822,64 @@ class CallMultipartyVideo(TestCase):
         cpg.page_should_contain_text("搜索或输入号码")
         cpg.click_back_by_android()
 
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0058(self):
+        """通话模块：搜索栏--通过英文搜索出结果"""
+        # 1、当前为多方视频联系人选择页
+        # 2、本地联系人中已有英文名称的联系人
+        # Step:1、在输入框输入英文
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        # CheckPoint:1、根据输入条件，搜索出姓名中含有对应英文的结果
+        SelectContactsPage().search("特殊!@$")
+        time.sleep(1)
+        cpg.page_should_contain_text("13800138040")
+        # CheckPoint: 2、搜索结果中，已匹配的内容高亮显示
+        # CheckPoint: 3、点击可选中，并且清空输入内容
+        mppg = MultiPartyVideoPage()
+        mppg.click_contact_icon(0)
+        time.sleep(1)
+        cpg.page_should_contain_text("搜索或输入号码")
+        cpg.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0059(self):
+        """通话模块：搜索栏--通过数字搜索出结果"""
+        # 1、当前为多方视频联系人选择页
+        # 2、本地联系人中已有名称含有数字的联系人
+        # Step:1、在输入框输入数字
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        # CheckPoint:1、根据输入条件，搜索出姓名、手机号码中含有对应数字的结果
+        SelectContactsPage().search("大佬1")
+        time.sleep(1)
+        cpg.page_should_contain_text("13800138005")
+        # CheckPoint: 2、搜索结果中，已匹配的内容高亮显示
+        # CheckPoint: 3、点击可选中，并且清空输入内容
+        mppg = MultiPartyVideoPage()
+        mppg.click_contact_icon(0)
+        time.sleep(1)
+        cpg.page_should_contain_text("搜索或输入号码")
+        cpg.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0060(self):
+        """通话模块：搜索栏--通过数字搜索出结果"""
+        # 1、当前为多方视频联系人选择页
+        # 2、本地联系人中已有名称含有数字的联系人
+        # Step:1、在输入框输入数字
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        # CheckPoint:1、根据输入条件，搜索出姓名、手机号码中含有对应数字的结果
+        SelectContactsPage().search("大佬1")
+        time.sleep(1)
+        cpg.page_should_contain_text("13800138005")
+        # CheckPoint: 2、搜索结果中，已匹配的内容高亮显示
+        # CheckPoint: 3、点击可选中，并且清空输入内容
+        mppg = MultiPartyVideoPage()
+        mppg.click_contact_icon(0)
+        time.sleep(1)
+        cpg.page_should_contain_text("搜索或输入号码")
+        cpg.click_back_by_android()
+
+
