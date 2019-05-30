@@ -18,6 +18,7 @@ from pages.contacts.components.menu_more import MenuMore
 from pages.contacts.local_contact import localContactPage
 import preconditions
 from dataproviders import contact2
+from pages.message.MassAssistant import Massassistant
 
 
 REQUIRED_MOBILES = {
@@ -2722,9 +2723,6 @@ class ContactsLocalhigh(TestCase):
         time.sleep(2)
         number =CreateContactPage().get_text_of_box(locator='输入号码')
         self.assertEqual(number,'13813813801')
-
-
-
 
 
 

@@ -32,6 +32,8 @@ class SelectHeContactsPage(BasePage):
                   'Superman': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_department'),
                   'myteam02': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_department'),
                   '团队名称': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_department'),
+                  '清空搜索框': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect'),
+
                   }
 
     @TestLogger.log()
@@ -69,3 +71,28 @@ class SelectHeContactsPage(BasePage):
     def click_back(self):
         """点击 返回"""
         self.click_element(self.__class__.__locators["返回"])
+
+    @TestLogger.log()
+    def get_element_text(self,locator='选择联系人'):
+        """获取元素文本"""
+        return self.get_text(self.__class__.__locators[locator])
+
+    @TestLogger.log()
+    def click_input_box(self):
+        """点击搜索框"""
+        self.click_element(self.__class__.__locators['搜索或输入手机号'])
+
+    @TestLogger.log()
+    def input_search_keywords(self,text):
+        """输入搜索内容"""
+        self.input_text(self.__class__.__locators['搜索或输入手机号'],text)
+
+    @TestLogger.log()
+    def clear_input_box(self):
+        """清空搜索框"""
+        self.click_element(self.__class__.__locators['清空搜索框'])
+
+    @TestLogger.log()
+    def is_element_present(self,locator='清空搜索框'):
+        """判断元素是否存在"""
+        return self._is_element_present(self.__class__.__locators[locator])
