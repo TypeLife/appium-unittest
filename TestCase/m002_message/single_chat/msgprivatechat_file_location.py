@@ -3013,3 +3013,118 @@ class MsgPrivateChatAllTest(TestCase):
 
         mp = MessagePage()
         mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD',  "lxd_debug")
+    def test_msg_weifenglian_1V1_0092(self):
+        """将自己发送的文件转发到手机联系人"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 设置当前网络为2/3/4G
+        scp.set_network_status(4)
+        # 发送大型图片文件
+        Preconditions.send_large_picture_file()
+        time.sleep(2)
+        local_file = ChatSelectLocalFilePage()
+        # 1.是否弹出继续发送、订购免流特权、以后不再提示
+        self.assertEquals(local_file.is_exist_continue_send(), True)
+        self.assertEquals(local_file.is_exist_free_flow_privilege(), True)
+        self.assertEquals(local_file.is_exist_no_longer_prompt(), True)
+        time.sleep(2)
+        local_file.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+        local_file.wait_for_page_load()
+        local_file.click_back()
+        csfp = ChatSelectFilePage()
+        csfp.click_back()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_1V1_0092():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD', "lxd_debug")
+    def test_msg_weifenglian_1V1_0093(self):
+        """将自己发送的文件转发到手机联系人时点击取消转发"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 设置当前网络为2/3/4G
+        scp.set_network_status(4)
+        # 发送大型图片文件
+        Preconditions.send_large_picture_file()
+        local_file = ChatSelectLocalFilePage()
+        # 点击继续发送
+        local_file.click_continue_send()
+        # 1.验证是否发送成功
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
+        # 再次选择大型图片文件发送
+        Preconditions.send_large_picture_file()
+        time.sleep(2)
+        # 2.是否弹出继续发送、订购免流特权、以后不再提示
+        self.assertEquals(local_file.is_exist_continue_send(), True)
+        self.assertEquals(local_file.is_exist_free_flow_privilege(), True)
+        self.assertEquals(local_file.is_exist_no_longer_prompt(), True)
+        time.sleep(2)
+        local_file.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+        local_file.wait_for_page_load()
+        local_file.click_back()
+        csfp = ChatSelectFilePage()
+        csfp.click_back()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_1V1_0093():
+        """恢复网络"""
+
+        mp = MessagePage()
+        mp.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'LXD', "lxd_debug")
+    def test_msg_weifenglian_1V1_0094(self):
+        """将自己发送的文件转发到手机联系人时发送失败"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1、2.进入本地音乐目录
+        Preconditions.enter_local_music_catalog()
+        local_file = ChatSelectLocalFilePage()
+        # 选择本地音乐
+        local_file.click_music()
+        time.sleep(2)
+        # 再次选择，取消
+        local_file.click_music()
+        # 3.等待音乐列表页面加载
+        local_file.wait_for_page_load()
+        local_file.click_back()
+        csfp = ChatSelectFilePage()
+        csfp.wait_for_page_load()
+        csfp.click_back()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD', "lxd_debug")
+    def test_msg_weifenglian_1V1_0095(self):
+        """将自己发送的文件转发到在搜索框输入多种字符搜索到的手机联系人"""
+
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 进入本地音乐目录
+        Preconditions.enter_local_music_catalog()
+        local_file = ChatSelectLocalFilePage()
+        local_file.click_back()
+        csfp = ChatSelectFilePage()
+        # 1.等待选择文件页面加载
+        csfp.wait_for_page_load()
+        csfp.click_back()
+        # 2.等待单聊会话页面加载
+        scp.wait_for_page_load()
