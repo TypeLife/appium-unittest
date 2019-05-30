@@ -2673,7 +2673,49 @@ class MsgGroupChatTest(TestCase):
         current_mobile().turn_on_wifi()
         current_mobile().turn_on_mobile_data()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0289(self):
+        """验证在群聊-查找聊天内容-文件页面点击打开已下载的可预览文件-右上角的更多按钮-收藏时是否正常"""
+        current_mobile().turn_off_wifi()
+        current_mobile().turn_off_mobile_data()
+        self.public_open_find_file_click_more_button()
+        GroupChatPage().click_element_by_text('收藏')
+        GroupChatPage().is_exist_collection()
+        GroupChatPage().click_file_back()
+        self.public_find_group_chat_back()
+        GroupChatPage().click_back()
+        message_page = MessagePage()
+        message_page.wait_for_page_load()
+        message_page.open_me_page()
+        MePage().is_on_this_page()
+        # 点击我的收藏,进入收藏页面
+        MePage().click_collection()
+        collection_page = MeCollectionPage()
+        collection_page.wait_for_page_load()
+        collection_page.element_contain_text("我", Preconditions.get_group_chat_name())
+        # 返回到消息页面
+        MePage().click_back()
+        MePage().open_message_page()
 
+    @staticmethod
+    def tearDown_test_msg_weifenglian_qun_0289():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0290(self):
+        """验证在群聊-查找聊天内容-文件页面点击打开已下载的可预览文件-右上角的更多按钮-其他应用打开时是否正常"""
+        current_mobile().turn_off_wifi()
+        current_mobile().turn_off_mobile_data()
+        self.public_open_find_file_click_more_button()
+        GroupChatPage().click_element_by_text('其他应用打开')
+        time.sleep(2)
+        self.assertFalse(GroupChatPage().is_text_present('其他应用打开'))
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_qun_0290():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
 
 class MsgGroupChatPrior(TestCase):
 
