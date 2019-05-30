@@ -480,6 +480,40 @@ class AnnouncementMessageTest(TestCase):
         amp.click_element_("确定")
         amp.wait_for_page_loads()
 
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0017(self):
+        """管理员通过链接发布方式新建公告，关闭消息推送"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、点击【发布公告】
+        # 4、选择【链接发布】方式
+        # 5、正确填写公告标题和链接公告
+        # 6、关闭消息推送
+        # 7、点击【发布】
+        # 8、点击【确定】
+        # 9、验证公告信息首页历史记录是否正确
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.click_element_("链接发布")
+        amp.input_link_title_text("哈哈")
+        amp.input_link_content_text("http://www.google.com")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        amp.click_element_("发布")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        if not amp.is_text_present("哈哈"):
+            raise AssertionError("首页显示不成功")
+        amp.click_text("哈哈")
+        time.sleep(2)
+        amp.click_text("下线")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+
 
 
 
