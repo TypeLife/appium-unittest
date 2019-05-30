@@ -5,9 +5,12 @@ from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.common.simcardtype import CardType
 from library.core.utils.testcasefilter import tags
 from pages import *
+from pages.call.mutivideo import MutiVideoPage
 from pages.components.BaseChat import BaseChatPage
 import time
 import unittest
+
+from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -112,7 +115,7 @@ class Preconditions(object):
         gcp.wait_for_page_load()
 
     @staticmethod
-    def enter_label_grouping_chat_page(enterLabelGroupingChatPage = True):
+    def enter_label_grouping_chat_page(enterLabelGroupingChatPage=True):
         """进入标签分组会话页面"""
         # 登录进入消息页面
         Preconditions.make_already_in_call()
@@ -174,6 +177,80 @@ class Preconditions(object):
         group_name = "alg" + phone_number[-4:]
         return group_name
 
+    @staticmethod
+    def create_he_contacts(names):
+        """选择手机联系人创建为团队联系人"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_workbench_page()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_organization()
+        osp = OrganizationStructurePage()
+        n = 1
+        # 解决工作台不稳定问题
+        while not osp.page_should_contain_text2("添加联系人"):
+            osp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_organization()
+            n += 1
+            if n > 20:
+                break
+        time.sleep(3)
+        for name in names:
+            if not osp.is_exist_specify_element_by_name(name):
+                osp.click_specify_element_by_name("添加联系人")
+                time.sleep(4)
+                osp.click_specify_element_by_name("从手机通讯录添加")
+                slc = SelectLocalContactsPage()
+                # 等待选择联系人页面加载
+                slc.wait_for_page_load()
+                slc.selecting_local_contacts_by_name(name)
+                slc.click_sure()
+                time.sleep(2)
+                osp.click_back()
+        osp.click_back()
+        wbp.wait_for_workbench_page_load()
+        mp.open_message_page()
+        mp.wait_for_page_load()
+
+    @staticmethod
+    def create_he_contacts2(contacts):
+        """手动输入联系人创建为团队联系人"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_workbench_page()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_organization()
+        osp = OrganizationStructurePage()
+        n = 1
+        # 解决工作台不稳定问题
+        while not osp.page_should_contain_text2("添加联系人"):
+            osp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_organization()
+            n += 1
+            if n > 20:
+                break
+        time.sleep(3)
+        for name, number in contacts:
+            if not osp.is_exist_specify_element_by_name(name):
+                osp.click_specify_element_by_name("添加联系人")
+                time.sleep(4)
+                osp.click_specify_element_by_name("手动输入添加")
+                osp.input_contacts_name(name)
+                osp.input_contacts_number(number)
+                osp.click_confirm()
+                time.sleep(2)
+                osp.click_back()
+        osp.click_back()
+        wbp.wait_for_workbench_page_load()
+        mp.open_message_page()
+        mp.wait_for_page_load()
+
 
 class CallMultipartyVideo(TestCase):
     """
@@ -184,39 +261,56 @@ class CallMultipartyVideo(TestCase):
 
     # @classmethod
     # def setUpClass(cls):
-    #     # 创建联系人
-    #     fail_time = 0
+    #     preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
+    #     # 导入测试联系人、群聊
+    #     fail_time1 = 0
+    #     flag1 = False
     #     import dataproviders
-    #     while fail_time < 3:
+    #     while fail_time1 < 3:
     #         try:
     #             required_contacts = dataproviders.get_preset_contacts()
     #             conts = ContactsPage()
-    #             preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
-    #             preconditions.make_already_in_message_page()
     #             current_mobile().hide_keyboard_if_display()
-    #             preconditions.make_already_in_message_page()
+    #             Preconditions.make_already_in_call()
+    #             conts.open_contacts_page()
+    #             try:
+    #                 if conts.is_text_present("发现SIM卡联系人"):
+    #                     conts.click_text("显示")
+    #             except:
+    #                 pass
     #             for name, number in required_contacts:
-    #                 conts.open_contacts_page()
-    #                 if conts.is_text_present("显示"):
-    #                     conts.click_text("不显示")
+    #                 # 创建联系人
     #                 conts.create_contacts_if_not_exits(name, number)
-    #
-    #             # 创建群
     #             required_group_chats = dataproviders.get_preset_group_chats()
-    #
     #             conts.open_group_chat_list()
     #             group_list = GroupListPage()
     #             for group_name, members in required_group_chats:
     #                 group_list.wait_for_page_load()
+    #                 # 创建群
     #                 group_list.create_group_chats_if_not_exits(group_name, members)
     #             group_list.click_back()
     #             conts.open_message_page()
-    #             return
+    #             flag1 = True
     #         except:
-    #             fail_time += 1
-    #             import traceback
-    #             msg = traceback.format_exc()
-    #             print(msg)
+    #             fail_time1 += 1
+    #         if flag1:
+    #             break
+    #
+    #     # 导入团队联系人
+    #     fail_time2 = 0
+    #     flag2 = False
+    #     while fail_time2 < 5:
+    #         try:
+    #             Preconditions.make_already_in_call()
+    #             contact_names = ["大佬1", "大佬2", "大佬3", "大佬4", "English"]
+    #             Preconditions.create_he_contacts(contact_names)
+    #             contact_names2 = [("Lily", "13800138050")]
+    #             Preconditions.create_he_contacts2(contact_names2)
+    #             flag2 = True
+    #         except:
+    #             fail_time2 += 1
+    #         if flag2:
+    #             break
     #
     # @classmethod
     # def tearDownClass(cls):
@@ -593,5 +687,68 @@ class CallMultipartyVideo(TestCase):
         cpg = CallPage()
         cpg.set_network_status(6)
 
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0038(self):
+        """普通群聊：多方视频联系人选择器搜索非群成员，检查页面显示"""
+        # 1、已通过群聊进入多方视频联系人选择器
+        # Step:1、在搜索框输入非群成员名称
+        cpg = CallPage()
+        mp = MessagePage()
+        ContactsPage().click_message_icon()
+        mp.wait_for_page_load()
+        mp.click_add_icon()
+        mp.click_group_chat()
+        # 点击选择一个群
+        scg = SelectContactsPage()
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        # 选择一个普通群
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        sog.selecting_one_group_by_name("Test_" + phone_number)
+        gpg = GroupListPage()
+        gpg.click_mult_call_icon()
+        CallPage().click_mutil_video_call()
+        time.sleep(1)
+        SelectContactsPage().search("13800138001")
+        # CheckPoint:1、页面显示“无搜索结果”
+        cpg.page_should_contain_text("无搜索结果")
+        cpg.click_back_by_android(3)
 
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0039(self):
+        """普通群聊：多方视频联系人选择器搜索群成员"""
+        # 1、已通过群聊进入多方视频联系人选择器
+        # Step:1、在搜索框输入群成员名称
+        cpg = CallPage()
+        mp = MessagePage()
+        ContactsPage().click_message_icon()
+        mp.wait_for_page_load()
+        mp.click_add_icon()
+        mp.click_group_chat()
+        # 点击选择一个群
+        scg = SelectContactsPage()
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        # 选择一个普通群
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        sog.selecting_one_group_by_name("Test_" + phone_number)
+        gpg = GroupListPage()
+        gpg.click_mult_call_icon()
+        CallPage().click_mutil_video_call()
+        time.sleep(1)
+        SelectContactsPage().search("我")
+        time.sleep(1)
+        # CheckPoint:1、根据输入条件，搜索出群成员
+        cpg.page_should_contain_text("我")
+        # CheckPoint:2、搜索结果中，已匹配的内容高亮显示
+        # CheckPoint:3、点击可选中，并且清空输入内容
+        mppg = MultiPartyVideoPage()
+        mppg.click_contact_icon(0)
+        time.sleep(1)
+        cpg.page_should_contain_text("搜索成员")
+        cpg.click_back_by_android(2)
 
