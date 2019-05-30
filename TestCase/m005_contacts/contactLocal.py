@@ -2854,6 +2854,60 @@ class ContactsLocalhigh(TestCase):
         self.assertTrue(len(result)>0)
 
     @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0535(self):
+        """测试联系人选择器，搜索框校验，输入英文字符进行搜索"""
+        #进入群发助手页面
+        ContactsPage().click_message_icon()
+        mes=MessagePage()
+        mes.click_add_icon()
+        mes.click_mass_assistant()
+        mass_assistant=Massassistant()
+        mass_assistant.click_sure()
+        mass_assistant.click_contact_avatar()
+        #选择联系人,输入内容后发送
+        select_contact=SelectContactsPage()
+        select_contact.click_search_contact()
+        select_contact.input_search_keyword('dalao')
+        result=select_contact.get_contacts_name()
+        self.assertTrue(len(result)>0)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0536(self):
+        """测试联系人选择器，搜索框校验，输入特殊字符进行搜索"""
+        #进入群发助手页面
+        ContactsPage().click_message_icon()
+        mes=MessagePage()
+        mes.click_add_icon()
+        mes.click_mass_assistant()
+        mass_assistant=Massassistant()
+        mass_assistant.click_sure()
+        mass_assistant.click_contact_avatar()
+        #选择联系人,输入内容后发送
+        select_contact=SelectContactsPage()
+        select_contact.click_search_contact()
+        select_contact.input_search_keyword('茻')
+        result=select_contact.get_contacts_name()
+        self.assertTrue(len(result)>0)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0537(self):
+        """测试联系人选择器，搜索框校验，输入组合字符（中英文、数字、特殊字符）进行搜索"""
+        #进入群发助手页面
+        ContactsPage().click_message_icon()
+        mes=MessagePage()
+        mes.click_add_icon()
+        mes.click_mass_assistant()
+        mass_assistant=Massassistant()
+        mass_assistant.click_sure()
+        mass_assistant.click_contact_avatar()
+        #选择联系人,输入内容后发送
+        select_contact=SelectContactsPage()
+        select_contact.click_search_contact()
+        select_contact.input_search_keyword('dalao5茻')
+        result=select_contact.get_contacts_name()
+        self.assertTrue(len(result)>0)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0346(self):
         """号码过滤：香港号码00852不过滤
 和飞信通讯录联系人编辑页不过滤系统通讯录联系人香港号码前面的00852"""
