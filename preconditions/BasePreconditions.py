@@ -3,6 +3,7 @@ from pages import *
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 import random
 from library.core.common.simcardtype import CardType
+from pages.workbench.announcement_message.AnnouncementMessage import AnnouncementMessagePage
 from pages.workbench.create_group.CreateGroup import CreateGroupPage
 from pages.workbench.create_group.SelectEnterpriseContacts import SelectEnterpriseContactsPage
 from pages.workbench.manager_console.WorkbenchManagerPage import WorkBenchManagerPage
@@ -499,3 +500,20 @@ class WorkbenchPreconditions(LoginPreconditions):
         wbp.wait_for_workbench_page_load()
         mp.open_message_page()
         mp.wait_for_page_load()
+
+    @staticmethod
+    def enter_announcement_message_page(reset=False):
+        """从消息进入公告信息页面"""
+        # 登录进入消息页面
+        LoginPreconditions.make_already_in_message_page(reset)
+        mess = MessagePage()
+        # 从消息进入组织架构页面
+        mess.open_workbench_page()
+        workbench = WorkbenchPage()
+        if workbench.is_on_welcome_page():
+            workbench.click_now_create_team()
+        else:
+            workbench.wait_for_page_load()
+            workbench.click_notice_info()
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
