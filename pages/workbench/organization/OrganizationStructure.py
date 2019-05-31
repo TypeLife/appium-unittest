@@ -228,3 +228,15 @@ class OrganizationStructurePage(BasePage):
     def click_element_(self, text):
         """点击元素"""
         self.click_element(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def is_element_present_by_name(self, text):
+        """判断元素是否存在"""
+        time=0
+        times=10
+        while time < times :
+            if self.is_text_present(text):
+                return True
+            time += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        return False
