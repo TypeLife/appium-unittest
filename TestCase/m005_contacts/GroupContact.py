@@ -9,6 +9,8 @@ from library.core.utils.testcasefilter import tags
 from pages import *
 from pages.SelectHeContacts import SelectHeContactsPage
 from pages.workbench.enterprise_contacts.EnterpriseContacts import EnterpriseContactsPage
+from preconditions.BasePreconditions import WorkbenchPreconditions
+from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
 
 REQUIRED_MOBILES = {
     'Android-移动':'M960BDQN229CH',
@@ -103,7 +105,6 @@ class Preconditions(LoginPreconditions):
             app_id = current_mobile().driver.desired_capabilities['appPackage']
         current_mobile().driver.activate_app(app_id)
 
-
     @staticmethod
     def create_contacts_if_not_exits(name, number):
         """
@@ -136,6 +137,128 @@ class Preconditions(LoginPreconditions):
             detail_page.wait_for_page_load()
             detail_page.click_back_icon()
 
+    @staticmethod
+    def create_he_contacts(names):
+        """选择手机联系人创建为团队联系人"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_workbench_page()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_organization()
+        osp = OrganizationStructurePage()
+        n = 1
+        # 解决工作台不稳定问题
+        while not osp.page_should_contain_text2("添加联系人"):
+            osp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_organization()
+            n += 1
+            if n > 20:
+                break
+        time.sleep(3)
+        for name in names:
+            if not osp.is_exist_specify_element_by_name(name):
+                osp.click_specify_element_by_name("添加联系人")
+                time.sleep(4)
+                osp.click_specify_element_by_name("从手机通讯录添加")
+                slc = SelectLocalContactsPage()
+                # 等待选择联系人页面加载
+                slc.wait_for_page_load()
+                slc.selecting_local_contacts_by_name(name)
+                slc.click_sure()
+                time.sleep(2)
+                osp.click_back()
+        osp.click_back()
+        wbp.wait_for_workbench_page_load()
+        mp.open_message_page()
+        mp.wait_for_page_load()
+
+    @staticmethod
+    def create_he_contacts2(contacts):
+        """手动输入联系人创建为团队联系人"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_workbench_page()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_organization()
+        osp = OrganizationStructurePage()
+        n = 1
+        # 解决工作台不稳定问题
+        while not osp.page_should_contain_text2("添加联系人"):
+            osp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_organization()
+            n += 1
+            if n > 20:
+                break
+        time.sleep(3)
+        for name, number in contacts:
+            if not osp.is_exist_specify_element_by_name(name):
+                osp.click_specify_element_by_name("添加联系人")
+                time.sleep(4)
+                osp.click_specify_element_by_name("手动输入添加")
+                osp.input_contacts_name(name)
+                osp.input_contacts_number(number)
+                osp.click_confirm()
+                time.sleep(2)
+                osp.click_back()
+        osp.click_back()
+        wbp.wait_for_workbench_page_load()
+        mp.open_message_page()
+        mp.wait_for_page_load()
+
+    @staticmethod
+    def create_sub_department_by_name(departmentName,name):
+        """从消息列表开始创建子部门并添加一个部门成员"""
+        WorkbenchPreconditions.enter_organization_page()
+        osp = OrganizationStructurePage()
+        osp.wait_for_page_load()
+        if osp.is_element_present_by_name(departmentName):
+            time.sleep(2)
+        else:
+            osp.click_text("添加子部门")
+            osp.wait_for_sub_department_page_load()
+            osp.input_sub_department_name(departmentName)
+            osp.click_text("完成")
+            time.sleep(2)
+        osp.click_text(departmentName)
+        time.sleep(2)
+        if osp.is_element_present_by_name(name):
+            time.sleep(2)
+        else:
+            osp.click_text("添加联系人")
+            time.sleep(1)
+            osp.click_text("从手机通讯录添加")
+            time.sleep(2)
+            sc = SelectContactsPage()
+            slc = SelectLocalContactsPage()
+            # 选择联系人
+            names=slc.get_contacts_name_list()
+            time.sleep(2)
+            sc.click_one_contact(name)
+            # sc.click_one_contact(name)
+            # sc.click_one_contact(name)
+            # slc.click_one_contact("和飞信电话")
+            slc.click_sure()
+            if not slc.is_toast_exist("操作成功"):
+                raise AssertionError("操作不成功")
+        time.sleep(2)
+        current_mobile().back()
+        time.sleep(2)
+        if not osp.is_on_this_page():
+            raise AssertionError("没有返回上一级")
+        time.sleep(2)
+        current_mobile().back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        time.sleep(3)
+        current_mobile().back()
+        workbench.open_message_page()
+
 
 class GroupcontactsSelectPage(TestCase):
     """
@@ -161,14 +284,12 @@ class GroupcontactsSelectPage(TestCase):
         title=select_group_contact.get_element_text(locator='选择联系人')
         self.assertEqual(title,'选择联系人')
 
-
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0769(self):
         """搜索框默认提示语修改为：搜索或输入手机号"""
         select_group_contact=SelectHeContactsPage()
         title=select_group_contact.get_element_text(locator='搜索或输入手机号')
         self.assertEqual(title,'搜索或输入手机号')
-
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0770(self):
@@ -211,7 +332,6 @@ class GroupcontactsSelectPage(TestCase):
         select_group_contact.clear_input_box()
         text2 = select_group_contact.get_element_text('搜索或输入手机号')
         self.assertNotEqual(text, text2)
-
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0724(self):
