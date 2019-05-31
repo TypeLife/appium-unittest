@@ -640,6 +640,75 @@ class AnnouncementMessageTest(TestCase):
         amp.click_element_("确定")
         amp.wait_for_page_loads()
 
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0022(self):
+        """验证未发公告页搜索是否正确"""
+        # 1、点击右上角放大镜图标
+        # 2、点击搜索栏，输入输入存在的关键字
+        # 3、点击搜索
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.input_title_text("ha6")
+        amp.input_content_text("你好啊")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        amp.click_element_("保存")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        amp.click_element_("未发公告")
+        time.sleep(2)
+        amp.click_element_("搜索")
+        time.sleep(2)
+        amp.click_element_("搜索输入框")
+        time.sleep(2)
+        amp.input_search_text("ha")
+        time.sleep(3)
+        amp.click_text("搜索")
+        time.sleep(2)
+        if not amp.is_text_present("ha6"):
+            raise AssertionError("搜索不成功")
+        amp.click_text("ha6")
+        time.sleep(2)
+        amp.click_element_("删除")
+        time.sleep(2)
+        amp.click_element_("确定")
+        time.sleep(2)
+        amp.click_element_("X")
+        wbp = WorkbenchPage()
+        wbp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0023(self):
+        """已发布公告下线"""
+        # 1、点击公告列表的一条公告
+        # 2、在详情界面，点击底部“下线”
+        # 3、点击下线提示框弹窗“确定”
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.input_title_text("ha6")
+        amp.input_content_text("你好啊")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        amp.click_element_("发布")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        if not amp.is_text_present("ha6"):
+            raise AssertionError("首页显示不成功")
+        amp.click_text("ha6")
+        time.sleep(2)
+        amp.click_text("下线")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        if amp.is_text_present("ha6"):
+            raise AssertionError("下线公告没有消失")
+
 
 
 
