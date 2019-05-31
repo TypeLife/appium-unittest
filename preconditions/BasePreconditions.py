@@ -517,3 +517,20 @@ class WorkbenchPreconditions(LoginPreconditions):
             workbench.click_notice_info()
         amp = AnnouncementMessagePage()
         amp.wait_for_page_loads()
+
+    @staticmethod
+    def enter_announcement_message_page_not_admin(reset=False):
+        """从消息进入公告信息页面--非管理员"""
+        # 登录进入消息页面
+        LoginPreconditions.make_already_in_message_page(reset)
+        mess = MessagePage()
+        # 从消息进入组织架构页面
+        mess.open_workbench_page()
+        workbench = WorkbenchPage()
+        if workbench.is_on_welcome_page():
+            workbench.click_now_create_team()
+        else:
+            workbench.wait_for_page_load()
+            workbench.click_notice_info()
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads_not_admin()

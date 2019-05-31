@@ -31,6 +31,9 @@ class AnnouncementMessagePage(BasePage):
         '保存': (MobileBy.XPATH, '//*[@text="保存"]'),
         '链接公告输入框': (MobileBy.XPATH, '//*[@resource-id ="linkUrl"]'),
         '链接公告标题输入框': (MobileBy.XPATH, '//*[@resource-id ="title_link"]'),
+        '取消': (MobileBy.XPATH, '//*[@text="取消"]'),
+        '删除': (MobileBy.XPATH, '//*[@text="删除"]'),
+        '发布text': (MobileBy.XPATH, '//*[@text="发布"]'),
     }
 
     @TestLogger.log()
@@ -145,3 +148,27 @@ class AnnouncementMessagePage(BasePage):
         except:
             pass
         return self
+
+    @TestLogger.log()
+    def wait_for_page_loads_not_admin(self, text="搜索", timeout=60):
+        """等待 页面加载--非管理员"""
+        try:
+            self.wait_until(
+                auto_accept_permission_alert=True,
+                condition=lambda d: self._is_element_present(self.__class__.__locators[text]),
+                timeout=timeout
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def is_on_this_page_not_admin(self):
+        """当前页面是否在公告信息页--非管理员"""
+        el = self.get_elements(self.__class__.__locators['搜索'])
+        if len(el) > 0:
+            return True
+        return False

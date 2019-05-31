@@ -23,6 +23,9 @@ class EnterpriseContactsPage(BasePage):
         '搜索框': (MobileBy.ID, 'com.chinasofti.rcs:id/search_edit'),
         '搜索输入框': (MobileBy.ID, 'com.chinasofti.rcs:id/et_search_view'),
         '搜索结果': (MobileBy.ID, 'com.chinasofti.rcs:id/lv_search_enterprise_activity'),
+        '更多': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_more'),
+        '团队管理': (MobileBy.ID, 'com.chinasofti.rcs:id/quit_confirm_tv'),
+        '解散团队': (MobileBy.ID, 'com.chinasofti.rcs:id/quit_cancel_tv'),
 
     }
 
@@ -62,6 +65,17 @@ class EnterpriseContactsPage(BasePage):
     def click_return(self):
         """点击返回"""
         self.click_element(self.__class__.__locators["返回上一级"])
+
+    @TestLogger.log()
+    def click_more(self):
+        """点击更多"""
+        self.click_element(self.__class__.__locators["更多"])
+
+    @TestLogger.log()
+    def click_management_team(self):
+        """点击管理团队"""
+        self.click_element(self.__class__.__locators["团队管理"])
+
 
     @TestLogger.log()
     def is_exist_corporate_grade(self):
@@ -221,3 +235,18 @@ class EnterpriseContactsPage(BasePage):
             # 没有此信息时返回True
             print(name + " 无部门")
             return True
+
+    @TestLogger.log()
+    def click_sub_level_department_by_name(self, name):
+        """选择指定子层级部门"""
+        locator = (
+            MobileBy.XPATH,
+            '//*[@resource-id="com.chinasofti.rcs:id/tv_title_department" and contains(@text,"%s")]' % name)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        self.click_element(locator)

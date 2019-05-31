@@ -171,5 +171,13 @@ class MultiPartyVideoPage(BasePage):
         """点击团队联系人图像"""
         self.click_element(self.__locators["团队联系人图像"])
 
+    @TestLogger.log()
+    def sure_button_is_enabled(self):
+        """确定呼叫是否可点击"""
+        return self._is_enabled(self.__class__.__locators["呼叫"])
 
+    @TestLogger.log()
+    def click_contact_list_item(self):
+        """点击联系人"""
+        self.click_element(self.__locators["联系人item"])
 

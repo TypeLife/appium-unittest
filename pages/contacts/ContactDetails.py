@@ -87,6 +87,12 @@ class ContactDetailsPage(BasePage):
         time.sleep(1)
         self.click_element(self.__locators["添加桌面快捷方式"])
 
+    @TestLogger.log("始终允许弹框处理")
+    def click_permission_box(self):
+        time.sleep(1)
+        while self.is_text_present('始终允许'):
+            self.click_text('始终允许')
+
     @TestLogger.log("点击我知道了")
     def click_I_know(self):
         time.sleep(1)
@@ -114,13 +120,22 @@ class ContactDetailsPage(BasePage):
 
     @TestLogger.log("挂断通话")
     def cancel_call(self):
-        time.sleep(7)
+        time.sleep(4)
         self.click_element(self.__locators["挂断电话"])
+
+    @TestLogger.log("挂断通话")
+    def is_element_present(self,locator='挂断电话'):
+        time.sleep(4)
+        return self._is_element_present(self.__locators[locator])
+
 
     @TestLogger.log("挂断和飞信电话")
     def cancel_hefeixin_call(self):
-        time.sleep(7)
-        self.click_element(self.__locators["和飞信电话-挂断电话"])
+        time.sleep(4)
+        if self._is_element_present(self.__locators["和飞信电话-挂断电话"]):
+            self.click_element(self.__locators["和飞信电话-挂断电话"])
+        else:
+            time.sleep(2)
 
     @TestLogger.log("结束通话")
     def click_end_call(self):
@@ -285,9 +300,9 @@ class ContactDetailsPage(BasePage):
 
     @TestLogger.log("挂断视频通话")
     def end_video_call(self):
-        time.sleep(2)
+        time.sleep(4)
 
-        if self.get_elements(self.__locators["挂断视频通话"]):
+        if self._is_element_present(self.__locators["挂断视频通话"]):
             self.click_element(self.__locators["挂断视频通话"])
         else:
             self.click_element(self.__locators["取消拨打"])
