@@ -416,6 +416,115 @@ class MygroupSearchPage(TestCase):
         MessagePage().click_contacts()
         ContactsPage().select_group_by_name('ateam7272')
 
+    @tags('ALL', 'CMCC', 'contact','my_group')
+    def test_contacts_quxinli_0045(self):
+        """用户在多个企业下"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_back()
+        time.sleep(2)
+        contact=ContactsPage()
+        group_name=contact.get_all_group_name()
+        self.assertTrue(len(group_name) > 1 )
+
+    @tags('ALL', 'CMCC', 'contact','my_group')
+    def test_contacts_quxinli_0048(self):
+        """子一层级下已保存到本地的RCS用户Profile(点击我的团队的企业下任一保存在本地的RCS联系人)"""
+        group_contact=EnterpriseContactsPage()
+        group_contact.wait_for_page_load()
+        group_contact.click_contacts_by_name('测试号码')
+        detailpage = ContactDetailsPage()
+        detailpage.wait_for_page_load()
+        #验证页面元素显示
+        self.assertTrue(detailpage.is_exists_contacts_name())
+        self.assertTrue(detailpage.is_exists_contacts_number())
+        self.assertTrue(detailpage.is_exists_contacts_image())
+        if detailpage.is_text_present("公司"):
+            detailpage.page_should_contain_text('公司')
+        if detailpage.is_text_present("职位"):
+            detailpage.page_should_contain_text('职位')
+        if detailpage.is_text_present("邮箱"):
+            detailpage.page_should_contain_text('邮箱')
+        detailpage.page_should_contain_text('消息')
+        detailpage.page_should_contain_text('电话')
+        detailpage.page_should_contain_text('语音通话')
+        detailpage.page_should_contain_text('视频通话')
+        detailpage.page_should_contain_text('和飞信电话')
+        detailpage.page_should_contain_text('分享名片')
+        # 点击头像查看大图
+        detailpage.click_avatar()
+        time.sleep(4)
+        detailpage.click_big_avatar()
+        # 消息按钮可点击
+        detailpage.click_message_icon()  # 进入消息页面
+        time.sleep(2)
+        if ChatWindowPage().is_text_present("用户须知"):
+            # 如果存在用户须知,就点击已阅读,然后点击返回.如果不存在,就直接点击返回
+            ChatWindowPage().click_already_read()
+            ChatWindowPage().click_sure_icon()
+            ChatWindowPage().click_back()
+        else:
+            ChatWindowPage().click_back()
+        #点击电话 拨打电话
+        detailpage.click_call_icon()
+        detailpage.cancel_call()
+        #点击语音,挂断语音电话
+        detailpage.click_voice_call_icon()
+        time.sleep(2)
+        if detailpage.is_text_present('暂不开启'):
+            time.sleep(2)
+            detailpage.click_text('暂不开启')
+        detailpage.click_end_call()
+        #点击视频通话
+        detailpage.click_video_call_icon()
+        time.sleep(2)
+        if detailpage.is_text_present('暂不开启'):
+            detailpage.click_text('暂不开启')
+        detailpage.end_video_call()
+        #点击和飞信电话
+        detailpage.click_hefeixin_call_menu()
+        time.sleep(2)
+        if detailpage.is_text_present('暂不开启'):
+            detailpage.click_text('暂不开启')
+        time.sleep(3)
+        detailpage.cancel_hefeixin_call()
+        # 分享名片按钮可点击
+        detailpage.click_share_business_card()
+        SelectContactsPage().select_local_contacts()
+        SelectContactsPage().click_one_contact('大佬1')
+        time.sleep(2)
+        SelectContactsPage().click_share_card()
+        detailpage.page_should_contain_text('已发送')
+
+    @tags('ALL', 'CMCC', 'contact','my_group')
+    def test_contacts_quxinli_0049(self):
+        """点击搜索结果已保存到本地的本机用户进入联系人详情页"""
+        group_contact=EnterpriseContactsPage()
+        group_contact.wait_for_page_load()
+        group_contact.click_search_box()
+        time.sleep(2)
+        #搜索框为空 无反应
+        self.assertFalse(group_contact.is_exists_contacts_search_result())
+        #搜索内容为空格
+        group_contact.input_search_message(' ')
+        time.sleep(2)
+        self.assertFalse(group_contact.is_exists_contacts_search_result())
+        #输入陈丹丹搜索
+        group_contact.input_search_message('陈丹丹')
+        time.sleep(2)
+        group_contact.is_search_contacts_name_full_match('陈丹丹')
+        #输入Alice
+        group_contact.input_search_message('alice')
+        time.sleep(2)
+        group_contact.is_search_contacts_name_full_match('alice')
+        #输入号码
+        group_contact.input_search_message('13800137004')
+        time.sleep(3)
+        group_contact.is_search_contacts_number_full_match('13800137004')
+        #输入号码
+        group_contact.input_search_message('188262*')
+        time.sleep(2)
+        self.assertFalse(group_contact.is_exists_contacts_name())
+
 
 
 
