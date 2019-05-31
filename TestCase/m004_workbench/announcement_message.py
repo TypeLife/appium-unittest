@@ -545,7 +545,29 @@ class AnnouncementMessageTest(TestCase):
         amp.click_element_("确定")
         amp.wait_for_page_loads()
 
-
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0019(self):
+        """管理员发布公告，取消发布，不发布公告"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、点击【发布公告】
+        # 4、选择发布方式
+        # 5、正确填写页面消息
+        # 6、点击【发布】按钮
+        # 7、点击【取消】按钮
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.input_title_text("ha6")
+        amp.input_content_text("你好啊")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        amp.click_element_("发布")
+        time.sleep(2)
+        amp.click_element_("取消")
+        current_mobile().back()
+        amp.wait_for_page_loads()
 
 
 
