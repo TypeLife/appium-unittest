@@ -1232,3 +1232,64 @@ class CallMultipartyVideo(TestCase):
         mppg.click_btn_ok()
         time.sleep(1)
         cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0130(self):
+        """通话模块：勾选本地联系人+和通讯录联系人+陌生联系人，发起多方视频"""
+        # 1、当前为多方视频联系人选择页
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        time.sleep(1)
+        # Step: 1、通过搜索栏搜索出1个陌生联系人并且选中
+        mppg = MultiPartyVideoPage()
+        SelectContactsPage().search("13800139000")
+        mppg.click_contact_list_item()
+        # Step: 2、点击进入和通讯录，选中1个和通讯录联系人
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        cpg.click_text("ateam3465")
+        time.sleep(1)
+        cpg.click_text("大佬1")
+        time.sleep(1)
+        cpg.click_back_by_android(2)
+        # Step: 3、在本地通讯录选中1个联系人
+        mppg.select_contacts_by_number("14775970982")
+        # Step: 4、点击呼叫发起多方视频
+        mppg.click_tv_sure()
+        # CheckPoint:1、正常发起多方视频
+        time.sleep(1)
+        if cpg.is_text_present("现在去开启"):
+            cpg.click_text("暂不开启")
+        time.sleep(1)
+        self.assertTrue(mppg.is_exist_end_video_call())
+        mppg.click_end_video_call()
+        mppg.click_btn_ok()
+        time.sleep(1)
+        cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0145(self):
+        """分组群发/标签分组/群发消息：多方视频联系人选择器搜索群成员"""
+        # 1、已通过分组群发/标签分组/群发消息进入多方视频联系人选择器
+        cpg = CallPage()
+        Preconditions.enter_label_grouping_chat_page()
+        gpg = GroupListPage()
+        gpg.click_mult_call_icon()
+        CallPage().click_mutil_video_call()
+        # Step: 1、在搜索框输入标签分组成员名称
+        GroupListPage().search_menber_text("大佬1")
+
+        # CheckPoint:1、根据输入条件，搜索出标签分组成员
+        cpg.page_should_contain_text("13800138005")
+
+        # CheckPoint:2、搜索结果中，已匹配的内容高亮显示
+        # CheckPoint:3、点击可选中，并且清空输入内容
+        mppg = MultiPartyVideoPage()
+        mppg.click_contact_head()
+        time.sleep(1)
+        cpg.page_should_contain_text("搜索标签分组成员")
+        cpg.click_back_by_android(4)
+        cpg.click_call()
+
+
+
