@@ -2402,3 +2402,69 @@ class MessageOthersAllTest(TestCase):
         self.assertEquals(cdp.is_exists_share_card_company(), True)
         self.assertEquals(cdp.is_exists_share_card_position(), True)
         self.assertEquals(cdp.is_exists_share_card_email(), True)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_hanjiabin_0183(self):
+        """名片消息——单聊——点击名片按钮进入“和通讯录+本地联系人”的联系人选择器——选择和通讯录联系人"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_contacts_page()
+        cp = ContactsPage()
+        cp.wait_for_page_load()
+        # 选择名片
+        card_name = "名片消息测试"
+        cp.select_contacts_by_name(card_name)
+        cdp = ContactDetailsPage()
+        cdp.wait_for_page_load()
+        # 发送名片消息给团队联系人
+        cdp.click_share_business_card()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        scg.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 需要考虑测试号码存在多个团队的情况
+        Preconditions.if_exists_multiple_enterprises_share_card()
+        shc.selecting_he_contacts_by_name("大佬3")
+        time.sleep(2)
+        # 1.左上角“X”按钮关闭弹窗、和飞信头像、企业下昵称、电话号码、企业-部门、职位/多个职位、邮箱
+        self.assertEquals(cdp.is_exists_share_card_close_icon(), True)
+        self.assertEquals(cdp.is_exists_share_card_head_img(), True)
+        self.assertEquals(cdp.is_exists_share_card_name(), True)
+        self.assertEquals(cdp.is_exists_share_card_number(), True)
+        self.assertEquals(cdp.is_exists_share_card_company(), True)
+        self.assertEquals(cdp.is_exists_share_card_position(), True)
+        self.assertEquals(cdp.is_exists_share_card_email(), True)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_hanjiabin_0184(self):
+        """名片消息——单聊——点击名片按钮进入“和通讯录+本地联系人”的联系人选择器——选择本地联系人"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_contacts_page()
+        cp = ContactsPage()
+        cp.wait_for_page_load()
+        # 选择名片
+        card_name = "名片消息测试"
+        cp.select_contacts_by_name(card_name)
+        cdp = ContactDetailsPage()
+        cdp.wait_for_page_load()
+        # 发送名片消息给手机联系人
+        cdp.click_share_business_card()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        slc.selecting_local_contacts_by_name("大佬4")
+        time.sleep(2)
+        # 1.左上角“X”按钮关闭弹窗、和飞信头像、企业下昵称、电话号码、企业-部门、职位/多个职位、邮箱
+        self.assertEquals(cdp.is_exists_share_card_close_icon(), True)
+        self.assertEquals(cdp.is_exists_share_card_head_img(), True)
+        self.assertEquals(cdp.is_exists_share_card_name(), True)
+        self.assertEquals(cdp.is_exists_share_card_number(), True)
+        self.assertEquals(cdp.is_exists_share_card_company(), True)
+        self.assertEquals(cdp.is_exists_share_card_position(), True)
+        self.assertEquals(cdp.is_exists_share_card_email(), True)
