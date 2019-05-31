@@ -10,7 +10,9 @@ from pages.components.BaseChat import BaseChatPage
 import time
 import unittest
 
+from pages.workbench.group_messenger.SelectCompanyContacts import SelectCompanyContactsPage
 from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
+from preconditions.BasePreconditions import WorkbenchPreconditions
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -306,6 +308,8 @@ class CallMultipartyVideo(TestCase):
     #             Preconditions.create_he_contacts(contact_names)
     #             contact_names2 = [("Lily", "13800138050")]
     #             Preconditions.create_he_contacts2(contact_names2)
+    #             department_names = ["测试部门1", "测试部门2"]
+    #             WorkbenchPreconditions.create_department_and_add_member(department_names)
     #             flag2 = True
     #         except:
     #             fail_time2 += 1
@@ -1026,5 +1030,62 @@ class CallMultipartyVideo(TestCase):
         cpg.page_should_contain_text("搜索或输入手机号")
         cpg.click_back_by_android(2)
 
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0083(self):
+        """通话模块：团队联系人选择页搜索栏--通过特殊字符搜索出结果"""
+        # 1、当前为团队联系人选择页
+        # 2、团队中已有名称含有特殊字符的联系人
+        # Step: 1、在输入框输入特殊字符
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        # CheckPoint:1、根据搜索条件，搜索出姓名、公司名称中含有对应特殊符号的结果
+        # CheckPoint:2、规则：>=2位字符，支持"+",“.”等组合搜索
+        # CheckPoint:3、优先级：完全匹配>前部匹配>后部匹配
+        SelectContactsPage().search("特殊!@$")
+        cpg.page_should_contain_text("特殊!@$")
+        cpg.page_should_contain_text("13800138040")
 
+        # CheckPoint:4、结果：高亮匹配特殊字符组合。按所有搜索结果姓名首字母A-Z排序
+        # CheckPoint:5、点击可选中，并且清空输入内容
+        cpg.click_text("特殊!@$")
+        cpg.page_should_contain_text("搜索或输入手机号")
+        cpg.click_back_by_android(2)
 
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0087(self):
+        """通话模块：团队联系人选择页搜索栏--搜索本机号码"""
+        # 1、当前为团队联系人选择页
+        # Step: 1、在输入框输入本机号码
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        # CheckPoint:1、默认置灰不可选
+        # CheckPoint:2、点击则toast提示：该联系人不可选择
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        SelectContactsPage().search(phone_number)
+        MultiPartyVideoPage().click_img_icon_contactlist()
+        self.assertTrue(cpg.is_toast_exist("该联系人不可选择"))
+        cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0096(self):
+        """通话模块：检查企业入口"""
+        # 1、当前为团队联系人选择页
+        # 2、本机用户已加入企业
+        # Step: 1、点击企业名称
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        # CheckPoint:1、搜索栏内置灰显示“当前组织”
+        cpg.page_should_contain_text("当前组织")
+        # CheckPoint:2、展示该列表下的用户
+        cpg.page_should_contain_text("本机")
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        cpg.page_should_contain_text(phone_number)
+        # CheckPoint:3、展示该列表下的分组
+        # CheckPoint:4、顶端显示企业导航栏面包屑，点击跳转到对应的列表
+        cpg.click_back_by_android(2)
