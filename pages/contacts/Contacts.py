@@ -238,7 +238,7 @@ class ContactsPage(FooterPage):
         self.click_element(self.__locators['公众号'])
 
     @TestLogger.log('创建通讯录联系人')
-    def create_contacts_if_not_exits(self, name, number):
+    def create_contacts_if_not_exits(self, name, number, company='', position='', email=''):
         """
         导入联系人数据
         :param name:
@@ -264,7 +264,7 @@ class ContactsPage(FooterPage):
             create_page = CreateContactPage()
             create_page.wait_for_page_load()
             create_page.hide_keyboard_if_display()
-            create_page.create_contact(name, number)
+            create_page.create_contact(name, number, company, position, email)
             detail_page.wait_for_page_load()
             detail_page.click_back_icon()
 

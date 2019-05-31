@@ -9,11 +9,110 @@ from library.core.utils.applicationcache import current_mobile, current_driver, 
 from library.core.utils.testcasefilter import tags
 from pages import *
 import preconditions
+from pages.components import BaseChatPage
+from pages.workbench.group_messenger.SelectCompanyContacts import SelectCompanyContactsPage
+from preconditions.BasePreconditions import WorkbenchPreconditions
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
     'Android-XX': ''  # 用来发短信
 }
+
+
+class Preconditions(WorkbenchPreconditions):
+    """前置条件"""
+
+    @staticmethod
+    def make_already_in_message_page(reset_required=False):
+        """确保应用在消息页面"""
+
+        if not reset_required:
+            message_page = MessagePage()
+            if message_page.is_on_this_page():
+                return
+            else:
+                try:
+                    current_mobile().terminate_app('com.chinasofti.rcs', timeout=2000)
+                except:
+                    pass
+                current_mobile().launch_app()
+            try:
+                message_page.wait_until(
+                    condition=lambda d: message_page.is_on_this_page(),
+                    timeout=3
+                )
+                return
+            except TimeoutException:
+                pass
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_one_key_login_page()
+        Preconditions.login_by_one_key_login()
+
+    @staticmethod
+    def reset_and_relaunch_app():
+        """首次启动APP（使用重置APP代替）"""
+
+        app_package = 'com.chinasofti.rcs'
+        current_driver().activate_app(app_package)
+        current_mobile().reset_app()
+
+    @staticmethod
+    def if_exists_multiple_enterprises_share_card():
+        """选择团队联系人时存在多个团队时返回获取当前团队名，再分享名片"""
+
+        shc = SelectHeContactsDetailPage()
+        # 测试号码是否存在多个团队
+        if not shc.is_exist_corporate_grade():
+            mp = MessagePage()
+            scg = SelectContactsPage()
+            cdp = ContactDetailsPage()
+            cp = ContactsPage()
+            shc.click_back()
+            scg.wait_for_page_load()
+            scg.click_back()
+            cdp.wait_for_page_load()
+            cdp.click_back_icon()
+            cp.wait_for_page_load()
+            cp.open_workbench_page()
+            wbp = WorkbenchPage()
+            wbp.wait_for_workbench_page_load()
+            time.sleep(2)
+            # 获取当前团队名
+            workbench_name = wbp.get_workbench_name()
+            mp.open_contacts_page()
+            cp.wait_for_page_load()
+            card_name = "名片消息测试"
+            cp.select_contacts_by_name(card_name)
+            cdp.wait_for_page_load()
+            cdp.click_share_business_card()
+            scg.wait_for_page_load()
+            scg.click_he_contacts()
+            shc.wait_for_he_contacts_page_load()
+            # 选择当前团队
+            shc.click_department_name(workbench_name)
+            time.sleep(2)
+
+    @staticmethod
+    def enter_single_chat_page(name):
+        """进入单聊聊天会话页面"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 点击 +
+        mp.click_add_icon()
+        # 点击“新建消息”
+        mp.click_new_message()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        # 进入单聊会话页面
+        slc.selecting_local_contacts_by_name(name)
+        bcp = BaseChatPage()
+        if bcp.is_exist_dialog():
+            # 点击我已阅读
+            bcp.click_i_have_read()
+        scp = SingleChatPage()
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
 
 
 class MessageScanTest(TestCase):
@@ -2001,3 +2100,160 @@ class MessageSearchTest(TestCase):
     def tearDown_test_msg_huangcaizui_E_0027():
         search_page = SearchPage()
         search_page.click_back_button()
+
+
+class MessageOthersAllTest(TestCase):
+    """
+    模块：消息
+    文件位置：1.1.5和飞信APP全量测试用例-汇总（9146条）.xlsx
+    表格：消息
+    Author:刘晓东
+    """
+
+    @classmethod
+    def setUpClass(cls):
+
+        Preconditions.select_mobile('Android-移动')
+        # 导入测试联系人、群聊
+        fail_time1 = 0
+        flag1 = False
+        import dataproviders
+        while fail_time1 < 3:
+            try:
+                required_contacts = dataproviders.get_preset_contacts()
+                conts = ContactsPage()
+                current_mobile().hide_keyboard_if_display()
+                Preconditions.make_already_in_message_page()
+                conts.open_contacts_page()
+                try:
+                    if conts.is_text_present("发现SIM卡联系人"):
+                        conts.click_text("显示")
+                except:
+                    pass
+                for name, number in required_contacts:
+                    # 创建联系人
+                    conts.create_contacts_if_not_exits(name, number)
+
+                # 创建名片消息联系人
+                conts.create_contacts_if_not_exits("名片消息测试", "13500135001", "中软国际", "经理", "123456@139.com")
+                required_group_chats = dataproviders.get_preset_group_chats()
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    # 创建群
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
+                flag1 = True
+            except:
+                fail_time1 += 1
+            if flag1:
+                break
+
+        # 导入团队联系人
+        fail_time2 = 0
+        flag2 = False
+        while fail_time2 < 5:
+            try:
+                Preconditions.make_already_in_message_page()
+                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
+                Preconditions.create_he_contacts(contact_names)
+                flag2 = True
+            except:
+                fail_time2 += 1
+            if flag2:
+                break
+
+    def default_setUp(self):
+        Preconditions.select_mobile('Android-移动')
+        mp = MessagePage()
+        if mp.is_on_this_page():
+            return
+        else:
+            current_mobile().launch_app()
+            Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_hanjiabin_0176(self):
+        """名片消息"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_contacts_page()
+        cp = ContactsPage()
+        cp.wait_for_page_load()
+        # 选择名片
+        cp.select_contacts_by_name("名片消息测试")
+        cdp = ContactDetailsPage()
+        cdp.wait_for_page_load()
+        # 发送名片消息给联系人
+        cdp.click_share_business_card()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        slc.selecting_local_contacts_by_name("大佬1")
+        time.sleep(2)
+        slc.click_text("发送名片")
+        # 1.正常分享
+        self.assertEquals(slc.is_toast_exist("已发送"), True)
+        cdp.click_back_icon()
+        cp.wait_for_page_load()
+        cp.open_message_page()
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_hanjiabin_0177(self):
+        """名片消息"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_contacts_page()
+        cp = ContactsPage()
+        cp.wait_for_page_load()
+        # 选择名片
+        card_name = "名片消息测试"
+        cp.select_contacts_by_name(card_name)
+        cdp = ContactDetailsPage()
+        cdp.wait_for_page_load()
+        # 发送名片消息给联系人
+        cdp.click_share_business_card()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        share_name = "大佬1"
+        slc.selecting_local_contacts_by_name(share_name)
+        time.sleep(2)
+        slc.click_text("发送名片")
+        cdp.click_back_icon()
+        cp.wait_for_page_load()
+        cp.open_message_page()
+        mp.wait_for_page_load()
+        # 选择刚刚发送的名片消息收藏
+        mp.choose_chat_by_name(share_name)
+        scp = SingleChatPage()
+        scp.wait_for_page_load()
+        scp.press_card_name_by_number(-1)
+        scp.click_text("收藏")
+        self.assertEquals(scp.is_toast_exist("已收藏"), True)
+        scp.click_back()
+        mp.wait_for_page_load()
+        mp.open_me_page()
+        me_page = MePage()
+        me_page.wait_for_page_load()
+        me_page.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        # 1.功能及文案全部正常
+        self.assertEquals(mcp.is_exists_card_by_name(card_name), True)
+        mcp.click_back()
+        me_page.wait_for_page_load()
+        me_page.open_message_page()
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+

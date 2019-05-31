@@ -54,7 +54,8 @@ class SingleChatPage(BaseChatPage):
                   '重发按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
                   '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
                   '取消': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
-                  '文件名称': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_name')
+                  '文件名称': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_name'),
+                  '名片消息名称': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_card_name'),
                   }
 
     @TestLogger.log()
@@ -222,3 +223,9 @@ class SingleChatPage(BaseChatPage):
     def click_action_call(self):
         """点击打电话图标"""
         self.click_element(self.__class__.__locators["打电话图标"])
+
+    @TestLogger.log()
+    def press_card_name_by_number(self, number):
+        """按压名片消息"""
+        els = self.get_elements(self.__class__.__locators["名片消息名称"])
+        self.press(els[number])

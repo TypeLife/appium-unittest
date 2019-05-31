@@ -816,21 +816,3 @@ class MessageListAllTest(TestCase):
             time.sleep(2)
         # 1.验证是否存在红点提醒
         self.assertEquals(mp.is_exist_news_red_dot(), False)
-
-
-# class MessageHanJiaBinAllTest(TestCase):
-#     """
-#         模块：消息-名片、网页消息
-#         文件位置：1.1.5和飞信APP全量测试用例-汇总（9146条）.xlsx
-#         表格：消息-名片、网页消息
-#         Author:刘晓东
-#     """
-#
-#     def default_setUp(self):
-#         Preconditions.select_mobile('Android-移动')
-#         mp = MessagePage()
-#         if mp.is_on_this_page():
-#             return
-#         else:
-#             current_mobile().launch_app()
-#             Preconditions.make_already_in_message_page()
