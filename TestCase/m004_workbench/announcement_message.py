@@ -569,6 +569,78 @@ class AnnouncementMessageTest(TestCase):
         current_mobile().back()
         amp.wait_for_page_loads()
 
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0020(self):
+        """管理员删除未发布公告，删除成功"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、点击【未发公告】
+        # 4、选中一条未发布公告
+        # 5、点击【删除】按钮
+        # 6、点击【确定】按钮
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.input_title_text("ha6")
+        amp.input_content_text("你好啊")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        amp.click_element_("保存")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        amp.click_element_("未发公告")
+        time.sleep(2)
+        amp.click_text("ha6")
+        time.sleep(2)
+        amp.click_element_("删除")
+        time.sleep(2)
+        amp.click_element_("确定")
+        time.sleep(2)
+        amp.click_element_("X")
+        wbp=WorkbenchPage()
+        wbp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0021(self):
+        """管理员发布未发布公告，发布成功"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、点击【未发布公告】
+        # 4、选中一条未发布公告
+        # 5、点击【发布】按钮
+        # 6、点击【确定】按钮
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.input_title_text("ha6")
+        amp.input_content_text("你好啊")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        amp.click_element_("保存")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        amp.click_element_("未发公告")
+        time.sleep(2)
+        amp.click_text("ha6")
+        time.sleep(2)
+        amp.click_element_("发布text")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        if not amp.is_text_present("ha6"):
+            raise AssertionError("公告发布不成功")
+        amp.click_text("ha6")
+        time.sleep(2)
+        amp.click_text("下线")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+
+
 
 
 
