@@ -739,10 +739,9 @@ class MessagePage(FooterPage):
         return self._is_element_present(self.__class__.__locators["搜索"])
 
     @TestLogger.log()
-    def message_list_is_exist_name(self, name):
+    def message_list_is_exist_name(self, name, max_try=20):
         """消息列表是否存在指定人名称"""
         locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % name)
-        max_try = 20
         current = 0
         while current < max_try:
             if self._is_element_present(locator):

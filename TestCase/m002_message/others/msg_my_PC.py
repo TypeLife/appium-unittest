@@ -242,7 +242,6 @@ class MsgMyPCChating(TestCase):
         chat.close_expression()
         chat.hide_keyboard()
 
-
     @tags('ALL', 'CMCC', 'my_PC')
     def test_msg_weifenglian_PC_0014(self):
         """我的电脑-本地照片发送"""
@@ -304,15 +303,75 @@ class MsgMyPCChating(TestCase):
         MessagePage().page_should_contain_text('文件')
 
 
+class MsgMyPcTest(TestCase):
 
+    def default_setUp(self):
+        """确保每个用例运行前在我的电脑会话页面"""
+        Preconditions.make_already_in_message_page()
+        msg_page = MessagePage()
+        msg_page.wait_for_page_load()
+        if msg_page.message_list_is_exist_name('我的电脑', max_try=3):
+            try:
+                msg_page.choose_chat_by_name('我的电脑')
+                self.wait_for_MyPc_page_load()
+            except:
+                msg_page.click_search()
+                SearchPage().input_search_keyword('我的电脑')
+                msg_page.choose_chat_by_name('我的电脑')
+                self.wait_for_MyPc_page_load()
+        else:
+            msg_page.click_search()
+            SearchPage().input_search_keyword('我的电脑')
+            msg_page.choose_chat_by_name('我的电脑')
+            self.wait_for_MyPc_page_load()
 
+    def default_tearDown(self):
+        pass
 
+    @staticmethod
+    def wait_for_MyPc_page_load():
+        current_mobile().wait_until(condition=lambda x: current_mobile().is_text_present('我的电脑'))
 
+    def public_select_file(self, file_type=".xlsx"):
+        """聊天页面选择文件"""
+        chat_more = ChatMorePage()
+        chat_more.close_more()
+        chat_more.click_file1()
+        select_file_type = ChatSelectFilePage()
+        select_file_type.wait_for_page_load()
+        select_file_type.click_local_file()
+        local_file = ChatSelectLocalFilePage()
+        local_file.enter_preset_file_dir()
+        local_file.select_file(file_type)
 
+    def public_select_file_send(self, file_type=".xlsx"):
+        """聊天页面选择文件发送"""
+        self.public_select_file(file_type)
+        ChatSelectLocalFilePage().click_send()
 
+    def public_send_GT_2M_file(self, file_type="2M_data.json"):
+        """发送大于2M的文件"""
+        current_mobile().turn_off_wifi()
+        self.public_select_file(file_type)
+        ChatSelectLocalFilePage().click_single_send()
 
+    def public_make_sure_have_faild_massege(self, file_type=".xlsx"):
+        """确保页面有发送失败的消息"""
+        current_mobile().turn_off_wifi()
+        current_mobile().turn_off_mobile_data()
+        self.public_select_file_send(file_type)
 
+    def public_select_pic(self, file_type=".jpg"):
+        chat_more = ChatMorePage()
+        chat_more.close_more()
+        chat_more.click_file1()
+        #  选择文件夹类型
+        select_file_type = ChatSelectFilePage()
+        select_file_type.wait_for_page_load()
+        select_file_type.click_pic()
+        local_file = ChatSelectLocalFilePage()
+        local_file.select_file(file_type)
 
-
-
-
+    def public_select_pic_send(self, file_type='.jpg'):
+        self.public_select_pic(file_type)
+        ChatSelectLocalFilePage().click_send()
