@@ -1291,5 +1291,59 @@ class CallMultipartyVideo(TestCase):
         cpg.click_back_by_android(4)
         cpg.click_call()
 
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0155(self):
+        """分组群发/标签分组/群发消息：发起多方视频，在管理页面点击“+”进入标签分组联系人选择页"""
+        # Step: 1、通过分组群发/标签分组/群发消息发起多方视频
+        cpg = CallPage()
+        Preconditions.enter_label_grouping_chat_page()
+        gpg = GroupListPage()
+        gpg.click_mult_call_icon()
+        CallPage().click_mutil_video_call()
+        time.sleep(1)
+        cpg.click_text("大佬1")
+        time.sleep(1)
+        cpg.click_text("给个红包1")
+        time.sleep(1)
+        mppg = MultiPartyVideoPage()
+        mppg.click_tv_sure()
+        time.sleep(1)
+        if cpg.is_text_present("现在去开启"):
+            cpg.click_text("暂不开启")
+        time.sleep(1)
+        self.assertTrue(mppg.is_exist_end_video_call())
+
+        # Step: 2、在多方视频管理页面点击“+”进入联系人选择页
+        MutiVideoPage().click_multi_video_add_person()
+
+        # CheckPoint:1、联系人选择页显示标签分组成员
+        cpg.page_should_contain_text("搜索标签分组成员")
+        cpg.click_back_by_android()
+        if mppg.is_exist_end_video_call():
+            mppg.click_end_video_call()
+        cpg.click_back_by_android(3)
+        cpg.click_call()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0158(self):
+        """多方视频管理页面，检查免提按钮"""
+        # 1、已成功发起多方视频
+        # 2、当前为多方视频管理界面
+        # Step: 1、点击免提按钮
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        mppg = MultiPartyVideoPage()
+        mppg.select_contacts_by_number("14775970982")
+        # CheckPoint:1、默认为开启状态
+        mppg.select_contacts_by_number("13800138006")
+        # CheckPoint:2、当前为开启状态：点击按钮，按钮变为关闭状态，按钮置灰，视频通话声音从手机听筒播放
+        mppg.click_tv_sure()
+        # CheckPoint:3、当前为关闭状态：点击按钮，按钮变为开启状态，按钮高亮，视频通话声音从手机外放播放
+        time.sleep(1)
+        if cpg.is_text_present("现在去开启"):
+            cpg.click_text("暂不开启")
+        time.sleep(1)
+        self.assertTrue(mppg.is_exist_end_video_call())
+
 
 
