@@ -1148,4 +1148,87 @@ class CallMultipartyVideo(TestCase):
         self.assertTrue(MultiPartyVideoPage().sure_button_is_enabled())
         cpg.click_back_by_android(2)
 
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0127(self):
+        """通话模块：仅勾选本地联系人，发起多方视频"""
+        # 1、当前为多方视频联系人选择页
+        # Step: 1、仅勾选本地联系人，点击呼叫发起多方视频
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        time.sleep(1)
+        # CheckPoint:1、正常发起多方视频
+        mppg = MultiPartyVideoPage()
+        mppg.select_contacts_by_number("14775970982")
+        mppg.select_contacts_by_number("13800138005")
+        mppg.select_contacts_by_number("13800138006")
+        mppg.click_tv_sure()
+        time.sleep(1)
+        if cpg.is_text_present("现在去开启"):
+            cpg.click_text("暂不开启")
+        time.sleep(1)
+        self.assertTrue(mppg.is_exist_end_video_call())
+        mppg.click_end_video_call()
+        mppg.click_btn_ok()
+        time.sleep(1)
+        cpg.click_back_by_android(2)
 
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0128(self):
+        """通话模块：仅勾选和通讯录联系人，发起多方视频"""
+        # 1、当前为多方视频联系人选择页
+        # Step: 1、点击进入和通讯录
+        # Step: 2、勾选和通讯录联系人，点击呼叫发起多方视频
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        time.sleep(1)
+        # CheckPoint:1、正常发起多方视频
+        mppg = MultiPartyVideoPage()
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        cpg.click_text("ateam3465")
+        time.sleep(1)
+        cpg.click_text("大佬1")
+        time.sleep(1)
+        cpg.click_text("大佬2")
+        time.sleep(1)
+        cpg.click_text("大佬3")
+        time.sleep(1)
+        cpg.click_back_by_android(2)
+        mppg.click_tv_sure()
+        time.sleep(1)
+        if cpg.is_text_present("现在去开启"):
+            cpg.click_text("暂不开启")
+        time.sleep(1)
+        self.assertTrue(mppg.is_exist_end_video_call())
+        mppg.click_end_video_call()
+        mppg.click_btn_ok()
+        time.sleep(1)
+        cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0129(self):
+        """通话模块：仅勾选陌生联系人，可发起多方视频"""
+        # 1、当前为多方视频联系人选择页
+        # Step: 1、通过搜索栏搜索出2-8个陌生联系人并且选中
+        # Step: 2、点击呼叫发起多方视频
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        time.sleep(1)
+        # CheckPoint:1、正常发起多方视频
+        mppg = MultiPartyVideoPage()
+        SelectContactsPage().search("13800139000")
+        mppg.click_contact_list_item()
+        SelectContactsPage().search("13800139001")
+        mppg.click_contact_list_item()
+        SelectContactsPage().search("13800139002")
+        mppg.click_contact_list_item()
+        mppg.click_tv_sure()
+        time.sleep(1)
+        if cpg.is_text_present("现在去开启"):
+            cpg.click_text("暂不开启")
+        time.sleep(1)
+        self.assertTrue(mppg.is_exist_end_video_call())
+        mppg.click_end_video_call()
+        mppg.click_btn_ok()
+        time.sleep(1)
+        cpg.click_back_by_android(2)
