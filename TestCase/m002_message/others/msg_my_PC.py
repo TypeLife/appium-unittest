@@ -414,3 +414,63 @@ class MsgMyPcTest(TestCase):
     def tearDown_test_msg_weifenglian_PC_0003():
         current_mobile().turn_on_wifi()
         current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0004(self):
+        """对发送失败的文件进行重发"""
+        self.wait_for_MyPc_page_load()
+        if GroupChatPage().is_exist_msg_send_failed_button():
+            pass
+        else:
+            self.test_msg_weifenglian_PC_0002()
+            current_mobile().turn_on_wifi()
+            current_mobile().turn_on_mobile_data()
+            self.wait_for_MyPc_page_load()
+        chat_page = GroupChatPage()
+        chat_page.click_msg_send_failed_button()
+        chat_page.click_resend_confirm()
+        self.wait_for_MyPc_page_load()
+        chat_page.wait_for_message_down_file()
+        self.assertTrue(chat_page.check_message_resend_success())
+        ChatWindowPage().click_back()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0004():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0005(self):
+        """对发送失败的文件进行重发后，消息列表页面的消息发送失败的标识消失"""
+        self.test_msg_weifenglian_PC_0004()
+        ChatWindowPage().click_back()
+        message_page = MessagePage()
+        message_page.wait_for_page_load()
+        self.assertFalse(message_page.is_iv_fail_status_present())
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0005():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0006(self):
+        """点击取消重发文件消失，停留在当前页面"""
+        chat_page = GroupChatPage()
+        self.wait_for_MyPc_page_load()
+        if chat_page.is_exist_msg_send_failed_button():
+            pass
+        else:
+            self.public_make_sure_have_faild_massege()
+            chat_page.mobile.turn_on_wifi()
+            chat_page.mobile.turn_on_mobile_data()
+        chat_page.click_msg_send_failed_button()
+        chat_page.click_multiple_selection_delete_cancel()
+        self.wait_for_MyPc_page_load()
+        self.assertTrue((chat_page.wait_until(condition=lambda x: chat_page.is_text_present('我的电脑'))))
+        ChatWindowPage().click_back()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0006():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
