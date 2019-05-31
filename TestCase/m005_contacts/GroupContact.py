@@ -652,6 +652,7 @@ class MygroupdetailPage(TestCase):
         ContactsPage().select_group_by_name('ateam7272')
         time.sleep(2)
 
+
     @tags('ALL', 'CMCC', 'contact','my_group')
     def test_contacts_quxinli_0148(self):
         """进入我的团队用户的Profile页-消息"""
@@ -705,6 +706,57 @@ class MygroupdetailPage(TestCase):
         MessagePage().click_contacts()
         ContactsPage().select_group_by_name('ateam7272')
         time.sleep(2)
+
+    @tags('ALL', 'CMCC', 'contact','my_group')
+    def test_contacts_quxinli_0152(self):
+        """进入我的团队用户的Profile页-视频通话"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_contacts_by_name('测试号码')
+        time.sleep(2)
+        contact_detail=ContactDetailsPage()
+        contact_detail.click_video_call_icon()
+        contact_detail.click_permission_box()
+        time.sleep(2)
+        if contact_detail.is_text_present('暂不开启'):
+            contact_detail.click_text('暂不开启')
+        self.assertTrue(contact_detail.is_element_present(locator='挂断视频通话'))
+        contact_detail.end_video_call()
+
+    @tags('ALL', 'CMCC-接口不稳定', 'contact','my_group')
+    def test_contacts_quxinli_0153(self):
+        """进入我的团队用户的非Profile页-语音通话"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_contacts_by_name('大佬1')
+        time.sleep(2)
+        contact_detail=ContactDetailsPage()
+        #点击语音通话
+        contact_detail.click_voice_call_icon()
+        contact_detail.click_permission_box()
+        time.sleep(2)
+        contact_detail.page_should_contain_text('对方未开通和飞信，无法拨打语音电话')
+        # if contact_detail.is_text_present('暂不开启'):
+        #     time.sleep(2)
+        #     contact_detail.click_text('暂不开启')
+        # self.assertTrue(contact_detail.is_element_present(locator='结束通话'))
+        # contact_detail.click_end_call()
+
+    @tags('ALL', 'CMCC-接口不稳定', 'contact','my_group')
+    def test_contacts_quxinli_0154(self):
+        """进入我的团队用户的非Profile页-视频通话"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_contacts_by_name('大佬2')
+        time.sleep(2)
+        contact_detail=ContactDetailsPage()
+        #点击视频通话
+        contact_detail.click_video_call_icon()
+        contact_detail.click_permission_box()
+        time.sleep(2)
+        contact_detail.page_should_contain_text('对方未开通和飞信，无法拨打视频电话')
+        # if contact_detail.is_text_present('暂不开启'):
+        #     contact_detail.click_text('暂不开启')
+        # self.assertTrue(contact_detail.is_element_present(locator='挂断视频通话'))
+        # contact_detail.end_video_call()
+
 
     @tags('ALL', 'CMCC-reset', 'contact','my_group')
     def test_contacts_quxinli_0155(self):
