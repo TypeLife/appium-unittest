@@ -31,6 +31,7 @@ class AnnouncementMessagePage(BasePage):
         '保存': (MobileBy.XPATH, '//*[@text="保存"]'),
         '链接公告输入框': (MobileBy.XPATH, '//*[@resource-id ="linkUrl"]'),
         '链接公告标题输入框': (MobileBy.XPATH, '//*[@resource-id ="title_link"]'),
+        '取消': (MobileBy.XPATH, '//*[@text="取消"]'),
     }
 
     @TestLogger.log()
