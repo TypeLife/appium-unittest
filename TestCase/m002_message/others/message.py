@@ -2468,3 +2468,65 @@ class MessageOthersAllTest(TestCase):
         self.assertEquals(cdp.is_exists_share_card_company(), True)
         self.assertEquals(cdp.is_exists_share_card_position(), True)
         self.assertEquals(cdp.is_exists_share_card_email(), True)
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_hanjiabin_0202(self):
+        """名片消息——场景"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_contacts_page()
+        cp = ContactsPage()
+        cp.wait_for_page_load()
+        # 选择名片
+        cp.select_contacts_by_name("名片消息测试")
+        cdp = ContactDetailsPage()
+        cdp.wait_for_page_load()
+        # 发送名片消息给单聊
+        cdp.click_share_business_card()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        slc.selecting_local_contacts_by_name("大佬1")
+        time.sleep(2)
+        slc.click_text("发送名片")
+        # 1.功能及文案全部正常
+        self.assertEquals(slc.is_toast_exist("已发送"), True)
+        cdp.click_back_icon()
+        cp.wait_for_page_load()
+        cp.open_message_page()
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_hanjiabin_0203(self):
+        """名片消息——场景"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_contacts_page()
+        cp = ContactsPage()
+        cp.wait_for_page_load()
+        # 选择名片
+        cp.select_contacts_by_name("名片消息测试")
+        cdp = ContactDetailsPage()
+        cdp.wait_for_page_load()
+        # 发送名片消息给群聊
+        cdp.click_share_business_card()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.selecting_one_group_by_name("群聊1")
+        time.sleep(2)
+        sog.click_text("发送名片")
+        # 1.功能及文案全部正常
+        self.assertEquals(sog.is_toast_exist("已发送"), True)
+        cdp.click_back_icon()
+        cp.wait_for_page_load()
+        cp.open_message_page()
+        # 等待消息页面加载
+        mp.wait_for_page_load()
