@@ -474,3 +474,50 @@ class MsgMyPcTest(TestCase):
     def tearDown_test_msg_weifenglian_PC_0006():
         current_mobile().turn_on_wifi()
         current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0007(self):
+        """未订购每月10G的用户发送大于2M的文件时有弹窗提示"""
+        self.public_send_GT_2M_file(file_type="2M_data.json")
+        local_file = ChatSelectLocalFilePage()
+        self.assertTrue(local_file.check_10G_free_data_page())
+        local_file.click_outside_element()
+        local_file.click_back()
+        local_file.click_back()
+        ChatSelectFilePage().click_back()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0008(self):
+        """直接点击“继续发送”：关闭弹窗，拨出，下次继续提示"""
+        current_mobile().turn_off_wifi()
+        self.public_select_file_send('2M_data.json')
+        self.test_msg_weifenglian_PC_0007()
+        ChatWindowPage().click_back()
+        MessagePage().wait_for_page_load()
+        MessagePage().clear_message_record()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0010(self):
+        """点击订购免流特权后可正常返回"""
+        self.public_send_GT_2M_file(file_type="2M_data.json")
+        self.test_msg_weifenglian_PC_0007()
+        ChatWindowPage().click_back()
+        MessagePage().wait_for_page_load()
+        MessagePage().clear_message_record()
+        local_file = ChatSelectLocalFilePage()
+        local_file.click_free_data_button()
+        bol = local_file.wait_until(lambda x: ChatSelectLocalFilePage().is_text_present('和飞信'),
+                                    auto_accept_permission_alert=False)
+        self.assertTrue(bol)
+        local_file.click_free_data_back()
+        self.assertTrue(local_file.check_10G_free_data_page())
+        # 返回到消息页面
+        local_file.click_outside_element()
+        local_file.click_back()
+        local_file.click_back()
+        ChatSelectFilePage().click_back()
+        ChatWindowPage().click_back()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0010():
+        current_mobile().turn_on_wifi()
