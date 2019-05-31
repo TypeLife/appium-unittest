@@ -652,6 +652,50 @@ class MygroupdetailPage(TestCase):
         ContactsPage().select_group_by_name('ateam7272')
         time.sleep(2)
 
+    @tags('ALL', 'CMCC', 'contact','my_group')
+    def test_contacts_quxinli_0148(self):
+        """进入我的团队用户的Profile页-消息"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_contacts_by_name('测试号码')
+        time.sleep(2)
+        contact_detail=ContactDetailsPage()
+        contact_detail.click_message_icon()
+        time.sleep(2)
+        chat=ChatWindowPage()
+        if chat.is_text_present("用户须知"):
+            # 如果存在用户须知,就点击已阅读,然后点击返回.如果不存在,就直接点击返回
+            chat.click_already_read()
+            chat.click_sure_icon()
+        SingleChatPage().is_on_this_page()
+
+    @tags('ALL', 'CMCC', 'contact','my_group')
+    def test_contacts_quxinli_0150(self):
+        """进入我的团队用户的Profile页-电话"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_contacts_by_name('测试号码')
+        time.sleep(2)
+        contact_detail=ContactDetailsPage()
+        contact_detail.click_call_icon()
+        contact_detail.click_permission_box()
+        time.sleep(2)
+        self.assertTrue(contact_detail.is_element_present(locator='挂断电话'))
+        contact_detail.cancel_call()
+
+    @tags('ALL', 'CMCC', 'contact','my_group')
+    def test_contacts_quxinli_0151(self):
+        """进入我的团队用户的Profile页-语音通话"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_contacts_by_name('测试号码')
+        time.sleep(2)
+        contact_detail=ContactDetailsPage()
+        contact_detail.click_voice_call_icon()
+        contact_detail.click_permission_box()
+        time.sleep(2)
+        if contact_detail.is_text_present('暂不开启'):
+            time.sleep(2)
+            contact_detail.click_text('暂不开启')
+        self.assertTrue(contact_detail.is_element_present(locator='结束通话'))
+        contact_detail.click_end_call()
 
     def setUp_test_contacts_quxinli_0155(self):
         Preconditions.connect_mobile('Android-移动')
