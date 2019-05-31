@@ -540,3 +540,56 @@ class MygroupdetailPage(TestCase):
         MessagePage().click_contacts()
         ContactsPage().select_group_by_name('ateam7272')
         time.sleep(2)
+
+
+    def setUp_test_contacts_quxinli_0155(self):
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        ContactsPage().select_group_by_name('ateam7272')
+        time.sleep(2)
+
+    @tags('ALL', 'CMCC-reset', 'contact','my_group')
+    def test_contacts_quxinli_0155(self):
+        """本网登录用户进入我的团队用户的Profile页-首次拨打和飞信电话"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_contacts_by_name('测试号码')
+        time.sleep(2)
+        contact_detail=ContactDetailsPage()
+        contact_detail.page_should_contain_text('和飞信电话')
+        #点击和飞信电话
+        contact_detail.click_hefeixin_call_menu()
+        time.sleep(2)
+        contact_detail.page_should_contain_text('请先接听  “和飞信电话”')
+        if contact_detail.is_text_present('我知道了'):
+            contact_detail.click_text('我知道了')
+        contact_detail.click_permission_box()
+        if contact_detail.is_text_present('暂不开启'):
+            contact_detail.click_text('暂不开启')
+        #检验是否有12506回拨
+        time.sleep(2)
+        self.assertTrue(contact_detail.is_element_present(locator='和飞信电话-挂断电话'))
+        contact_detail.cancel_hefeixin_call()
+
+    @tags('ALL', 'CMCC', 'contact','my_group')
+    def test_contacts_quxinli_0156(self):
+        """本网登录用户进入我的团队用户的Profile页-非首次拨打和飞信电话"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_contacts_by_name('测试号码')
+        time.sleep(2)
+        contact_detail=ContactDetailsPage()
+        contact_detail.page_should_contain_text('和飞信电话')
+        #点击和飞信电话
+        contact_detail.click_hefeixin_call_menu()
+        time.sleep(2)
+        if contact_detail.is_text_present('我知道了'):
+            contact_detail.click_text('我知道了')
+        contact_detail.click_permission_box()
+        if contact_detail.is_text_present('暂不开启'):
+            contact_detail.click_text('暂不开启')
+        #检验是否有12306回拨
+        time.sleep(2)
+        self.assertTrue(contact_detail.is_element_present(locator='和飞信电话-挂断电话'))
+        contact_detail.cancel_hefeixin_call()
