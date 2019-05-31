@@ -75,7 +75,6 @@ class ContactsPage(FooterPage):
         '新建手机联系人-下拉按钮': (MobileBy.ID, 'com.android.contacts:id/account_arrow'),
 
 
-
         '已加入团队名称': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_department'),
         '团队联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name_personal_contactlist'),
     }
@@ -104,6 +103,26 @@ class ContactsPage(FooterPage):
         if "本机" in contacts_name:
             contacts_name.remove("本机")
         return contacts_name
+
+    @TestLogger.log("获取所有团队名称")
+    def get_all_group_name(self):
+        """获取所有团队名"""
+        max_try = 5
+        current = 0
+        while current < max_try:
+            if self._is_element_present(self.__class__.__locators["已加入团队名称"]):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        els = self.get_elements(self.__class__.__locators["已加入团队名称"])
+        group_name = []
+        if els:
+            for el in els:
+                group_name.append(el.text)
+        else:
+            raise AssertionError("No m005_group, please add m005_group in address book.")
+        return group_name
+
 
     @TestLogger.log()
     def find_element_by_swipe(self, locator, times=15):
@@ -324,10 +343,18 @@ class ContactsPage(FooterPage):
 
     @TestLogger.log("处理SIM联系人弹框")
     def click_sim_contact(self):
-        """点击和通讯录联系人更多"""
+        """点击不显示sim卡联系人"""
         time.sleep(2)
         if self.get_elements(self.__class__.__locators['不显示']):
             self.click_element(self.__class__.__locators['不显示'])
+
+    @TestLogger.log("处理SIM联系人弹框")
+    def click_sim_contact_ok(self):
+        """点击显示sim卡联系人"""
+        time.sleep(2)
+        if self.get_elements(self.__class__.__locators['显示']):
+            self.click_element(self.__class__.__locators['显示'])
+
 
     @TestLogger.log()
     def is_exist_enterprise_group(self):
