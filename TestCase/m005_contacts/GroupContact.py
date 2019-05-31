@@ -638,6 +638,61 @@ class MygroupSearchPage(TestCase):
         detailpage.page_should_contain_text('已发送')
 
     @tags('ALL', 'CMCC', 'contact','my_group')
+    def test_contacts_quxinli_0050(self):
+        """我的团队-中文模糊搜索"""
+        group_contact=EnterpriseContactsPage()
+        group_contact.wait_for_page_load()
+        group_contact.click_search_box()
+        time.sleep(2)
+        #输入陈搜索
+        group_contact.input_search_message('陈')
+        time.sleep(3)
+        group_contact.is_search_contacts_name_match('陈')
+        time.sleep(1)
+
+    @tags('ALL', 'CMCC', 'contact','my_group')
+    def test_contacts_quxinli_0051(self):
+        """我的团队-数字模糊搜索"""
+        group_contact=EnterpriseContactsPage()
+        group_contact.wait_for_page_load()
+        group_contact.click_search_box()
+        time.sleep(2)
+        #输入数字搜索
+        group_contact.input_search_message('1380')
+        time.sleep(3)
+        group_contact.is_search_contacts_number_match('1380')
+        time.sleep(1)
+        # 输入数字精确搜索
+        group_contact.input_search_message('13800137004')
+        time.sleep(3)
+        group_contact.is_search_contacts_number_full_match('13800137004')
+        time.sleep(1)
+        # 输入香港搜索
+        group_contact.input_search_message('67656003')
+        time.sleep(3)
+        group_contact.is_search_contacts_number_full_match('67656003')
+        time.sleep(1)
+
+    @tags('ALL', 'CMCC', 'contact','my_group')
+    def test_contacts_quxinli_0053(self):
+        """我的团队-英文模糊搜索"""
+        group_contact=EnterpriseContactsPage()
+        group_contact.wait_for_page_load()
+        group_contact.click_search_box()
+        time.sleep(2)
+        #输入alice搜索
+        group_contact.input_search_message('alice')
+        time.sleep(3)
+        group_contact.is_search_contacts_name_full_match('alice')
+        time.sleep(1)
+        #输入alice搜索
+        group_contact.input_search_message('A')
+        time.sleep(3)
+        group_contact.is_search_contacts_name_match('a')
+        time.sleep(1)
+
+
+    @tags('ALL', 'CMCC', 'contact','my_group')
     def test_contacts_quxinli_0107(self):
         """点击搜索结果已保存到本地的RCS用户进入Profile页(进入联系页面-我的团队-任一企业下的任一部门，点击搜索框并输入关键字)"""
         group_contact=EnterpriseContactsPage()
