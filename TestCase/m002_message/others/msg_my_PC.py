@@ -375,3 +375,42 @@ class MsgMyPcTest(TestCase):
     def public_select_pic_send(self, file_type='.jpg'):
         self.public_select_pic(file_type)
         ChatSelectLocalFilePage().click_send()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0001(self):
+        """勾选本地文件内任意文件点击发送按钮"""
+        self.public_select_file_send()
+        msg_page = MessagePage()
+        print(msg_page.wait_until(condition=lambda x: msg_page.is_text_present('测试用例.xlsx')))
+        ChatWindowPage().click_back()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0002(self):
+        """网络异常时勾选本地文件内任意文件点击发送按钮"""
+        self.public_make_sure_have_faild_massege()
+        self.assertTrue(GroupChatPage().is_exist_msg_send_failed_button())
+        ChatWindowPage().click_back()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0002():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0003(self):
+        """会话页面有文件发送失败时查看消息列表是否有消息发送失败的标识"""
+        current_mobile().turn_off_wifi()
+        current_mobile().turn_off_mobile_data()
+        self.wait_for_MyPc_page_load()
+        if GroupChatPage().is_exist_msg_send_failed_button():
+            pass
+        else:
+            self.public_make_sure_have_faild_massege()
+        self.wait_for_MyPc_page_load()
+        ChatWindowPage().click_back()
+        self.assertTrue(MessagePage().is_iv_fail_status_present())
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0003():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
