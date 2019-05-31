@@ -5,9 +5,12 @@ from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.common.simcardtype import CardType
 from library.core.utils.testcasefilter import tags
 from pages import *
+from pages.call.mutivideo import MutiVideoPage
 from pages.components.BaseChat import BaseChatPage
 import time
 import unittest
+
+from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -112,7 +115,7 @@ class Preconditions(object):
         gcp.wait_for_page_load()
 
     @staticmethod
-    def enter_label_grouping_chat_page(enterLabelGroupingChatPage = True):
+    def enter_label_grouping_chat_page(enterLabelGroupingChatPage=True):
         """进入标签分组会话页面"""
         # 登录进入消息页面
         Preconditions.make_already_in_call()
@@ -174,6 +177,80 @@ class Preconditions(object):
         group_name = "alg" + phone_number[-4:]
         return group_name
 
+    @staticmethod
+    def create_he_contacts(names):
+        """选择手机联系人创建为团队联系人"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_workbench_page()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_organization()
+        osp = OrganizationStructurePage()
+        n = 1
+        # 解决工作台不稳定问题
+        while not osp.page_should_contain_text2("添加联系人"):
+            osp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_organization()
+            n += 1
+            if n > 20:
+                break
+        time.sleep(3)
+        for name in names:
+            if not osp.is_exist_specify_element_by_name(name):
+                osp.click_specify_element_by_name("添加联系人")
+                time.sleep(4)
+                osp.click_specify_element_by_name("从手机通讯录添加")
+                slc = SelectLocalContactsPage()
+                # 等待选择联系人页面加载
+                slc.wait_for_page_load()
+                slc.selecting_local_contacts_by_name(name)
+                slc.click_sure()
+                time.sleep(2)
+                osp.click_back()
+        osp.click_back()
+        wbp.wait_for_workbench_page_load()
+        mp.open_message_page()
+        mp.wait_for_page_load()
+
+    @staticmethod
+    def create_he_contacts2(contacts):
+        """手动输入联系人创建为团队联系人"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        mp.open_workbench_page()
+        wbp = WorkbenchPage()
+        wbp.wait_for_workbench_page_load()
+        wbp.click_organization()
+        osp = OrganizationStructurePage()
+        n = 1
+        # 解决工作台不稳定问题
+        while not osp.page_should_contain_text2("添加联系人"):
+            osp.click_back()
+            wbp.wait_for_workbench_page_load()
+            wbp.click_organization()
+            n += 1
+            if n > 20:
+                break
+        time.sleep(3)
+        for name, number in contacts:
+            if not osp.is_exist_specify_element_by_name(name):
+                osp.click_specify_element_by_name("添加联系人")
+                time.sleep(4)
+                osp.click_specify_element_by_name("手动输入添加")
+                osp.input_contacts_name(name)
+                osp.input_contacts_number(number)
+                osp.click_confirm()
+                time.sleep(2)
+                osp.click_back()
+        osp.click_back()
+        wbp.wait_for_workbench_page_load()
+        mp.open_message_page()
+        mp.wait_for_page_load()
+
 
 class CallMultipartyVideo(TestCase):
     """
@@ -184,39 +261,56 @@ class CallMultipartyVideo(TestCase):
 
     # @classmethod
     # def setUpClass(cls):
-    #     # 创建联系人
-    #     fail_time = 0
+    #     preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
+    #     # 导入测试联系人、群聊
+    #     fail_time1 = 0
+    #     flag1 = False
     #     import dataproviders
-    #     while fail_time < 3:
+    #     while fail_time1 < 3:
     #         try:
     #             required_contacts = dataproviders.get_preset_contacts()
     #             conts = ContactsPage()
-    #             preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
-    #             preconditions.make_already_in_message_page()
     #             current_mobile().hide_keyboard_if_display()
-    #             preconditions.make_already_in_message_page()
+    #             Preconditions.make_already_in_call()
+    #             conts.open_contacts_page()
+    #             try:
+    #                 if conts.is_text_present("发现SIM卡联系人"):
+    #                     conts.click_text("显示")
+    #             except:
+    #                 pass
     #             for name, number in required_contacts:
-    #                 conts.open_contacts_page()
-    #                 if conts.is_text_present("显示"):
-    #                     conts.click_text("不显示")
+    #                 # 创建联系人
     #                 conts.create_contacts_if_not_exits(name, number)
-    #
-    #             # 创建群
     #             required_group_chats = dataproviders.get_preset_group_chats()
-    #
     #             conts.open_group_chat_list()
     #             group_list = GroupListPage()
     #             for group_name, members in required_group_chats:
     #                 group_list.wait_for_page_load()
+    #                 # 创建群
     #                 group_list.create_group_chats_if_not_exits(group_name, members)
     #             group_list.click_back()
     #             conts.open_message_page()
-    #             return
+    #             flag1 = True
     #         except:
-    #             fail_time += 1
-    #             import traceback
-    #             msg = traceback.format_exc()
-    #             print(msg)
+    #             fail_time1 += 1
+    #         if flag1:
+    #             break
+    #
+    #     # 导入团队联系人
+    #     fail_time2 = 0
+    #     flag2 = False
+    #     while fail_time2 < 5:
+    #         try:
+    #             Preconditions.make_already_in_call()
+    #             contact_names = ["大佬1", "大佬2", "大佬3", "大佬4", "English"]
+    #             Preconditions.create_he_contacts(contact_names)
+    #             contact_names2 = [("Lily", "13800138050")]
+    #             Preconditions.create_he_contacts2(contact_names2)
+    #             flag2 = True
+    #         except:
+    #             fail_time2 += 1
+    #         if flag2:
+    #             break
     #
     # @classmethod
     # def tearDownClass(cls):
@@ -592,6 +686,345 @@ class CallMultipartyVideo(TestCase):
         # 打开网络
         cpg = CallPage()
         cpg.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0038(self):
+        """普通群聊：多方视频联系人选择器搜索非群成员，检查页面显示"""
+        # 1、已通过群聊进入多方视频联系人选择器
+        # Step:1、在搜索框输入非群成员名称
+        cpg = CallPage()
+        mp = MessagePage()
+        ContactsPage().click_message_icon()
+        mp.wait_for_page_load()
+        mp.click_add_icon()
+        mp.click_group_chat()
+        # 点击选择一个群
+        scg = SelectContactsPage()
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        # 选择一个普通群
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        sog.selecting_one_group_by_name("Test_" + phone_number)
+        gpg = GroupListPage()
+        gpg.click_mult_call_icon()
+        CallPage().click_mutil_video_call()
+        time.sleep(1)
+        SelectContactsPage().search("13800138001")
+        # CheckPoint:1、页面显示“无搜索结果”
+        cpg.page_should_contain_text("无搜索结果")
+        cpg.click_back_by_android(3)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0039(self):
+        """普通群聊：多方视频联系人选择器搜索群成员"""
+        # 1、已通过群聊进入多方视频联系人选择器
+        # Step:1、在搜索框输入群成员名称
+        cpg = CallPage()
+        mp = MessagePage()
+        ContactsPage().click_message_icon()
+        mp.wait_for_page_load()
+        mp.click_add_icon()
+        mp.click_group_chat()
+        # 点击选择一个群
+        scg = SelectContactsPage()
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        # 选择一个普通群
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        sog.selecting_one_group_by_name("Test_" + phone_number)
+        gpg = GroupListPage()
+        gpg.click_mult_call_icon()
+        CallPage().click_mutil_video_call()
+        time.sleep(1)
+        SelectContactsPage().search("我")
+        time.sleep(1)
+        # CheckPoint:1、根据输入条件，搜索出群成员
+        cpg.page_should_contain_text("我")
+        # CheckPoint:2、搜索结果中，已匹配的内容高亮显示
+        # CheckPoint:3、点击可选中，并且清空输入内容
+        mppg = MultiPartyVideoPage()
+        mppg.click_contact_icon(0)
+        time.sleep(1)
+        cpg.page_should_contain_text("搜索成员")
+        cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0053(self):
+        """从群聊发起多方视频，在多方视频管理界面点击“+”进入联系人选择页"""
+        # Step:1、从群聊发起多方视频
+        # Step:2、在多方视频管理界面点击“+”进入联系人选择页
+        # Step:3、检查联系人选择器
+        cpg = CallPage()
+        mp = MessagePage()
+        ContactsPage().click_message_icon()
+        mp.wait_for_page_load()
+        mp.click_add_icon()
+        mp.click_group_chat()
+        # 点击选择一个群
+        scg = SelectContactsPage()
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        # 选择一个普通群
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        sog.selecting_one_group_by_name("Test_" + phone_number)
+        # Step: 2、勾选2 - 8人，点击呼叫
+        gpg = GroupListPage()
+        gpg.click_mult_call_icon()
+        CallPage().click_mutil_video_call()
+        mppg = MultiPartyVideoPage()
+        for i in range(3):
+            mppg.click_contact_icon(i)
+        mppg.click_tv_sure()
+        time.sleep(1)
+        if cpg.is_text_present("现在去开启"):
+            cpg.click_text("暂不开启")
+        time.sleep(1)
+        self.assertTrue(mppg.is_exist_end_video_call())
+        # CheckPoint:1、展示群成员列表
+        MutiVideoPage().click_multi_video_add_person()
+        cpg.page_should_contain_text(phone_number)
+        cpg.click_back_by_android()
+        if mppg.is_exist_end_video_call():
+            mppg.click_end_video_call()
+        cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0057(self):
+        """通话模块：搜索栏--通过简/繁体中文搜索出结果"""
+        # 1、当前为多方视频联系人选择页
+        # 2、本地联系人中已有简体中文名称的联系人以及繁体中文名称的联系人
+        # Step:1、在输入框输入简体中文/繁体中文
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        # CheckPoint:1、根据输入条件，搜索出姓名中含有对应简/繁体字的结果
+        SelectContactsPage().search("测试号码")
+        time.sleep(1)
+        cpg.page_should_contain_text("14775970982")
+        mppg = MultiPartyVideoPage()
+        mppg.click_contact_icon(0)
+        time.sleep(1)
+        cpg.page_should_contain_text("搜索或输入号码")
+
+        # CheckPoint:2、搜索结果中，已匹配的内容高亮显示
+        SelectContactsPage().search("繁體")
+        time.sleep(1)
+        cpg.page_should_contain_text("13800138020")
+        # CheckPoint:3、点击可选中，并且清空输入内容
+        mppg = MultiPartyVideoPage()
+        mppg.click_contact_icon(0)
+        time.sleep(1)
+        cpg.page_should_contain_text("搜索或输入号码")
+        cpg.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0058(self):
+        """通话模块：搜索栏--通过英文搜索出结果"""
+        # 1、当前为多方视频联系人选择页
+        # 2、本地联系人中已有英文名称的联系人
+        # Step:1、在输入框输入英文
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        # CheckPoint:1、根据输入条件，搜索出姓名中含有对应英文的结果
+        SelectContactsPage().search("特殊!@$")
+        time.sleep(1)
+        cpg.page_should_contain_text("13800138040")
+        # CheckPoint: 2、搜索结果中，已匹配的内容高亮显示
+        # CheckPoint: 3、点击可选中，并且清空输入内容
+        mppg = MultiPartyVideoPage()
+        mppg.click_contact_icon(0)
+        time.sleep(1)
+        cpg.page_should_contain_text("搜索或输入号码")
+        cpg.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0059(self):
+        """通话模块：搜索栏--通过数字搜索出结果"""
+        # 1、当前为多方视频联系人选择页
+        # 2、本地联系人中已有名称含有数字的联系人
+        # Step:1、在输入框输入数字
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        # CheckPoint:1、根据输入条件，搜索出姓名、手机号码中含有对应数字的结果
+        SelectContactsPage().search("大佬1")
+        time.sleep(1)
+        cpg.page_should_contain_text("13800138005")
+        # CheckPoint: 2、搜索结果中，已匹配的内容高亮显示
+        # CheckPoint: 3、点击可选中，并且清空输入内容
+        mppg = MultiPartyVideoPage()
+        mppg.click_contact_icon(0)
+        time.sleep(1)
+        cpg.page_should_contain_text("搜索或输入号码")
+        cpg.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0060(self):
+        """通话模块：搜索栏--通过数字搜索出结果"""
+        # 1、当前为多方视频联系人选择页
+        # 2、本地联系人中已有名称含有数字的联系人
+        # Step:1、在输入框输入数字
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        # CheckPoint:1、根据输入条件，搜索出姓名、手机号码中含有对应数字的结果
+        SelectContactsPage().search("大佬1")
+        time.sleep(1)
+        cpg.page_should_contain_text("13800138005")
+        # CheckPoint: 2、搜索结果中，已匹配的内容高亮显示
+        # CheckPoint: 3、点击可选中，并且清空输入内容
+        mppg = MultiPartyVideoPage()
+        mppg.click_contact_icon(0)
+        time.sleep(1)
+        cpg.page_should_contain_text("搜索或输入号码")
+        cpg.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0071(self):
+        """通话模块：进入多方视频联系人选择页，搜索出结果，搜索栏下方显示：【放大镜图标】搜索团队联系人：【搜索内容】     >，点击跳转到团队联系人搜索结果页面"""
+        # 1、当前为多方视频联系人选择页
+        # Step: 1、在输入框输入任意内容
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        # Step: 2、检查输入框下方
+        SelectContactsPage().search("大佬1")
+        time.sleep(1)
+        # CheckPoint:1、搜索栏下方显示：【放大镜图标】搜索团队联系人：【搜索内容】
+        # CheckPoint: 2、搜索超长内容时，后面...显示
+        cpg.page_should_contain_text("搜索团队联系人 : 大佬1")
+        # CheckPoint: 3、点击跳转到团队联系人搜索结果页面
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        cpg.page_should_contain_text("团队联系人")
+        cpg.click_back_by_android(3)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0073(self):
+        """通话模块：进入多方视频联系人选择页，检查【选择团队联系人】入口"""
+        # 1、当前为多方视频联系人选择页
+        # 2、用户已加入企业
+        # Step: 1、点击【选择团队联系人】
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        # CheckPoint:1、跳转团队联系人选择页
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        cpg.page_should_contain_text("选择联系人")
+        cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0076(self):
+        """通话模块：检查团队联系人选择页的页面显示"""
+        # 1、当前为团队联系人选择页
+        # Step: 1、检查页面显示
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        # CheckPoint:1、返回按钮
+        mppg = MultiPartyVideoPage()
+        self.assertTrue(mppg.is_exist_back_button())
+
+        # CheckPoint:2、标题：选择联系人
+        cpg.page_should_contain_text("选择联系人")
+
+        # CheckPoint:3、搜索栏内置灰显示“搜索或输入手机号”
+        cpg.page_should_contain_text("搜索或输入手机号")
+
+        # CheckPoint:4、呼叫按钮，置灰显示
+        # CheckPoint:5、企业层级显示
+        self.assertFalse(mppg.is_enabled_tv_sure())
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0080(self):
+        """通话模块：团队联系人选择页搜索栏--通过中文搜索出结果"""
+        # 1、当前为团队联系人选择页
+        # 2、团队中已有简体中文名称的联系人以及繁体中文名称的联系人
+        # Step: 1、在输入框输入简体中文/繁体中文
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        # CheckPoint:1、根据搜索条件，搜索出姓名、公司名称中含有对应中文的联系人
+        # CheckPoint:2、规则：中文完全匹配>前部匹配>后部匹配
+        # 完全匹配
+        SelectContactsPage().search("大佬1")
+        cpg.page_should_contain_text("大佬1")
+        cpg.page_should_not_contain_text("大佬2")
+        cpg.page_should_not_contain_text("大佬3")
+        cpg.page_should_not_contain_text("大佬4")
+
+        # 部分匹配
+        SelectContactsPage().search("大佬")
+        cpg.page_should_contain_text("大佬1")
+        cpg.page_should_contain_text("大佬2")
+        cpg.page_should_contain_text("大佬3")
+        cpg.page_should_contain_text("大佬4")
+        # 先显示前半部分匹配，后显示后半部匹配
+        cpg.page_should_not_contain_text("香港大佬")
+
+        # CheckPoint:3、搜索结果中，已匹配的内容高亮显示
+        # CheckPoint:4、点击可选中，并且清空输入内容
+        cpg.click_text("大佬1")
+        cpg.page_should_contain_text("搜索或输入手机号")
+        cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0081(self):
+        """通话模块：团队联系人选择页搜索栏--通过字母搜索出结果"""
+        # 1、当前为团队联系人选择页
+        # 2、团队中已有英文名称的联系人
+        # Step: 1、在输入框输入英文
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        # CheckPoint:1、根据搜索条件，搜索出姓名、公司名称中含有对应字母的联系人
+        # CheckPoint:2、优先级：拼音>首字母
+        # CheckPoint:3、规则：完全匹配>前部匹配>后部匹配
+        # 完全匹配
+        SelectContactsPage().search("English")
+        cpg.page_should_contain_text("English")
+        cpg.page_should_not_contain_text("Lily")
+
+        # 部分匹配排序
+        SelectContactsPage().search("li")
+        mppg = MultiPartyVideoPage()
+        time.sleep(2)
+        self.assertTrue("Lily" == mppg.get_img_icon_contactlist(0))
+        self.assertTrue("English" == mppg.get_img_icon_contactlist(1))
+
+        # CheckPoint:4、搜索结果中，已匹配的内容高亮显示
+        # CheckPoint:5、点击可选中，并且清空输入内容
+        cpg.click_text("English")
+        cpg.page_should_contain_text("搜索或输入手机号")
+        cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0082(self):
+        """通话模块：团队联系人选择页搜索栏--通过数字搜索出结果"""
+        # 1、当前为团队联系人选择页
+        # 2、团队中已有名称含有数字的联系人
+        # Step: 1、在输入框输入数字
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        # CheckPoint:1、根据搜索条件，搜索出姓名、手机号码中含有对应数字的结果
+        # CheckPoint:2、优先级：手机>姓名>其它号码（含固话、短号）
+        # CheckPoint:3、规则：>=6位展示搜索结果（短号除外）
+        SelectContactsPage().search("大佬1")
+        cpg.page_should_contain_text("大佬1")
+        cpg.page_should_contain_text("13800138005")
+
+        # CheckPoint:4、结果：高亮匹配搜索数字，按所有搜索结果姓名首字母A-Z排序
+        # CheckPoint:5、点击可选中，并且清空输入内容
+        cpg.click_text("大佬1")
+        cpg.page_should_contain_text("搜索或输入手机号")
+        cpg.click_back_by_android(2)
 
 
 
