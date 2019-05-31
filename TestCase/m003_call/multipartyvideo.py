@@ -1089,3 +1089,63 @@ class CallMultipartyVideo(TestCase):
         # CheckPoint:3、展示该列表下的分组
         # CheckPoint:4、顶端显示企业导航栏面包屑，点击跳转到对应的列表
         cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0100(self):
+        """通话模块：部门级搜索--搜索部门下的用户"""
+        # 1、当前为团队联系人选择页
+        # 2、已点击进入企业下的部门分组
+        # Step: 1、搜索当前部门下的用户
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        # CheckPoint:1、根据搜索结果展示对方姓名、手机号码、部门分组
+        SelectContactsPage().search("大佬1")
+        time.sleep(1)
+        cpg.page_should_contain_text("13800138005")
+        cpg.page_should_contain_text("测试部门1")
+        # CheckPoint:2、点击可选中，并且清空输入内容
+        cpg.click_text("13800138005")
+        cpg.page_should_contain_text("搜索或输入手机号")
+        cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0105(self):
+        """通话模块：点击团队联系人，检查联系人状态显示"""
+        # 1、当前为团队联系人选择页
+        # 2、已点击进入企业下的部门分组
+        # Step: 1、点击任意团队联系人
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        SelectContactsPage().click_search_he_contact()
+        time.sleep(1)
+        # CheckPoint:1、对应联系人显示勾选状态，头相处显示“√”
+        cpg.click_text("ateam3465")
+        cpg.click_text("大佬1")
+        # CheckPoint:2、搜索框显示已添加联系人
+        SelectLocalContactsPage().is_exist_select_contacts_name()
+        # CheckPoint:3、右上角“呼叫”按钮，数字发生变化，并且由置灰变为可点击
+        cpg.page_should_contain_text("呼叫(1/8)")
+        self.assertTrue(SelectCompanyContactsPage().sure_button_is_enabled())
+        cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0119(self):
+        """通话模块：点击本地通讯录联系人，检查联系人状态显示"""
+        # 1、当前为多方视频联系人选择页
+        # Step: 1、点击任意本地通讯录联系人
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        time.sleep(1)
+        # CheckPoint:1、对应联系人显示勾选状态，头相处显示“√”
+        cpg.click_text("大佬1")
+        time.sleep(1)
+        # CheckPoint:2、搜索框显示已添加联系人
+        SelectLocalContactsPage().is_exist_select_contacts_name()
+        # CheckPoint:3、右上角“呼叫”按钮，数字发生变化，并且由置灰变为可点击
+        cpg.page_should_contain_text("呼叫(1/8)")
+        self.assertTrue(MultiPartyVideoPage().sure_button_is_enabled())
+        cpg.click_back_by_android(2)
+
+
