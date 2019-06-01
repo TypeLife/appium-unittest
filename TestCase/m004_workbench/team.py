@@ -879,3 +879,64 @@ class TeamTestAll(TestCase):
         workbench.wait_for_page_load()
         workbench.click_create_team()
         team.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    def test_CJTD_0027(self):
+        """敏感词检验 -- 企业名称检查"""
+        # 1、企业名称输入敏感词：如法论功组织等
+        # 2、其他正常信息正常填写
+        team = CreateTeamPage()
+        team.input_team_name("法轮功")
+        team.choose_location()
+        team.choose_industry()
+        name = "admin"
+        team.input_real_name(name)
+        # 立即创建团队
+        team.click_immediately_create_team()
+        time.sleep(2)
+        team.page_should_contain_text("311")
+        team.click_sure()
+        # 清除输入数据
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        workbench.click_create_team()
+        team.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    def test_CJTD_0028(self):
+        """敏感词检验 -- 管理员检查"""
+        # 1、依次填写企业名称、选择所在地、行业
+        # 2、管理员姓名输入敏感词：如法论功等
+        team = CreateTeamPage()
+        team.input_team_name("test_CJTD_0028")
+        team.choose_location()
+        team.choose_industry()
+        name = "法轮功"
+        team.input_real_name(name)
+        # 立即创建团队
+        team.click_immediately_create_team()
+        time.sleep(2)
+        team.page_should_contain_text("315")
+        team.click_sure()
+        # 清除输入数据
+        team.click_back()
+        workbench = WorkbenchPage()
+        workbench.wait_for_page_load()
+        workbench.click_create_team()
+        team.wait_for_page_load()
+
+    @tags('ALL', "CMCC", 'workbench', 'CJTD')
+    def test_CJTD_0029(self):
+        """企业切换"""
+        # 1.点击界面左上角显示的企业
+        # 2.点击与当前企业不同的任一企业
+        current_mobile().back()
+        workbench = WorkbenchPage()
+        workbench.click_element_("当前团队名称")
+        time.sleep(2)
+        workbench.click_element_("第二个团队")
+        time.sleep(3)
+        workbench.click_element_("当前团队名称")
+        time.sleep(2)
+        workbench.click_element_("第一个团队")
