@@ -387,7 +387,7 @@ class CallMultipartyVideo(TestCase):
         if cpg.is_text_present("现在去开启"):
             cpg.click_text("暂不开启")
         time.sleep(1)
-        self.assertTrue(mppg.is_exist_end_video_call())
+        cpg.page_should_contain_text("关闭摄像头")
         mppg.click_end_video_call()
         mppg.click_btn_ok()
 
@@ -1334,16 +1334,103 @@ class CallMultipartyVideo(TestCase):
         cpg.click_multi_party_video()
         mppg = MultiPartyVideoPage()
         mppg.select_contacts_by_number("14775970982")
-        # CheckPoint:1、默认为开启状态
         mppg.select_contacts_by_number("13800138006")
-        # CheckPoint:2、当前为开启状态：点击按钮，按钮变为关闭状态，按钮置灰，视频通话声音从手机听筒播放
         mppg.click_tv_sure()
+        time.sleep(1)
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        MutiVideoPage().wait_for_and_click_not_open()
+        time.sleep(2)
+        # CheckPoint:1、默认为开启状态
+        self.assertTrue(MutiVideoPage().is_selected_mutil_video_call_speaker_btn())
+        # CheckPoint:2、当前为开启状态：点击按钮，按钮变为关闭状态，按钮置灰，视频通话声音从手机听筒播放
+        MutiVideoPage().click_mutil_video_call_speaker_btn()
+        time.sleep(2)
+        self.assertFalse(MutiVideoPage().is_selected_mutil_video_call_speaker_btn())
         # CheckPoint:3、当前为关闭状态：点击按钮，按钮变为开启状态，按钮高亮，视频通话声音从手机外放播放
-        time.sleep(1)
-        if cpg.is_text_present("现在去开启"):
-            cpg.click_text("暂不开启")
-        time.sleep(1)
-        self.assertTrue(mppg.is_exist_end_video_call())
+        MutiVideoPage().click_mutil_video_call_speaker_btn()
+        time.sleep(2)
+        self.assertTrue(MutiVideoPage().is_selected_mutil_video_call_speaker_btn())
 
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0159(self):
+        """多方视频管理页面，检查免提按钮"""
+        # 1、已成功发起多方视频
+        # 2、当前为多方视频管理界面
+        # Step: 1、点击静音按钮
+        cpg = CallPage()
+        cpg.click_multi_party_video()
+        mppg = MultiPartyVideoPage()
+        mppg.select_contacts_by_number("14775970982")
+        mppg.select_contacts_by_number("13800138006")
+        mppg.click_tv_sure()
+        time.sleep(1)
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        MutiVideoPage().wait_for_and_click_not_open()
+        time.sleep(2)
+        # CheckPoint:1、默认为开启状态
+        self.assertTrue(MutiVideoPage().is_selected_mutil_video_call_mute())
+        # CheckPoint:2、当前为开启状态：点击按钮，按钮变为关闭状态按钮置灰，本机说话，对方能听到本机声音
+        MutiVideoPage().click_mutil_video_call_mute()
+        time.sleep(2)
+        self.assertFalse(MutiVideoPage().is_selected_mutil_video_call_mute())
+        # CheckPoint:3、当前为关闭状态：点击按钮，按钮变为开启状态，按钮高亮，本机说话，对方不能听到本机声音
+        MutiVideoPage().click_mutil_video_call_mute()
+        time.sleep(2)
+        self.assertTrue(MutiVideoPage().is_selected_mutil_video_call_mute())
 
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0200(self):
+        """检查多方视频通话记录详情页入口"""
+        # 1、通话记录列表已有多方视频记录
+        # Step: 1、点击多方视频通话记录右侧“！”
+        self.test_call_zhenyishan_0002()
+        cpg = CallPage()
+        cpg.click_call_time()
+        # CheckPoint：1、进入多方视频通话记录详情页
+        cpg.page_should_contain_text("再次呼叫")
+        cpg.page_should_contain_text("多方视频")
+        cpg.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0204(self):
+        """多方视频通话记录详情页，检查一键建群按钮"""
+        # 1、当前为多方视频通话记录详情页
+        # Step: 1、点击一键建群按钮
+        self.test_call_zhenyishan_0002()
+        cpg = CallPage()
+        cpg.click_call_time()
+        # CheckPoint：1、跳转到群聊名称设置页面
+        mppg = MultiPartyVideoPage()
+        mppg.click_one_key_new_group()
+        time.sleep(1)
+        cpg.page_should_contain_text("群聊名称")
+        cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_zhenyishan_0207(self):
+        """多方视频通话记录详情页，点击一键建群，进入群聊名称设置页面，检查创建按钮"""
+        # 1、当前为设置群聊名称页面
+        # Step: 1、群聊名称为空时点击创建按钮
+        # Step: 2、输入群聊名称后点击创建按钮
+        self.test_call_zhenyishan_0002()
+        cpg = CallPage()
+        cpg.click_call_time()
+        mppg = MultiPartyVideoPage()
+        mppg.click_one_key_new_group()
+        time.sleep(1)
+        cpg.page_should_contain_text("群聊名称")
+        # CheckPoint：1、未有群聊名称：置灰不可点击
+        BuildGroupChatPage().click_clear_button()
+        time.sleep(1)
+        self.assertFalse(BuildGroupChatPage().is_enabled_tv_sure())
+        # CheckPoint：2、已有群聊名称：高亮显示，点击跳转到群聊窗口，并且向多方视频成员发起进群邀请
+        BuildGroupChatPage().input_group_chat_name("多方通话群聊")
+        BuildGroupChatPage().click_ok()
+        cpg.wait_until(timeout=5, auto_accept_permission_alert=True,
+                        condition=lambda d: cpg.is_text_present("你向"))
+        cpg.page_should_contain_text("发出群邀请")
+        cpg.page_should_contain_text("多方通话群聊")
+        cpg.click_back_by_android(2)
 

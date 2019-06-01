@@ -42,3 +42,8 @@ class BuildGroupChatPage(Keyboard, BasePage):
         self.input_group_chat_name(name)
         self.hide_keyboard_if_display()
         self.click_ok()
+
+    def is_enabled_tv_sure(self):
+        """判断确定按钮是否可用"""
+        return self._is_enabled(self.__locators['确定'])
+

@@ -120,46 +120,46 @@ class CallAll(TestCase):
     Author:wangquansheng
     """
 
-    @classmethod
-    def setUpClass(cls):
-        # 创建联系人
-        fail_time = 0
-        import dataproviders
-        while fail_time < 3:
-            try:
-                required_contacts = dataproviders.get_preset_contacts()
-                conts = ContactsPage()
-                preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
-                preconditions.make_already_in_message_page()
-                current_mobile().hide_keyboard_if_display()
-                preconditions.make_already_in_message_page()
-                for name, number in required_contacts:
-                    conts.open_contacts_page()
-                    if conts.is_text_present("显示"):
-                        conts.click_text("不显示")
-                    conts.create_contacts_if_not_exits(name, number)
-
-                # 创建群
-                required_group_chats = dataproviders.get_preset_group_chats()
-
-                conts.open_group_chat_list()
-                group_list = GroupListPage()
-                for group_name, members in required_group_chats:
-                    group_list.wait_for_page_load()
-                    group_list.create_group_chats_if_not_exits(group_name, members)
-                group_list.click_back()
-                conts.open_message_page()
-                return
-            except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
-
-    @classmethod
-    def tearDownClass(cls):
-        current_mobile().hide_keyboard_if_display()
-        preconditions.make_already_in_message_page()
+    # @classmethod
+    # def setUpClass(cls):
+    #     # 创建联系人
+    #     fail_time = 0
+    #     import dataproviders
+    #     while fail_time < 3:
+    #         try:
+    #             required_contacts = dataproviders.get_preset_contacts()
+    #             conts = ContactsPage()
+    #             preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
+    #             preconditions.make_already_in_message_page()
+    #             current_mobile().hide_keyboard_if_display()
+    #             preconditions.make_already_in_message_page()
+    #             for name, number in required_contacts:
+    #                 conts.open_contacts_page()
+    #                 if conts.is_text_present("显示"):
+    #                     conts.click_text("不显示")
+    #                 conts.create_contacts_if_not_exits(name, number)
+    #
+    #             # 创建群
+    #             required_group_chats = dataproviders.get_preset_group_chats()
+    #
+    #             conts.open_group_chat_list()
+    #             group_list = GroupListPage()
+    #             for group_name, members in required_group_chats:
+    #                 group_list.wait_for_page_load()
+    #                 group_list.create_group_chats_if_not_exits(group_name, members)
+    #             group_list.click_back()
+    #             conts.open_message_page()
+    #             return
+    #         except:
+    #             fail_time += 1
+    #             import traceback
+    #             msg = traceback.format_exc()
+    #             print(msg)
+    #
+    # @classmethod
+    # def tearDownClass(cls):
+    #     current_mobile().hide_keyboard_if_display()
+    #     preconditions.make_already_in_message_page()
 
     def default_setUp(self):
         """进入Call页面,清空通话记录"""
@@ -403,17 +403,18 @@ class CallAll(TestCase):
         self.assertTrue(flag)
         cpg.click_call()
 
-    # @tags('ALL', 'CMCC', 'Call')
-    @unittest.skip("pass")
+    @tags('ALL', 'CMCC', 'Call')
     def test_call_shenlisi_0013(self):
         """检查拨号盘展开状态可收起"""
         # 1.和飞信登录系统：通话tab
         # 2.拨号盘为展开状态
         cpg = CallPage()
         # Step:1.点击拨号盘按钮
+        cpg.click_call()
+        time.sleep(1)
         # CheckPoint:1.拨号盘可收起展开，拨号盘图标变为7个蓝点
-        callcolor = cpg.get_call_color_of_element()
-        # TODOs
+        self.assertTrue(cpg.is_on_the_dial_pad())
+        cpg.click_back_by_android()
 
     @tags('ALL', 'CMCC', 'Call')
     def test_call_shenlisi_0014(self):
@@ -1377,6 +1378,38 @@ class CallAll(TestCase):
         cpg.click_back_by_android()
 
     @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0087(self):
+        """检查语音通话记录-企业联系人"""
+        # 1.A已登录和飞信
+        # 2.用户A已成功发起与用户N的语音通话
+        # Step:1.用户A查看通话记录
+        cpg = CallPage()
+        cpg.click_call()
+        time.sleep(1)
+        cpg.select_type_start_call(calltype=1, text="13800137003")
+        time.sleep(1)
+        if cpg.is_exist_go_on():
+            cpg.click_go_on()
+        cpg.click_cancel_open()
+        time.sleep(1)
+        cpg.wait_for_dial_pad()
+        time.sleep(1)
+        if not cpg.is_on_the_call_page():
+            cpg.click_call()
+        time.sleep(1)
+        # CheckPoint:1.通话记录展示与用户B的语音通话记录，显示用户B的名称、通话类型【语音通话】、归属地。右侧显示通话时间以及时间节点图标
+        cpg.page_should_contain_text("哈 马上")
+        cpg.page_should_contain_text("语音通话")
+        self.assertTrue(cpg.is_exist_call_time())
+        # Step:2.点击时间节点
+        # Step:3.用户N为企业联系人（非本地联系人）
+        cpg.click_call_time()
+        time.sleep(1)
+        # CheckPoint:2.进入到用户N的通话profile
+        self.assertTrue(cpg.is_exist_profile_name())
+        cpg.click_back_by_android()
+
+    @tags('ALL', 'CMCC', 'Call')
     def test_call_shenlisi_0088(self):
         """检查语音通话记录-陌生联系人"""
         # 1.A已登录和飞信
@@ -2319,6 +2352,71 @@ class CallAll(TestCase):
         cpg.page_should_contain_text("15343030009")
 
     @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0333(self):
+        """检查清零未接通话数"""
+        # 1.用户已登录和飞信消息tab
+        # 2.通话tab右上角显示未读消息气泡
+        # Step:1.点击通话tab
+        cpg = CallPage()
+        cpg.click_call()
+        # CheckPoint:1.通话未接数清零，图标变为拨号盘按钮
+        # 清空通话记录
+        cpg.delete_all_call_entry()
+        cpg.page_should_contain_text("拨号盘")
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0341(self):
+        """检查连续与同一号码，同一呼叫状态可累计叠加条数"""
+        # 1.和飞信为登录状态
+        # 2.网络正常
+        # Step:1.连续与用户A语音通话5次
+        # CheckPoint:1.与用户A的语音通话记录一条，次数为5
+        cpg = CallPage()
+        cpg.create_call_entry("13800138001")
+        cpg.click_call_time()
+        for i in range(5):
+            CallContactDetailPage().click_voice_call()
+            time.sleep(1)
+            if cpg.is_exist_go_on():
+                cpg.click_go_on()
+            GrantPemissionsPage().allow_contacts_permission()
+            time.sleep(2)
+            if cpg.is_text_present("暂不开启"):
+                cpg.click_text("暂不开启")
+            CallContactDetailPage().wait_for_profile_name()
+
+        # Step:2.连续与用户B视频通话5次
+        # CheckPoint:2.与用户B的视频通话记录一条，次数为5
+        cpg = CallPage()
+        cpg.create_call_entry("13537795364")
+        cpg.click_call_time()
+        for i in range(5):
+            CallContactDetailPage().click_video_call()
+            time.sleep(1)
+            if cpg.is_exist_go_on():
+                cpg.click_go_on()
+            GrantPemissionsPage().allow_contacts_permission()
+            time.sleep(2)
+            cpg.click_cancel_open()
+            CallContactDetailPage().wait_for_profile_name()
+            cpg.click_back_by_android()
+            cpg.page_should_contain_text("视频通话")
+
+        # Step:3.连续与用户C普通电话5次
+        # CheckPoint:3.与用户C的普通通话记录一条，次数为5
+        cpg = CallPage()
+        cpg.create_call_entry("13800138001")
+        cpg.click_call_time()
+        for i in range(5):
+            CallContactDetailPage().click_normal_call()
+            time.sleep(1)
+            # CheckPoint:1.调起系统电话后
+            flag = cpg.is_phone_in_calling_state()
+            self.assertTrue(flag)
+            cpg.hang_up_the_call()
+        cpg.click_back_by_android(2)
+
+    @tags('ALL', 'CMCC', 'Call')
     def test_call_shenlisi_0347(self):
         """检查本地联系人通话profile左上角显示名称"""
         # 1.已登录和飞信：通话tab
@@ -2377,6 +2475,26 @@ class CallAll(TestCase):
         time.sleep(1)
         # CheckPoint:1.返回值通话记录列表页面
         self.assertTrue(cpg.is_on_the_call_page())
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0351(self):
+        """检查通话profile星标功能"""
+        # 1.已登录和飞信：通话tab
+        # 2.已进入到联系人通话profile
+        # 3.星标按钮未高亮
+        # Step:1.点击星标
+        cpg = CallPage()
+        cpg.create_call_entry("13800138001")
+        cpg.click_call_time()
+        time.sleep(2)
+        # CheckPoint:1.星标按钮高亮，提示”已成功添加星标联系人“该联系人在通讯录置顶
+        GroupListPage().click_star_icon()
+        time.sleep(1)
+        self.assertTrue(cpg.is_toast_exist("已成功添加星标联系人"))
+        # CheckPoint:2.星标按钮置灰，提示”已取消添加为星标联系人“该联系人在通信录取消置顶
+        GroupListPage().click_star_icon()
+        time.sleep(1)
+        self.assertTrue(cpg.is_toast_exist("已取消添加为星标联系人"))
 
     @tags('ALL', 'CMCC', 'Call')
     def test_call_shenlisi_0353(self):
@@ -2564,6 +2682,33 @@ class CallAll(TestCase):
         time.sleep(2)
         cpg.page_should_contain_text("新建联系人")
 
+        cpg.click_back_by_android(3)
+
+    @tags('ALL', 'CMCC', 'Call')
+    def test_call_shenlisi_0363(self):
+        """检查非RCS通话profile--陌生联系人"""
+        # 1.已登录和飞信-通话记录列表
+        # 2.已进入到本地联系人C的通话profile
+        # 3.用户C为非RCS用户并为陌生人
+        # 4.当前登录账号无副号
+        # Step:1.查看界面
+        cpg = CallPage()
+        cpg.create_call_entry("15343038890")
+        cpg.click_call_time()
+        # CheckPoint:1.功能有：保存到通讯录、邀请使用。消息、电话、语音通话、视频通话、和飞信电话高亮。页面显示：在和飞信电话按钮下显示通话记录。底部显示【保存到通讯录】，点击进入到编辑页面。【邀请使用】，点击调起系统短信
+        time.sleep(2)
+        cpg.page_should_contain_text("保存到通讯录")
+        cpg.page_should_contain_text("邀请使用")
+        cpg.page_should_contain_text("消息")
+        cpg.page_should_contain_text("电话")
+        cpg.page_should_contain_text("语音通话")
+        cpg.page_should_contain_text("视频通话")
+        cpg.page_should_contain_text("和飞信电话")
+        cpg.page_should_contain_text("拨出电话")
+        ContactDetailsPage().click_invitation_use()
+        time.sleep(1)
+        cpg.page_should_contain_text("新建短信")
+        cpg.page_should_contain_text("收件人：")
         cpg.click_back_by_android(3)
 
     @tags('ALL', 'CMCC', 'Call')
