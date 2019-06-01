@@ -172,3 +172,8 @@ class AnnouncementMessagePage(BasePage):
         if len(el) > 0:
             return True
         return False
+
+    @TestLogger.log()
+    def get_element_(self, text):
+        """点击元素"""
+        return self.get_element(self.__class__.__locators[text])
