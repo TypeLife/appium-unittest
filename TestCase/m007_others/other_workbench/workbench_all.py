@@ -1,16 +1,20 @@
 from pages.me.MeViewUserProfile import MeViewUserProfilePage
 
 from pages.message.Send_CardName import Send_CardNamePage
+import random
 from pages.components import ChatNoticeDialog
+import os
+import time
+
+from appium.webdriver.common.mobileby import MobileBy
+from dataproviders import contact2
 from preconditions.BasePreconditions import LoginPreconditions
+from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile
-import random
-import time
-from appium.webdriver.common.mobileby import MobileBy
-from library.core.TestCase import TestCase
 from library.core.utils.testcasefilter import tags
 from pages import *
+from settings import PROJECT_PATH
 
 
 class Preconditions(LoginPreconditions):
@@ -88,6 +92,104 @@ class Preconditions(LoginPreconditions):
         cgnp.click_sure()
         # 等待群聊页面加载
         GroupChatPage().wait_for_page_load()
+
+    @staticmethod
+    def get_group_chat_name():
+        """获取群名"""
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        group_name = "aatest" + phone_number[-4:]
+        return group_name
+
+    @staticmethod
+    def make_already_have_my_group(reset=False):
+        """确保有群，没有群则创建群名为mygroup+电话号码后4位的群"""
+        # 消息页面
+        Preconditions.make_already_in_message_page(reset)
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(2)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
+        time.sleep(3)
+        sc.click_select_one_group()
+        # 群名
+        group_name = Preconditions.get_group_chat_name()
+        # 获取已有群名
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        group_names = sog.get_group_name()
+        # 有群返回，无群创建
+        if group_name in group_names:
+            return
+        sog.click_back()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 从本地联系人中选择成员创建群
+        sc.click_local_contacts()
+        time.sleep(2)
+        slc = SelectLocalContactsPage()
+        a = 0
+        names = {}
+        while a < 3:
+            names = slc.get_contacts_name()
+            num = len(names)
+            if not names:
+                raise AssertionError("No contacts, please add contacts in address book.")
+            if num == 1:
+                sog.page_up()
+                a += 1
+                if a == 3:
+                    raise AssertionError("联系人只有一个，请再添加多个不同名字联系人组成群聊")
+            else:
+                break
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        slc.click_sure()
+        # 创建群
+        cgnp = CreateGroupNamePage()
+        cgnp.input_group_name(group_name)
+        cgnp.click_sure()
+        # 等待群聊页面加载
+        GroupChatPage().wait_for_page_load()
+
+    @staticmethod
+    def enter_group_chat_page(reset=False):
+        """进入群聊聊天会话页面"""
+        # 确保已有群
+        Preconditions.make_already_have_my_group(reset)
+        # 如果有群，会在选择一个群页面，没有创建群后会在群聊页面
+        scp = GroupChatPage()
+        sogp = SelectOneGroupPage()
+        if sogp.is_on_this_page():
+            group_name = Preconditions.get_group_chat_name()
+            # 点击群名，进入群聊页面
+            sogp.select_one_group_by_name(group_name)
+            scp.wait_for_page_load()
+
+        if scp.is_on_this_page():
+            return
+        else:
+            raise AssertionError("Failure to enter group chat session page.")
 
     @staticmethod
     def get_group_chat_name():
@@ -398,6 +500,274 @@ class MsgAllPrior(TestCase):
         flag = select_contacts_page.is_toast_exist('已收藏')
         self.assertTrue(flag)
 
+    @staticmethod
+    def setUp_test_msg_huangcaizui_B_0040():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_B_0040(self):
+        """进入免费/发送短信--选择联系人页面"""
+        contacts_page = ContactsPage()
+        contacts_page.open_contacts_page()
+        contacts_page.wait_for_page_load()
+        name = 'admin'
+        contacts_page.create_contacts_if_not_exits(name, '13333333333')
+        message_page = MessagePage()
+        message_page.open_message_page()
+        # 点击+号
+        message_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/action_add'))
+        # 点击免费短信
+        message_page.click_free_sms()
+        try:
+            text = message_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/sure_btn'))
+            if text == "确定":
+                message_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/sure_btn'))
+        except BaseException:
+            print("warn ：非首次进入，无需确认！")
+        select_contacts_page = SelectContactsPage()
+        # 当有本地搜索结果时 高亮
+        select_contacts_page.search(name)
+        time.sleep(3)
+        falg = select_contacts_page.get_element_attribute(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="%s"]' % name), "enabled")
+        self.assertTrue(falg == "true")
+        select_contacts_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'))
+        time.sleep(5)
+        sms_text = select_contacts_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/et_sms'))
+        self.assertTrue(sms_text == '发送短信...')
+        msg_text = '你好，testOK !' + str(random.random())
+        select_contacts_page.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/et_sms'), msg_text)
+        select_contacts_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_sms_send'))
+        try:
+            select_contacts_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'))
+        except BaseException:
+            print("warn ：非首次进入，无需资费提醒确认！")
+        select_contacts_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_sms_send'))
+        element = select_contacts_page.get_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_message" and @text="%s"]' % msg_text))
+        select_contacts_page.press(element)
+        select_contacts_page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="多选"]'))
+        self.assertTrue(select_contacts_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/multi_btn_forward')) == '转发')
+        select_contacts_page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/multi_btn_delete" and @text="删除"]'))
+        select_contacts_page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/btn_ok" and @text="删除"]'))
+        select_contacts_page.is_toast_exist("和飞信：删除成功")
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_B_0061():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_B_0061(self):
+        """进入免费/发送短信查看展示页面"""
+        message_page = MessagePage()
+        time.sleep(4)
+        # 点击+号
+        message_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/action_add'))
+        # 点击免费短信
+        message_page.click_free_sms()
+        try:
+            text = message_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/sure_btn'))
+            if text == "确定":
+                message_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/sure_btn'))
+        except BaseException:
+            print("warn ：非首次进入，无需确认！")
+        title_text = message_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/title'))
+        self.assertTrue(title_text == "选择联系人")
+
+        search_bar_text = message_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/contact_search_bar'))
+        self.assertTrue(search_bar_text == "搜索或输入手机号")
+
+        hint_text = message_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/text_hint'))
+        self.assertTrue(hint_text == "选择团队联系人")
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_B_0062():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_B_0062(self):
+        """进入免费/发送短信--选择联系人页面"""
+        contacts_page = ContactsPage()
+        contacts_page.open_contacts_page()
+        contacts_page.wait_for_page_load()
+        name = 'admin'
+        contacts_page.create_contacts_if_not_exits(name, '13333333333')
+        message_page = MessagePage()
+        message_page.open_message_page()
+        time.sleep(4)
+        # 点击+号
+        message_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/action_add'))
+        # 点击免费短信
+        message_page.click_free_sms()
+        try:
+            text = message_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/sure_btn'))
+            if text == "确定":
+                message_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/sure_btn'))
+        except BaseException:
+            print("warn ：非首次进入，无需确认！")
+        select_contacts_page = SelectContactsPage()
+        select_contacts_page.search(name)
+        time.sleep(3)
+        falg = select_contacts_page.get_element_attribute(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="%s"]' % name), "enabled")
+        self.assertTrue(falg == "true")
+        # TODO 获取不到【放大镜图标】搜索团队联系人：【搜索内容】   > 内容
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_B_0063():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_B_0063(self):
+        """进入免费/发送短信--选择联系人页面"""
+        contacts_page = ContactsPage()
+        contacts_page.open_contacts_page()
+        contacts_page.wait_for_page_load()
+        name = 'admin'
+        contacts_page.create_contacts_if_not_exits(name, '13333333333')
+        message_page = MessagePage()
+        message_page.open_message_page()
+        # 点击+号
+        message_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/action_add'))
+        # 点击免费短信
+        message_page.click_free_sms()
+        try:
+            text = message_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/sure_btn'))
+            if text == "确定":
+                message_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/sure_btn'))
+        except BaseException:
+            print("warn ：非首次进入，无需确认！")
+        select_contacts_page = SelectContactsPage()
+        # 当有本地搜索结果时 高亮
+        select_contacts_page.search(name)
+        time.sleep(3)
+        falg = select_contacts_page.get_element_attribute(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="%s"]' % name), "enabled")
+        self.assertTrue(falg == "true")
+        # 当无本地搜索结果时
+        select_contacts_page.search(name + name)
+        time.sleep(3)
+        view_elements = select_contacts_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_list_item and @clickable=true"]'))
+        self.assertTrue(len(view_elements) == 0)
+        # 当搜索我的电脑相关时，不显示我的电脑
+        select_contacts_page.search('我的电脑')
+        time.sleep(3)
+        view_elements = select_contacts_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_list_item and @clickable=true"]'))
+        self.assertTrue(len(view_elements) == 0)
+        # 当搜索一个手机号时
+        select_contacts_page.search('13782572918')
+        time.sleep(3)
+        # 显示网络搜索
+        view_elements = select_contacts_page.get_elements(
+            (MobileBy.XPATH, '//*[contains(@text,"(未知号码)")]'))
+        self.assertTrue(len(view_elements) > 0)
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_B_0071():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_B_0071(self):
+        """进入免费/发送短信--选择联系人页面"""
+        contacts_page = ContactsPage()
+        contacts_page.open_contacts_page()
+        contacts_page.wait_for_page_load()
+        name = 'admin'
+        contacts_page.create_contacts_if_not_exits(name, '13333333333')
+        message_page = MessagePage()
+        message_page.open_message_page()
+        # 点击+号
+        message_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/action_add'))
+        # 点击免费短信
+        message_page.click_free_sms()
+        try:
+            text = message_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/sure_btn'))
+            if text == "确定":
+                message_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/sure_btn'))
+        except BaseException:
+            print("warn ：非首次进入，无需确认！")
+        select_contacts_page = SelectContactsPage()
+        # 当有本地搜索结果时 高亮
+        select_contacts_page.search(name)
+        time.sleep(3)
+        falg = select_contacts_page.get_element_attribute(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="%s"]' % name), "enabled")
+        self.assertTrue(falg == "true")
+        select_contacts_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'))
+        time.sleep(5)
+        sms_text = select_contacts_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/et_sms'))
+        self.assertTrue(sms_text == '发送短信...')
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_1V1_0076():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_have_my_group()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_1V1_0076(self):
+        """将自己发送的文件转发到企业群"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+                                                     os.path.join(PROJECT_PATH, path))
+        select_one_group_page = SelectOneGroupPage()
+        group_chat_name = Preconditions.get_group_chat_name()
+        select_one_group_page.select_one_group_by_name(group_chat_name)
+        select_one_group_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        element = select_one_group_page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="文件"]'))
+        element = select_one_group_page.click_element(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ll_mobile_memory'))
+        elements = elements = select_one_group_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        while len(elements) == 0:
+            select_one_group_page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/lv_choose'), 'up')
+            time.sleep(1)
+            elements = select_one_group_page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        select_one_group_page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        select_one_group_page.click_element((MobileBy.XPATH,
+                                             '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="2018-11-09 11-06-18-722582.log"]'))
+        select_one_group_page.click_element((MobileBy.XPATH,
+                                             '//*[@resource-id="com.chinasofti.rcs:id/button_send" and @text="发送"]'))
+        file_elements = select_one_group_page.get_elements(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/textview_file_name" and @text="2018-11-09 11-06-18-722582.log"]'))
+        for file_element in file_elements:
+            select_one_group_page.press(file_element)
+            select_one_group_page.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="转发"]'))
+            select_one_group_page.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/text_hint" and @text="选择一个群"]'))
+            # 点击群名称  然后取消
+            select_one_group_page.click_element(
+                (MobileBy.XPATH,
+                 '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="%s"]' % group_chat_name))
+            select_one_group_page.click_element((MobileBy.XPATH,
+                                                 '//*[@resource-id="com.chinasofti.rcs:id/btn_cancel" and @text="取消"]'))
+
+            # 点击群名称  然后确认
+            select_one_group_page.click_element(
+                (MobileBy.XPATH,
+                 '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="%s"]' % group_chat_name))
+            select_one_group_page.click_element((MobileBy.XPATH,
+                                                 '//*[@resource-id="com.chinasofti.rcs:id/btn_ok" and @text="确定"]'))
+            select_one_group_page.is_toast_exist("已转发")
+        # 删除所有转发信息
+        wait_del_file_elements = select_one_group_page.get_elements(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/textview_file_name" and @text="2018-11-09 11-06-18-722582.log"]'))
+        for file_element in wait_del_file_elements:
+            select_one_group_page.press(file_element)
+            select_one_group_page.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="删除"]'))
+
 
 class Contacts_demo(TestCase):
 
@@ -704,4 +1074,62 @@ class Contacts_demo(TestCase):
         # 判断是否进入单聊对话框
         text = singlechat.is_on_this_page()
         self.assertTrue(lambda: (text.endswith(')') and text.startswith('(')))
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_E_0022():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_E_0022(self):
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        time.sleep(3)
+        self.assertTrue(me.is_on_this_page())
+        me.click_setting_menu()
+        me.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/setting_sms_text'))
+        SmsSettingPage().assert_menu_item_has_been_turn_on('应用内收发短信')
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0400():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["给个红包1, 13800138000"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangmianhua_0400(self):
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词给个红包1
+        SearchPage().input_search_keyword("给个红包1")
+        # 选择联系人进入联系人页
+        mess.choose_chat_by_name('给个红包1')
+        # 点击消息按钮发送消息
+        ContactDetailsPage().click_message_icon()
+        chatdialog = ChatNoticeDialog()
+        # 若存在资费提醒对话框，点击确认
+        if chatdialog.is_exist_tips():
+            chatdialog.accept_and_close_tips_alert()
+        single = SingleChatPage()
+        single.input_text_message("测试一个呵呵")
+        single.send_text()
+        single.click_back()
+        mess.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/iv_back'))
+        mess.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/iv_back01'))
+        mess.is_on_this_page()
+        single.press_mess("给个红包1")
+        mess.click_element((MobileBy.XPATH, '//*[@text ="置顶聊天"]'))
+        single.press_mess("给个红包1")
+        mess.click_element((MobileBy.XPATH, '//*[@text ="取消置顶"]'))
+        mess.delete_message_record_by_name("给个红包1")
+        mess.page_should_not_contain_text('给个红包1')
+
 
