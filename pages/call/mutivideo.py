@@ -25,9 +25,8 @@ class MutiVideoPage(BasePage):
         '00:06': (MobileBy.ID, 'com.chinasofti.rcs:id/call_duration_text'),
         'com.chinasofti.rcs:id/rl_operation': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_operation'),
         'com.chinasofti.rcs:id/iv_open_self_camera': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_open_self_camera'),
-        'com.chinasofti.rcs:id/mutil_video_call_speaker_btn': (
-            MobileBy.ID, 'com.chinasofti.rcs:id/mutil_video_call_speaker_btn'),
-        'com.chinasofti.rcs:id/mutil_video_call_mute': (MobileBy.ID, 'com.chinasofti.rcs:id/mutil_video_call_mute'),
+        '免提图标': (MobileBy.ID, 'com.chinasofti.rcs:id/mutil_video_call_speaker_btn'),
+        '静音图标': (MobileBy.ID, 'com.chinasofti.rcs:id/mutil_video_call_mute'),
         'com.chinasofti.rcs:id/end_video_call_btn': (MobileBy.ID, 'com.chinasofti.rcs:id/end_video_call_btn'),
         'com.chinasofti.rcs:id/ll_tv_hint': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_tv_hint'),
         '关闭摄像头': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_open'),
@@ -39,4 +38,28 @@ class MutiVideoPage(BasePage):
     def click_multi_video_add_person(self):
         """点击添加成员"""
         self.click_element(self.__locators["添加成员"])
+
+    @TestLogger.log()
+    def click_mutil_video_call_speaker_btn(self):
+        """点击视频免提"""
+        self.click_element(self.__locators["免提图标"])
+
+    def is_selected_mutil_video_call_speaker_btn(self):
+        """是否打开视频免提按钮"""
+        return self.is_selected(self.__locators["免提图标"])
+
+    @TestLogger.log()
+    def click_mutil_video_call_mute(self):
+        """点击静音图标"""
+        self.click_element(self.__locators["静音图标"])
+
+    def is_selected_mutil_video_call_mute(self):
+        """是否打开静音图标按钮"""
+        return self.is_selected(self.__locators["静音图标"])
+
+    def wait_for_and_click_not_open(self):
+        """等待暂不开启并点击"""
+        if self.wait_until(timeout=5, auto_accept_permission_alert=True,
+                       condition=lambda d: self.is_text_present("暂不开启")):
+            self.click_text("暂不开启")
 

@@ -11,6 +11,7 @@ from pages.SelectHeContacts import SelectHeContactsPage
 from pages.workbench.enterprise_contacts.EnterpriseContacts import EnterpriseContactsPage
 from preconditions.BasePreconditions import WorkbenchPreconditions
 from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
+from pages.contacts.EditContactPage import EditContactPage
 
 REQUIRED_MOBILES = {
     'Android-移动':'M960BDQN229CH',
@@ -996,3 +997,157 @@ class MygroupdetailPage(TestCase):
         time.sleep(2)
         self.assertTrue(contact_detail.is_element_present(locator='和飞信电话-挂断电话'))
         contact_detail.cancel_hefeixin_call()
+
+
+    @tags('ALL', 'CMCC-接口不稳定', 'contact', 'my_group')
+    def test_contacts_quxinli_0193(self):
+        """进入我的团队非RCS用户的Profile页-邀请使用"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_contacts_by_name('大佬2')
+        time.sleep(2)
+        contact_detail=ContactDetailsPage()
+        #点击邀请使用
+        contact_detail.click_invitation_use()
+        time.sleep(2)
+        contact_detail.page_should_contain_text('最近都在用“和飞信”发消息打电话，免费短信省钱省心，多方通话一呼八应，邀请你一起畅享沟通，立即体验：http://feixin.10086.cn/rcs')
+
+    @tags('ALL', 'CMCC-接口不稳定', 'contact', 'my_group')
+    def test_contacts_quxinli_0194(self):
+        """进入未保存本地的我的团队联系人Profile页-保存到通讯录"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_contacts_by_name('陈丹丹')
+        time.sleep(2)
+        contact_detail=ContactDetailsPage()
+        #点击邀请使用
+        contact_detail.click_save_contacts_icon()
+        time.sleep(2)
+        creat=CreateContactPage()
+        creat.hide_keyboard()
+        time.sleep(3)
+        #姓名 电话 公司自动填充
+        name=creat.get_text_of_box(locator='输入姓名')
+        self.assertIsNotNone(name)
+        number = creat.get_text_of_box(locator='输入号码')
+        self.assertIsNotNone(number)
+        company = creat.get_text_of_box(locator='输入公司')
+        self.assertIsNotNone(company)
+        #点击保存,保存成功
+        creat.click_save()
+        contact_detail.page_should_contain_text('创建成功')
+        contact_detail.is_on_this_page()
+
+    def tearDown_test_contacts_quxinli_0194(self):
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        contacts=ContactsPage()
+        if contacts.is_contacts_exist('陈丹丹'):
+            contacts.select_contacts_by_name('陈丹丹')
+            ContactDetailsPage().click_edit_contact()
+            edit=EditContactPage()
+            edit.hide_keyboard()
+            time.sleep(1)
+            edit.click_delete_contact()
+            edit.click_sure_delete()
+        else:
+            pass
+
+    @tags('ALL', 'CMCC', 'contact', 'my_group')
+    def test_contacts_quxinli_0195(self):
+        """进入已保存本地的我的团队联系人的Profile页-分享名片"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_contacts_by_name('测试号码')
+        time.sleep(2)
+        contact_detail=ContactDetailsPage()
+        #点击分享名片
+        contact_detail.click_share_business_card()
+        select_contact=SelectContactsPage()
+        #验证页面元素
+        title=select_contact.get_element_text(locator='选择联系人')
+        self.assertEqual(title,'选择联系人')
+        input=select_contact.get_element_text(locator='搜索或输入手机号')
+        self.assertEqual(input, '搜索或输入手机号')
+        select_contact.page_should_contain_text('选择一个群')
+        select_contact.page_should_contain_text('选择团队联系人')
+        select_contact.page_should_contain_text('选择手机联系人')
+        if select_contact.is_element_present_by_locator('最近聊天联系人'):
+            select_contact.page_should_contain_text('最近聊天')
+
+    @tags('ALL', 'CMCC', 'contact', 'my_group')
+    def test_contacts_quxinli_0197(self):
+        """在联系人选择器页面，选择一个群"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_contacts_by_name('测试号码')
+        time.sleep(2)
+        contact_detail = ContactDetailsPage()
+        # 点击分享名片
+        contact_detail.click_share_business_card()
+        select_contact = SelectContactsPage()
+        select_contact.click_select_one_group()
+        time.sleep(1)
+        SelectOneGroupPage().selecting_one_group_by_name('给个红包1')
+        SelectOneGroupPage().page_should_contain_text('发送名片')
+        SelectOneGroupPage().click_share_business_card()
+        SelectOneGroupPage().page_should_contain_text('已发送')
+
+    @tags('ALL', 'CMCC', 'contact', 'my_group')
+    def test_contacts_quxinli_0199(self):
+        """在联系人选择器页面，选择本地联系人"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_contacts_by_name('测试号码')
+        time.sleep(2)
+        contact_detail = ContactDetailsPage()
+        # 点击分享名片
+        contact_detail.click_share_business_card()
+        select_contact = SelectContactsPage()
+        select_contact.click_local_contacts()
+        time.sleep(1)
+        select_local=SelectLocalContactsPage()
+        select_local.swipe_select_one_member_by_name('大佬1')
+        select_local.page_should_contain_text('发送名片')
+        select_local.click_share_business_card()
+        contact_detail.page_should_contain_text('已发送')
+
+    @tags('ALL', 'CMCC', 'contact', 'my_group')
+    def test_contacts_quxinli_0201(self):
+        """在联系人选择器页面，选择团队联系人"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_contacts_by_name('测试号码')
+        time.sleep(2)
+        contact_detail = ContactDetailsPage()
+        # 点击分享名片
+        contact_detail.click_share_business_card()
+        select_contact = SelectContactsPage()
+        select_contact.click_he_contacts()
+        time.sleep(1)
+        select_he=SelectHeContactsPage()
+        select_he.select_one_team_by_name('ateam7272')
+        time.sleep(1)
+        SelectHeContactsDetailPage().selecting_he_contacts_by_name('陈丹丹')
+        time.sleep(1)
+        SelectHeContactsDetailPage().page_should_contain_text('发送名片')
+        SelectHeContactsDetailPage().click_share_business_card()
+        contact_detail.page_should_contain_text('已发送')
+
+
+    @tags('ALL', 'CMCC', 'contact', 'my_group')
+    def test_contacts_quxinli_0207(self):
+        """用户在多个企业下,分享名片"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_contacts_by_name('测试号码')
+        time.sleep(2)
+        contact_detail = ContactDetailsPage()
+        # 点击分享名片
+        contact_detail.click_share_business_card()
+        select_contact = SelectContactsPage()
+        select_contact.click_he_contacts()
+        time.sleep(1)
+        select_he=SelectHeContactsPage()
+        names=select_he.get_all_group_name()
+        self.assertTrue(len(names) > 0 )
+        select_he.select_one_team_by_name('ateam7272')
+        time.sleep(1)
+        SelectHeContactsDetailPage().selecting_he_contacts_by_name('陈丹丹')
+        time.sleep(1)
+        SelectHeContactsDetailPage().page_should_contain_text('发送名片')
+        SelectHeContactsDetailPage().click_share_business_card()
+        contact_detail.page_should_contain_text('已发送')
