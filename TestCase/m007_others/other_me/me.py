@@ -558,3 +558,538 @@ class MsgAllPrior(TestCase):
 
         text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/charge_content'))
         self.assertTrue(text == '可用流量不足100M，暂不能充到手机')
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_141():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_141(self):
+        """和包支付--授权"""
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.is_current_activity_match_this_page()
+        time.sleep(3)
+        elements = agreement_detail_page.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        time.sleep(3)
+        self.assertTrue(len(elements) > 0)
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/lv_flow_area'))
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/id_goto_charge_redpaper'))
+
+        text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/charge_content'))
+        self.assertTrue(text == '可用流量不足100M，暂不能充到手机')
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'))
+
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/iv_action_bar_help'))
+        help_title = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/tv_actionbar_title'))
+        self.assertTrue(help_title == '帮助手册')
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_143():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_143(self):
+        """和包支付--授权"""
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.is_current_activity_match_this_page()
+        time.sleep(3)
+        elements = agreement_detail_page.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        time.sleep(3)
+        self.assertTrue(len(elements) > 0)
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/lv_flow_area'))
+
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/tv_actionbar_right'))
+
+        text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/id_tv_no_data'))
+        flag = False
+        if text == "暂无流量相关账单":
+            flag = True
+        # 有数据怎么处理 TODO
+        self.assertTrue(flag)
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_144():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_144(self):
+        """和包支付--授权"""
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.is_current_activity_match_this_page()
+        time.sleep(5)
+        elements = agreement_detail_page.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        self.assertTrue(len(elements) > 0)
+
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/id_iv_avatar'))
+        text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+        self.assertTrue(text == "添加银行卡")
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_146():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_146(self):
+        """和包支付--银行卡页面填写0-14位银行卡号"""
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.is_current_activity_match_this_page()
+        time.sleep(3)
+        elements = agreement_detail_page.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        time.sleep(3)
+        self.assertTrue(len(elements) > 0)
+
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/id_iv_avatar'))
+        text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+        self.assertTrue(text == "添加银行卡")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+        agreement_detail_page.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addbankcard_cardnoEdit'),
+                                         "111111111")
+        attribute = agreement_detail_page.get_element_attribute(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'), "enabled")
+        self.assertTrue(attribute == "false")
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_147():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_147(self):
+        """和包支付--银行卡页面填写0-14位银行卡号"""
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.is_current_activity_match_this_page()
+        time.sleep(3)
+        elements = agreement_detail_page.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        time.sleep(3)
+        self.assertTrue(len(elements) > 0)
+
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/id_iv_avatar'))
+        text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+        self.assertTrue(text == "添加银行卡")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+
+        time.sleep(5)
+        agreement_detail_page.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addbankcard_cardnoEdit'),
+                                         "1111111111111111111111111")
+
+        attribute = agreement_detail_page.get_element_attribute(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'), "enabled")
+        self.assertTrue(attribute == "true")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'))
+        exist = agreement_detail_page.is_toast_exist("您的银行卡号有误，请核对后重试")
+        self.assertTrue(exist)
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_148():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_148(self):
+        """和包支付--银行卡页面填写0-14位银行卡号"""
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.is_current_activity_match_this_page()
+        time.sleep(5)
+        elements = agreement_detail_page.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        self.assertTrue(len(elements) > 0)
+
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/id_iv_avatar'))
+        text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+        self.assertTrue(text == "添加银行卡")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+
+        time.sleep(5)
+        agreement_detail_page.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addbankcard_cardnoEdit'),
+                                         "6214180300001315198")
+
+        attribute = agreement_detail_page.get_element_attribute(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'), "enabled")
+        self.assertTrue(attribute == "true")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'))
+        time.sleep(5)
+        agreement_detail_page.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_inputKjCardInfo_mobile'), "")
+        # TODO 身份证号无法修改
+        attribute = agreement_detail_page.get_element_attribute(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_inputKjCardInfo_nextBtn'), "enabled")
+        self.assertTrue(attribute == "false")
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_149():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_149(self):
+        """和包支付--银行卡页面填写0-14位银行卡号"""
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.is_current_activity_match_this_page()
+        time.sleep(3)
+        elements = agreement_detail_page.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        time.sleep(3)
+        self.assertTrue(len(elements) > 0)
+
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/id_iv_avatar'))
+        text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+        self.assertTrue(text == "添加银行卡")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+
+        time.sleep(5)
+        agreement_detail_page.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addbankcard_cardnoEdit'),
+                                         "6214180300001315198")
+
+        attribute = agreement_detail_page.get_element_attribute(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'), "enabled")
+        self.assertTrue(attribute == "true")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'))
+        time.sleep(5)
+        agreement_detail_page.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_inputKjCardInfo_mobile'), "")
+        # TODO 身份证号无法修改
+        attribute = agreement_detail_page.get_element_attribute(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_inputKjCardInfo_nextBtn'), "enabled")
+        self.assertTrue(attribute == "false")
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_153():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_153(self):
+        """和包支付--银行卡页面填写0-14位银行卡号"""
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.is_current_activity_match_this_page()
+        time.sleep(3)
+        elements = agreement_detail_page.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        time.sleep(3)
+        self.assertTrue(len(elements) > 0)
+
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/id_iv_avatar'))
+        text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+        self.assertTrue(text == "添加银行卡")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+
+        time.sleep(5)
+        agreement_detail_page.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addbankcard_cardnoEdit'),
+                                         "6214180300001315198")
+
+        attribute = agreement_detail_page.get_element_attribute(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'), "enabled")
+        self.assertTrue(attribute == "true")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'))
+        time.sleep(5)
+        agreement_detail_page.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_inputKjCardInfo_mobile'), "")
+        # TODO 身份证号无法修改
+        attribute = agreement_detail_page.get_element_attribute(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_inputKjCardInfo_nextBtn'), "enabled")
+        self.assertTrue(attribute == "false")
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_155():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_155(self):
+        """和包支付--银行卡页面填写0-14位银行卡号"""
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.is_current_activity_match_this_page()
+        time.sleep(3)
+        elements = agreement_detail_page.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        time.sleep(3)
+        self.assertTrue(len(elements) > 0)
+
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/id_iv_avatar'))
+        text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+        self.assertTrue(text == "添加银行卡")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+
+        time.sleep(5)
+        agreement_detail_page.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addbankcard_cardnoEdit'),
+                                         "6214180300001315198")
+
+        attribute = agreement_detail_page.get_element_attribute(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'), "enabled")
+        self.assertTrue(attribute == "true")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'))
+        time.sleep(5)
+
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_inputKjCardInfo_agreement'))
+        time.sleep(3)
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_agreement_buttonConfirm'))
+        addbankcard_title = agreement_detail_page.get_text(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addbankcard_title'))
+
+        self.assertTrue(addbankcard_title == "填写银行预留信息")
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_156():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_156(self):
+        """和包支付--银行卡页面填写0-14位银行卡号"""
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.is_current_activity_match_this_page()
+        time.sleep(3)
+        elements = agreement_detail_page.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        time.sleep(3)
+        self.assertTrue(len(elements) > 0)
+
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/id_iv_avatar'))
+        time.sleep(5)
+        text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+        self.assertTrue(text == "添加银行卡")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+
+        time.sleep(5)
+        agreement_detail_page.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addbankcard_cardnoEdit'),
+                                         "6214180300001315198")
+        time.sleep(3)
+        attribute = agreement_detail_page.get_element_attribute(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'), "enabled")
+        self.assertTrue(attribute == "true")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'))
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_inputKjCardInfo_phone_btn'))
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_dialog_order_ok_button'))
+
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addbankcard_name_img'))
+        title_text = agreement_detail_page.get_text(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_dialog_explain_titleText'))
+        self.assertTrue(title_text == "持卡人说明")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_dialog_explain_dismissBtn'))
+
+        addbankcard_title = agreement_detail_page.get_text(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addbankcard_title'))
+
+        self.assertTrue(addbankcard_title == "填写银行预留信息")
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_162():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_162(self):
+        """和包支付--银行卡页面填写0-14位银行卡号"""
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.is_current_activity_match_this_page()
+        time.sleep(3)
+        elements = agreement_detail_page.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        time.sleep(3)
+        self.assertTrue(len(elements) > 0)
+
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/id_iv_avatar'))
+        text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+        self.assertTrue(text == "添加银行卡")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+
+        time.sleep(5)
+        agreement_detail_page.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addbankcard_cardnoEdit'),
+                                         "6214180300001315198")
+
+        attribute = agreement_detail_page.get_element_attribute(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'), "enabled")
+        self.assertTrue(attribute == "true")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'))
+        time.sleep(5)
+        agreement_detail_page.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_inputKjCardInfo_mobile'),
+                                         "01234567891")
+        # TODO  持卡人身份证号无法修改
+        attribute = agreement_detail_page.get_element_attribute(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_inputKjCardInfo_nextBtn'), "enabled")
+        self.assertTrue(attribute == "true")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_inputKjCardInfo_nextBtn'))
+        exist = agreement_detail_page.is_toast_exist("和飞信：请输入正确的11位手机号码")
+        self.assertTrue(exist)
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_172():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_172(self):
+        """和包支付--银行卡页面填写0-14位银行卡号"""
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.is_current_activity_match_this_page()
+        time.sleep(3)
+        elements = agreement_detail_page.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        time.sleep(3)
+        self.assertTrue(len(elements) > 0)
+
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/id_iv_avatar'))
+        text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+        self.assertTrue(text == "添加银行卡")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+
+        time.sleep(5)
+        agreement_detail_page.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addbankcard_cardnoEdit'),
+                                         "1214180300001315198")
+
+        attribute = agreement_detail_page.get_element_attribute(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'), "enabled")
+        self.assertTrue(attribute == "true")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'))
+        # FIXME 此处提示不是 请您输入有效的15-19位银行号  而是
+
+        message_content = agreement_detail_page.get_text(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_dialog_message_content'))
+        self.assertTrue(message_content == "您的银行卡号有误，请核对后重试")
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_174():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_174(self):
+        """和包支付--银行卡页面填写0-14位银行卡号"""
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.is_current_activity_match_this_page()
+        time.sleep(5)
+        elements = agreement_detail_page.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        self.assertTrue(len(elements) > 0)
+
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/id_iv_avatar'))
+        text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+        self.assertTrue(text == "添加银行卡")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+
+        time.sleep(5)
+        card_number = "6214 1803 0000 1315 1981"
+        error_card_number = card_number + "96"
+
+        agreement_detail_page.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addbankcard_cardnoEdit'),
+                                         error_card_number)
+        attribute = agreement_detail_page.get_element_attribute(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'), "enabled")
+        self.assertTrue(attribute == "true")
+        message_content = agreement_detail_page.get_text(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addbankcard_cardnoEdit'))
+        self.assertTrue(message_content == card_number)
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_175():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_175(self):
+        """和包支付--银行卡页面填写0-14位银行卡号"""
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.is_current_activity_match_this_page()
+        time.sleep(3)
+        elements = agreement_detail_page.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        time.sleep(3)
+        self.assertTrue(len(elements) > 0)
+
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/id_iv_avatar'))
+        text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+        self.assertTrue(text == "添加银行卡")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+
+        time.sleep(5)
+        card_number = "6214 1803 0000 1315 198"
+        agreement_detail_page.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addbankcard_cardnoEdit'),
+                                         card_number)
+        attribute = agreement_detail_page.get_element_attribute(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'), "enabled")
+        self.assertTrue(attribute == "true")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addKjbankcard_return'))
+        text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addcard_text'))
+        self.assertTrue(text == "添加银行卡")
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_283():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_283(self):
+        """和包支付--银行卡页面填写0-14位银行卡号"""
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/iv_action_bar_help'))
+
+        elements = agreement_detail_page.get_elements(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/pop_window_list_item_name'))
+        for e in elements:
+            if e.text == "帮助中心":
+                e.click()
+        actionbar_title = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/tv_actionbar_title'))
+        self.assertTrue(actionbar_title == "帮助中心")
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/iv_actionbar_left_back'))
+        time.sleep(3)
+        elements = agreement_detail_page.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        time.sleep(3)
+        self.assertTrue(len(elements) > 0)
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_291():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_291(self):
+        """和包支付--银行卡页面填写0-14位银行卡号"""
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.is_current_activity_match_this_page()
+        time.sleep(3)
+        elements = agreement_detail_page.get_elements((MobileBy.CLASS_NAME, 'android.widget.TextView'))
+        for e in elements:
+            if e.text == "和聚宝":
+                e.click()
+        text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/tv_actionbar_title'))
+        self.assertTrue(text == "和聚宝")
