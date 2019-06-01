@@ -784,3 +784,312 @@ class MsgAllPrior(TestCase):
         """联系-选择一个联系人判断是否存在新增桌面快捷方式"""
         cdp = ContactDetailsPage()
         self.assertTrue(cdp.page_contain_shortcut())
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0262():
+        Preconditions.select_mobile('Android-移动')
+        LoginPreconditions.make_already_in_message_page()
+        mess = MessagePage()
+        # 点击‘通讯录’
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        time.sleep(4)
+        contacts.wait_for_page_load()
+        names = contacts.get_contacts_name()
+        if '本机' in names:
+            names.remove('本机')
+        cdp = ContactDetailsPage()
+        # 不存在联系则创建联系人
+        if not names:
+            contacts.click_add()
+            ccp = CreateContactPage()
+            ccp.wait_for_page_load()
+            name = "atest_0262_" + str(random.randint(100, 999))
+            number = "147752" + str(time.time())[-5:]
+            ccp.create_contact(name, number)
+            ccp.click_allow_button()
+        else:
+            contacts.select_people_by_name(names[0])
+        cdp.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_contacts_chenjixiang_0262(self):
+        """联系-选择联系人-添加桌面快捷方式"""
+        cdp = ContactDetailsPage()
+        cdp.click_shortcut()
+        cdp.click_i_know_and_no_remind()
+        cdp.click_allow_button()
+        cdp.click_shortcut()
+        self.assertTrue(cdp.page_not_contain_i_know())
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0291():
+        Preconditions.select_mobile('Android-移动')
+        LoginPreconditions.make_already_in_message_page()
+        mess = MessagePage()
+        # 点击‘通讯录’
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        time.sleep(4)
+        contacts.wait_for_page_load()
+        names = contacts.get_contacts_name()
+        if '本机' in names:
+            names.remove('本机')
+        cdp = ContactDetailsPage()
+        # 不存在联系则创建联系人
+        if not names:
+            contacts.click_add()
+            ccp = CreateContactPage()
+            ccp.wait_for_page_load()
+            name = "atest_0291_" + str(random.randint(100, 999))
+            number = "147752" + str(time.time())[-5:]
+            ccp.create_contact(name, number)
+            ccp.click_allow_button()
+        else:
+            contacts.select_people_by_name(names[0])
+        cdp.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_contacts_chenjixiang_0291(self):
+        """联系-选择没有号码的联系人-判断是否存在添加桌面快捷方式"""
+        cdp = ContactDetailsPage()
+        cdp.click_shortcut()
+        cdp.click_i_know_and_no_remind()
+        cdp.click_allow_button()
+        cdp.click_shortcut()
+        self.assertTrue(cdp.is_toast_exist('已添加'))
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0352():
+        Preconditions.select_mobile('Android-移动')
+        LoginPreconditions.make_already_in_message_page()
+        mess = MessagePage()
+        # 点击‘通讯录’
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        contacts.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_contacts_chenjixiang_0352(self):
+        """联系-选择一个联系人-编辑-判断条件"""
+        contacts = ContactsPage()
+        cdp = ContactDetailsPage()
+        # 创建联系人号码部分为+的联系人
+        contacts.click_add()
+        ccp = CreateContactPage()
+        ccp.wait_for_page_load()
+        name = "atest_0352_" + str(random.randint(100, 999))
+        tail = str(time.time())[-5:]
+        number = "++++++" + tail
+        ccp.create_contact(name, number)
+        ccp.click_allow_button()
+        cdp.wait_for_page_load()
+        cdp.click_back()
+        contacts = ContactsPage()
+        time.sleep(1)
+        contacts.select_contacts_by_name(name)
+        cdp.wait_for_page_load()
+        cdp.click_edit_contact()
+        ecp = EditContactPage()
+        ecp.wait_for_page_load()
+        ecp.hide_keyboard_if_display()
+        self.assertTrue(ecp.check_element_word("输入号码", "+" + tail))
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0353():
+        Preconditions.select_mobile('Android-移动')
+        LoginPreconditions.make_already_in_message_page()
+        mess = MessagePage()
+        # 点击‘通讯录’
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        contacts.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_contacts_chenjixiang_0353(self):
+        """联系-选择一个联系人-编辑-判断条件"""
+        contacts = ContactsPage()
+        cdp = ContactDetailsPage()
+        # 创建联系人号码全为+的联系人
+        contacts.click_add()
+        ccp = CreateContactPage()
+        ccp.wait_for_page_load()
+        name = "atest_0353_" + str(random.randint(100, 999))
+        number = "+++++++++++"
+        ccp.create_contact(name, number)
+        cdp.wait_for_page_load()
+        cdp.click_back()
+        contacts = ContactsPage()
+        time.sleep(1)
+        contacts.select_contacts_by_name(name)
+        cdp.wait_for_page_load()
+        cdp.click_edit_contact()
+        ecp = EditContactPage()
+        ecp.wait_for_page_load()
+        ecp.hide_keyboard_if_display()
+        self.assertTrue(ecp.check_element_word("输入号码", "+"))
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0433():
+        Preconditions.select_mobile('Android-移动')
+        LoginPreconditions.make_already_in_message_page()
+        mess = MessagePage()
+        # 点击‘通讯录’
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        contacts.wait_for_page_load()
+        names = contacts.get_contacts_name()
+        if '本机' in names:
+            names.remove('本机')
+        # 不存在联系则创建联系人
+        if not names:
+            contacts.click_add()
+            ccp = CreateContactPage()
+            ccp.wait_for_page_load()
+            name = "atest_0433_" + str(random.randint(100, 999))
+            number = "147752" + str(time.time())[-5:]
+            ccp.create_contact(name, number)
+            cdp = ContactDetailsPage()
+            cdp.wait_for_page_load()
+            cdp.click_back()
+            contacts = ContactsPage()
+            contacts.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_contacts_chenjixiang_0433(self):
+        """联系-标签分组-选择分组-跳转联系人选择器-搜索号码-点击联系人"""
+        contacts = ContactsPage()
+        names = contacts.get_all_contacts_name()
+        self.assertTrue(len(names) > 1)
+        contacts.click_label_grouping()
+        lgp = LabelGroupingPage()
+        lgp.wait_for_page_load()
+        # 无分组则创建分组
+        group_names = lgp.get_label_grouping_names()
+        if len(group_names) == 0:
+            group_name = "gtest_0433_" + str(random.randint(100, 999))
+            lgp.click_new_create_group()
+            time.sleep(1)
+            lgp.input_label_grouping_name(group_name)
+            lgp.click_sure()
+            scp = SelectContactsPage()
+            scp.wait_for_page_load()
+            scp.click_back()
+            lgp = LabelGroupingPage()
+            lgp.wait_for_page_load()
+            lgp.new_group_click_back()
+        else:
+            group_name = group_names[0]
+        # 点击分组
+        lgp.click_label_group(group_name)
+        lgdp = LableGroupDetailPage()
+        lgdp.wait_for_page_load()
+        time.sleep(1)
+        lgdp.click_i_know()
+        # 点击添加成员
+        lgdp.click_add_members()
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 全量查询
+        scp.click_group_search()
+        scp.group_search(names[0])
+        if scp.is_keyboard_shown():
+            scp.hide_keyboard()
+        time.sleep(1)
+        # 点击查询结果
+        scp.click_search_result_by_name(names[0])
+        self.assertTrue(scp.check_if_element_exist("选中联系人头像"))
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0733():
+        Preconditions.select_mobile('Android-移动')
+        LoginPreconditions.make_already_in_message_page()
+        mess = MessagePage()
+        # 点击‘通讯录’
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        contacts.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_contacts_chenjixiang_0733(self):
+        """联系-搜索-查看提示词"""
+        contacts = ContactsPage()
+        contacts.click_search_box()
+        clsp = ContactListSearchPage()
+        clsp.wait_for_page_load()
+        clsp.page_should_not_contain_text("本地通讯录")
+        clsp.page_should_not_contain_text("和通讯录")
+        self.assertFalse(clsp.is_exist_contacts())
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0734():
+        Preconditions.select_mobile('Android-移动')
+        LoginPreconditions.make_already_in_message_page()
+        mess = MessagePage()
+        # 点击‘通讯录’
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        contacts.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_contacts_chenjixiang_0734(self):
+        """联系-搜索-查看提示词"""
+        contacts = ContactsPage()
+        contacts.click_search_box()
+        clsp = ContactListSearchPage()
+        clsp.wait_for_page_load()
+        clsp.page_should_contain_text("输入关键词快速搜索")
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0735():
+        Preconditions.select_mobile('Android-移动')
+        LoginPreconditions.make_already_in_message_page()
+        mess = MessagePage()
+        # 点击‘通讯录’
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        contacts.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_contacts_chenjixiang_0735(self):
+        """联系-搜索-点击返回"""
+        contacts = ContactsPage()
+        contacts.click_search_box()
+        clsp = ContactListSearchPage()
+        clsp.wait_for_page_load()
+        clsp.click_back()
+        contacts = ContactsPage()
+        contacts.wait_for_page_load()
+        self.assertTrue(contacts.is_on_this_page())
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0737():
+        Preconditions.select_mobile('Android-移动')
+        LoginPreconditions.make_already_in_message_page()
+        mess = MessagePage()
+        # 点击‘通讯录’
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        contacts.wait_for_page_load()
+        for i in range(3):
+            contacts.click_add()
+            ccp = CreateContactPage()
+            ccp.wait_for_page_load()
+            name = "atest_0737_" + str(random.randint(100, 999))
+            number = "147652" + str(time.time())[-5:]
+            ccp.create_contact(name, number)
+            ccp.click_allow_button()
+            cdp = ContactDetailsPage()
+            cdp.wait_for_page_load()
+            cdp.click_back()
+            contacts = ContactsPage()
+            contacts.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_contacts_chenjixiang_0737(self):
+        """联系-搜索-查看是否有显示更多标识"""
+        contacts = ContactsPage()
+        contacts.click_search_box()
+        clsp = ContactListSearchPage()
+        clsp.input_search_keyword("atest_0737")
+        self.assertFalse(clsp.is_show_more_display())
