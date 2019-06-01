@@ -2234,4 +2234,361 @@ class Contacts_demo(TestCase):
         time.sleep(10)
         self.assertEqual(mess.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/group_name')), '测试233AA')
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0155():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.click_sim_contact()
+        contactspage.create_contacts_if_not_exits('测试短信1', '13800138111')
+        contactspage.create_contacts_if_not_exits('测试短信2', '13800138112')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0155(self):
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词测试群组1
+        SearchPage().input_search_keyword("测试群组1")
+        # 如果能搜到对应群组，则点击进入；否则创建群组
+        if mess._is_element_present(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="测试群组1"]')):
+            mess.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="测试群组1"]'))
+        else:
+            ContactListSearchPage().click_back()
+            contactspage = ContactsPage()
+            # 打开联系人页
+            contactspage.open_contacts_page()
+            contactspage.wait_for_contact_load()
+            contactspage.click_sim_contact()
+            contactspage.open_group_chat_list()
+            # 点击创建群组
+            GroupListPage().click_create_group()
+            mess.click_element((MobileBy.XPATH, '//*[@text ="选择手机联系人"]'))
+            from pages.components import ContactsSelector
+            ContactsSelector().search('测试短信')
+            mess.click_element((MobileBy.XPATH, '//*[@text ="测试短信1"]'))
+            ContactsSelector().search('测试短信')
+            mess.click_element((MobileBy.XPATH, '//*[@text ="测试短信2"]'))
+            mess.click_element((MobileBy.XPATH, '//*[@text ="确定(2/500)"]'))
+            BuildGroupChatPage().create_group_chat('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        time.sleep(1)
+        groupset.click_modify_group_name()
+        time.sleep(2)
+        groupset.clear_group_name()
+        groupset.input_new_group_name("!@#$%")
+        groupset.save_group_name()
+        time.sleep(10)
+        self.assertEqual(mess.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/group_name')), '!@#$%')
+        groupset.click_modify_group_name()
+        time.sleep(2)
+        groupset.clear_group_name()
+        self.assertFalse(groupset.is_enabled_of_save_group_name_button())
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0156():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.click_sim_contact()
+        contactspage.create_contacts_if_not_exits('测试短信1', '13800138111')
+        contactspage.create_contacts_if_not_exits('测试短信2', '13800138112')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0156(self):
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词测试群组1
+        SearchPage().input_search_keyword("测试群组1")
+        # 如果能搜到对应群组，则点击进入；否则创建群组
+        if mess._is_element_present(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="测试群组1"]')):
+            mess.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="测试群组1"]'))
+        else:
+            ContactListSearchPage().click_back()
+            contactspage = ContactsPage()
+            # 打开联系人页
+            contactspage.open_contacts_page()
+            contactspage.wait_for_contact_load()
+            contactspage.click_sim_contact()
+            contactspage.open_group_chat_list()
+            # 点击创建群组
+            GroupListPage().click_create_group()
+            mess.click_element((MobileBy.XPATH, '//*[@text ="选择手机联系人"]'))
+            from pages.components import ContactsSelector
+            ContactsSelector().search('测试短信')
+            mess.click_element((MobileBy.XPATH, '//*[@text ="测试短信1"]'))
+            ContactsSelector().search('测试短信')
+            mess.click_element((MobileBy.XPATH, '//*[@text ="测试短信2"]'))
+            mess.click_element((MobileBy.XPATH, '//*[@text ="确定(2/500)"]'))
+            BuildGroupChatPage().create_group_chat('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        time.sleep(1)
+        groupset.click_modify_group_name()
+        groupset.wait_for_modify_groupname_load()
+        groupset.click_edit_group_name_back()
+        groupset.wait_for_page_load()
+        groupset.click_modify_group_name()
+        groupset.save_group_name()
+        groupset.wait_for_page_load()
+        self.assertEqual(mess.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/group_name')), '测试群组1')
+        groupset.click_modify_group_name()
+        groupset.wait_for_modify_groupname_load()
+        groupset.click_iv_delete_button()
+        self.assertEqual(groupset.get_edit_query_text(), '请输入群聊名称')
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0157():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.click_sim_contact()
+        contactspage.create_contacts_if_not_exits('测试短信1', '13800138111')
+        contactspage.create_contacts_if_not_exits('测试短信2', '13800138112')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0157(self):
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词测试群组1
+        SearchPage().input_search_keyword("测试群组1")
+        # 如果能搜到对应群组，则点击进入；否则创建群组
+        if mess._is_element_present(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="测试群组1"]')):
+            mess.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="测试群组1"]'))
+        else:
+            ContactListSearchPage().click_back()
+            contactspage = ContactsPage()
+            # 打开联系人页
+            contactspage.open_contacts_page()
+            contactspage.wait_for_contact_load()
+            contactspage.click_sim_contact()
+            contactspage.open_group_chat_list()
+            # 点击创建群组
+            GroupListPage().click_create_group()
+            mess.click_element((MobileBy.XPATH, '//*[@text ="选择手机联系人"]'))
+            from pages.components import ContactsSelector
+            ContactsSelector().search('测试短信')
+            mess.click_element((MobileBy.XPATH, '//*[@text ="测试短信1"]'))
+            ContactsSelector().search('测试短信')
+            mess.click_element((MobileBy.XPATH, '//*[@text ="测试短信2"]'))
+            mess.click_element((MobileBy.XPATH, '//*[@text ="确定(2/500)"]'))
+            BuildGroupChatPage().create_group_chat('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        time.sleep(1)
+        groupset.click_modify_my_group_name()
+        groupset.wait_for_modify_mygroupname_load()
+        groupset.clear_group_name()
+        groupset.input_new_group_name("和")
+        groupset.save_group_card_name()
+        groupset.wait_for_page_load()
+        self.assertEqual(mess.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/my_group_name')), '和')
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0158():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.click_sim_contact()
+        contactspage.create_contacts_if_not_exits('测试短信1', '13800138111')
+        contactspage.create_contacts_if_not_exits('测试短信2', '13800138112')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0158(self):
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词测试群组1
+        SearchPage().input_search_keyword("测试群组1")
+        # 如果能搜到对应群组，则点击进入；否则创建群组
+        if mess._is_element_present(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="测试群组1"]')):
+            mess.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="测试群组1"]'))
+        else:
+            ContactListSearchPage().click_back()
+            contactspage = ContactsPage()
+            # 打开联系人页
+            contactspage.open_contacts_page()
+            contactspage.wait_for_contact_load()
+            contactspage.click_sim_contact()
+            contactspage.open_group_chat_list()
+            # 点击创建群组
+            GroupListPage().click_create_group()
+            mess.click_element((MobileBy.XPATH, '//*[@text ="选择手机联系人"]'))
+            from pages.components import ContactsSelector
+            ContactsSelector().search('测试短信')
+            mess.click_element((MobileBy.XPATH, '//*[@text ="测试短信1"]'))
+            ContactsSelector().search('测试短信')
+            mess.click_element((MobileBy.XPATH, '//*[@text ="测试短信2"]'))
+            mess.click_element((MobileBy.XPATH, '//*[@text ="确定(2/500)"]'))
+            BuildGroupChatPage().create_group_chat('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        time.sleep(1)
+        groupset.click_modify_my_group_name()
+        groupset.wait_for_modify_mygroupname_load()
+        groupset.clear_group_name()
+        groupset.input_new_group_name("和飞信测试")
+        groupset.save_group_card_name()
+        groupset.wait_for_page_load()
+        self.assertEqual(mess.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/my_group_name')), '和飞信测试')
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0159():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.click_sim_contact()
+        contactspage.create_contacts_if_not_exits('测试短信1', '13800138111')
+        contactspage.create_contacts_if_not_exits('测试短信2', '13800138112')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0159(self):
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词测试群组1
+        SearchPage().input_search_keyword("测试群组1")
+        # 如果能搜到对应群组，则点击进入；否则创建群组
+        if mess._is_element_present(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="测试群组1"]')):
+            mess.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="测试群组1"]'))
+        else:
+            ContactListSearchPage().click_back()
+            contactspage = ContactsPage()
+            # 打开联系人页
+            contactspage.open_contacts_page()
+            contactspage.wait_for_contact_load()
+            contactspage.click_sim_contact()
+            contactspage.open_group_chat_list()
+            # 点击创建群组
+            GroupListPage().click_create_group()
+            mess.click_element((MobileBy.XPATH, '//*[@text ="选择手机联系人"]'))
+            from pages.components import ContactsSelector
+            ContactsSelector().search('测试短信')
+            mess.click_element((MobileBy.XPATH, '//*[@text ="测试短信1"]'))
+            ContactsSelector().search('测试短信')
+            mess.click_element((MobileBy.XPATH, '//*[@text ="测试短信2"]'))
+            mess.click_element((MobileBy.XPATH, '//*[@text ="确定(2/500)"]'))
+            BuildGroupChatPage().create_group_chat('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        time.sleep(1)
+        groupset.click_modify_my_group_name()
+        groupset.wait_for_modify_mygroupname_load()
+        groupset.clear_group_name()
+        groupset.input_new_group_name("和飞信测试和飞信测试")
+        groupset.save_group_card_name()
+        groupset.wait_for_page_load()
+        self.assertEqual(mess.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/my_group_name')), '和飞信测试和飞信测试')
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0160():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.click_sim_contact()
+        contactspage.create_contacts_if_not_exits('测试短信1', '13800138111')
+        contactspage.create_contacts_if_not_exits('测试短信2', '13800138112')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0160(self):
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词测试群组1
+        SearchPage().input_search_keyword("测试群组1")
+        # 如果能搜到对应群组，则点击进入；否则创建群组
+        if mess._is_element_present(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="测试群组1"]')):
+            mess.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="测试群组1"]'))
+        else:
+            ContactListSearchPage().click_back()
+            contactspage = ContactsPage()
+            # 打开联系人页
+            contactspage.open_contacts_page()
+            contactspage.wait_for_contact_load()
+            contactspage.click_sim_contact()
+            contactspage.open_group_chat_list()
+            # 点击创建群组
+            GroupListPage().click_create_group()
+            mess.click_element((MobileBy.XPATH, '//*[@text ="选择手机联系人"]'))
+            from pages.components import ContactsSelector
+            ContactsSelector().search('测试短信')
+            mess.click_element((MobileBy.XPATH, '//*[@text ="测试短信1"]'))
+            ContactsSelector().search('测试短信')
+            mess.click_element((MobileBy.XPATH, '//*[@text ="测试短信2"]'))
+            mess.click_element((MobileBy.XPATH, '//*[@text ="确定(2/500)"]'))
+            BuildGroupChatPage().create_group_chat('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        time.sleep(1)
+        groupset.click_modify_my_group_name()
+        groupset.wait_for_modify_mygroupname_load()
+        groupset.clear_group_name()
+        groupset.input_new_group_name("和飞信测试和飞信测试的")
+        groupset.save_group_card_name()
+        groupset.wait_for_page_load()
+        self.assertEqual(mess.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/my_group_name')), '和飞信测试和飞信测试')
+
 
