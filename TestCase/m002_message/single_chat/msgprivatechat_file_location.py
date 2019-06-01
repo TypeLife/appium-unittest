@@ -3128,3 +3128,75 @@ class MsgPrivateChatAllTest(TestCase):
         csfp.click_back()
         # 2.等待单聊会话页面加载
         scp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD', "lxd_debug")
+    def test_msg_weifenglian_1V1_0096(self):
+        """将自己发送的文件转发到在搜索框输入数字搜索到的手机联系人"""
+
+        scp = SingleChatPage()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1.长按自己发送的文件并转发
+        scp.forward_file(file_type)
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 点击“选择一个群”菜单
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 3.等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        search_name = "a尼6"
+        # 输入查找信息
+        sog.input_search_keyword(search_name)
+        time.sleep(2)
+        # 4.检查搜索结果是否完全匹配关键字
+        self.assertEquals(sog.is_search_group_name_full_match(search_name), True)
+        # 5.点击搜索结果
+        sog.selecting_one_group_by_name(search_name)
+        # 确定转发
+        sog.click_sure_forward()
+        # 6.是否提示已转发,等待单聊页面加载
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD', "lxd_debug")
+    def test_msg_weifenglian_1V1_0097(self):
+        """将自己发送的文件转发到在搜索框输入标点符号搜索到的手机联系人"""
+
+        scp = SingleChatPage()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1.长按自己发送的文件并转发
+        scp.forward_file(file_type)
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 点击“选择一个群”菜单
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 3.等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        search_name = "   "
+        # 输入查找信息
+        sog.input_search_keyword(search_name)
+        time.sleep(2)
+        # 4.是否提示无搜索结果
+        self.assertEquals(sog.is_toast_exist("无搜索结果"), True)
+        # 返回单聊页面
+        sog.click_back_icon()
+        sog.wait_for_page_load()
+        sog.click_back()
+        scg.wait_for_page_load()
+        scg.click_back()
+        scp.wait_for_page_load()

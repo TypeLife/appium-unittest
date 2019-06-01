@@ -54,6 +54,7 @@ class MeCollectionPage(BasePage):
                   '收藏时间': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_time'),
                   '收藏内容': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_tv'),
                   '文件大小': (MobileBy.ID, 'com.chinasofti.rcs:id/file_size'),
+                  '文件列表': (MobileBy.ID, 'com.chinasofti.rcs:id/swipe_content'),
                   }
 
     @TestLogger.log()
@@ -350,3 +351,22 @@ class MeCollectionPage(BasePage):
         """是否存在指定名片"""
         locator = (MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/favorite_tv_content" and @text="[名片]%s的个人名片"]' % name)
         return self._is_element_present(locator)
+
+    @TestLogger.log()
+    def is_exists_text_message_by_name(self, name):
+        """是否存在指定文本消息"""
+        locator = (MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/favorite_tv" and @text="%s"]' % name)
+        return self._is_element_present(locator)
+
+    @TestLogger.log()
+    def clear_collection_list(self):
+        """清空收藏列表"""
+        current = 0
+        while self._is_element_present(self.__class__.__locators["文件列表"]):
+            current += 1
+            if current > 20:
+                return
+            self.swipe_by_direction(self.__class__.__locators["文件列表"], "left", 700)
+            self.click_delete_collection()
+            self.click_sure_forward()
+            self.wait_for_page_load()

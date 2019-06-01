@@ -74,6 +74,7 @@ class GroupChatPage(BaseChatPage):
                   '预览文件_更多': (MobileBy.ID, 'com.chinasofti.rcs:id/menu'),
                   '定位_地图': ('id', 'com.chinasofti.rcs:id/location_info_view'),
                   '始终允许': (MobileBy.XPATH, "//*[contains(@text, '始终允许')]"),
+                  '文本消息': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'),
                   }
 
     def is_exist_msg_videos(self):
@@ -559,3 +560,15 @@ class GroupChatPage(BaseChatPage):
     def click_element_(self, text):
         """点击元素"""
         self.click_element(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def click_message_text_by_number(self, number):
+        """点击消息文本"""
+        els = self.get_elements(self.__class__.__locators["文本消息"])
+        els[number].click()
+
+    @TestLogger.log()
+    def press_message_text_by_number(self, number):
+        """按压消息文本"""
+        els = self.get_elements(self.__class__.__locators["文本消息"])
+        self.press(els[number])
