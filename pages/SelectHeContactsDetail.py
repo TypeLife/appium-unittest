@@ -62,6 +62,7 @@ class SelectHeContactsDetailPage(BasePage):
                   '取消': (MobileBy.XPATH, "//*[contains(@text, '取消')]"),
                   '确定': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
                   '企业层级': (MobileBy.ID, "android:id/title"),
+                  '分享名片': (MobileBy.ID, 'com.chinasofti.rcs:id/send_tv'),
                   }
 
     @TestLogger.log()
@@ -73,6 +74,12 @@ class SelectHeContactsDetailPage(BasePage):
     def click_cancel_forward(self):
         """点击取消转发"""
         self.click_element(self.__class__.__locators['取消'])
+
+    @TestLogger.log("点击分享名片")
+    def click_share_business_card(self):
+        """点击分享名片"""
+        time.sleep(2)
+        self.click_element(self.__locators['分享名片'])
 
     @TestLogger.log()
     def select_one_linkman(self, name):

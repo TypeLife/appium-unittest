@@ -52,7 +52,8 @@ class SelectLocalContactsPage(BasePage):
                   '左侧字母索引': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_index"]'),
                   # 删除成员
                   '确定删除': (MobileBy.XPATH, '//*[@text="确定"]'),
-                  # 分享群二维码时选择联系人后的弹窗页面
+                  # 分享群二维码 名片时选择联系人后的弹窗页面
+                  '分享名片': (MobileBy.ID, 'com.chinasofti.rcs:id/send_tv'),
                   '确定分享': (MobileBy.XPATH, '//*[@text="确定"]'),
                   '取消分享': (MobileBy.XPATH, '//*[@text="取消"]'),
                   '发送给:xxx': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_message'),
@@ -94,6 +95,12 @@ class SelectLocalContactsPage(BasePage):
             ('xpath','//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView[1]'))
         elements = self.get_elements(self.__class__.__locators["联系人名"])
         elements[0].click()
+
+    @TestLogger.log("点击分享名片")
+    def click_share_business_card(self):
+        """点击分享名片"""
+        time.sleep(2)
+        self.click_element(self.__locators['分享名片'])
 
     @TestLogger.log()
     def click_sure_share(self):

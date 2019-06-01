@@ -198,7 +198,7 @@ class ContactsPage(FooterPage):
     @TestLogger.log("获取电话号码")
     def get_phone_number(self):
         """获取电话号码"""
-        els = self.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/contact_phone'))
+        els = self.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/tv_number'))
         phones = []
         if els:
             for el in els:
@@ -459,6 +459,24 @@ class ContactsPage(FooterPage):
             ('xpath','//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView[1]'))
         elements = self.get_elements(self.__class__.__locators["群聊名"])
         elements[0].click()
+
+    def get_letters_index(self):
+        """获取所有索引字母"""
+        container_el = self.get_element(self.__class__.__locators['索引字母容器'])
+        letter_els = container_el.find_elements(MobileBy.XPATH, "//android.view.View")
+        if not letter_els:
+            raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
+        letters = []
+        for el in letter_els:
+            letters.append(el.text)
+        return letters
+
+    @TestLogger.log()
+    def click_letter_index(self, letter):
+        """点击字母索引"""
+        container_el = self.get_element(self.__class__.__locators['索引字母容器'])
+        container_el.find_element(MobileBy.XPATH, "//android.view.View[@text='%s']" % letter).click()
+
 
     @TestLogger.log('点击新建SIM联系人界面-确定')
     def click_sure_SIM(self):
