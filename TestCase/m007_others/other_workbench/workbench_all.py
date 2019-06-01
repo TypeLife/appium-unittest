@@ -101,78 +101,6 @@ class Preconditions(LoginPreconditions):
         return group_name
 
     @staticmethod
-    def make_already_have_my_group(reset=False):
-        """确保有群，没有群则创建群名为mygroup+电话号码后4位的群"""
-        # 消息页面
-        Preconditions.make_already_in_message_page(reset)
-        mess = MessagePage()
-        mess.wait_for_page_load()
-        # 点击 +
-        mess.click_add_icon()
-        # 点击 发起群聊
-        mess.click_group_chat()
-        # 选择联系人界面，选择一个群
-        sc = SelectContactsPage()
-        times = 15
-        n = 0
-        # 重置应用时需要再次点击才会出现选择一个群
-        while n < times:
-            flag = sc.wait_for_page_load()
-            if not flag:
-                sc.click_back()
-                time.sleep(2)
-                mess.click_add_icon()
-                mess.click_group_chat()
-                sc = SelectContactsPage()
-            else:
-                break
-            n = n + 1
-        time.sleep(3)
-        sc.click_select_one_group()
-        # 群名
-        group_name = Preconditions.get_group_chat_name()
-        # 获取已有群名
-        sog = SelectOneGroupPage()
-        sog.wait_for_page_load()
-        group_names = sog.get_group_name()
-        # 有群返回，无群创建
-        if group_name in group_names:
-            return
-        sog.click_back()
-        # 点击 +
-        mess.click_add_icon()
-        # 点击 发起群聊
-        mess.click_group_chat()
-        # 从本地联系人中选择成员创建群
-        sc.click_local_contacts()
-        time.sleep(2)
-        slc = SelectLocalContactsPage()
-        a = 0
-        names = {}
-        while a < 3:
-            names = slc.get_contacts_name()
-            num = len(names)
-            if not names:
-                raise AssertionError("No contacts, please add contacts in address book.")
-            if num == 1:
-                sog.page_up()
-                a += 1
-                if a == 3:
-                    raise AssertionError("联系人只有一个，请再添加多个不同名字联系人组成群聊")
-            else:
-                break
-        # 选择成员
-        for name in names:
-            slc.select_one_member_by_name(name)
-        slc.click_sure()
-        # 创建群
-        cgnp = CreateGroupNamePage()
-        cgnp.input_group_name(group_name)
-        cgnp.click_sure()
-        # 等待群聊页面加载
-        GroupChatPage().wait_for_page_load()
-
-    @staticmethod
     def enter_group_chat_page(reset=False):
         """进入群聊聊天会话页面"""
         # 确保已有群
@@ -191,12 +119,6 @@ class Preconditions(LoginPreconditions):
         else:
             raise AssertionError("Failure to enter group chat session page.")
 
-    @staticmethod
-    def get_group_chat_name():
-        """获取群名"""
-        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
-        group_name = "aatest" + phone_number[-4:]
-        return group_name
 
 class MsgAllPrior(TestCase):
 
@@ -768,6 +690,309 @@ class MsgAllPrior(TestCase):
             select_one_group_page.click_element(
                 (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="删除"]'))
 
+    @staticmethod
+    def setUp_test_msg_weifenglian_1V1_0106():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        # 从消息进入创建团队页面
+        mess.open_workbench_page()
+        workbench = WorkbenchPage()
+        workbench.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_actionbar'))
+        elements = workbench.get_elements((MobileBy.XPATH,
+                                           '//*[@resource-id="com.chinasofti.rcs:id/tv_listitem" and @text="%s"]' % Preconditions.get_team_name()))
+
+        if len(elements) == 0:
+            Preconditions.enter_create_team_page()
+            Preconditions.create_team()
+        else:
+            elements[0].click()
+        Preconditions.make_already_have_my_group()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_1V1_0106(self):
+        """会话窗口中点击删除文本消息"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+                                                     os.path.join(PROJECT_PATH, path))
+        select_one_group_page = SelectOneGroupPage()
+        group_chat_name = Preconditions.get_group_chat_name()
+        select_one_group_page.select_one_group_by_name(group_chat_name)
+        select_one_group_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        select_one_group_page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="文件"]'))
+        select_one_group_page.click_element(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ll_mobile_memory'))
+        elements = select_one_group_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        while len(elements) == 0:
+            select_one_group_page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/lv_choose'), 'up')
+            time.sleep(1)
+            elements = select_one_group_page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        select_one_group_page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        select_one_group_page.click_element((MobileBy.XPATH,
+                                             '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="2018-11-09 11-06-18-722582.log"]'))
+        select_one_group_page.click_element((MobileBy.XPATH,
+                                             '//*[@resource-id="com.chinasofti.rcs:id/button_send" and @text="发送"]'))
+        time.sleep(1)
+        file_elements = select_one_group_page.get_elements(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/textview_file_name" and @text="2018-11-09 11-06-18-722582.log"]'))
+        time.sleep(1)
+        select_one_group_page.press(file_elements[0])
+        select_one_group_page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="转发"]'))
+        select_one_group_page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/text_hint" and @text="选择团队联系人"]'))
+        # 点击团队名称
+        team_name = Preconditions.get_team_name()
+        select_one_group_page.click_element(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/tv_title_department" and @text="%s"]' % team_name))
+        select_one_group_page.click_element(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/tv_name_personal_contactlist" and @text="admin"]'))
+        exist = select_one_group_page.is_toast_exist("该联系人不可选择")
+        self.assertTrue(exist)
+        select_one_group_page.click_element(
+            (MobileBy.ID,
+             'com.chinasofti.rcs:id/btn_back'))
+        select_one_group_page.click_element(
+            (MobileBy.ID,
+             'com.chinasofti.rcs:id/btn_back'))
+        select_one_group_page.click_element(
+            (MobileBy.ID,
+             'com.chinasofti.rcs:id/back'))
+        # 删除所有转发信息
+        wait_del_file_elements = select_one_group_page.get_elements(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/textview_file_name" and @text="2018-11-09 11-06-18-722582.log"]'))
+        for file_element in wait_del_file_elements:
+            select_one_group_page.press(file_element)
+            select_one_group_page.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="删除"]'))
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_1V1_0125():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        # 从消息进入创建团队页面
+        mess.open_workbench_page()
+        workbench = WorkbenchPage()
+        workbench.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_actionbar'))
+        elements = workbench.get_elements((MobileBy.XPATH,
+                                           '//*[@resource-id="com.chinasofti.rcs:id/tv_listitem" and @text="%s"]' % Preconditions.get_team_name()))
+
+        if len(elements) == 0:
+            Preconditions.enter_create_team_page()
+            Preconditions.create_team()
+        else:
+            elements[0].click()
+        Preconditions.make_already_have_my_group()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_1V1_0125(self):
+        """会话窗口中点击删除文本消息"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+                                                     os.path.join(PROJECT_PATH, path))
+        select_one_group_page = SelectOneGroupPage()
+        group_chat_name = Preconditions.get_group_chat_name()
+        select_one_group_page.select_one_group_by_name(group_chat_name)
+        select_one_group_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        select_one_group_page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="文件"]'))
+        select_one_group_page.click_element(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ll_mobile_memory'))
+        elements = select_one_group_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        while len(elements) == 0:
+            select_one_group_page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/lv_choose'), 'up')
+            time.sleep(1)
+            elements = select_one_group_page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        select_one_group_page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        select_one_group_page.click_element((MobileBy.XPATH,
+                                             '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="2018-11-09 11-06-18-722582.log"]'))
+        select_one_group_page.click_element((MobileBy.XPATH,
+                                             '//*[@resource-id="com.chinasofti.rcs:id/button_send" and @text="发送"]'))
+        time.sleep(1)
+        file_elements = select_one_group_page.get_elements(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/textview_file_name" and @text="2018-11-09 11-06-18-722582.log"]'))
+        time.sleep(1)
+        select_one_group_page.press(file_elements[0])
+        select_one_group_page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="转发"]'))
+        select_one_group_page.input_text(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_search_bar" and @text="搜索或输入手机号"]'),
+            '我的电脑')
+        # 点击我的电脑
+        select_one_group_page.click_element(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="我的电脑"]'))
+        select_one_group_page.click_element(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/btn_ok" and @text="确定"]'))
+        exist = select_one_group_page.is_toast_exist("已转发")
+        self.assertTrue(exist)
+        # 删除所有转发信息
+        wait_del_file_elements = select_one_group_page.get_elements(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/textview_file_name" and @text="2018-11-09 11-06-18-722582.log"]'))
+        for file_element in wait_del_file_elements:
+            select_one_group_page.press(file_element)
+            select_one_group_page.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="删除"]'))
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_1V1_0126():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        # 从消息进入创建团队页面
+        mess.open_workbench_page()
+        workbench = WorkbenchPage()
+        workbench.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_actionbar'))
+        elements = workbench.get_elements((MobileBy.XPATH,
+                                           '//*[@resource-id="com.chinasofti.rcs:id/tv_listitem" and @text="%s"]' % Preconditions.get_team_name()))
+
+        if len(elements) == 0:
+            Preconditions.enter_create_team_page()
+            Preconditions.create_team()
+        else:
+            elements[0].click()
+        Preconditions.make_already_have_my_group()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_1V1_0126(self):
+        """会话窗口中点击删除文本消息"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+                                                     os.path.join(PROJECT_PATH, path))
+        select_one_group_page = SelectOneGroupPage()
+        group_chat_name = Preconditions.get_group_chat_name()
+        select_one_group_page.select_one_group_by_name(group_chat_name)
+        select_one_group_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        select_one_group_page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="文件"]'))
+        select_one_group_page.click_element(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ll_mobile_memory'))
+        elements = select_one_group_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        while len(elements) == 0:
+            select_one_group_page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/lv_choose'), 'up')
+            time.sleep(1)
+            elements = select_one_group_page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        select_one_group_page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        select_one_group_page.click_element((MobileBy.XPATH,
+                                             '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="2018-11-09 11-06-18-722582.log"]'))
+        select_one_group_page.click_element((MobileBy.XPATH,
+                                             '//*[@resource-id="com.chinasofti.rcs:id/button_send" and @text="发送"]'))
+        time.sleep(1)
+        file_elements = select_one_group_page.get_elements(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/textview_file_name" and @text="2018-11-09 11-06-18-722582.log"]'))
+        time.sleep(1)
+        select_one_group_page.press(file_elements[0])
+        select_one_group_page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="转发"]'))
+        # 点击我的电脑
+        select_one_group_page.click_element(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/item_rl" and @index="1"]'))
+        select_one_group_page.click_element(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/btn_ok" and @text="确定"]'))
+        exist = select_one_group_page.is_toast_exist("已转发")
+        self.assertTrue(exist)
+        # 删除所有转发信息
+        wait_del_file_elements = select_one_group_page.get_elements(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/textview_file_name" and @text="2018-11-09 11-06-18-722582.log"]'))
+        for file_element in wait_del_file_elements:
+            select_one_group_page.press(file_element)
+            select_one_group_page.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="删除"]'))
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_1V1_0129():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        # 从消息进入创建团队页面
+        mess.open_workbench_page()
+        workbench = WorkbenchPage()
+        workbench.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_actionbar'))
+        elements = workbench.get_elements((MobileBy.XPATH,
+                                           '//*[@resource-id="com.chinasofti.rcs:id/tv_listitem" and @text="%s"]' % Preconditions.get_team_name()))
+
+        if len(elements) == 0:
+            Preconditions.enter_create_team_page()
+            Preconditions.create_team()
+        else:
+            elements[0].click()
+        Preconditions.make_already_have_my_group()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_1V1_0129(self):
+        """会话窗口中点击删除文本消息"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+                                                     os.path.join(PROJECT_PATH, path))
+        select_one_group_page = SelectOneGroupPage()
+        group_chat_name = Preconditions.get_group_chat_name()
+        select_one_group_page.select_one_group_by_name(group_chat_name)
+        select_one_group_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        select_one_group_page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="文件"]'))
+        select_one_group_page.click_element(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ll_mobile_memory'))
+        elements = select_one_group_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        while len(elements) == 0:
+            select_one_group_page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/lv_choose'), 'up')
+            time.sleep(1)
+            elements = select_one_group_page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        select_one_group_page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        select_one_group_page.click_element((MobileBy.XPATH,
+                                             '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="2018-11-09 11-06-18-722582.log"]'))
+        select_one_group_page.click_element((MobileBy.XPATH,
+                                             '//*[@resource-id="com.chinasofti.rcs:id/button_send" and @text="发送"]'))
+        time.sleep(1)
+        file_elements = select_one_group_page.get_elements(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/textview_file_name" and @text="2018-11-09 11-06-18-722582.log"]'))
+        time.sleep(1)
+        select_one_group_page.press(file_elements[0])
+        select_one_group_page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="转发"]'))
+        # 点击我的电脑
+        select_one_group_page.click_element(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/item_rl" and @index="1"]'))
+        select_one_group_page.click_element(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/btn_ok" and @text="确定"]'))
+        exist = select_one_group_page.is_toast_exist("已转发")
+        self.assertTrue(exist)
+        # 删除所有转发信息
+        wait_del_file_elements = select_one_group_page.get_elements(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/textview_file_name" and @text="2018-11-09 11-06-18-722582.log"]'))
+        for file_element in wait_del_file_elements:
+            select_one_group_page.press(file_element)
+            select_one_group_page.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="删除"]'))
+
 
 class Contacts_demo(TestCase):
 
@@ -1131,5 +1356,181 @@ class Contacts_demo(TestCase):
         mess.click_element((MobileBy.XPATH, '//*[@text ="取消置顶"]'))
         mess.delete_message_record_by_name("给个红包1")
         mess.page_should_not_contain_text('给个红包1')
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0140():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.click_sim_contact()
+        contactspage.create_contacts_if_not_exits('测试短信1', '13800138111')
+        contactspage.create_contacts_if_not_exits('测试短信2', '13800138112')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0140(self):
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词测试群组1
+        SearchPage().input_search_keyword("测试群组1")
+        # 如果能搜到对应群组，则点击进入；否则创建群组
+        if mess._is_element_present(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="测试群组1"]')):
+            mess.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="测试群组1"]'))
+        else:
+            ContactListSearchPage().click_back()
+            contactspage = ContactsPage()
+            # 打开联系人页
+            contactspage.open_contacts_page()
+            contactspage.wait_for_contact_load()
+            contactspage.click_sim_contact()
+            contactspage.open_group_chat_list()
+            # 点击创建群组
+            GroupListPage().click_create_group()
+            mess.click_element((MobileBy.XPATH, '//*[@text ="选择手机联系人"]'))
+            mess.click_element((MobileBy.XPATH, '//*[@text ="测试短信1"]'))
+            mess.click_element((MobileBy.XPATH, '//*[@text ="测试短信2"]'))
+            mess.click_element((MobileBy.XPATH, '//*[@text ="确定(2/500)"]'))
+            BuildGroupChatPage().create_group_chat('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        time.sleep(1)
+        groupset.click_modify_group_name()
+        groupset.wait_for_modify_groupname_load()
+        groupset.click_edit_group_name_back()
+        groupset.wait_for_page_load()
+        groupset.click_modify_group_name()
+        groupset.save_group_name()
+        groupset.wait_for_page_load()
+        self.assertEqual(mess.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/group_name')), '测试群组1')
+        groupset.click_modify_group_name()
+        groupset.wait_for_modify_groupname_load()
+        groupset.click_iv_delete_button()
+        self.assertEqual(groupset.get_edit_query_text(), '请输入群聊名称')
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0141():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.click_sim_contact()
+        contactspage.create_contacts_if_not_exits('测试短信1', '13800138111')
+        contactspage.create_contacts_if_not_exits('测试短信2', '13800138112')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0141(self):
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词测试群组1
+        SearchPage().input_search_keyword("测试群组1")
+        # 如果能搜到对应群组，则点击进入；否则创建群组
+        if mess._is_element_present(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="测试群组1"]')):
+            mess.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="测试群组1"]'))
+        else:
+            ContactListSearchPage().click_back()
+            contactspage = ContactsPage()
+            # 打开联系人页
+            contactspage.open_contacts_page()
+            contactspage.wait_for_contact_load()
+            contactspage.click_sim_contact()
+            contactspage.open_group_chat_list()
+            # 点击创建群组
+            GroupListPage().click_create_group()
+            mess.click_element((MobileBy.XPATH, '//*[@text ="选择手机联系人"]'))
+            from pages.components import ContactsSelector
+            ContactsSelector().search('测试短信')
+            mess.click_element((MobileBy.XPATH, '//*[@text ="测试短信1"]'))
+            ContactsSelector().search('测试短信')
+            mess.click_element((MobileBy.XPATH, '//*[@text ="测试短信2"]'))
+            mess.click_element((MobileBy.XPATH, '//*[@text ="确定(2/500)"]'))
+            BuildGroupChatPage().create_group_chat('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        time.sleep(1)
+        groupset.click_modify_group_name()
+        time.sleep(2)
+        groupset.clear_group_name()
+        groupset.input_new_group_name("和")
+        groupset.save_group_name()
+        time.sleep(10)
+        self.assertEqual(mess.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/group_name')), '和')
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0142():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.click_sim_contact()
+        contactspage.create_contacts_if_not_exits('测试短信1', '13800138111')
+        contactspage.create_contacts_if_not_exits('测试短信2', '13800138112')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0142(self):
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词测试群组1
+        SearchPage().input_search_keyword("测试群组1")
+        # 如果能搜到对应群组，则点击进入；否则创建群组
+        if mess._is_element_present(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="测试群组1"]')):
+            mess.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="测试群组1"]'))
+        else:
+            ContactListSearchPage().click_back()
+            contactspage = ContactsPage()
+            # 打开联系人页
+            contactspage.open_contacts_page()
+            contactspage.wait_for_contact_load()
+            contactspage.click_sim_contact()
+            contactspage.open_group_chat_list()
+            # 点击创建群组
+            GroupListPage().click_create_group()
+            mess.click_element((MobileBy.XPATH, '//*[@text ="选择手机联系人"]'))
+            from pages.components import ContactsSelector
+            ContactsSelector().search('测试短信')
+            mess.click_element((MobileBy.XPATH, '//*[@text ="测试短信1"]'))
+            ContactsSelector().search('测试短信')
+            mess.click_element((MobileBy.XPATH, '//*[@text ="测试短信2"]'))
+            mess.click_element((MobileBy.XPATH, '//*[@text ="确定(2/500)"]'))
+            BuildGroupChatPage().create_group_chat('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        time.sleep(1)
+        groupset.click_modify_group_name()
+        time.sleep(2)
+        groupset.clear_group_name()
+        groupset.input_new_group_name("和飞信测试")
+        groupset.save_group_name()
+        time.sleep(10)
+        self.assertEqual(mess.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/group_name')), '和飞信测试')
 
 
