@@ -73,7 +73,7 @@ class MePage(FooterPage):
         '设置': (MobileBy.ID, 'com.chinasofti.rcs:id/setting_app_text'),
         '移动营业厅': (MobileBy.ID, 'com.chinasofti.rcs:id/onlinehall_text'),
         '姓名': (MobileBy.ID, 'com.chinasofti.rcs:id/card_name'),
-        "联系人管理":("com.chinasofti.rcs:id/manage_contact_text"),
+        "联系人管理":(MobileBy.ID,'com.chinasofti.rcs:id/manage_contact_text'),
         '取消退出': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
         '确定退出': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
 
@@ -82,6 +82,10 @@ class MePage(FooterPage):
     @TestLogger.log('点击个人名片头像')
     def click_head(self):
         self.click_element(self.__locators['个人头像'])
+
+    @TestLogger.log('点击联系人管理')
+    def click_manage_contact(self):
+        self.click_element(self.__class__.__locators['联系人管理'])
 
     @TestLogger.log('点击确认退出')
     def click_sure_drop(self):
