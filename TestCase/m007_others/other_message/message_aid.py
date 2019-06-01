@@ -459,3 +459,426 @@ class MsgAllPrior(TestCase):
                 (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/file_name" and @text="%s"]' % file_name))
         self.assertTrue(len(collection_elements) > 0)
 
+    @staticmethod
+    def setUp_test_msg_weifenglian_1V1_0204():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_1V1_0204(self):
+        """会话窗口中点击删除文本消息"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        # contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+        #                                              os.path.join(PROJECT_PATH, path))
+
+        # 转发文件的名称
+        file_name = '大型测试图片.jpg';
+        messpage = MessagePage()
+        messpage.click_add_icon()
+        messpage.click_new_message()
+
+        page = SelectContactsPage()
+        page.input_search_contact_message('admin')
+        page.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="admin"]'))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="文件"]'))
+        page.click_element(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ll_mobile_memory'))
+        elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        # 文件系统找到 文件目录
+        while len(elements) == 0:
+            page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/lv_choose'), 'up')
+            time.sleep(1)
+            elements = page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        # 找到元素
+        elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % file_name))
+        while len(elements) == 0:
+            page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/lv_choose'), 'up')
+            time.sleep(1)
+            elements = page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % file_name))
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % file_name))
+        # 发送
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/button_send" and @text="发送"]'))
+        time.sleep(1)
+        file_elements = page.get_elements(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/imageview_msg_image" and @index="1"]'))
+        page.press(file_elements[0])
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="收藏"]'))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'))
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.wait_for_page_load()
+        me_page.page_down()
+        me_page.click_collection()
+        time.sleep(2)
+        collection_elements = me_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/favorite_image" and @index="0"]'))
+        while len(collection_elements) == 0:
+            page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/rv_favorite'), 'up')
+            time.sleep(1)
+            collection_elements = me_page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/favorite_image" and @index="0"]'))
+        self.assertTrue(len(collection_elements) > 0)
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_1V1_0205():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_1V1_0205(self):
+        """会话窗口中点击删除文本消息"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        # contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+        #                                              os.path.join(PROJECT_PATH, path))
+
+        # 转发文件的名称
+        file_name = '测试doc文件.doc';
+        messpage = MessagePage()
+        messpage.click_add_icon()
+        messpage.click_new_message()
+
+        page = SelectContactsPage()
+        page.input_search_contact_message('admin')
+        page.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="admin"]'))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="文件"]'))
+        page.click_element(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ll_mobile_memory'))
+        time.sleep(2)
+        elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        # 文件系统找到 文件目录
+        while len(elements) == 0:
+            page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/lv_choose'), 'up')
+            time.sleep(1)
+            elements = page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        # 找到元素
+        time.sleep(2)
+        elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % file_name))
+        while len(elements) == 0:
+            page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/lv_choose'), 'up')
+            time.sleep(1)
+            elements = page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % file_name))
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % file_name))
+        # 发送
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/button_send" and @text="发送"]'))
+        time.sleep(1)
+        file_elements = page.get_elements(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/textview_file_name" and @text="%s"]' % file_name))
+        page.press(file_elements[0])
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="收藏"]'))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'))
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.wait_for_page_load()
+        me_page.page_down()
+        me_page.click_collection()
+        time.sleep(2)
+        collection_elements = me_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/file_name" and @text="%s"]' % file_name))
+        while len(collection_elements) == 0:
+            page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/rv_favorite'), 'up')
+            time.sleep(1)
+            collection_elements = me_page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/file_name" and @text="%s"]' % file_name))
+        self.assertTrue(len(collection_elements) > 0)
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_1V1_0206():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_1V1_0206(self):
+        """会话窗口中点击删除文本消息"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        # contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+        #                                              os.path.join(PROJECT_PATH, path))
+
+        # 转发文件的名称
+        file_name = 'ppt测试文件.ppt';
+        messpage = MessagePage()
+        messpage.click_add_icon()
+        messpage.click_new_message()
+
+        page = SelectContactsPage()
+        page.input_search_contact_message('admin')
+        page.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="admin"]'))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="文件"]'))
+        page.click_element(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ll_mobile_memory'))
+        time.sleep(2)
+        elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        # 文件系统找到 文件目录
+        while len(elements) == 0:
+            page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/lv_choose'), 'up')
+            time.sleep(1)
+            elements = page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        # 找到元素
+        time.sleep(2)
+        elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % file_name))
+        while len(elements) == 0:
+            page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/lv_choose'), 'up')
+            time.sleep(1)
+            elements = page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % file_name))
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % file_name))
+        # 发送
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/button_send" and @text="发送"]'))
+        time.sleep(1)
+        file_elements = page.get_elements(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/textview_file_name" and @text="%s"]' % file_name))
+        page.press(file_elements[0])
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="收藏"]'))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'))
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.wait_for_page_load()
+        me_page.page_down()
+        me_page.click_collection()
+        time.sleep(2)
+        collection_elements = me_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/file_name" and @text="%s"]' % file_name))
+        while len(collection_elements) == 0:
+            page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/rv_favorite'), 'up')
+            time.sleep(1)
+            collection_elements = me_page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/file_name" and @text="%s"]' % file_name))
+        self.assertTrue(len(collection_elements) > 0)
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_1V1_0207():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_1V1_0207(self):
+        """会话窗口中点击删除文本消息"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        # contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+        #                                              os.path.join(PROJECT_PATH, path))
+
+        # 转发文件的名称
+        file_name = '测试xls文件.xls';
+        messpage = MessagePage()
+        messpage.click_add_icon()
+        messpage.click_new_message()
+
+        page = SelectContactsPage()
+        page.input_search_contact_message('admin')
+        page.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="admin"]'))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="文件"]'))
+        page.click_element(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ll_mobile_memory'))
+        time.sleep(2)
+        elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        # 文件系统找到 文件目录
+        while len(elements) == 0:
+            page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/lv_choose'), 'up')
+            time.sleep(1)
+            elements = page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        # 找到元素
+        time.sleep(2)
+        elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % file_name))
+        while len(elements) == 0:
+            page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/lv_choose'), 'up')
+            time.sleep(1)
+            elements = page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % file_name))
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % file_name))
+        # 发送
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/button_send" and @text="发送"]'))
+        time.sleep(1)
+        file_elements = page.get_elements(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/textview_file_name" and @text="%s"]' % file_name))
+        page.press(file_elements[0])
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="收藏"]'))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'))
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.wait_for_page_load()
+        me_page.page_down()
+        me_page.click_collection()
+        time.sleep(2)
+        collection_elements = me_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/file_name" and @text="%s"]' % file_name))
+        while len(collection_elements) == 0:
+            page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/rv_favorite'), 'up')
+            time.sleep(1)
+            collection_elements = me_page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/file_name" and @text="%s"]' % file_name))
+        self.assertTrue(len(collection_elements) > 0)
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_1V1_0208():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_1V1_0208(self):
+        """会话窗口中点击删除文本消息"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        # contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+        #                                              os.path.join(PROJECT_PATH, path))
+
+        # 转发文件的名称
+        file_name = '文档pdf.pdf'
+        messpage = MessagePage()
+        messpage.click_add_icon()
+        messpage.click_new_message()
+
+        page = SelectContactsPage()
+        page.input_search_contact_message('admin')
+        page.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="admin"]'))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="文件"]'))
+        page.click_element(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ll_mobile_memory'))
+        time.sleep(2)
+        elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        # 文件系统找到 文件目录
+        while len(elements) == 0:
+            page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/lv_choose'), 'up')
+            time.sleep(1)
+            elements = page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        # 找到元素
+        time.sleep(2)
+        elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % file_name))
+        while len(elements) == 0:
+            page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/lv_choose'), 'up')
+            time.sleep(1)
+            elements = page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % file_name))
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % file_name))
+        # 发送
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/button_send" and @text="发送"]'))
+        time.sleep(1)
+        file_elements = page.get_elements(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/textview_file_name" and @text="%s"]' % file_name))
+        page.press(file_elements[0])
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="收藏"]'))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'))
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.wait_for_page_load()
+        me_page.page_down()
+        me_page.click_collection()
+        time.sleep(2)
+        collection_elements = me_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/file_name" and @text="%s"]' % file_name))
+        while len(collection_elements) == 0:
+            page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/rv_favorite'), 'up')
+            time.sleep(1)
+            collection_elements = me_page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/file_name" and @text="%s"]' % file_name))
+        self.assertTrue(len(collection_elements) > 0)
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_1V1_0226():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_1V1_0226(self):
+        """会话窗口中点击删除文本消息"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        # contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+        #                                              os.path.join(PROJECT_PATH, path))
+
+        # 转发文件的名称
+        file_name = '文档pdf.pdf'
+        messpage = MessagePage()
+        messpage.click_add_icon()
+        messpage.click_new_message()
+
+        page = SelectContactsPage()
+        page.input_search_contact_message('admin')
+        page.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="admin"]'))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="文件"]'))
+        page.click_element(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ll_mobile_memory'))
+        time.sleep(2)
+        elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        # 文件系统找到 文件目录
+        while len(elements) == 0:
+            page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/lv_choose'), 'up')
+            time.sleep(1)
+            elements = page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % path))
+        # 找到元素
+        time.sleep(2)
+        elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % file_name))
+        while len(elements) == 0:
+            page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/lv_choose'), 'up')
+            time.sleep(1)
+            elements = page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % file_name))
+        page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/tv_file_name" and @text="%s"]' % file_name))
+
+        file_size_text = page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/textview_select_file_size'))
+        self.assertTrue('已选' in file_size_text)
+        attribute = page.get_element_attribute(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/button_send" and @text="发送"]'), 'enabled')
+
+        self.assertTrue('true' == attribute)
