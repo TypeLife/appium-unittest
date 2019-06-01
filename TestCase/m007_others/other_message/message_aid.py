@@ -1203,3 +1203,237 @@ class MsgAllPrior(TestCase):
         contact_page.click_element((MobileBy.XPATH,
                             '//*[@resource-id="com.chinasofti.rcs:id/btn_ok" and @text="确定"]'))
         contact_page.is_toast_exist("已转发")
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_qun_0370():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_qun_0370(self):
+        """将自己发送的位置转发到个人联系人"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        # contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+        #                                              os.path.join(PROJECT_PATH, path))
+
+        # 转发文件的名称
+        file_name = '文档pdf.pdf'
+        messpage = MessagePage()
+        messpage.click_add_icon()
+        messpage.click_new_message()
+
+        page = SelectContactsPage()
+        page.input_search_contact_message('admin')
+        page.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="admin"]'))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="位置"]'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/location_ok_btn" and @text="发送"]'))
+        time.sleep(2)
+        addr_elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/lloc_famous_address_text"]'))
+        self.assertTrue(len(addr_elements) > 0)
+        group_chat_name = Preconditions.get_group_chat_name()
+        page.press(addr_elements[0])
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="转发"]'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/text_hint" and @text="选择一个群"]'))
+        # 点击群名称  然后取消 todo 企业群
+        page.click_element(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="%s"]' % group_chat_name))
+        page.click_element((MobileBy.XPATH,
+                                             '//*[@resource-id="com.chinasofti.rcs:id/btn_cancel" and @text="取消"]'))
+
+        # 点击群名称  然后确认
+        page.click_element(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="%s"]' % group_chat_name))
+        page.click_element((MobileBy.XPATH,
+                                             '//*[@resource-id="com.chinasofti.rcs:id/btn_ok" and @text="确定"]'))
+
+        addr_elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/lloc_famous_address_text"]'))
+        page.press(addr_elements[0])
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="转发"]'))
+        contact_page = SelectContactPage()
+        elements = contact_page.get_elements((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/item_rl"]'))
+        elements[0].click()
+        contact_page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/btn_ok" and @text="确定"]'))
+        contact_page.is_toast_exist("已转发")
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_qun_0373():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_qun_0373(self):
+        """将自己发送的位置转发到个人联系人"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        # contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+        #                                              os.path.join(PROJECT_PATH, path))
+
+        # 转发文件的名称
+        messpage = MessagePage()
+        messpage.click_add_icon()
+        messpage.click_group_chat()
+
+        group_chat_name = Preconditions.get_group_chat_name()
+        page = SelectContactsPage()
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/text_hint" and @text="选择一个群"]'))
+        # 点击群名称  然后取消 todo 企业群
+        page.click_element(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="%s"]' % group_chat_name))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="位置"]'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/location_ok_btn" and @text="发送"]'))
+        time.sleep(2)
+        addr_elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/lloc_famous_address_text"]'))
+        self.assertTrue(len(addr_elements) > 0)
+        addr_elements_pre = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/lloc_famous_address_text"]'))
+        page.press(addr_elements_pre[0])
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="删除"]'))
+        time.sleep(1)
+        addr_elements_suf = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/lloc_famous_address_text"]'))
+        self.assertTrue(len(addr_elements_suf) == (len(addr_elements_pre) - 1))
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_qun_0374():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_qun_0374(self):
+        """将自己发送的位置转发到个人联系人"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        # contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+        #                                              os.path.join(PROJECT_PATH, path))
+
+        # 转发文件的名称
+        messpage = MessagePage()
+        messpage.click_add_icon()
+        messpage.click_group_chat()
+
+        group_chat_name = Preconditions.get_group_chat_name()
+        page = SelectContactsPage()
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/text_hint" and @text="选择一个群"]'))
+        # 点击群名称  然后取消 todo 企业群
+        page.click_element(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="%s"]' % group_chat_name))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="位置"]'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/location_ok_btn" and @text="发送"]'))
+        time.sleep(2)
+        addr_elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/lloc_famous_address_text"]'))
+        self.assertTrue(len(addr_elements) > 0)
+        addr_elements_pre = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/lloc_famous_address_text"]'))
+        page.press(addr_elements_pre[0])
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="撤回"]'))
+        time.sleep(1)
+        addr_elements_suf = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/lloc_famous_address_text"]'))
+        self.assertTrue(len(addr_elements_suf) == (len(addr_elements_pre) - 1))
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_qun_0375():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_qun_0375(self):
+        """将自己发送的位置转发到个人联系人"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        # contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+        #                                              os.path.join(PROJECT_PATH, path))
+
+        # 转发文件的名称
+        messpage = MessagePage()
+        messpage.click_add_icon()
+        messpage.click_group_chat()
+
+        group_chat_name = Preconditions.get_group_chat_name()
+        page = SelectContactsPage()
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/text_hint" and @text="选择一个群"]'))
+        # 点击群名称  然后取消 todo 企业群
+        page.click_element(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="%s"]' % group_chat_name))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="位置"]'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/location_ok_btn" and @text="发送"]'))
+        time.sleep(2)
+        addr_elements_pre = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/lloc_famous_address_text"]'))
+        page.press(addr_elements_pre[0])
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="收藏"]'))
+        page.is_toast_exist('已收藏')
+
+        addr__text = addr_elements_pre[0].text
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'))
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.page_down()
+        me_page.click_collection()
+        time.sleep(2)
+        collection_elements = me_page.get_elements((MobileBy.XPATH,
+                                                    '//*[@resource-id="com.chinasofti.rcs:id/favorite_tv_content"]'))
+        flag = False
+        for element in collection_elements:
+            if addr__text in element.text:
+                flag = True
+                break
+        self.assertTrue(flag)
+
+    @staticmethod
+    def setUp_test_msg_xiaoliping_B_0007():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_have_a_message()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoliping_B_0007(self):
+        """进入免费/发送短信--选择联系人页面"""
+        message_page = MessagePage()
+        message_page.open_message_page()
+        element = message_page.get_element((MobileBy.XPATH,
+                                           '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text="admin"]'))
+        message_page.press(element)
+        message_page.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="删除聊天"]'))
+        elements = message_page.get_elements((MobileBy.XPATH,
+                                            '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text="admin"]'))
+        self.assertTrue(len(elements) == 0)
+
+    @staticmethod
+    def setUp_test_msg_xiaoliping_B_0008():
+        Preconditions.select_mobile('Android-移动')
+        contact2.push_resource_dir_to_mobile_sdcard(Preconditions.select_mobile('Android-移动'))
+        Preconditions.make_already_have_a_message()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoliping_B_0008(self):
+        """进入免费/发送短信--选择联系人页面"""
+
+        time.sleep(5)
