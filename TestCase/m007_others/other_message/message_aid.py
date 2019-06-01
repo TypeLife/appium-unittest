@@ -1203,3 +1203,562 @@ class MsgAllPrior(TestCase):
         contact_page.click_element((MobileBy.XPATH,
                             '//*[@resource-id="com.chinasofti.rcs:id/btn_ok" and @text="确定"]'))
         contact_page.is_toast_exist("已转发")
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_qun_0370():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_qun_0370(self):
+        """将自己发送的位置转发到个人联系人"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        # contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+        #                                              os.path.join(PROJECT_PATH, path))
+
+        # 转发文件的名称
+        file_name = '文档pdf.pdf'
+        messpage = MessagePage()
+        messpage.click_add_icon()
+        messpage.click_new_message()
+
+        page = SelectContactsPage()
+        page.input_search_contact_message('admin')
+        page.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="admin"]'))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="位置"]'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/location_ok_btn" and @text="发送"]'))
+        time.sleep(2)
+        addr_elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/lloc_famous_address_text"]'))
+        self.assertTrue(len(addr_elements) > 0)
+        group_chat_name = Preconditions.get_group_chat_name()
+        page.press(addr_elements[0])
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="转发"]'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/text_hint" and @text="选择一个群"]'))
+        # 点击群名称  然后取消 todo 企业群
+        page.click_element(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="%s"]' % group_chat_name))
+        page.click_element((MobileBy.XPATH,
+                                             '//*[@resource-id="com.chinasofti.rcs:id/btn_cancel" and @text="取消"]'))
+
+        # 点击群名称  然后确认
+        page.click_element(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="%s"]' % group_chat_name))
+        page.click_element((MobileBy.XPATH,
+                                             '//*[@resource-id="com.chinasofti.rcs:id/btn_ok" and @text="确定"]'))
+
+        addr_elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/lloc_famous_address_text"]'))
+        page.press(addr_elements[0])
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="转发"]'))
+        contact_page = SelectContactPage()
+        elements = contact_page.get_elements((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/item_rl"]'))
+        elements[0].click()
+        contact_page.click_element((MobileBy.XPATH,
+                            '//*[@resource-id="com.chinasofti.rcs:id/btn_ok" and @text="确定"]'))
+        contact_page.is_toast_exist("已转发")
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_qun_0373():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_qun_0373(self):
+        """将自己发送的位置转发到个人联系人"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        # contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+        #                                              os.path.join(PROJECT_PATH, path))
+
+        # 转发文件的名称
+        messpage = MessagePage()
+        messpage.click_add_icon()
+        messpage.click_group_chat()
+
+        group_chat_name = Preconditions.get_group_chat_name()
+        page = SelectContactsPage()
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/text_hint" and @text="选择一个群"]'))
+        # 点击群名称  然后取消 todo 企业群
+        page.click_element(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="%s"]' % group_chat_name))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="位置"]'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/location_ok_btn" and @text="发送"]'))
+        time.sleep(2)
+        addr_elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/lloc_famous_address_text"]'))
+        self.assertTrue(len(addr_elements) > 0)
+        addr_elements_pre = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/lloc_famous_address_text"]'))
+        page.press(addr_elements_pre[0])
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="删除"]'))
+        time.sleep(1)
+        addr_elements_suf = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/lloc_famous_address_text"]'))
+        self.assertTrue(len(addr_elements_suf) == (len(addr_elements_pre) - 1))
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_qun_0374():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_qun_0374(self):
+        """将自己发送的位置转发到个人联系人"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        # contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+        #                                              os.path.join(PROJECT_PATH, path))
+
+        # 转发文件的名称
+        messpage = MessagePage()
+        messpage.click_add_icon()
+        messpage.click_group_chat()
+
+        group_chat_name = Preconditions.get_group_chat_name()
+        page = SelectContactsPage()
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/text_hint" and @text="选择一个群"]'))
+        # 点击群名称  然后取消 todo 企业群
+        page.click_element(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="%s"]' % group_chat_name))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="位置"]'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/location_ok_btn" and @text="发送"]'))
+        time.sleep(2)
+        addr_elements = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/lloc_famous_address_text"]'))
+        self.assertTrue(len(addr_elements) > 0)
+        addr_elements_pre = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/lloc_famous_address_text"]'))
+        page.press(addr_elements_pre[0])
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="撤回"]'))
+        time.sleep(1)
+        addr_elements_suf = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/lloc_famous_address_text"]'))
+        self.assertTrue(len(addr_elements_suf) == (len(addr_elements_pre) - 1))
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_qun_0375():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_qun_0375(self):
+        """将自己发送的位置转发到个人联系人"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        # contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+        #                                              os.path.join(PROJECT_PATH, path))
+
+        # 转发文件的名称
+        messpage = MessagePage()
+        messpage.click_add_icon()
+        messpage.click_group_chat()
+
+        group_chat_name = Preconditions.get_group_chat_name()
+        page = SelectContactsPage()
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/text_hint" and @text="选择一个群"]'))
+        # 点击群名称  然后取消 todo 企业群
+        page.click_element(
+            (MobileBy.XPATH,
+             '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="%s"]' % group_chat_name))
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="位置"]'))
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/location_ok_btn" and @text="发送"]'))
+        time.sleep(2)
+        addr_elements_pre = page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/lloc_famous_address_text"]'))
+        page.press(addr_elements_pre[0])
+        page.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="收藏"]'))
+        page.is_toast_exist('已收藏')
+
+        addr__text = addr_elements_pre[0].text
+        page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'))
+        me_page = MePage()
+        me_page.open_me_page()
+        me_page.page_down()
+        me_page.click_collection()
+        time.sleep(2)
+        collection_elements = me_page.get_elements((MobileBy.XPATH,
+                                                    '//*[@resource-id="com.chinasofti.rcs:id/favorite_tv_content"]'))
+        flag = False
+        for element in collection_elements:
+            if addr__text in element.text:
+                flag = True
+                break
+        self.assertTrue(flag)
+
+    @staticmethod
+    def setUp_test_msg_xiaoliping_B_0007():
+        Preconditions.select_mobile('Android-移动')
+        Preconditions.make_already_have_a_message()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoliping_B_0007(self):
+        """进入免费/发送短信--选择联系人页面"""
+        message_page = MessagePage()
+        message_page.open_message_page()
+        element = message_page.get_element((MobileBy.XPATH,
+                                           '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text="admin"]'))
+        message_page.press(element)
+        message_page.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view" and @text="删除聊天"]'))
+        elements = message_page.get_elements((MobileBy.XPATH,
+                                            '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text="admin"]'))
+        self.assertTrue(len(elements) == 0)
+
+    @staticmethod
+    def setUp_test_msg_xiaoliping_B_0008():
+        Preconditions.select_mobile('Android-移动')
+        contact2.push_resource_dir_to_mobile_sdcard(Preconditions.select_mobile('Android-移动'))
+        Preconditions.make_already_have_a_message()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoliping_B_0008(self):
+        """进入免费/发送短信--选择联系人页面"""
+
+        time.sleep(5)
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0191():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits('给个红包1', '13800138000')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0191(self):
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词给个红包1
+        SearchPage().input_search_keyword("给个红包1")
+        # 选择联系人进入联系人页
+        mess.choose_chat_by_name('给个红包1')
+        # 点击消息按钮发送消息
+        ContactDetailsPage().click_message_icon()
+        chatdialog = ChatNoticeDialog()
+        # 若存在资费提醒对话框，点击确认
+        if chatdialog.is_exist_tips():
+            chatdialog.accept_and_close_tips_alert()
+        single = SingleChatPage()
+        # 如果当前页面不存在消息，发送一条消息
+        if not single._is_element_present((MobileBy.XPATH, '//*[@text ="测试一个删除"]')):
+            single.input_text_message("测试一个删除")
+            single.send_text()
+        single.press_mess("测试一个删除")
+        single.click_multiple_selection()
+        time.sleep(2)
+        group_chat = GroupChatPage()
+        # 勾选消息时校验页面元素
+        self.assertTrue(group_chat.is_exist_multiple_selection_back())
+        mess.page_should_contain_text('已选择')
+        self.assertTrue(group_chat.is_exist_multiple_selection_count())
+        self.assertTrue(group_chat.is_enabled_multiple_selection_delete())
+        self.assertTrue(group_chat.is_enabled_multiple_selection_forward())
+        group_chat.click_multiple_selection_delete()
+        group_chat.click_multiple_selection_delete_sure()
+        mess.is_toast_exist('删除成功')
+        mess.page_should_not_contain_text('测试一个删除')
+
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0212():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits('给个红包1', '13800138000')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0212(self):
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词给个红包1
+        SearchPage().input_search_keyword("给个红包1")
+        # 选择联系人进入联系人页
+        mess.choose_chat_by_name('给个红包1')
+        # 点击消息按钮发送消息
+        ContactDetailsPage().click_message_icon()
+        chatdialog = ChatNoticeDialog()
+        # 若存在资费提醒对话框，点击确认
+        if chatdialog.is_exist_tips():
+            chatdialog.accept_and_close_tips_alert()
+        single = SingleChatPage()
+        single.input_text_message("测试一个删除1")
+        single.send_text()
+        single.input_text_message("测试一个删除2")
+        single.send_text()
+        single.press_mess("测试一个删除1")
+        single.click_multiple_selection()
+        time.sleep(2)
+        group_chat = GroupChatPage()
+        # 勾选消息时校验页面元素
+        self.assertTrue(group_chat.is_exist_multiple_selection_back())
+        mess.page_should_contain_text('已选择')
+        self.assertTrue(group_chat.is_exist_multiple_selection_count())
+        self.assertTrue(group_chat.is_enabled_multiple_selection_delete())
+        self.assertTrue(group_chat.is_enabled_multiple_selection_forward())
+        group_chat.get_check_all_not_selected()
+        group_chat.click_multiple_selection_delete()
+        group_chat.click_multiple_selection_delete_sure()
+        mess.is_toast_exist('删除成功')
+        mess.page_should_not_contain_text('测试一个删除1')
+        mess.page_should_not_contain_text('测试一个删除2')
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0260():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0260(self):
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        self.assertTrue(me.is_on_this_page())
+        me.click_setting_menu()
+        message_notice_set = MessageNoticeSettingPage()
+        me.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/default_SMS_app'))
+        message_notice_set.assert_menu_item_has_been_turn_on('消息送达状态显示')
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0261():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits('给个红包1', '13800138000')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0261(self):
+        # 打开‘我’页面
+        me = MePage()
+        mess = MessagePage()
+        me.open_me_page()
+        self.assertTrue(me.is_on_this_page())
+        me.click_setting_menu()
+        message_notice_set = MessageNoticeSettingPage()
+        me.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/default_SMS_app'))
+        message_notice_set.turn_off('消息送达状态显示')
+        message_notice_set.click_back()
+        message_notice_set.click_back()
+        me.open_message_page()
+        if me.is_text_present('给个红包1'):
+            mess.delete_message_record_by_name("给个红包1")
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词给个红包1
+        SearchPage().input_search_keyword("给个红包1")
+        # 选择联系人进入联系人页
+        mess.choose_chat_by_name('给个红包1')
+        # 点击消息按钮发送消息
+        ContactDetailsPage().click_message_icon()
+        chatdialog = ChatNoticeDialog()
+        # 若存在资费提醒对话框，点击确认
+        if chatdialog.is_exist_tips():
+            chatdialog.accept_and_close_tips_alert()
+        single = SingleChatPage()
+        single.input_text_message("测试一个呵呵")
+        single.send_text()
+        mess.page_should_not_contain_text('已送达')
+        mess.page_should_not_contain_text('已转为短信送达')
+        mess.page_should_not_contain_text('对方离线')
+        mess.page_should_not_contain_text('已提醒')
+        single.click_back()
+        mess.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/iv_back'))
+        mess.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/iv_back01'))
+
+        me.open_me_page()
+        me.is_on_this_page()
+        me.click_setting_menu()
+        message_notice_set = MessageNoticeSettingPage()
+        me.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/default_SMS_app'))
+        message_notice_set.turn_on('消息送达状态显示')
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0273():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits('给个红包1', '13800138000')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0273(self):
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词给个红包1
+        SearchPage().input_search_keyword("给个红包1")
+        # 选择联系人进入联系人页
+        mess.choose_chat_by_name('给个红包1')
+        # 点击消息按钮发送消息
+        ContactDetailsPage().click_message_icon()
+        chatdialog = ChatNoticeDialog()
+        # 若存在资费提醒对话框，点击确认
+        if chatdialog.is_exist_tips():
+            chatdialog.accept_and_close_tips_alert()
+        single = SingleChatPage()
+        single.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0274():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits('给个红包1', '13800138000')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0274(self):
+        single = SingleChatPage()
+        mess = MessagePage()
+        # 点击+号
+        mess.click_add_icon()
+        mess.click_new_message()
+        select_page = SelectContactsPage()
+        mess.page_should_contain_element((MobileBy.ID, 'com.chinasofti.rcs:id/contact_search_bar'))
+        mess.page_should_contain_element((MobileBy.XPATH,"//*[@text='选择团队联系人']"))
+        select_page.select_one_contact_by_name('给个红包1')
+
+        chatdialog = ChatNoticeDialog()
+        # 若存在资费提醒对话框，点击确认
+        if chatdialog.is_exist_tips():
+            chatdialog.accept_and_close_tips_alert()
+        single.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0275():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits('给个红包1', '13800138000')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0275(self):
+        single = SingleChatPage()
+        mess = MessagePage()
+        # 点击+号
+        mess.click_add_icon()
+        # 点击免费短信
+        mess.click_free_sms()
+        mess_call_page = CallPage()
+        freemsg = FreeMsgPage()
+        # 若存在欢迎页面
+        if freemsg.is_exist_welcomepage():
+            # 点击确定按钮
+            freemsg.click_sure_btn()
+            time.sleep(2)
+            # 若存在权限控制
+            if mess_call_page.is_exist_allow_button():
+                # 存在提示点击允许
+                mess_call_page.wait_for_freemsg_load()
+
+        select_page = SelectContactsPage()
+        mess.page_should_contain_element((MobileBy.ID, 'com.chinasofti.rcs:id/contact_search_bar'))
+        mess.page_should_contain_element((MobileBy.XPATH,"//*[@text='选择团队联系人']"))
+        select_page.select_one_contact_by_name('给个红包1')
+        chatdialog = ChatNoticeDialog()
+        # 判断存在？标志
+        chatdialog.page_should_contain_element((MobileBy.ID, 'com.chinasofti.rcs:id/sms_direction'))
+        # 判断存在退出短信按钮
+        chatdialog.page_should_contain_element((MobileBy.ID, 'com.chinasofti.rcs:id/tv_exitsms'))
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0289():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_allinfo_if_not_exits('给个名片1', '13800138200', '中软国际', '软件工程师', 'test1234@163.com')
+        contactspage.create_contacts_allinfo_if_not_exits('给个名片2', '13800138300', '中软国际', '软件工程师', 'test1234@163.com')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0289(self):
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词给个红包1
+        SearchPage().input_search_keyword("给个名片1")
+        # 选择联系人进入联系人页
+        mess.choose_chat_by_name('给个名片1')
+        # 点击消息按钮发送消息
+        ContactDetailsPage().click_message_icon()
+        chatdialog = ChatNoticeDialog()
+        # 若存在资费提醒对话框，点击确认
+        if chatdialog.is_exist_tips():
+            chatdialog.accept_and_close_tips_alert()
+        mess.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'))
+        mess.click_element((MobileBy.XPATH, '//*[@text="名片"]'))
+        mess.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text="给个名片2"]'))
+        send_card = Send_CardNamePage()
+        send_card.click_share_btn()
+        mess.click_element((MobileBy.XPATH, '//*[@text="给个名片2"]'))
+        GroupChatSetSeeMembersPage().wait_for_profile_page_load()
+        # 点击消息按钮发送消息
+        ContactDetailsPage().click_message_icon()
+        chatdialog = ChatNoticeDialog()
+        # 若存在资费提醒对话框，点击确认
+        if chatdialog.is_exist_tips():
+            chatdialog.accept_and_close_tips_alert()
+        MessagePage().is_on_this_page()
