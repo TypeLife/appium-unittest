@@ -1,5 +1,6 @@
 import unittest
 import uuid
+import random
 import time
 import threading
 from preconditions.BasePreconditions import LoginPreconditions
@@ -19,6 +20,7 @@ from pages.contacts.local_contact import localContactPage
 import preconditions
 from dataproviders import contact2
 from pages.message.MassAssistant import Massassistant
+from pages.workbench.enterprise_contacts.EnterpriseContacts import EnterpriseContactsPage
 
 
 REQUIRED_MOBILES = {
@@ -1839,37 +1841,37 @@ class ContactsLocalhigh(TestCase):
     表格：通讯录-本地通讯录
     author: 余梦思
     """
-    #
-    # @classmethod
-    # def setUpClass(cls):
-    #     # 创建联系人
-    #     fail_time = 0
-    #     import dataproviders
-    #
-    #     while fail_time < 3:
-    #         try:
-    #             # 获取需要导入的联系人数据
-    #             required_contacts = dataproviders.get_preset_contacts()
-    #
-    #             # 连接手机
-    #             Preconditions.connect_mobile('Android-移动')
-    #             Preconditions.make_already_in_message_page()
-    #             current_mobile().hide_keyboard_if_display()
-    #             conts = ContactsPage()
-    #             conts.open_contacts_page()
-    #             # 导入数据
-    #             for name, number in required_contacts:
-    #                 # Preconditions.create_contacts_if_not_exits(name, number)
-    #                 Preconditions.create_contacts_if_not_exits(name, number)
-    #
-    #             # # 推送resource文件到手机
-    #             # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
-    #             return
-    #         except:
-    #             fail_time += 1
-    #             import traceback
-    #             msg = traceback.format_exc()
-    #             print(msg)
+
+    @classmethod
+    def setUpClass(cls):
+        # 创建联系人
+        fail_time = 0
+        import dataproviders
+
+        while fail_time < 3:
+            try:
+                # 获取需要导入的联系人数据
+                required_contacts = dataproviders.get_preset_contacts()
+
+                # 连接手机
+                Preconditions.connect_mobile('Android-移动')
+                Preconditions.make_already_in_message_page()
+                current_mobile().hide_keyboard_if_display()
+                conts = ContactsPage()
+                conts.open_contacts_page()
+                # 导入数据
+                for name, number in required_contacts:
+                    # Preconditions.create_contacts_if_not_exits(name, number)
+                    Preconditions.create_contacts_if_not_exits(name, number)
+
+                # # 推送resource文件到手机
+                # dataproviders.push_resource_dir_to_mobile_sdcard(Preconditions.connect_mobile('Android-移动'))
+                return
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
 
     def default_setUp(self):
         """确保每个用例执行前在通讯录页面"""
@@ -3047,9 +3049,6 @@ class ContactsLocalhigh(TestCase):
         mass_assistant.input_text_and_send('测shi123&&&')
         time.sleep(5)
         mass_assistant.page_contain_element(locator='新增')
-
-
-
 
 
 
