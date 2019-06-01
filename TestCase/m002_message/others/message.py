@@ -5,6 +5,7 @@ import time
 from selenium.common.exceptions import TimeoutException
 
 from library.core.TestCase import TestCase
+from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, current_driver, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
@@ -93,6 +94,41 @@ class Preconditions(WorkbenchPreconditions):
             time.sleep(2)
 
     @staticmethod
+    def if_exists_multiple_enterprises_send_card(name):
+        """选择团队联系人时存在多个团队时返回获取当前团队名，再进入单聊发送名片"""
+
+        shc = SelectHeContactsDetailPage()
+        # 测试号码是否存在多个团队
+        if not shc.is_exist_corporate_grade():
+            mp = MessagePage()
+            slc = SelectLocalContactsPage()
+            scp = SingleChatPage()
+            wbp = WorkbenchPage()
+            shc.click_back()
+            slc.wait_for_page_load()
+            slc.click_back()
+            scp.wait_for_page_load()
+            scp.click_back()
+            mp.wait_for_page_load()
+            mp.open_workbench_page()
+            wbp.wait_for_workbench_page_load()
+            time.sleep(2)
+            # 获取当前团队名
+            workbench_name = wbp.get_workbench_name()
+            mp.open_message_page()
+            mp.wait_for_page_load()
+            Preconditions.enter_single_chat_page(name)
+            scp.click_more()
+            time.sleep(1)
+            scp.click_profile()
+            slc.wait_for_page_load()
+            slc.click_text("选择团队联系人")
+            shc.wait_for_he_contacts_page_load()
+            # 选择当前团队
+            shc.click_department_name(workbench_name)
+            time.sleep(2)
+
+    @staticmethod
     def enter_single_chat_page(name):
         """进入单聊聊天会话页面"""
 
@@ -113,6 +149,111 @@ class Preconditions(WorkbenchPreconditions):
         scp = SingleChatPage()
         # 等待单聊会话页面加载
         scp.wait_for_page_load()
+
+    @staticmethod
+    def get_into_group_chat_page(name):
+        """进入群聊聊天会话页面"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 点击 +
+        mp.click_add_icon()
+        # 点击发起群聊
+        mp.click_group_chat()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        # 选择一个普通群
+        sog.selecting_one_group_by_name(name)
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+
+    @staticmethod
+    def get_into_enterprise_group_chat_page():
+        """进入企业群聊天会话页面 返回群名"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 点击 +
+        mp.click_add_icon()
+        # 点击发起群聊
+        mp.click_group_chat()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        # 选择一个企业群
+        name = sog.select_one_enterprise_group()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        return name
+
+    @staticmethod
+    def enter_label_grouping_chat_page():
+        """进入标签分组会话页面"""
+
+        mess = MessagePage()
+        # 点击‘通讯录’
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        contacts.click_label_grouping()
+        label_grouping = LabelGroupingPage()
+        label_grouping.wait_for_page_load()
+        # 不存在标签分组则创建
+        group_name = Preconditions.get_label_grouping_name()
+        group_names = label_grouping.get_label_grouping_names()
+        time.sleep(1)
+        if not group_names:
+            label_grouping.click_new_create_group()
+            label_grouping.wait_for_create_label_grouping_page_load()
+            label_grouping.input_label_grouping_name(group_name)
+            label_grouping.click_sure()
+            # 选择成员
+            slc = SelectLocalContactsPage()
+            slc.wait_for_page_load()
+            names = slc.get_contacts_name()
+            if not names:
+                raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
+            for name in names:
+                slc.select_one_member_by_name(name)
+            slc.click_sure()
+            label_grouping.wait_for_page_load()
+            label_grouping.select_group(group_name)
+        else:
+            # 选择一个标签分组
+            label_grouping.select_group(group_names[0])
+        lgdp = LableGroupDetailPage()
+        time.sleep(1)
+        # 标签分组成员小于2人，需要添加成员
+        members_name = lgdp.get_members_names()
+        if lgdp.is_text_present("该标签分组内暂无成员") or len(members_name) < 2:
+            lgdp.click_add_members()
+            # 选择成员
+            slc = SelectLocalContactsPage()
+            slc.wait_for_page_load()
+            names = slc.get_contacts_name()
+            if not names:
+                raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
+            for name in names:
+                slc.select_one_member_by_name(name)
+            slc.click_sure()
+        # 点击群发信息
+        lgdp.click_send_group_info()
+        chat = LabelGroupingChatPage()
+        chat.wait_for_page_load()
+
+    @staticmethod
+    def get_label_grouping_name():
+        """获取标签分组群名"""
+
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        group_name = "alg" + phone_number[-4:]
+        return group_name
 
 
 class MessageScanTest(TestCase):
@@ -2159,10 +2300,26 @@ class MessageOthersAllTest(TestCase):
                 Preconditions.make_already_in_message_page()
                 contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
                 Preconditions.create_he_contacts(contact_names)
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "13800137005"), ('郑海', "13802883296")]
+                Preconditions.create_he_contacts2(contact_names2)
                 flag2 = True
             except:
                 fail_time2 += 1
             if flag2:
+                break
+
+        # 确保有企业群
+        fail_time3 = 0
+        flag3 = False
+        while fail_time3 < 5:
+            try:
+                Preconditions.make_already_in_message_page()
+                Preconditions.ensure_have_enterprise_group()
+                flag3 = True
+            except:
+                fail_time3 += 1
+            if flag3:
                 break
 
     def default_setUp(self):
@@ -2211,6 +2368,16 @@ class MessageOthersAllTest(TestCase):
 
         mp = MessagePage()
         mp.wait_for_page_load()
+        # 清空收藏列表确保不影响验证
+        mp.open_me_page()
+        me_page = MePage()
+        mcp = MeCollectionPage()
+        me_page.wait_for_page_load()
+        me_page.click_collection()
+        mcp.wait_for_page_load()
+        mcp.clear_collection_list()
+        mcp.click_back()
+        me_page.wait_for_page_load()
         mp.open_contacts_page()
         cp = ContactsPage()
         cp.wait_for_page_load()
@@ -2236,18 +2403,20 @@ class MessageOthersAllTest(TestCase):
         mp.wait_for_page_load()
         # 选择刚刚发送的名片消息收藏
         mp.choose_chat_by_name(share_name)
+        time.sleep(2)
+        chat = BaseChatPage()
+        if chat.is_exist_dialog():
+            # 点击我已阅读
+            chat.click_i_have_read()
         scp = SingleChatPage()
-        scp.wait_for_page_load()
         scp.press_card_name_by_number(-1)
         scp.click_text("收藏")
         self.assertEquals(scp.is_toast_exist("已收藏"), True)
         scp.click_back()
         mp.wait_for_page_load()
         mp.open_me_page()
-        me_page = MePage()
         me_page.wait_for_page_load()
         me_page.click_collection()
-        mcp = MeCollectionPage()
         mcp.wait_for_page_load()
         # 1.功能及文案全部正常
         self.assertEquals(mcp.is_exists_card_by_name(card_name), True)
@@ -2470,33 +2639,130 @@ class MessageOthersAllTest(TestCase):
         self.assertEquals(cdp.is_exists_share_card_email(), True)
 
     @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_hanjiabin_0190(self):
+        """名片消息——单聊——发出名片后--消息界面——点击查看"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 进入单聊会话页面
+        name = "大佬1"
+        Preconditions.enter_single_chat_page(name)
+        # 发送名片消息
+        scp = SingleChatPage()
+        scp.click_more()
+        time.sleep(1)
+        scp.click_profile()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        slc.click_text("选择团队联系人")
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 需要考虑测试号码存在多个团队的情况
+        Preconditions.if_exists_multiple_enterprises_send_card(name)
+        shc.selecting_he_contacts_by_name("郑海")
+        time.sleep(2)
+        slc.click_text("发送名片")
+        scp.wait_for_page_load()
+        scp.click_card_name_by_number(-1)
+        time.sleep(1)
+        self.assertEquals(scp.is_text_present("保存到通讯录"), True)
+        scp.click_back_by_android(2)
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_hanjiabin_0191(self):
+        """名片消息——单聊——发出名片后--消息界面——长按"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 进入单聊会话页面
+        name = "大佬1"
+        Preconditions.enter_single_chat_page(name)
+        # 发送名片消息给单聊
+        scp = SingleChatPage()
+        scp.click_more()
+        time.sleep(1)
+        scp.click_profile()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        slc.selecting_local_contacts_by_name("名片消息测试")
+        time.sleep(2)
+        slc.click_text("发送名片")
+        scp.wait_for_page_load()
+        # 转发名片消息到我的电脑
+        scp.press_card_name_by_number(-1)
+        scp.click_text("转发")
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        scg.input_search_keyword("我的电脑")
+        time.sleep(2)
+        slc.selecting_local_contacts_by_name("我的电脑")
+        scg.click_sure_forward()
+        # 是否提示已转发
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+        # 转发名片消息到单聊
+        scp.press_card_name_by_number(-1)
+        scp.click_text("转发")
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc.wait_for_page_load()
+        slc.selecting_local_contacts_by_name("大佬2")
+        scg.click_sure_forward()
+        # 是否提示已转发
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+        # 转发名片消息到普通群
+        scp.press_card_name_by_number(-1)
+        scp.click_text("转发")
+        scg.wait_for_page_load()
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.selecting_one_group_by_name("群聊1")
+        scg.click_sure_forward()
+        # 是否提示已转发
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+        # 转发名片消息到企业群
+        scp.press_card_name_by_number(-1)
+        scp.click_text("转发")
+        scg.wait_for_page_load()
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.select_one_enterprise_group()
+        scg.click_sure_forward()
+        # 是否提示已转发
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+        scp.click_back()
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_hanjiabin_0202(self):
         """名片消息——场景"""
 
         mp = MessagePage()
         mp.wait_for_page_load()
-        mp.open_contacts_page()
-        cp = ContactsPage()
-        cp.wait_for_page_load()
-        # 选择名片
-        cp.select_contacts_by_name("名片消息测试")
-        cdp = ContactDetailsPage()
-        cdp.wait_for_page_load()
+        # 进入单聊会话页面
+        Preconditions.enter_single_chat_page("大佬1")
         # 发送名片消息给单聊
-        cdp.click_share_business_card()
-        scg = SelectContactsPage()
-        scg.wait_for_page_load()
-        scg.select_local_contacts()
+        scp = SingleChatPage()
+        scp.click_more()
+        time.sleep(1)
+        scp.click_profile()
         slc = SelectLocalContactsPage()
         slc.wait_for_page_load()
-        slc.selecting_local_contacts_by_name("大佬1")
+        slc.selecting_local_contacts_by_name("名片消息测试")
         time.sleep(2)
         slc.click_text("发送名片")
         # 1.功能及文案全部正常
-        self.assertEquals(slc.is_toast_exist("已发送"), True)
-        cdp.click_back_icon()
-        cp.wait_for_page_load()
-        cp.open_message_page()
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
+        slc.click_back_by_android()
         # 等待消息页面加载
         mp.wait_for_page_load()
 
@@ -2506,28 +2772,20 @@ class MessageOthersAllTest(TestCase):
 
         mp = MessagePage()
         mp.wait_for_page_load()
-        mp.open_contacts_page()
-        cp = ContactsPage()
-        cp.wait_for_page_load()
-        # 选择名片
-        cp.select_contacts_by_name("名片消息测试")
-        cdp = ContactDetailsPage()
-        cdp.wait_for_page_load()
-        # 发送名片消息给群聊
-        cdp.click_share_business_card()
-        scg = SelectContactsPage()
-        scg.wait_for_page_load()
-        scg.click_select_one_group()
-        sog = SelectOneGroupPage()
-        sog.wait_for_page_load()
-        sog.selecting_one_group_by_name("群聊1")
+        # 进入普通群会话页面
+        Preconditions.get_into_group_chat_page("群聊1")
+        # 发送名片消息给普通群
+        gcp = GroupChatPage()
+        gcp.click_profile()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        slc.selecting_local_contacts_by_name("名片消息测试")
         time.sleep(2)
-        sog.click_text("发送名片")
+        slc.click_text("发送名片")
         # 1.功能及文案全部正常
-        self.assertEquals(sog.is_toast_exist("已发送"), True)
-        cdp.click_back_icon()
-        cp.wait_for_page_load()
-        cp.open_message_page()
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
+        slc.click_back_by_android()
         # 等待消息页面加载
         mp.wait_for_page_load()
 
@@ -2537,29 +2795,44 @@ class MessageOthersAllTest(TestCase):
 
         mp = MessagePage()
         mp.wait_for_page_load()
-        mp.open_contacts_page()
-        cp = ContactsPage()
-        cp.wait_for_page_load()
-        # 选择名片
-        cp.select_contacts_by_name("名片消息测试")
-        cdp = ContactDetailsPage()
-        cdp.wait_for_page_load()
+        # 进入企业群会话页面
+        Preconditions.get_into_enterprise_group_chat_page()
         # 发送名片消息给企业群
-        cdp.click_share_business_card()
-        scg = SelectContactsPage()
-        scg.wait_for_page_load()
-        scg.click_select_one_group()
-        sog = SelectOneGroupPage()
-        sog.wait_for_page_load()
-        # 选择一个企业群
-        sog.select_one_enterprise_group()
+        gcp = GroupChatPage()
+        gcp.click_profile()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        slc.selecting_local_contacts_by_name("名片消息测试")
         time.sleep(2)
-        sog.click_text("发送名片")
+        slc.click_text("发送名片")
         # 1.功能及文案全部正常
-        self.assertEquals(sog.is_toast_exist("已发送"), True)
-        cdp.click_back_icon()
-        cp.wait_for_page_load()
-        cp.open_message_page()
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
+        slc.click_back_by_android()
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_hanjiabin_0205(self):
+        """名片消息——场景"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 进入标签分组会话页面
+        Preconditions.enter_label_grouping_chat_page()
+        # 发送名片消息给标签分组
+        gcp = GroupChatPage()
+        gcp.click_profile()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        slc.selecting_local_contacts_by_name("名片消息测试")
+        time.sleep(2)
+        slc.click_text("发送名片")
+        # 1.功能及文案全部正常
+        cwp = ChatWindowPage()
+        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
+        slc.click_back_by_android(3)
+        mp.open_message_page()
         # 等待消息页面加载
         mp.wait_for_page_load()
 
@@ -2569,6 +2842,7 @@ class MessageOthersAllTest(TestCase):
 
         mp = MessagePage()
         mp.wait_for_page_load()
+        # 进入我的电脑会话页面
         mp.click_search()
         sp = SearchPage()
         sp.input_search_keyword('我的电脑')
@@ -2587,5 +2861,268 @@ class MessageOthersAllTest(TestCase):
         cwp = ChatWindowPage()
         cwp.wait_for_msg_send_status_become_to('发送成功', 30)
         slc.click_back_by_android(2)
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_hanjiabin_0212(self):
+        """网页消息——发出网页消息消息界面——长按"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 进入会话页面发送网页消息
+        Preconditions.get_into_group_chat_page("群聊1")
+        gcp = GroupChatPage()
+        gcp.input_text_message("www.baidu.com")
+        gcp.send_text()
+        # 转发网页消息到我的电脑
+        gcp.press_message_text_by_number(-1)
+        gcp.click_text("转发")
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        scg.input_search_keyword("我的电脑")
+        time.sleep(2)
+        slc = SelectLocalContactsPage()
+        slc.selecting_local_contacts_by_name("我的电脑")
+        scg.click_sure_forward()
+        # 是否提示已转发
+        self.assertEquals(gcp.is_exist_forward(), True)
+        gcp.wait_for_page_load()
+        # 转发网页消息到单聊
+        gcp.press_message_text_by_number(-1)
+        gcp.click_text("转发")
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc.wait_for_page_load()
+        slc.selecting_local_contacts_by_name("大佬1")
+        scg.click_sure_forward()
+        # 是否提示已转发
+        self.assertEquals(gcp.is_exist_forward(), True)
+        gcp.wait_for_page_load()
+        # 转发网页消息到普通群
+        gcp.press_message_text_by_number(-1)
+        gcp.click_text("转发")
+        scg.wait_for_page_load()
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.selecting_one_group_by_name("群聊2")
+        scg.click_sure_forward()
+        # 是否提示已转发
+        self.assertEquals(gcp.is_exist_forward(), True)
+        gcp.wait_for_page_load()
+        # 转发网页消息到企业群
+        gcp.press_message_text_by_number(-1)
+        gcp.click_text("转发")
+        scg.wait_for_page_load()
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.select_one_enterprise_group()
+        scg.click_sure_forward()
+        # 是否提示已转发
+        self.assertEquals(gcp.is_exist_forward(), True)
+        gcp.wait_for_page_load()
+        gcp.click_back()
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_hanjiabin_0213(self):
+        """网页消息——发出网页消息消息界面——长按"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 清空收藏列表确保不影响验证
+        mp.open_me_page()
+        me_page = MePage()
+        mcp = MeCollectionPage()
+        me_page.wait_for_page_load()
+        me_page.click_collection()
+        mcp.wait_for_page_load()
+        mcp.clear_collection_list()
+        mcp.click_back()
+        me_page.wait_for_page_load()
+        me_page.open_message_page()
+        mp.wait_for_page_load()
+        # 进入会话页面
+        Preconditions.get_into_group_chat_page("群聊1")
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        gcs = GroupChatSetPage()
+        gcs.wait_for_page_load()
+        # 获取当前群名片名称
+        my_group_name = gcs.get_my_group_name()
+        gcs.click_back()
+        gcp.wait_for_page_load()
+        # 发送网页消息
+        text = "www.baidu.com"
+        gcp.input_text_message(text)
+        gcp.send_text()
+        gcp.press_message_text_by_number(-1)
+        gcp.click_text("收藏")
+        self.assertEquals(gcp.is_toast_exist("已收藏"), True)
+        gcp.click_back()
+        mp.wait_for_page_load()
+        mp.open_me_page()
+        me_page = MePage()
+        me_page.wait_for_page_load()
+        me_page.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        # 1.收藏内容来源显示为消息发送者名称
+        self.assertEquals(mcp.is_exists_text_message_by_name(text), True)
+        self.assertEquals(mcp.is_text_present(my_group_name), True)
+        mcp.click_back()
+        me_page.wait_for_page_load()
+        me_page.open_message_page()
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_hanjiabin_0214(self):
+        """网页消息——发出网页消息消息界面——长按"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 进入会话页面
+        Preconditions.get_into_group_chat_page("群聊1")
+        gcp = GroupChatPage()
+        # 发送网页消息
+        text = "www.baidu.com"
+        gcp.input_text_message(text)
+        gcp.send_text()
+        gcp.press_message_text_by_number(-1)
+        self.assertEquals(gcp.is_text_present("撤回"), True)
+        gcp.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+        time.sleep(610)
+        gcp.press_message_text_by_number(-1)
+        # 1.超过10分钟隐藏按钮
+        self.assertEquals(gcp.is_text_present("撤回"), False)
+        gcp.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+        gcp.click_back()
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD', "lxd_debug")
+    def test_msg_hanjiabin_0215(self):
+        """网页消息——发出网页消息消息界面——长按"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 清空收藏列表确保不影响验证
+        mp.open_me_page()
+        me_page = MePage()
+        mcp = MeCollectionPage()
+        me_page.wait_for_page_load()
+        me_page.click_collection()
+        mcp.wait_for_page_load()
+        mcp.clear_collection_list()
+        mcp.click_back()
+        me_page.wait_for_page_load()
+        me_page.open_message_page()
+        mp.wait_for_page_load()
+        # 进入会话页面
+        Preconditions.get_into_group_chat_page("群聊1")
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        gcs = GroupChatSetPage()
+        gcs.wait_for_page_load()
+        # 获取当前群名片名称
+        my_group_name = gcs.get_my_group_name()
+        gcs.click_back()
+        gcp.wait_for_page_load()
+        # 发送网页消息
+        text = "www.baidu.com"
+        gcp.input_text_message(text)
+        gcp.send_text()
+        gcp.press_message_text_by_number(-1)
+        gcp.click_text("收藏")
+        self.assertEquals(gcp.is_toast_exist("已收藏"), True)
+        gcp.click_back()
+        mp.wait_for_page_load()
+        mp.open_me_page()
+        me_page = MePage()
+        me_page.wait_for_page_load()
+        me_page.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        # 1.收藏内容来源显示为消息发送者名称
+        self.assertEquals(mcp.is_exists_text_message_by_name(text), True)
+        self.assertEquals(mcp.is_text_present(my_group_name), True)
+        mcp.click_back()
+        me_page.wait_for_page_load()
+        me_page.open_message_page()
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD', "lxd_debug")
+    def test_msg_hanjiabin_0216(self):
+        """网页消息——发出网页消息消息界面——长按"""
+
+        mp = MessagePage()
+        mp.wait_for_page_load()
+        # 进入单聊会话页面
+        name = "大佬1"
+        Preconditions.enter_single_chat_page(name)
+        # 发送名片消息给单聊
+        scp = SingleChatPage()
+        scp.click_more()
+        time.sleep(1)
+        scp.click_profile()
+        slc = SelectLocalContactsPage()
+        slc.wait_for_page_load()
+        slc.selecting_local_contacts_by_name("名片消息测试")
+        time.sleep(2)
+        slc.click_text("发送名片")
+        scp.wait_for_page_load()
+        # 转发名片消息到我的电脑
+        scp.press_card_name_by_number(-1)
+        scp.click_text("转发")
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        scg.input_search_keyword("我的电脑")
+        time.sleep(2)
+        slc.selecting_local_contacts_by_name("我的电脑")
+        scg.click_sure_forward()
+        # 是否提示已转发
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+        # 转发名片消息到单聊
+        scp.press_card_name_by_number(-1)
+        scp.click_text("转发")
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc.wait_for_page_load()
+        slc.selecting_local_contacts_by_name("大佬2")
+        scg.click_sure_forward()
+        # 是否提示已转发
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+        # 转发名片消息到普通群
+        scp.press_card_name_by_number(-1)
+        scp.click_text("转发")
+        scg.wait_for_page_load()
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.selecting_one_group_by_name("群聊1")
+        scg.click_sure_forward()
+        # 是否提示已转发
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+        # 转发名片消息到企业群
+        scp.press_card_name_by_number(-1)
+        scp.click_text("转发")
+        scg.wait_for_page_load()
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.select_one_enterprise_group()
+        scg.click_sure_forward()
+        # 是否提示已转发
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+        scp.click_back()
         # 等待消息页面加载
         mp.wait_for_page_load()

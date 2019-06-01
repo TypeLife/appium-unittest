@@ -56,6 +56,8 @@ class SingleChatPage(BaseChatPage):
                   '取消': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
                   '文件名称': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_name'),
                   '名片消息名称': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_card_name'),
+                  '更多': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
+                  '选择名片': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="名片"]'),
                   }
 
     @TestLogger.log()
@@ -229,3 +231,19 @@ class SingleChatPage(BaseChatPage):
         """按压名片消息"""
         els = self.get_elements(self.__class__.__locators["名片消息名称"])
         self.press(els[number])
+
+    @TestLogger.log()
+    def click_card_name_by_number(self, number):
+        """点击名片消息"""
+        els = self.get_elements(self.__class__.__locators["名片消息名称"])
+        els[number].click()
+
+    @TestLogger.log()
+    def click_more(self):
+        """点击更多富媒体按钮"""
+        self.click_element(self.__class__.__locators["更多"])
+
+    @TestLogger.log()
+    def click_profile(self):
+        """点击选择名片"""
+        self.click_element(self.__class__.__locators["选择名片"])
