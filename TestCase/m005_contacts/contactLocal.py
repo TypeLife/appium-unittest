@@ -3051,6 +3051,137 @@ class ContactsLocalhigh(TestCase):
         mass_assistant.page_contain_element(locator='新增')
 
 
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0079(self):
+        """测试邀请按钮跳转，自动调用系统短信，自动填入短信模板内容"""
+        contact=ContactsPage()
+        contact.select_contacts_by_name('大佬1')
+        time.sleep(2)
+        detail=ContactDetailsPage()
+        if detail.is_text_present('邀请使用'):
+            detail.click_invitation_use()
+            time.sleep(2)
+            detail.page_should_contain_text('最近都在用“和飞信”发消息打电话，免费短信省钱省心，多方通话一呼八应，邀请你一起畅享沟通，立即体验：http://feixin.10086.cn/rcs')
+        else:
+            pass
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0087(self):
+        """测试系统通讯录存在多个联系人，手机号码不一样"""
+        contact=ContactsPage()
+        name=contact.get_contacts_name()
+        number=contact.get_phone_number()
+        self.assertNotEqual(name[0],name[1])
+        self.assertNotEqual(number[0], number[1])
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0116(self):
+        """测试右边字母导航"""
+        contact=ContactsPage()
+        letters=contact.get_letters_index()
+        letter = random.choice(letters)
+        contact.click_letter_index(letter)
+        time.sleep(2)
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0232(self):
+        """测试“邀请使用”按钮跳转"""
+        contact=ContactsPage()
+        contact.select_contacts_by_name('大佬1')
+        time.sleep(2)
+        detail=ContactDetailsPage()
+        if detail.is_text_present('邀请使用'):
+            detail.click_invitation_use()
+            time.sleep(2)
+            detail.page_should_contain_text('最近都在用“和飞信”发消息打电话，免费短信省钱省心，多方通话一呼八应，邀请你一起畅享沟通，立即体验：http://feixin.10086.cn/rcs')
+        else:
+            pass
+
+    #备份通讯录
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0363(self):
+        """测试上传云端不存在的手机号码（大陆号码，不加区号）"""
+        contact=ContactsPage()
+        #进入我页面 备份通讯录
+        contact.click_me_icon()
+        me=MePage()
+        me.page_up()
+        me.click_setting_menu()
+        me.click_manage_contact()
+        manage_contact=MeSetContactsManagerPage()
+        manage_contact.click_text('通讯录备份')
+        time.sleep(2)
+        manage_contact.click_text('上传通讯录')
+        manage_contact.wait_for_contact_upload_success()
+        #删除联系人,联系人不存在
+        manage_contact.click_back_by_android(times=3)
+        me.open_contacts_page()
+        contact.select_contacts_by_name('b测算')
+        ContactDetailsPage().click_edit_contact()
+        EditContactPage().hide_keyboard()
+        EditContactPage().click_delete_contact()
+        EditContactPage().click_sure_delete()
+        time.sleep(2)
+        self.assertFalse(contact.is_contacts_exist('b测算'))
+        #进入我页面 备份通讯录
+        contact.click_me_icon()
+        me=MePage()
+        me.page_up()
+        me.click_setting_menu()
+        me.click_manage_contact()
+        manage_contact=MeSetContactsManagerPage()
+        manage_contact.click_text('通讯录备份')
+        time.sleep(2)
+        manage_contact.click_text('下载通讯录')
+        manage_contact.wait_for_contact_dowmload_success()
+        #进入通讯录界面 查看是否下载成功
+        manage_contact.click_back_by_android(times=3)
+        me.open_contacts_page()
+        self.assertTrue(contact.is_contacts_exist('b测算'))
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0365(self):
+        """测试上传云端不存在的手机号码（香港，不加区号）"""
+        contact=ContactsPage()
+        #进入我页面 备份通讯录
+        contact.click_me_icon()
+        me=MePage()
+        me.page_up()
+        me.click_setting_menu()
+        me.click_manage_contact()
+        manage_contact=MeSetContactsManagerPage()
+        manage_contact.click_text('通讯录备份')
+        time.sleep(2)
+        manage_contact.click_text('上传通讯录')
+        manage_contact.wait_for_contact_upload_success()
+        #删除联系人,联系人不存在
+        manage_contact.click_back_by_android(times=3)
+        me.open_contacts_page()
+        contact.select_contacts_by_name('香港大佬')
+        ContactDetailsPage().click_edit_contact()
+        EditContactPage().hide_keyboard()
+        EditContactPage().click_delete_contact()
+        EditContactPage().click_sure_delete()
+        time.sleep(2)
+        self.assertFalse(contact.is_contacts_exist('香港大佬'))
+        #进入我页面 备份通讯录
+        contact.click_me_icon()
+        me=MePage()
+        me.page_up()
+        me.click_setting_menu()
+        me.click_manage_contact()
+        manage_contact=MeSetContactsManagerPage()
+        manage_contact.click_text('通讯录备份')
+        time.sleep(2)
+        manage_contact.click_text('下载通讯录')
+        manage_contact.wait_for_contact_dowmload_success()
+        #进入通讯录界面 查看是否下载成功
+        manage_contact.click_back_by_android(times=3)
+        me.open_contacts_page()
+        self.assertTrue(contact.is_contacts_exist('香港大佬'))
+
+
+
 
 if __name__=="__main__":
     unittest.main()
