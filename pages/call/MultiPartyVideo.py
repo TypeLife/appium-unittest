@@ -47,6 +47,7 @@ class MultiPartyVideoPage(BasePage):
         '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
         '取消': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
         '再次呼叫': (MobileBy.ID, 'com.chinasofti.rcs:id/call_again'),
+        '一键建群': (MobileBy.ID, 'com.chinasofti.rcs:id/one_key_new_group'),
         '团队联系人图像': (MobileBy.ID, 'com.chinasofti.rcs:id/img_icon_contactlist')
     }
 
@@ -100,6 +101,11 @@ class MultiPartyVideoPage(BasePage):
     def click_call_again(self):
         """点击再次呼叫"""
         self.click_element(self.__locators["再次呼叫"])
+
+    @TestLogger.log()
+    def click_one_key_new_group(self):
+        """点击一键建群"""
+        self.click_element(self.__locators["一键建群"])
 
     @TestLogger.log()
     def click_contact_icon(self, index=0):
