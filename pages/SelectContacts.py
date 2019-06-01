@@ -35,6 +35,7 @@ class SelectContactsPage(BasePage):
         '最近聊天': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint'),
         'X': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect'),
         '聊天电话': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),
+        '最近聊天联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/item_rl'),
         # 分享二维码的选择联系人页面
         '选择手机联系人': (MobileBy.XPATH, '//*[@text ="选择手机联系人"]'),
         'tel:+86': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_number"]'),
@@ -400,6 +401,11 @@ class SelectContactsPage(BasePage):
         if text in locator:
             return True
         return False
+
+    @TestLogger.log('获取元素文本内容')
+    def get_element_text(self, locator='选择联系人'):
+        return self.get_text(self.__locators[locator])
+
 
     @TestLogger.log('判断该页面是否有元素')
     def page_contain_element(self, locator):

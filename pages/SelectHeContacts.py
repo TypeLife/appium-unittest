@@ -62,6 +62,26 @@ class SelectHeContactsPage(BasePage):
                 team_names.append(el.text)
         return team_names
 
+    @TestLogger.log("获取所有团队名称")
+    def get_all_group_name(self):
+        """获取所有团队名"""
+        max_try = 5
+        current = 0
+        while current < max_try:
+            if self._is_element_present(self.__class__.__locators["团队名称"]):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        els = self.get_elements(self.__class__.__locators["团队名称"])
+        group_name = []
+        if els:
+            for el in els:
+                group_name.append(el.text)
+        else:
+            raise AssertionError("No m005_group, please add m005_group in address book.")
+        return group_name
+
+
     @TestLogger.log()
     def select_one_team_by_name(self, name):
         """选择一个团队"""
