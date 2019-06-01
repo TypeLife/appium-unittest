@@ -42,6 +42,13 @@ class ContactDetailsPage(BasePage):
         '邮箱': (MobileBy.ID, 'com.chinasofti.rcs:id/property'),
         '邮箱地址': (MobileBy.ID, 'com.chinasofti.rcs:id/value'),
         '分享名片': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/btn_share_card" and @text="分享名片"]'),
+        '分享名片左上角X按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/cancle_img'),
+        '分享名片头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_card_img'),
+        '分享名片名字': (MobileBy.ID, 'com.chinasofti.rcs:id/name_tv'),
+        '分享名片号码': (MobileBy.ID, 'com.chinasofti.rcs:id/phone_tv'),
+        '分享名片公司': (MobileBy.ID, 'com.chinasofti.rcs:id/company_tv'),
+        '分享名片职位': (MobileBy.ID, 'com.chinasofti.rcs:id/position_tv'),
+        '分享名片邮箱': (MobileBy.ID, 'com.chinasofti.rcs:id/email_tv'),
         '保存到通讯录': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/btn_share_card" and @text="保存到通讯录"]'),
         'com.chinasofti.rcs:id/btn_share_card_line': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_share_card_line'),
         '邀请使用': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_invitation_to_use'),
@@ -411,6 +418,41 @@ class ContactDetailsPage(BasePage):
     def click_save_contacts_icon(self):
         """点击保存到通讯录图标"""
         self.click_element(self.__class__.__locators["保存到通讯录"])
+
+    @TestLogger.log()
+    def is_exists_share_card_close_icon(self):
+        """是否存在分享名片左上角X按钮"""
+        return self._is_element_present(self.__class__.__locators["分享名片左上角X按钮"])
+
+    @TestLogger.log()
+    def is_exists_share_card_head_img(self):
+        """是否存在分享名片头像"""
+        return self._is_element_present(self.__class__.__locators["分享名片头像"])
+
+    @TestLogger.log()
+    def is_exists_share_card_name(self):
+        """是否存在分享名片名字"""
+        return self._is_element_present(self.__class__.__locators["分享名片名字"])
+
+    @TestLogger.log()
+    def is_exists_share_card_number(self):
+        """是否存在分享名片号码"""
+        return self._is_element_present(self.__class__.__locators["分享名片号码"])
+
+    @TestLogger.log()
+    def is_exists_share_card_company(self):
+        """是否存在分享名片公司"""
+        return self._is_element_present(self.__class__.__locators["分享名片公司"])
+
+    @TestLogger.log()
+    def is_exists_share_card_position(self):
+        """是否存在分享名片职位"""
+        return self._is_element_present(self.__class__.__locators["分享名片职位"])
+
+    @TestLogger.log()
+    def is_exists_share_card_email(self):
+        """是否存在分享名片邮箱"""
+        return self._is_element_present(self.__class__.__locators["分享名片邮箱"])
 
     @TestLogger.log()
     def is_exists_value_by_name(self, name):

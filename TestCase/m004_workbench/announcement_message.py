@@ -569,6 +569,227 @@ class AnnouncementMessageTest(TestCase):
         current_mobile().back()
         amp.wait_for_page_loads()
 
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0020(self):
+        """管理员删除未发布公告，删除成功"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、点击【未发公告】
+        # 4、选中一条未发布公告
+        # 5、点击【删除】按钮
+        # 6、点击【确定】按钮
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.input_title_text("ha6")
+        amp.input_content_text("你好啊")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        amp.click_element_("保存")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        amp.click_element_("未发公告")
+        time.sleep(2)
+        amp.click_text("ha6")
+        time.sleep(2)
+        amp.click_element_("删除")
+        time.sleep(2)
+        amp.click_element_("确定")
+        time.sleep(2)
+        amp.click_element_("X")
+        wbp=WorkbenchPage()
+        wbp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0021(self):
+        """管理员发布未发布公告，发布成功"""
+        # 1、管理员登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、点击【未发布公告】
+        # 4、选中一条未发布公告
+        # 5、点击【发布】按钮
+        # 6、点击【确定】按钮
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.input_title_text("ha6")
+        amp.input_content_text("你好啊")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        amp.click_element_("保存")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        amp.click_element_("未发公告")
+        time.sleep(2)
+        amp.click_text("ha6")
+        time.sleep(2)
+        amp.click_element_("发布text")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        if not amp.is_text_present("ha6"):
+            raise AssertionError("公告发布不成功")
+        amp.click_text("ha6")
+        time.sleep(2)
+        amp.click_text("下线")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0022(self):
+        """验证未发公告页搜索是否正确"""
+        # 1、点击右上角放大镜图标
+        # 2、点击搜索栏，输入输入存在的关键字
+        # 3、点击搜索
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.input_title_text("ha6")
+        amp.input_content_text("你好啊")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        amp.click_element_("保存")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        amp.click_element_("未发公告")
+        time.sleep(2)
+        amp.click_element_("搜索")
+        time.sleep(2)
+        amp.click_element_("搜索输入框")
+        time.sleep(2)
+        amp.input_search_text("ha")
+        time.sleep(3)
+        amp.click_text("搜索")
+        time.sleep(2)
+        if not amp.is_text_present("ha6"):
+            raise AssertionError("搜索不成功")
+        amp.click_text("ha6")
+        time.sleep(2)
+        amp.click_element_("删除")
+        time.sleep(2)
+        amp.click_element_("确定")
+        time.sleep(2)
+        amp.click_element_("X")
+        wbp = WorkbenchPage()
+        wbp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'workbench', 'GGXX')
+    def test_GGXX_0023(self):
+        """已发布公告下线"""
+        # 1、点击公告列表的一条公告
+        # 2、在详情界面，点击底部“下线”
+        # 3、点击下线提示框弹窗“确定”
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads()
+        amp.click_text("发布公告")
+        time.sleep(2)
+        amp.input_title_text("ha6")
+        amp.input_content_text("你好啊")
+        current_mobile().hide_keyboard()
+        time.sleep(2)
+        amp.click_element_("发布")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        if not amp.is_text_present("ha6"):
+            raise AssertionError("首页显示不成功")
+        amp.click_text("ha6")
+        time.sleep(2)
+        amp.click_text("下线")
+        time.sleep(2)
+        amp.click_element_("确定")
+        amp.wait_for_page_loads()
+        if amp.is_text_present("ha6"):
+            raise AssertionError("下线公告没有消失")
+
+    @staticmethod
+    def setUp_test_GGXX_0024():
+
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_announcement_message_page_not_admin()
+            return
+        workbench = WorkbenchPage()
+        if workbench.is_on_this_page():
+            workbench.open_message_page()
+            Preconditions.enter_announcement_message_page_not_admin()
+            return
+        amp = AnnouncementMessagePage()
+        if amp.is_on_this_page_not_admin():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            Preconditions.enter_announcement_message_page_not_admin()
+
+    @tags('ALL', 'CMCC_skip', 'workbench', 'GGXX')
+    def test_GGXX_0024(self):
+        """非管理员进入公告信息，检查初始空白页"""
+        # 1、普通用户登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、检查公告信息初始页
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads_not_admin()
+        time.sleep(3)
+        if not amp.is_text_present("管理员还未发布任何公告"):
+            raise AssertionError("初始页提示有错误")
+        current_mobile().back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_GGXX_0026():
+
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_announcement_message_page_not_admin()
+            return
+        workbench = WorkbenchPage()
+        if workbench.is_on_this_page():
+            workbench.open_message_page()
+            Preconditions.enter_announcement_message_page_not_admin()
+            return
+        amp = AnnouncementMessagePage()
+        if amp.is_on_this_page_not_admin():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            Preconditions.enter_announcement_message_page_not_admin()
+
+    @tags('ALL', 'CMCC_skip', 'workbench', 'GGXX')
+    def test_GGXX_0026(self):
+        """非管理员进入发布公告，公告搜索-按中文搜索"""
+        # 1、普通用户登录移动端和飞信工作台
+        # 2、点击进入【公告信息】页面
+        # 3、按中文搜索公告信息
+        amp = AnnouncementMessagePage()
+        amp.wait_for_page_loads_not_admin()
+        time.sleep(3)
+        amp.click_element_("搜索")
+        time.sleep(2)
+        amp.click_element_("搜索输入框")
+        time.sleep(2)
+        amp.input_search_text("哈")
+        time.sleep(3)
+        amp.click_text("搜索")
+        time.sleep(2)
+        if not amp.is_text_present("哈哈"):
+            raise AssertionError("搜索不成功")
+        current_mobile().back()
+        wbp = WorkbenchPage()
+        wbp.wait_for_page_load()
+
+
 
 
 

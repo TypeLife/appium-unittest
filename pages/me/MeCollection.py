@@ -344,3 +344,9 @@ class MeCollectionPage(BasePage):
     def click_cancel_forward(self):
         """点击取消"""
         self.click_element(self.__class__.__locators["取消"])
+
+    @TestLogger.log()
+    def is_exists_card_by_name(self, name):
+        """是否存在指定名片"""
+        locator = (MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/favorite_tv_content" and @text="[名片]%s的个人名片"]' % name)
+        return self._is_element_present(locator)
