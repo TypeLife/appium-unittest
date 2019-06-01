@@ -4,7 +4,7 @@ from library.core.utils.applicationcache import current_mobile
 from pages.components import ContactsSelector
 from preconditions.BasePreconditions import LoginPreconditions, ContactsPage, CallPage, ContactSecltorPage, \
     SelectContactsPage, CalllogBannerPage, MessagePage, SearchPage, LabelGroupingPage, GroupListPage, \
-    GroupListSearchPage
+    GroupListSearchPage, LableGroupDetailPage
 from library.core.TestCase import TestCase
 from library.core.utils.testcasefilter import tags
 
@@ -1034,6 +1034,291 @@ class MsgAllPrior(TestCase):
             elements[i].click()
         # 判断右侧字符是否按顺序排列
         current_mobile().is_right_letters_sorted()
+
+    @staticmethod
+    def setUp_test_call_wangqiong_0179():
+        """预置条件"""
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits('联系人3', '18311111111')
+        contactspage.create_contacts_if_not_exits('联系人4', '18322222222')
+        # 进入标签分组页签
+        contactspage.click_label_grouping()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_call_wangqiong_0179(self):
+        # 创建标签分组
+        labellist = LabelGroupingPage()
+        labellist.click_new_create_group()
+        labellist.wait_for_create_label_grouping_page_load()
+        labellist.input_label_grouping_name('分组1')
+        labellist.click_sure()
+        time.sleep(3)
+        if current_mobile().is_text_present('新建分组'):
+            labellist.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/rl_label_left_back'))
+            labellist.select_group('分组1')
+
+            # 判断标签中有无指定成员
+            if labellist._is_element_present((MobileBy.ID, 'com.chinasofti.rcs:id/dialog_message')):
+                time.sleep(5)
+                labellist.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
+                                        auto_accept_permission_alert=False)
+            a = labellist.is_contacter_in_lable('联系人3')
+            b = labellist.is_contacter_in_lable('联系人4')
+            if not (a & b):
+                labellist.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/image_first_colum'),
+                                        auto_accept_permission_alert=False)
+                if not a:
+                    labellist.click_one_contact('联系人3')
+                if not b:
+                    labellist.click_one_contact('联系人4')
+                labellist.click_sure()
+        else:
+            # 新建分组 选择分组成员
+            labellist.click_one_contact('联系人3')
+            labellist.click_one_contact('联系人4')
+            labellist.click_sure()
+            labellist.select_group('分组1')
+        # 点击多方电话
+        labeldeatilpage = LableGroupDetailPage()
+        labeldeatilpage.click_multi_tel()
+
+        # 通过11位号码选择联系人 看是否能精准匹配到联系人
+        from pages import SelectLocalContactsPage
+
+        selectpage = SelectLocalContactsPage()
+        selectpage.search('18311111111')
+        # 搜索到指定联系人选择之后 搜索栏清空 呼叫按钮可点击
+        selectpage.click_element((MobileBy.XPATH, '//*[contains(@text, "联系人3")]'))
+        time.sleep(3)
+        selectpage.element_should_be_enabled((MobileBy.ID, 'com.chinasofti.rcs:id/tv_sure'))
+
+        """判断输入框是否自动清空"""
+        self.assertTrue(selectpage.page_should_not_contain_element((MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect')))
+
+    @staticmethod
+    def setUp_test_call_wangqiong_0180():
+        """预置条件"""
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits('联系人3', '18311111111')
+        contactspage.create_contacts_if_not_exits('联系人4', '18322222222')
+        # 进入标签分组页签
+        contactspage.click_label_grouping()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_call_wangqiong_0180(self):
+        # 创建标签分组
+        labelpage = LabelGroupingPage()
+        if not labelpage.is_text_present('分组1'):
+            labelpage.create_group('分组1', '联系人3', '联系人4')
+        labelpage.click_label_group('分组1')
+        # 校验里面成员是否包含联系人3&联系人4，没有则添加成员
+        if labelpage._is_element_present((MobileBy.ID, 'com.chinasofti.rcs:id/dialog_message')):
+            time.sleep(5)
+            labelpage.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
+                                    auto_accept_permission_alert=False)
+        a = labelpage.is_contacter_in_lable('联系人3')
+        b = labelpage.is_contacter_in_lable('联系人4')
+        if not (a & b):
+            labelpage.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/image_first_colum'),
+                                    auto_accept_permission_alert=False)
+            if not a:
+                labelpage.click_one_contact('联系人3')
+            if not b:
+                labelpage.click_one_contact('联系人4')
+            labelpage.click_sure()
+        # 进入多方通话
+        labelpage.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/image_third_colum'))
+
+        # 输入1位数 查看是否能模糊匹配到联系人
+        from pages import SelectLocalContactsPage
+        selectpage = SelectLocalContactsPage()
+        selectpage.search('1')
+        # 搜索到指定联系人选择之后 搜索栏清空 呼叫按钮可点击
+        selectpage.click_element((MobileBy.XPATH, '//*[contains(@text, "联系人3")]'))
+        time.sleep(3)
+        selectpage.element_should_be_enabled((MobileBy.ID, 'com.chinasofti.rcs:id/tv_sure'))
+
+        """判断输入框是否自动清空"""
+        self.assertTrue(selectpage.page_should_not_contain_element((MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect')))
+
+    @staticmethod
+    def setUp_test_call_wangqiong_0181():
+        """预置条件"""
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits('联系人3', '18311111111')
+        contactspage.create_contacts_if_not_exits('联系人4', '18322222222')
+        # 进入标签分组页签
+        contactspage.click_label_grouping()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_call_wangqiong_0181(self):
+        # 创建标签分组
+        labelpage = LabelGroupingPage()
+        if not labelpage.is_text_present('分组1'):
+            labelpage.create_group('分组1', '联系人3', '联系人4')
+        labelpage.click_label_group('分组1')
+        # 校验里面成员是否包含联系人3&联系人4，没有则添加成员
+        if labelpage._is_element_present((MobileBy.ID, 'com.chinasofti.rcs:id/dialog_message')):
+            time.sleep(5)
+            labelpage.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
+                                    auto_accept_permission_alert=False)
+        a = labelpage.is_contacter_in_lable('联系人3')
+        b = labelpage.is_contacter_in_lable('联系人4')
+        if not (a & b):
+            labelpage.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/image_first_colum'),
+                                    auto_accept_permission_alert=False)
+            if not a:
+                labelpage.click_one_contact('联系人3')
+            if not b:
+                labelpage.click_one_contact('联系人4')
+            labelpage.click_sure()
+        # 进入多方通话
+        labelpage.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/image_third_colum'))
+
+        # 输入全名 查看是否能精准匹配到联系人
+        from pages import SelectLocalContactsPage
+        selectpage = SelectLocalContactsPage()
+        selectpage.search('联系人3')
+        time.sleep(3)
+        # 搜索到指定联系人选择之后 搜索栏清空 呼叫按钮可点击
+        selectpage.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and ' + '@text="联系人3"]'))
+        time.sleep(3)
+        selectpage.element_should_be_enabled((MobileBy.ID, 'com.chinasofti.rcs:id/tv_sure'))
+
+        """判断输入框是否自动清空"""
+        self.assertTrue(selectpage.page_should_not_contain_element((MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect')))
+
+    @staticmethod
+    def setUp_test_call_wangqiong_0182():
+        """预置条件"""
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits('联系人3', '18311111111')
+        contactspage.create_contacts_if_not_exits('联系人4', '18322222222')
+        # 进入标签分组页签
+        contactspage.click_label_grouping()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_call_wangqiong_0182(self):
+        # 创建标签分组
+        labelpage = LabelGroupingPage()
+        if not labelpage.is_text_present('分组1'):
+            labelpage.create_group('分组1', '联系人3', '联系人4')
+        labelpage.click_label_group('分组1')
+        # 校验里面成员是否包含联系人3&联系人4，没有则添加成员
+        if labelpage._is_element_present((MobileBy.ID, 'com.chinasofti.rcs:id/dialog_message')):
+            time.sleep(5)
+            labelpage.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
+                                    auto_accept_permission_alert=False)
+        a = labelpage.is_contacter_in_lable('联系人3')
+        b = labelpage.is_contacter_in_lable('联系人4')
+        if not (a & b):
+            labelpage.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/image_first_colum'),
+                                    auto_accept_permission_alert=False)
+            if not a:
+                labelpage.click_one_contact('联系人3')
+            if not b:
+                labelpage.click_one_contact('联系人4')
+            labelpage.click_sure()
+        # 进入多方通话
+        labelpage.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/image_third_colum'))
+
+        # 输入非全名 查看是否能模糊匹配到联系人
+        from pages import SelectLocalContactsPage
+        selectpage = SelectLocalContactsPage()
+        selectpage.search('联系人')
+        # 搜索到指定联系人选择之后 搜索栏清空 呼叫按钮可点击
+        selectpage.click_element((MobileBy.XPATH, '//*[contains(@text, "联系人3")]'))
+        time.sleep(3)
+        selectpage.element_should_be_enabled((MobileBy.ID, 'com.chinasofti.rcs:id/tv_sure'))
+
+        """判断输入框是否自动清空"""
+        self.assertTrue(selectpage.page_should_not_contain_element((MobileBy.ID, 'com.chinasofti.rcs:id/iv_delect')))
+
+    @staticmethod
+    def setUp_test_call_wangqiong_0193():
+        """预置条件"""
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_call_call_wangqiong_0193(self):
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits('联系人3', '18311111111')
+        contactspage.create_contacts_if_not_exits('联系人4', '18322222222')
+
+        Preconditions.enter_call_page()
+        # 如果存在多方通话引导页跳过引导页
+        callcontact = CalllogBannerPage()
+        callcontact.skip_multiparty_call()
+        # 点击多方通话
+        callcontact.click_element((MobileBy.ID, "com.chinasofti.rcs:id/btnFreeCall"))
+        # 选择指定联系人 点击呼叫
+        selectcontacts = SelectContactsPage()
+        selectcontacts.search('联系人3')
+        selectcontacts.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and ' + '@text="联系人3"]'))
+        time.sleep(4)
+        selectcontacts.click_sure_bottom()
+        time.sleep(3)
+        # 是否存在请先接听“和飞信电话”，点击“我知道了” 并自动允许和飞信管理
+        if callcontact._is_element_present((MobileBy.ID, 'com.chinasofti.rcs:id/andfetion_tip_bt')):
+            callcontact.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/andfetion_tip_bt'))
+            callcontact.get_source()
+        if not callcontact._is_element_present((MobileBy.XPATH, "//*[contains(@text, '我')]")):
+            callcontact.click_element((MobileBy.ID, 'com.android.packageinstaller:id/permission_allow_button'), 1,
+                                      False)
+
+        # 是否存在设置悬浮窗，存在去设置页设置权限
+        if callcontact._is_element_present((MobileBy.ID, 'android:id/button1')):
+            callcontact.click_element((MobileBy.ID, 'android:id/button1'))
+            current_mobile().click_element((MobileBy.ID, 'android:id/switch_widget'))
+            current_mobile().click_element((MobileBy.XPATH, '//android.widget.ImageButton[@content-desc="向上导航"]'))
+
+        # 挂断多方通话
+        time.sleep(6)
+        callpage = CallPage()
+        callpage.hang_up_hefeixin_call()
+        time.sleep(3)
+        #
+        # 挂断电话回到多方通话界面
+        self.assertTrue(callcontact._is_element_present((MobileBy.ID, "com.chinasofti.rcs:id/btnFreeCall")))
+
+
+
 
 
 
