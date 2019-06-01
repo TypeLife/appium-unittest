@@ -1093,3 +1093,408 @@ class MsgAllPrior(TestCase):
         clsp = ContactListSearchPage()
         clsp.input_search_keyword("atest_0737")
         self.assertFalse(clsp.is_show_more_display())
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0738():
+        Preconditions.select_mobile('Android-移动')
+        LoginPreconditions.make_already_in_message_page()
+        mess = MessagePage()
+        # 点击‘通讯录’
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        contacts.wait_for_page_load()
+        for i in range(4):
+            contacts.click_add()
+            ccp = CreateContactPage()
+            ccp.wait_for_page_load()
+            name = "atest_0738_" + str(random.randint(100, 999))
+            number = "147652" + str(time.time())[-5:]
+            ccp.create_contact(name, number)
+            ccp.click_allow_button()
+            cdp = ContactDetailsPage()
+            cdp.wait_for_page_load()
+            cdp.click_back()
+            contacts = ContactsPage()
+            contacts.wait_for_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_contacts_chenjixiang_0738(self):
+        """联系-搜索-查看是否有显示更多标识"""
+        contacts = ContactsPage()
+        contacts.click_search_box()
+        clsp = ContactListSearchPage()
+        clsp.input_search_keyword("atest_0738")
+        self.assertTrue(clsp.is_show_more_display())
+
+    @staticmethod
+    def setUp_test_contacts_chenjixiang_0759():
+        Preconditions.select_mobile('Android-移动')
+        LoginPreconditions.make_already_in_message_page()
+        mess = MessagePage()
+        # 点击‘通讯录’
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        contacts.wait_for_page_load()
+        names = contacts.get_all_contacts_name()
+        if '本机' in names:
+            names.remove('本机')
+        # 删除所有联系人
+        contacts.swipe_to_top()
+        for name in names:
+            contacts.select_contacts_by_name(name)
+            cdp = ContactDetailsPage()
+            cdp.wait_for_page_load()
+            cdp.click_edit_contact()
+            ecp = EditContactPage()
+            ecp.wait_for_page_load()
+            ecp.page_up()
+            time.sleep(1)
+            ecp.click_delete_contact()
+            ecp.click_sure_delete()
+            ecp.click_allow_button()
+            contacts = ContactsPage()
+            time.sleep(2)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_contacts_chenjixiang_0759(self):
+        """联系-搜索-点击返回"""
+        contacts = ContactsPage()
+        contacts.swipe_to_top()
+        contacts.click_search_box()
+        clsp = ContactListSearchPage()
+        clsp.input_search_keyword("123")
+        self.assertFalse(clsp.is_exist_contacts())
+
+    @staticmethod
+    def setUp_test_contacts_quxinli_0002():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        # """点击到“联系”页"""
+        if mess.is_on_this_page():
+            mess.open_contacts_page()
+            return
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_contacts_quxinli_0002(self):
+        contacts = ContactsPage()
+        createteampage = CreateTeamPage()
+
+        # """1.测试“搜索栏”存在并点击有效，并返回"""
+        contacts.click_search_box()
+        contacts.click_search_return()
+
+        # """测试“备份提示”是否存在，并返回"""
+        contacts.is_exist_backup_tips()
+        contacts.is_exist_backup_tips_text()
+
+        # """测试“群聊”存在并点击有效，并返回"""
+        contacts.open_group_chat_list()
+        contacts.click_return()
+
+        # """测试“标签分组”存在并点击有效，并返回"""
+        contacts.click_label_grouping()
+        contacts.click_label_grouping_return()
+
+        # """测试“公众号”存在并点击有效，并返回"""
+        contacts.click_official_account_icon()
+        contacts.click_return()
+
+        # """测试“创建团队”存在并点击有效，并返回"""
+        contacts.click_creatteam()
+        contacts.click_creatteam_return()
+
+        # """手机联系人标签显示所有手机联系人
+        contacts.is_exists_star()
+
+        # """有星标联系人时最上面显示星标联系人
+        # 待补充
+
+        # """2.右上角显示新建联系人按钮 +"""
+        contacts.click_add()
+        contacts.click_add_return()
+
+
+        # """3.测试“字母导航栏”存在并点击有效，并返回"""
+        # contacts.click_element()
+        # 待补充
+
+    @staticmethod
+    def setUp_test_contacts_quxinli_0003():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        # """点击到“联系”页"""
+        if mess.is_on_this_page():
+            mess.open_contacts_page()
+            return
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_contacts_quxinli_0003(self):
+        contacts = ContactsPage()
+        createteampage = CreateTeamPage()
+
+        # """1.测试“搜索栏”存在并点击有效，并返回"""
+        contacts.click_search_box()
+        contacts.click_search_return()
+
+        # """测试“备份提示”是否存在，并返回"""
+        contacts.is_exist_backup_tips()
+        contacts.is_exist_backup_tips_text()
+
+        # """测试“群聊”存在并点击有效，并返回"""
+        contacts.open_group_chat_list()
+        contacts.click_return()
+
+        # """测试“标签分组”存在并点击有效，并返回"""
+        contacts.click_label_grouping()
+        contacts.click_label_grouping_return()
+
+        # """测试“公众号”存在并点击有效，并返回"""
+        contacts.click_official_account_icon()
+        contacts.click_return()
+
+        # """测试“创建团队”存在并点击有效，并返回"""
+        contacts.click_creatteam()
+        contacts.click_creatteam_return()
+
+        # """手机联系人标签显示所有手机联系人
+        contacts.is_exists_star()
+
+        # """有星标联系人时最上面显示星标联系人
+        # 待补充
+
+        # """2.右上角显示新建联系人按钮 +"""
+        contacts.click_add()
+        contacts.click_add_return()
+
+
+        # """3.测试“字母导航栏”存在并点击有效，并返回"""
+        # contacts.click_element()
+        # 待补充
+
+    @staticmethod
+    def setUp_test_contacts_quxinli_0019():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        # """点击到“联系”页"""
+        if mess.is_on_this_page():
+            mess.open_contacts_page()
+            return
+        #待补充 我的团队搜索结果中有已保存到本地的RCS用户
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_contacts_quxinli_0019(self):
+        contacts = ContactsPage()
+
+        # """1.点击联系tab的搜索框输入关键字"""
+        contacts.click_search_box()
+        contactlistsearchpage = ContactListSearchPage()
+        contactlistsearchpage.click_myteam()
+        contactlistsearchpage.input_search_keyword('给个红包1')
+        time.sleep(0.5)
+        contactlistsearchpage.click_result_icon()
+        time.sleep(0.5)
+        # """页面跳转到该用户的Profile页，显示用户的详情：姓名、号码、头像，公司"""
+        contactdetailspage = ContactDetailsPage()
+        contactdetailspage.is_exists_contacts_name()
+        contactdetailspage.is_exists_contacts_number()
+        contactdetailspage.is_exists_contacts_image()
+        contacts.assert_screen_contain_text('测试zrtest')
+        # """消息、电话、语音通话、视频通话，飞信电话，分享名片"""
+        contactdetailspage.is_exists_message_icon()
+        contactdetailspage.is_exists_call_icon()
+        contactdetailspage.is_exists_voice_call_icon()
+        contactdetailspage.is_exists_video_call_icon()
+        contactdetailspage.is_exists_dial_hefeixin_icon()
+        contactdetailspage.is_exists_share_card_icon()
+
+
+        # """点击头像显示大图
+        contactdetailspage.click_avatar()
+        contactdetailspage.is_exists_big_avatar()
+        contactdetailspage.click_big_avatar()
+        time.sleep(2)
+
+        # """点击消息按钮进入会话界面
+        contactdetailspage.message_btn_is_clickable()
+
+        # """点击电话弹出拨打弹出
+        contactdetailspage.call_btn_is_clickable()
+
+        # """点击语音通话弹出语音会话弹窗
+        contactdetailspage.voice_btn_is_clickable()
+
+        # """点击视频通话弹窗视频会话弹窗
+        contactdetailspage.video_call_btn_is_clickable()
+
+        # """点击和飞信电话直接拨打和飞信电话
+        contactdetailspage.hefeixin_call_btn_is_clickable()
+
+        # """3.点击分享名片,掉起分享名片的联系人选择"""
+        contactdetailspage.click_share_business_card()
+        time.sleep(0.5)
+        contactdetailspage.assert_screen_contain_text('选择一个群')
+        contactdetailspage.assert_screen_contain_text('选择手机联系人')
+        contacts.share_to_contact()
+
+        # """可以成功分享给群、联系人"""
+        contacts.select_people_by_name('给个红包2')
+        contacts.share_sure()
+        time.sleep(0.5)
+        contacts.assert_screen_contain_text('已发送')
+
+    @staticmethod
+    def setUp_test_contacts_quxinli_0426():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        # """点击到“联系”页"""
+        if mess.is_on_this_page():
+            mess.open_contacts_page()
+            return
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_contacts_quxinli_0426(self):
+        contacts = ContactsPage()
+        contactdetailspage = ContactDetailsPage()
+        # """删除联系人"""
+        contactdetailspage.delete_contact('2测试团队保存联系人子级')
+
+        # """进入我的团队"""
+        contacts.choose_zetest_group()
+        contacts.choose_zetest_group_son()
+        contactdetailspage.click_selectone3()
+        # """保存"""
+        contactdetailspage.click_save_contacts_icon()
+        contactdetailspage.click_sure_icon()
+
+
+        # """页面跳转到该用户的Profile页，显示用户的详情：姓名、号码、头像，公司"""
+        contactdetailspage = ContactDetailsPage()
+        contactdetailspage.is_exists_contacts_name()
+        contactdetailspage.is_exists_contacts_number()
+        contactdetailspage.is_exists_contacts_image()
+        contacts.assert_screen_contain_text('测试zrtest')
+        # """消息、电话、语音通话、视频通话，飞信电话，分享名片"""
+        contactdetailspage.is_exists_message_icon()
+        contactdetailspage.is_exists_call_icon()
+        contactdetailspage.is_exists_voice_call_icon()
+        contactdetailspage.is_exists_video_call_icon()
+        contactdetailspage.is_exists_dial_hefeixin_icon()
+        contactdetailspage.is_exists_share_card_icon()
+
+
+        # """点击头像显示大图
+        contactdetailspage.click_avatar()
+        contactdetailspage.is_exists_big_avatar()
+        contactdetailspage.click_big_avatar()
+        time.sleep(2)
+
+        # """点击消息按钮进入会话界面
+        contactdetailspage.message_btn_is_clickable()
+
+        # """点击电话弹出拨打弹出
+        contactdetailspage.call_btn_is_clickable()
+
+        # """点击语音通话弹出语音会话弹窗
+        contactdetailspage.voice_btn_is_clickable()
+
+        # """点击视频通话弹窗视频会话弹窗
+        contactdetailspage.video_call_btn_is_clickable()
+
+        # """点击和飞信电话直接拨打和飞信电话
+        contactdetailspage.hefeixin_call_btn_is_clickable()
+
+        # """3.点击分享名片,掉起分享名片的联系人选择"""
+        contactdetailspage.click_share_business_card()
+        time.sleep(0.5)
+        contactdetailspage.assert_screen_contain_text('选择一个群')
+        contactdetailspage.assert_screen_contain_text('选择手机联系人')
+        contacts.share_to_contact()
+
+        # """可以成功分享给群、联系人"""
+        contacts.select_people_by_name('给个红包2')
+        contacts.share_sure()
+        time.sleep(0.5)
+        contacts.assert_screen_contain_text('已发送')
+
+    @staticmethod
+    def setUp_test_contacts_quxinli_0019():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        # """点击到“联系”页"""
+        if mess.is_on_this_page():
+            mess.open_contacts_page()
+            return
+        #待补充 我的团队搜索结果中有已保存到本地的RCS用户
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_contacts_quxinli_0019(self):
+        contacts = ContactsPage()
+
+        # """1.进入我的团队联系人的Profile页"""
+        contacts.choose_zetest_group()
+
+        contactdetailspage = ContactDetailsPage()
+        contactdetailspage.click_selectone()
+
+        # """点击消息按钮"""
+        contactdetailspage.click_message_icon()
+        singlechatpage = SingleChatPage()
+        singlechatpage.is_exist_inputtext()
+
+    @staticmethod
+    def setUp_test_contacts_quxinli_0426():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        # """点击到“联系”页"""
+        if mess.is_on_this_page():
+            mess.open_contacts_page()
+            return
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_contacts_quxinli_0426(self):
+        contacts = ContactsPage()
+        contactdetailspage = ContactDetailsPage()
+        # """删除联系人"""
+        contactdetailspage.delete_contact('测试团队保存联系人')
+
+        # """进入我的团队"""
+        contacts.choose_zetest_group()
+        contactdetailspage.click_selectone2()
+        # """保存"""
+        contactdetailspage.click_save_contacts_icon()
+        contactdetailspage.click_sure_icon()
+
+
+        # """1.点击星标，提示已成功添加为星标联系人"""
+        contactdetailspage.click_star()
+        time.sleep(1)
+        contactdetailspage.assert_screen_contain_text('已成功添加为星标联系人')
+
+
+        # """2.点击编辑,进入编辑联系人页面，有值字段自动填充"""
+        contactdetailspage.click_edit_contact()
+        ecp = EditContactPage()
+        ecp.is_exist_name('1测试团队保存联系人')
+
+        # """3.修改姓名及其他字段的值并点击确定,保存成功，手机联系人显示修改后的信息"""
+        number = "147752" + str(time.time())[-5:]
+        ccp = CreateContactPage()
+        ccp.create_contact('1测试团队保存联系人', number)
+        contactdetailspage.assert_screen_contain_text('1测试团队保存联系人')
+        contactdetailspage.assert_screen_contain_text(number)
+
+        # """4.点击分享名片,掉起分享名片的联系人选择"""
+        contactdetailspage.click_share_business_card()
+        time.sleep(0.5)
+        contactdetailspage.assert_screen_contain_text('选择一个群')
+        contactdetailspage.assert_screen_contain_text('选择手机联系人')
+        contacts.share_to_contact()
+
+        # """可以成功分享给群、联系人"""
+        contacts.select_people_by_name('1测试团队保存联系人')
+        contacts.share_sure()
+        time.sleep(0.5)
+        contacts.assert_screen_contain_text('已发送')
+
+
+
