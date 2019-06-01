@@ -1762,3 +1762,342 @@ class MsgAllPrior(TestCase):
         if chatdialog.is_exist_tips():
             chatdialog.accept_and_close_tips_alert()
         MessagePage().is_on_this_page()
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0354():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits('给个红包1', '13800138000')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0354(self):
+        contactspage = ContactsPage()
+        contactspage.click_search_box()
+        contactspage.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/edit_query01'),'给个红包1')
+        contactspage.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text="给个红包1"]'))
+        # 点击消息按钮发送消息
+        ContactDetailsPage().click_message_icon()
+        chatdialog = ChatNoticeDialog()
+        # 若存在资费提醒对话框，点击确认
+        if chatdialog.is_exist_tips():
+            chatdialog.accept_and_close_tips_alert()
+        MessagePage().is_on_this_page()
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_B_0021():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.wait_for_contact_load()
+        contactspage.click_sim_contact()
+        contactspage.create_contacts_if_not_exits('给个红包1', '13800138000')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_B_0021(self):
+        mess = MessagePage()
+        # 点击+号
+        mess.click_add_icon()
+        # 点击免费短信
+        mess.click_free_sms()
+        mess_call_page = CallPage()
+        freemsg = FreeMsgPage()
+        # 若存在欢迎页面
+        if freemsg.is_exist_welcomepage():
+            # 点击确定按钮
+            freemsg.click_sure_btn()
+            time.sleep(2)
+            # 若存在权限控制
+            if mess_call_page.is_exist_allow_button():
+                # 存在提示点击允许
+                mess_call_page.wait_for_freemsg_load()
+        mess.click_element((MobileBy.XPATH, '//*[@text ="给个红包1"]'))
+        singe_chat = SingleChatPage()
+        chatdialog = ChatNoticeDialog()
+        singe_chat.input_sms_message("测试前一半")
+        # 点击退出短信按钮
+        chatdialog.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/tv_exitsms'))
+        # 点击短信按钮
+        singe_chat.click_sms()
+        # 判断是否有之前输入的内容
+        chatdialog.page_should_contain_element((MobileBy.XPATH, '//*[@text ="测试前一半"]'))
+        singe_chat.edit_clear("测试前一半")
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_B_0022():
+        # 启动App
+        Preconditions.select_mobile('Android-移动', reset=True)
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.wait_for_contact_load()
+        contactspage.click_sim_contact()
+        contactspage.create_contacts_if_not_exits('给个红包1', '13800138000')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_B_0022(self):
+        mess = MessagePage()
+        # 点击+号
+        mess.click_add_icon()
+        # 点击免费短信
+        mess.click_free_sms()
+        mess_call_page = CallPage()
+        freemsg = FreeMsgPage()
+        # 若存在欢迎页面
+        if freemsg.is_exist_welcomepage():
+            # 点击确定按钮
+            freemsg.click_sure_btn()
+            time.sleep(2)
+            # 若存在权限控制
+            if mess_call_page.is_exist_allow_button():
+                # 存在提示点击允许
+                mess_call_page.wait_for_freemsg_load()
+        mess.click_element((MobileBy.XPATH, '//*[@text ="给个红包1"]'))
+        singe_chat = SingleChatPage()
+        chatdialog = ChatNoticeDialog()
+        singe_chat.input_sms_message("发送第一条")
+        # 点击发送短信
+        singe_chat.send_sms()
+        # 判断弹出资费提醒提示框
+        chatdialog.page_should_contain_element((MobileBy.XPATH, '//*[@text ="资费提醒"]'))
+        # 点击发送
+        chatdialog.click_element((MobileBy.XPATH, '//*[@text ="发送"]'))
+        singe_chat.input_sms_message("发送第二条")
+        # 点击发送短信
+        singe_chat.send_sms()
+        # 判断未弹出资费提醒提示框
+        chatdialog.page_should_not_contain_element((MobileBy.XPATH, '//*[@text ="资费提醒"]'))
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_B_0025():
+        # 启动App
+        Preconditions.select_mobile('Android-移动',reset=True)
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits('给个红包1', '13800138000')
+        contactspage.open_message_page()
+
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词给个红包1
+        SearchPage().input_search_keyword("给个红包1")
+        # 选择联系人进入联系人页
+        mess.choose_chat_by_name('给个红包1')
+        # 点击消息按钮发送消息
+        ContactDetailsPage().click_message_icon()
+        chatdialog = ChatNoticeDialog()
+        # 若存在资费提醒对话框，点击确认
+        if chatdialog.is_exist_tips():
+            chatdialog.accept_and_close_tips_alert()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_B_0025(self):
+        single = SingleChatPage()
+        # 如果当前页面不存在消息，发送一条消息
+        if not single._is_element_present((MobileBy.XPATH, '//*[@text ="测试一个呵呵"]')):
+            single.input_text_message("测试一个呵呵")
+            single.send_text()
+        # 长按通过短信发送
+        single.send_for_sms('测试一个呵呵')
+        # 判断控件存在
+        single.is_present_sms_fee_remind()
+        single.is_exist_send_button()
+        single.is_exist_cancel_button()
+        # 点击取消按钮
+        single.click_cancel()
+        # 再次发送
+        single.send_for_sms('测试一个呵呵')
+        single.is_present_sms_fee_remind()
+        single.click_send_button()
+        single.page_should_contain_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_message" and @text="测试一个呵呵"]'))
+        single.page_should_contain_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_sms_mark" and @text="短信"]'))
+        single.send_for_sms('测试一个呵呵')
+        single.page_should_not_contain_element((MobileBy.XPATH, '//*[@text="资费提醒"]'))
+        single.page_should_contain_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_message" and @text="测试一个呵呵"]'))
+        single.page_should_contain_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_sms_mark" and @text="短信"]'))
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_B_0062():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits('给个红包1', '13800138000')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_B_0062(self):
+        mess = MessagePage()
+        # 点击+号
+        mess.click_add_icon()
+        # 点击免费短信
+        mess.click_free_sms()
+        mess_call_page = CallPage()
+        freemsg = FreeMsgPage()
+        # 若存在欢迎页面
+        if freemsg.is_exist_welcomepage():
+            # 点击确定按钮
+            freemsg.click_sure_btn()
+            time.sleep(2)
+            # 若存在权限控制
+            if mess_call_page.is_exist_allow_button():
+                # 存在提示点击允许
+                mess_call_page.wait_for_freemsg_load()
+        select_page = SelectContactsPage()
+        select_page.search('给个红包1')
+        time.sleep(2)
+        mess.page_should_contain_text('手机联系人')
+        mess.page_should_contain_text('给个红包1')
+        mess.page_should_contain_text('13800138000')
+        mess.page_should_contain_text('搜索团队联系人 : 给个红包1')
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_B_0063():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits('给个红包1', '13800138000')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_B_0063(self):
+        mess = MessagePage()
+        # 点击+号
+        mess.click_add_icon()
+        # 点击免费短信
+        mess.click_free_sms()
+        mess_call_page = CallPage()
+        freemsg = FreeMsgPage()
+        # 若存在欢迎页面
+        if freemsg.is_exist_welcomepage():
+            # 点击确定按钮
+            freemsg.click_sure_btn()
+            time.sleep(2)
+            # 若存在权限控制
+            if mess_call_page.is_exist_allow_button():
+                # 存在提示点击允许
+                mess_call_page.wait_for_freemsg_load()
+        select_page = SelectContactsPage()
+        # 按姓名搜索存在联系人
+        select_page.search('给个红包1')
+        time.sleep(1)
+        mess.page_should_contain_text('手机联系人')
+        mess.page_should_contain_text('给个红包1')
+        mess.page_should_contain_text('13800138000')
+        mess.page_should_contain_text('搜索团队联系人 : 给个红包1')
+        # 按手机号搜索存在联系人
+        select_page.search('13800138000')
+        time.sleep(1)
+        mess.page_should_contain_text('手机联系人')
+        mess.page_should_contain_text('给个红包1')
+        mess.page_should_contain_text('13800138000')
+        mess.page_should_contain_text('搜索团队联系人 : 13800138000')
+        # 按手机号搜索不存在联系人
+        select_page.search('199815')
+        time.sleep(1)
+        mess.page_should_not_contain_text('手机联系人')
+        mess.page_should_contain_text('搜索团队联系人 : 199815')
+        # 无手机联系人且搜索手机号时
+        select_page.search('19981512581')
+        time.sleep(1)
+        mess.page_should_contain_text('网络搜索')
+        mess.page_should_contain_text('搜索团队联系人 : 19981512581')
+        select_page.is_present_unknown_member()
+        # 搜索我的电脑
+        select_page.search('我的电脑')
+        time.sleep(1)
+        mess.page_should_not_contain_text('手机联系人')
+        mess.page_should_contain_text('搜索团队联系人 : 我的电脑')
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_D_0004():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_D_0004(self):
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词给个红包1
+        SearchPage().input_search_keyword("我的电脑")
+        # 选择联系人进入联系人页
+        mess.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text="我的电脑"]'))
+        mess.click_back()
+        mess.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/iv_back01'))
+        mess.is_on_this_page()
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_E_0002():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_E_0002(self):
+        mess = MessagePage()
+        mess.click_search()
+        time.sleep(2)
+        self.assertTrue(current_mobile().is_keyboard_shown())
+        mess.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/result_wrapper'))
+        self.assertFalse(current_mobile().is_keyboard_shown())
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_E_0029():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_E_0029(self):
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词给个红包1
+        SearchPage().input_search_keyword("我的电脑")
+        # 选择联系人进入联系人页
+        time.sleep(2)
+        current_mobile().hide_keyboard_if_display()
+        # 点击进入我的电脑
+        mess.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text="我的电脑"]'))
+        # 检查是否进入我的电脑页面
+        mess.page_should_contain_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/title" and @text="我的电脑"]'))
+
