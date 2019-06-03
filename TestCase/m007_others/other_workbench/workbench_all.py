@@ -2881,5 +2881,90 @@ class Contacts_demo(TestCase):
         # Checkpoint 展示无搜索结果
         search.check_no_search_result()
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0208():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        # 预置联系人
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0208(self):
+        """群聊设置页面——查找聊天内容——特殊字符搜索——搜索结果展示"""
+        mess = MessagePage()
+        # 1.、成功登录和飞信
+        # 2、已创建或者加入群聊
+        # 3、群主、普通成员
+        # 4、聊天会话页面不存在文本消息
+        # 预置群聊
+        Preconditions.create_group_if_not_exist_not_enter_chat('测试群组1', "测试短信1", "测试短信2")
+        # Step 进入群聊页面
+        mess.search_and_enter('测试群组1')
+
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        # Step 聊天会话页面不存在文本，清除聊天记录
+        groupset.click_clear_chat_record()
+        groupset.wait_clear_chat_record_confirmation_box_load()
+        groupset.click_sure()
+        # Step 进入查找聊天内容页面
+        groupset.click_find_chat_record()
+        search = GroupChatSetFindChatContentPage()
+        search.wait_for_page_load()
+        # Step 1、在查找聊天内容页面，输入框中，输入特殊字符字母作为搜索条件
+        search.search('!@#$%')
+        # Checkpoint 展示无搜索结果
+        search.check_no_search_result()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0212():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        # 预置联系人
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0212(self):
+        """群聊设置页面——查找聊天内容——特殊字符搜索——搜索结果展示"""
+        mess = MessagePage()
+        # 1.、成功登录和飞信
+        # 2、已创建或者加入群聊
+        # 3、群主、普通成员
+        # 4、聊天会话页面不存在文本消息
+        # 预置群聊
+        Preconditions.create_group_if_not_exist_not_enter_chat('测试群组1', "测试短信1", "测试短信2")
+        # Step 进入群聊页面
+        mess.search_and_enter('测试群组1')
+
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        # Step 聊天会话页面不存在文本，清除聊天记录
+        groupset.click_clear_chat_record()
+        groupset.wait_clear_chat_record_confirmation_box_load()
+        groupset.click_sure()
+        groupset.click_back()
+        SingleChatPage().send_text_if_not_exist("九个一个的")
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        # Step 进入查找聊天内容页面
+        groupset.click_find_chat_record()
+        search = GroupChatSetFindChatContentPage()
+        search.wait_for_page_load()
+        # Step 1、在查找聊天内容页面，输入框中，输入搜索条件搜索
+        search.search('无赖地痞别跑')
+        # Checkpoint 展示无搜索结果
+        search.check_no_search_result()
+
+
 
 
