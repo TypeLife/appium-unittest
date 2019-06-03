@@ -291,10 +291,10 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def wait_login_success(self, timeout=8, auto_accept_alerts=True):
         """等待消息页面加载（自动允许权限）"""
-        # time.sleep(15)
-        # locator = (MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/btn_cancel" and @text ="以后再说"]')
-        # if self._is_element_present(locator):
-        #     self.click_element(locator)
+        time.sleep(15)
+        locator = (MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/btn_cancel" and @text ="以后再说"]')
+        if self._is_element_present(locator):
+            self.click_element(locator)
         self.__unexpected_info = None
 
         def unexpected():
