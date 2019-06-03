@@ -2,7 +2,8 @@ from pages.me.MeViewUserProfile import MeViewUserProfilePage
 
 from pages.message.Send_CardName import Send_CardNamePage
 import random
-from pages.components import ChatNoticeDialog
+from pages.components import ChatNoticeDialog, ContactsSelector
+from pages.message.FreeMsg import FreeMsgPage
 import os
 import time
 
@@ -2619,5 +2620,44 @@ class Contacts_demo(TestCase):
         select_page.click_back()
         # Checkpoint:2、退出新建消息，返回消息列表
         mess.wait_login_success()
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0276():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["给个红包1, 13800138000"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0276(self):
+        """从发送短信进入单聊"""
+        # 1.客户端已登录
+        # 2.网络正常
+        # 3.异网用户
+        mess = MessagePage()
+        # Step 1.点击右上角“+”
+        mess.click_add_icon()
+        # Step 2.点击发送短信
+        mess.click_free_sms()
+        freemsg = FreeMsgPage()
+        # 若存在欢迎页面
+        if freemsg.wait_is_exist_welcomepage():
+            # 点击确定按钮
+            freemsg.click_sure_btn()
+            CallPage().wait_for_freemsg_load()
+        select_page = SelectContactPage()
+        # Checkpoint 进入联系人选择器（直接选择本地通讯录联系人)
+        select_page.is_exist_select_contact_btn()
+        # Checkpoint 进入联系人选择器（可在搜索框输入联系人姓名或电话号码搜索)
+        select_page.is_exist_selectorinput_toast()
+        # Checkpoint 进入联系人选择器（选择团队联系人)
+        select_page.is_exist_selectortuandui_toast()
+        # Step 3.任意选择一联系人
+        ContactsSelector().click_local_contacts('给个红包1')
+        # Checkpoint 进入短信编辑页面
+        freemsg.wait_is_exist_wenhao()
+        freemsg.wait_is_exist_exit()
 
 
