@@ -3010,5 +3010,83 @@ class Contacts_demo(TestCase):
     def tearDown_test_msg_xiaoqiu_0216():
         current_mobile().set_network_status(6)
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0217():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        # 预置联系人
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0217(self):
+        """群聊设置页面——关闭消息免打扰——网络断网"""
+        mess = MessagePage()
+        # 1.、成功登录和飞信
+        # 2、已创建或者加入群聊
+        # 3、群主、普通成员
+        # 4、网络断网
+        # 5、消息免打扰关闭状态
+        # 预置群聊
+        Preconditions.create_group_if_not_exist_not_enter_chat('测试群组5', "测试短信1", "测试短信2")
+        # Step 进入群聊页面
+        mess.search_and_enter('测试群组5')
+
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        # Step 消息免打扰关闭状态
+        if groupset.get_switch_undisturb_status():
+            groupset.click_switch_undisturb()
+        time.sleep(2)
+        # Step 网络断网
+        current_mobile().set_network_status(0)
+        time.sleep(2)
+        # Step 点击打开消息免打扰开关
+        groupset.click_switch_undisturb()
+        # Checkpoint 会弹出toast提示：无网络，请连接网络重试
+        mess.is_toast_exist("无网络，请连接网络重试")
+
+    @staticmethod
+    def tearDown_test_msg_xiaoqiu_0217():
+        current_mobile().set_network_status(6)
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0223():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        # 预置联系人
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0223(self):
+        """聊天设置页面——清空聊天记录"""
+        mess = MessagePage()
+        # 1、已成功登录和飞信
+        # 2、已创建一个群聊
+        # 3、群主、普通成员
+        # 4、聊天会话页面存在记录
+        # 预置群聊
+        Preconditions.create_group_if_not_exist_not_enter_chat('测试群组1', "测试短信1", "测试短信2")
+        # Step 进入群聊页面
+        mess.search_and_enter('测试群组1')
+
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        # Step 1、点击【设置】
+        groupchat.click_setting()
+        # Checkpoint 进入“设置”页面
+        groupset.wait_for_page_load()
+        # Step 点击【清空聊天记录】
+        groupset.click_clear_chat_record()
+        groupset.wait_clear_chat_record_confirmation_box_load()
+        groupset.click_sure()
+        # Checkpoint 会弹出toast提示：无网络，请连接网络重试
+        mess.is_toast_exist("聊天记录清除成功")
 
