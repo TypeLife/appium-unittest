@@ -2965,6 +2965,50 @@ class Contacts_demo(TestCase):
         # Checkpoint 展示无搜索结果
         search.check_no_search_result()
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0216():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        # 预置联系人
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0216(self):
+        """群聊设置页面——关闭消息免打扰——网络断网"""
+        mess = MessagePage()
+        # 1.、成功登录和飞信
+        # 2、已创建或者加入群聊
+        # 3、群主、普通成员
+        # 4、网络断网
+        # 5、消息免打扰开启状态
+        # 预置群聊
+        Preconditions.create_group_if_not_exist_not_enter_chat('测试群组5', "测试短信1", "测试短信2")
+        # Step 进入群聊页面
+        mess.search_and_enter('测试群组5')
+
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        # Step 消息免打扰开启状态
+        if not groupset.get_switch_undisturb_status():
+            groupset.click_switch_undisturb()
+        time.sleep(2)
+        # Step 网络断网
+        current_mobile().set_network_status(0)
+        time.sleep(2)
+        # Step 点击关闭消息免打扰开关
+        groupset.click_switch_undisturb()
+        # Checkpoint 会弹出toast提示：无网络，请连接网络重试
+        mess.is_toast_exist("无网络，请连接网络重试")
+        current_mobile().set_network_status(6)
+
+    @staticmethod
+    def tearDown_test_msg_xiaoqiu_0216():
+        current_mobile().set_network_status(6)
 
 
 
