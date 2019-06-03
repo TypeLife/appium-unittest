@@ -2660,4 +2660,45 @@ class Contacts_demo(TestCase):
         freemsg.wait_is_exist_wenhao()
         freemsg.wait_is_exist_exit()
 
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0283():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0283(self):
+        """联系——标签分组——进入单聊页面"""
+        # 1.客户端已登录
+        # 2.网络正常
+        # 3.在联系模块
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.wait_for_contact_load()
+        contactspage.click_sim_contact()
+        # Step 1.点击上方标签分组图标
+        contactspage.click_label_grouping()
+        labelgroup = LabelGroupingPage()
+        time.sleep(2)
+        if '测试分组1' not in labelgroup.get_label_grouping_names():
+            labelgroup.create_group('测试分组1', '测试短信1', '测试短信2')
+        # Step 2.任意点击一存在多名成员的标签分组
+        labelgroup.click_label_group('测试分组1')
+        time.sleep(2)
+        # Checkpoint 2.进入成员列表页，显示该标签分组中的所有成员
+        contactspage.page_should_contain_text('测试短信1')
+        contactspage.page_should_contain_text('测试短信2')
+        # Step 3.任意选择一标签分组中的联系人
+        BaseChatPage().click_to_do('测试短信1')
+        # Checkpoint 3.进入联系人详情页面
+        self.assertTrue(ContactDetailsPage().is_on_this_page())
+        # Step 4.点击消息
+        ContactDetailsPage().click_message_icon()
+        time.sleep(2)
+        # Checkpoint 4.进入单聊页面
+        self.assertTrue(SingleChatPage().is_on_this_page())
+
 
