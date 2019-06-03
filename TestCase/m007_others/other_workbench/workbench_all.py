@@ -2790,4 +2790,96 @@ class Contacts_demo(TestCase):
         singe_chat.clear_inputtext()
         singe_chat.click_back()
 
+    @staticmethod
+    def setUp_test_msg_huangcaizui_E_0024():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        Preconditions.create_contacts_if_not_exist(["转发短信1, 13800138114"])
+        Preconditions.create_contacts_if_not_exist(["转发短信2, 13800138113"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_E_0024(self):
+        """查看更多聊天记录"""
+        # 1、联网正常
+        # 2、已登录客户端
+        # 3、当前聊天页面搜索页面
+        # 4、同一个群或联系人有多条相同的聊天记录
+        mess = MessagePage()
+        # Step 1.点击右上角“+”
+        mess.click_add_icon()
+        # Step 点击下方发送短信按钮
+        mess.click_free_sms()
+        freemsg = FreeMsgPage()
+        # 若存在欢迎页面
+        if freemsg.wait_is_exist_welcomepage():
+            # 点击确定按钮
+            freemsg.click_sure_btn()
+            CallPage().wait_for_freemsg_load()
+        ContactsSelector().click_local_contacts('转发短信1')
+        singe_chat = SingleChatPage()
+        singe_chat.wait_for_page_load()
+        singe_chat.clear_msg()
+        singe_chat.input_sms_message("发送第一条")
+        # 点击发送按钮
+        singe_chat.send_sms()
+        if singe_chat.is_present_sms_fee_remind():
+            singe_chat.click_sure()
+        singe_chat.input_sms_message("发送第一条")
+        singe_chat.send_sms()
+        singe_chat.click_back()
+        mess.click_search()
+        # Step 1.搜索框输入一条有多条相同的聊天记录
+        SearchPage().input_search_keyword("发送第一条")
+        # 选择联系人进入联系人页
+        time.sleep(2)
+        current_mobile().hide_keyboard_if_display()
+        # Checkpoint 1.显示有这条聊天记录的群名或联系人，并显示对应聊天记录的数量
+        mess.page_should_contain_text('转发短信1')
+        mess.page_should_contain_text('2条相关聊天记录')
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0207():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        # 预置联系人
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0207(self):
+        """群聊设置页面——查找聊天内容——英文搜索——搜索结果展示"""
+        mess = MessagePage()
+        # 1.、成功登录和飞信
+        # 2、已创建或者加入群聊
+        # 3、群主、普通成员
+        # 4、聊天会话页面不存在文本消息
+        # 预置群聊
+        Preconditions.create_group_if_not_exist_not_enter_chat('测试群组1', "测试短信1", "测试短信2")
+        # Step 进入群聊页面
+        mess.search_and_enter('测试群组1')
+
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        # Step 聊天会话页面不存在文本，清除聊天记录
+        groupset.click_clear_chat_record()
+        groupset.wait_clear_chat_record_confirmation_box_load()
+        groupset.click_sure()
+        # Step 进入查找聊天内容页面
+        groupset.click_find_chat_record()
+        search = GroupChatSetFindChatContentPage()
+        search.wait_for_page_load()
+        # Step 1、在查找聊天内容页面，输入框中，输入英文字母作为搜索条件
+        search.search('AAVBVAW')
+        # Checkpoint 展示无搜索结果
+        search.check_no_search_result()
+
+
 
