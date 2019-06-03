@@ -572,3 +572,9 @@ class GroupChatPage(BaseChatPage):
         """按压消息文本"""
         els = self.get_elements(self.__class__.__locators["文本消息"])
         self.press(els[number])
+
+    @TestLogger.log()
+    def is_exists_message_by_text(self, name):
+        """是否存在指定文本消息"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_message" and text="%s"]' % name)
+        return self._is_element_present(locator)

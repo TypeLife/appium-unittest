@@ -2591,4 +2591,33 @@ class Contacts_demo(TestCase):
         groupset.wait_for_page_load()
         self.assertEqual(mess.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/my_group_name')), '和飞信测试和飞信测试')
 
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0049():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0049(self):
+        """消息-消息列表界面新建消息页面返回操作"""
+        # 1.正常联网
+        # 2.正常登录
+        # 3.当前所在的页面是消息列表页面
+        mess = MessagePage()
+        # Step: 1.点击右上角的+号按钮
+        mess.click_add_icon()
+        mess.click_new_message()
+        select_page = SelectContactPage()
+        # checkpoint:1、成功进入新建消息界面
+        # 判断存在选择联系人
+        select_page.is_exist_select_contact_btn()
+        # 判断存在搜索或输入手机号提示
+        select_page.is_exist_selectorinput_toast()
+        select_page.is_exist_selectortuandui_toast()
+        # Setp: 2、点击左上角返回按钮
+        select_page.click_back()
+        # Checkpoint:2、退出新建消息，返回消息列表
+        mess.wait_login_success()
+
 

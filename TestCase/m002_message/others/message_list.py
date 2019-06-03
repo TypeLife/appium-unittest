@@ -523,7 +523,7 @@ class MessageListAllTest(TestCase):
         # 2.消息图标高亮显示
         self.assertEquals(mp.message_icon_is_selected(), True)
         name = "啊" * 15
-        number = "13566664567"
+        number = "13300133001"
         Preconditions.create_contacts_by_name(name, number)
         # 确保有足够的消息记录可供滑动
         messages = [("大佬1", "1"),
