@@ -2,7 +2,7 @@ from pages.me.MeViewUserProfile import MeViewUserProfilePage
 
 from pages.message.Send_CardName import Send_CardNamePage
 import random
-from pages.components import ChatNoticeDialog, ContactsSelector
+from pages.components import ChatNoticeDialog, ContactsSelector, BaseChatPage
 from pages.message.FreeMsg import FreeMsgPage
 import os
 import time
@@ -2700,5 +2700,94 @@ class Contacts_demo(TestCase):
         time.sleep(2)
         # Checkpoint 4.进入单聊页面
         self.assertTrue(SingleChatPage().is_on_this_page())
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0284():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0284(self):
+        """联系——标签分组——进入单聊页面"""
+        # 1.客户端已登录
+        # 2.网络正常
+        # 3.在联系模块
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.wait_for_contact_load()
+        contactspage.click_sim_contact()
+        # Step 1.点击上方标签分组图标
+        contactspage.click_label_grouping()
+        labelgroup = LabelGroupingPage()
+        time.sleep(2)
+        if '测试分组2' not in labelgroup.get_label_grouping_names():
+            labelgroup.create_group('测试分组2', '测试短信1')
+        # Step 2.点击只有一名成员的标签分组
+        labelgroup.click_label_group('测试分组2')
+        time.sleep(2)
+        # Checkpoint 1.进入标签分组页面 2.进入成员列表页面
+        contactspage.page_should_contain_text('测试短信1')
+        # Step 3.点击群发消息按钮
+        LableGroupDetailPage().click_send_smsall()
+        time.sleep(2)
+        # Checkpoint 3.进入群聊页面
+        self.assertTrue(GroupChatPage().is_on_this_page())
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_B_0020():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_B_0020(self):
+        """验证编辑短信后不发送，是否信息草稿"""
+        # 1.网络正常，本网用户
+        # 2.客户端已登录
+        # 3.首次使用发送短信，短信设置开关已开启
+        # 4.已进入的单聊页面
+        mess = MessagePage()
+        # Step 1.点击右上角“+”
+        mess.click_add_icon()
+        # Step 点击下方发送短信按钮
+        mess.click_free_sms()
+        freemsg = FreeMsgPage()
+        # 若存在欢迎页面
+        if freemsg.wait_is_exist_welcomepage():
+            # 点击确定按钮
+            freemsg.click_sure_btn()
+            CallPage().wait_for_freemsg_load()
+        ContactsSelector().click_local_contacts('测试短信1')
+        singe_chat = SingleChatPage()
+        chatdialog = ChatNoticeDialog()
+        # Checkpoint 2.进入发送短信页面
+        singe_chat.input_sms_message("测试前一半")
+        # 点击发送按钮
+        singe_chat.send_sms()
+        if singe_chat.is_present_sms_fee_remind():
+            singe_chat.click_sure()
+        # Step 输入想存为草稿的内容
+        singe_chat.input_sms_message('测试后一半')
+        # Step 3.编辑好短信，点击系统返回按钮
+        singe_chat.click_back()
+        # Checkpoint 回到消息列表页面，并显示未发送的短信草稿
+        time.sleep(2)
+        chatdialog.page_should_contain_text('[草稿] ')
+        chatdialog.page_should_contain_text('测试短信1')
+        chatdialog.page_should_contain_text('测试后一半')
+        # Step 4.再次点击进入
+        mess.click_message('测试短信1')
+        # Checkpoint 进入短信编辑页面，可继续编辑该短信
+        singe_chat.clear_inputtext()
+        singe_chat.click_back()
 
 
