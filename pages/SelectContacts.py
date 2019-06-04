@@ -810,3 +810,8 @@ class SelectContactsPage(BasePage):
         if "本机" in contacts_name:
             contacts_name.remove("本机")
         return contacts_name
+
+    @TestLogger.log("点击所有联系人名")
+    def click_all_contacts(self):
+        """"""
+

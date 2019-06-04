@@ -629,6 +629,11 @@ class BasePage(object):
         """挂断电话"""
         return self.mobile.hang_up_the_call()
 
+    @TestLogger.log('接听电话')
+    def pick_up_the_call(self):
+        """接听电话"""
+        return self.mobile.pick_up_the_call()
+
     @TestLogger.log('判断是否在通话界面')
     def is_phone_in_calling_state(self):
         """判断是否在通话界面"""

@@ -77,6 +77,7 @@ class MessagePage(FooterPage):
         "选择手机联系人":(MobileBy.XPATH,"//*[contains(@text,'选择手机联系人')]"),
         "确定2":(MobileBy.ID,"com.chinasofti.rcs:id/tv_sure"),
         "群聊名":(MobileBy.ID,"com.chinasofti.rcs:id/et_group_name"),
+        "有人@我": (MobileBy.XPATH, "//*[contains(@text,'有人@我')]"),
     }
 
     @TestLogger.log("点击创建群聊")
@@ -817,3 +818,8 @@ class MessagePage(FooterPage):
         if "[视频]" in text:
             return True
         return False
+
+    @TestLogger.log()
+    def is_element_exit_(self, text):
+        """指定元素是否存在"""
+        return self._is_element_present(self.__class__.__locators[text])
