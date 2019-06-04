@@ -2,7 +2,7 @@ import os
 import random
 import time
 import unittest
-
+from pages.components import ChatNoticeDialog, ContactsSelector
 from appium.webdriver.common.mobileby import MobileBy
 
 import preconditions
@@ -2509,6 +2509,151 @@ class MsgAllPrior(TestCase):
         # Checkpoint 展示无搜索结果
         search.check_no_search_result()
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0179():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+        # Step 构造最近聊天人
+        # 点击消息页搜索
+        mess = MessagePage()
+        mess.click_search()
+        # 搜索关键词给个红包1
+        SearchPage().input_search_keyword("测试短信1")
+        # 选择联系人进入联系人页
+        mess.choose_chat_by_name('测试短信1')
+        # 点击消息按钮发送消息
+        ContactDetailsPage().click_message_icon()
+        chatdialog = ChatNoticeDialog()
+        # 若存在资费提醒对话框，点击确认
+        if chatdialog.is_exist_tips():
+            chatdialog.accept_and_close_tips_alert()
+        single = SingleChatPage()
+        single.input_text_message("测试一个呵呵")
+        single.send_text()
+        single.click_back()
+        CallContactDetailPage().click_back()
+        SearchPage().click_back()
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0179(self):
+        """分享群二维码到——选择最近聊天"""
+        # 1、网络正常（4G/WIFI）
+        # 2、已创建一个普通群
+        # 3、在群聊设置页面
+        # 4、群主/群成员
+        mess = MessagePage()
+        Preconditions.create_group_if_not_exist_not_enter_chat('测试群组1', "测试短信1", "测试短信2")
+        mess.search_and_enter('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        groupset.click_group_avatars()
+        # Step 点击左下角的分享按钮
+        groupset.click_qecode_share_button()
+        # Checkpoint 跳转到联系人选择器页面
+        ContactsSelector().wait_for_contacts_selector_page_load()
+        # Step 点击选择最近聊天的联系人
+        ContactsPage().select_people_by_name("测试短信1")
+        # Checkpoint 弹出确认弹窗,Step 点击取消
+        SingleChatPage().click_cancel()
+        # Checkpoint 关闭弹窗
+        ContactsPage().select_people_by_name("测试短信1")
+        # Step 点击确定
+        SingleChatPage().click_sure()
+        # Checkpoint 返回到群二维码分享页面并弹出toast提示：已转发
+        mess.is_toast_exist("已转发")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0195():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0195(self):
+        """群聊设置页面——查找聊天内容"""
+        # 1.、成功登录和飞信
+        # 2、已创建或者加入群聊
+        # 3、群主、普通成员
+        # 4、聊天会话页面存在文本消息
+        mess = MessagePage()
+        Preconditions.create_group_if_not_exist_not_enter_chat('测试群组1', "测试短信1", "测试短信2")
+        mess.search_and_enter('测试群组1')
+        # 如果当前页面不存在消息，发送一条消息
+        single = SingleChatPage()
+        if not single.is_text_present('测试一个呵呵'):
+            single.input_text_message("测试一个呵呵")
+            single.send_text()
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        # Step 点击聊天内容入口
+        groupset.click_find_chat_record()
+        search = GroupChatSetFindChatContentPage()
+        # Checkpoint 可以跳转到聊天内容页面
+        search.wait_for_page_load()
+        # Checkpoint 调起小键盘
+        self.assertTrue(current_mobile().is_keyboard_shown())
+        # Step 点击顶部的搜索框
+        search.search('测试一个呵呵')
+        search.click_search_result('测试一个呵呵')
+        groupchat.is_on_this_page()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0196():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0196(self):
+        """群聊设置页面——查找聊天内容——中文搜索——搜索结果展示"""
+        # 1.、成功登录和飞信
+        # 2、已创建或者加入群聊
+        # 3、群主、普通成员
+        # 4、聊天会话页面存在文本消息
+        mess = MessagePage()
+        Preconditions.create_group_if_not_exist_not_enter_chat('测试群组1', "测试短信1", "测试短信2")
+        mess.search_and_enter('测试群组1')
+        # 如果当前页面不存在消息，发送一条消息
+        single = SingleChatPage()
+        if not single.is_text_present('测试一个呵呵'):
+            single.input_text_message("测试一个呵呵")
+            single.send_text()
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        groupset.click_find_chat_record()
+        search = GroupChatSetFindChatContentPage()
+        search.wait_for_page_load()
+        self.assertTrue(current_mobile().is_keyboard_shown())
+        # Step 在查找聊天内容页面，输入框中，输入中文搜索条件
+        search.search('测试一个呵呵')
+        # Checkpoint 搜索结果是否展示为：发送人头像、发送人名称、发送的内容、发送的时间
+        search.check_search_result()
+        # Step 任意选中一条聊天记录
+        search.click_search_result('测试一个呵呵')
+        # Checkpoint 跳转到聊天记录对应的位置
+        groupchat.is_on_this_page()
 
 
 
