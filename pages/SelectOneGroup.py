@@ -262,3 +262,8 @@ class SelectOneGroupPage(BasePage):
     def is_element_exit(self, text):
         """指定元素是否存在"""
         return self._is_element_present(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def click_element_(self, text):
+        """点击元素"""
+        self.click_element(self.__class__.__locators[text])
