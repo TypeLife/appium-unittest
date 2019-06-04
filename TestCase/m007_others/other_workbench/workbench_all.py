@@ -3157,3 +3157,34 @@ class Contacts_demo(TestCase):
         ContactsPage().select_people_by_name("系统消息")
         mess.page_should_contain_text('你已退出群')
         mess.page_should_contain_text('来自群聊测试群组1')
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0250():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0250(self):
+        """消息列表——群聊天会话窗口——发送的消息类型展示"""
+        # 1、已成功登录和飞信
+        # 2、网络正常（4G/WIFI ）
+        # 3、消息列表页面
+        # 4、发送消息类型展示
+        mess = MessagePage()
+        Preconditions.create_group_if_not_exist_not_enter_chat('测试群组1', "测试短信1", "测试短信2")
+        mess.search_and_enter('测试群组1')
+        # Step 群聊会话页面中，发送到新消息
+        single = SingleChatPage()
+        if not single.is_text_present('测试一个呵呵'):
+            single.input_text_message("测试一个呵呵")
+            single.send_text()
+        mess.click_back()
+        SearchPage().click_back_button()
+        # Checkpoint 会在消息列表的会话窗口展示：接发送消息的类型或者类型+内容展示
+        mess.is_on_this_page()
+        mess.page_should_contain_text('测试群组1')
+        mess.page_should_contain_text('测试一个呵呵')
