@@ -3090,3 +3090,37 @@ class Contacts_demo(TestCase):
         # Checkpoint 会弹出toast提示：无网络，请连接网络重试
         mess.is_toast_exist("聊天记录清除成功")
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0226():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0226(self):
+        """聊天设置页面——删除并退出群聊——群成员"""
+        # 1、已成功登录和飞信
+        # 2、已加入群聊
+        # 3、普通成员
+        # 4、群人数小于：3
+        # 5、网络正常（4G/WIFI ）
+        mess = MessagePage()
+        Preconditions.create_group_if_not_exist_not_enter_chat('测试群组1', "测试短信1", "测试短信2")
+        mess.search_and_enter('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        # Step 在聊天设置页面
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        groupset.click_delete_and_exit()
+        # Step 点击页面底部的“删除并退出”按钮
+        SearchPage().click_back_button()
+        # Checkpoint 会退出当前群聊返回到消息列表并收到一条系统消息：你已退出群
+        ContactsPage().select_people_by_name("系统消息")
+        mess.page_should_contain_text("你已退出群")
+        mess.page_should_contain_text("来自群聊测试群组1")
+
