@@ -3004,32 +3004,23 @@ class MessageOthersAllTest(TestCase):
         # 等待消息页面加载
         mp.wait_for_page_load()
 
-    @tags('ALL', 'CMCC', 'LXD', "lxd_debug")
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_hanjiabin_0215(self):
         """网页消息——发出网页消息消息界面——长按"""
 
         mp = MessagePage()
         mp.wait_for_page_load()
-        # 清空收藏列表确保不影响验证
-        mp.open_me_page()
-        me_page = MePage()
-        mcp = MeCollectionPage()
-        me_page.wait_for_page_load()
-        me_page.click_collection()
-        mcp.wait_for_page_load()
-        mcp.clear_collection_list()
-        mcp.click_back()
-        me_page.wait_for_page_load()
-        me_page.open_message_page()
-        mp.wait_for_page_load()
         # 进入会话页面
         Preconditions.get_into_group_chat_page("群聊1")
         gcp = GroupChatPage()
+        # 清空聊天记录确保不影响验证
         gcp.click_setting()
         gcs = GroupChatSetPage()
         gcs.wait_for_page_load()
-        # 获取当前群名片名称
-        my_group_name = gcs.get_my_group_name()
+        gcs.click_clear_chat_record()
+        time.sleep(1)
+        gcs.click_sure()
+        gcs.wait_for_page_load()
         gcs.click_back()
         gcp.wait_for_page_load()
         # 发送网页消息
@@ -3037,24 +3028,10 @@ class MessageOthersAllTest(TestCase):
         gcp.input_text_message(text)
         gcp.send_text()
         gcp.press_message_text_by_number(-1)
-        gcp.click_text("收藏")
-        self.assertEquals(gcp.is_toast_exist("已收藏"), True)
-        gcp.click_back()
-        mp.wait_for_page_load()
-        mp.open_me_page()
-        me_page = MePage()
-        me_page.wait_for_page_load()
-        me_page.click_collection()
-        mcp = MeCollectionPage()
-        mcp.wait_for_page_load()
-        # 1.收藏内容来源显示为消息发送者名称
-        self.assertEquals(mcp.is_exists_text_message_by_name(text), True)
-        self.assertEquals(mcp.is_text_present(my_group_name), True)
-        mcp.click_back()
-        me_page.wait_for_page_load()
-        me_page.open_message_page()
-        # 等待消息页面加载
-        mp.wait_for_page_load()
+        gcp.click_text("删除")
+        time.sleep(2)
+        # 1.正常删除
+        self.assertEquals(gcp.is_exists_message_by_text(text), False)
 
     @tags('ALL', 'CMCC', 'LXD', "lxd_debug")
     def test_msg_hanjiabin_0216(self):
