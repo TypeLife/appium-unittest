@@ -3209,3 +3209,42 @@ class Contacts_demo(TestCase):
         Preconditions.create_group_if_not_exist('123456789012345678901234567890', "测试短信1", "测试短信2")
         # Checkpoint 用省略号隐藏群名称的中间名称，只展示前后名称
         self.assertEqual(groupchat.get_group_name(), '123456789012345678901234567890(1)')
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0269():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0269(self):
+        """普通群——聊天会话页面——未进群联系人展示"""
+        # 1、已成功登录和飞信
+        # 2、网络正常（4G/WIFI ）
+        # 3、群主权限
+        mess = MessagePage()
+        Preconditions.create_group_if_not_exist_not_enter_chat('测试群组3', "测试短信1", "测试短信2")
+        mess.search_and_enter('测试群组3')
+        # Step 存在未进群的联系人时，在聊天会话页面，发送一条消息
+        single = SingleChatPage()
+        if not single.is_text_present('测试一个呵呵'):
+            single.input_text_message("测试一个呵呵")
+            single.send_text()
+        # Checkpoint 提示：还有人未进群，再次邀请
+        time.sleep(2)
+        mess.page_should_contain_text('还有人未进群,再次邀请')
+        # Step 再次发送3次消息
+        count = 0
+        while count <= 2:
+            single.input_text_message("测试一个呵呵")
+            single.send_text()
+            time.sleep(5)
+            count = count + 1
+        # Checkpoint 一共只有3个提示
+        mess.check_group_toast_num()
+        GroupChatPage().click_setting()
+        GroupChatSetPage().wait_for_page_load()
+        GroupChatSetPage().click_delete_and_exit()
