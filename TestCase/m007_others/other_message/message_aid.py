@@ -2579,7 +2579,6 @@ class MsgAllPrior(TestCase):
         # 下面根据用例情况进入相应的页面
         Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
 
-    liwenxiu
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
     def test_msg_xiaoqiu_0195(self):
         """群聊设置页面——查找聊天内容"""
