@@ -2579,7 +2579,7 @@ class MsgAllPrior(TestCase):
         # 下面根据用例情况进入相应的页面
         Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
 
-
+    liwenxiu
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
     def test_msg_xiaoqiu_0195(self):
         """群聊设置页面——查找聊天内容"""
@@ -2656,4 +2656,71 @@ class MsgAllPrior(TestCase):
         groupchat.is_on_this_page()
 
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0163():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
 
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0163(self):
+        """群主——清除旧名片——录入29个字母（不区分大、小写）"""
+        # 1、网络正常（4G/WIFI）
+        # 2、已创建一个普通群
+        # 3、在群聊设置页面
+        # 4、群主权限
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        groupset.click_modify_my_group_name()
+        groupset.wait_for_modify_mygroupname_load()
+        # Step 群名片编辑页面，清除旧名片后，录入29个字母
+        groupset.clear_group_name()
+        # Checkpoint 可以正常录入29个字母
+        groupset.input_new_group_name("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        # Step 录入成功，点击右上角的完成按钮
+        groupset.save_group_card_name()
+        groupset.wait_for_page_load()
+        # Checkpoint 可以完成保存操作
+        groupset.check_group_nickname('AAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0164():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0164(self):
+        """群主——清除旧名片——录入30个字母（不区分大、小写）"""
+        # 1、网络正常（4G/WIFI）
+        # 2、已创建一个普通群
+        # 3、在群聊设置页面
+        # 4、群主权限
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        groupset.click_modify_my_group_name()
+        groupset.wait_for_modify_mygroupname_load()
+        # Step 群名片编辑页面，清除旧名片后，录入30个字母
+        groupset.clear_group_name()
+        # Checkpoint 可以正常录入30个字母
+        groupset.input_new_group_name("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        # Step 录入成功，点击右上角的完成按钮
+        groupset.save_group_card_name()
+        groupset.wait_for_page_load()
+        # Checkpoint 可以完成保存操作
+        groupset.check_group_nickname('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
