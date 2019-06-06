@@ -1633,3 +1633,62 @@ class MsgAllPrior(TestCase):
         groupchat.is_send_gif()
         chatgif.is_gif_head_exist()
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0106():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0106(self):
+        """点击输入框上方的+号——展示隐藏的：文件、群短信（群主）、位置、红包"""
+        # 1、网络正常
+        # 2、已加入普通群
+        # 3、在群聊天会话页面
+        # 4、本网用户
+        mess = MessagePage()
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        groupchat.wait_for_page_load()
+        # Step 点击输入框上方的+号
+        groupchat.click_more()
+        time.sleep(2)
+        # Checkpoint 展示：文件、群短信（群主）、位置、红包ICON
+        mess.page_should_contain_text("文件")
+        mess.page_should_contain_text("位置")
+        mess.page_should_contain_text("红包")
+        mess.page_should_contain_text("群短信")
+
+
+class Contacts_demo(TestCase):
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0109():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0109(self):
+        """在群聊会话页，点击输入框——调起小键盘"""
+        # 1、网络正常
+        # 2、已加入普通群
+        # 3、在群聊天会话页面
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        # Step 在群聊会话页面
+        groupchat.wait_for_page_load()
+        # Step 点击输入框
+        groupchat.click_input_box()
+        time.sleep(1)
+        # Checkpoint 默认调起小键盘
+        self.assertTrue(current_mobile().is_keyboard_shown())
+
