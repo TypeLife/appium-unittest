@@ -1496,5 +1496,74 @@ class MsgAllPrior(TestCase):
         time.sleep(0.5)
         contacts.assert_screen_contain_text('已发送')
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0102():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0102(self):
+        """在群聊会话窗口，点击输入框上方的相机ICON，进入到相机拍摄页"""
+        # 1、网络正常
+        # 2、已加入普通群
+        # 3、在群聊天会话页面
+        # 4、已获取相机权限
+        # Step 创建群聊并进入
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        # Step 等待群聊天页加载
+        groupchat.wait_for_page_load()
+        # Step 1、点击输入框上方的相机
+        groupchat.click_take_picture()
+        chat_photo = ChatPhotoPage()
+        # Checkpoint 可以正常调起相机操作页
+        chat_photo.wait_for_page_load()
+        # Step 轻触拍摄按钮
+        chat_photo.take_photo()
+        # Checkpoint 会拍摄成功一张照片
+        # Step 点击右下角的“√”按钮
+        chat_photo.send_photo()
+        time.sleep(5)
+        # Checkpoint 可以发送成功
+        groupchat.is_exist_pic_msg()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0103():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0103(self):
+        """在群聊会话窗口，点击输入框上方的相机ICON，进入到相机拍摄页"""
+        # 1、网络正常
+        # 2、已加入普通群
+        # 3、在群聊天会话页面
+        # 4、已获取相机权限
+        # 创建群聊
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        groupchat.wait_for_page_load()
+        # Step 1、点击输入框上方的相机ICON，调起相机操作页
+        groupchat.click_take_picture()
+        chat_photo = ChatPhotoPage()
+        # Checkpoint 调起相机操作页
+        chat_photo.wait_for_page_load()
+        # Step 2、长按拍摄按钮3、录制时间超过1秒钟后，松手
+        chat_photo.record_video(3000)
+        # Step 4、点击右下角的“√”按钮
+        chat_photo.send_video()
+        time.sleep(5)
+        # Checkpoint 3、录制时间超过1秒钟后，松手，会录制成功的视频4、点击右下角的“√”按钮，可以发送成功
+        groupchat.is_exist_video_record()
 
 
