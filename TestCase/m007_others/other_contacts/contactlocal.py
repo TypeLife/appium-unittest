@@ -6,9 +6,10 @@ from preconditions.BasePreconditions import LoginPreconditions
 from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile
 from library.core.utils.testcasefilter import tags
+from pages.components import ChatNoticeDialog, SearchBar, ContactsSelector
 from pages import *
 from pages.contacts.EditContactPage import EditContactPage
-
+from pages.message.Send_CardName import Send_CardNamePage
 
 class Preconditions(LoginPreconditions):
     """前置条件"""
@@ -1566,4 +1567,69 @@ class MsgAllPrior(TestCase):
         # Checkpoint 3、录制时间超过1秒钟后，松手，会录制成功的视频4、点击右下角的“√”按钮，可以发送成功
         groupchat.is_exist_video_record()
 
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0104():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0104(self):
+        """点击输入框上方的名片ICON——进入到联系人选择器页"""
+        # 1、网络正常
+        # 2、已加入普通群
+        # 3、在群聊天会话页面
+        # Step 创建群聊
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        groupchat.wait_for_page_load()
+        # Step 点击输入框上方的名片ICON
+        groupchat.click_profile()
+        selectcontact = SelectLocalContactsPage()
+        # Checkpoint 进入到联系人选择器页面
+        selectcontact.wait_for_page_load()
+        # Step 任意选中一个联系人的名片，发送出去
+        ContactsSelector().click_local_contacts('测试短信1')
+        time.sleep(2)
+        Send_CardNamePage().click_share_btn()
+        # Checkpoint 在会话页面展示正常
+        groupchat.page_should_contain_text('测试短信1')
+        groupchat.page_should_contain_text('个人名片')
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0105():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0105(self):
+        """点击输入框上方的GIFICON——展示GIF图片推荐列表"""
+        # 1、网络正常
+        # 2、已加入普通群
+        # 3、在群聊天会话页面
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        groupchat.wait_for_page_load()
+        # Step 点击输入框上方的GIFICON
+        groupchat.click_gif()
+        chatgif = ChatGIFPage()
+        # Checkpoint 展示推荐图
+        chatgif.wait_for_page_load()
+        # Step 任意点击一个推荐图片，发送
+        chatgif.send_gif(1)
+        chatgif.close_gif()
+        time.sleep(2)
+        # Checkpoint 发送成功后的展示会另起一个头像和一个昵称
+        groupchat.is_send_gif()
+        chatgif.is_gif_head_exist()
 
