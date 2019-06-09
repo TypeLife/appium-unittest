@@ -74,7 +74,8 @@ class Preconditions(WorkbenchPreconditions):
 
         # 点击权限列表页面的确定按钮
         permission_list = PermissionListPage()
-        permission_list.click_submit_button()
+        # permission_list.click_submit_button()
+        permission_list.go_permission()
         one_key.wait_for_page_load(30)
 
     @staticmethod
@@ -87,11 +88,14 @@ class Preconditions(WorkbenchPreconditions):
         one_key = OneKeyLoginPage()
         one_key.wait_for_tell_number_load(60)
         one_key.click_one_key_login()
-        if one_key.have_read_agreement_detail():
-            one_key.click_read_agreement_detail()
-            # 同意协议
-            agreement = AgreementDetailPage()
-            agreement.click_agree_button()
+        # if one_key.have_read_agreement_detail():
+        #     one_key.click_read_agreement_detail()
+        #     # 同意协议
+        #     agreement = AgreementDetailPage()
+        #     agreement.click_agree_button()
+        agreement = AgreementDetailPage()
+        time.sleep(1)
+        agreement.click_agree_button()
         # 等待消息页
         message_page = MessagePage()
         message_page.wait_login_success(60)

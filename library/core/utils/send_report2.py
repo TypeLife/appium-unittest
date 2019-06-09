@@ -181,7 +181,7 @@ def get_current_version():
         assert response.status_code == 200
         result = json.loads(response.text)
         # CURRENT_VERSION = 'V' + result['data']['list'][0]['buildVersion']
-        CURRENT_VERSION = 'V6.2.9.0313'
+        CURRENT_VERSION = 'V6.3.1.0524'
     except:
         print("获取APP当前版本号失败")
         traceback.print_exc()

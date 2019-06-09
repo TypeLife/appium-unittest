@@ -2298,7 +2298,6 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         Preconditions.get_into_group_chat_page(name)
         gcp = GroupChatPage()
         gcp.wait_for_page_load()
-        gcp.click_more()
         cmp = ChatMorePage()
         cmp.click_file()
         csfp = ChatSelectFilePage()

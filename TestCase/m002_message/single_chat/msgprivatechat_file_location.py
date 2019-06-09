@@ -78,7 +78,7 @@ class Preconditions(WorkbenchPreconditions):
         # 在当前聊天会话页面，点击更多富媒体的文件按钮
         scp = SingleChatPage()
         scp.wait_for_page_load()
-        scp.click_more()
+        # scp.click_more()
         # 点击本地文件
         cmp = ChatMorePage()
         cmp.click_file()
@@ -131,7 +131,7 @@ class Preconditions(WorkbenchPreconditions):
         # 在当前聊天会话页面，点击更多富媒体的文件按钮
         scp = SingleChatPage()
         scp.wait_for_page_load()
-        scp.click_more()
+        # scp.click_more()
         cmp = ChatMorePage()
         cmp.click_file()
         csfp = ChatSelectFilePage()
@@ -178,7 +178,7 @@ class Preconditions(WorkbenchPreconditions):
         # 在当前聊天会话页面，点击更多富媒体的文件按钮
         scp = SingleChatPage()
         scp.wait_for_page_load()
-        scp.click_more()
+        # scp.click_more()
         cmp = ChatMorePage()
         cmp.click_file()
         csfp = ChatSelectFilePage()
@@ -225,7 +225,7 @@ class Preconditions(WorkbenchPreconditions):
         # 在当前聊天会话页面，点击更多富媒体的文件按钮
         scp = SingleChatPage()
         scp.wait_for_page_load()
-        scp.click_more()
+        # scp.click_more()
         cmp = ChatMorePage()
         cmp.click_file()
         csfp = ChatSelectFilePage()

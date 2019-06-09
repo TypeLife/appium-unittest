@@ -125,6 +125,8 @@ class Preconditions(object):
         # 点击‘通讯录’
         mess.open_contacts_page()
         contacts = ContactsPage()
+        time.sleep(1)
+        contacts.click_mobile_contacts()
         contacts.click_label_grouping()
         label_grouping = LabelGroupingPage()
         label_grouping.wait_for_page_load()
