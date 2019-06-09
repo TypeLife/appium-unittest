@@ -6,9 +6,10 @@ from preconditions.BasePreconditions import LoginPreconditions
 from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile
 from library.core.utils.testcasefilter import tags
+from pages.components import ChatNoticeDialog, SearchBar, ContactsSelector
 from pages import *
 from pages.contacts.EditContactPage import EditContactPage
-
+from pages.message.Send_CardName import Send_CardNamePage
 
 class Preconditions(LoginPreconditions):
     """前置条件"""
@@ -1496,5 +1497,439 @@ class MsgAllPrior(TestCase):
         time.sleep(0.5)
         contacts.assert_screen_contain_text('已发送')
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0102():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0102(self):
+        """在群聊会话窗口，点击输入框上方的相机ICON，进入到相机拍摄页"""
+        # 1、网络正常
+        # 2、已加入普通群
+        # 3、在群聊天会话页面
+        # 4、已获取相机权限
+        # Step 创建群聊并进入
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        # Step 等待群聊天页加载
+        groupchat.wait_for_page_load()
+        # Step 1、点击输入框上方的相机
+        groupchat.click_take_picture()
+        chat_photo = ChatPhotoPage()
+        # Checkpoint 可以正常调起相机操作页
+        chat_photo.wait_for_page_load()
+        # Step 轻触拍摄按钮
+        chat_photo.take_photo()
+        # Checkpoint 会拍摄成功一张照片
+        # Step 点击右下角的“√”按钮
+        chat_photo.send_photo()
+        time.sleep(5)
+        # Checkpoint 可以发送成功
+        groupchat.is_exist_pic_msg()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0103():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0103(self):
+        """在群聊会话窗口，点击输入框上方的相机ICON，进入到相机拍摄页"""
+        # 1、网络正常
+        # 2、已加入普通群
+        # 3、在群聊天会话页面
+        # 4、已获取相机权限
+        # 创建群聊
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        groupchat.wait_for_page_load()
+        # Step 1、点击输入框上方的相机ICON，调起相机操作页
+        groupchat.click_take_picture()
+        chat_photo = ChatPhotoPage()
+        # Checkpoint 调起相机操作页
+        chat_photo.wait_for_page_load()
+        # Step 2、长按拍摄按钮3、录制时间超过1秒钟后，松手
+        chat_photo.record_video(3000)
+        # Step 4、点击右下角的“√”按钮
+        chat_photo.send_video()
+        time.sleep(5)
+        # Checkpoint 3、录制时间超过1秒钟后，松手，会录制成功的视频4、点击右下角的“√”按钮，可以发送成功
+        groupchat.is_exist_video_record()
+
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0104():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0104(self):
+        """点击输入框上方的名片ICON——进入到联系人选择器页"""
+        # 1、网络正常
+        # 2、已加入普通群
+        # 3、在群聊天会话页面
+        # Step 创建群聊
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        groupchat.wait_for_page_load()
+        # Step 点击输入框上方的名片ICON
+        groupchat.click_profile()
+        selectcontact = SelectLocalContactsPage()
+        # Checkpoint 进入到联系人选择器页面
+        selectcontact.wait_for_page_load()
+        # Step 任意选中一个联系人的名片，发送出去
+        ContactsSelector().click_local_contacts('测试短信1')
+        time.sleep(2)
+        Send_CardNamePage().click_share_btn()
+        # Checkpoint 在会话页面展示正常
+        groupchat.page_should_contain_text('测试短信1')
+        groupchat.page_should_contain_text('个人名片')
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0105():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0105(self):
+        """点击输入框上方的GIFICON——展示GIF图片推荐列表"""
+        # 1、网络正常
+        # 2、已加入普通群
+        # 3、在群聊天会话页面
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        groupchat.wait_for_page_load()
+        # Step 点击输入框上方的GIFICON
+        groupchat.click_gif()
+        chatgif = ChatGIFPage()
+        # Checkpoint 展示推荐图
+        chatgif.wait_for_page_load()
+        # Step 任意点击一个推荐图片，发送
+        chatgif.send_gif(1)
+        chatgif.close_gif()
+        time.sleep(2)
+        # Checkpoint 发送成功后的展示会另起一个头像和一个昵称
+        groupchat.is_send_gif()
+        chatgif.is_gif_head_exist()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0106():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0106(self):
+        """点击输入框上方的+号——展示隐藏的：文件、群短信（群主）、位置、红包"""
+        # 1、网络正常
+        # 2、已加入普通群
+        # 3、在群聊天会话页面
+        # 4、本网用户
+        mess = MessagePage()
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        groupchat.wait_for_page_load()
+        # Step 点击输入框上方的+号
+        groupchat.click_more()
+        time.sleep(2)
+        # Checkpoint 展示：文件、群短信（群主）、位置、红包ICON
+        mess.page_should_contain_text("文件")
+        mess.page_should_contain_text("位置")
+        mess.page_should_contain_text("红包")
+        mess.page_should_contain_text("群短信")
+
+
+class Contacts_demo(TestCase):
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0109():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0109(self):
+        """在群聊会话页，点击输入框——调起小键盘"""
+        # 1、网络正常
+        # 2、已加入普通群
+        # 3、在群聊天会话页面
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        # Step 在群聊会话页面
+        groupchat.wait_for_page_load()
+        # Step 点击输入框
+        groupchat.click_input_box()
+        time.sleep(1)
+        # Checkpoint 默认调起小键盘
+        self.assertTrue(current_mobile().is_keyboard_shown())
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0111():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0111(self):
+        """在群聊设置页面，群成员头像上方文案展示"""
+        # 1、网络正常
+        # 2、已加入普通群
+        # 3、在群聊设置页面
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        groupchat.wait_for_page_load()
+        # Step 群聊设置页面
+        groupchat.click_setting()
+        time.sleep(1)
+        # Checkpoint 展示了：群成员+括号+群聊天人数
+        groupchat.page_should_contain_text('群成员(1人)')
+        # Checkpoint 展示了群聊设置，返回按钮
+        groupchat.return_btn_is_exist()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0112():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0112(self):
+        """在群聊设置页面，群成员展示"""
+        # 1、网络正常
+        # 2、已加入普通群
+        # 3、在群聊设置页面
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        groupchat.wait_for_page_load()
+        # Step 群聊设置页面
+        groupchat.click_setting()
+        time.sleep(1)
+        # Checkpoint 群头像默认展示为：头像+昵称
+        GroupChatSetPage().group_avatar_is_exist()
+        GroupChatSetPage().group_name_is_exist()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0122():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0122(self):
+        """在群聊设置页面中——群成员头像展示"""
+        # 1、网络正常
+        # 2、已加入普通群
+        # 3、在群聊设置页面
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        groupchat.wait_for_page_load()
+        # Step 群聊天设置页面
+        groupchat.click_setting()
+        time.sleep(1)
+        # Checkpoint 展示的群成员头像，最少会展示一个头像
+        GroupChatSetPage().group_avatar_is_exist()
+
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0123():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0123(self):
+        """在群聊设置页面中——群主头像展示"""
+        # 1、网络正常
+        # 2、已加入普通群
+        # 3、在群聊设置页面
+        # 4、群主权限
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        groupchat.wait_for_page_load()
+        # Step 群聊天设置页面
+        groupchat.click_setting()
+        time.sleep(1)
+        # Checkpoint 校验群主头像皇冠
+        GroupChatSetPage().group_chairman_tag_is_exist()
+
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0124():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0124(self):
+        """普通群——群主——添加一个成员"""
+        # 1、网络正常（4G/WIFI）
+        # 2、已创建一个群聊
+        # 3、群聊人数为1
+        # 4、在群聊设置页面
+        # 5、群主权限
+        mess = MessagePage()
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        time.sleep(1)
+        # Step 点击添加成员的“+”号按钮
+        GroupChatSetPage().click_add_number()
+        # Checkpoint 跳转到联系人选择器页面
+        # Step 任意选中一个联系人，点击右上角的确定按钮
+        ContactsSelector().select_local_contacts('测试短信1')
+        time.sleep(2)
+        # Checkpoint 会向邀请人发送一条消息
+        mess.page_should_contain_text("你向 测试短信1... 发出群邀请")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0125():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0125(self):
+        """普通群——群主——添加2个成员"""
+        # 1、网络正常（4G/WIFI）
+        # 2、已创建一个群聊
+        # 3、群聊人数为1
+        # 4、在群聊设置页面
+        # 5、群主权限
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        contactsel = ContactsSelector()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        time.sleep(1)
+        # Step 点击添加成员的“+”号按钮
+        GroupChatSetPage().click_add_number()
+        # Step 任意选中2个联系人，点击右上角的确定按钮
+        contactsel.click_local_contacts('测试短信1')
+        contactsel.click_local_contacts('测试短信2')
+        contactsel.click_ok_button()
+        time.sleep(2)
+        # Checkpoint 会向邀请人发送一条消息
+        groupchat.page_should_contain_text('你向 测试短信1,测试短信2... 发出群邀请')
+
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0135():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0135(self):
+        """无群成员时——点击移除成员按钮"""
+        # 1、网络正常（4G/WIFI）
+        # 2、已创建一个普通群
+        # 3、群聊人数为1
+        # 4、在群聊设置页面
+        # 5、群主权限
+        mess = MessagePage()
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        GroupChatSetPage().wait_for_page_load()
+        # Step 点击移除群成员按钮
+        GroupChatSetPage().click_del_member()
+        # Checkpoint 跳转到群成员选择列表页面
+        mess.page_should_not_contain_text("删除群成员")
+
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0161():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0161(self):
+        """群主——清除旧名片——录入1个字母（不区分大、小写）"""
+        # 1、网络正常（4G/WIFI）
+        # 2、已创建一个普通群
+        # 3、在群聊设置页面
+        # 4、群主权限
+        mess = MessagePage()
+        Preconditions.create_group_if_not_exist('测试群组1', "测试短信1", "测试短信2")
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        groupset.click_modify_my_group_name()
+        groupset.wait_for_modify_mygroupname_load()
+        # Step 群名片编辑页面，清除旧名片后，录入1个字母
+        groupset.clear_group_name()
+        # Checkpoint 可以正常录入1个字母
+        groupset.input_new_group_name("A")
+        # Step 录入成功，点击右上角的完成按钮
+        groupset.save_group_card_name()
+        # Checkpoint 可以完成保存操作
+        groupset.wait_for_page_load()
+        groupset.check_group_nickname('A')
 
 

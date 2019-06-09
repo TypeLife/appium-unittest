@@ -1381,7 +1381,6 @@ class MsgGroupChatTest(TestCase):
             pass
         else:
             chat_more = ChatMorePage()
-            chat_more.close_more()
             chat_more.click_file1()
             select_file_type = ChatSelectFilePage()
             select_file_type.wait_for_page_load()
