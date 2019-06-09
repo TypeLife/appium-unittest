@@ -266,7 +266,7 @@ class GroupcontactsSelectPage(TestCase):
     模块:通讯录--企业联系人选择器
     """
     def default_setUp(self):
-        """确保每个用例执行前在通讯录页面"""
+        """确保每个用例执行前在选择团队联系人页面"""
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()

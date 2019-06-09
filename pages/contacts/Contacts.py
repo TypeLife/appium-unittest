@@ -447,7 +447,7 @@ class ContactsPage(FooterPage):
     @TestLogger.log()
     def select_group_by_name(self, name):
         """根据名字选择一个团队"""
-        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title_department" and @text ="%s"]' % name)
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title" and @text ="%s"]' % name)
         max_try = 20
         current = 0
         while current < max_try:
