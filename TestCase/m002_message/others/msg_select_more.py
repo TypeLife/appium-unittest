@@ -119,8 +119,6 @@ class MsgSelectMoreTest(TestCase):
         time.sleep(5)
         select_contacts = SelectContactsPage()
         select_contacts.hide_keyboard()
-        # 群聊 & 查看更多
-        # select_contacts.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @index="2"]'))
         select_contacts.click_read_more()
         time.sleep(5)
         # 判定点
