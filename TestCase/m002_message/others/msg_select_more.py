@@ -52,13 +52,14 @@ class MsgSelectMoreTest(TestCase):
                 except:
                     pass
                 for name, number in required_contacts:
+                    # 创建联系人
                     conts.create_contacts_if_not_exits(name, number)
-                # 创建群
                 required_group_chats = dataproviders.get_preset_group_chats()
                 conts.open_group_chat_list()
                 group_list = GroupListPage()
                 for group_name, members in required_group_chats:
                     group_list.wait_for_page_load()
+                    # 创建群
                     group_list.create_group_chats_if_not_exits(group_name, members)
                 group_list.click_back()
                 conts.open_message_page()
