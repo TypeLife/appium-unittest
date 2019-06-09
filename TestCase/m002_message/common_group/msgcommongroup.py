@@ -123,6 +123,8 @@ class Preconditions(object):
         current_mobile().back()
         sog.click_back()
         time.sleep(2)
+        sc.click_back()
+        mess.wait_for_page_load()
         # 点击 +
         mess.click_add_icon()
         # 点击 发起群聊
@@ -326,11 +328,15 @@ class Preconditions(object):
             # 有群返回，无群创建
             if group_name in group_names:
                 sog.click_back()
+                time.sleep(1)
+                sc.click_back()
                 return
             a+=1
             sog.page_up()
 
         sog.click_back()
+        time.sleep(1)
+        sc.click_back()
         # 点击 +
         mess.click_add_icon()
         # 点击 发起群聊

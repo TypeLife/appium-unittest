@@ -208,6 +208,9 @@ class Preconditions(object):
         time.sleep(2)
         current_mobile().back()
         sog.click_back()
+        time.sleep(1)
+        sc.click_back()
+        mess.wait_for_page_load()
         # 从本地联系人中选择成员创建群
         mess.click_add_icon()
         # 点击 发起群聊

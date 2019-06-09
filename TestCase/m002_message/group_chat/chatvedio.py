@@ -114,6 +114,9 @@ class Preconditions(WorkbenchPreconditions):
         time.sleep(2)
         current_mobile().back()
         sog.click_back()
+        time.sleep(2)
+        sc.click_back()
+        mess.wait_for_page_load()
         # 点击 +
         mess.click_add_icon()
         # 点击 发起群聊

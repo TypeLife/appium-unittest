@@ -2342,6 +2342,8 @@ class MessageOthersAllTest(TestCase):
         mp.open_contacts_page()
         cp = ContactsPage()
         cp.wait_for_page_load()
+        cp.click_mobile_contacts()
+        time.sleep(1)
         # 选择名片
         cp.select_contacts_by_name("名片消息测试")
         cdp = ContactDetailsPage()
@@ -2359,6 +2361,8 @@ class MessageOthersAllTest(TestCase):
         # 1.正常分享
         self.assertEquals(slc.is_toast_exist("已发送"), True)
         cdp.click_back_icon()
+        time.sleep(1)
+        cdp.click_back_by_android()
         cp.wait_for_page_load()
         cp.open_message_page()
         # 等待消息页面加载
@@ -2383,6 +2387,8 @@ class MessageOthersAllTest(TestCase):
         mp.open_contacts_page()
         cp = ContactsPage()
         cp.wait_for_page_load()
+        cp.click_mobile_contacts()
+        time.sleep(1)
         # 选择名片
         card_name = "名片消息测试"
         cp.select_contacts_by_name(card_name)
@@ -2400,6 +2406,8 @@ class MessageOthersAllTest(TestCase):
         time.sleep(2)
         slc.click_text("发送名片")
         cdp.click_back_icon()
+        time.sleep(1)
+        cdp.click_back_by_android()
         cp.wait_for_page_load()
         cp.open_message_page()
         mp.wait_for_page_load()
@@ -2437,6 +2445,8 @@ class MessageOthersAllTest(TestCase):
         mp.open_contacts_page()
         cp = ContactsPage()
         cp.wait_for_page_load()
+        cp.click_mobile_contacts()
+        time.sleep(1)
         # 选择名片
         card_name = "名片消息测试"
         cp.select_contacts_by_name(card_name)
@@ -2474,6 +2484,8 @@ class MessageOthersAllTest(TestCase):
         mp.open_contacts_page()
         cp = ContactsPage()
         cp.wait_for_page_load()
+        cp.click_mobile_contacts()
+        time.sleep(1)
         # 选择名片
         card_name = "名片消息测试"
         cp.select_contacts_by_name(card_name)
@@ -2510,6 +2522,8 @@ class MessageOthersAllTest(TestCase):
         mp.open_contacts_page()
         cp = ContactsPage()
         cp.wait_for_page_load()
+        cp.click_mobile_contacts()
+        time.sleep(1)
         # 选择名片
         card_name = "名片消息测试"
         cp.select_contacts_by_name(card_name)
@@ -2547,6 +2561,8 @@ class MessageOthersAllTest(TestCase):
         mp.open_contacts_page()
         cp = ContactsPage()
         cp.wait_for_page_load()
+        cp.click_mobile_contacts()
+        time.sleep(1)
         # 选择名片
         card_name = "名片消息测试"
         cp.select_contacts_by_name(card_name)
@@ -2583,6 +2599,8 @@ class MessageOthersAllTest(TestCase):
         mp.open_contacts_page()
         cp = ContactsPage()
         cp.wait_for_page_load()
+        cp.click_mobile_contacts()
+        time.sleep(1)
         # 选择名片
         card_name = "名片消息测试"
         cp.select_contacts_by_name(card_name)
@@ -2617,6 +2635,8 @@ class MessageOthersAllTest(TestCase):
         mp.open_contacts_page()
         cp = ContactsPage()
         cp.wait_for_page_load()
+        cp.click_mobile_contacts()
+        time.sleep(1)
         # 选择名片
         card_name = "名片消息测试"
         cp.select_contacts_by_name(card_name)
