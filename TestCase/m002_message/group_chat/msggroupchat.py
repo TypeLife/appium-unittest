@@ -2613,7 +2613,7 @@ class MessageGroupChatAllTest(TestCase):
         self.assertEquals(gcp.page_should_contain_text2("群已解散"), True)
 
     @staticmethod
-    def tearDown_test_msg_xiaoqiu_0182():
+    def tearDown_test_msg_():
         """恢复环境"""
 
         Preconditions.make_already_in_message_page()
