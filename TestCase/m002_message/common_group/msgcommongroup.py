@@ -6194,7 +6194,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.go_to_group_double(group_name)
 
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0097(self):
         """在群聊会话页，点击分享过来的卡片消息体——进入到卡片链接页"""
         # 1、点击接收到的卡片消息体，是否可以进入到卡片链接页
@@ -6255,7 +6255,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0099(self):
         """在群聊会话窗口，点击通话按钮——拨打多方电话"""
         # 1、点击多方电话按钮，是否可以跳转到群成员联系人选择器页
@@ -6271,6 +6271,7 @@ class MsgCommonGroupAllTest(TestCase):
         for name in names:
             slc.select_one_member_by_name(name)
         slc.click_text("呼叫")
+        time.sleep(3)
         if gcp.is_text_present("我知道了"):
             gcp.click_text("我知道了")
         if gcp.is_text_present("始终允许"):
@@ -6280,12 +6281,102 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("没有出现通话界面")
         gcp.pick_up_the_call()
         Preconditions.select_mobile('Android-移动-移动')
-        time.sleep(6)
+        time.sleep(10)
         if not gcp.is_phone_in_calling_state():
             raise AssertionError("没有成功发起呼叫")
         gcp.hang_up_the_call()
         Preconditions.select_mobile('Android-移动')
         gcp.hang_up_the_call()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0113():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0113(self):
+        """在群聊设置页面，群成员展示列表，点击“>”"""
+        # 1、在群聊设置页面，点击群成员展示列表右上角的“ > ”按钮，是否可以跳转到群成员列表页
+        # 2、任意点击一个陌生的群成员头像，是否会跳转到陌生人详情页中并展示交换名片按钮
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        time.sleep(2)
+        gcp.click_element_("群成员")
+        time.sleep(3)
+        if not gcp.is_text_present("搜索成员"):
+            raise AssertionError("不可以跳转到群成员列表页")
+        # 选择联系人
+        slc = SelectLocalContactsPage()
+        names = slc.get_contacts_name()
+        for name in names:
+            slc.select_one_member_by_name(name)
+            time.sleep(3)
+            if gcp.is_text_present("编辑"):
+                current_mobile().back()
+                time.sleep(2)
+            else:
+                if not gcp.is_text_present("交换名片"):
+                    raise AssertionError("不会跳转到陌生人详情页中并展示交换名片按钮")
+                break
+        current_mobile().back()
+        time.sleep(2)
+        current_mobile().back()
+        time.sleep(2)
+        current_mobile().back()
+        gcp.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0114():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0114(self):
+        """群成员展示列表页，输入框输入号码——前3位搜索群成员"""
+        # 1、在页面顶部的搜索框中，输入一个号码的前3位作为搜索条件进行搜索，是否可以搜索出对应的群成员信息
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        time.sleep(2)
+        gcp.click_element_("群成员")
+        time.sleep(3)
+        if not gcp.is_text_present("搜索成员"):
+            raise AssertionError("不可以跳转到群成员列表页")
+        # 输入群成员信息
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        gcp.input_member_message(phone_number[0:3])
+        #验证搜索结果
+        current_mobile().back()
+        current_mobile().back()
+        current_mobile().back()
+        gcp.wait_for_page_load()
 
 
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
@@ -6332,7 +6423,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0231(self):
         """群聊天会话页面——同时@多个人——@效果展示"""
         # 1、同时 @ 多群成员联系人，发送成功后，被 @ 的联系人收到后，是否存在 @ 效果
@@ -6359,4 +6450,310 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("被@的联系人收到后，不存在@效果")
         Preconditions.go_to_group_double(group_name)
         Preconditions.delete_record_group_chat()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0115():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0115(self):
+        """群成员展示列表页，输入框输入号码——前3位搜索群成员"""
+        # 1、在页面顶部的搜索框中，输入一个号码的前3位作为搜索条件进行搜索，是否可以搜索出对应的群成员信息
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        time.sleep(2)
+        gcp.click_element_("群成员")
+        time.sleep(3)
+        if not gcp.is_text_present("搜索成员"):
+            raise AssertionError("不可以跳转到群成员列表页")
+        # 输入群成员信息
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        gcp.input_member_message(phone_number[0:3])
+        # 验证搜索结果
+        current_mobile().back()
+        current_mobile().back()
+        current_mobile().back()
+        gcp.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0116():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0116(self):
+        """群成员展示列表页，输入框输入——完整号码搜索群成员"""
+        # 1、在页面顶部的搜索框中，输入一个完整的号码的作为搜索条件进行搜索，是否可以搜索出对应的群成员信息
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        time.sleep(2)
+        gcp.click_element_("群成员")
+        time.sleep(3)
+        if not gcp.is_text_present("搜索成员"):
+            raise AssertionError("不可以跳转到群成员列表页")
+        # 输入群成员信息
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        gcp.input_member_message(phone_number)
+        # 验证搜索结果
+        current_mobile().back()
+        current_mobile().back()
+        current_mobile().back()
+        gcp.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0117():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0117(self):
+        """群成员展示列表页，输入框输入——中文字符搜索群成员"""
+        # 1、在页面顶部的搜索框中，输入一个中文字符作为搜索条件进行搜索，是否可以搜索出对应的群成员信息
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        time.sleep(2)
+        gcp.click_element_("群成员")
+        time.sleep(3)
+        if not gcp.is_text_present("搜索成员"):
+            raise AssertionError("不可以跳转到群成员列表页")
+        # 输入群成员信息
+        gcp.input_member_message("哈")
+        # 验证搜索结果
+        current_mobile().back()
+        current_mobile().back()
+        current_mobile().back()
+        gcp.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0118():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0118(self):
+        """群成员展示列表页，输入框输入——英文字符搜索群成员"""
+        # 1、在页面顶部的搜索框中，输入一个英文字符作为搜索条件进行搜索，是否可以搜索出对应的群成员信息
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        time.sleep(2)
+        gcp.click_element_("群成员")
+        time.sleep(3)
+        if not gcp.is_text_present("搜索成员"):
+            raise AssertionError("不可以跳转到群成员列表页")
+        # 输入群成员信息
+        gcp.input_member_message("A")
+        # 验证搜索结果
+        current_mobile().back()
+        current_mobile().back()
+        current_mobile().back()
+        gcp.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0636():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0636(self):
+        """群成员展示列表页，输入搜索条件——搜索——不存在搜索结果时展示"""
+        # 1、在页面顶部的搜索框中，输入一个字符作为搜索条件进行搜索，无搜索结果展示
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        time.sleep(2)
+        gcp.click_element_("群成员")
+        time.sleep(3)
+        if not gcp.is_text_present("搜索成员"):
+            raise AssertionError("不可以跳转到群成员列表页")
+        # 输入群成员信息
+        gcp.input_member_message("$")
+        # 验证搜索结果
+        current_mobile().back()
+        current_mobile().back()
+        current_mobile().back()
+        gcp.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0119():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0119(self):
+        """群成员展示列表页，搜索出的搜索结果排序"""
+        # 1、在页面顶部的搜索框中，输入一个英文字符作为搜索条件进行搜索，搜索出的搜索结果，是否是按照：排序规则：精确匹配>模糊匹配排序；其次按照结果的首字母顺序排序
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        time.sleep(2)
+        gcp.click_element_("群成员")
+        time.sleep(3)
+        if not gcp.is_text_present("搜索成员"):
+            raise AssertionError("不可以跳转到群成员列表页")
+        # 输入群成员信息
+        gcp.input_member_message("A")
+        # 验证搜索结果
+        current_mobile().back()
+        current_mobile().back()
+        current_mobile().back()
+        gcp.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0120():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0120(self):
+        """在群聊设置页面——群主——群成员头像展示"""
+        # 1、群主在群聊天设置页面，展示的群成员头像，最多是否只能展示10个头像
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        time.sleep(2)
+        gcp.click_element_("群成员")
+        time.sleep(3)
+        if not gcp.is_text_present("搜索成员"):
+            raise AssertionError("不可以跳转到群成员列表页")
+        # 判断群成员头像是否存在
+        if not gcp.is_element_exit_("群成员头像"):
+            raise AssertionError("没有展示出群成员头像")
+        # 验证搜索结果
+        current_mobile().back()
+        current_mobile().back()
+        gcp.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0121():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0121(self):
+        """在群聊设置页面——群成员——群成员头像展示"""
+        # 1、群成员在群聊天设置页面，展示的群成员头像，最多是否只能展示11个头像
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        time.sleep(2)
+        gcp.click_element_("群成员")
+        time.sleep(3)
+        if not gcp.is_text_present("搜索成员"):
+            raise AssertionError("不可以跳转到群成员列表页")
+        # 判断群成员头像是否存在
+        if not gcp.is_element_exit_("群成员头像"):
+            raise AssertionError("没有展示出群成员头像")
+        # 验证搜索结果
+        current_mobile().back()
+        current_mobile().back()
+        gcp.wait_for_page_load()
 

@@ -75,6 +75,9 @@ class GroupChatPage(BaseChatPage):
                   '定位_地图': ('id', 'com.chinasofti.rcs:id/location_info_view'),
                   '始终允许': (MobileBy.XPATH, "//*[contains(@text, '始终允许')]"),
                   '文本消息': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'),
+                  '群成员': (MobileBy.XPATH, "//*[contains(@text, '群成员')]"),
+                  '搜索成员输入框': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_search_bar'),
+                  '群成员头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
                   }
 
     def is_exist_msg_videos(self):
@@ -578,3 +581,9 @@ class GroupChatPage(BaseChatPage):
         """是否存在指定文本消息"""
         locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_message" and text="%s"]' % name)
         return self._is_element_present(locator)
+
+    @TestLogger.log()
+    def input_member_message(self, message):
+        """输入搜索成员文本信息"""
+        self.input_text(self.__class__.__locators["搜索成员输入框"], message)
+        return self
