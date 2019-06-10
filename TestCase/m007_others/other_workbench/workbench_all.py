@@ -1895,6 +1895,74 @@ class MsgAllPrior(TestCase):
         # Checkpoint：挂断电话回到多方通话界面
         self.assertTrue(callpage.is_on_the_call_page())
 
+    @staticmethod
+    def setUp_test_msg_weifenglian_PC_0354():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 进入单聊页面
+        Preconditions.enter_private_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_PC_0354(self):
+        """单聊-位置"""
+        chat_window_page = ChatWindowPage()
+        chat_window_page.click_add_icon()
+        chat_window_page.click_menu_icon('位置')
+        elements = chat_window_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.lbe.security.miui:id/permission_message"]'))
+        self.assertTrue(len(elements) > 0)
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_1V1_0433():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 进入单聊页面
+        Preconditions.enter_private_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_1V1_0433(self):
+        """单聊-位置"""
+        chat_window_page = ChatWindowPage()
+        chat_window_page.click_add_icon()
+        chat_window_page.click_menu_icon('位置')
+        elements = chat_window_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.lbe.security.miui:id/permission_message"]'))
+        self.assertTrue(len(elements) > 0)
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_1V1_0436():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 进入单聊页面
+        Preconditions.enter_private_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_1V1_0436(self):
+        """单聊-位置"""
+        chat_window_page = ChatWindowPage()
+        chat_window_page.click_add_icon()
+        chat_window_page.click_menu_icon('位置')
+        elements = chat_window_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.lbe.security.miui:id/permission_message"]'))
+        if len(elements) > 0:
+            chat_window_page.click_element((MobileBy.XPATH, '//*[@resource-id="android:id/button1"]'))
+        chat_window_page.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/location_ok_btn"]'))
+        # 长按位置信息
+        time.sleep(3)
+        chat_window_page.press(chat_window_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/image_view_lloc_icon"]'))[0])
+        # 获取操作信息
+        time.sleep(3)
+        ops_elements = chat_window_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view"]'))
+        self.assertTrue(len(ops_elements) > 0)
+
 
 class Contacts_demo(TestCase):
 
