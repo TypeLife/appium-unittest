@@ -1963,6 +1963,143 @@ class MsgAllPrior(TestCase):
             (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_view"]'))
         self.assertTrue(len(ops_elements) > 0)
 
+    @staticmethod
+    def setUp_test_msg_weifenglian_1V1_0437():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 进入单聊页面
+        Preconditions.enter_private_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_1V1_0437(self):
+        """单聊-位置"""
+        chat_window_page = ChatWindowPage()
+        chat_window_page.click_add_icon()
+        chat_window_page.click_menu_icon('位置')
+        elements = chat_window_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.lbe.security.miui:id/permission_message"]'))
+        if len(elements) > 0:
+            chat_window_page.click_element((MobileBy.XPATH, '//*[@resource-id="android:id/button1"]'))
+        chat_window_page.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/location_ok_btn"]'))
+        # 长按位置信息
+        time.sleep(3)
+        chat_window_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/image_view_lloc_icon"]'))[0].click()
+        # 获取操作信息
+        time.sleep(3)
+        enabled_status = chat_window_page.get_element_attribute(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/location_nativ_btn"]'), 'enabled')
+        self.assertTrue(enabled_status == "true")
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_1V1_0445():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 进入单聊页面
+        Preconditions.enter_private_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_1V1_0445(self):
+        """单聊-位置"""
+        chat_window_page = ChatWindowPage()
+        chat_window_page.click_add_icon()
+        chat_window_page.click_menu_icon('位置')
+        elements = chat_window_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.lbe.security.miui:id/permission_message"]'))
+        if len(elements) > 0:
+            chat_window_page.click_element((MobileBy.XPATH, '//*[@resource-id="android:id/button1"]'))
+
+        chat_window_page.input_text((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/search_edit"]'), "医院")
+
+        chat_window_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/poi_list_item_title"]'))[0].click()
+
+        chat_window_page.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/location_ok_btn"]'))
+        # 长按位置信息
+        time.sleep(3)
+        window_page_get_elements = chat_window_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/image_view_lloc_icon"]'))
+        self.assertTrue(len(window_page_get_elements) > 0)
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_1V1_0450():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 进入单聊页面
+        Preconditions.enter_private_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_1V1_0450(self):
+        """单聊-位置"""
+        chat_window_page = ChatWindowPage()
+        chat_window_page.click_add_icon()
+        chat_window_page.click_menu_icon('位置')
+        elements = chat_window_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.lbe.security.miui:id/permission_message"]'))
+        if len(elements) > 0:
+            chat_window_page.click_element((MobileBy.XPATH, '//*[@resource-id="android:id/button1"]'))
+
+        chat_window_page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/gd_map_view'), 'up')
+        time.sleep(5)
+        chat_window_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/poi_list_item_title"]'))[0].click()
+
+        chat_window_page.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/location_ok_btn"]'))
+        # 按位置信息
+        time.sleep(3)
+        window_page_get_elements = chat_window_page.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/image_view_lloc_icon"]'))
+        self.assertTrue(len(window_page_get_elements) > 0)
+
+    @staticmethod
+    def setUp_test_msg_weifenglian_PC_0042():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 进入我的电脑页面
+        message_page = MessagePage()
+        message_page.wait_for_page_load()
+        message_page.search_and_enter("我的电脑")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_weifenglian_PC_0042(self):
+        """会话窗口中点击删除文本消息"""
+        # 推送文件到指定目录
+        path = 'aaaresource'
+        # contact2.push_resource_dir_to_mobile_sdcard2(Preconditions.select_mobile('Android-移动'),
+        #                                              os.path.join(PROJECT_PATH, path))
+
+        # 转发文件的名称
+        file_name = '2018-11-09 11-06-18-722582.log'
+        chatWindowPage = ChatWindowPage()
+        chatWindowPage.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_file'))
+        chatWindowPage.click_element(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/ll_music'))
+        time.sleep(2)
+        elements = chatWindowPage.get_elements(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/cb_choose_icon"]'))
+        self.assertTrue(len(elements) > 0)
+        elements[0].click()
+        # 发送
+        chatWindowPage.click_element((MobileBy.XPATH,
+                                      '//*[@resource-id="com.chinasofti.rcs:id/button_send" and @text="发送"]'))
+        try:
+            chatWindowPage.click_element((MobileBy.XPATH,
+                                          '//*[@resource-id="com.chinasofti.rcs:id/continue_call" and @text="继续发送"]'))
+        except BaseException as e:
+            print(e)
+        time.sleep(3)
+        page_elements = chatWindowPage.get_elements((MobileBy.XPATH,
+                                                     '//*[@resource-id="com.chinasofti.rcs:id/textview_file_name"]'))
+        self.assertTrue(len(page_elements) > 0)
+
 
 class Contacts_demo(TestCase):
 
