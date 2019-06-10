@@ -4,6 +4,7 @@ from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
+from pages.contacts.local_contact import localContactPage
 from preconditions.BasePreconditions import LoginPreconditions
 from pages.workbench.group_messenger.SelectCompanyContacts import SelectCompanyContactsPage
 
@@ -87,6 +88,8 @@ class ContactSearchOpTest(TestCase):
         pass
 
     def default_tearDown(self):
+        lcontact = localContactPage()
+        lcontact.set_network_status(6)
         pass
 
     @tags('ALL', 'CONTACT', 'YL')
@@ -112,9 +115,8 @@ class ContactSearchOpTest(TestCase):
         mess = MessagePage()
         mess.open_contacts_page()
         # 1、点击通讯录，点击搜索输入框
-        # 2、输入特殊字符
         mess.click_search()
-        # 查询页面输入'大佬1'
+        # 查询页面输入'188262'
         search_page = SearchPage()
         search_number = "188262"
         search_page.input_search_keyword(search_number)
@@ -260,6 +262,24 @@ class ContactSearchOpTest(TestCase):
         time.sleep(5)
         search_page.hide_keyboard()
         self.assertEquals(sccp.is_search_contacts_number_match(search_name), True)
+
+    @tags('ALL', 'CONTACT', 'YL')
+    def test_contacts_quxinli_0017(self):
+
+        Preconditions.make_already_in_message_page()
+        # 点击‘通讯录’
+        mess = MessagePage()
+        mess.open_contacts_page()
+        # 1、点击通讯录，点击搜索输入框
+        mess.click_search()
+        # 断开网络
+        lcontact = localContactPage()
+        lcontact.set_network_status(0)
+        # 查询页面输入'大佬1'
+        search_page = SearchPage()
+        search_page.input_search_keyword("大佬1")
+        sccp = SelectCompanyContactsPage()
+        self.assertEquals(sccp.is_toast_exist("当前网络不可用，请检查网络设置"), True)
 
     @tags('ALL', 'CONTACT', 'YL')
     def test_contacts_chenjixiang_0736(self):
