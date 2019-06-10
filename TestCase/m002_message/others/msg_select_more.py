@@ -89,7 +89,7 @@ class MsgSelectMoreTest(TestCase):
     def default_tearDown(self):
         pass
 
-    @tags('ALL', 'SMOKE')
+    @tags('ALL', 'MES_OTHER', 'YL')
     def test_msg_huangcaizui_E_0017(self):
         """查看更多联系人"""
         Preconditions.make_already_in_message_page()
@@ -108,7 +108,7 @@ class MsgSelectMoreTest(TestCase):
         # 2.跳转到搜索到的所有联系人显示页面
         select_contacts.is_text_present("手机联系人")
 
-    @tags('ALL', 'SMOKE')
+    @tags('ALL', 'MES_OTHER', 'YL')
     def test_msg_huangcaizui_E_0020(self):
         """查看更多联系人"""
         Preconditions.make_already_in_message_page()
