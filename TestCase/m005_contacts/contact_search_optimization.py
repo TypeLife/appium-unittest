@@ -89,7 +89,7 @@ class ContactSearchOpTest(TestCase):
     def default_tearDown(self):
         pass
 
-    @tags('ALL', 'CONTACT','YL')
+    @tags('ALL', 'CONTACT', 'YL')
     def test_contacts_quxinli_0010(self):
         # 导入团队联系人
         fail_time2 = 0
@@ -127,6 +127,42 @@ class ContactSearchOpTest(TestCase):
         self.assertEquals(sccp.is_search_contacts_number_match(search_number), True)
 
     @tags('ALL', 'CONTACT', 'YL')
+    def test_contacts_quxinli_0012(self):
+        # 导入团队联系人
+        fail_time2 = 0
+        flag2 = False
+        while fail_time2 < 5:
+            try:
+                Preconditions.make_already_in_message_page()
+                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
+                Preconditions.create_he_contacts(contact_names)
+                contact_names2 = [("陈1", "13888137001"), ("陈2", "13801137002"), ('陈3', "13820137003")]
+                Preconditions.create_he_contacts2(contact_names2)
+                flag2 = True
+            except:
+                fail_time2 += 1
+            if flag2:
+                break
+
+        Preconditions.make_already_in_message_page()
+        # 点击‘通讯录’
+        mess = MessagePage()
+        mess.open_contacts_page()
+        # 1、点击通讯录，点击搜索输入框
+        mess.click_search()
+        # 查询页面输入'陈'
+        search_page = SearchPage()
+        search_name = "陈"
+        search_page.input_search_keyword(search_name)
+        time.sleep(5)
+        search_page.hide_keyboard()
+        # 判定点
+        # 1、自动匹配输入结果，搜索内容高亮  准自动化
+        # 1.检查搜索结果是否模糊匹配关键字
+        sccp = SelectCompanyContactsPage()
+        self.assertEquals(sccp.is_search_contacts_number_match(search_name), True)
+
+    @tags('ALL', 'CONTACT', 'YL')
     def test_contacts_chenjixiang_0736(self):
         Preconditions.make_already_in_message_page()
         # 点击‘通讯录’
@@ -144,7 +180,7 @@ class ContactSearchOpTest(TestCase):
         # 1.模糊匹配到正确的结果
         self.assertEquals(search_page.is_text_present("特殊!@$"), False)
 
-    @tags('ALL', 'SMOKE')
+    @tags('ALL', 'CONTACT', 'YL')
     def test_contacts_chenjixiang_0739(self):
         # 导入团队联系人
         fail_time2 = 0
