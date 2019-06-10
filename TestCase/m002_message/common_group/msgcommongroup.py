@@ -6757,3 +6757,313 @@ class MsgCommonGroupAllTest(TestCase):
         current_mobile().back()
         gcp.wait_for_page_load()
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0220():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0220(self):
+        """聊天设置页面——打开置顶聊天功能——置顶一个聊天会话窗口"""
+        # 1、点击置顶聊天功能右边的开关，是否可以打开置顶聊天功能
+        # 2、置顶聊天功能开启后，返回到消息列表，接收一条消息，置顶聊天会话窗口是否会展示到页面顶部并且会话窗口成浅灰色展示
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        time.sleep(2)
+        if gcp.is_element_exit_("置顶聊天"):
+            gcp.click_element_("置顶聊天")
+        else:
+            gcp.page_up()
+            time.sleep(2)
+            gcp.click_element_("置顶聊天")
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp = GroupChatPage()
+        gcp.input_text_message("哈哈")
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        if not gcp.is_text_present(group_name):
+            raise AssertionError("会话窗口没有置顶")
+        gcp.press_element_by_text(group_name,3000)
+        time.sleep(2)
+        if not gcp.is_text_present("取消置顶"):
+            raise AssertionError("会话窗口没有置顶")
+        time.sleep(2)
+        gcp.click_text("取消置顶")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0221():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0221(self):
+        """聊天设置页面——打开置顶聊天功能——置顶二个聊天会话窗口"""
+        # 1、打开二个群聊或者单聊的置顶聊天功能，后续接收到消息时，后面置顶的聊天会话窗口是否会展示在第一个置顶的聊天会话窗口上方
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        time.sleep(2)
+        if gcp.is_element_exit_("置顶聊天"):
+            gcp.click_element_("置顶聊天")
+        else:
+            gcp.page_up()
+            time.sleep(2)
+            gcp.click_element_("置顶聊天")
+        current_mobile().launch_app()
+        #置顶单聊
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择手机联系人
+        sc = SelectContactsPage()
+        sc.click_phone_contact()
+        sc.click_one_contact("飞信电话")
+        time.sleep(2)
+        sc.click_text("确定")
+        chat = SingleChatPage()
+        time.sleep(2)
+        if gcp.is_text_present("1元/条"):
+            chat.click_i_have_read()
+        gcp.input_text_message("哈哈")
+        gcp.send_message()
+        gcp.click_setting()
+        time.sleep(2)
+        if gcp.is_element_exit_("置顶聊天"):
+            gcp.click_element_("置顶聊天")
+        else:
+            gcp.page_up()
+            time.sleep(2)
+            gcp.click_element_("置顶聊天")
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp = GroupChatPage()
+        gcp.input_text_message("哈哈")
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        if not gcp.is_text_present(group_name):
+            raise AssertionError("会话窗口没有置顶")
+        gcp.press_element_by_text(group_name, 3000)
+        time.sleep(2)
+        if not gcp.is_text_present("取消置顶"):
+            raise AssertionError("会话窗口没有置顶")
+        time.sleep(2)
+        gcp.click_text("取消置顶")
+        gcp.press_element_by_text("飞信电话", 3000)
+        time.sleep(2)
+        gcp.click_text("取消置顶")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0222():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0222(self):
+        """聊天设置页面——关闭置顶聊天"""
+        # 1、点击置顶聊天功能右边的开关，是否可以关闭置顶聊天功能
+        # 2、置顶聊天功能关闭后，返回到消息列表，接收一条消息，聊天会话窗口在消息列表展示时，是否会随着其他聊天窗口的新消息进行排序
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.input_text_message("hh")
+        gcp.send_message()
+        Preconditions.delete_record_group_chat()
+        gcp.click_setting()
+        time.sleep(2)
+        if gcp.is_element_exit_("置顶聊天"):
+            gcp.click_element_("置顶聊天")
+        else:
+            gcp.page_up()
+            time.sleep(2)
+            gcp.click_element_("置顶聊天")
+        current_mobile().launch_app()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        group_name = Preconditions.get_group_chat_name_double()
+        mess.click_text(group_name)
+        #取消置顶
+        gcp.click_setting()
+        time.sleep(2)
+        if gcp.is_element_exit_("置顶聊天"):
+            gcp.click_element_("置顶聊天")
+        else:
+            gcp.page_up()
+            time.sleep(2)
+            gcp.click_element_("置顶聊天")
+        Preconditions.change_mobile('Android-移动-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp = GroupChatPage()
+        gcp.input_text_message("哈哈")
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        if not gcp.is_text_present(group_name):
+            raise AssertionError("聊天会话窗口在消息列表展示失败")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0234():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0234(self):
+        """消息列表页面——有人@我——然后撤回@消息"""
+        # 1、有人 @ 我后再撤回 @ 我的消息，查看消息列表页面是否还会提示有人 @ 我
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.input_text_message("@")
+        slc = SelectLocalContactsPage()
+        names = slc.get_contacts_name()
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        time.sleep(2)
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        time.sleep(2)
+        gcp.press_element_by_text("@",3000)
+        gcp.click_text("撤回")
+        if gcp.is_text_present("知道了"):
+            gcp.click_text("知道了")
+        Preconditions.delete_record_group_chat()
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        if not mess.is_text_present(group_name):
+            raise AssertionError("对话窗口显示不正常")
+        if mess.is_text_present("有人@我"):
+            raise AssertionError("存在有人@我")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0236():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0236(self):
+        """普通群——聊天会话页面——超长文本消息中带有@群成员"""
+        # 1、超长文本消息中带有 @ 群成员，发送成功后，被 @ 的联系人收到后，是否存在 @ 效果
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.input_text_message("@")
+        slc = SelectLocalContactsPage()
+        names = slc.get_contacts_name()
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        time.sleep(2)
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        if not mess.is_text_present(group_name):
+            raise AssertionError("对话窗口显示不正常")
+        if not mess.is_text_present("有人@我"):
+            raise AssertionError("不存在有人@我")
+
+
