@@ -292,6 +292,40 @@ class Preconditions(WorkbenchPreconditions):
             mp.clear_fail_in_send_message()
         Preconditions.enter_single_chat_page(name)
 
+    @staticmethod
+    def if_exists_multiple_enterprises_enter_single_chat(file_type):
+        """选择团队联系人时存在多个团队时返回获取当前团队名，再进入单聊转发文件"""
+
+        shc = SelectHeContactsDetailPage()
+        # 测试号码是否存在多个团队
+        if not shc.is_exist_corporate_grade():
+            mp = MessagePage()
+            scg = SelectContactsPage()
+            scp = SingleChatPage()
+            shc.click_back()
+            scg.wait_for_page_load()
+            scg.click_back()
+            scp.wait_for_page_load()
+            scp.click_back()
+            mp.wait_for_page_load()
+            mp.open_workbench_page()
+            wbp = WorkbenchPage()
+            wbp.wait_for_workbench_page_load()
+            time.sleep(2)
+            # 获取当前团队名
+            workbench_name = wbp.get_workbench_name()
+            mp.open_message_page()
+            mp.wait_for_page_load()
+            single_name = "大佬1"
+            Preconditions.enter_single_chat_page(single_name)
+            scp.forward_file(file_type)
+            scg.wait_for_page_load()
+            scg.click_he_contacts()
+            shc.wait_for_he_contacts_page_load()
+            # 选择当前团队
+            shc.click_department_name(workbench_name)
+            time.sleep(2)
+
 
 class MsgPrivateChatFileLocationTest(TestCase):
     """
@@ -897,15 +931,22 @@ class MsgPrivateChatAllTest(TestCase):
                         conts.click_text("显示")
                 except:
                     pass
+                # 创建联系人
                 for name, number in required_contacts:
-                    # 创建联系人
                     conts.create_contacts_if_not_exits(name, number)
+
+                # 创建符合搜索结果的联系人
+                contacts = [('test_contact', '13300133000'), ('123987', '13300133001'), ('。：、', '13300133002'),
+                            ('b马9', '13300133003')]
+                for name, number in contacts:
+                    conts.create_contacts_if_not_exits(name, number)
+
                 required_group_chats = dataproviders.get_preset_group_chats()
                 conts.open_group_chat_list()
                 group_list = GroupListPage()
+                # 创建群
                 for group_name, members in required_group_chats:
                     group_list.wait_for_page_load()
-                    # 创建群
                     group_list.create_group_chats_if_not_exits(group_name, members)
 
                 # 创建符合搜索结果的群聊
@@ -922,19 +963,19 @@ class MsgPrivateChatAllTest(TestCase):
             if flag1:
                 break
 
-        # # 导入团队联系人
-        # fail_time2 = 0
-        # flag2 = False
-        # while fail_time2 < 5:
-        #     try:
-        #         Preconditions.make_already_in_message_page()
-        #         contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
-        #         Preconditions.create_he_contacts(contact_names)
-        #         flag2 = True
-        #     except:
-        #         fail_time2 += 1
-        #     if flag2:
-        #         break
+        # 导入团队联系人
+        fail_time2 = 0
+        flag2 = False
+        while fail_time2 < 5:
+            try:
+                Preconditions.make_already_in_message_page()
+                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
+                Preconditions.create_he_contacts(contact_names)
+                flag2 = True
+            except:
+                fail_time2 += 1
+            if flag2:
+                break
 
         # 确保有企业群
         fail_time3 = 0
@@ -2987,149 +3028,185 @@ class MsgPrivateChatAllTest(TestCase):
         # 6.取消转发
         sog.click_cancel_forward()
 
-    @tags('ALL', 'CMCC', 'LXD', "lxd_debug")
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_weifenglian_1V1_0091(self):
         """将自己发送的文件转发到滑动右边字母导航栏定位查找的群"""
 
         scp = SingleChatPage()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
         # 等待单聊会话页面加载
         scp.wait_for_page_load()
-        # 确保当前单聊会话页面有发送失败的图片文件重发
-        file_type = ".jpg"
-        scp.set_network_status(0)
-        # 发送指定类型文件
-        Preconditions.send_file_by_type(file_type)
-        scp.set_network_status(6)
-        # 1.点击重发按钮
-        scp.click_msg_send_failed_button(-1)
-        time.sleep(2)
-        scp.click_cancel()
-        # 2.等待单聊会话页面加载
+        # 1.长按自己发送的文件并转发
+        scp.forward_file(file_type)
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 点击“选择一个群”菜单
+        scg.click_select_one_group()
+        sog = SelectOneGroupPage()
+        # 3.等待“选择一个群”页面加载
+        sog.wait_for_page_load()
+        sog.click_letter_index("Q")
+        time.sleep(1)
+        name = "群聊1"
+        # 4.选择一个普通群
+        sog.selecting_one_group_by_name(name)
+        # 确定转发
+        sog.click_sure_forward()
+        # 5.是否提示已转发,等待单聊页面加载
+        self.assertEquals(scp.is_exist_forward(), True)
         scp.wait_for_page_load()
 
-    @staticmethod
-    def tearDown_test_msg_weifenglian_1V1_0091():
-        """恢复网络"""
-
-        mp = MessagePage()
-        mp.set_network_status(6)
-
-    @tags('ALL', 'CMCC', 'LXD',  "lxd_debug")
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_weifenglian_1V1_0092(self):
         """将自己发送的文件转发到手机联系人"""
 
         scp = SingleChatPage()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
         # 等待单聊会话页面加载
         scp.wait_for_page_load()
-        # 设置当前网络为2/3/4G
-        scp.set_network_status(4)
-        # 发送大型图片文件
-        Preconditions.send_large_picture_file()
-        time.sleep(2)
-        local_file = ChatSelectLocalFilePage()
-        # 1.是否弹出继续发送、订购免流特权、以后不再提示
-        self.assertEquals(local_file.is_exist_continue_send(), True)
-        self.assertEquals(local_file.is_exist_free_flow_privilege(), True)
-        self.assertEquals(local_file.is_exist_no_longer_prompt(), True)
-        time.sleep(2)
-        local_file.tap_coordinate([(100, 20), (100, 60), (100, 100)])
-        local_file.wait_for_page_load()
-        local_file.click_back()
-        csfp = ChatSelectFilePage()
-        csfp.click_back()
-        # 等待单聊会话页面加载
+        # 1.长按自己发送的文件并转发
+        scp.forward_file(file_type)
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        # 3.等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        contact_name = "大佬2"
+        # 4.选择一个手机联系人
+        slc.selecting_local_contacts_by_name(contact_name)
+        # 确定转发
+        slc.click_sure_forward()
+        # 5.是否提示已转发,等待单聊页面加载
+        self.assertEquals(scp.is_exist_forward(), True)
         scp.wait_for_page_load()
 
-    @staticmethod
-    def tearDown_test_msg_weifenglian_1V1_0092():
-        """恢复网络"""
-
-        mp = MessagePage()
-        mp.set_network_status(6)
-
-    @tags('ALL', 'CMCC', 'LXD', "lxd_debug")
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_weifenglian_1V1_0093(self):
         """将自己发送的文件转发到手机联系人时点击取消转发"""
 
         scp = SingleChatPage()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
         # 等待单聊会话页面加载
         scp.wait_for_page_load()
-        # 设置当前网络为2/3/4G
-        scp.set_network_status(4)
-        # 发送大型图片文件
-        Preconditions.send_large_picture_file()
-        local_file = ChatSelectLocalFilePage()
-        # 点击继续发送
-        local_file.click_continue_send()
-        # 1.验证是否发送成功
-        cwp = ChatWindowPage()
-        cwp.wait_for_msg_send_status_become_to('发送成功', 30)
-        # 再次选择大型图片文件发送
-        Preconditions.send_large_picture_file()
-        time.sleep(2)
-        # 2.是否弹出继续发送、订购免流特权、以后不再提示
-        self.assertEquals(local_file.is_exist_continue_send(), True)
-        self.assertEquals(local_file.is_exist_free_flow_privilege(), True)
-        self.assertEquals(local_file.is_exist_no_longer_prompt(), True)
-        time.sleep(2)
-        local_file.tap_coordinate([(100, 20), (100, 60), (100, 100)])
-        local_file.wait_for_page_load()
-        local_file.click_back()
-        csfp = ChatSelectFilePage()
-        csfp.click_back()
+        # 1.长按自己发送的文件并转发
+        scp.forward_file(file_type)
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        # 3.等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        contact_name = "大佬2"
+        # 4.选择一个手机联系人
+        slc.selecting_local_contacts_by_name(contact_name)
+        # 取消转发
+        slc.click_cancel_forward()
+        # 5.等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        slc.click_back()
+        # 等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 返回单聊会话页面
+        scg.click_back()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_weifenglian_1V1_0094(self):
+        """将自己发送的文件转发到手机联系人时发送失败"""
+
+        scp = SingleChatPage()
+        single_name = "大佬1"
+        # 确保当前消息列表没有消息发送失败的标识影响验证结果
+        Preconditions.make_no_message_send_failed_status(single_name)
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
         # 等待单聊会话页面加载
         scp.wait_for_page_load()
+        # 设置手机网络断开
+        scp.set_network_status(0)
+        # 1.长按自己发送的文件并转发
+        scp.forward_file(file_type)
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        # 3.等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        contact_name = "大佬2"
+        # 4.选择一个手机联系人
+        slc.selecting_local_contacts_by_name(contact_name)
+        # 确定转发
+        scg.click_sure_forward()
+        # 5.是否提示已转发,等待单聊页面加载
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+        # 返回到消息页
+        scp.click_back()
+        time.sleep(2)
+        mp = MessagePage()
+        # 等待消息页面加载
+        mp.wait_for_page_load()
+        # 6.是否存在消息发送失败的标识
+        self.assertEquals(mp.is_iv_fail_status_present(), True)
 
     @staticmethod
-    def tearDown_test_msg_weifenglian_1V1_0093():
+    def tearDown_test_msg_weifenglian_1V1_0094():
         """恢复网络"""
 
         mp = MessagePage()
         mp.set_network_status(6)
 
-    @tags('ALL', 'CMCC', 'LXD', "lxd_debug")
-    def test_msg_weifenglian_1V1_0094(self):
-        """将自己发送的文件转发到手机联系人时发送失败"""
-
-        scp = SingleChatPage()
-        # 等待单聊会话页面加载
-        scp.wait_for_page_load()
-        # 1、2.进入本地音乐目录
-        Preconditions.enter_local_music_catalog()
-        local_file = ChatSelectLocalFilePage()
-        # 选择本地音乐
-        local_file.click_music()
-        time.sleep(2)
-        # 再次选择，取消
-        local_file.click_music()
-        # 3.等待音乐列表页面加载
-        local_file.wait_for_page_load()
-        local_file.click_back()
-        csfp = ChatSelectFilePage()
-        csfp.wait_for_page_load()
-        csfp.click_back()
-        # 等待单聊会话页面加载
-        scp.wait_for_page_load()
-
-    @tags('ALL', 'CMCC', 'LXD', "lxd_debug")
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_weifenglian_1V1_0095(self):
         """将自己发送的文件转发到在搜索框输入多种字符搜索到的手机联系人"""
 
         scp = SingleChatPage()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
         # 等待单聊会话页面加载
         scp.wait_for_page_load()
-        # 进入本地音乐目录
-        Preconditions.enter_local_music_catalog()
-        local_file = ChatSelectLocalFilePage()
-        local_file.click_back()
-        csfp = ChatSelectFilePage()
-        # 1.等待选择文件页面加载
-        csfp.wait_for_page_load()
-        csfp.click_back()
-        # 2.等待单聊会话页面加载
+        # 1.长按自己发送的文件并转发
+        scp.forward_file(file_type)
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        # 3.等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        search_name = "b马9"
+        # 输入查找信息
+        slc.input_search_keyword(search_name)
+        time.sleep(2)
+        # 4.检查搜索结果是否完全匹配关键字（字母导航栏由于页面问题难以验证）
+        self.assertEquals(slc.is_search_contact_name_full_match(search_name), True)
+        # self.assertEquals(slc.is_exists_letter_index(), False)
+        # 5.点击搜索结果
+        slc.selecting_local_contacts_by_name(search_name)
+        # 确定转发
+        slc.click_sure_forward()
+        # 6.是否提示已转发,等待单聊页面加载
+        self.assertEquals(scp.is_exist_forward(), True)
         scp.wait_for_page_load()
 
-    @tags('ALL', 'CMCC', 'LXD', "lxd_debug")
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_weifenglian_1V1_0096(self):
         """将自己发送的文件转发到在搜索框输入数字搜索到的手机联系人"""
 
@@ -3145,27 +3222,26 @@ class MsgPrivateChatAllTest(TestCase):
         scg = SelectContactsPage()
         # 2.等待选择联系人页面加载
         scg.wait_for_page_load()
-        # 点击“选择一个群”菜单
-        scg.click_select_one_group()
-        sog = SelectOneGroupPage()
-        # 3.等待“选择一个群”页面加载
-        sog.wait_for_page_load()
-        sog.click_search_group()
-        search_name = "a尼6"
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        # 3.等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        search_name = "123987"
         # 输入查找信息
-        sog.input_search_keyword(search_name)
+        slc.input_search_keyword(search_name)
         time.sleep(2)
-        # 4.检查搜索结果是否完全匹配关键字
-        self.assertEquals(sog.is_search_group_name_full_match(search_name), True)
+        # 4.检查搜索结果是否完全匹配关键字（字母导航栏由于页面问题难以验证）
+        self.assertEquals(slc.is_search_contact_name_full_match(search_name), True)
+        # self.assertEquals(slc.is_exists_letter_index(), False)
         # 5.点击搜索结果
-        sog.selecting_one_group_by_name(search_name)
+        slc.selecting_local_contacts_by_name(search_name)
         # 确定转发
-        sog.click_sure_forward()
+        slc.click_sure_forward()
         # 6.是否提示已转发,等待单聊页面加载
         self.assertEquals(scp.is_exist_forward(), True)
         scp.wait_for_page_load()
 
-    @tags('ALL', 'CMCC', 'LXD', "lxd_debug")
+    @tags('ALL', 'CMCC', 'LXD')
     def test_msg_weifenglian_1V1_0097(self):
         """将自己发送的文件转发到在搜索框输入标点符号搜索到的手机联系人"""
 
@@ -3181,22 +3257,268 @@ class MsgPrivateChatAllTest(TestCase):
         scg = SelectContactsPage()
         # 2.等待选择联系人页面加载
         scg.wait_for_page_load()
-        # 点击“选择一个群”菜单
-        scg.click_select_one_group()
-        sog = SelectOneGroupPage()
-        # 3.等待“选择一个群”页面加载
-        sog.wait_for_page_load()
-        sog.click_search_group()
-        search_name = "   "
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        # 3.等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        search_name = "。：、"
         # 输入查找信息
-        sog.input_search_keyword(search_name)
+        slc.input_search_keyword(search_name)
         time.sleep(2)
-        # 4.是否提示无搜索结果
-        self.assertEquals(sog.is_toast_exist("无搜索结果"), True)
-        # 返回单聊页面
-        sog.click_back_icon()
-        sog.wait_for_page_load()
-        sog.click_back()
+        # 4.检查搜索结果是否完全匹配关键字（字母导航栏由于页面问题难以验证）
+        self.assertEquals(slc.is_search_contact_name_full_match(search_name), True)
+        # self.assertEquals(slc.is_exists_letter_index(), False)
+        # 5.点击搜索结果
+        slc.selecting_local_contacts_by_name(search_name)
+        # 确定转发
+        slc.click_sure_forward()
+        # 6.是否提示已转发,等待单聊页面加载
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_weifenglian_1V1_0098(self):
+        """将自己发送的文件转发到在搜索框输入字母搜索到的手机联系人"""
+
+        scp = SingleChatPage()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1.长按自己发送的文件并转发
+        scp.forward_file(file_type)
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
         scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        # 3.等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        search_name = "test_contact"
+        # 输入查找信息
+        slc.input_search_keyword(search_name)
+        time.sleep(2)
+        # 4.检查搜索结果是否完全匹配关键字（字母导航栏由于页面问题难以验证）
+        self.assertEquals(slc.is_search_contact_name_full_match(search_name), True)
+        # self.assertEquals(slc.is_exists_letter_index(), False)
+        # 5.点击搜索结果
+        slc.selecting_local_contacts_by_name(search_name)
+        # 确定转发
+        slc.click_sure_forward()
+        # 6.是否提示已转发,等待单聊页面加载
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_weifenglian_1V1_0101(self):
+        """将自己发送的文件转发到在搜索框输入号码搜索到的手机联系人"""
+
+        scp = SingleChatPage()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1.长按自己发送的文件并转发
+        scp.forward_file(file_type)
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        # 3.等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        search_number = "13800138007"
+        # 输入查找信息
+        slc.input_search_keyword(search_number)
+        time.sleep(2)
+        # 4.检查搜索结果是否完全匹配关键字（字母导航栏由于页面问题难以验证）
+        self.assertEquals(slc.is_search_contact_number_full_match(search_number), True)
+        # self.assertEquals(slc.is_exists_letter_index(), False)
+        # 5.点击搜索结果
+        slc.selecting_local_contacts_by_number(search_number)
+        # 确定转发
+        slc.click_sure_forward()
+        # 6.是否提示已转发,等待单聊页面加载
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_weifenglian_1V1_0102(self):
+        """将自己发送的文件转发到在搜索框进行搜索到的手机联系人时取消转发"""
+
+        scp = SingleChatPage()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1.长按自己发送的文件并转发
+        scp.forward_file(file_type)
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        # 3.等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        search_number = "13800138008"
+        # 输入查找信息
+        slc.input_search_keyword(search_number)
+        time.sleep(2)
+        # 4.检查搜索结果是否完全匹配关键字（字母导航栏由于页面问题难以验证）
+        self.assertEquals(slc.is_search_contact_number_full_match(search_number), True)
+        # self.assertEquals(slc.is_exists_letter_index(), False)
+        # 5.点击搜索结果
+        slc.selecting_local_contacts_by_number(search_number)
+        # 取消转发
+        slc.click_cancel_forward()
+        # 6.等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        slc.click_back()
+        # 等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 返回单聊会话页面
+        scg.click_back()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_weifenglian_1V1_0103(self):
+        """将自己发送的文件转发到滑动右边字母导航栏定位查找的手机联系人"""
+
+        scp = SingleChatPage()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1.长按自己发送的文件并转发
+        scp.forward_file(file_type)
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        # 3.等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        slc.click_letter_index("D")
+        time.sleep(1)
+        contact_name = "大佬2"
+        # 4.选择一个手机联系人
+        slc.selecting_local_contacts_by_name(contact_name)
+        # 确定转发
+        slc.click_sure_forward()
+        # 5.是否提示已转发,等待单聊页面加载
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_weifenglian_1V1_0104(self):
+        """将自己发送的文件转发到滑动右边字母导航栏定位查找的手机联系人时点击取消转发"""
+
+        scp = SingleChatPage()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1.长按自己发送的文件并转发
+        scp.forward_file(file_type)
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        scg.select_local_contacts()
+        slc = SelectLocalContactsPage()
+        # 3.等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        slc.click_letter_index("D")
+        time.sleep(1)
+        contact_name = "大佬2"
+        # 4.选择一个手机联系人
+        slc.selecting_local_contacts_by_name(contact_name)
+        # 取消转发
+        slc.click_cancel_forward()
+        # 5.等待选择联系人->本地联系人 页面加载
+        slc.wait_for_page_load()
+        slc.click_back()
+        # 等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 返回单聊会话页面
+        scg.click_back()
+        scp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_weifenglian_1V1_0105(self):
+        """将自己发送的文件转发到团队未置灰的联系人"""
+
+        scp = SingleChatPage()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1.长按自己发送的文件并转发
+        scp.forward_file(file_type)
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 点击“选择和通讯录联系人”菜单
+        scg.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        # 3.等待选择联系人->和通讯录联系人 页面加载
+        shc.wait_for_he_contacts_page_load()
+        # 4.选择一个团队联系人
+        # 需要考虑测试号码存在多个团队的情况
+        Preconditions.if_exists_multiple_enterprises_enter_single_chat(file_type)
+        name = "大佬3"
+        shc.selecting_he_contacts_by_name(name)
+        # 确定转发
+        shc.click_sure_forward()
+        # 5.是否提示已转发,等待单聊页面加载
+        self.assertEquals(scp.is_exist_forward(), True)
+        scp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC', 'LXD')
+    def test_msg_weifenglian_1V1_0107(self):
+        """将自己发送的文件转发到团队未置灰的联系人时点击取消转发"""
+
+        scp = SingleChatPage()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        # 1.长按自己发送的文件并转发
+        scp.forward_file(file_type)
+        scg = SelectContactsPage()
+        # 2.等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 点击“选择和通讯录联系人”菜单
+        scg.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        # 3.等待选择联系人->和通讯录联系人 页面加载
+        shc.wait_for_he_contacts_page_load()
+        # 4.选择一个团队联系人
+        # 需要考虑测试号码存在多个团队的情况
+        Preconditions.if_exists_multiple_enterprises_enter_single_chat(file_type)
+        name = "大佬3"
+        shc.selecting_he_contacts_by_name(name)
+        # 取消转发
+        shc.click_cancel_forward()
+        # 5.等待选择联系人->和通讯录联系人 页面加载
+        shc.wait_for_he_contacts_page_load()
+        shc.click_back()
+        time.sleep(1)
+        shc.click_back()
+        # 等待选择联系人页面加载
+        scg.wait_for_page_load()
+        # 返回单聊会话页面
         scg.click_back()
         scp.wait_for_page_load()

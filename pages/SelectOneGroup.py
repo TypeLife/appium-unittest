@@ -267,3 +267,10 @@ class SelectOneGroupPage(BasePage):
     def click_element_(self, text):
         """点击元素"""
         self.click_element(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def click_letter_index(self, name):
+        """点击字母索引"""
+        locator = (MobileBy.XPATH,
+                   '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView[@text="%s"]' % name)
+        self.click_element(locator)
