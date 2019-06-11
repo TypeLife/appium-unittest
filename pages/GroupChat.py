@@ -79,6 +79,9 @@ class GroupChatPage(BaseChatPage):
                   '搜索成员输入框': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_search_bar'),
                   '群成员头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
                   '置顶聊天': (MobileBy.ID, 'com.chinasofti.rcs:id/chat_set_to_top_switch'),
+                  '移除群成员减号': (MobileBy.XPATH,"/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.support.v7.widget.RecyclerView/android.widget.RelativeLayout[4]/android.view.View"),
+                  '确定移除': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
+                  '取消移除': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
                   }
 
     def is_exist_msg_videos(self):
@@ -595,3 +598,9 @@ class GroupChatPage(BaseChatPage):
         locator = (MobileBy.XPATH, "//*[contains(@text, '%s')]" % text)
         el = self.get_element(locator)
         self.press(el, times)
+
+    @TestLogger.log()
+    def get_message_text_by_number(self, number=0):
+        """按压消息文本"""
+        els = self.get_elements(self.__class__.__locators["文本消息"])
+        return els[number].get_attribute("text")
