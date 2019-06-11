@@ -191,7 +191,7 @@ class SelectHeContactsDetailPage(BasePage):
     @TestLogger.log()
     def click_department_name(self, name):
         """点击指定企业/部门名称"""
-        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title_department" and @text="%s"]' % name)
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title" and @text="%s"]' % name)
         max_try = 20
         current = 0
         while current < max_try:
