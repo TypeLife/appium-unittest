@@ -7566,5 +7566,68 @@ class MsgCommonGroupAllTest(TestCase):
         if mess.is_text_present("被请出该群"):
             raise AssertionError("其他群成员会收到提示")
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0384():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0384(self):
+        """验证群主在群设置页面——修改群名称后——全员收到的提示"""
+        # 1、群主点击右上角的群设置按钮
+        # 2、群主点击群名称进行修改
+        # 3、全员在会话窗口查看提示
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        Preconditions.delete_record_group_chat()
+        group_name = Preconditions.get_group_chat_name_double()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_element_("群名称")
+        time.sleep(2)
+        gcsp.input_new_group_name(group_name+'change')
+        time.sleep(2)
+        gcsp.save_group_name()
+        if not gcsp.is_toast_exist("修改成功"):
+            raise AssertionError("没有修改成功弹窗")
+        Preconditions.change_mobile('Android-移动-移动')
+        Preconditions.go_to_group_double(group_name+'change')
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        if not gcp.is_text_present("群名称已修改为"):
+            raise AssertionError("全员没有收到提示")
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name+'change')
+        gcp.wait_for_page_load()
+        Preconditions.delete_record_group_chat()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_element_("群名称")
+        time.sleep(2)
+        gcsp.input_new_group_name(group_name)
+        time.sleep(2)
+        gcsp.save_group_name()
+        if not gcsp.is_toast_exist("修改成功"):
+            raise AssertionError("群名称没有还原成功")
+        Preconditions.change_mobile('Android-移动-移动')
+        Preconditions.go_to_group_double(group_name)
+        Preconditions.delete_record_group_chat()
+
 
 

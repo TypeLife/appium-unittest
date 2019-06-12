@@ -75,6 +75,7 @@ class GroupChatSetPage(BasePage):
                   '立即分享': (MobileBy.XPATH, '//*[@text ="立即分享"]'),
                   "再次邀请":(MobileBy.XPATH,'//*[@text="还有人未进群,再次邀请"]'),
                   '群名片': (MobileBy.ID, 'com.chinasofti.rcs:id/my_group_name'),
+                  '群名称': (MobileBy.ID, 'com.chinasofti.rcs:id/group_name'),
                   }
 
     @TestLogger.log("获取控件数量")
@@ -476,3 +477,8 @@ class GroupChatSetPage(BasePage):
         """获取我的群聊名片名称"""
         el = self.get_element(self.__class__.__locators["群名片"])
         return el.text
+
+    @TestLogger.log()
+    def click_element_(self, text):
+        """点击元素"""
+        self.click_element(self.__class__.__locators[text])
