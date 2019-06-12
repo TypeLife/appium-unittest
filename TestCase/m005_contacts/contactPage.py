@@ -1150,6 +1150,61 @@ class ContactPage(TestCase):
         OfficialAccountPage().click_back()
         OfficialAccountPage().click_back()
 
+    @staticmethod
+    def setUp_test_contacts_quxinli_0023():
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.init_and_enter_contacts_page()
+        if ContactsPage().is_text_present('需要使用通讯录权限'):
+            ContactsPage().click_always_allowed()
+
+    @tags('All', 'CMCC')
+    def test_contacts_quxinli_0023(self):
+        """点击搜索结果已保存到本地的非RCS用户进入Profile页"""
+        ContactsPage().click_search_box()
+        # 搜索联系人:大佬1
+        ContactListSearchPage().input_search_keyword('大佬1')
+        ContactListSearchPage().click_contact('大佬1')
+        time.sleep(2)
+        # 进入个人详情页
+        # 页面包含的元素
+        detailpage = ContactDetailsPage()
+        detailpage.is_exists_contacts_name()
+        detailpage.is_exists_contacts_number()
+        # detailpage.page_should_contain_text('D')
+        if detailpage.is_text_present("公司"):
+            detailpage.page_should_contain_text('公司')
+        if detailpage.is_text_present("职位"):
+            detailpage.page_should_contain_text('职位')
+        if detailpage.is_text_present("邮箱"):
+            detailpage.page_should_contain_text('邮箱')
+        detailpage.page_should_contain_text('消息')
+        detailpage.page_should_contain_text('电话')
+        detailpage.page_should_contain_text('语音通话')
+        detailpage.page_should_contain_text('视频通话')
+        detailpage.page_should_contain_text('和飞信电话')
+        # detailpage.page_should_contain_text('分享名片')
+        # detailpage.page_should_contain_text('邀请使用')
+        time.sleep(2)
+        # 点击头像可查看大图
+        detailpage.click_avatar()
+        time.sleep(2)
+        detailpage.click_big_avatar()
+        # 消息按钮可点击
+        detailpage.click_message_icon()  # 进入消息页面
+        time.sleep(2)
+        if ChatWindowPage().is_text_present("用户须知"):
+            # 如果存在用户须知,就点击已阅读,然后点击返回.如果不存在,就直接点击返回
+            ChatWindowPage().click_already_read()
+            ChatWindowPage().click_sure_icon()
+            ChatWindowPage().click_back()
+        else:
+            ChatWindowPage().click_back()
+
+        # 返回通讯录页面
+        detailpage.click_back_icon()
+        ContactListSearchPage().click_back()
+
 
 
 
