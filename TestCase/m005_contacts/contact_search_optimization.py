@@ -222,6 +222,80 @@ class ContactSearchOpTest(TestCase):
         self.assertEquals(sccp.is_search_contacts_name_match(search_name), True)
 
     @tags('ALL', 'CONTACT', 'YL')
+    def test_contacts_quxinli_0013(self):
+        # 导入团队联系人
+        fail_time2 = 0
+        flag2 = False
+        while fail_time2 < 5:
+            try:
+                Preconditions.make_already_in_message_page()
+                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
+                Preconditions.create_he_contacts(contact_names)
+                contact_names2 = [("alice", "18826211112"), ("阿啊", "18826211113")]
+                Preconditions.create_he_contacts2(contact_names2)
+                flag2 = True
+            except:
+                fail_time2 += 1
+            if flag2:
+                break
+
+        Preconditions.make_already_in_message_page()
+        # 点击‘通讯录’
+        mess = MessagePage()
+        mess.open_contacts_page()
+        # 1、点击通讯录，点击搜索输入框
+        mess.click_search()
+        search_page = SearchPage()
+        search_number = "8"
+        search_page.input_search_keyword(search_number)
+        time.sleep(5)
+        search_page.hide_keyboard()
+        # 判定点
+        # 1、搜索匹配内容显示高亮
+        sccp = SelectCompanyContactsPage()
+        self.assertEquals(sccp.is_search_contacts_number_match(search_number), True)
+        # 2、输入1-11位同我的团队匹配号码，18826211112
+        search_page = SearchPage()
+        search_number = "18826211112"
+        search_page.input_search_keyword(search_number)
+        time.sleep(5)
+        search_page.hide_keyboard()
+        self.assertEquals(sccp.is_search_contacts_name_match(search_number), True)
+
+    @tags('ALL', 'CONTACT', 'YL')
+    def test_contacts_quxinli_0014(self):
+        # 导入团队联系人
+        fail_time2 = 0
+        flag2 = False
+        while fail_time2 < 5:
+            try:
+                Preconditions.make_already_in_message_page()
+                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
+                Preconditions.create_he_contacts(contact_names)
+                contact_names2 = [("alice3", "+8618826211115")]
+                Preconditions.create_he_contacts2(contact_names2)
+                flag2 = True
+            except:
+                fail_time2 += 1
+            if flag2:
+                break
+
+        Preconditions.make_already_in_message_page()
+        # 点击‘通讯录’
+        mess = MessagePage()
+        mess.open_contacts_page()
+        mess.click_search()
+        search_page = SearchPage()
+        search_number = "+861882"
+        search_page.input_search_keyword(search_number)
+        time.sleep(5)
+        search_page.hide_keyboard()
+        # 判定点
+        # 1、搜索结果显示所有匹配到号码
+        sccp = SelectCompanyContactsPage()
+        self.assertEquals(sccp.is_search_contacts_number_match(search_number), True)
+
+    @tags('ALL', 'CONTACT', 'YL')
     def test_contacts_quxinli_0015(self):
         # 导入团队联系人
         fail_time2 = 0
@@ -263,6 +337,40 @@ class ContactSearchOpTest(TestCase):
         time.sleep(5)
         search_page.hide_keyboard()
         self.assertEquals(sccp.is_search_contacts_name_match(search_name), True)
+
+    @tags('ALL', 'CONTACT', 'YL')
+    def test_contacts_quxinli_0016(self):
+        # 导入团队联系人
+        fail_time2 = 0
+        flag2 = False
+        while fail_time2 < 5:
+            try:
+                Preconditions.make_already_in_message_page()
+                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
+                Preconditions.create_he_contacts(contact_names)
+                contact_names2 = [("alice4", "#*1882621")]
+                Preconditions.create_he_contacts2(contact_names2)
+                flag2 = True
+            except:
+                fail_time2 += 1
+            if flag2:
+                break
+
+        Preconditions.make_already_in_message_page()
+        # 点击‘通讯录’
+        mess = MessagePage()
+        mess.open_contacts_page()
+        # 1、点击通讯录，点击搜索输入框
+        mess.click_search()
+        search_page = SearchPage()
+        search_number = "#*"
+        search_page.input_search_keyword(search_number)
+        time.sleep(5)
+        search_page.hide_keyboard()
+        # 判定点
+        # 1、1、搜索出对应联系人，排序按照平台返回的搜索结果排序
+        sccp = SelectCompanyContactsPage()
+        self.assertEquals(sccp.is_search_contacts_number_match(search_number), True)
 
     @tags('ALL', 'CONTACT', 'YL')
     def test_contacts_quxinli_0017(self):
