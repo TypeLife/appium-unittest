@@ -55,7 +55,8 @@ class Preconditions(LoginPreconditions):
 
         # 点击权限列表页面的确定按钮
         permission_list = PermissionListPage()
-        permission_list.click_submit_button()
+        # permission_list.click_submit_button()
+        permission_list.go_permission()
         one_key.wait_for_page_load(30)
 
     @staticmethod
@@ -69,10 +70,13 @@ class Preconditions(LoginPreconditions):
         one_key.wait_for_tell_number_load(60)
         login_number = one_key.get_login_number()
         one_key.click_one_key_login()
-        one_key.click_read_agreement_detail()
-
-        # 同意协议
+        # one_key.click_read_agreement_detail()
+        #
+        # # 同意协议
+        # agreement = AgreementDetailPage()
+        # agreement.click_agree_button()
         agreement = AgreementDetailPage()
+        time.sleep(1)
         agreement.click_agree_button()
 
         # 等待消息页
@@ -180,6 +184,20 @@ class Preconditions(LoginPreconditions):
         detail_page.wait_for_page_load()
         detail_page.click_back_icon()
 
+    @staticmethod
+    def enter_label_grouping_chat_page(reset=False):
+        """进入标签分组会话页面"""
+        # 登录进入消息页面
+        Preconditions.make_already_in_message_page(reset)
+        mess = MessagePage()
+        # 点击‘通讯录’
+        mess.open_contacts_page()
+        contacts = ContactsPage()
+        time.sleep(1)
+        contacts.click_mobile_contacts()
+        contacts.click_label_grouping()
+
+
 
 class TagsGroupingTest(TestCase):
     """通讯录 - 标签分组"""
@@ -219,8 +237,6 @@ class TagsGroupingTest(TestCase):
     def test_contacts_quxinli_0352(self):
         """无分组"""
         conts_page = ContactsPage()
-        conts_page.open_contacts_page()
-        conts_page.click_label_grouping()
         lg = LabelGroupingPage()
         lg.wait_for_page_load()
         lg.delete_all_label()
@@ -231,9 +247,7 @@ class TagsGroupingTest(TestCase):
         conts_page.open_message_page()
 
     def setUp_test_contacts_quxinli_0352(self):
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_Conts_TagsGrouping_0002(self):
@@ -252,8 +266,6 @@ class TagsGroupingTest(TestCase):
             ['分组11'],
         ]
         conts_page = ContactsPage()
-        conts_page.open_contacts_page()
-        conts_page.click_label_grouping()
         lg = LabelGroupingPage()
         lg.wait_for_page_load()
         for g in groups:
@@ -266,16 +278,12 @@ class TagsGroupingTest(TestCase):
         conts_page.open_message_page()
 
     def setUp_test_Conts_TagsGrouping_0002(self):
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_contacts_quxinli_0353(self):
         """新建分组"""
         conts_page = ContactsPage()
-        conts_page.open_contacts_page()
-        conts_page.click_label_grouping()
         lg = LabelGroupingPage()
         lg.wait_for_page_load()
         lg.click_new_create_group()
@@ -291,16 +299,12 @@ class TagsGroupingTest(TestCase):
         conts_page.open_message_page()
 
     def setUp_test_contacts_quxinli_0353(self):
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_contacts_quxinli_0372(self):
         """联系人选择器页面"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group()
@@ -318,17 +322,12 @@ class TagsGroupingTest(TestCase):
         GroupPage.delete_group(name='aaa')
 
     def setUp_test_contacts_quxinli_0372(self):
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_contacts_quxinli_0403(self):
         """修改标签名称"""
         GroupPage = GroupListPage()
-        cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -344,17 +343,13 @@ class TagsGroupingTest(TestCase):
         GroupPage.delete_group(name='aaa')
 
     def setUp_test_contacts_quxinli_0403(self):
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_contacts_quxinli_0411(self):
         """移除成员"""
         GroupPage = GroupListPage()
         # cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -385,17 +380,13 @@ class TagsGroupingTest(TestCase):
         GroupPage.delete_group(name='aaa')
 
     def setUp_test_contacts_quxinli_0411(self):
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_contacts_quxinli_0415(self):
         """删除标签"""
 
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         LabelGroupingPage().delete_all_label()
         time.sleep(2)
@@ -405,16 +396,12 @@ class TagsGroupingTest(TestCase):
         GroupPage.page_should_not_contain_text('ccc')
 
     def setUp_test_contacts_quxinli_0415(self):
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_contacts_quxinli_0390(self):
         """群发信息"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -465,9 +452,7 @@ class TagsGroupingTest(TestCase):
         GroupPage.delete_group(name='aaa')
 
     def setUp_test_contacts_quxinli_0390(self):
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_contacts_quxinli_0397(self):
@@ -476,8 +461,6 @@ class TagsGroupingTest(TestCase):
         cdp=ContactDetailsPage()
         # preconditions.launch_app()
         time.sleep(1)
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -509,9 +492,7 @@ class TagsGroupingTest(TestCase):
             time.sleep(2)
 
     def setUp_test_contacts_quxinli_0397(self):
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_contacts_quxinli_0398(self):
@@ -520,9 +501,6 @@ class TagsGroupingTest(TestCase):
         cdp = ContactDetailsPage()
         # preconditions.launch_app()
         time.sleep(2)
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
-        time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
         #添加成员
@@ -556,9 +534,7 @@ class TagsGroupingTest(TestCase):
         GroupPage.delete_group(name='aaa')
 
     def setUp_test_contacts_quxinli_0398(self):
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @classmethod
     def tearDownClass(cls):
@@ -621,16 +597,12 @@ class Tag_Group(TestCase):
                 print(msg)
 
     def setUp_test_contacts_quxinli_0352(self):
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'SMOKE', 'CMCC')
     def test_contacts_quxinli_0352(self):
         """未添加分组"""
         conts_page = ContactsPage()
-        conts_page.open_contacts_page()
-        conts_page.click_label_grouping()
         lg = LabelGroupingPage()
         lg.wait_for_page_load()
         lg.delete_all_label()
@@ -642,16 +614,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0353():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0353(self):
         """新建分组"""
         GroupPage=GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         GroupPage.click_new_group()
         time.sleep(1)
         GroupPage.check_if_contains_element('为你的分组创建一个名称')
@@ -661,16 +629,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0354():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0354(self):
         """新建分组,标签分组名称为空"""
         GroupPage=GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         GroupPage.click_new_group()
         GroupPage.click_sure_element()
         time.sleep(3)
@@ -679,16 +643,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0355():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0355(self):
         """新建分组,标签分组名称输入空格"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         GroupPage.click_new_group()
         GroupPage.click_input_element()
         time.sleep(3)
@@ -699,17 +659,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0356():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0356(self):
         """新建分组,标签分组名称输入9个汉字"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        time.sleep(2)
-        GroupPage.click_label_grouping()
         GroupPage.delete_group(name='祝一路顺风幸福美满')
         GroupPage.click_new_group()
         GroupPage.click_input_element()
@@ -721,26 +676,18 @@ class Tag_Group(TestCase):
         GroupPage.page_should_contain_text('选择联系人')
 
     def tearDown_test_contacts_quxinli_0356(self):
-        Preconditions.make_already_in_message_page()
-        MessagePage().click_contacts()
-        time.sleep(2)
-        ContactsPage().click_label_grouping()
-        time.sleep(1)
+        Preconditions.enter_label_grouping_chat_page()
         GroupPage = GroupListPage()
         GroupPage.delete_group(name='祝一路顺风幸福美满')
 
     @staticmethod
     def setUp_test_contacts_quxinli_0357():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0357(self):
         """新建分组,标签分组名称输入10个汉字"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         GroupPage.click_new_group()
         GroupPage.click_input_element()
         time.sleep(3)
@@ -756,16 +703,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0358():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0358(self):
         """新建分组,标签分组名称输入11个汉字"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         GroupPage.click_new_group()
         GroupPage.click_input_element()
         time.sleep(3)
@@ -781,16 +724,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0359():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0359(self):
         """新建分组,标签分组名称输入29个数字"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.click_new_group()
         GroupPage.click_input_element()
@@ -811,16 +750,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0369():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0369(self):
         """新建分组,已添加分组后标签分组列表展示"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         lg = LabelGroupingPage()
         lg.wait_for_page_load()
@@ -841,16 +776,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0370():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0370(self):
         """点击分组列表无成员的分组"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         lg = LabelGroupingPage()
         lg.wait_for_page_load()
@@ -880,16 +811,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0371():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0371(self):
         """新建分组,分组详情操作界面"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group()
@@ -912,16 +839,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0372():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0372(self):
         """新建分组,标签分组添加成员页面"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group()
@@ -943,16 +866,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0373():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0373(self):
         """标签分组添加成员-搜索结果页面"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -993,16 +912,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0374():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0374(self):
         """标签分组添加成员-搜索陌生号码"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -1025,17 +940,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0375():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0375(self):
         """标签分组添加成员-选择本地联系人"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        time.sleep(2)
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -1078,6 +988,7 @@ class Tag_Group(TestCase):
         else:
         # 创建联系人 本机
             ContactListSearchPage().click_back()
+            ContactsPage().click_mobile_contacts()
             ContactsPage().click_add()
             creat_contact2 = CreateContactPage()
             creat_contact2.click_input_name()
@@ -1112,16 +1023,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0388():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0388(self):
         """分组详情操作界面-分组只有一个人员点击群发消息"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -1144,16 +1051,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0389():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0389(self):
         """分组详情操作界面-分组有多个人员点击群发消息"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -1183,16 +1086,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0390():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0390(self):
         """分组详情操作界面-群发消息-发送消息"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -1244,16 +1143,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0394():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0394(self):
         """分组联系人进入Profile页-星标"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -1298,6 +1193,7 @@ class Tag_Group(TestCase):
     def tearDown_test_contacts_quxinli_0394(self):
         Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
+        ContactsPage().click_mobile_contacts()
         #去除大佬1的星标
         ContactsPage().select_contacts_by_name('大佬1')
         GroupPage = GroupListPage()
@@ -1317,17 +1213,13 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0395():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0395(self):
         """分组联系人进入Profile页-编辑"""
         GroupPage = GroupListPage()
         cdp=ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -1377,21 +1269,14 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0396():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        # Preconditions.background_app()
-        # time.sleep(5)
-        # preconditions.launch_app()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
+
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0396(self):
         """分组联系人进入Profile页-编辑-删除联系人"""
         GroupPage = GroupListPage()
         cdp=ContactDetailsPage()
-        time.sleep(1)
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -1446,21 +1331,13 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0397():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-        # Preconditions.background_app()
-        # time.sleep(5)
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', '多方通话-跳过')
     def test_contacts_quxinli_0397(self):
         """“分组详情操作”界面-多方电话"""
         GroupPage = GroupListPage()
         cdp=ContactDetailsPage()
-        # preconditions.launch_app()
-        time.sleep(1)
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -1498,21 +1375,14 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0398():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        # Preconditions.background_app()
-        # time.sleep(5)
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0398(self):
         """“分组详情操作”界面-多方视频"""
         GroupPage = GroupListPage()
         cdp = ContactDetailsPage()
-        # preconditions.launch_app()
-        time.sleep(2)
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
+
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -1547,9 +1417,7 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0407():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0407(self):
@@ -1557,9 +1425,6 @@ class Tag_Group(TestCase):
         auther:darcy
         """
         GroupPage = GroupListPage()
-        cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -1576,9 +1441,7 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0408():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0408(self):
@@ -1586,9 +1449,6 @@ class Tag_Group(TestCase):
         auther:darcy
         """
         GroupPage = GroupListPage()
-        cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -1605,9 +1465,8 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0409():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
+
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0409(self):
@@ -1615,9 +1474,6 @@ class Tag_Group(TestCase):
         auther:darcy
         """
         GroupPage = GroupListPage()
-        cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -1634,9 +1490,7 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0414():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT-debug', 'CMCC')
     def test_contacts_quxinli_0414(self):
@@ -1644,9 +1498,6 @@ class Tag_Group(TestCase):
         auther:darcy
         """
         GroupPage = GroupListPage()
-        cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -1681,9 +1532,7 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0415():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT-debug', 'CMCC')
     def test_contacts_quxinli_0415(self):
@@ -1691,9 +1540,6 @@ class Tag_Group(TestCase):
         auther:darcy
         """
         GroupPage = GroupListPage()
-        cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.new_group(name='ccc')
         GroupPage.delete_group(name='ccc')
@@ -1701,20 +1547,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0416():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
-      #   Preconditions.background_app()
-        time.sleep(3)
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT-debug', 'CMCC')
     def test_contacts_quxinli_0416(self):
         """分组详情操作页面进入Profile页"""
         GroupPage = GroupListPage()
-        # preconditions.launch_app()
-        # time.sleep(2)
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -1751,28 +1589,20 @@ class Tag_Group(TestCase):
         time.sleep(2)
 
     def tearDown_test_contacts_quxinli_0416(self):
-        Preconditions.make_already_in_message_page()
-        MessagePage().click_contacts()
-        ContactsPage().click_label_grouping()
+        Preconditions.enter_label_grouping_chat_page()
         time.sleep(1)
         GroupPage = GroupListPage()
         GroupPage.delete_group(name='aaa')
 
     @staticmethod
     def setUp_test_contacts_quxinli_0417():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT-debug', 'CMCC')
     def test_contacts_quxinli_0417(self):
         """分组详情操作页面进入Profile页_星标
         auther:darcy"""
         GroupPage = GroupListPage()
-        # preconditions.launch_app()
-        time.sleep(2)
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -1813,6 +1643,7 @@ class Tag_Group(TestCase):
     def tearDown_test_contacts_quxinli_0417(self):
         Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
+        ContactsPage().click_mobile_contacts()
         #去除大佬1的星标
         ContactsPage().select_contacts_by_name('大佬3')
         time.sleep(1)
@@ -1833,17 +1664,13 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0421():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0421(self):
         """安卓手机：手机系统本地新建分组名称等于30个字符的分组
         auther:darcy"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         name="a"*30
@@ -1882,10 +1709,7 @@ class Tag_Group(TestCase):
 
 
     def tearDown_test_contacts_quxinli_0421(self):
-        Preconditions.make_already_in_message_page()
-        MessagePage().click_contacts()
-        time.sleep(2)
-        ContactsPage().click_label_grouping()
+        Preconditions.enter_label_grouping_chat_page()
         GroupPage = GroupListPage()
         # GroupPage.click_back_button(times=4)
         time.sleep(1)
@@ -1893,16 +1717,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0360():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0360(self):
         """新建分组,标签分组名称输入30个数字"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         LabelGroupingPage().delete_all_label()
         GroupPage.click_new_group()
@@ -1917,24 +1737,17 @@ class Tag_Group(TestCase):
 
     def tearDown_test_contacts_quxinli_0360(self):
         GroupPage = GroupListPage()
-        GroupPage.click_back_button()
-        time.sleep(1)
-        GroupPage.click_back_button()
-        time.sleep(1)
+        Preconditions.enter_label_grouping_chat_page()
         GroupPage.delete_group(name=self.message1)
 
     @staticmethod
     def setUp_test_contacts_quxinli_0361():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0361(self):
         """新建分组,标签分组名称输入31个数字"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.click_new_group()
         GroupPage.click_input_element()
@@ -1950,16 +1763,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0362():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0362(self):
         """新建分组,标签分组名称输入29个字母"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.click_new_group()
         GroupPage.click_input_element()
@@ -1981,16 +1790,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0363():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'debug', 'CMCC')
     def test_contacts_quxinli_0363(self):
         """新建分组,标签分组名称输入30个字母"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.click_new_group()
         GroupPage.click_input_element()
@@ -2012,16 +1817,13 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0364():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
+
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0364(self):
         """新建分组,标签分组名称输入31字母"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.click_new_group()
         GroupPage.click_input_element()
@@ -2037,16 +1839,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0365():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'debug', 'CMCC')
     def test_contacts_quxinli_0365(self):
         """新建分组,标签分组名称输入29个字符：汉字、数字、英文字母、空格和特殊字符组合"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.click_new_group()
         GroupPage.click_input_element()
@@ -2068,16 +1866,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0366():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'debug', 'CMCC')
     def test_contacts_quxinli_0366(self):
         """新建分组,标签分组名称输入30个字符：汉字、数字、英文字母、空格和特殊字符组合"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.click_new_group()
         GroupPage.click_input_element()
@@ -2099,9 +1893,7 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0367():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0367(self):
@@ -2109,8 +1901,6 @@ class Tag_Group(TestCase):
         标签分组名称输入31个字符：汉字、数字、英文字母、空格和特殊字符组合(中文占据3个字符)
         '''
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.click_new_group()
         GroupPage.click_input_element()
@@ -2126,9 +1916,7 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0368():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'debug', 'CMCC')
     def test_contacts_quxinli_0368(self):
@@ -2137,8 +1925,6 @@ class Tag_Group(TestCase):
 
         '''
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.click_new_group()
         GroupPage.click_input_element()
@@ -2162,16 +1948,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0391():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'debug', 'CMCC')
     def test_contacts_quxinli_0391(self):
         """分组详情操作界面-群发消息-多方通话图标"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -2198,16 +1980,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0392():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0392(self):
         """分组详情操作界面-群发消息-分组联系人图标"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -2239,16 +2017,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0393():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0393(self):
         """分组联系人进入Profile页"""
         GroupPage = GroupListPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -2301,17 +2075,12 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0399():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0399(self):
         """“分组设置入口"""
         GroupPage = GroupListPage()
-        cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -2327,9 +2096,7 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0400():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0400(self):
@@ -2337,9 +2104,6 @@ class Tag_Group(TestCase):
          auther:darcy
         """
         GroupPage = GroupListPage()
-        cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -2356,9 +2120,7 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0401():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0401(self):
@@ -2366,9 +2128,7 @@ class Tag_Group(TestCase):
         auther:darcy
         """
         GroupPage = GroupListPage()
-        cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
+
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -2387,9 +2147,7 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0402():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0402(self):
@@ -2397,9 +2155,6 @@ class Tag_Group(TestCase):
         auther:darcy
         """
         GroupPage = GroupListPage()
-        cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -2416,9 +2171,7 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0403():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0403(self):
@@ -2426,9 +2179,6 @@ class Tag_Group(TestCase):
         auther:darcy
         """
         GroupPage = GroupListPage()
-        cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -2445,9 +2195,7 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0404():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0404(self):
@@ -2455,9 +2203,6 @@ class Tag_Group(TestCase):
         auther:darcy
         """
         GroupPage = GroupListPage()
-        cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -2474,9 +2219,7 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0405():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0405(self):
@@ -2484,9 +2227,6 @@ class Tag_Group(TestCase):
         auther:darcy
         """
         GroupPage = GroupListPage()
-        cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -2503,9 +2243,7 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0406():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0406(self):
@@ -2513,9 +2251,6 @@ class Tag_Group(TestCase):
         auther:darcy
         """
         GroupPage = GroupListPage()
-        cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -2532,9 +2267,7 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0410():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0410(self):
@@ -2542,9 +2275,6 @@ class Tag_Group(TestCase):
         auther:darcy
         """
         GroupPage = GroupListPage()
-        cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -2562,9 +2292,7 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0411():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0411(self):
@@ -2572,9 +2300,6 @@ class Tag_Group(TestCase):
         auther:darcy
         """
         GroupPage = GroupListPage()
-        cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -2592,9 +2317,7 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0412():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
     @tags('ALL', 'CONTACT', 'CMCC')
     def test_contacts_quxinli_0412(self):
@@ -2602,9 +2325,6 @@ class Tag_Group(TestCase):
         auther:darcy
         """
         GroupPage = GroupListPage()
-        cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')
@@ -2639,9 +2359,7 @@ class Tag_Group(TestCase):
 
     @staticmethod
     def setUp_test_contacts_quxinli_0413():
-        Preconditions.connect_mobile('Android-移动')
-        current_mobile().hide_keyboard_if_display()
-        Preconditions.make_already_in_message_page()
+        Preconditions.enter_label_grouping_chat_page()
 
 
     @tags('ALL', 'CONTACT', 'CMCC')
@@ -2650,9 +2368,6 @@ class Tag_Group(TestCase):
         auther:darcy
         """
         GroupPage = GroupListPage()
-        cdp = ContactDetailsPage()
-        GroupPage.open_contacts_page()
-        GroupPage.click_label_grouping()
         time.sleep(1)
         GroupPage.delete_group(name='aaa')
         GroupPage.new_group(name='aaa')

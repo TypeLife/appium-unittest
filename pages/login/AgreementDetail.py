@@ -17,7 +17,7 @@ class AgreementDetailPage(BasePage):
         '和飞信软件许可及服务协议': (MobileBy.ID, ''),
         '协议内容': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_content2'),
         '不同意': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
-        '同意': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_agree'),
+        '同意': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_positive_button'),
         # 'android:id/statusBarBackground': (MobileBy.ID, 'android:id/statusBarBackground')
     }
 

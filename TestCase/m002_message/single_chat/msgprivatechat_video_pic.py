@@ -965,6 +965,8 @@ class MsgPrivateChatVideoPicTest(TestCase):
         gif = ChatGIFPage()
         if gif.is_gif_exist():
             gif.close_gif()
+        gif.click_expression_icon()
+        time.sleep(1)
         chat.click_gif()
         gif.wait_for_page_load()
         # 进入趣图选择页面
@@ -983,6 +985,8 @@ class MsgPrivateChatVideoPicTest(TestCase):
         gif = ChatGIFPage()
         if gif.is_gif_exist():
             gif.close_gif()
+        gif.click_expression_icon()
+        time.sleep(1)
         chat.click_gif()
         gif.wait_for_page_load()
         # 2、选择表情点击发送
@@ -994,7 +998,7 @@ class MsgPrivateChatVideoPicTest(TestCase):
         chat.wait_for_page_load()
 
     @tags('ALL', 'SMOKE', 'CMCC')
-    def test_Msg_PrivateChat_VideoPic_0167(self):
+    def test_msg_xiaoliping_C_0167(self):
         """在单聊会话窗，断网情况下发送表情搜搜"""
         # 断网
         current_mobile().set_network_status(0)
@@ -1003,6 +1007,8 @@ class MsgPrivateChatVideoPicTest(TestCase):
         gif = ChatGIFPage()
         if gif.is_gif_exist():
             gif.close_gif()
+        gif.click_expression_icon()
+        time.sleep(1)
         chat.click_gif()
         # 提示：“网络异常，请重新设置网络”
         if not chat.is_toast_exist("请检查网络设置", timeout=10):
@@ -1023,6 +1029,8 @@ class MsgPrivateChatVideoPicTest(TestCase):
         gif = ChatGIFPage()
         if gif.is_gif_exist():
             gif.close_gif()
+        gif.click_expression_icon()
+        time.sleep(1)
         chat.click_gif()
         gif.wait_for_page_load()
         # 2、搜索框输入数字
@@ -1050,6 +1058,8 @@ class MsgPrivateChatVideoPicTest(TestCase):
         gif = ChatGIFPage()
         if gif.is_gif_exist():
             gif.close_gif()
+        gif.click_expression_icon()
+        time.sleep(1)
         chat.click_gif()
         gif.wait_for_page_load()
         # 2、搜索框输入特殊字符 @ ? ...
@@ -1077,6 +1087,8 @@ class MsgPrivateChatVideoPicTest(TestCase):
         gif = ChatGIFPage()
         if gif.is_gif_exist():
             gif.close_gif()
+        gif.click_expression_icon()
+        time.sleep(1)
         chat.click_gif()
         gif.wait_for_page_load()
         # 2、搜索框输入关键字
@@ -1100,6 +1112,8 @@ class MsgPrivateChatVideoPicTest(TestCase):
         gif = ChatGIFPage()
         if gif.is_gif_exist():
             gif.close_gif()
+        gif.click_expression_icon()
+        time.sleep(1)
         chat.click_gif()
         gif.wait_for_page_load()
         # 2、搜索框输入关键字匹配到对应结果后点击返回
@@ -1128,6 +1142,8 @@ class MsgPrivateChatVideoPicTest(TestCase):
         gif = ChatGIFPage()
         if gif.is_gif_exist():
             gif.close_gif()
+        gif.click_expression_icon()
+        time.sleep(1)
         chat.click_gif()
         gif.wait_for_page_load()
         # 2、搜索框输入关键字匹配到对应结果后点击发送
@@ -1155,6 +1171,8 @@ class MsgPrivateChatVideoPicTest(TestCase):
         gif = ChatGIFPage()
         if gif.is_gif_exist():
             gif.close_gif()
+        gif.click_expression_icon()
+        time.sleep(1)
         chat.click_gif()
         gif.wait_for_page_load()
         # 2、点击搜索框左方×

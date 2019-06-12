@@ -45,6 +45,7 @@ class ChatGIFPage(BasePage):
                   'com.chinasofti.rcs:id/fl_edit_panel': (MobileBy.ID, 'com.chinasofti.rcs:id/fl_edit_panel'),
                   '趣图搜搜...': (MobileBy.ID, 'com.chinasofti.rcs:id/et_message'),
                   'com.chinasofti.rcs:id/ib_expression': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression'),
+                  '表情按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression'),
                   '语音按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_audio'),
                   '发送按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_send'),
                   }
@@ -64,6 +65,11 @@ class ChatGIFPage(BasePage):
                 message
             )
         return self
+
+    @TestLogger.log()
+    def click_expression_icon(self):
+        """点击表情按钮"""
+        self.click_element(self.__class__.__locators["表情按钮"])
 
     @TestLogger.log()
     def input_message(self, message):

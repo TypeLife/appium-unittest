@@ -11,12 +11,18 @@ class PermissionListPage(BasePage):
 
     __locators = {
         "确定": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_submit'),
+        "去授权": (MobileBy.XPATH, '//*[@text="去授权"]'),
     }
 
     @TestLogger.log()
     def click_submit_button(self):
         """点击确定"""
         self.click_element(self.__class__.__locators["确定"])
+
+    @TestLogger.log()
+    def go_permission(self):
+        """点击去授权"""
+        self.click_element(self.__class__.__locators["去授权"])
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):

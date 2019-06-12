@@ -56,6 +56,12 @@ class Preconditions(LoginPreconditions):
             local_file.click_send()
             chat.wait_for_page_load()
 
+    @staticmethod
+    def get_group_chat_name():
+        """获取群名"""
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        group_name = "aatest" + phone_number[-4:]
+        return group_name
 
 class MsgMyPCChating(TestCase):
     """
@@ -302,7 +308,6 @@ class MsgMyPCChating(TestCase):
         time.sleep(2)
         MessagePage().page_should_contain_text('文件')
 
-
 class MsgMyPcTest(TestCase):
 
     def default_setUp(self):
@@ -320,6 +325,10 @@ class MsgMyPcTest(TestCase):
                 msg_page.choose_chat_by_name('我的电脑')
                 self.wait_for_MyPc_page_load()
         else:
+            try:
+                msg_page.clear_message_record()
+            except Exception as e:
+                print(e)
             msg_page.click_search()
             SearchPage().input_search_keyword('我的电脑')
             msg_page.choose_chat_by_name('我的电脑')
@@ -334,7 +343,6 @@ class MsgMyPcTest(TestCase):
 
     def public_select_folder(self):
         chat_more = ChatMorePage()
-        chat_more.close_more()
         chat_more.click_file1()
 
     def public_select_file(self, file_type=".xlsx"):
@@ -381,13 +389,13 @@ class MsgMyPcTest(TestCase):
         self.public_select_folder()
         select_file_type = ChatSelectFilePage()
         select_file_type.wait_for_page_load()
-        select_file_type.click_video()
+        select_file_type.click_music()
         # 3、选择任意文件，点击发送按钮
         local_file = ChatSelectLocalFilePage()
         local_file.select_file(file_name)
 
     def public_select_music_send(self, file_name='28618718.mp3'):
-        self.public_select_pic(file_name)
+        self.public_select_music(file_name)
         ChatSelectLocalFilePage().click_send()
 
     def public_select_video(self, file_name='.mp4'):
@@ -409,7 +417,7 @@ class MsgMyPcTest(TestCase):
         self.public_select_file_send()
         msg_page = MessagePage()
         print(msg_page.wait_until(condition=lambda x: msg_page.is_text_present('测试用例.xlsx')))
-        ChatWindowPage().click_back()
+        ChatWindowPage().click_back1()
 
     @tags('ALL', 'CMCC', 'my_PC')
     def test_msg_weifenglian_PC_0002(self):
@@ -433,7 +441,7 @@ class MsgMyPcTest(TestCase):
         else:
             self.public_make_sure_have_faild_massege()
         self.wait_for_MyPc_page_load()
-        ChatWindowPage().click_back()
+        ChatWindowPage().click_back1()
         self.assertTrue(MessagePage().is_iv_fail_status_present())
 
     @staticmethod
@@ -468,7 +476,7 @@ class MsgMyPcTest(TestCase):
     def test_msg_weifenglian_PC_0005(self):
         """对发送失败的文件进行重发后，消息列表页面的消息发送失败的标识消失"""
         self.test_msg_weifenglian_PC_0004()
-        ChatWindowPage().click_back()
+        ChatWindowPage().click_back1()
         message_page = MessagePage()
         message_page.wait_for_page_load()
         self.assertFalse(message_page.is_iv_fail_status_present())
@@ -493,7 +501,7 @@ class MsgMyPcTest(TestCase):
         chat_page.click_multiple_selection_delete_cancel()
         self.wait_for_MyPc_page_load()
         self.assertTrue((chat_page.wait_until(condition=lambda x: chat_page.is_text_present('我的电脑'))))
-        ChatWindowPage().click_back()
+        ChatWindowPage().click_back1()
 
     @staticmethod
     def tearDown_test_msg_weifenglian_PC_0006():
@@ -517,7 +525,7 @@ class MsgMyPcTest(TestCase):
         current_mobile().turn_off_wifi()
         self.public_select_file_send('2M_data.json')
         self.test_msg_weifenglian_PC_0007()
-        ChatWindowPage().click_back()
+        ChatWindowPage().click_back1()
         MessagePage().wait_for_page_load()
         MessagePage().clear_message_record()
 
@@ -537,7 +545,7 @@ class MsgMyPcTest(TestCase):
         local_file.click_back()
         local_file.click_back()
         ChatSelectFilePage().click_back()
-        ChatWindowPage().click_back()
+        ChatWindowPage().click_back1()
 
     @staticmethod
     def tearDown_test_msg_weifenglian_PC_0010():
@@ -554,7 +562,7 @@ class MsgMyPcTest(TestCase):
         local_file.click_back()
         local_file.click_back()
         ChatSelectFilePage().click_back()
-        ChatWindowPage().click_back()
+        ChatWindowPage().click_back1()
 
     @tags('ALL', 'CMCC', 'my_PC')
     def test_msg_weifenglian_PC_0013(self):
@@ -594,7 +602,7 @@ class MsgMyPcTest(TestCase):
             current_mobile().turn_off_mobile_data()
             self.public_select_pic_send('23e.jpg')
             self.wait_for_MyPc_page_load()
-        ChatWindowPage().click_back()
+        ChatWindowPage().click_back1()
         message_page = MessagePage()
         message_page.wait_for_page_load()
         self.assertTrue(message_page.is_iv_fail_status_present())
@@ -643,7 +651,7 @@ class MsgMyPcTest(TestCase):
         pc_chat_page.click_msg_send_failed_button()
         pc_chat_page.click_resend_confirm()
         self.wait_for_MyPc_page_load()
-        ChatWindowPage().click_back()
+        ChatWindowPage().click_back1()
         message_page = MessagePage()
         message_page.wait_for_page_load()
         self.assertFalse(message_page.is_iv_fail_status_present())
@@ -688,7 +696,7 @@ class MsgMyPcTest(TestCase):
         local_file.click_outside_element()
         local_file.click_back()
         ChatSelectFilePage().click_back()
-        ChatWindowPage().click_back()
+        ChatWindowPage().click_back1()
 
     @tags('ALL', 'CMCC', 'my_PC')
     def test_msg_weifenglian_PC_0021(self):
@@ -717,7 +725,7 @@ class MsgMyPcTest(TestCase):
         local_file.click_outside_element()
         local_file.click_back()
         ChatSelectFilePage().click_back()
-        ChatWindowPage().click_back()
+        ChatWindowPage().click_back1()
 
     @staticmethod
     def tearDown_test_msg_weifenglian_PC_0023():
@@ -733,7 +741,7 @@ class MsgMyPcTest(TestCase):
         # 返回到消息页面
         local_file.click_back()
         ChatSelectLocalFilePage().click_back()
-        ChatWindowPage().click_back()
+        ChatWindowPage().click_back1()
 
     @tags('ALL', 'CMCC', 'my_PC')
     def test_msg_weifenglian_PC_0026(self):
@@ -747,7 +755,7 @@ class MsgMyPcTest(TestCase):
         bol = current_mobile().wait_until(condition=lambda x: current_mobile().is_text_present('我的电脑'))
         self.assertTrue(bol)
         # 返回到消息页面
-        ChatWindowPage().click_back()
+        ChatWindowPage().click_back1()
 
     @tags('ALL', 'CMCC', 'my_PC')
     def test_msg_weifenglian_PC_0029(self):
@@ -798,7 +806,7 @@ class MsgMyPcTest(TestCase):
         self.wait_for_MyPc_page_load()
         self.assertFalse(pc_chat_page.is_exist_msg_send_failed_button())
         # 返回到消息页面
-        ChatWindowPage().click_back()
+        ChatWindowPage().click_back1()
 
     @staticmethod
     def tearDown_test_msg_weifenglian_PC_0031():
@@ -814,5 +822,332 @@ class MsgMyPcTest(TestCase):
 
     @staticmethod
     def tearDown_test_msg_weifenglian_PC_0032():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0033(self):
+        """点击取消重发视频文件消失，停留在当前页面"""
+        self.wait_for_MyPc_page_load()
+        pc_chat_page = GroupChatPage()
+        if pc_chat_page.is_exist_msg_send_failed_button():
+            pass
+        else:
+            self.test_msg_weifenglian_PC_0029()
+            current_mobile().turn_on_wifi()
+            current_mobile().turn_on_mobile_data()
+            time.sleep(2)
+        pc_chat_page.click_msg_send_failed_button()
+        pc_chat_page.click_multiple_selection_delete_cancel()
+        bol = self.wait_for_MyPc_page_load()
+        self.assertTrue(bol)
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0033():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0034(self):
+        """未订购每月10G的用户发送大于2M的视频时有弹窗提示"""
+        self.wait_for_MyPc_page_load()
+        current_mobile().turn_off_wifi()
+        self.public_select_video('2M_vedio.mp4')
+        local_file = ChatSelectLocalFilePage()
+        local_file.click_single_send()
+        self.assertTrue(local_file.check_10G_free_data_page())
+        local_file.click_outside_element()
+        local_file.click_back()
+        ChatSelectFilePage().click_back()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0034():
+        current_mobile().turn_on_wifi()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0035(self):
+        """直接点击“继续发送”：关闭弹窗，拨出，下次继续提示"""
+        current_mobile().turn_off_wifi()
+        self.public_select_video_send('2M_vedio.mp4')
+        self.public_select_video('2M_vedio.mp4')
+        local_file = ChatSelectLocalFilePage()
+        local_file.click_single_send()
+        self.assertTrue(local_file.check_10G_free_data_page())
+        local_file.click_outside_element()
+        local_file.click_back()
+        ChatSelectFilePage().click_back()
+        ChatWindowPage().click_back1()
+        MessagePage().wait_for_page_load()
+        MessagePage().clear_message_record()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0035():
+        current_mobile().turn_on_wifi()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0037(self):
+        """点击订购免流特权后可正常返回”"""
+        current_mobile().turn_off_wifi()
+        self.public_select_video('2M_vedio.mp4')
+        local_file = ChatSelectLocalFilePage()
+        local_file.click_single_send()
+        local_file.click_free_data_button()
+        bol = local_file.wait_until(lambda x: ChatSelectLocalFilePage().is_text_present('和飞信'), timeout=15,
+                                    auto_accept_permission_alert=False)
+        self.assertTrue(bol)
+        local_file.click_free_data_back()
+        self.assertTrue(local_file.check_10G_free_data_page())
+        local_file.click_outside_element()
+        local_file.click_back()
+        ChatSelectFilePage().click_back()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0037():
+        current_mobile().turn_on_wifi()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0039(self):
+        """在视频列表页选择文件后再点击取消按钮，停留在当前页面”"""
+        self.public_select_video('.mp4')
+        local_file = ChatSelectLocalFilePage()
+        local_file.select_file(".mp4")
+        self.assertTrue(local_file.is_on_this_page())
+        local_file.click_back()
+        ChatSelectFilePage().click_back()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0040(self):
+        """在视频列表页点击返回按钮时可正常逐步返回到会话页面”"""
+        self.public_select_video('.mp4')
+        local_file = ChatSelectLocalFilePage()
+        local_file.select_file(".mp4")
+        self.assertTrue(local_file.is_on_this_page())
+        local_file.click_back()
+        ChatSelectFilePage().wait_for_page_load()
+        ChatSelectFilePage().click_back()
+        bol = self.wait_for_MyPc_page_load()
+        self.assertTrue(bol)
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0043(self):
+        """网络异常时勾选音乐列表页面任意音乐点击发送按钮”"""
+        current_mobile().turn_off_wifi()
+        current_mobile().turn_off_mobile_data()
+        self.public_select_music_send('28618718.mp3')
+        is_on_Pc_Chat_Page = self.wait_for_MyPc_page_load()
+        self.assertTrue(is_on_Pc_Chat_Page)
+        self.assertTrue(GroupChatPage().is_exist_msg_send_failed_button())
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0043():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0044(self):
+        """会话页面有音乐文件发送失败时查看消息列表是否有消息发送失败的标识”"""
+        if GroupChatPage().is_exist_msg_send_failed_button():
+            pass
+        else:
+            current_mobile().turn_off_wifi()
+            current_mobile().turn_off_mobile_data()
+            self.public_select_music_send('28618718.mp3')
+        self.wait_for_MyPc_page_load()
+        ChatWindowPage().click_back1()
+        MessagePage().wait_for_page_load()
+        self.assertTrue(MessagePage().is_iv_fail_status_present())
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0044():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0045(self):
+        """对发送失败的音乐进行重发”"""
+        if GroupChatPage().is_exist_msg_send_failed_button():
+            pass
+        else:
+            current_mobile().turn_off_wifi()
+            current_mobile().turn_off_mobile_data()
+            self.public_select_music_send('28618718.mp3')
+            current_mobile().turn_on_wifi()
+            current_mobile().turn_on_mobile_data()
+        self.wait_for_MyPc_page_load()
+        GroupChatPage().click_msg_send_failed_button()
+        GroupChatPage().click_resend_confirm()
+        self.wait_for_MyPc_page_load()
+        self.assertFalse(GroupChatPage().is_exist_msg_send_failed_button())
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0045():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0046(self):
+        """对发送失败的音乐进行重发后，消息列表页面的消息发送失败的标识消失”"""
+        self.test_msg_weifenglian_PC_0045()
+        ChatWindowPage().click_back1()
+        MessagePage().wait_for_page_load()
+        self.assertFalse(MessagePage().is_iv_fail_status_present())
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0046():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0047(self):
+        """点击取消重发音乐文件消失，停留在当前页面”"""
+        if GroupChatPage().is_exist_msg_send_failed_button():
+            pass
+        else:
+            current_mobile().turn_off_wifi()
+            current_mobile().turn_off_mobile_data()
+            self.public_select_music_send('28618718.mp3')
+            current_mobile().turn_on_wifi()
+            current_mobile().turn_on_mobile_data()
+            time.sleep(2)
+        GroupChatPage().click_msg_send_failed_button()
+        GroupChatPage().click_multiple_selection_delete_cancel()
+        pc_chat_page = self.wait_for_MyPc_page_load()
+        self.assertTrue(pc_chat_page)
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0047():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0048(self):
+        """未订购每月10G的用户发送大于2M的音乐时有弹窗提示”"""
+        current_mobile().turn_off_wifi()
+        self.public_select_music('喜欢你.mp3')
+        local_file = ChatSelectLocalFilePage()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_single_send()
+        self.assertTrue(local_file.check_10G_free_data_page())
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0048():
+        current_mobile().turn_on_wifi()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0049(self):
+        """直接点击“继续发送”：关闭弹窗，拨出，下次继续提示”"""
+        current_mobile().turn_off_wifi()
+        self.public_select_music_send('喜欢你.mp3')
+        self.test_msg_weifenglian_PC_0048()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0049():
+        current_mobile().turn_on_wifi()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0051(self):
+        """点击订购免流特权后可正常返回"""
+        current_mobile().turn_off_wifi()
+        self.public_select_music('喜欢你.mp3')
+        local_file = ChatSelectLocalFilePage()
+        local_file.click_single_send()
+        local_file.click_free_data_button()
+        bol = local_file.wait_until(lambda x: ChatSelectLocalFilePage().is_text_present('和飞信'), timeout=15,
+                                    auto_accept_permission_alert=False)
+        self.assertTrue(bol)
+        local_file.click_free_data_back()
+        self.assertTrue(local_file.check_10G_free_data_page())
+        local_file.click_outside_element()
+        local_file.click_back()
+        ChatSelectFilePage().click_back()
+        ChatWindowPage().click_back1()
+        MessagePage().wait_for_page_load()
+        MessagePage().clear_message_record()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0051():
+        current_mobile().turn_on_wifi()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0053(self):
+        """在音乐列表页选择文件后再点击取消按钮，停留在当前页面"""
+        self.public_select_music('.mp3')
+        local_file = ChatSelectLocalFilePage()
+        local_file.select_file(".mp3")
+        self.assertTrue(local_file.is_on_this_page())
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0054(self):
+        """在音乐列表页点击返回按钮时可正常逐步返回到会话页面"""
+        self.public_select_music('.mp3')
+        local_file = ChatSelectLocalFilePage()
+        local_file.select_file(".mp3")
+        self.assertTrue(local_file.is_on_this_page())
+        local_file.click_back()
+        ChatSelectFilePage().click_back()
+        pc_chat_page = self.wait_for_MyPc_page_load()
+        self.assertTrue(pc_chat_page)
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0074(self):
+        """在我的电脑将自己发送的文件转发到当前会话窗口"""
+        self.public_select_file_send(".xlsx")
+        self.wait_for_MyPc_page_load()
+        ChatFilePage().forward_file('.xlsx')
+        SelectContactsPage().wait_for_page_load()
+        SelectContactsPage().select_one_recently_contact_by_name('我的电脑')
+        SelectContactsPage().click_sure_forward()
+        self.assertTrue(GroupChatPage().is_exist_forward())
+        self.assertFalse(GroupChatPage().is_exist_msg_send_failed_button())
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0075(self):
+        """将自己发送的文件转发到普通群"""
+        pc_chat_page = GroupChatPage()
+        if pc_chat_page.is_exist_msg_file():
+            pass
+        else:
+            self.public_select_file_send('.xlsx')
+        # 转发xls文件
+        ChatFilePage().forward_file('.xlsx')
+        SelectContactsPage().wait_for_page_load()
+        # 需要转发的群
+        SelectContactsPage().click_select_one_group()
+        group_name = Preconditions.get_group_chat_name()
+        SelectOneGroupPage().select_one_group_by_name(group_name)
+        SelectOneGroupPage().click_sure_forward()
+        # 转发成功并回到聊天页面
+        self.assertTrue(GroupChatPage().is_exist_forward())
+        pc_chat_page = self.wait_for_MyPc_page_load()
+        self.assertTrue(pc_chat_page)
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0077(self):
+        """将自己发送的文件转发到普通群时失败"""
+        current_mobile().turn_off_wifi()
+        current_mobile().turn_off_mobile_data()
+        pc_chat_page = GroupChatPage()
+        if pc_chat_page.is_exist_msg_file():
+            pass
+        else:
+            self.public_select_file_send('.xlsx')
+        # 转发xls文件
+        ChatFilePage().forward_file('.xlsx')
+        SelectContactsPage().wait_for_page_load()
+        # 需要转发的群
+        SelectContactsPage().click_select_one_group()
+        group_name = Preconditions.get_group_chat_name()
+        SelectOneGroupPage().select_one_group_by_name(group_name)
+        SelectOneGroupPage().click_sure_forward()
+        # 转发成功并回到聊天页面
+        self.assertTrue(GroupChatPage().is_exist_forward())
+        ChatWindowPage().click_back1()
+        MessagePage().wait_for_page_load()
+        MessagePage().choose_chat_by_name(group_name)
+        GroupChatPage().wait_for_page_load()
+        self.assertTrue(GroupChatPage().is_exist_msg_send_failed_button())
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0077():
         current_mobile().turn_on_wifi()
         current_mobile().turn_on_mobile_data()

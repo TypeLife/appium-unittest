@@ -114,6 +114,9 @@ class Preconditions(WorkbenchPreconditions):
         time.sleep(2)
         current_mobile().back()
         sog.click_back()
+        time.sleep(2)
+        sc.click_back()
+        mess.wait_for_page_load()
         # 点击 +
         mess.click_add_icon()
         # 点击 发起群聊
@@ -2298,7 +2301,6 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         Preconditions.get_into_group_chat_page(name)
         gcp = GroupChatPage()
         gcp.wait_for_page_load()
-        gcp.click_more()
         cmp = ChatMorePage()
         cmp.click_file()
         csfp = ChatSelectFilePage()

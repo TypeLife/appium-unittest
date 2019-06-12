@@ -1222,7 +1222,7 @@ class MsgPrivateChatDialog(TestCase):
         chat.input_message('')
 
     @tags('ALL', 'SMOKE', 'CMCC', 'DEBUG')
-    def test_msg_huangcaizui_A107(self):
+    def test_msg_huangcaizui_A_0107(self):
         """ 表情列表按钮"""
         # 1、进入一对一聊天界面
         chat = SingleChatPage()

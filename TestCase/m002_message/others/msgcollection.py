@@ -1,3 +1,5 @@
+import time
+
 from library.core.TestCase import TestCase
 from library.core.utils.applicationcache import current_mobile
 from preconditions.BasePreconditions import LoginPreconditions
@@ -34,6 +36,8 @@ class Preconditions(LoginPreconditions):
         mess.open_contacts_page()
         contacts = ContactsPage()
         contacts.wait_for_page_load()
+        contacts.click_mobile_contacts()
+        time.sleep(1)
         names = contacts.get_contacts_name()
         if '本机' in names:
             names.remove('本机')

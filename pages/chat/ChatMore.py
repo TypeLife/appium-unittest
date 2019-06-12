@@ -36,7 +36,7 @@ class ChatMorePage(BasePage):
                   'com.chinasofti.rcs:id/layout_for_message': (MobileBy.ID, 'com.chinasofti.rcs:id/layout_for_message'),
                   'com.chinasofti.rcs:id/chat_rich_media_vp': (MobileBy.ID, 'com.chinasofti.rcs:id/chat_rich_media_vp'),
                   'com.chinasofti.rcs:id/iocn_img': (MobileBy.ID, 'com.chinasofti.rcs:id/iocn_img'),
-                  '文件': (MobileBy.XPATH, '//*[@text="文件"]'),
+                  '文件': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_file'),
                   '群短信': (MobileBy.XPATH, '//*[@text="群短信"]'),
                   '位置': (MobileBy.XPATH, '//*[@text="位置"]'),
                   '红包': (MobileBy.XPATH, '//*[@text="红包"]'),
@@ -53,7 +53,8 @@ class ChatMorePage(BasePage):
                   '说点什么...': (MobileBy.ID, 'com.chinasofti.rcs:id/et_message'),
                   'com.chinasofti.rcs:id/ib_expression': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression'),
                   'com.chinasofti.rcs:id/ib_audio': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_audio'),
-                  '文件1': (MobileBy.XPATH, '//*[(@resource-id="com.chinasofti.rcs:id/iocn_tv") and (@text="文件")]'),
+                  # '文件1': (MobileBy.XPATH, '//*[(@resource-id="com.chinasofti.rcs:id/iocn_tv") and (@text="文件")]'),
+                  '文件1': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_file'),
                   '音视频通话': (MobileBy.XPATH, '//*[(@resource-id="com.chinasofti.rcs:id/iocn_tv") and (@text="音视频通话")]'),
                   '和飞信电话': (MobileBy.XPATH, '//*[(@resource-id="com.chinasofti.rcs:id/iocn_tv") and (@text="和飞信电话")]'),
                   }

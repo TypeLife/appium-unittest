@@ -121,6 +121,8 @@ class Preconditions(WorkbenchPreconditions):
         time.sleep(2)
         current_mobile().back()
         sog.click_back()
+        time.sleep(2)
+        sc.click_back()
         mess.wait_for_page_load()
         # 点击 +
         mess.click_add_icon()
@@ -2611,7 +2613,7 @@ class MessageGroupChatAllTest(TestCase):
         self.assertEquals(gcp.page_should_contain_text2("群已解散"), True)
 
     @staticmethod
-    def tearDown_test_msg_xiaoqiu_0182():
+    def tearDown_test_msg_():
         """恢复环境"""
 
         Preconditions.make_already_in_message_page()

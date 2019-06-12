@@ -250,7 +250,6 @@ class ContactsLocal(TestCase):
         Preconditions.make_already_in_message_page()
         MessagePage().wait_for_page_load()
         MessagePage().click_contacts()
-        time.sleep(2)
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0001(self):
@@ -1874,13 +1873,14 @@ class ContactsLocalhigh(TestCase):
                 print(msg)
 
     def default_setUp(self):
-        """确保每个用例执行前在通讯录页面"""
+        """确保每个用例执行前在通讯录-手机联系人页面"""
         Preconditions.connect_mobile('Android-移动')
         current_mobile().hide_keyboard_if_display()
         Preconditions.make_already_in_message_page()
         MessagePage().wait_for_page_load()
         MessagePage().click_contacts()
         time.sleep(2)
+        ContactsPage().click_mobile_contacts()
 
     @tags('ALL', 'CONTACTS', 'CMCC')
     def test_contacts_chenjixiang_0123(self):
@@ -1915,6 +1915,8 @@ class ContactsLocalhigh(TestCase):
     def tearDown_test_contacts_chenjixiang_0123(self):
         Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
+        ContactsPage().click_mobile_contacts()
+        time.sleep(2)
         ContactsPage().select_contacts_by_name('无手机号')
         time.sleep(2)
         contant_detail = ContactDetailsPage()
@@ -2096,6 +2098,8 @@ class ContactsLocalhigh(TestCase):
     def tearDown_test_contacts_chenjixiang_0166(self):
         Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
+        ContactsPage().click_mobile_contacts()
+        time.sleep(2)
         contact = ContactsPage()
         if contact.is_exit_element_by_text_swipe('12345678901'):
             contact.select_contacts_by_number('12345678901')
@@ -2189,6 +2193,7 @@ class ContactsLocalhigh(TestCase):
         Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
         time.sleep(2)
+        ContactsPage().click_mobile_contacts()
         ContactsPage().select_contacts_by_name('大佬1')
         #恢复联系人电话号码
         number=ContactDetailsPage().get_people_number()
@@ -2357,6 +2362,7 @@ class ContactsLocalhigh(TestCase):
         #删除联系人后添加该联系人
         Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
+        ContactsPage().click_mobile_contacts()
         ContactsPage().click_add()
         time.sleep(2)
         creat_contact=CreateContactPage()
@@ -2409,6 +2415,7 @@ class ContactsLocalhigh(TestCase):
     def tearDown_test_contacts_chenjixiang_0242(self):
         Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
+        ContactsPage().click_mobile_contacts()
         ContactsPage().select_contacts_by_name('大佬1')
         glp = GroupListPage()
         time.sleep(2)
@@ -2523,6 +2530,7 @@ class ContactsLocalhigh(TestCase):
         """测试点击快捷方式跳转，进入profile页后进行功能操作，和页面返回跳转等"""
         #从快捷方式进入页面
         contact=ContactsPage()
+        ContactsPage().click_mobile_contacts()
         time.sleep(2)
         Preconditions.background_app()
         contact.is_element_present_on_desktop('测试号码')
@@ -2610,6 +2618,7 @@ class ContactsLocalhigh(TestCase):
         """测试sim联系人profile页显示是否正常"""
         #确保有SIM卡联系人
         GroupListPage().open_contacts_page()
+        ContactsPage().click_mobile_contacts()
         contact = ContactsPage()
         if ContactsPage().is_page_contain_element('sim标志'):
             time.sleep(2)
@@ -2658,6 +2667,7 @@ class ContactsLocalhigh(TestCase):
         #删除联系人后添加该联系人
         Preconditions.make_already_in_message_page()
         MessagePage().click_contacts()
+        ContactsPage().click_mobile_contacts()
         if ContactsPage().is_contacts_exist('测试号码'):
             pass
         else:
@@ -2872,6 +2882,8 @@ class ContactsLocalhigh(TestCase):
     def test_contacts_chenjixiang_0529(self):
         """测试群发助手消息窗口，内容输入框有内容时，发送按钮状态"""
         #进入群发助手页面
+        ContactsPage().click_back()
+        time.sleep(1)
         ContactsPage().click_message_icon()
         mes=MessagePage()
         mes.click_add_icon()
@@ -2892,6 +2904,8 @@ class ContactsLocalhigh(TestCase):
     def test_contacts_chenjixiang_0533(self):
         """测试联系人选择器，搜索框校验，输入多位数字进行搜索"""
         #进入群发助手页面
+        ContactsPage().click_back()
+        time.sleep(1)
         ContactsPage().click_message_icon()
         mes=MessagePage()
         mes.click_add_icon()
@@ -2910,6 +2924,8 @@ class ContactsLocalhigh(TestCase):
     def test_contacts_chenjixiang_0534(self):
         """测试联系人选择器，搜索框校验，输入中文字符进行搜索"""
         #进入群发助手页面
+        ContactsPage().click_back()
+        time.sleep(1)
         ContactsPage().click_message_icon()
         mes=MessagePage()
         mes.click_add_icon()
@@ -2928,6 +2944,8 @@ class ContactsLocalhigh(TestCase):
     def test_contacts_chenjixiang_0535(self):
         """测试联系人选择器，搜索框校验，输入英文字符进行搜索"""
         #进入群发助手页面
+        ContactsPage().click_back()
+        time.sleep(1)
         ContactsPage().click_message_icon()
         mes=MessagePage()
         mes.click_add_icon()
@@ -2946,6 +2964,8 @@ class ContactsLocalhigh(TestCase):
     def test_contacts_chenjixiang_0536(self):
         """测试联系人选择器，搜索框校验，输入特殊字符进行搜索"""
         #进入群发助手页面
+        ContactsPage().click_back()
+        time.sleep(1)
         ContactsPage().click_message_icon()
         mes=MessagePage()
         mes.click_add_icon()
@@ -2964,6 +2984,8 @@ class ContactsLocalhigh(TestCase):
     def test_contacts_chenjixiang_0537(self):
         """测试联系人选择器，搜索框校验，输入组合字符（中英文、数字、特殊字符）进行搜索"""
         #进入群发助手页面
+        ContactsPage().click_back()
+        time.sleep(1)
         ContactsPage().click_message_icon()
         mes=MessagePage()
         mes.click_add_icon()
@@ -3033,6 +3055,8 @@ class ContactsLocalhigh(TestCase):
     def test_contacts_chenjixiang_0672(self):
         """测试群发消息输入框录入页面，发送成功后跳转到历史记录页"""
         #进入群发助手页面
+        ContactsPage().click_back()
+        time.sleep(1)
         ContactsPage().click_message_icon()
         mes=MessagePage()
         mes.click_add_icon()
@@ -3102,6 +3126,7 @@ class ContactsLocalhigh(TestCase):
     def test_contacts_chenjixiang_0363(self):
         """测试上传云端不存在的手机号码（大陆号码，不加区号）"""
         contact=ContactsPage()
+        contact.click_back()
         #进入我页面 备份通讯录
         contact.click_me_icon()
         me=MePage()
@@ -3124,6 +3149,7 @@ class ContactsLocalhigh(TestCase):
         time.sleep(2)
         self.assertFalse(contact.is_contacts_exist('b测算'))
         #进入我页面 备份通讯录
+        contact.click_back()
         contact.click_me_icon()
         me=MePage()
         me.page_up()
@@ -3143,6 +3169,7 @@ class ContactsLocalhigh(TestCase):
     def test_contacts_chenjixiang_0365(self):
         """测试上传云端不存在的手机号码（香港，不加区号）"""
         contact=ContactsPage()
+        contact.click_back()
         #进入我页面 备份通讯录
         contact.click_me_icon()
         me=MePage()

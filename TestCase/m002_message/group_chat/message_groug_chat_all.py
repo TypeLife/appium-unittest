@@ -59,6 +59,9 @@ class Preconditions(LoginPreconditions):
         time.sleep(2)
         current_mobile().back()
         sog.click_back()
+        time.sleep(2)
+        sc.click_back()
+        mess.wait_for_page_load()
         # 点击 +
         mess.click_add_icon()
         # 点击 发起群聊
@@ -1381,7 +1384,6 @@ class MsgGroupChatTest(TestCase):
             pass
         else:
             chat_more = ChatMorePage()
-            chat_more.close_more()
             chat_more.click_file1()
             select_file_type = ChatSelectFilePage()
             select_file_type.wait_for_page_load()

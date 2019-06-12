@@ -25,8 +25,9 @@ class ContactsPage(FooterPage):
             MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView_contactList'),
         '通讯录列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list'),
         '列表项': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_list"]/*'),
-        '群聊': (MobileBy.ID, 'com.chinasofti.rcs:id/first_item'),
-        '标签分组': (MobileBy.ID, 'com.chinasofti.rcs:id/second_item'),
+        '手机联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/first_item'),
+        '群聊': (MobileBy.ID, 'com.chinasofti.rcs:id/second_item'),
+        '标签分组': (MobileBy.XPATH, '//*[@text="标签分组"]'),
         '公众号': (MobileBy.ID, 'com.chinasofti.rcs:id/third_item'),
         '创建团队': (MobileBy.XPATH, '//*[@text="创建团队"]'),
         'com.chinasofti.rcs:id/contact_group_chat_item_id': (
@@ -251,10 +252,45 @@ class ContactsPage(FooterPage):
         """点击和通讯录"""
         self.click_element(self.__class__.__locators['和通讯录'])
 
+    @TestLogger.log()
+    def click_mobile_contacts(self):
+        """点击手机联系人"""
+        self.click_element(self.__class__.__locators["手机联系人"])
 
     @TestLogger.log('点击公众号图标')
     def click_official_account_icon(self):
         self.click_element(self.__locators['公众号'])
+
+    # @TestLogger.log('创建通讯录联系人')
+    # def create_contacts_if_not_exits(self, name, number, company='', position='', email=''):
+    #     """
+    #     导入联系人数据
+    #     :param name:
+    #     :param number:
+    #     :return:
+    #     """
+    #     from pages import ContactDetailsPage
+    #     detail_page = ContactDetailsPage()
+    #
+    #     self.wait_for_page_load()
+    #     # 创建联系人
+    #     self.click_search_box()
+    #     from pages import ContactListSearchPage
+    #     contact_search = ContactListSearchPage()
+    #     contact_search.wait_for_page_load()
+    #     contact_search.input_search_keyword(name)
+    #     if contact_search.is_contact_in_list(name):
+    #         contact_search.click_back()
+    #     else:
+    #         contact_search.click_back()
+    #         self.click_add()
+    #         from pages import CreateContactPage
+    #         create_page = CreateContactPage()
+    #         create_page.wait_for_page_load()
+    #         create_page.hide_keyboard_if_display()
+    #         create_page.create_contact(name, number, company, position, email)
+    #         detail_page.wait_for_page_load()
+    #         detail_page.click_back_icon()
 
     @TestLogger.log('创建通讯录联系人')
     def create_contacts_if_not_exits(self, name, number, company='', position='', email=''):
@@ -278,6 +314,8 @@ class ContactsPage(FooterPage):
             contact_search.click_back()
         else:
             contact_search.click_back()
+            self.click_mobile_contacts()
+            time.sleep(1)
             self.click_add()
             from pages import CreateContactPage
             create_page = CreateContactPage()
@@ -286,6 +324,8 @@ class ContactsPage(FooterPage):
             create_page.create_contact(name, number, company, position, email)
             detail_page.wait_for_page_load()
             detail_page.click_back_icon()
+            time.sleep(1)
+            detail_page.click_back_by_android()
 
     @TestLogger.log()
     def click_and_address(self):
@@ -316,7 +356,7 @@ class ContactsPage(FooterPage):
             self.wait_until(
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
-                condition=lambda d: self._is_element_present(self.__class__.__locators["+号"])
+                condition=lambda d: self._is_element_present(self.__class__.__locators["群聊"])
             )
         except:
             raise AssertionError("页面在{}s内，没有加载成功".format(str(timeout)))
@@ -407,7 +447,7 @@ class ContactsPage(FooterPage):
     @TestLogger.log()
     def select_group_by_name(self, name):
         """根据名字选择一个团队"""
-        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title_department" and @text ="%s"]' % name)
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_title" and @text ="%s"]' % name)
         max_try = 20
         current = 0
         while current < max_try:

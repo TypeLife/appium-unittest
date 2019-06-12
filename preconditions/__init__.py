@@ -36,7 +36,8 @@ def make_already_in_one_key_login_page():
 
     # 点击权限列表页面的确定按钮
     permission_list = PermissionListPage()
-    permission_list.click_submit_button()
+    # permission_list.click_submit_button()
+    permission_list.go_permission()
     one_key.wait_for_page_load(30)
 
 
@@ -50,10 +51,13 @@ def login_by_one_key_login():
     one_key.wait_for_tell_number_load(60)
     login_number = one_key.get_login_number()
     one_key.click_one_key_login()
-    one_key.click_read_agreement_detail()
-
-    # 同意协议
+    # one_key.click_read_agreement_detail()
+    #
+    # # 同意协议
+    # agreement = AgreementDetailPage()
+    # agreement.click_agree_button()
     agreement = AgreementDetailPage()
+    time.sleep(1)
     agreement.click_agree_button()
 
     # 等待消息页
