@@ -2375,7 +2375,7 @@ class MsgAllPrior(TestCase):
         # Checkpoint 可以匹配展示搜索结果
         self.assertTrue(group_search.is_group_in_list('测试!@#测试'))
 
- @staticmethod
+    @staticmethod
     def setUp_test_msg_xiaoqiu_0284():
         # 启动App
         Preconditions.select_mobile('Android-移动')
@@ -2407,7 +2407,7 @@ class MsgAllPrior(TestCase):
         # Checkpoint 可以匹配展示搜索结果
         self.assertTrue(group_search.is_group_in_list('带空格  的群组'))
 
-@staticmethod
+    @staticmethod
     def setUp_test_msg_xiaoqiu_0285():
         # 启动App
         Preconditions.select_mobile('Android-移动')
@@ -2437,7 +2437,7 @@ class MsgAllPrior(TestCase):
         # Checkpoint 可以匹配展示搜索结果
         contactspage.page_should_contain_text('无搜索结果')
 
-@staticmethod
+    @staticmethod
     def setUp_test_msg_xiaoqiu_0291():
         # 启动App
         Preconditions.select_mobile('Android-移动')
