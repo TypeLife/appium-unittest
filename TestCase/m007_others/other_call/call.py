@@ -2074,7 +2074,7 @@ class MsgAllPrior(TestCase):
         # Checkpoint 可以匹配展示搜索结果
         self.assertTrue(group_search.is_group_in_list('测试!@#测试'))
 
- @staticmethod
+    @staticmethod
     def setUp_test_msg_xiaoqiu_0284():
         # 启动App
         Preconditions.select_mobile('Android-移动')
@@ -2106,7 +2106,7 @@ class MsgAllPrior(TestCase):
         # Checkpoint 可以匹配展示搜索结果
         self.assertTrue(group_search.is_group_in_list('带空格  的群组'))
 
-@staticmethod
+    @staticmethod
     def setUp_test_msg_xiaoqiu_0285():
         # 启动App
         Preconditions.select_mobile('Android-移动')
@@ -2136,7 +2136,7 @@ class MsgAllPrior(TestCase):
         # Checkpoint 可以匹配展示搜索结果
         contactspage.page_should_contain_text('无搜索结果')
 
-@staticmethod
+    @staticmethod
     def setUp_test_msg_xiaoqiu_0291():
         # 启动App
         Preconditions.select_mobile('Android-移动')
@@ -2198,4 +2198,104 @@ class MsgAllPrior(TestCase):
         time.sleep(2)
         # Checkpoint 收到群消息：你向C发出群邀请
         mess.page_should_contain_text("你向 测试短信1... 发出群邀请")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0286():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist_631(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+        Preconditions.create_group_if_not_exist_not_enter_chat_631('12321431413', "测试短信1", "测试短信2")
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0286(self):
+        """通讯录-群聊-中文精确搜索——搜索结果展示"""
+        # 1、网络正常
+        # 2、已登录和飞信
+        # 3、选择一个群——群聊列表展示页面
+        # 4、存在跟搜索条件匹配的群聊
+        # 5、通讯录-群聊
+        # Step 中文精确搜索
+        contactspage = ContactsPage()
+        grouplist = GroupListPage()
+        contactspage.open_contacts_page()
+        contactspage.wait_for_contact_load()
+        contactspage.click_sim_contact()
+        contactspage.click_group_chat_631()
+        grouplist.click_search_input()
+        group_search = GroupListSearchPage()
+        group_search.input_search_keyword('12321431413')
+        # Checkpoint 可以匹配展示搜索结果
+        self.assertTrue(group_search.is_group_in_list('12321431413'))
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0402():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist_631(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+        Preconditions.delete_group_if_exist('测试群组88')
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0402(self):
+        """验证群主A点击消息列表右上角的+——发起群聊/点对点建群/点击通讯录右上角，创建群后A收到的群消息"""
+        # 1、已登录客户端
+        # 2、网络正常
+        # 3、当前在群会话窗口页面
+        mess = MessagePage()
+        # Step 1、A选择联系人后进行创建群
+        mess.click_add_icon()
+        mess.click_group_chat()
+        select_cont = SelectContactsPage()
+        # Step 选择手机联系人
+        select_cont.select_local_contacts()
+        ContactsSelector().click_local_contacts('测试短信1')
+        ContactsSelector().click_local_contacts('测试短信2')
+        select_cont.click_sure_bottom()
+        # Checkpoint 跳转到群名称设置页面
+        GroupNamePage().wait_for_page_load_631()
+        groupname = GroupNamePage()
+        groupname.wait_for_page_load_631()
+        groupname.clear_input_group_name()
+        groupname.input_group_name_631('测试群组88')
+        groupname.click_sure()
+        # Step  A返回到会话窗口页面查看群消息
+        GroupChatPage().wait_for_page_load()
+        # Checkpoint 群消息显示：你向“XX, XX, XX...”发出群邀请（逗号为中文字符；提示语姓名不加双引号，前后用空格；...省略号后加一个空格）
+        GroupChatPage().page_should_contain_text('你向 +86138********,+86138********... 发出群邀请')
+
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0404():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist_631(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+        Preconditions.create_group_if_not_exist_not_enter_chat_631('测试群组1', "测试短信1", "测试短信2")
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0404(self):
+        """在全局搜索搜索群聊时——点击进入到群会话窗口——群设置页面(重复在消息列表页已有的群聊列表进入到群这个入口进群进行测试)"""
+        # 1、已登录客户端
+        # 2、网络正常
+        # 3、当前在消息列表页面
+        mess = MessagePage()
+        # Step 1、在消息列表页点击全局搜索框，进行群聊搜索
+        mess.search_and_enter('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        # Step 2、点击右上角的群设置按钮
+        groupchat.click_setting()
+        # Checkpoint 2、进入到群设置页面
+        groupset.wait_for_page_load()
 
