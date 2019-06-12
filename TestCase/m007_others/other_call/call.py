@@ -2600,3 +2600,72 @@ class MsgAllPrior(TestCase):
         # Checkpoint 2、进入到群设置页面
         groupset.wait_for_page_load()
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0405():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist_631(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+        Preconditions.delete_group_if_exist('测试群组88')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0405(self):
+        """在点击消息列表右上角的+，选择发起群聊，新成功创建的群会话窗口和群设置页面(重复在消息列表页已有的群聊列表进入到群这个入口进群进行测试)"""
+        # 1、已登录客户端
+        # 2、网络正常
+        # 3、当前在群会话窗口页面
+        mess = MessagePage()
+        # Step 1、在消息列表页点击右上角的+选择发起群聊进行建群
+        mess.click_add_icon()
+        mess.click_group_chat()
+        select_cont = SelectContactsPage()
+        select_cont.select_local_contacts()
+        ContactsSelector().click_local_contacts('测试短信1')
+        ContactsSelector().click_local_contacts('测试短信2')
+        select_cont.click_sure_bottom()
+        GroupNamePage().wait_for_page_load_631()
+        groupname = GroupNamePage()
+        groupname.wait_for_page_load_631()
+        groupname.clear_input_group_name()
+        groupname.input_group_name_631('测试群组88')
+        groupname.click_sure()
+        # Checkpoint 1、建群成功返回到会话窗口页面
+        GroupChatPage().wait_for_page_load()
+        # Step 2、点击右上角的群设置按钮
+        GroupChatPage().click_setting()
+        # Checkpoint 2、进入到群设置页面
+        GroupChatSetPage().wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0406():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist_631(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+        Preconditions.create_group_if_not_exist_not_enter_chat_631('测试群组1', "测试短信1", "测试短信2")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0406(self):
+        """在点击消息列表右上角的+，选择发起群聊选择已有群进入到群会话窗口和群设置页面(重复在消息列表页已有的群聊列表进入到群这个入口进群进行测试)"""
+        # 1、已登录客户端
+        # 2、网络正常
+        # 3、当前在消息列表页面
+        mess = MessagePage()
+        # Step 1、在消息列表页点击右上角的+选择发起群聊，选择已有群，点击任意群聊
+        mess.click_add_icon()
+        mess.click_group_chat()
+        select_cont = SelectContactsPage()
+        select_cont.click_select_one_group()
+        SearchGroupPage().click_group('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        # Checkpoint 1、进入会话窗口页面
+        groupchat.wait_for_page_load()
+        # Step 2、点击右上角的群设置按钮
+        groupchat.click_setting()
+        # Checkpoint 2、进入到群设置页面
+        groupset.wait_for_page_load()
