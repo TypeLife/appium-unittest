@@ -2368,3 +2368,80 @@ class MsgAllPrior(TestCase):
         groupchat.click_setting()
         # Checkpoint 2、进入到群设置页面
         groupset.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0408():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist_631(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+        Preconditions.create_group_if_not_exist_not_enter_chat_631('测试群组1', "测试短信1", "测试短信2")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0408(self):
+        """点击通讯录——点击群聊——任意选中一个群——进入到群会话窗口和群设置页面"""
+        # 1、已登录客户端
+        # 2、网络正常
+        # 3、当前在通讯录群聊页面
+        # Step 1、在群聊页面点击任意群聊
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.wait_for_contact_load()
+        contactspage.click_sim_contact()
+        contactspage.click_group_chat_631()
+        SearchGroupPage().click_group('测试群组1')
+        groupchat = GroupChatPage()
+        # Checkpoint 1、进入会话窗口页面
+        groupchat.wait_for_page_load()
+        # Step 2、点击右上角的群设置按钮
+        groupchat.click_setting()
+        # Checkpoint 2、进入到群设置页面
+        GroupChatSetPage().wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0409():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist_631(["测试短信1, 13800138111"])
+        Preconditions.delete_group_if_exist('测试群组88')
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0409(self):
+        """点击通讯录——点击群聊——点击右上角创建群聊按钮——进入到会话窗口和群设置页面"""
+        # 1、已登录客户端
+        # 2、网络正常
+        # 3、当前通讯录群聊页面
+        contactspage = ContactsPage()
+        grouplist = GroupListPage()
+        contactspage.open_contacts_page()
+        contactspage.wait_for_contact_load()
+        contactspage.click_sim_contact()
+        contactspage.click_group_chat_631()
+        grouplist.click_create_group()
+        # Step 选择手机联系人
+        select_cont = SelectContactsPage()
+        select_cont.select_local_contacts()
+        ContactsSelector().click_local_contacts('测试短信1')
+        select_cont.click_back()
+        select_cont.click_search_keyword()
+        select_cont.input_search_keyword('13901390144')
+        select_cont.select_one_contact_by_name('13901390144(未知号码)')
+        select_cont.click_sure_bottom()
+        # Checkpoint 跳转到群名称设置页面
+        groupname = GroupNamePage()
+        groupname.wait_for_page_load_631()
+        groupname.clear_input_group_name()
+        groupname.input_group_name_631('测试群组88')
+        groupname.click_sure()
+        # Checkpoint 可以创建普通群聊成功
+        GroupChatPage().wait_for_page_load()
+        # Step 2、点击右上角的群设置按钮
+        GroupChatPage().click_setting()
+        # Checkpoint 2、进入到群设置页面
+        GroupChatSetPage().wait_for_page_load()
