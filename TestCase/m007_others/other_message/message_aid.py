@@ -2926,3 +2926,505 @@ class MsgAllPrior(TestCase):
         groupset.wait_for_page_load()
         # Checkpoint 可以完成保存
         groupset.check_group_nickname('测试012AA')
+
+    @staticmethod
+    def setUp_test_call_wangqiong_0297():
+        """预置条件"""
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_call_wangqiong_0297(self):
+        """通话记录详情页：一键建群，网络正常可建群成功"""
+
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page_631()
+        # 下面根据用例情况进入相应的页面
+        # 需要预置联系人
+        contactname1 = Preconditions.contacts_name_1
+        contactnum1 = Preconditions.telephone_num_1
+        contactname2 = Preconditions.contacts_name_2
+        contactnum2 = Preconditions.telephone_num_2
+        # 新建联系人
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits_631(contactname1, contactnum1)
+        contactspage.create_contacts_if_not_exits_631(contactname2, contactnum2)
+        # 进入通话页签
+        Preconditions.enter_call_page()
+        # 如果存在多方通话引导页跳过引导页
+        callcontact = CalllogBannerPage()
+        callcontact.skip_multiparty_call()
+        # 点击多方通话
+        callcontact.click_free_call()
+        # 选择指定联系人 点击呼叫
+        from pages.components import ContactsSelector
+        contactselect = ContactsSelector()
+        contactselect.select_local_contacts(contactname1, contactname2)
+        # 是否存在请先接听“和飞信电话”，点击“我知道了” 并自动允许和飞信管理
+        callcontact.click_elsfif_ikonw()
+        # 是否存在权限窗口 自动赋权
+        from pages import GrantPemissionsPage
+        grantpemiss = GrantPemissionsPage()
+        grantpemiss.allow_contacts_permission()
+
+        # 是否存在设置悬浮窗，存在暂不开启
+        from pages.components.dialogs import SuspendedTips
+        suspend = SuspendedTips()
+        suspend.ignore_tips_if_tips_display()
+        # 会控页面挂断和飞信电话，回到通话页
+        callpage = CallPage()
+        callpage.hang_up_hefeixin_call_631()
+
+        # Checkpoint：拨打的通话记录为多方电话 进入通话详情页，标题为多方电话通话类型
+        callpage.is_type_hefeixin(0, '飞信电话')
+        # 进入详情页
+        time.sleep(3)
+        callpage.click_ganggang_call_time()
+        # Checkpoint：查看详情页面是否是多方电话？
+        callpage.is_hefeixin_page('飞信电话')
+
+        # 点击‘一键建群’
+        callpage.click_onekey_build_group()
+        # checkpoint : 删除原有的“群聊”，重新输入群聊名称
+        buildgroup = BuildGroupChatPage()
+        buildgroup.create_group_chat('新群聊')
+        # Checkpoint：群聊创建成功、跳转到群聊窗口
+        time.sleep(2)
+        groupchat = GroupChatPage()
+        self.assertTrue(groupchat.is_on_this_page())
+
+    @staticmethod
+    def setUp_test_call_wangqiong_0300():
+        """预置条件"""
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_call_wangqiong_0300(self):
+        """大陆用户实现自动接听的号码：12560结尾的长度不超过9位的号码"""
+
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        # 需要预置联系人
+        contactname1 = Preconditions.contacts_name_1
+        contactnum1 = Preconditions.telephone_num_1
+        contactname2 = Preconditions.contacts_name_2
+        contactnum2 = Preconditions.telephone_num_2
+        # 新建联系人
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits_631(contactname1, contactnum1)
+        contactspage.create_contacts_if_not_exits_631(contactname2, contactnum2)
+        # 进入通话页签
+        Preconditions.enter_call_page()
+        # 如果存在多方通话引导页跳过引导页
+        callcontact = CalllogBannerPage()
+        callcontact.skip_multiparty_call()
+        # 点击多方通话
+        callcontact.click_free_call()
+        # 1.1选择指定联系人 发起和飞信呼叫
+        selectcontacts = SelectContactsPage()
+        selectcontacts.search(contactname1)
+        selectcontacts.click_contact_by_name(contactname1)
+        time.sleep(4)
+        selectcontacts.click_sure_bottom()
+        time.sleep(1)
+        # 是否存在请先接听“和飞信电话”，点击“我知道了” 并自动允许和飞信管理
+        callcontact.click_elsfif_ikonw()
+        # 是否存在权限窗口 自动赋权
+        from pages import GrantPemissionsPage
+        grantpemiss = GrantPemissionsPage()
+        grantpemiss.allow_contacts_permission()
+        # 是否存在设置悬浮窗，存在暂不开启
+        from pages.components.dialogs import SuspendedTips
+        suspend = SuspendedTips()
+        suspend.ignore_tips_if_tips_display()
+        callpage = CallPage()
+        # 挂断和飞信电话
+        callpage.hang_up_hefeixin_call_631()
+        # 1.2 Checkpoint：拨打的通话记录为飞信电话 进入通话详情页，标题为飞信通话类型
+        callpage.is_type_hefeixin(0, '飞信电话')
+        # 进入详情页
+        time.sleep(3)
+        callpage.click_ganggang_call_time()
+        # 查看详情页面是否是飞信电话？
+        callpage.is_hefeixin_page('飞信电话')
+        # 返回到通话页面
+        callpage.click_lefticon_back()
+        # 2.1 选择联系人发起多方电话
+        callcontact.click_free_call()
+        # 2.2选择指定联系人 发起多方电话呼叫
+        selectcontacts = SelectContactsPage()
+        selectcontacts.search(contactname1)
+        selectcontacts.click_contact_by_name(contactname1)
+        selectcontacts.search(contactname2)
+        selectcontacts.click_contact_by_name(contactname2)
+        time.sleep(4)
+        selectcontacts.click_sure_bottom()
+        time.sleep(1)
+        # 是否存在设置悬浮窗，存在暂不开启
+        from pages.components.dialogs import SuspendedTips
+        suspend = SuspendedTips()
+        suspend.ignore_tips_if_tips_display()
+        # 挂断多方电话
+        callpage.hang_up_hefeixin_call_631()
+        # 2.2 Checkpoint：拨打的通话记录为多方电话 进入通话详情页，标题为多方通话类型
+        callpage.is_type_hefeixin(0, '飞信电话')
+        # 进入详情页
+        time.sleep(3)
+        callpage.click_ganggang_call_time()
+        # 查看详情页面是否是多方电话？
+        callpage.is_hefeixin_page('飞信电话')
+        # 返回到通话页面
+        callpage.click_lefticon_back()
+        # 3.1进入‘我-多方电话可用时长’页面
+        callpage.open_me_page()
+        # 进入多方电话可用时长，查看页面展示是否正常
+        mepage = MeCallMultiPage()
+        mepage.click_mutilcall_manage_631()
+        time.sleep(2)
+        # checkpoint；判断当前页面是否在飞信电话管理
+        result = mepage.is_mutil_call_manage_631()
+        self.assertTrue(result)
+
+    @staticmethod
+    def setUp_call_wangqiong_0351():
+        """预置条件"""
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_call_wangqiong_0351(self):
+        """拨号方式选择优先使用和飞信电话拨号盘拨打以和飞信电话呼出"""
+
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page_631()
+        # 进入‘我’页面
+        mepage = MePage()
+        mepage.open_me_page()
+        # 点击‘设置’
+        mepage.click_setting_menu()
+        # 进入拨号设置 并选择'优先使用和飞信电话（免费）'
+        meset = MeSetUpPage()
+        meset.click_call_setting('总是询问（默认）')
+        # 返回到‘我’页面
+        meset.click_back()
+        meset.click_back()
+        meset.click_back()
+
+        # 进入通话页面。跳过相关引导页
+        Preconditions.enter_call_page()
+        # 点击拨号键，输入号码并拨打'
+        callpage = CallPage()
+        callpage.click_call()
+        callpage.dial_number('18311111111')
+        time.sleep(2)
+        # 直接呼叫
+        callpage.click_call_phone()
+        # checkpoint：出现拨号方式选择界面
+        calltypeselect = CallTypeSelectPage()
+        time.sleep(2)
+        self.assertTrue(calltypeselect.is_calltype_selectpage_display_631())
+        # Checkpoint2：出现‘设置为默认’
+        self.assertTrue(calltypeselect.is_setting_default_display())
+
+    @staticmethod
+    def setUp_call_wangqiong_0353():
+        """预置条件"""
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_call_wangqiong_0353(self):
+        """拨号方式选择优先使用和飞信电话拨号盘拨打以和飞信电话呼出"""
+
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page_631()
+        # 进入‘我’页面
+        mepage = MePage()
+        mepage.open_me_page()
+        # 点击‘设置’
+        mepage.click_setting_menu()
+        # 进入拨号设置 并选择'优先使用和飞信电话（免费）'
+        meset = MeSetUpPage()
+        meset.click_call_setting('总是询问（默认）')
+        # 返回到‘我’页面
+        meset.click_back()
+        meset.click_back()
+        meset.click_back()
+
+        # 进入通话页面。跳过相关引导页
+        Preconditions.enter_call_page()
+        # 点击拨号键，输入号码并拨打'
+        callpage = CallPage()
+        callpage.click_call()
+        callpage.dial_number('18311111111')
+        time.sleep(2)
+        # 直接呼叫
+        callpage.click_call_phone()
+        time.sleep(2)
+        # checkpoint：出现拨号方式选择界面
+        calltypeselect = CallTypeSelectPage()
+        self.assertTrue(calltypeselect.is_calltype_selectpage_display_631())
+        # Checkpoint2：出现‘设置为默认’,点击设置为默认
+        self.assertTrue(calltypeselect.is_setting_default_display())
+        calltypeselect.click_setting_default()
+        # Checkpoint3：出现‘可在我-设置-拨号设置”中修改’
+        calltypeselect.is_toast_exist('可前往“我-设置-拨号设置”中修改')
+
+    @staticmethod
+    def setUp_call_wangqiong_0357():
+        """预置条件"""
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_call_wangqiong_0357(self):
+        """拨号方式选择优先使用和飞信电话拨号盘拨打以和飞信电话呼出"""
+
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page_631()
+        # 进入‘我’页面
+        mepage = MePage()
+        mepage.open_me_page()
+        # 点击‘设置’
+        mepage.click_setting_menu()
+        # 进入拨号设置 并选择'优先使用和飞信电话（免费）'
+        meset = MeSetUpPage()
+        meset.click_call_setting('优先使用飞信电话（免费）')
+        # 返回到‘我’页面
+        meset.click_back()
+        meset.click_back()
+        meset.click_back()
+
+        # 进入通话页面。跳过相关引导页
+        Preconditions.enter_call_page()
+        # 点击拨号键，输入号码并拨打'
+        callpage = CallPage()
+        callpage.click_call()
+        callpage.dial_number('18311111111')
+        time.sleep(2)
+        # checkpiont1: 不用选择拨号方式，直接呼叫
+        callpage.click_call_phone()
+        # 是否存在请先接听“和飞信电话”，点击“我知道了” 并自动允许和飞信管理
+        callcontact = CalllogBannerPage()
+        callcontact.click_elsfif_ikonw()
+        # 是否存在权限窗口 自动赋权
+        from pages import GrantPemissionsPage
+        grantpemiss = GrantPemissionsPage()
+        grantpemiss.allow_contacts_permission()
+
+        # 是否存在设置悬浮窗，存在暂不开启
+        from pages.components.dialogs import SuspendedTips
+        suspend = SuspendedTips()
+        suspend.ignore_tips_if_tips_display()
+        # 会控页面挂断和飞信电话，回到通话页
+        callpage = CallPage()
+        callpage.hang_up_hefeixin_call_631()
+
+        # Checkpoint2：拨打的通话记录为飞信电话 进入通话详情页，标题为飞信电话通话类型
+        callpage.is_type_hefeixin(0, '飞信电话')
+        # checkpiont3: 进入详情页
+        time.sleep(3)
+        callpage.click_ganggang_call_time()
+        # Checkpoint4：查看详情页面是否是和飞信电话？
+        callpage.is_hefeixin_page('飞信电话')
+        time.sleep(3)
+
+    @staticmethod
+    def setUp_test_call_wangqiong_0374():
+        """预置条件"""
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_call_wangqiong_0374(self):
+        """非首次拨打多方电话显示多方电话会控页（去掉原浮层提示），发起后不再放音，缩短呼叫等待时间"""
+
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page_631()
+        # 下面根据用例情况进入相应的页面
+        # 需要预置联系人
+        contactname1 = Preconditions.contacts_name_1
+        contactnum1 = Preconditions.telephone_num_1
+        contactname2 = Preconditions.contacts_name_2
+        contactnum2 = Preconditions.telephone_num_2
+        # 新建联系人
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits_631(contactname1, contactnum1)
+        contactspage.create_contacts_if_not_exits_631(contactname2, contactnum2)
+
+        Preconditions.enter_call_page()
+        # 如果存在多方通话引导页跳过引导页
+        callcontact = CalllogBannerPage()
+        callcontact.skip_multiparty_call()
+        # 点击多方通话
+        callcontact.click_free_call()
+        # 选择指定联系人 点击呼叫
+        from pages.components import ContactsSelector
+        contactselect = ContactsSelector()
+        contactselect.select_local_contacts(contactname1, contactname2)
+        # 是否存在请先接听“和飞信电话”，点击“我知道了” 并自动允许和飞信管理
+        time.sleep(2)
+        callcontact.click_elsfif_ikonw()
+        # 是否存在权限窗口 自动赋权
+        from pages import GrantPemissionsPage
+        grantpemiss = GrantPemissionsPage()
+        grantpemiss.allow_contacts_permission()
+
+        # 是否存在设置悬浮窗，存在去掉设置悬浮框提示
+        from pages.components.dialogs import SuspendedTips
+        suspend = SuspendedTips()
+        suspend.ignore_tips_if_tips_display()
+        # 判断当前是否在系统通话界面 是的话 挂断系统电话
+        callpage = CallPage()
+        Flag = True
+        i = 0
+        while Flag:
+            time.sleep(1)
+            if callpage.is_phone_in_calling_state():
+                break
+            elif i > 30:
+                break
+            else:
+                i = i + 1
+        time.sleep(2)
+        callpage.hang_up_the_call()
+
+    @staticmethod
+    def setUp_test_call_wangqiong_0390():
+        """预置条件"""
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_call_wangqiong_0390(self):
+        """非首次拨打多方电话显示多方电话会控页（去掉原浮层提示），发起后不再放音，缩短呼叫等待时间"""
+
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page_631()
+        # 下面根据用例情况进入相应的页面
+        # 需要预置联系人
+        contactname1 = Preconditions.contacts_name_1
+        contactnum1 = Preconditions.telephone_num_1
+        contactname2 = Preconditions.contacts_name_2
+        contactnum2 = Preconditions.telephone_num_2
+        # 新建联系人
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits_631(contactname1, contactnum1)
+        contactspage.create_contacts_if_not_exits_631(contactname2, contactnum2)
+        # 进入通话页面
+        Preconditions.enter_call_page()
+        # 如果存在多方通话引导页跳过引导页
+        callcontact = CalllogBannerPage()
+        callcontact.skip_multiparty_call()
+        # 点击多方通话
+        callcontact.click_free_call()
+        # 1.1选择指定联系人 发起和飞信呼叫
+        selectcontacts = SelectContactsPage()
+        selectcontacts.search(contactname1)
+        selectcontacts.click_contact_by_name(contactname1)
+        time.sleep(2)
+        selectcontacts.click_sure_bottom()
+        time.sleep(2)
+        # 是否存在请先接听“和飞信电话”，点击“我知道了” 并自动允许和飞信管理
+        callcontact.click_elsfif_ikonw()
+        # 是否存在权限窗口 自动赋权
+        grantpemiss = GrantPemissionsPage()
+        grantpemiss.allow_contacts_permission()
+        # checkpoint1: 是否存在设置悬浮窗，存在暂不开启
+        from pages.components.dialogs import SuspendedTips
+        suspend = SuspendedTips()
+        suspend.ignore_tips_if_tips_display()
+        callpage = CallPage()
+        # 挂断和飞信电话
+        # 判断当前是否在系统通话界面 是的话 挂断系统电话
+        callpage = CallPage()
+        Flag = True
+        i = 0
+        while Flag:
+            time.sleep(1)
+            if callpage.is_phone_in_calling_state():
+                break
+            elif i > 30:
+                break
+            else:
+                i = i + 1
+        time.sleep(2)
+        callpage.hang_up_the_call()
+        # Checkpoint2：拨打的通话记录为和飞信电话 进入通话详情页，标题为和飞信通话类型
+        time.sleep(2)
+        callpage.is_type_hefeixin(0, '飞信电话')
+
+    @staticmethod
+    def setUp_test_call_wangqiong_0391():
+        """预置条件"""
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_call_wangqiong_0391(self):
+        """会控页未创建会场成功时（12560未回呼）会控置灰文案"""
+
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page_631()
+        # 下面根据用例情况进入相应的页面
+        # 需要预置联系人
+        contactname1 = Preconditions.contacts_name_1
+        contactnum1 = Preconditions.telephone_num_1
+        contactname2 = Preconditions.contacts_name_2
+        contactnum2 = Preconditions.telephone_num_2
+        # 新建联系人
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.create_contacts_if_not_exits_631(contactname1, contactnum1)
+        contactspage.create_contacts_if_not_exits_631(contactname2, contactnum2)
+
+        Preconditions.enter_call_page()
+        # 如果存在多方通话引导页跳过引导页
+        callcontact = CalllogBannerPage()
+        callcontact.skip_multiparty_call()
+        # 点击多方通话
+        callcontact.click_free_call()
+        # 1.1选择指定联系人 发起和飞信呼叫
+        selectcontacts = SelectContactsPage()
+        selectcontacts.search(contactname1)
+        selectcontacts.click_contact_by_name(contactname1)
+        time.sleep(4)
+        selectcontacts.click_sure_bottom()
+        time.sleep(1)
+        # 是否存在请先接听“和飞信电话”，点击“我知道了” 并自动允许和飞信管理
+        callcontact.click_elsfif_ikonw()
+        # 是否存在权限窗口 自动赋权
+        grantpemiss = GrantPemissionsPage()
+        if grantpemiss.is_exist_allow_button():
+            grantpemiss.allow_contacts_permission()
+        # checkpoint1: 是否存在设置悬浮窗，存在暂不开启
+        from pages.components.dialogs import SuspendedTips
+        suspend = SuspendedTips()
+        suspend.ignore_tips_if_tips_display()
+        # checkpoint2: 会控页存在文字‘请先接听来电，随后将自动呼叫对方’
+        multiparty = MultipartyCallPage()
+        multiparty.assert_accepttips_is_display()
+
+        # 判断当前是否在系统通话界面 是的话 挂断系统电话
+        callpage = CallPage()
+        Flag = True
+        i = 0
+        while Flag:
+            time.sleep(1)
+            if callpage.is_phone_in_calling_state():
+                break
+            elif i > 30:
+                break
+            else:
+                i = i + 1
+        time.sleep(2)
+        callpage.hang_up_the_call()
+        time.sleep(2)
+        # Checkpoint2：拨打的通话记录为和飞信电话 进入通话详情页，标题为和飞信通话类型
+        callpage.is_type_hefeixin(0, '飞信电话')

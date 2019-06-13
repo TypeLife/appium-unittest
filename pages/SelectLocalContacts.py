@@ -358,4 +358,42 @@ class SelectLocalContactsPage(BasePage):
             auto_accept_permission_alert=False
         ).click()
 
+    @TestLogger.log()
+    def is_search_contact_name_full_match(self, name):
+        """搜索联系人名是否精准匹配"""
+        els = self.get_elements(self.__class__.__locators["联系人名"])
+        texts = []
+        for el in els:
+            text = el.text.strip()
+            if text:
+                texts.append(text)
+        for t in texts:
+            if name == t:
+                return True
+        raise AssertionError('搜索结果"{}"没有找到与关键字"{}"完全匹配的文本'.format(texts, name))
 
+    @TestLogger.log()
+    def is_search_contact_number_full_match(self, name):
+        """搜索联系人号码是否精准匹配"""
+        els = self.get_elements(self.__class__.__locators["电话号码"])
+        texts = []
+        for el in els:
+            text = el.text.strip()
+            if text:
+                texts.append(text)
+        for t in texts:
+            if name == t:
+                return True
+        raise AssertionError('搜索结果"{}"没有找到与关键字"{}"完全匹配的文本'.format(texts, name))
+
+    @TestLogger.log()
+    def is_exists_letter_index(self):
+        """是否存在字母索引"""
+        return self._is_element_present(self.__class__.__locators["右侧字母索引"])
+
+    @TestLogger.log()
+    def click_letter_index(self, name):
+        """点击字母索引"""
+        locator = (MobileBy.XPATH,
+                   '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView[@text="%s"]' % name)
+        self.click_element(locator)
