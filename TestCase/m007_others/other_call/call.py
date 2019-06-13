@@ -2669,3 +2669,413 @@ class MsgAllPrior(TestCase):
         groupchat.click_setting()
         # Checkpoint 2、进入到群设置页面
         groupset.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0408():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist_631(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+        Preconditions.create_group_if_not_exist_not_enter_chat_631('测试群组1', "测试短信1", "测试短信2")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0408(self):
+        """点击通讯录——点击群聊——任意选中一个群——进入到群会话窗口和群设置页面"""
+        # 1、已登录客户端
+        # 2、网络正常
+        # 3、当前在通讯录群聊页面
+        # Step 1、在群聊页面点击任意群聊
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.wait_for_contact_load()
+        contactspage.click_sim_contact()
+        contactspage.click_group_chat_631()
+        SearchGroupPage().click_group('测试群组1')
+        groupchat = GroupChatPage()
+        # Checkpoint 1、进入会话窗口页面
+        groupchat.wait_for_page_load()
+        # Step 2、点击右上角的群设置按钮
+        groupchat.click_setting()
+        # Checkpoint 2、进入到群设置页面
+        GroupChatSetPage().wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0409():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist_631(["测试短信1, 13800138111"])
+        Preconditions.delete_group_if_exist('测试群组88')
+
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0409(self):
+        """点击通讯录——点击群聊——点击右上角创建群聊按钮——进入到会话窗口和群设置页面"""
+        # 1、已登录客户端
+        # 2、网络正常
+        # 3、当前通讯录群聊页面
+        contactspage = ContactsPage()
+        grouplist = GroupListPage()
+        contactspage.open_contacts_page()
+        contactspage.wait_for_contact_load()
+        contactspage.click_sim_contact()
+        contactspage.click_group_chat_631()
+        grouplist.click_create_group()
+        # Step 选择手机联系人
+        select_cont = SelectContactsPage()
+        select_cont.select_local_contacts()
+        ContactsSelector().click_local_contacts('测试短信1')
+        select_cont.click_back()
+        select_cont.click_search_keyword()
+        select_cont.input_search_keyword('13901390144')
+        select_cont.select_one_contact_by_name('13901390144(未知号码)')
+        select_cont.click_sure_bottom()
+        # Checkpoint 跳转到群名称设置页面
+        groupname = GroupNamePage()
+        groupname.wait_for_page_load_631()
+        groupname.clear_input_group_name()
+        groupname.input_group_name_631('测试群组88')
+        groupname.click_sure()
+        # Checkpoint 可以创建普通群聊成功
+        GroupChatPage().wait_for_page_load()
+        # Step 2、点击右上角的群设置按钮
+        GroupChatPage().click_setting()
+        # Checkpoint 2、进入到群设置页面
+        GroupChatSetPage().wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0534():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0534(self):
+        """创建一个普通群"""
+        # 1、网络正常
+        # 2、已登录和飞信
+        # 4、当前用户未创建任何群聊
+        mess = MessagePage()
+        # Step 使用创建群聊功能，创建1个普通群
+        Preconditions.create_group_if_not_exist_not_enter_chat('测试群组5', "测试短信1", "测试短信2")
+        mess.search_and_enter('测试群组5')
+        groupchat = GroupChatPage()
+        # Checkpoint 可以正常创建一个普通群
+        groupchat.wait_for_page_load()
+
+    @staticmethod
+    def tearDown_test_msg_xiaoqiu_0534():
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        # 建群完成以后删除
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        groupset.click_group_manage()
+        groupset.wait_exist_and_delete_confirmation_box_load()
+        groupset.click_group_manage_disband_button()
+        SingleChatPage().click_sure()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0548():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0548(self):
+        """ 普通群，分享群聊邀请口令"""
+        # 1、网络正常
+        # 2、已加入或创建普通群
+        # 3、已消除红点
+        # 4、群主、群成员
+        # 5、仅限大陆本网和异网号码
+        mess = MessagePage()
+        Preconditions.create_group_if_not_exist_not_enter_chat('测试群组1', "测试短信1", "测试短信2")
+        mess.search_and_enter('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        # Step 在群聊设置页面，点击邀请微信或QQ好友进群入口
+        groupset.click_avetor_qq_wechat_friend()
+        # Checkpoint 小于等于15秒内加载成功，弹出：群口令分享弹窗
+        groupset.wait_for_share_group_load()
+        # Step 点击下次再次按钮
+        groupset.click_say_next()
+        # Checkpoint 弹窗消失并且返回到群聊设置页面
+        groupset.wait_for_page_load()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0605():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0605(self):
+        """开启免打扰后，在聊天页面在输入框输入内容-返回到消息列表页时，该消息列表窗口直接展示：草稿"""
+        # 1、当前在群聊（普通群/企业群）会话窗口页面
+        mess = MessagePage()
+        Preconditions.create_group_if_not_exist_not_enter_chat('测试群组1', "测试短信1", "测试短信2")
+        mess.search_and_enter('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        # Step 在当前页面点击右上角的设置按钮
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        # Step 消息免打扰开启状态
+        if not groupset.get_switch_undisturb_status():
+            # Checkpoint 2、开启成功
+            groupset.click_switch_undisturb()
+        groupset.click_back()
+        # Step 返回到会话窗口，在输入框中进行输入内容，然后点击左上角的返回按钮
+        groupchat.input_text_message('呵呵呵1')
+        groupchat.send_text()
+        groupchat.input_text_message('呵呵呵2')
+        groupchat.click_back()
+        SearchPage().click_back_button()
+        # Step 查看该消息列表窗口显示
+        mess.page_should_contain_text('测试群组1')
+        # Checkpoint 该消息列表窗口直接展示：草稿
+        mess.page_should_contain_text('[草稿] ')
+        mess.page_should_contain_text('呵呵呵2')
+        mess.delete_message_record_by_name("测试群组1")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0613():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0613(self):
+        """首次创建群聊桌面快捷方式"""
+        # 1、手机存在桌面快捷方式权限
+        # 2、已开启此权限或者此权限默认为开启状态
+        # 3、登录和飞信
+        # 4、进入到群聊设置页面
+        mess = MessagePage()
+        Preconditions.create_group_if_not_exist_not_enter_chat('测试群组1', "测试短信1", "测试短信2")
+        mess.search_and_enter('测试群组1')
+        groupchat = GroupChatPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        groupset = GroupChatSetPage()
+        # Step 点击创建桌面快捷方式入口，弹窗展示
+        groupset.click_add_destop_link()
+        # Checkpoint 弹窗内容展示为，标题：已尝试添加桌面，内容：若添加失败，请在手机系统设置中，为和飞信打开“创建桌面快捷方式”的权限，复选框选择项：不再提醒，可点击按钮我知道了
+        groupset.check_element_for_add_destop_link()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0614():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0614(self):
+        """首次创建群聊桌面快捷方式"""
+        # 1、手机存在桌面快捷方式权限
+        # 2、已开启此权限或者此权限默认为开启状态
+        # 3、登录和飞信
+        # 4、进入到群聊设置页面
+        # 5、不勾选弹窗中复选框
+        mess = MessagePage()
+        Preconditions.create_group_if_not_exist_not_enter_chat('测试群组1', "测试短信1", "测试短信2")
+
+        mess.search_and_enter('测试群组1')
+        groupchat = GroupChatPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        groupset = GroupChatSetPage()
+        # Step 点击创建桌面快捷方式入口，弹窗展示
+        groupset.click_add_destop_link()
+        # Step 不勾选弹窗复选框，点击：我知道了
+        groupset.check_element_for_add_destop_link()
+        groupset.click_iknow_but()
+        # Step 3、重复进行1，2.步骤
+        groupset.click_add_destop_link()
+        # Checkpoint 桌面快捷方式创建成功校验
+        groupset.check_element_for_add_destop_link()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0427():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        # Preconditions.create_contacts_if_not_exist_631(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+        # Preconditions.create_group_if_not_exist_not_enter_chat_631('测试群组1', "测试短信1", "测试短信2")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0427(self):
+        """聊天会话页面——长按——撤回——发送失败的文本消息"""
+        # 1、网络正常
+        # 2、登录和飞信
+        # 3、已加入普通群
+        # 4、聊天会话页面，存在发送失败的消息
+        # 5、普通群/单聊/企业群/我的电脑/标签分组
+        mess = MessagePage()
+        mess.search_and_enter('测试群组1')
+        chatdialog = ChatNoticeDialog()
+        # 若存在资费提醒对话框，点击确认
+        if chatdialog.is_tips_display():
+            chatdialog.accept_and_close_tips_alert()
+
+        single = SingleChatPage()
+        # 如果当前页面不存在消息，发送一条消息
+        if not single.is_text_present('测试一个呵呵'):
+            single.input_text_message("测试一个呵呵")
+            single.send_text()
+        time.sleep(60)
+        single.press_mess("测试一个呵呵")
+        single.click_recall()
+        single.if_exist_i_know_click()
+        time.sleep(3)
+        # Checkpoint 可以成功撤回此条消息并且在会话窗口展示：你撤回了一条消息
+        mess.page_should_contain_text('你撤回了一条信息')
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0496():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 进入单聊页面
+        Preconditions.enter_private_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0496(self):
+        """单聊-位置"""
+        chat_window_page = ChatWindowPage()
+        # 点击语音
+        chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_audio'))
+        time.sleep(3)
+        try:
+            ok_buttons = chat_window_page.get_elements(MobileBy.XPATH,
+                                                       '//*[@resource-id="android:id/button1" and @text ="允许"]')
+            if len(ok_buttons) > 0:
+                ok_buttons[0].click()
+        except BaseException as e:
+            print(e)
+        time.sleep(1)
+        chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/recodr_audio_finish'))
+        chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/recodr_audio_finish'))
+        chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/select_send_voice'))
+        chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/select_send_audio_type_confirm'))
+        chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/recodr_audio_finish'))
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0504():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 进入单聊页面
+        Preconditions.enter_private_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0504(self):
+        """单聊-位置"""
+        chat_window_page = ChatWindowPage()
+        chat_window_page.click_expression()
+        time.sleep(3)
+        element = chat_window_page.get_element(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/vp_expression'))
+        for i in range(5):
+            time.sleep(3)
+            expression_images = chat_window_page.get_elements(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iv_expression_image"]'))
+            for expression_image in expression_images:
+                expression_image.click()
+            chat_window_page.swipe_by_direction((MobileBy.ID, 'com.chinasofti.rcs:id/vp_expression'), 'left')
+
+        chat_window_page.click_send_button()
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0528():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 进入我的电脑页面
+        message_page = MessagePage()
+        message_page.wait_for_page_load()
+        message_page.search_and_enter("我的电脑")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0528(self):
+        """单聊-位置"""
+        chat_window_page = ChatWindowPage()
+        # 点击语音
+        chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_audio'))
+        time.sleep(3)
+        try:
+            ok_buttons = chat_window_page.get_elements(MobileBy.XPATH,
+                                                       '//*[@resource-id="android:id/button1" and @text ="允许"]')
+            if len(ok_buttons) > 0:
+                ok_buttons[0].click()
+        except BaseException as e:
+            print(e)
+        time.sleep(3)
+        chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/recodr_audio_finish'))
+        chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/recodr_audio_finish'))
+        chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/select_send_voice'))
+        chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/select_send_audio_type_confirm'))
+        time.sleep(3)
+        chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/recodr_audio_finish'))
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0531():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 进入我的电脑页面
+        message_page = MessagePage()
+        message_page.wait_for_page_load()
+        message_page.search_and_enter("我的电脑")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0531(self):
+        """单聊-位置"""
+        chat_window_page = ChatWindowPage()
+        # 点击语音
+        chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ib_audio'))
+        time.sleep(3)
+        try:
+            ok_buttons = chat_window_page.get_elements(MobileBy.XPATH,
+                                                       '//*[@resource-id="android:id/button1" and @text ="允许"]')
+            if len(ok_buttons) > 0:
+                ok_buttons[0].click()
+        except BaseException as e:
+            print(e)
+        time.sleep(3)
+        chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/recodr_audio_finish'))
+        chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/recodr_audio_finish'))
+        chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/select_send_voice'))
+        chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/select_send_audio_type_confirm'))
+        time.sleep(11)
+        chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/recodr_audio_finish'))
