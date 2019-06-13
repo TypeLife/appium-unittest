@@ -758,3 +758,20 @@ class ContactSearchOpTest(TestCase):
         # 1.模糊匹配到正确的结果
         self.assertEquals(search_page.is_text_present("大佬1"), False)
 
+    @tags('ALL', 'CONTACT', 'YL')
+    def test_contacts_quxinli_0004(self):
+        Preconditions.make_already_in_message_page()
+        # 点击‘联系’
+        mess = MessagePage()
+        mess.open_contacts_page()
+        time.sleep(5)
+        # 1、联系页面从上到下依次为搜索栏，
+        # 2、备份手机联系提示：备份你的手机联系，联系人数据不丢失
+        # 3、顶部入口：群聊、公众号，创建团队
+        contact = ContactsPage()
+        self.assertEquals(contact.is_exist_search_view(), True)
+        search_page = SearchPage()
+        self.assertEquals(search_page.is_text_present("备份你的手机联系，联系人数据不丢失"), True)
+        self.assertEquals(search_page.is_text_present("群聊"), True)
+        self.assertEquals(search_page.is_text_present("公众号"), True)
+        self.assertEquals(search_page.is_text_present("创建团队"), True)
