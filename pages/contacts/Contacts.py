@@ -654,3 +654,9 @@ class ContactsPage(FooterPage):
             current += 1
             self.swipe_by_percent_on_screen(50, 30, 50, 70, 700)
         return True
+
+    @TestLogger.log("是否存在搜索框")
+    def is_exist_search_view(self):
+        if self._is_element_present(self.__locators['搜索']):
+            return True
+        return False
