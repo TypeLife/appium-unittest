@@ -63,6 +63,7 @@ class Preconditions(LoginPreconditions):
         group_name = "aatest" + phone_number[-4:]
         return group_name
 
+
 class MsgMyPCChating(TestCase):
     """
     文件位置：全量/115 和飞信测试用例(分)-消息(4294).xlsx
@@ -308,6 +309,7 @@ class MsgMyPCChating(TestCase):
         time.sleep(2)
         MessagePage().page_should_contain_text('文件')
 
+
 class MsgMyPcTest(TestCase):
 
     def default_setUp(self):
@@ -339,6 +341,7 @@ class MsgMyPcTest(TestCase):
 
     @staticmethod
     def wait_for_MyPc_page_load():
+        """等待我的电脑页面加载，也可判断是否在我的电脑页面，return True"""
         return current_mobile().wait_until(condition=lambda x: current_mobile().is_text_present('我的电脑'))
 
     def public_select_folder(self):
@@ -1143,11 +1146,338 @@ class MsgMyPcTest(TestCase):
         self.assertTrue(GroupChatPage().is_exist_forward())
         ChatWindowPage().click_back1()
         MessagePage().wait_for_page_load()
-        MessagePage().choose_chat_by_name(group_name)
-        GroupChatPage().wait_for_page_load()
-        self.assertTrue(GroupChatPage().is_exist_msg_send_failed_button())
+        self.assertTrue(MessagePage().is_iv_fail_status_present())
 
     @staticmethod
     def tearDown_test_msg_weifenglian_PC_0077():
         current_mobile().turn_on_wifi()
         current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0076(self):
+        """将自己发送的文件转发到企业群"""
+        pc_chat_page = GroupChatPage()
+        if pc_chat_page.is_exist_msg_file():
+            pass
+        else:
+            self.public_select_file_send('.xlsx')
+        # 转发xls文件
+        ChatFilePage().forward_file('.xlsx')
+        SelectContactsPage().wait_for_page_load()
+        # 需要转发的群
+        SelectContactsPage().click_select_one_group()
+        SelectOneGroupPage().select_one_enterprise_group()
+        SelectOneGroupPage().click_sure_forward()
+        # 转发成功并回到聊天页面
+        self.assertTrue(GroupChatPage().is_exist_forward())
+        self.assertTrue(self.wait_for_MyPc_page_load())
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0078(self):
+        """将自己发送的文件转发到企业群"""
+        current_mobile().turn_off_wifi()
+        current_mobile().turn_off_mobile_data()
+        pc_chat_page = GroupChatPage()
+        if pc_chat_page.is_exist_msg_file():
+            pass
+        else:
+            self.public_select_file_send('.xlsx')
+        # 转发xls文件
+        ChatFilePage().forward_file('.xlsx')
+        SelectContactsPage().wait_for_page_load()
+        # 需要转发的群
+        SelectContactsPage().click_select_one_group()
+        SelectOneGroupPage().select_one_enterprise_group()
+        SelectOneGroupPage().click_sure_forward()
+        # 转发成功并回到聊天页面
+        self.assertTrue(GroupChatPage().is_exist_forward())
+        ChatWindowPage().click_back1()
+        MessagePage().wait_for_page_load()
+        self.assertTrue(MessagePage().is_iv_fail_status_present())
+        MessagePage().clear_fail_in_send_message()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0078():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0079(self):
+        """将自己发送的文件转发到普通群时点击取消转发"""
+        pc_chat_page = GroupChatPage()
+        if pc_chat_page.is_exist_msg_send_failed_button():
+            pass
+        else:
+            self.public_select_file_send('.xlsx')
+            self.wait_for_MyPc_page_load()
+        ChatFilePage().forward_file('.xlsx')
+        SelectContactsPage().wait_for_page_load()
+        # 需要转发的群
+        SelectContactsPage().click_select_one_group()
+        group_name = Preconditions.get_group_chat_name()
+        SelectOneGroupPage().select_one_group_by_name(group_name)
+        SelectOneGroupPage().click_cancel_forward()
+        # 点击取消留在当前页面
+        SelectOneGroupPage().wait_for_page_load()
+        self.assertTrue(SelectOneGroupPage().is_on_this_page())
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0080(self):
+        """将自己发送的文件转发到企业群时点击取消转发 """
+        pc_chat_page = GroupChatPage()
+        if pc_chat_page.is_exist_msg_send_failed_button():
+            pass
+        else:
+            self.public_select_file_send('.xlsx')
+            self.wait_for_MyPc_page_load()
+        ChatFilePage().forward_file('.xlsx')
+        SelectContactsPage().wait_for_page_load()
+        # 需要转发的群
+        SelectContactsPage().click_select_one_group()
+        SelectOneGroupPage().select_one_enterprise_group()
+        # 点击取消留在当前页面
+        SelectOneGroupPage().click_cancel_forward()
+        # 点击取消留在当前页面
+        SelectOneGroupPage().wait_for_page_load()
+        self.assertTrue(SelectOneGroupPage().is_on_this_page())
+
+    def long_press_file(self):
+        """ 长按文件(.xlsx) """
+        pc_chat_page = GroupChatPage()
+        if pc_chat_page.is_exist_msg_file():
+            pass
+        else:
+            self.public_select_file_send()
+            self.wait_for_MyPc_page_load()
+
+    def public_forward_file(self):
+        """ 转发文件 """
+        self.long_press_file()
+        # 转发xls文件
+        ChatFilePage().forward_file('.xlsx')
+        SelectContactsPage().wait_for_page_load()
+
+    def public_select_Group_search_by_text(self, text):
+        """ 进入选择一个群并通过文本搜索 """
+        SelectContactsPage().click_select_one_group()
+        SelectOneGroupPage().wait_for_page_load()
+        SelectOneGroupPage().click_search_group()
+        SelectOneGroupPage().input_search_keyword(text)
+        if SelectOneGroupPage().is_text_present('无搜索结果'):
+            pass
+        else:
+            SelectOneGroupPage().click_search_result()
+            SelectOneGroupPage().click_sure_forward()
+            # 转发成功并回到聊天页面
+            self.assertTrue(GroupChatPage().is_exist_forward())
+            self.assertTrue(self.wait_for_MyPc_page_load())
+
+    def public_select_TeamContacts_search_by_text(self, text):
+        """ 进入团队联系人并通过文本搜索 """
+        # 需要转发的群
+        SelectContactsPage().click_select_one_group()
+        SelectOneGroupPage().wait_for_page_load()
+        SelectOneGroupPage().click_search_group()
+        SelectOneGroupPage().input_search_keyword(text)
+        if SelectOneGroupPage().is_text_present('无搜索结果'):
+            pass
+        else:
+            pass
+
+    def public_select_PhoneContacts_search_by_text(self, text):
+        """ 进入手机联系人并通过文本搜索 """
+        SelectContactsPage().select_local_contacts()
+        SelectLocalContactsPage().wait_for_page_load()
+        search_contact = SelectLocalContactsPage()
+        search_contact.search(text)
+        if SelectOneGroupPage().is_text_present('无搜索结果'):
+            pass
+        else:
+            search_contact.click_search_phone_contacts()
+            search_contact.click_sure_forward()
+            # 转发成功并回到聊天页面
+            self.assertTrue(GroupChatPage().is_exist_forward())
+            self.assertTrue(self.wait_for_MyPc_page_load())
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0081(self):
+        """将自己发送的文件转发到在搜索框输入文字搜索到的群"""
+        self.public_select_Group_search_by_text('群聊')
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0082(self):
+        """将自己发送的文件转发到在搜索框输入英文字母搜索到的群"""
+        self.public_select_Group_search_by_text('test')
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0083(self):
+        """将自己发送的文件转发到在搜索框输入数字搜索到的群"""
+        self.public_select_Group_search_by_text('2345')
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0084(self):
+        """将自己发送的文件转发到在搜索框输入标点符号搜索到的群"""
+        self.public_select_Group_search_by_text('.;,')
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0085(self):
+        """将自己发送的文件转发到在搜索框输入特殊字符搜索到的群"""
+        self.public_select_Group_search_by_text('αβγ')
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0086(self):
+        """将自己发送的文件转发到在搜索框输入空格搜索到的群"""
+        self.public_select_Group_search_by_text('    ')
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0087(self):
+        """将自己发送的文件转发到在搜索框输入多种字符搜索到的群"""
+        self.public_select_Group_search_by_text('int123')
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0088(self):
+        """将自己发送的文件转发到在搜索框输入多种字符搜索到的群"""
+        self.public_select_Group_search_by_text('float0.123')
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0090(self):
+        """将自己发送的文件转发到搜索到的群时点击取消转发"""
+        self.public_forward_file()
+        SelectContactsPage().click_select_one_group()
+        SelectOneGroupPage().wait_for_page_load()
+        SelectOneGroupPage().click_search_group()
+        SelectOneGroupPage().input_search_keyword('test')
+        if SelectOneGroupPage().is_text_present('无搜索结果'):
+            pass
+        else:
+            SelectOneGroupPage().click_search_result()
+            SelectOneGroupPage().click_cancel_forward()
+            bol = SelectOneGroupPage().wait_until(lambda x: SelectOneGroupPage().is_text_present('群聊'),
+                                                  auto_accept_permission_alert=False)
+            self.assertTrue(bol)
+
+    @tags('ALL', 'CMCC', 'my_PC')
+    def test_msg_weifenglian_PC_0091(self):
+        """将自己发送的文件转发到滑动右边字母导航栏定位查找的群"""
+        self.public_forward_file()
+        SelectContactsPage().click_select_one_group()
+        SelectOneGroupPage().wait_for_page_load()
+        SelectOneGroupPage().choose_index_bar_click_element()
+        SelectOneGroupPage().click_sure_forward()
+        self.assertTrue(GroupChatPage().is_exist_forward())
+        self.assertTrue(self.wait_for_MyPc_page_load())
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_PC_0092(self):
+        """将自己发送的文件转发到手机联系人"""
+        self.public_forward_file()
+        SelectContactsPage().select_local_contacts()
+        SelectLocalContactsPage().wait_for_page_load()
+        phone_contacts = SelectLocalContactsPage()
+        phone_contacts.click_first_phone_contacts()
+        phone_contacts.click_sure_forward()
+        # 转发成功并回到聊天页面
+        self.assertTrue(GroupChatPage().is_exist_forward())
+        GroupChatPage().wait_for_page_load()
+        self.assertTrue(GroupChatPage().is_on_this_page())
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_PC_0093(self):
+        """将自己发送的文件转发到手机联系人时点击取消转发"""
+        self.public_forward_file()
+        SelectContactsPage().select_local_contacts()
+        SelectLocalContactsPage().wait_for_page_load()
+        phone_contacts = SelectLocalContactsPage()
+        phone_contacts.click_first_phone_contacts()
+        phone_contacts.click_cancel_forward()
+        phone_contacts.wait_for_page_load()
+        self.assertTrue(phone_contacts.is_on_this_page())
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_PC_0094(self):
+        """将自己发送的文件转发到手机联系人时发送失败"""
+        current_mobile().turn_off_wifi()
+        current_mobile().turn_off_mobile_data()
+        self.public_forward_file()
+        SelectContactsPage().select_local_contacts()
+        SelectLocalContactsPage().wait_for_page_load()
+        phone_contacts = SelectLocalContactsPage()
+        phone_contacts.click_first_phone_contacts()
+        phone_contacts.click_sure_forward()
+        ChatWindowPage().click_back1()
+        MessagePage().wait_for_page_load()
+        self.assertTrue(MessagePage().is_iv_fail_status_present())
+        MessagePage().clear_fail_in_send_message()
+
+    @staticmethod
+    def tearDown_test_msg_weifenglian_PC_0094():
+        current_mobile().turn_on_wifi()
+        current_mobile().turn_on_mobile_data()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_PC_0095(self):
+        """将自己发送的文件转发到在搜索框输入多种字符搜索到的手机联系人"""
+        self.public_select_PhoneContacts_search_by_text('给个红包1')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_PC_0096(self):
+        """将自己发送的文件转发到在搜索框输入数字搜索到的手机联系人"""
+        self.public_select_PhoneContacts_search_by_text('23579')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_PC_0097(self):
+        """将自己发送的文件转发到在搜索框输入标点符号搜索到的手机联系人"""
+        self.public_select_PhoneContacts_search_by_text('.;,')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_PC_0098(self):
+        """将自己发送的文件转发到在搜索框输入字母搜索到的手机联系人"""
+        self.public_select_PhoneContacts_search_by_text('abc')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_PC_0099(self):
+        """将自己发送的文件转发到在搜索框输入空格搜索到的手机联系人"""
+        self.public_select_PhoneContacts_search_by_text('   ')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_PC_0101(self):
+        """将自己发送的文件转发到在搜索框输入号码搜索到的手机联系人"""
+        self.public_select_PhoneContacts_search_by_text('13800138005')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0102(self):
+        """将自己发送的文件转发到在搜索框进行搜索到的手机联系人时取消转发"""
+        self.public_forward_file()
+        SelectContactsPage().select_local_contacts()
+        SelectLocalContactsPage().wait_for_page_load()
+        search_contact = SelectLocalContactsPage()
+        search_contact.search('13800138005')
+        if search_contact.is_text_present('无搜索结果'):
+            pass
+        else:
+            search_contact.click_search_phone_contacts()
+            search_contact.click_cancel_forward()
+            search_contact.wait_for_page_load()
+            self.assertTrue(search_contact.is_on_this_page())
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0103(self):
+        """将自己发送的文件转发到滑动右边字母导航栏定位查找的手机联系人"""
+        self.public_forward_file()
+        SelectContactsPage().select_local_contacts()
+        SelectLocalContactsPage().wait_for_page_load()
+        SelectOneGroupPage().choose_index_bar_click_element()
+        SelectOneGroupPage().click_sure_forward()
+        self.assertTrue(GroupChatPage().is_exist_forward())
+        self.assertTrue(self.wait_for_MyPc_page_load())
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0104(self):
+        """将自己发送的文件转发到滑动右边字母导航栏定位查找的手机联系人时点击取消转发"""
+        self.public_forward_file()
+        SelectContactsPage().select_local_contacts()
+        SelectLocalContactsPage().wait_for_page_load()
+        SelectOneGroupPage().choose_index_bar_click_element()
+        SelectOneGroupPage().click_cancel_forward()
+        SelectLocalContactsPage().wait_for_page_load()
+        self.assertTrue(SelectLocalContactsPage().is_on_this_page())
