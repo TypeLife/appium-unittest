@@ -322,21 +322,26 @@ class Preconditions(object):
         # 获取已有群名
         sog = SelectOneGroupPage()
         sog.wait_for_page_load()
-        a=0
-        while a<10:
-            group_names = sog.get_group_name()
-            # 有群返回，无群创建
-            if group_name in group_names:
-                sog.click_back()
-                time.sleep(1)
-                sc.click_back()
-                return
-            a+=1
-            sog.page_up()
-
-        sog.click_back()
-        time.sleep(1)
-        sc.click_back()
+        sog.click_search_group()
+        time.sleep(2)
+        sog.input_search_keyword(group_name)
+        time.sleep(2)
+        if sog.is_element_exit("群聊名"):
+            current_mobile().back()
+            time.sleep(2)
+            current_mobile().back()
+            if not mess.is_on_this_page():
+                current_mobile().back()
+                time.sleep(2)
+                current_mobile().back()
+            return
+        current_mobile().back()
+        time.sleep(2)
+        current_mobile().back()
+        if not mess.is_on_this_page():
+            current_mobile().back()
+            time.sleep(2)
+            current_mobile().back()
         # 点击 +
         mess.click_add_icon()
         # 点击 发起群聊
@@ -2074,6 +2079,23 @@ class MsgCommonGroupTest(TestCase):
         time.sleep(1)
         #录入新群名
         gcsp.input_new_group_name("NGN")
+        time.sleep(1)
+        if not gcsp.is_enabled_of_group_name_save_button():
+            raise AssertionError("页面右上角的确定按钮没有高亮展示")
+        gcsp.save_group_name()
+        if not gcsp.is_toast_exist("修改成功"):
+            raise AssertionError("群名称更改为新名称失败")
+        gcsp.click_back()
+        #恢复群名
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gcsp.wait_for_page_load()
+        gcsp.click_modify_group_name()
+        time.sleep(1)
+        gcsp.clear_group_name()
+        time.sleep(1)
+        group_name = Preconditions.get_group_chat_name()
+        gcsp.input_new_group_name(group_name)
         time.sleep(1)
         if not gcsp.is_enabled_of_group_name_save_button():
             raise AssertionError("页面右上角的确定按钮没有高亮展示")
@@ -4529,6 +4551,23 @@ class MsgCommonGroupPriorityTest(TestCase):
             raise AssertionError("群名称更改为新名称失败")
         time.sleep(1)
         gcsp.click_back()
+        # 恢复群名
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gcsp.wait_for_page_load()
+        gcsp.click_modify_group_name()
+        time.sleep(1)
+        gcsp.clear_group_name()
+        time.sleep(1)
+        group_name = Preconditions.get_group_chat_name()
+        gcsp.input_new_group_name(group_name)
+        time.sleep(1)
+        if not gcsp.is_enabled_of_group_name_save_button():
+            raise AssertionError("页面右上角的确定按钮没有高亮展示")
+        gcsp.save_group_name()
+        if not gcsp.is_toast_exist("修改成功"):
+            raise AssertionError("群名称更改为新名称失败")
+        gcsp.click_back()
 
 
 class MsgCommonGroupAllTest(TestCase):
@@ -4915,9 +4954,16 @@ class MsgCommonGroupAllTest(TestCase):
         els = sog.get_search_result_group()
         if not els[0].get_attribute("text") == "112233445566":
             raise AssertionError("无法数字精确搜索")
-        sog.click_back_icon()
-        sog.click_back()
-        # sc.click_back()
+        # sog.click_back_icon()
+        # sog.click_back()
+        current_mobile().back()
+        time.sleep(2)
+        current_mobile().back()
+        if not mess.is_on_this_page():
+            current_mobile().back()
+            time.sleep(2)
+            current_mobile().back()
+
 
     @staticmethod
     def setUp_test_msg_xiaoqiu_0010():
@@ -4954,9 +5000,13 @@ class MsgCommonGroupAllTest(TestCase):
         time.sleep(2)
         if not sog.is_text_present("无搜索结果"):
             raise AssertionError("没有提示 无搜索结果")
-        sog.click_back_icon()
-        sog.click_back()
-        # sc.click_back()
+        current_mobile().back()
+        time.sleep(2)
+        current_mobile().back()
+        if not mess.is_on_this_page():
+            current_mobile().back()
+            time.sleep(2)
+            current_mobile().back()
 
     @staticmethod
     def setUp_test_msg_xiaoqiu_0011():
@@ -4994,9 +5044,13 @@ class MsgCommonGroupAllTest(TestCase):
         els = sog.get_search_result_group()
         if not els[0].get_attribute("text") == "112233445566":
             raise AssertionError("无法数字精确搜索")
-        sog.click_back_icon()
-        sog.click_back()
-        # sc.click_back()
+        current_mobile().back()
+        time.sleep(2)
+        current_mobile().back()
+        if not mess.is_on_this_page():
+            current_mobile().back()
+            time.sleep(2)
+            current_mobile().back()
 
     @staticmethod
     def setUp_test_msg_xiaoqiu_0012():
@@ -5033,9 +5087,13 @@ class MsgCommonGroupAllTest(TestCase):
         time.sleep(2)
         if not sog.is_text_present("无搜索结果"):
             raise AssertionError("没有提示 无搜索结果")
-        sog.click_back_icon()
-        sog.click_back()
-        # sc.click_back()
+        current_mobile().back()
+        time.sleep(2)
+        current_mobile().back()
+        if not mess.is_on_this_page():
+            current_mobile().back()
+            time.sleep(2)
+            current_mobile().back()
 
     @staticmethod
     def setUp_test_msg_xiaoqiu_0013():
@@ -5073,9 +5131,13 @@ class MsgCommonGroupAllTest(TestCase):
         els = sog.get_search_result_group()
         if not els[0].get_attribute("text") == "$$":
             raise AssertionError("无法字符精确搜索")
-        sog.click_back_icon()
-        sog.click_back()
-        # sc.click_back()
+        current_mobile().back()
+        time.sleep(2)
+        current_mobile().back()
+        if not mess.is_on_this_page():
+            current_mobile().back()
+            time.sleep(2)
+            current_mobile().back()
 
     @staticmethod
     def setUp_test_msg_xiaoqiu_0014():
@@ -5112,9 +5174,13 @@ class MsgCommonGroupAllTest(TestCase):
         time.sleep(2)
         if not sog.is_text_present("无搜索结果"):
             raise AssertionError("没有提示 无搜索结果")
-        sog.click_back_icon()
-        sog.click_back()
-        # sc.click_back()
+        current_mobile().back()
+        time.sleep(2)
+        current_mobile().back()
+        if not mess.is_on_this_page():
+            current_mobile().back()
+            time.sleep(2)
+            current_mobile().back()
 
     @staticmethod
     def setUp_test_msg_xiaoqiu_0015():
