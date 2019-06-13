@@ -28,6 +28,12 @@ PRESET_GROUP_CHATS = [
     ('群聊4', ['给个红包1', '给个红包2']),
 ]
 
+PRESET_GROUP_CONTACTS = [
+    ('通讯录小于1', ['通讯录小于1', '通讯录小于2']),
+    ('通讯录小于2', ['通讯录小于1', '通讯录小于2']),
+]
+
+
 
 def get_preset_contacts():
     """
@@ -41,6 +47,12 @@ def get_preset_group_chats():
     需要预先导入的群聊数据
     """
     return PRESET_GROUP_CHATS
+
+def get_preset_group_contacts():
+    """
+    需要预先导入的群聊数据
+    """
+    return PRESET_GROUP_CONTACTS
 
 
 def push_resource_dir_to_mobile_sdcard(dist_mobile):
