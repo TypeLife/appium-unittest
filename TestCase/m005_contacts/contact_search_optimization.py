@@ -608,7 +608,7 @@ class ContactSearchOpTest(TestCase):
         search_page.hide_keyboard()
         # 判定点
         # 1.模糊匹配到正确的结果
-        self.assertEquals(search_page.is_text_present("查看更多"), False)
+        self.assertEquals(search_page.is_text_present("大佬1"), False)
 
     @tags('ALL', 'CONTACT', 'YL')
     def test_contacts_chenjixiang_0740(self):
@@ -722,4 +722,39 @@ class ContactSearchOpTest(TestCase):
         search_page.hide_keyboard()
         # 搜索时，不展示和通讯录搜索结果标签
         self.assertEquals(search_page.is_text_present("无搜索结果"), True)
+
+    @tags('ALL', 'CONTACT', 'YL')
+    def test_contacts_chenjixiang_0781(self):
+        # 导入团队联系人
+        fail_time2 = 0
+        flag2 = False
+        while fail_time2 < 5:
+            try:
+                Preconditions.make_already_in_message_page()
+                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
+                Preconditions.create_he_contacts(contact_names)
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "18826211112"), ('郑海', "13802883296")]
+                Preconditions.create_he_contacts2(contact_names2)
+                flag2 = True
+            except:
+                fail_time2 += 1
+            if flag2:
+                break
+
+        Preconditions.make_already_in_message_page()
+        # 点击‘通讯录’
+        mess = MessagePage()
+        mess.open_contacts_page()
+        # 1、点击通讯录，点击搜索输入框
+        # 2、输入特殊字符
+        mess.click_search()
+        # 查询页面输入'大佬1'
+        search_page = SearchPage()
+        search_page.input_search_keyword('大佬1')
+        time.sleep(5)
+        search_page.hide_keyboard()
+        # 判定点
+        # 1.模糊匹配到正确的结果
+        self.assertEquals(search_page.is_text_present("大佬1"), False)
 
