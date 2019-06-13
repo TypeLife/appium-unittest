@@ -6195,8 +6195,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0097(self):
         """在群聊会话页，点击分享过来的卡片消息体——进入到卡片链接页"""
         # 1、点击接收到的卡片消息体，是否可以进入到卡片链接页
@@ -6257,7 +6256,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0099(self):
         """在群聊会话窗口，点击通话按钮——拨打多方电话"""
         # 1、点击多方电话按钮，是否可以跳转到群成员联系人选择器页
@@ -6308,7 +6307,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0113(self):
         """在群聊设置页面，群成员展示列表，点击“>”"""
         # 1、在群聊设置页面，点击群成员展示列表右上角的“ > ”按钮，是否可以跳转到群成员列表页
@@ -6359,7 +6358,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0114(self):
         """群成员展示列表页，输入框输入号码——前3位搜索群成员"""
         # 1、在页面顶部的搜索框中，输入一个号码的前3位作为搜索条件进行搜索，是否可以搜索出对应的群成员信息
@@ -6425,7 +6424,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0231(self):
         """群聊天会话页面——同时@多个人——@效果展示"""
         # 1、同时 @ 多群成员联系人，发送成功后，被 @ 的联系人收到后，是否存在 @ 效果
@@ -6471,7 +6470,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0115(self):
         """群成员展示列表页，输入框输入号码——前3位搜索群成员"""
         # 1、在页面顶部的搜索框中，输入一个号码的前3位作为搜索条件进行搜索，是否可以搜索出对应的群成员信息
@@ -6510,7 +6509,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0116(self):
         """群成员展示列表页，输入框输入——完整号码搜索群成员"""
         # 1、在页面顶部的搜索框中，输入一个完整的号码的作为搜索条件进行搜索，是否可以搜索出对应的群成员信息
@@ -6549,7 +6548,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0117(self):
         """群成员展示列表页，输入框输入——中文字符搜索群成员"""
         # 1、在页面顶部的搜索框中，输入一个中文字符作为搜索条件进行搜索，是否可以搜索出对应的群成员信息
@@ -6587,7 +6586,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0118(self):
         """群成员展示列表页，输入框输入——英文字符搜索群成员"""
         # 1、在页面顶部的搜索框中，输入一个英文字符作为搜索条件进行搜索，是否可以搜索出对应的群成员信息
@@ -6625,7 +6624,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0636(self):
         """群成员展示列表页，输入搜索条件——搜索——不存在搜索结果时展示"""
         # 1、在页面顶部的搜索框中，输入一个字符作为搜索条件进行搜索，无搜索结果展示
@@ -6663,7 +6662,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0119(self):
         """群成员展示列表页，搜索出的搜索结果排序"""
         # 1、在页面顶部的搜索框中，输入一个英文字符作为搜索条件进行搜索，搜索出的搜索结果，是否是按照：排序规则：精确匹配>模糊匹配排序；其次按照结果的首字母顺序排序
@@ -6701,7 +6700,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0120(self):
         """在群聊设置页面——群主——群成员头像展示"""
         # 1、群主在群聊天设置页面，展示的群成员头像，最多是否只能展示10个头像
@@ -6739,7 +6738,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0121(self):
         """在群聊设置页面——群成员——群成员头像展示"""
         # 1、群成员在群聊天设置页面，展示的群成员头像，最多是否只能展示11个头像
@@ -6777,7 +6776,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0220(self):
         """聊天设置页面——打开置顶聊天功能——置顶一个聊天会话窗口"""
         # 1、点击置顶聊天功能右边的开关，是否可以打开置顶聊天功能
@@ -6833,7 +6832,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0221(self):
         """聊天设置页面——打开置顶聊天功能——置顶二个聊天会话窗口"""
         # 1、打开二个群聊或者单聊的置顶聊天功能，后续接收到消息时，后面置顶的聊天会话窗口是否会展示在第一个置顶的聊天会话窗口上方
@@ -6919,7 +6918,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0222(self):
         """聊天设置页面——关闭置顶聊天"""
         # 1、点击置顶聊天功能右边的开关，是否可以关闭置顶聊天功能
@@ -6968,6 +6967,52 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("聊天会话窗口在消息列表展示失败")
 
     @staticmethod
+    def setUp_test_msg_xiaoqiu_0230():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0230(self):
+        """聊天设置页面，删除并退出群聊——群主"""
+        # 1、在聊天设置页面
+        # 2、点击页面底部的“删除并退出”按钮，把群主转让给选择的群成员后，是否会退出当前群聊并返回到消息列表，收到一条系统消息：你已退出群
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击删除并退出
+        gcsp.click_delete_and_exit()
+        time.sleep(2)
+        gcp.click_element_("确定移除")
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        if not mess.is_text_present("系统消息"):
+            raise AssertionError("系统消息不显示")
+        mess.click_text("系统消息")
+        time.sleep(2)
+        if not mess.is_text_present("你已退出群"):
+            raise AssertionError("没有收到一条系统消息：你已退出群")
+
+    @staticmethod
     def setUp_test_msg_xiaoqiu_0234():
         """确保有一个多人的群聊"""
         Preconditions.select_mobile('Android-移动-移动')
@@ -6985,7 +7030,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0234(self):
         """消息列表页面——有人@我——然后撤回@消息"""
         # 1、有人 @ 我后再撤回 @ 我的消息，查看消息列表页面是否还会提示有人 @ 我
@@ -7039,7 +7084,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0236(self):
         """普通群——聊天会话页面——超长文本消息中带有@群成员"""
         # 1、超长文本消息中带有 @ 群成员，发送成功后，被 @ 的联系人收到后，是否存在 @ 效果
@@ -7088,7 +7133,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0237(self):
         """群聊天会话页面——复制粘贴的@内容"""
         # 1、复制粘贴的 @ 群成员内容，发送成功后，被 @ 的联系人收到后，是否存在 @ 效果
@@ -7154,7 +7199,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0238(self):
         """群聊天会话页面——输入多个@后——再选要@的群成员查看@效果"""
         # 1、输入多个 @ 后再选要 @ 的群成员，发送成功后，被 @ 的联系人收到后，是否存在 @ 效果
@@ -7208,7 +7253,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0239(self):
         """群聊天会话页面——同时@多个人——@效果展示"""
         # 1、同时 @ 多群成员联系人，发送成功后，被 @ 的联系人收到后，是否存在 @ 效果
@@ -7242,6 +7287,7 @@ class MsgCommonGroupAllTest(TestCase):
             Preconditions.delete_record_group_chat()
             raise AssertionError("不存在有人@我")
         mess.click_text(group_name)
+        time.sleep(2)
         Preconditions.delete_record_group_chat()
 
     @staticmethod
@@ -7262,7 +7308,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_xiaoqiu_0252(self):
         """A被B——移除普通群——群聊解散"""
         # 1、B使用群主权限把A从普通群中移除后，A是否会收到一体系统消息：你已被请出该群
@@ -7270,6 +7316,14 @@ class MsgCommonGroupAllTest(TestCase):
         # 3、群聊人数小于2人时，是否会自动解散
         gcp = GroupChatPage()
         gcp.wait_for_page_load()
+        gcp.input_text_message("hh")
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
         Preconditions.delete_record_group_chat()
         gcp.click_setting()
         gcsp = GroupChatSetPage()
@@ -7316,7 +7370,7 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
 
-    @tags('ALL', 'CMCC', 'group_chat_double', 'full', 'full-yyx')
+    @tags('ALL', 'CMCC_double','full', 'full-yyx')
     def test_msg_xiaoqiu_0253(self):
         """A被B——移除普通群——群聊存在"""
         # 1、B使用群主权限把A从群聊中移除后，A是否会收到一体系统消息：你已被请出群
@@ -7349,5 +7403,231 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("没有出现系统信息")
         if not mess.is_text_present("你已被请出该群"):
             raise AssertionError("不会收到系统消息：你已被请出该群")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0381():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0381(self):
+        """验证群主在群设置页面点击—移除群成员A后,A收到的群消息是否正确"""
+        # 1、群主点击—删除A
+        # 2、A在会话窗口收到提示
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.input_text_message("hh")
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcp.click_element_("移除群成员减号")
+        time.sleep(3)
+        slc = SelectLocalContactsPage()
+        names = slc.get_contacts_name()
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        gcp.click_text("确定")
+        time.sleep(2)
+        gcp.click_element_("确定移除")
+        time.sleep(10)
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        if not mess.is_text_present(group_name):
+            raise AssertionError("不会保存被移除群聊的会话窗口")
+        if not mess.is_text_present("系统消息"):
+            raise AssertionError("没有出现系统信息")
+        mess.click_text(group_name)
+        time.sleep(2)
+        if not mess.is_text_present("你已被请出该群"):
+            raise AssertionError("不会收到群消息：你已被请出该群")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0382():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0382(self):
+        """验证群主在群设置页面点击—移除群成员A后,A收到的系统消息是否正确"""
+        # 1、群主点击—删除A
+        # 2、A在消息列表页收到系统消息，点击查看
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        Preconditions.delete_record_group_chat()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcp.click_element_("移除群成员减号")
+        time.sleep(3)
+        slc = SelectLocalContactsPage()
+        names = slc.get_contacts_name()
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        gcp.click_text("确定")
+        time.sleep(2)
+        gcp.click_element_("确定移除")
+        time.sleep(10)
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        if not mess.is_text_present("系统消息"):
+            raise AssertionError("没有出现系统信息")
+        if not mess.is_text_present("你已被请出该群"):
+            raise AssertionError("不会收到系统消息：你已被请出该群")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0383():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0383(self):
+        """验证群主在群设置页面点击—移除群成员A后其他群成员B是否有提示"""
+        # 1、群主点击—删除A
+        # 2、B查看系统消息和群会话窗口
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        Preconditions.delete_record_group_chat()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcp.click_element_("移除群成员减号")
+        time.sleep(3)
+        slc = SelectLocalContactsPage()
+        names = slc.get_contacts_name()
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        gcp.click_text("确定")
+        time.sleep(2)
+        gcp.click_element_("确定移除")
+        time.sleep(10)
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        if not mess.is_text_present("系统消息"):
+            raise AssertionError("没有出现系统信息")
+        if not mess.is_text_present("你已被请出该群"):
+            raise AssertionError("不会收到系统消息：你已被请出该群")
+        Preconditions.change_mobile('Android-移动')
+        if mess.is_text_present("被请出该群"):
+            raise AssertionError("其他群成员会收到提示")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0384():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0384(self):
+        """验证群主在群设置页面——修改群名称后——全员收到的提示"""
+        # 1、群主点击右上角的群设置按钮
+        # 2、群主点击群名称进行修改
+        # 3、全员在会话窗口查看提示
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        Preconditions.delete_record_group_chat()
+        group_name = Preconditions.get_group_chat_name_double()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_element_("群名称")
+        time.sleep(2)
+        gcsp.input_new_group_name(group_name+'change')
+        time.sleep(2)
+        gcsp.save_group_name()
+        if not gcsp.is_toast_exist("修改成功"):
+            raise AssertionError("没有修改成功弹窗")
+        Preconditions.change_mobile('Android-移动-移动')
+        Preconditions.go_to_group_double(group_name+'change')
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        if not gcp.is_text_present("群名称已修改为"):
+            raise AssertionError("全员没有收到提示")
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name+'change')
+        gcp.wait_for_page_load()
+        Preconditions.delete_record_group_chat()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_element_("群名称")
+        time.sleep(2)
+        gcsp.input_new_group_name(group_name)
+        time.sleep(2)
+        gcsp.save_group_name()
+        if not gcsp.is_toast_exist("修改成功"):
+            raise AssertionError("群名称没有还原成功")
+        Preconditions.change_mobile('Android-移动-移动')
+        Preconditions.go_to_group_double(group_name)
+        Preconditions.delete_record_group_chat()
+
 
 
