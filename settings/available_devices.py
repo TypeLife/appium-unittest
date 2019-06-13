@@ -601,19 +601,19 @@ DEVICES_CONFIG_DEBUG_YYX = {
     },
 }
 
-DEVICES_CONFIG_DEBUG_YL = {
+DEVICES_CONFIG_DEBUG_YMS = {
     'M960BDQN229CH': {
         "MODEL": SupportedModel.HUAWEI_P20,
-        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
+        "SERVER_URL": 'http://127.0.0.1:4727/wd/hub',
         "DEFAULT_CAPABILITY": {
-"platformName": "Android",
-"platformVersion": "7.0",
-"deviceName": "XPUGL18808000100",
-"udid": "XPUGL18808000100",
-"automationName": "UiAutomator2",
-"newCommandTimeout": 600,
-"appPackage": "com.chinasofti.rcs",
-"appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
+            "platformName": "Android",
+            "platformVersion": "9",
+            "deviceName": "RKKDU18321000975",
+            "udid": "RKKDU18321000975",
+            "automationName": "UiAutomator2",
+            "newCommandTimeout": 600,
+            "appPackage": "com.chinasofti.rcs",
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
         },
         'CARDS': [
             {
