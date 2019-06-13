@@ -664,7 +664,7 @@ class ContactSearchOpTest(TestCase):
     @tags('ALL', 'CONTACT', 'YL')
     def test_contacts_chenjixiang_0742(self):
         Preconditions.make_already_in_message_page()
-        # 点击‘通讯录’
+        # 点击‘联系’
         mess = MessagePage()
         mess.open_contacts_page()
         mess.click_search()
@@ -675,4 +675,51 @@ class ContactSearchOpTest(TestCase):
         search_page.hide_keyboard()
         # 1.展示群聊搜索结果标签，标签右上角展示查看更多按钮  群聊 & 查看更多
         self.assertEquals(search_page.is_text_present("查看更多"), True)
+
+    @tags('ALL', 'CONTACT', 'YL')
+    def test_contacts_chenjixiang_0743(self):
+        Preconditions.make_already_in_message_page()
+        # 点击‘联系’
+        mess = MessagePage()
+        mess.open_contacts_page()
+        mess.click_search()
+        # 查询页面输入'和飞信团队''
+        search_page = SearchPage()
+        search_page.input_search_keyword('和飞信团队')
+        time.sleep(5)
+        search_page.hide_keyboard()
+        # 1.展示公众号搜索结果标签，标签右上角不展示查看更多按钮
+        self.assertEquals(search_page.is_text_present("查看更多"), False)
+        self.assertEquals(search_page.is_text_present("公众号"), True)
+
+    @tags('ALL', 'CONTACT', 'YL')
+    def test_contacts_chenjixiang_0744(self):
+        Preconditions.make_already_in_message_page()
+        # 点击‘联系’
+        mess = MessagePage()
+        mess.open_contacts_page()
+        mess.click_search()
+        # 查询页面输入'和'
+        search_page = SearchPage()
+        search_page.input_search_keyword('和')
+        time.sleep(5)
+        search_page.hide_keyboard()
+        # 展示公众号搜索结果标签，标签右上角展示查看更多按钮
+        self.assertEquals(search_page.is_text_present("查看更多"), True)
+        self.assertEquals(search_page.is_text_present("公众号"), True)
+
+    @tags('ALL', 'CONTACT', 'YL')
+    def test_contacts_chenjixiang_0760(self):
+        Preconditions.make_already_in_message_page()
+        # 点击‘联系’
+        mess = MessagePage()
+        mess.open_contacts_page()
+        mess.click_search()
+        # 查询页面输入'和飞信1'
+        search_page = SearchPage()
+        search_page.input_search_keyword('和飞信1')
+        time.sleep(5)
+        search_page.hide_keyboard()
+        # 搜索时，不展示和通讯录搜索结果标签
+        self.assertEquals(search_page.is_text_present("无搜索结果"), True)
 
