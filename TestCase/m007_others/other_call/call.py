@@ -3079,3 +3079,105 @@ class MsgAllPrior(TestCase):
         chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/select_send_audio_type_confirm'))
         time.sleep(11)
         chat_window_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/recodr_audio_finish'))
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0001():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0001(self):
+        mess = MessagePage()
+        # 点击+号
+        mess.click_add_icon()
+        # 点击新建消息
+        mess.click_new_message()
+        freemsg = FreeMsgPage()
+        select_page = SelectContactPage()
+        # 判断存在选择联系人
+        select_page.is_exist_select_contact_btn()
+        # 判断存在搜索或输入手机号提示
+        select_page.is_exist_selectorinput_toast()
+        # 判断存在选择团队联系人按钮
+        freemsg.page_should_contain_element((MobileBy.XPATH, '//*[@text ="选择团队联系人"]'))
+        # 判断存在手机联系人列表
+        freemsg.page_should_contain_element((MobileBy.ID, 'com.chinasofti.rcs:id/contact_list'))
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_A_0044():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_A_0044(self):
+        mess = MessagePage()
+        mess.page_should_contain_element((MobileBy.ID, 'com.chinasofti.rcs:id/tv_title'))
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_E_0001():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_E_0001(self):
+        mess = MessagePage()
+        mess.assert_search_box_is_display()
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_E_0006():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.wait_for_contact_load()
+        contactspage.click_sim_contact()
+        contactspage.create_contacts_if_not_exits('转发短信1', '13800138112')
+        contactspage.create_contacts_if_not_exits('转发短信2', '13800138113')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_E_0006(self):
+        mess = MessagePage()
+        mess.click_search()
+        searchbar = SearchBar()
+        searchbar.input_search_keyword('转发短信1')
+        search = SearchPage()
+        search.assert_contact_name_display('转发短信1')
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_E_0007():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        """需要预置一个联系人"""
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.wait_for_contact_load()
+        contactspage.click_sim_contact()
+        contactspage.create_contacts_if_not_exits('转发短信1', '13800138112')
+        contactspage.create_contacts_if_not_exits('转发短信2', '13800138113')
+        contactspage.open_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_E_0007(self):
+        mess = MessagePage()
+        mess.click_search()
+        searchbar = SearchBar()
+        searchbar.input_search_keyword('转发')
+        search = SearchPage()
+        search.assert_contact_name_display('转发短信1')
+        search.assert_contact_name_display('转发短信2')
