@@ -763,7 +763,6 @@ class MygroupSearchPage(TestCase):
         # 返回工作台
         wbp.wait_for_workbench_page_load()
 
-
     @tags('ALL', 'CMCC', 'contact', 'my_group')
     def test_contacts_quxinli_0053(self):
         """我的团队-英文模糊搜索"""
@@ -782,8 +781,52 @@ class MygroupSearchPage(TestCase):
         group_contact.is_search_contacts_name_match('a')
         time.sleep(1)
 
+    @tags('ALL', 'CMCC', 'contact', 'my_group')
+    def test_contacts_quxinli_0064(self):
+        group_contact = EnterpriseContactsPage()
+        group_contact.wait_for_page_load()
+        group_contact.click_search_box()
+        contact_name = "大佬3"
+        group_contact.input_search_message(contact_name)
+        time.sleep(3)
+        shc = SelectHeContactsDetailPage()
+        shc.selecting_he_contacts_by_name(contact_name)
+        # 判定点
+        # 进入个人详情页 判断页面包含的元素
+        detailpage = ContactDetailsPage()
+        # 名字
+        detailpage.is_exists_contacts_name()
+        # 号码
+        detailpage.is_exists_contacts_number()
+        # detailpage.page_should_contain_text('B')
+        if detailpage.is_text_present("公司"):
+            detailpage.page_should_contain_text('公司')
+        if detailpage.is_text_present("职位"):
+            detailpage.page_should_contain_text('职位')
+        if detailpage.is_text_present("邮箱"):
+            detailpage.page_should_contain_text('邮箱')
+        # 消息、电话、语音视频、视频电话、副号拨打、和飞信电话置灰，不可点击
+        detailpage.page_should_contain_text('消息')
+        detailpage.page_should_contain_text('电话')
+        detailpage.page_should_contain_text('语音通话')
+        detailpage.page_should_contain_text('视频通话')
+        detailpage.page_should_contain_text('和飞信电话')
+        time.sleep(2)
+        # """点击头像显示大图
+        detailpage.click_avatar()
+        detailpage.is_exists_big_avatar()
+        detailpage.click_big_avatar()
+        time.sleep(2)
+        # """点击消息按钮进入会话界面
+        detailpage.message_btn_is_clickable()
+        # """点击电话弹出拨打弹出
+        detailpage.call_btn_is_clickable()
+        # """点击语音通话弹出语音会话弹窗
+        detailpage.voice_btn_is_clickable()
+        # """点击视频通话弹窗视频会话弹窗
+        detailpage.video_call_btn_is_clickable()
 
-    @tags('ALL', 'CMCC', 'contact','my_group')
+    @tags('ALL', 'CMCC', 'contact', 'my_group')
     def test_contacts_quxinli_0107(self):
         """点击搜索结果已保存到本地的RCS用户进入Profile页(进入联系页面-我的团队-任一企业下的任一部门，点击搜索框并输入关键字)"""
         group_contact=EnterpriseContactsPage()
@@ -856,7 +899,7 @@ class MygroupSearchPage(TestCase):
         SelectContactsPage().click_share_card()
         detailpage.page_should_contain_text('已发送')
 
-    @tags('ALL', 'CMCC', 'contact','my_group')
+    @tags('ALL', 'CMCC', 'contact', 'my_group')
     def test_contacts_quxinli_0130(self):
         """点击搜索结果已保存到本地的RCS用户进入Profile页(点击我的团队某个企业的部门下任一保存在本地的RCS联系人)"""
         group_contact=EnterpriseContactsPage()
