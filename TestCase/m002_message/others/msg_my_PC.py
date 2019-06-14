@@ -1259,6 +1259,7 @@ class MsgMyPcTest(TestCase):
 
     def public_select_Group_search_by_text(self, text):
         """ 进入选择一个群并通过文本搜索 """
+        self.public_forward_file()
         SelectContactsPage().click_select_one_group()
         SelectOneGroupPage().wait_for_page_load()
         SelectOneGroupPage().click_search_group()
@@ -1272,20 +1273,46 @@ class MsgMyPcTest(TestCase):
             self.assertTrue(GroupChatPage().is_exist_forward())
             self.assertTrue(self.wait_for_MyPc_page_load())
 
-    def public_select_TeamContacts_search_by_text(self, text):
-        """ 进入团队联系人并通过文本搜索 """
+    def public_select_TeamListContacts_search_by_text(self, text):
+        """ 进入团队联系人列表并通过文本搜索 """
         # 需要转发的群
-        SelectContactsPage().click_select_one_group()
-        SelectOneGroupPage().wait_for_page_load()
-        SelectOneGroupPage().click_search_group()
-        SelectOneGroupPage().input_search_keyword(text)
+        self.public_forward_file()
+        SelectContactsPage().click_he_contacts()
+        SelectHeContactsPage().wait_for_page_load()
+        SelectHeContactsPage().input_search_keywords(text)
         if SelectOneGroupPage().is_text_present('无搜索结果'):
             pass
         else:
+            SelectHeContactsDetailPage().click_search_team_contacts()
+            SelectHeContactsDetailPage().click_sure_forward()
+            # 转发成功并回到聊天页面
+            self.assertTrue(GroupChatPage().is_exist_forward())
+            self.assertTrue(self.wait_for_MyPc_page_load())
+
+    def public_select_TeamSingleContacts_search_by_text(self, text):
+        """ 进入团队联系人内并通过文本搜索 """
+        # 需要转发的群
+        self.public_forward_file()
+        shcp = SelectHeContactsPage()
+        teams = shcp.get_team_names()
+        detail_page = SelectHeContactsDetailPage()
+        if teams:
+            shcp.select_one_team_by_name(teams[0])
+            detail_page.wait_for_page_load()
+        detail_page.input_search(text)
+        if SelectOneGroupPage().is_text_present('无搜索结果'):
             pass
+        else:
+            SelectHeContactsDetailPage().click_search_team_contacts()
+            SelectHeContactsDetailPage().click_sure_forward()
+            # 转发成功并回到聊天页面
+            self.assertTrue(GroupChatPage().is_exist_forward())
+            self.assertTrue(self.wait_for_MyPc_page_load())
 
     def public_select_PhoneContacts_search_by_text(self, text):
+        
         """ 进入手机联系人并通过文本搜索 """
+        self.public_forward_file()
         SelectContactsPage().select_local_contacts()
         SelectLocalContactsPage().wait_for_page_load()
         search_contact = SelectLocalContactsPage()
@@ -1481,3 +1508,57 @@ class MsgMyPcTest(TestCase):
         SelectOneGroupPage().click_cancel_forward()
         SelectLocalContactsPage().wait_for_page_load()
         self.assertTrue(SelectLocalContactsPage().is_on_this_page())
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0107(self):
+        """将自己发送的文件转发到团队未置灰的联系人时点击取消转发"""
+        self.public_forward_file()
+        SelectContactsPage().click_he_contacts()
+        shcp = SelectHeContactsPage()
+        shcp.wait_for_page_load()
+        teams = shcp.get_team_names()
+        if teams:
+            shcp.select_one_team_by_name(teams[0])
+            detail_page = SelectHeContactsDetailPage()
+            detail_page.wait_for_page_load()
+            names = detail_page.get_contacts_names()
+            if not names:
+                print("WARN: Please add m005_contacts in %s." % teams[0])
+            for name in names:
+                detail_page.select_one_linkman(name)
+                flag = detail_page.is_toast_exist("该联系人不可选择", timeout=3)
+                if not flag:
+                    break
+            detail_page.click_cancel_forward()
+            detail_page.wait_for_he_contacts_page_load()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0109(self):
+        """将自己发送的文件转发到在企业列表搜索框输入多种字符搜索到的团队联系人"""
+        self.public_select_TeamListContacts_search_by_text('float0.123')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0110(self):
+        """将自己发送的文件转发到在企业内搜索框输入多种字符搜索到的团队联系人"""
+        self.public_select_TeamSingleContacts_search_by_text('float0.123')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0111(self):
+        """将自己发送的文件转发到在企业列表搜索框输入数字搜索到的团队联系人"""
+        self.public_select_TeamListContacts_search_by_text('2345')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0112(self):
+        """将自己发送的文件转发到在企业内搜索框输入数字搜索到的团队联系人"""
+        self.public_select_TeamSingleContacts_search_by_text('2345')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0113(self):
+        """将自己发送的文件转发到在企业列表搜索框输入标点符号搜索到的团队联系人"""
+        self.public_select_TeamListContacts_search_by_text('.;,')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0114(self):
+        """将自己发送的文件转发到在企业内搜索框输入标点符号搜索到的团队联系人"""
+        self.public_select_TeamSingleContacts_search_by_text('.;,')
+

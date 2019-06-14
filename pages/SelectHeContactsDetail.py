@@ -205,3 +205,10 @@ class SelectHeContactsDetailPage(BasePage):
     def is_exist_corporate_grade(self):
         """是否存在企业层级"""
         return self._is_element_present(self.__class__.__locators['企业层级'])
+
+    @TestLogger.log("点击搜索第一个联系人")
+    def click_search_team_contacts(self):
+        self.wait_until(
+            condition=lambda x: self.get_elements(self.__locators['联系人名'])[0],
+            auto_accept_permission_alert=False
+        ).click()
