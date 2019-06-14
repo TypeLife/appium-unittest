@@ -7695,5 +7695,286 @@ class MsgCommonGroupAllTest(TestCase):
         Preconditions.go_to_group_double(group_name)
         Preconditions.delete_record_group_chat()
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0385():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0385(self):
+        """验证群主在设置页面——点击群管理——点击解散群按钮后——全员收到的群消息"""
+        # 1、群主点击右上角的群设置按钮，点击群管理，点击解散群，点击确认解散群
+        # 2、全员查看群消息提示
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.input_text_message("hh")
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击群管理
+        gcsp.click_element_("群管理")
+        time.sleep(2)
+        gcsp.click_element_("解散群")
+        time.sleep(2)
+        gcp.click_element_("确定移除")
+        time.sleep(8)
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        if not mess.is_text_present(group_name):
+            raise AssertionError("不会保存被移除群聊的会话窗口")
+        if not mess.is_text_present("系统消息"):
+            raise AssertionError("没有出现系统信息")
+        mess.click_text(group_name)
+        time.sleep(2)
+        if not mess.is_text_present("该群已解散"):
+            raise AssertionError("不会收到群消息：该群已解散")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0386():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0386(self):
+        """验证群主在设置页面——点击群管理——点击解散群按钮后——全员收到的系统消息"""
+        # 1、群主点击右上角的群设置按钮，点击群管理，点击解散群，点击确认解散群
+        # 2、全员查看系统消息消息提示
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击群管理
+        gcsp.click_element_("群管理")
+        time.sleep(2)
+        gcsp.click_element_("解散群")
+        time.sleep(2)
+        gcp.click_element_("确定移除")
+        time.sleep(8)
+        # group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        if not mess.is_text_present("系统消息"):
+            raise AssertionError("没有出现系统信息")
+        time.sleep(2)
+        if not mess.is_text_present("该群已解散"):
+            raise AssertionError("不会收到系统消息：该群已解散")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0389():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0389(self):
+        """验证群主在群设置页面——将所有群成员移出群后——群成员收到的群消息"""
+        # 1、点击 - 删除群成员，全选群成员进行删除
+        # 2、群成员查看群消息
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.input_text_message("hh")
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcp.click_element_("移除群成员减号")
+        time.sleep(3)
+        slc = SelectLocalContactsPage()
+        names = slc.get_contacts_name()
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        gcp.click_text("确定")
+        time.sleep(2)
+        gcp.click_element_("确定移除")
+        time.sleep(10)
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        if not mess.is_text_present(group_name):
+            raise AssertionError("不会保存被移除群聊的会话窗口")
+        if not mess.is_text_present("系统消息"):
+            raise AssertionError("没有出现系统信息")
+        mess.click_text(group_name)
+        time.sleep(2)
+        if not mess.is_text_present("你已被请出该群"):
+            raise AssertionError("不会收到群消息：你已被请出该群")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0390():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0390(self):
+        """验证群成员在群设置页面——点击删除并退出按钮后——群主收到的群消息"""
+        # 1、群成员在群设置页面点击删除并退出按钮
+        # 2、群主查看群消息
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.input_text_message("hh")
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击删除并退出
+        gcsp.click_delete_and_exit()
+        time.sleep(2)
+        gcp.click_element_("确定移除")
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        Preconditions.change_mobile('Android-移动')
+        mess.wait_for_page_load()
+        if not mess.is_text_present(group_name):
+            raise AssertionError("消息列表显示不正确")
+        mess.click_text(group_name)
+        time.sleep(2)
+        if not mess.is_text_present("已退出群"):
+            raise AssertionError("没有收到一条群消息：某某已退出群")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0393():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0393(self):
+        """验证群主在设置页面——点击群管理——点击群主管理权转让——转让给群成员A后——A收到的群消息"""
+        # 1、群主点击群管理，点击群主管理权转让，转让给A
+        # 2、A查看群消息
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击群管理
+        gcsp.click_element_("群管理")
+        time.sleep(2)
+        gcsp.click_element_("群主管理权转让")
+        time.sleep(2)
+        slc = SelectLocalContactsPage()
+        names = slc.get_contacts_name()
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        time.sleep(2)
+        gcp.click_element_("确定移除")
+        time.sleep(8)
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        Preconditions.go_to_group_double(group_name)
+        if not gcp.is_text_present("你已成为群主"):
+            raise AssertionError("没有出现：你已成为群主")
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击群管理
+        gcsp.click_element_("群管理")
+        time.sleep(2)
+        gcsp.click_element_("群主管理权转让")
+        time.sleep(2)
+        slc = SelectLocalContactsPage()
+        names = slc.get_contacts_name()
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        time.sleep(2)
+        gcp.click_element_("确定移除")
 
 

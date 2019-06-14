@@ -195,6 +195,54 @@ class ContactPage(TestCase):
         time.sleep(1)
         contact.is_page_contain_element('联系人名')
 
+    @staticmethod
+    def setUp_test_contacts_quxinli_0006():
+
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_one_key_login_page()
+        Preconditions.login_by_one_key_login()
+        MessagePage().wait_for_page_load()
+
+    @tags('All', 'CMCC_RESET')
+    def test_contacts_quxinli_0006(self):
+        """用户未开启联系权限首次进入联系页面"""
+        MessagePage().click_contacts_only()
+        contact = ContactsPage()
+        time.sleep(1)
+        # 权限框点击允许,
+        contact.page_should_contain_text('“和飞信”将访问您的通讯录')
+        contact.click_always_allowed()
+        time.sleep(2)
+        contact.click_mobile_contacts()
+        time.sleep(2)
+        contact.is_page_contain_element('联系人名')
+
+    @staticmethod
+    def setUp_test_contacts_quxinli_0007():
+
+        Preconditions.connect_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        Preconditions.reset_and_relaunch_app()
+        Preconditions.make_already_in_one_key_login_page()
+        Preconditions.login_by_one_key_login()
+        MessagePage().wait_for_page_load()
+
+    @tags('All', 'CMCC_RESET')
+    def test_contacts_quxinli_0007(self):
+        """用户未开启联系权限首次进入联系页面"""
+        MessagePage().click_contacts_only()
+        contact = ContactsPage()
+        time.sleep(2)
+        contact.page_should_contain_text('“和飞信”将访问您的通讯录')
+        self.assertEquals(contact.is_exist_allow_button(), True)
+        self.assertEquals(contact.is_exist_forbidden_button(), True)
+        contact.click_always_allowed()
+        time.sleep(1)
+        contact.page_should_contain_text('群聊')
+        contact.page_should_contain_text('公众号')
+        contact.is_page_contain_element('创建团队')
 
     @staticmethod
     def setUp_contacts_quxinli_0019():

@@ -1,15 +1,28 @@
 import time
 
 from library.core.TestCase import TestCase
-from library.core.utils.applicationcache import current_mobile
+from library.core.utils.applicationcache import switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import *
 from pages.contacts.local_contact import localContactPage
 from pages.workbench.enterprise_contacts.EnterpriseContacts import EnterpriseContactsPage
-from preconditions.BasePreconditions import LoginPreconditions
+from preconditions.BasePreconditions import WorkbenchPreconditions
 from pages.workbench.group_messenger.SelectCompanyContacts import SelectCompanyContactsPage
+from library.core.utils.applicationcache import current_mobile
 
-class Preconditions(LoginPreconditions):
+REQUIRED_MOBILES = {
+    'Android-移动': 'M960BDQN229CH',
+    # 'Android-移动': 'single_mobile',
+    'IOS-移动': '',
+    'Android-电信': 'single_telecom',
+    'Android-联通': 'single_union',
+    'Android-移动-联通': 'mobile_and_union',
+    'Android-移动-电信': '',
+    'Android-移动-移动': 'double_mobile',
+    'Android-XX-XX': 'others_double',
+}
+
+class Preconditions(WorkbenchPreconditions):
     """前置条件"""
 
     @staticmethod
@@ -32,6 +45,14 @@ class Preconditions(LoginPreconditions):
                 Preconditions.make_already_in_one_key_login_page()
                 #  从一键登录页面登录
                 Preconditions.login_by_one_key_login()
+
+    @staticmethod
+    def connect_mobile(category):
+        """选择手机手机"""
+        client = switch_to_mobile(REQUIRED_MOBILES[category])
+        client.connect_mobile()
+        return client
+
 
 class ContactSearchOpTest(TestCase):
     """  """
@@ -103,7 +124,8 @@ class ContactSearchOpTest(TestCase):
                 Preconditions.make_already_in_message_page()
                 contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
                 Preconditions.create_he_contacts(contact_names)
-                contact_names2 = [("高亮1", "18826200000")]
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "18826211112"), ('郑海', "13802883296")]
                 Preconditions.create_he_contacts2(contact_names2)
                 flag2 = True
             except:
@@ -139,7 +161,8 @@ class ContactSearchOpTest(TestCase):
                 Preconditions.make_already_in_message_page()
                 contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
                 Preconditions.create_he_contacts(contact_names)
-                contact_names2 = [("陈丹丹", "18826211111"), ("alice", "18826211112")]
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                 ('陈丹丹', "13800137004"), ('alice', "18826211112"), ('郑海', "13802883296")]
                 Preconditions.create_he_contacts2(contact_names2)
                 flag2 = True
             except:
@@ -170,9 +193,9 @@ class ContactSearchOpTest(TestCase):
         time.sleep(5)
         search_page.hide_keyboard()
         self.assertEquals(sccp.is_search_contacts_name_match(search_name), True)
-        # 6、出现精准搜素结果。18826211111
+        # 6、出现精准搜素结果。13800137003
         search_page = SearchPage()
-        search_number = "18826211111"
+        search_number = "13800137003"
         search_page.input_search_keyword(search_number)
         time.sleep(5)
         search_page.hide_keyboard()
@@ -195,7 +218,8 @@ class ContactSearchOpTest(TestCase):
                 Preconditions.make_already_in_message_page()
                 contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
                 Preconditions.create_he_contacts(contact_names)
-                contact_names2 = [("陈1", "13888137001"), ("陈2", "13801137002"), ('陈3', "13820137003")]
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "18826211112"), ('郑海', "13802883296")]
                 Preconditions.create_he_contacts2(contact_names2)
                 flag2 = True
             except:
@@ -231,7 +255,8 @@ class ContactSearchOpTest(TestCase):
                 Preconditions.make_already_in_message_page()
                 contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
                 Preconditions.create_he_contacts(contact_names)
-                contact_names2 = [("alice", "18826211112"), ("阿啊", "18826211113")]
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "18826211112"), ('郑海', "13802883296")]
                 Preconditions.create_he_contacts2(contact_names2)
                 flag2 = True
             except:
@@ -260,7 +285,7 @@ class ContactSearchOpTest(TestCase):
         search_page.input_search_keyword(search_number)
         time.sleep(5)
         search_page.hide_keyboard()
-        self.assertEquals(sccp.is_search_contacts_name_match(search_number), True)
+        self.assertEquals(sccp.is_search_contacts_number_match(search_number), True)
 
     @tags('ALL', 'CONTACT', 'YL')
     def test_contacts_quxinli_0014(self):
@@ -272,7 +297,9 @@ class ContactSearchOpTest(TestCase):
                 Preconditions.make_already_in_message_page()
                 contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
                 Preconditions.create_he_contacts(contact_names)
-                contact_names2 = [("alice3", "+8618826211115")]
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "18826211112"), ('郑海', "13802883296"),
+                                  ('测试啊', "+8618822883296")]
                 Preconditions.create_he_contacts2(contact_names2)
                 flag2 = True
             except:
@@ -305,7 +332,9 @@ class ContactSearchOpTest(TestCase):
                 Preconditions.make_already_in_message_page()
                 contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
                 Preconditions.create_he_contacts(contact_names)
-                contact_names2 = [("alice", "18826211112"), ("阿啊", "18826211113")]
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "18826211112"), ('郑海', "13802883296"),
+                                  ('测试啊', "+8618822883296")]
                 Preconditions.create_he_contacts2(contact_names2)
                 flag2 = True
             except:
@@ -348,7 +377,9 @@ class ContactSearchOpTest(TestCase):
                 Preconditions.make_already_in_message_page()
                 contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
                 Preconditions.create_he_contacts(contact_names)
-                contact_names2 = [("alice4", "#*1882621")]
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "18826211112"), ('郑海', "13802883296"),
+                                  ('测试啊', "+8618822883296"), ('测试啊2', "#*13800137004")]
                 Preconditions.create_he_contacts2(contact_names2)
                 flag2 = True
             except:
@@ -400,7 +431,9 @@ class ContactSearchOpTest(TestCase):
                 Preconditions.make_already_in_message_page()
                 contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
                 Preconditions.create_he_contacts(contact_names)
-                contact_names2 = [("alice", "18826211112")]
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "18826211112"), ('郑海', "13802883296"),
+                                  ('测试啊', "+8618822883296"), ('测试啊2', "#*13800137004")]
                 Preconditions.create_he_contacts2(contact_names2)
                 flag2 = True
             except:
@@ -439,7 +472,9 @@ class ContactSearchOpTest(TestCase):
                 Preconditions.make_already_in_message_page()
                 contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
                 Preconditions.create_he_contacts(contact_names)
-                contact_names2 = [("alice", "18826211112")]
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "18826211112"), ('郑海', "13802883296"),
+                                  ('测试啊', "+8618822883296"), ('测试啊2', "#*13800137004")]
                 Preconditions.create_he_contacts2(contact_names2)
                 flag2 = True
             except:
@@ -474,7 +509,9 @@ class ContactSearchOpTest(TestCase):
                 Preconditions.make_already_in_message_page()
                 contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
                 Preconditions.create_he_contacts(contact_names)
-                contact_names2 = [("陈丹丹", "18826211112"), ("alice2", "18826277777")]
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "18826211112"), ('郑海', "13802883296"),
+                                  ('测试啊', "+8618822883296"), ('测试啊2', "#*13800137004")]
                 Preconditions.create_he_contacts2(contact_names2)
                 flag2 = True
             except:
@@ -497,7 +534,7 @@ class ContactSearchOpTest(TestCase):
         sccp = SelectCompanyContactsPage()
         self.assertEquals(sccp.is_search_contacts_number_match(search_name), True)
 
-        search_name = "alice2"
+        search_name = "alice"
         search_page.input_search_keyword(search_name)
         time.sleep(5)
         search_page.hide_keyboard()
@@ -505,15 +542,15 @@ class ContactSearchOpTest(TestCase):
         sccp = SelectCompanyContactsPage()
         self.assertEquals(sccp.is_search_contacts_number_match(search_name), True)
 
-        search_number = "18826277777"
+        search_number = "13802883296"
         search_page.input_search_keyword(search_number)
         time.sleep(5)
         search_page.hide_keyboard()
-        # 6、出现精准搜素结果。18826277777高亮显示
+        # 6、出现精准搜素结果。13802883296高亮显示
         sccp = SelectCompanyContactsPage()
         self.assertEquals(sccp.is_search_contacts_number_match(search_number), True)
 
-        search_number = "18826299"
+        search_number = "138028"
         search_page.input_search_keyword(search_number)
         time.sleep(5)
         search_page.hide_keyboard()
@@ -531,7 +568,9 @@ class ContactSearchOpTest(TestCase):
                 Preconditions.make_already_in_message_page()
                 contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
                 Preconditions.create_he_contacts(contact_names)
-                contact_names2 = [("陈1", "13888137001"), ("陈2", "13801137002"), ('陈3', "13820137003")]
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "18826211112"), ('郑海', "13802883296"),
+                                  ('测试啊', "+8618822883296"), ('测试啊2', "#*13800137004")]
                 Preconditions.create_he_contacts2(contact_names2)
                 flag2 = True
             except:
@@ -547,7 +586,7 @@ class ContactSearchOpTest(TestCase):
         mess.click_search()
         # 查询页面输入'陈'
         search_page = SearchPage()
-        search_name = "陈"
+        search_name = "测试"
         search_page.input_search_keyword(search_name)
         time.sleep(5)
         search_page.hide_keyboard()
@@ -757,4 +796,87 @@ class ContactSearchOpTest(TestCase):
         # 判定点
         # 1.模糊匹配到正确的结果
         self.assertEquals(search_page.is_text_present("大佬1"), False)
+
+    @tags('ALL', 'CONTACT', 'YL')
+    def test_contacts_quxinli_0004(self):
+        Preconditions.make_already_in_message_page()
+        # 点击‘联系’
+        mess = MessagePage()
+        mess.open_contacts_page()
+        time.sleep(5)
+        # 1、联系页面从上到下依次为搜索栏，
+        # 2、备份手机联系提示：备份你的手机联系，联系人数据不丢失
+        # 3、顶部入口：群聊、公众号，创建团队
+        contact = ContactsPage()
+        self.assertEquals(contact.is_exist_search_view(), True)
+        search_page = SearchPage()
+        self.assertEquals(search_page.is_text_present("备份你的手机联系，联系人数据不丢失"), True)
+        self.assertEquals(search_page.is_text_present("群聊"), True)
+        self.assertEquals(search_page.is_text_present("公众号"), True)
+        self.assertEquals(search_page.is_text_present("创建团队"), True)
+
+    @tags('ALL', 'CONTACT', 'YL')
+    def test_contacts_quxinli_0024(self):
+        # 导入团队联系人
+        fail_time2 = 0
+        flag2 = False
+        while fail_time2 < 5:
+            try:
+                Preconditions.make_already_in_message_page()
+                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
+                Preconditions.create_he_contacts(contact_names)
+                contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+                                  ('陈丹丹', "13800137004"), ('alice', "18826211112"), ('郑海', "13802883296")]
+                Preconditions.create_he_contacts2(contact_names2)
+                flag2 = True
+            except:
+                fail_time2 += 1
+            if flag2:
+                break
+
+        Preconditions.make_already_in_message_page()
+        # 点击‘通讯录’
+        mess = MessagePage()
+        mess.open_contacts_page()
+        # 1、点击通讯录，点击搜索输入框
+        # 2、输入特殊字符
+        mess.click_search()
+        # 查询页面输入'大佬1'
+        search_page = SearchPage()
+        search_name = "哈 马上"
+        search_page.input_search_keyword(search_name)
+        time.sleep(5)
+        search_page.hide_keyboard()
+        SelectHeContactsDetailPage().selecting_he_contacts_by_name(search_name)
+        time.sleep(1)
+        # 判定点
+        # 进入个人详情页 判断页面包含的元素
+        detailpage = ContactDetailsPage()
+        # 名字
+        detailpage.is_exists_contacts_name()
+        # 号码
+        detailpage.is_exists_contacts_number()
+        # detailpage.page_should_contain_text('B')
+        if detailpage.is_text_present("公司"):
+            detailpage.page_should_contain_text('公司')
+        if detailpage.is_text_present("职位"):
+            detailpage.page_should_contain_text('职位')
+        if detailpage.is_text_present("邮箱"):
+            detailpage.page_should_contain_text('邮箱')
+        # 消息、电话、语音视频、视频电话、副号拨打、和飞信电话置灰，不可点击
+        detailpage.page_should_contain_text('消息')
+        detailpage.page_should_contain_text('电话')
+        detailpage.page_should_contain_text('语音通话')
+        detailpage.page_should_contain_text('视频通话')
+        detailpage.page_should_contain_text('和飞信电话')
+        time.sleep(2)
+        detailpage.message_btn_is_clickable()
+        detailpage.call_btn_is_clickable()
+        detailpage.voice_btn_is_clickable()
+        detailpage.video_call_btn_is_clickable()
+        detailpage.hefeixin_call_btn_is_clickable()
+        time.sleep(2)
+        # 返回通讯录页面
+        detailpage.click_back_icon()
+        ContactListSearchPage().click_back()
 
