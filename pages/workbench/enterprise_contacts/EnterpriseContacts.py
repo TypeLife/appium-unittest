@@ -270,11 +270,7 @@ class EnterpriseContactsPage(BasePage):
         osp.click_confirm()
         # 返回4次
         time.sleep(1)
-        osp.click_back()
-        time.sleep(1)
-        osp.click_back()
-        time.sleep(1)
-        osp.click_back()
+        osp.click_close()
         time.sleep(1)
         osp.click_back()
 

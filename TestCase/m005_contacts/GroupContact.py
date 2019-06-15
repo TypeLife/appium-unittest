@@ -1052,7 +1052,6 @@ class MygroupSearchPage(TestCase):
 
     @tags('ALL', 'CMCC', 'contact', 'my_group')
     def test_contacts_quxinli_0094(self):
-        """企业的子层级中有已保存到本地的非RCS用户"""
         group_contact = EnterpriseContactsPage()
         group_contact.click_sub_level_department_by_name('bm0')
         time.sleep(1)
@@ -1093,12 +1092,279 @@ class MygroupSearchPage(TestCase):
         detailpage.page_should_contain_text('和飞信电话')
         detailpage.page_should_contain_text('分享名片')
         time.sleep(2)
+        # 消息、电话、语音视频、视频电话、副号拨打、和飞信电话置灰，不可点击
         detailpage.message_btn_is_clickable()
         detailpage.call_btn_is_clickable()
         detailpage.voice_btn_is_clickable()
         detailpage.video_call_btn_is_clickable()
         detailpage.hefeixin_call_btn_is_clickable()
 
+    @tags('ALL', 'CMCC', 'contact', 'my_group')
+    def test_contacts_quxinli_0095(self):
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_sub_level_department_by_name('bm0')
+        time.sleep(1)
+        group_contact.click_search_box()
+        time.sleep(1)
+        contact_name = "姚磊"
+        group_contact.input_search_message(contact_name)
+        time.sleep(2)
+        group_contact.click_contacts_by_name(contact_name)
+        detailpage = ContactDetailsPage()
+        detailpage.wait_for_page_load()
+        # 验证页面元素显示
+        self.assertTrue(detailpage.is_exists_contacts_name())
+        self.assertTrue(detailpage.is_exists_contacts_number())
+        self.assertTrue(detailpage.is_exists_contacts_image())
+        if detailpage.is_text_present("公司"):
+            detailpage.page_should_contain_text('公司')
+        if detailpage.is_text_present("职位"):
+            detailpage.page_should_contain_text('职位')
+        if detailpage.is_text_present("邮箱"):
+            detailpage.page_should_contain_text('邮箱')
+        detailpage.page_should_contain_text('消息')
+        detailpage.page_should_contain_text('电话')
+        detailpage.page_should_contain_text('语音通话')
+        detailpage.page_should_contain_text('视频通话')
+        detailpage.page_should_contain_text('和飞信电话')
+        detailpage.page_should_contain_text('保存到通讯录')
+        time.sleep(2)
+
+        # 点击头像查看大图
+        detailpage.click_avatar()
+        time.sleep(4)
+        detailpage.click_big_avatar()
+        # 消息按钮可点击
+        detailpage.click_message_icon()  # 进入消息页面
+        time.sleep(2)
+        if ChatWindowPage().is_text_present("用户须知"):
+            # 如果存在用户须知,就点击已阅读,然后点击返回.如果不存在,就直接点击返回
+            ChatWindowPage().click_already_read()
+            ChatWindowPage().click_sure_icon()
+            ChatWindowPage().click_back()
+        else:
+            ChatWindowPage().click_back()
+        # 点击电话 拨打电话
+        detailpage.click_call_icon()
+        detailpage.cancel_call()
+        # 点击语音,挂断语音电话
+        detailpage.click_voice_call_icon()
+        time.sleep(2)
+        if detailpage.is_text_present('暂不开启'):
+            time.sleep(2)
+            detailpage.click_text('暂不开启')
+        detailpage.click_end_call()
+        # 点击视频通话
+        detailpage.click_video_call_icon()
+        time.sleep(2)
+        if detailpage.is_text_present('暂不开启'):
+            detailpage.click_text('暂不开启')
+        detailpage.end_video_call()
+        # 点击和飞信电话
+        detailpage.click_hefeixin_call_menu()
+        time.sleep(2)
+        if detailpage.is_text_present('暂不开启'):
+            detailpage.click_text('暂不开启')
+        time.sleep(3)
+        detailpage.cancel_hefeixin_call()
+
+        # 3.点击保存到通讯录按钮，进入编辑联系人页面，验证每个字段都可以编辑并保存成功
+        detailpage.click_save_contacts_icon()
+        detailpage = CreateContactPage()
+        detailpage.wait_for_page_load()
+        detailpage.create_contact("姚磊", "15013708130", "test_work", "员工", "13800137004@139.com")
+        time.sleep(2)
+        # 是否保存成功
+        self.assertEquals(detailpage.is_exists_share_card_icon(), True)
+        self.assertEquals(detailpage.is_exists_save_contacts_icon(), False)
+
+    @staticmethod
+    def tearDown_test_contacts_quxinli_0095():
+        """恢复环境"""
+        Preconditions.make_already_in_message_page()
+        mp = MessagePage()
+        mp.open_contacts_page()
+        cp = ContactsPage()
+        cp.wait_for_page_load()
+        # 删除指定联系人
+        cp.click_search_box()
+        name = "姚磊"
+        contact_search = ContactListSearchPage()
+        contact_search.wait_for_page_load()
+        contact_search.input_search_keyword(name)
+        if contact_search.is_contact_in_list(name):
+            cp.select_contacts_by_name(name)
+            cdp = ContactDetailsPage()
+            cdp.wait_for_page_load()
+            cdp.click_edit_contact()
+            time.sleep(1)
+            current_mobile().hide_keyboard_if_display()
+            time.sleep(1)
+            cdp.change_delete_number()
+            cdp.click_sure_delete()
+        contact_search.click_back()
+        cp.wait_for_page_load()
+        mp.open_workbench_page()
+        wbp = WorkbenchPage()
+        # 返回工作台
+        wbp.wait_for_workbench_page_load()
+
+    @tags('ALL', 'CMCC', 'contact', 'my_group')
+    def test_contacts_quxinli_0096(self):
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_search_box()
+        time.sleep(1)
+        contact_name = "b测试"
+        group_contact.input_search_message(contact_name)
+        time.sleep(2)
+        group_contact.click_contacts_by_name(contact_name)
+        detailpage = ContactDetailsPage()
+        detailpage.wait_for_page_load()
+        # 验证页面元素显示
+        self.assertTrue(detailpage.is_exists_contacts_name())
+        self.assertTrue(detailpage.is_exists_contacts_number())
+        self.assertTrue(detailpage.is_exists_contacts_image())
+        if detailpage.is_text_present("公司"):
+            detailpage.page_should_contain_text('公司')
+        if detailpage.is_text_present("职位"):
+            detailpage.page_should_contain_text('职位')
+        if detailpage.is_text_present("邮箱"):
+            detailpage.page_should_contain_text('邮箱')
+        detailpage.page_should_contain_text('消息')
+        detailpage.page_should_contain_text('电话')
+        detailpage.page_should_contain_text('语音通话')
+        detailpage.page_should_contain_text('视频通话')
+        detailpage.page_should_contain_text('和飞信电话')
+        detailpage.page_should_contain_text('保存到通讯录')
+        detailpage.page_should_contain_text('邀请使用')
+        time.sleep(2)
+        # 点击头像查看大图
+        detailpage.click_avatar()
+        time.sleep(4)
+        detailpage.click_big_avatar()
+        # 消息按钮可点击
+        detailpage.click_message_icon()  # 进入消息页面
+        time.sleep(2)
+        if ChatWindowPage().is_text_present("用户须知"):
+            # 如果存在用户须知,就点击已阅读,然后点击返回.如果不存在,就直接点击返回
+            ChatWindowPage().click_already_read()
+            ChatWindowPage().click_sure_icon()
+            ChatWindowPage().click_back()
+        else:
+            ChatWindowPage().click_back()
+        # 点击电话 拨打电话
+        detailpage.click_call_icon()
+        detailpage.cancel_call()
+        # 点击语音,挂断语音电话
+        detailpage.click_voice_call_icon()
+        time.sleep(2)
+        if detailpage.is_text_present('暂不开启'):
+            time.sleep(2)
+            detailpage.click_text('暂不开启')
+        detailpage.click_end_call()
+        # 点击视频通话
+        detailpage.click_video_call_icon()
+        time.sleep(2)
+        if detailpage.is_text_present('暂不开启'):
+            detailpage.click_text('暂不开启')
+        detailpage.end_video_call()
+        # 点击和飞信电话
+        detailpage.click_hefeixin_call_menu()
+        time.sleep(2)
+        if detailpage.is_text_present('暂不开启'):
+            detailpage.click_text('暂不开启')
+        time.sleep(3)
+        detailpage.cancel_hefeixin_call()
+
+        # 3.点击保存到通讯录按钮，进入编辑联系人页面，验证每个字段都可以编辑并保存成功
+        detailpage.click_save_contacts_icon()
+        detailpage = CreateContactPage()
+        detailpage.wait_for_page_load()
+        detailpage.create_contact("b测试", "13800137004", "test_work", "员工", "13800137004@139.com")
+        time.sleep(2)
+        # 是否保存成功
+        self.assertEquals(detailpage.is_exists_share_card_icon(), True)
+        self.assertEquals(detailpage.is_exists_save_contacts_icon(), False)
+
+    @tags('ALL', 'CMCC', 'contact', 'my_group')
+    def test_contacts_quxinli_0097(self):
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_sub_level_department_by_name('bm0')
+        time.sleep(1)
+        # 标题栏三点
+        group_contact.click_three_points_icon()
+        time.sleep(1)
+        contacts = ContactsPage()
+        contacts.click_text("团队管理")
+        time.sleep(1)
+        # 进入部门 bm0
+        group_contact.click_sub_level_department_by_name('bm0')
+        time.sleep(1)
+        group_contact.add_phone_number_to_department('bm0')
+        time.sleep(1)
+        # 进入部门 bm0
+        group_contact.click_sub_level_department_by_name('bm0')
+        # 本机用户
+        group_contact.click_search_box()
+        time.sleep(2)
+        group_contact.input_search_message('本机测试')
+        group_contact.click_contacts_by_name('本机测试')
+        detailpage = ContactDetailsPage()
+        detailpage.wait_for_page_load()
+        # 验证页面元素显示
+        self.assertTrue(detailpage.is_exists_contacts_name())
+        self.assertTrue(detailpage.is_exists_contacts_number())
+        self.assertTrue(detailpage.is_exists_contacts_image())
+        if detailpage.is_text_present("公司"):
+            detailpage.page_should_contain_text('公司')
+        if detailpage.is_text_present("职位"):
+            detailpage.page_should_contain_text('职位')
+        if detailpage.is_text_present("邮箱"):
+            detailpage.page_should_contain_text('邮箱')
+        detailpage.page_should_contain_text('消息')
+        detailpage.page_should_contain_text('电话')
+        detailpage.page_should_contain_text('语音通话')
+        detailpage.page_should_contain_text('视频通话')
+        detailpage.page_should_contain_text('和飞信电话')
+        detailpage.page_should_contain_text('分享名片')
+        time.sleep(2)
+        # 消息、电话、语音视频、视频电话、副号拨打、和飞信电话置灰，不可点击
+        detailpage.message_btn_is_clickable()
+        detailpage.call_btn_is_clickable()
+        detailpage.voice_btn_is_clickable()
+        detailpage.video_call_btn_is_clickable()
+        detailpage.hefeixin_call_btn_is_clickable()
+
+    @staticmethod
+    def tearDown_test_contacts_quxinli_0096():
+        """恢复环境"""
+        Preconditions.make_already_in_message_page()
+        mp = MessagePage()
+        mp.open_contacts_page()
+        cp = ContactsPage()
+        cp.wait_for_page_load()
+        # 删除指定联系人
+        cp.click_search_box()
+        name = "b测试"
+        contact_search = ContactListSearchPage()
+        contact_search.wait_for_page_load()
+        contact_search.input_search_keyword(name)
+        if contact_search.is_contact_in_list(name):
+            cp.select_contacts_by_name(name)
+            cdp = ContactDetailsPage()
+            cdp.wait_for_page_load()
+            cdp.click_edit_contact()
+            time.sleep(1)
+            current_mobile().hide_keyboard_if_display()
+            time.sleep(1)
+            cdp.change_delete_number()
+            cdp.click_sure_delete()
+        contact_search.click_back()
+        cp.wait_for_page_load()
+        mp.open_workbench_page()
+        wbp = WorkbenchPage()
+        # 返回工作台
+        wbp.wait_for_workbench_page_load()
 
     @tags('ALL', 'CMCC', 'contact', 'my_group')
     def test_contacts_quxinli_0107(self):
