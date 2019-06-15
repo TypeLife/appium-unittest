@@ -350,6 +350,11 @@ class ContactsPage(FooterPage):
         return self._is_element_present(self.__class__.__locators["弹出框点击允许"])
 
     @TestLogger.log()
+    def is_exist_forbidden_button(self):
+        """是否存在始终允许"""
+        return self._is_element_present(self.__class__.__locators["弹出框点击禁止"])
+
+    @TestLogger.log()
     def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
         """等待通讯录页面加载"""
         try:
@@ -476,7 +481,6 @@ class ContactsPage(FooterPage):
     def page_contain_element_add(self):
         """页面包含元素+号"""
         self.page_should_contain_element(self.__class__.__locators['+号'])
-
 
     @TestLogger.log('判断元素是否存在')
     def is_page_contain_element(self, locator,times=10):
