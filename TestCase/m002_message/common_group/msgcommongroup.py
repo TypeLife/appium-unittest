@@ -7977,4 +7977,241 @@ class MsgCommonGroupAllTest(TestCase):
         time.sleep(2)
         gcp.click_element_("确定移除")
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0394():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0394(self):
+        """验证群主在设置页面——点击群管理——点击群主管理权转让——转让给群成员A后——A收到的系统消息"""
+        # 1、群主点击群管理，点击群主管理权转让，转让给A
+        # 2、A查看系统消息
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击群管理
+        gcsp.click_element_("群管理")
+        time.sleep(2)
+        gcsp.click_element_("群主管理权转让")
+        time.sleep(2)
+        slc = SelectLocalContactsPage()
+        names = slc.get_contacts_name()
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        time.sleep(2)
+        gcp.click_element_("确定移除")
+        time.sleep(8)
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        if not gcp.is_text_present("系统消息"):
+            raise AssertionError("没有出现系统消息")
+        if not gcp.is_text_present("你已成为群主"):
+            raise AssertionError("没有出现系统消息：你已成为群主")
+        # 还原初始状态
+        Preconditions.go_to_group_double(group_name)
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击群管理
+        gcsp.click_element_("群管理")
+        time.sleep(2)
+        gcsp.click_element_("群主管理权转让")
+        time.sleep(2)
+        slc = SelectLocalContactsPage()
+        names = slc.get_contacts_name()
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        time.sleep(2)
+        gcp.click_element_("确定移除")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0395():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0395(self):
+        """验证被邀请人A在系统消息页面——点击同意邀请后——其他群成员收到的群消息"""
+        # 1、A在系统消息也没得点击同意进群邀请
+        # 2、其他群成员查看群消息
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        # 先退出群再重新建群
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击删除并退出
+        gcsp.click_delete_and_exit()
+        time.sleep(2)
+        gcp.click_element_("确定移除")
+        time.sleep(3)
+        #重新建群
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        Preconditions.change_mobile('Android-移动-移动')
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_text("系统消息")
+        time.sleep(3)
+        mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+        if not (gcp.is_text_present("欢迎") and gcp.is_text_present("加入群")):
+            raise AssertionError("群没有显示欢迎加入群")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0396():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0396(self):
+        """验证被邀请人A在系统消息页面——点击同意邀请后——A收到的群消息"""
+        # 1、A在系统消息也没得点击同意进群邀请
+        # 2、A查看群消息
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        # 先退出群再重新建群
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击删除并退出
+        gcsp.click_delete_and_exit()
+        time.sleep(2)
+        gcp.click_element_("确定移除")
+        time.sleep(3)
+        #重新建群
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        Preconditions.change_mobile('Android-移动-移动')
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_text("系统消息")
+        time.sleep(3)
+        mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动-移动')
+        Preconditions.go_to_group_double(group_name)
+        if not (gcp.is_text_present("欢迎") and gcp.is_text_present("加入群")):
+            raise AssertionError("群没有显示欢迎加入群")
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0398():
+        """先建一个群可以来分享群二维码"""
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        else:
+            current_mobile().launch_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoqiu_0398(self):
+        """验证被邀请人A长按识别群二维码加入群后——其他群成员收到的群消息"""
+        # 1、A在会话窗口长按识别未加入群的群二维码，点击加入群聊
+        # 2、其他群成员查看群消息
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动-移动')
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        if mess.is_text_present(phone_number2):
+            mess.press_file_to_do(phone_number2,"删除聊天")
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.enter_group_chat_page()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_QRCode()
+        gcsp.wait_for_qecode_load()
+        gcsp.click_element_("二维码转发")
+        sc = SelectContactsPage()
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        gcp.click_element_("确定移除")
+        if not gcp.is_toast_exist("已转发"):
+            raise AssertionError("群二维码转发失败")
+        Preconditions.change_mobile('Android-移动-移动')
+        if not mess.is_text_present(phone_number2):
+            raise AssertionError("没有接收到群二维码")
+        gcp.click_text(phone_number2)
+        time.sleep(2)
+        gcp.click_element_("消息图片")
+        time.sleep(2)
+        gcp.press_xy()
+        gcp.click_text("识别图中二维码")
+        time.sleep(3)
+        gcp.click_element_("加入群聊")
+        gcp.wait_for_page_load()
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.enter_group_chat_page()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        if not (gcp.is_text_present("欢迎") and gcp.is_text_present("加入群")):
+            raise AssertionError("群没有显示欢迎加入群")
+        gcp.wait_for_page_load()
+        # 删除群
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击删除并退出
+        gcsp.click_delete_and_exit()
+        time.sleep(2)
+        gcp.click_element_("确定移除")
+        time.sleep(3)
 
