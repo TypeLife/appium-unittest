@@ -4696,3 +4696,33 @@ class Contacts_demo(TestCase):
         # CheckPoint：中文模糊搜索，是否可以匹配展示搜索结果
         self.assertIsNotNone(global_search_group_page.is_group_in_list("群聊"))
         self.assertTrue(global_search_group_page.is_toast_exist("无搜索结果"))
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0189():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'middle')
+    def test_msg_huangmianhua_0189(self):
+        """通讯录-群聊-中文精确搜索——搜索结果展示"""
+        # 1.正常联网
+        # 2.正常登录
+        # 3.当前所在的页面是消息列表页面
+        # 4、中文精确搜索，是否可以匹配展示搜索结果
+        # 5、通讯录 - 群聊
+        groupchat = MessagePage()
+        # Step:1、点击通讯
+        groupchat.open_contacts_page()
+        # Step:2、点击选择一个群
+        groupchat.click_element_by_text("群聊")
+        # Step: 3、点击搜索群组
+        groupchat.click_element_by_text("搜索群组")
+        # 进行中文精确搜索
+        global_search_group_page = GlobalSearchGroupPage()
+        global_search_group_page.search("群聊")
+        # CheckPoint：中文精确搜索，是否可以匹配展示搜索结果
+        # self.assertIsNotNone(global_search_group_page.is_group_in_list("群聊"))
+        self.assertTrue(global_search_group_page.is_toast_exist("群聊"))
