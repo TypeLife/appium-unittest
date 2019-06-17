@@ -2319,6 +2319,39 @@ class MsgAllPrior(TestCase):
         # 判断搜索结果是否存在
         self.assertTrue(cgp.is_on_this_page())
 
+    @staticmethod
+    def setUp_test_msg_huangcaizui_D_0057():
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page_631()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_D_0057(self):
+        """1、点击GIF图标 2、点击搜索框右方×"""
+        # 判断网络是否正常
+        mess = MessagePage()
+        ns = mess.get_network_status()
+        self.assertTrue(ns in [2, 4, 6])
+        # 点击我的电脑
+        self.assertTrue(mess.page_should_contain_my_computer())
+        mess.click_my_computer()
+        cwp = ChatWindowPage()
+        # 点击表情
+        cwp.click_expression()
+        time.sleep(1)
+        # 点击gif
+        cwp.click_gif()
+        cgp = ChatGIFPage()
+        cgp.wait_for_page_load()
+        # 判断是否在gif页面
+        self.assertTrue(cgp.is_on_this_page())
+        # 点击退出gif页面
+        cgp.close_gif()
+        # 判断是否在gif页面
+        self.assertFalse(cgp.is_on_this_page())
+
+
+
 
 class Contacts_demo(TestCase):
 
@@ -4600,3 +4633,36 @@ class Contacts_demo(TestCase):
         ContactsSelector().select_local_contacts('测试短信2')
         # Checkpoint 1.进入群聊名称设置
         GroupNamePage().wait_for_page_load_631()
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0187():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'middle')
+    def test_msg_huangmianhua_0187(self):
+        """通讯录——群聊——搜索——选择一个群"""
+        # 1.正常联网
+        # 2.正常登录
+        # 3.当前所在的页面是消息列表页面
+        # 4、存在跟搜索条件匹配的群聊
+        # 5、通讯录 - 群聊
+        groupchat = MessagePage()
+        # Step:1、点击右上角的+号
+        groupchat.click_add_icon()
+        # 点击 发起群聊
+        groupchat.click_group_chat()
+        # Step:2、点击选择一个群
+        groupchat.click_element_by_text("选择一个群")
+        # CheckPoint：是否可以进入到群聊列表展示页面
+
+        # Step: 3、点击搜索群组
+        groupchat.click_element_by_text("搜索群组")
+        # 进行中文模糊搜索
+        global_search_group_page = GlobalSearchGroupPage()
+        global_search_group_page.search("群")
+        # CheckPoint：检测是否有包含名为"群聊"的群
+        self.assertIsNotNone(global_search_group_page.is_group_in_list("群聊"))
