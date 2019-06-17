@@ -527,6 +527,7 @@ class MessagePage(FooterPage):
         """长按指定文件进行操作"""
         el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file))
         self.press(el)
+        time.sleep(2)
         self.click_element(self.__class__.__locators[text])
 
     @TestLogger.log()

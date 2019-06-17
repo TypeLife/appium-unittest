@@ -331,6 +331,27 @@ class MessageScanTest(TestCase):
         scan_page.click_back()
 
 
+    @staticmethod
+    def setUp_test_msg_xiaoliping_A_0008():
+        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
+        current_mobile().hide_keyboard_if_display()
+        preconditions.make_already_in_message_page()
+        current_mobile().activate_app()
+
+    @tags('ALL', 'SMOKE', 'CMCC')
+    def test_msg_xiaoliping_A_0008(self):
+        """扫描普通群无效二维码，分享二维码的人已离开该群"""
+        # 1、进入消息列表标题栏“+”
+        # 2、点击扫一扫
+        # 3、扫描群聊二维码
+        message_page = MessagePage()
+        message_page.click_add_icon()
+        message_page.click_take_a_scan()
+        time.sleep(3)
+        current_mobile().back()
+        message_page.wait_for_page_load()
+
+
 class MessageSearchTest(TestCase):
     """消息-全局搜索"""
 

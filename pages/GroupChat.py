@@ -84,6 +84,8 @@ class GroupChatPage(BaseChatPage):
                               "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.support.v7.widget.RecyclerView/android.widget.RelativeLayout[4]/android.view.View"),
                   '确定移除': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
                   '取消移除': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
+                  '加入群聊': (MobileBy.ID, 'com.chinasofti.rcs:id/group_qr_apply_enter'),
+                  '添加群成员加号': (MobileBy.XPATH, "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.support.v7.widget.RecyclerView/android.widget.RelativeLayout[2]/android.view.View"),
                   }
 
     def is_exist_msg_videos(self):

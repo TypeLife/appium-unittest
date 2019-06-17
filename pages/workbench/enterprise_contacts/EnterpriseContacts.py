@@ -3,6 +3,9 @@ from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
+from library.core.common.simcardtype import CardType
+from library.core.utils.applicationcache import current_mobile
+from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
 
 
 class EnterpriseContactsPage(BasePage):
@@ -26,6 +29,7 @@ class EnterpriseContactsPage(BasePage):
         '更多': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_more'),
         '团队管理': (MobileBy.ID, 'com.chinasofti.rcs:id/quit_confirm_tv'),
         '解散团队': (MobileBy.ID, 'com.chinasofti.rcs:id/quit_cancel_tv'),
+        '标题栏三点': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.RelativeLayout[2]/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]/android.view.View[1]/android.view.View[3]'),
 
     }
 
@@ -250,3 +254,27 @@ class EnterpriseContactsPage(BasePage):
             current += 1
             self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         self.click_element(locator)
+
+    @staticmethod
+    def add_phone_number_to_department(department_name):
+        """添加本机号码到指定部门"""
+        osp = OrganizationStructurePage()
+        osp.click_specify_element_by_name("添加联系人")
+        time.sleep(2)
+        osp.click_specify_element_by_name("手动输入添加")
+        osp.input_contacts_name("本机测试")
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        osp.input_contacts_number(phone_number)
+        osp.hide_keyboard()
+        # 完成
+        osp.click_confirm()
+        # 返回4次
+        time.sleep(1)
+        osp.click_close()
+        time.sleep(1)
+        osp.click_back()
+
+    @TestLogger.log()
+    def click_three_points_icon(self):
+        """点击标题栏右侧三点"""
+        self.click_element(self.__class__.__locators["标题栏三点"])

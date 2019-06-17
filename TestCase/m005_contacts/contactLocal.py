@@ -3207,6 +3207,141 @@ class ContactsLocalhigh(TestCase):
         me.open_contacts_page()
         self.assertTrue(contact.is_contacts_exist('香港大佬'))
 
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0260(self):
+        """测试本地系统通讯录联系人，有姓名，头像，无号码，profile页是否正常"""
+        # 返回桌面,添加SIM卡联系人:无手机号
+        contact = ContactsPage()
+        Preconditions.background_app()
+        time.sleep(1)
+        contact.click_text('拨号')
+        time.sleep(2)
+        contact.click_text('联系人')
+        time.sleep(1)
+        contact.click_creat_contacts()
+        time.sleep(1)
+        contact.click_text('姓名')
+        text = '无手机号'
+        contact.input_contact_text(text)
+        contact.click_sure_SIM()
+        time.sleep(2)
+        # 激活App
+        Preconditions.activate_app()
+        if contact.is_text_present('SIM卡联系人'):
+            contact.click_text('显示')
+        # 判断无手机号联系人的个人详情页
+        contact.select_contacts_by_name(text)
+        time.sleep(2)
+        self.assertEquals(contact.is_text_present("添加桌面快捷方式"), False)
+
+    def tearDown_test_contacts_chenjixiang_0260(self):
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        ContactsPage().click_mobile_contacts()
+        time.sleep(2)
+        ContactsPage().select_contacts_by_name('无手机号')
+        time.sleep(2)
+        contant_detail = ContactDetailsPage()
+        contant_detail.click_edit_contact()
+        time.sleep(2)
+        contant_detail.hide_keyboard()
+        contant_detail.change_delete_number()
+        contant_detail.click_sure_delete()
+
+    @tags('ALL', 'CONTACTS', 'CMCC')
+    def test_contacts_chenjixiang_0272(self):
+        #1、返回桌面,添加SIM卡联系人:手机号1
+        contact = ContactsPage()
+        Preconditions.background_app()
+        time.sleep(1)
+        contact.click_text('拨号')
+        time.sleep(2)
+        contact.click_text('联系人')
+        time.sleep(1)
+        contact.click_creat_contacts()
+        time.sleep(1)
+        contact.click_text('姓名')
+        text = '手机号1'
+        contact.input_contact_text(text)
+        contact.click_text('电话号码')
+        text = '1111'
+        contact.input_contact_text(text)
+
+        contact.click_sure_SIM()
+        time.sleep(2)
+        # 激活App
+        Preconditions.activate_app()
+        if contact.is_text_present('SIM卡联系人'):
+            contact.click_text('显示')
+        # 判断无手机号联系人的个人详情页
+        contact.select_contacts_by_name(text)
+        time.sleep(2)
+        contact.click_text('添加桌面快捷方式')
+
+        # 2、返回桌面,添加SIM卡联系人:手机号2
+        contact = ContactsPage()
+        Preconditions.background_app()
+        time.sleep(1)
+        contact.click_text('拨号')
+        time.sleep(2)
+        contact.click_text('联系人')
+        time.sleep(1)
+        contact.click_creat_contacts()
+        time.sleep(1)
+        contact.click_text('姓名')
+        text = '手机号2'
+        contact.input_contact_text(text)
+        contact.click_text('电话号码')
+        text = '1111'
+        contact.input_contact_text(text)
+
+        contact.click_sure_SIM()
+        time.sleep(2)
+        # 激活App
+        Preconditions.activate_app()
+        if contact.is_text_present('SIM卡联系人'):
+            contact.click_text('显示')
+        # 判断无手机号联系人的个人详情页
+        contact.select_contacts_by_name(text)
+        time.sleep(2)
+        contact.click_text('添加桌面快捷方式')
+
+        # 从快捷方式进入
+        Preconditions.background_app()
+        contact.is_element_present_on_desktop('手机号2')
+        contact.click_text('手机号2')
+        time.sleep(5)
+        self.assertEquals(contact.is_text_present("手机号2"), False)
+
+
+    def tearDown_test_contacts_chenjixiang_0272(self):
+        # 删除 手机号1
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        ContactsPage().click_mobile_contacts()
+        time.sleep(2)
+        ContactsPage().select_contacts_by_name('手机号1')
+        time.sleep(2)
+        contant_detail = ContactDetailsPage()
+        contant_detail.click_edit_contact()
+        time.sleep(2)
+        contant_detail.hide_keyboard()
+        contant_detail.change_delete_number()
+        contant_detail.click_sure_delete()
+        # 删除 手机号2
+        Preconditions.make_already_in_message_page()
+        MessagePage().click_contacts()
+        ContactsPage().click_mobile_contacts()
+        time.sleep(2)
+        ContactsPage().select_contacts_by_name('手机号2')
+        time.sleep(2)
+        contant_detail = ContactDetailsPage()
+        contant_detail.click_edit_contact()
+        time.sleep(2)
+        contant_detail.hide_keyboard()
+        contant_detail.change_delete_number()
+        contant_detail.click_sure_delete()
+
 
 
 
