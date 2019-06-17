@@ -2190,6 +2190,38 @@ class MsgAllPrior(TestCase):
         # 判断是否发送成功
         cwp.wait_for_msg_send_status_become_to("发送成功", max_wait_time=10)
 
+    @staticmethod
+    def setUp_test_msg_huangcaizui_D_0052():
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page_631()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_D_0052(self):
+        """1、点击GIF图标 2、搜索框输入特殊字符 3、点击选择表情"""
+        # 判断网络是否正常
+        mess = MessagePage()
+        ns = mess.get_network_status()
+        self.assertTrue(ns in [2, 4, 6])
+        # 点击我的电脑
+        self.assertTrue(mess.page_should_contain_my_computer())
+        mess.click_my_computer()
+        cwp = ChatWindowPage()
+        # 点击表情
+        cwp.click_expression()
+        time.sleep(1)
+        # 点击gif
+        cwp.click_gif()
+        cgp = ChatGIFPage()
+        cgp.wait_for_page_load()
+        # 点击表情搜搜
+        cgp.input_message("囍")
+        time.sleep(1)
+        # 点击第一个表情包
+        cgp.send_gif()
+        # 判断是否发送成功
+        cwp.wait_for_msg_send_status_become_to("发送成功", max_wait_time=10)
+
 
 class Contacts_demo(TestCase):
 
