@@ -2751,6 +2751,447 @@ class MsgGroupChatvedioTest(TestCase):
         scp.set_network_status(6)
         time.sleep(6)
 
+    @staticmethod
+    def setUp_test_msg_xiaoliping_D_0028():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_D_0028(self):
+        """群聊会话页面，转发他人发送的图片到手机联系人时点击取消转发"""
+        # 1、在当前聊天会话页面，长按他人发送的图片
+        # 2、点击转发
+        # 3、选择任意手机联系人
+        # 4、点击取消按钮
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        # 2.点击输入框左上方的相册图标
+        gcp.click_picture()
+        # 3.进入相片页面,选择一张相片
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_pic_fk()
+        # 4.点击预览
+        cpg.click_preview()
+        cpp = ChatPicPreviewPage()
+        cpp.wait_for_page_load()
+        # 5.点击发送,
+        cpp.click_send()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp.wait_for_page_load()
+        gcp.click_element_("消息图片")
+        time.sleep(2)
+        gcp.press_xy()
+        gcp.click_text("转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text("选择手机联系人")
+        time.sleep(2)
+        sc.click_one_contact("飞信电话")
+        time.sleep(2)
+        gcp.click_element_("取消移除")
+        scp=SelectLocalContactsPage()
+        scp.wait_for_page_load()
+        current_mobile().back()
+        current_mobile().back()
+        current_mobile().back()
+        Preconditions.delete_record_group_chat()
+
+    @staticmethod
+    def setUp_test_msg_xiaoliping_D_0029():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_D_0029(self):
+        """群聊会话页面，转发他人发送的图片给团队联系人"""
+        # 1、在当前聊天会话页面，长按他人发送的图片
+        # 2、点击转发
+        # 3、选择任意团队联系人
+        # 4、点击发送按钮
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        # 2.点击输入框左上方的相册图标
+        gcp.click_picture()
+        # 3.进入相片页面,选择一张相片
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_pic_fk()
+        # 4.点击预览
+        cpg.click_preview()
+        cpp = ChatPicPreviewPage()
+        cpp.wait_for_page_load()
+        # 5.点击发送,
+        cpp.click_send()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp.wait_for_page_load()
+        gcp.click_element_("消息图片")
+        time.sleep(2)
+        gcp.press_xy()
+        gcp.click_text("转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text("选择团队联系人")
+        time.sleep(2)
+        if sc.is_text_present("当前组织"):
+            sc.click_one_contact("yyx")
+            gcp.click_element_("确定移除")
+            if not gcp.is_toast_exist("已转发"):
+                raise AssertionError("转发失败")
+            current_mobile().back()
+            Preconditions.delete_record_group_chat()
+        else:
+            Preconditions.change_mobile('Android-移动')
+            Preconditions.enter_organization_page()
+            osp = OrganizationStructurePage()
+            osp.wait_for_page_load()
+            if not osp.swipe_and_find_element("yyx"):
+                osp.click_text("添加联系人")
+                time.sleep(1)
+                osp.click_text("手动输入添加")
+                time.sleep(1)
+                osp.input_contacts_name("yyx")
+                osp.input_contacts_number("18920736596")
+                time.sleep(2)
+                osp.click_text("完成")
+                if not osp.is_toast_exist("成功"):
+                    raise AssertionError("手动添加失败")
+                osp.wait_for_page_load()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_message_page()
+            Preconditions.go_to_group_double(group_name)
+            gcp.wait_for_page_load()
+            gcp.click_element_("消息图片")
+            time.sleep(2)
+            gcp.press_xy()
+            gcp.click_text("转发")
+            sc = SelectContactsPage()
+            sc.wait_for_page_load()
+            sc.click_text("选择团队联系人")
+            time.sleep(2)
+            sc.click_element_("企业名称")
+            time.sleep(2)
+            sc.click_one_contact("yyx")
+            gcp.click_element_("确定移除")
+            if not gcp.is_toast_exist("已转发"):
+                raise AssertionError("转发失败")
+            current_mobile().back()
+            Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        self.assertTrue(mess.is_text_present("yyx"))
+        mess.click_element_by_text("yyx")
+        chat = SingleChatPage()
+        time.sleep(2)
+        if gcp.is_text_present("1元/条"):
+            chat.click_i_have_read()
+        chat.wait_for_page_load()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        time.sleep(2)
+        # 最后删除消息记录，返回消息页面结束用例
+        gcp.press_element_("消息图片",3000)
+        gcp.click_text("删除")
+        time.sleep(2)
+        chat.click_back()
+
+    @staticmethod
+    def setUp_test_msg_xiaoliping_D_0030():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_D_0030(self):
+        """群聊会话页面，转发他人发送的图片到团队联系人时失败"""
+        # 1、在当前聊天会话页面，长按他人发送的图片
+        # 2、点击转发
+        # 3、选择任意团队联系人
+        # 4、点击发送按钮
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        # 2.点击输入框左上方的相册图标
+        gcp.click_picture()
+        # 3.进入相片页面,选择一张相片
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_pic_fk()
+        # 4.点击预览
+        cpg.click_preview()
+        cpp = ChatPicPreviewPage()
+        cpp.wait_for_page_load()
+        # 5.点击发送,
+        cpp.click_send()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp.wait_for_page_load()
+        gcp.click_element_("消息图片")
+        time.sleep(2)
+        gcp.press_xy()
+        gcp.click_text("转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text("选择团队联系人")
+        time.sleep(2)
+        if sc.is_text_present("当前组织"):
+            sc.click_one_contact("yyx")
+            gcp.set_network_status(0)
+            time.sleep(8)
+            gcp.click_element_("确定移除")
+            if not gcp.is_toast_exist("已转发"):
+                raise AssertionError("转发失败")
+            current_mobile().back()
+            Preconditions.delete_record_group_chat()
+        else:
+            Preconditions.change_mobile('Android-移动')
+            Preconditions.enter_organization_page()
+            osp = OrganizationStructurePage()
+            osp.wait_for_page_load()
+            if not osp.swipe_and_find_element("yyx"):
+                osp.click_text("添加联系人")
+                time.sleep(1)
+                osp.click_text("手动输入添加")
+                time.sleep(1)
+                osp.input_contacts_name("yyx")
+                osp.input_contacts_number("18920736596")
+                time.sleep(2)
+                osp.click_text("完成")
+                if not osp.is_toast_exist("成功"):
+                    raise AssertionError("手动添加失败")
+                osp.wait_for_page_load()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_message_page()
+            Preconditions.go_to_group_double(group_name)
+            gcp.wait_for_page_load()
+            gcp.click_element_("消息图片")
+            time.sleep(2)
+            gcp.press_xy()
+            gcp.click_text("转发")
+            sc = SelectContactsPage()
+            sc.wait_for_page_load()
+            sc.click_text("选择团队联系人")
+            time.sleep(2)
+            sc.click_element_("企业名称")
+            time.sleep(2)
+            sc.click_one_contact("yyx")
+            gcp.set_network_status(0)
+            time.sleep(8)
+            gcp.click_element_("确定移除")
+            if not gcp.is_toast_exist("已转发"):
+                raise AssertionError("转发失败")
+            current_mobile().back()
+            Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        self.assertTrue(mess.is_text_present("yyx"))
+        mess.click_element_by_text("yyx")
+        chat = SingleChatPage()
+        time.sleep(2)
+        if gcp.is_text_present("1元/条"):
+            chat.click_i_have_read()
+        chat.wait_for_page_load()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送失败'.format(10))
+        time.sleep(2)
+        # 最后删除消息记录，返回消息页面结束用例
+        gcp.press_element_("消息图片",3000)
+        gcp.click_text("删除")
+        time.sleep(2)
+        chat.click_back()
+
+    def tearDown_test_msg_xiaoliping_D_0030(self):
+        # 重新连接网络
+        scp = GroupChatPage()
+        scp.set_network_status(6)
+        time.sleep(6)
+
+    @staticmethod
+    def setUp_test_msg_xiaoliping_D_0031():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_D_0031(self):
+        """群聊会话页面，转发他人发送的图片到团队联系人时点击取消转发"""
+        # 1、在当前聊天会话页面，长按他人发送的图片
+        # 2、点击转发
+        # 3、选择任意团队联系人
+        # 4、点击取消按钮
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        # 2.点击输入框左上方的相册图标
+        gcp.click_picture()
+        # 3.进入相片页面,选择一张相片
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_pic_fk()
+        # 4.点击预览
+        cpg.click_preview()
+        cpp = ChatPicPreviewPage()
+        cpp.wait_for_page_load()
+        # 5.点击发送,
+        cpp.click_send()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp.wait_for_page_load()
+        gcp.click_element_("消息图片")
+        time.sleep(2)
+        gcp.press_xy()
+        gcp.click_text("转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text("选择团队联系人")
+        time.sleep(2)
+        if sc.is_text_present("当前组织"):
+            sc.click_one_contact("yyx")
+            gcp.click_element_("取消移除")
+            if not gcp.is_text_present("团队"):
+                raise AssertionError("没有停留在当前页面")
+            Preconditions.change_mobile('Android-移动')
+            Preconditions.go_to_group_double(group_name)
+            Preconditions.delete_record_group_chat()
+        else:
+            Preconditions.change_mobile('Android-移动')
+            Preconditions.enter_organization_page()
+            osp = OrganizationStructurePage()
+            osp.wait_for_page_load()
+            if not osp.swipe_and_find_element("yyx"):
+                osp.click_text("添加联系人")
+                time.sleep(1)
+                osp.click_text("手动输入添加")
+                time.sleep(1)
+                osp.input_contacts_name("yyx")
+                osp.input_contacts_number("18920736596")
+                time.sleep(2)
+                osp.click_text("完成")
+                if not osp.is_toast_exist("成功"):
+                    raise AssertionError("手动添加失败")
+                osp.wait_for_page_load()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_message_page()
+            Preconditions.go_to_group_double(group_name)
+            gcp.wait_for_page_load()
+            gcp.click_element_("消息图片")
+            time.sleep(2)
+            gcp.press_xy()
+            gcp.click_text("转发")
+            sc = SelectContactsPage()
+            sc.wait_for_page_load()
+            sc.click_text("选择团队联系人")
+            time.sleep(2)
+            sc.click_element_("企业名称")
+            time.sleep(2)
+            sc.click_one_contact("yyx")
+            gcp.click_element_("取消移除")
+            if not gcp.is_text_present("团队"):
+                raise AssertionError("没有停留在当前页面")
+            Preconditions.change_mobile('Android-移动')
+            Preconditions.go_to_group_double(group_name)
+            Preconditions.delete_record_group_chat()
+
 class MsgGroupChatVideoPicAllTest(TestCase):
     """
     模块：群聊-图片视频-GIF
