@@ -1,0 +1,8 @@
+from library.core.utils.code_genarator import Recorder as RC
+from library.core import Keywords KW
+from library.core import Keywords as KW
+KW.Android.open_app()
+
+RC.generate_page_object()
+# 请输入页面类名：>? Concat
+# 请输入页面描述：>? 会话页面
