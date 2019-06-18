@@ -1310,7 +1310,6 @@ class MsgMyPcTest(TestCase):
             self.assertTrue(self.wait_for_MyPc_page_load())
 
     def public_select_PhoneContacts_search_by_text(self, text):
-        
         """ 进入手机联系人并通过文本搜索 """
         self.public_forward_file()
         SelectContactsPage().select_local_contacts()
@@ -1562,3 +1561,66 @@ class MsgMyPcTest(TestCase):
         """将自己发送的文件转发到在企业内搜索框输入标点符号搜索到的团队联系人"""
         self.public_select_TeamSingleContacts_search_by_text('.;,')
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0115(self):
+        """将自己发送的文件转发到在企业列表搜索框输入字母搜索到的团队联系人"""
+        self.public_select_TeamSingleContacts_search_by_text('test')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0116(self):
+        """将自己发送的文件转发到在企业内搜索框输入字母搜索到的团队联系人"""
+        self.public_select_TeamListContacts_search_by_text('test')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0117(self):
+        """将自己发送的文件转发到在企业列表搜索框输入空格搜索到的团队联系人"""
+        self.public_select_TeamListContacts_search_by_text('   ')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0118(self):
+        """将自己发送的文件转发到在企业内搜索框输入空格搜索到的团队联系人"""
+        self.public_select_TeamSingleContacts_search_by_text('  ')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0121(self):
+        """将自己发送的文件转发到在企业列表搜索框输入号码搜索到的团队联系人"""
+        self.public_select_TeamSingleContacts_search_by_text('13800138005')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0122(self):
+        """将自己发送的文件转发到在企业内搜索框输入号码搜索到的团队联系人"""
+        self.public_select_TeamSingleContacts_search_by_text('13800138005')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0123(self):
+        """将自己发送的文件转发到在企业列表搜索框进行搜索到的团队联系人时取消转发"""
+        self.public_forward_file()
+        SelectContactsPage().click_he_contacts()
+        SelectHeContactsPage().wait_for_page_load()
+        SelectHeContactsPage().input_search_keywords('13800138005')
+        if SelectOneGroupPage().is_text_present('无搜索结果'):
+            pass
+        else:
+            SelectHeContactsDetailPage().click_search_team_contacts()
+            SelectHeContactsDetailPage().click_cancel_forward()
+            bol = SelectHeContactsDetailPage().wait_for_he_contacts_page_load()
+            self.assertTrue(bol)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
+    def test_msg_weifenglian_qun_0124(self):
+        """将自己发送的文件转发到在企业内搜索框进行搜索到的团队联系人时取消转发"""
+        self.public_forward_file()
+        shcp = SelectHeContactsPage()
+        teams = shcp.get_team_names()
+        detail_page = SelectHeContactsDetailPage()
+        if teams:
+            shcp.select_one_team_by_name(teams[0])
+            detail_page.wait_for_page_load()
+        detail_page.input_search("13800138005")
+        if SelectOneGroupPage().is_text_present('无搜索结果'):
+            pass
+        else:
+            SelectHeContactsDetailPage().click_search_team_contacts()
+            SelectHeContactsDetailPage().click_cancel_forward()
+            bol = SelectHeContactsDetailPage().wait_for_he_contacts_page_load()
+            self.assertTrue(bol)
