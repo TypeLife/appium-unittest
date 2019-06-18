@@ -606,3 +606,9 @@ class GroupChatPage(BaseChatPage):
         """按压消息文本"""
         els = self.get_elements(self.__class__.__locators["文本消息"])
         return els[number].get_attribute("text")
+
+    @TestLogger.log()
+    def press_element_(self, text,times):
+        """长按元素"""
+        el=self.get_element(self.__class__.__locators[text])
+        self.press(el,times)

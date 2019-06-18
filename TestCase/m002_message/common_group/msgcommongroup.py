@@ -1200,8 +1200,8 @@ class MsgCommonGroupTest(TestCase):
         # 判断消息页面有新的会话窗口
         mess = MessagePage()
         if mess.is_on_this_page():
-            self.assertTrue(mess.is_text_present("和飞信电话"))
-            mess.click_element_by_text("和飞信电话")
+            self.assertTrue(mess.is_text_present("飞信电话"))
+            mess.click_element_by_text("飞信电话")
             chat = SingleChatPage()
             time.sleep(2)
             if gcp.is_text_present("1元/条"):
