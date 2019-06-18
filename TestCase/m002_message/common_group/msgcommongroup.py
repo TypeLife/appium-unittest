@@ -6343,7 +6343,7 @@ class MsgCommonGroupAllTest(TestCase):
             gcp.click_text("我知道了")
         if gcp.is_text_present("始终允许"):
             gcp.click_text("始终允许")
-        time.sleep(5)
+        time.sleep(8)
         if not gcp.is_phone_in_calling_state():
             raise AssertionError("没有出现通话界面")
         gcp.pick_up_the_call()
