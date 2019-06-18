@@ -2223,6 +2223,35 @@ class MeAllTest(TestCase):
         scg.click_back()
         qr_code.click_back()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_072(self):
+        # 0.检验是否跳转到我页面
+        mep = MePage()
+        mep.is_on_this_page()
+        # 1.点击个人二维码
+        mep.click_qr_code_icon()
+        qr_code = MyQRCodePage()
+        qr_code.wait_for_loading_animation_end()
+        # 2、点击“分享我的二维码”
+        qr_code.click_forward_qr_code()
+        scg = SelectContactsPage()
+        scg.wait_for_page_load()
+        # 判定点
+        # 1.调起选择联系人页面
+        scg.is_text_present("选择联系人")
+        # 选择团队联系人
+        scg.click_group_contact()
+        time.sleep(2)
+        scg.click_search_keyword()
+        scg.input_search_keyword("大佬5")
+        time.sleep(2)
+        # 2.显示无搜索结果
+        self.assertEquals(scg.is_text_present("无搜索结果"), True)
+        # 点击返回
+        scg.click_back()
+        scg.click_back()
+        qr_code.click_back()
+
     @tags('ALL', 'CMCC', 'me_all', 'debug_fk_me2')
     def test_me_zhangshuli_074(self):
         """我的二维码分享-搜索群组有结果"""
