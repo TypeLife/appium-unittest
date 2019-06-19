@@ -3428,3 +3428,161 @@ class MsgAllPrior(TestCase):
         time.sleep(2)
         # Checkpoint2：拨打的通话记录为和飞信电话 进入通话详情页，标题为和飞信通话类型
         callpage.is_type_hefeixin(0, '飞信电话')
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_D_0024():
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page_631()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_D_0024(self):
+        """1、在当前聊天会话页面，点击输入框左上方的相册图标.不选择照片，直接点击发送按钮"""
+        mess = MessagePage()
+        # 点击我的电脑
+        self.assertTrue(mess.page_should_contain_my_computer())
+        mess.click_my_computer()
+        cwp = ChatWindowPage()
+        # 点击发送图片
+        cwp.click_img_msgs()
+        cpp = ChatPicPage()
+        cpp.wait_for_page_load()
+        # 不选择照片，判断发送按钮是否可点击
+        self.assertFalse(cpp.send_btn_is_enabled())
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_D_0025():
+        # 推送图片文件
+        pic_path = os.path.join(PROJECT_PATH, 'bbbresource')
+        Preconditions.select_mobile('Android-移动').push_folder(pic_path, '/sdcard')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page_631()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_D_0025(self):
+        """1、在当前聊天会话页面，点击输入框左上方的相册图标 2.选择一张照片，点击发送按钮"""
+        mess = MessagePage()
+        # 点击我的电脑
+        self.assertTrue(mess.page_should_contain_my_computer())
+        mess.click_my_computer()
+        cwp = ChatWindowPage()
+        # 点击发送图片
+        cwp.send_img_msgs({"pic": (1,)})
+        # 判断是否发送成功
+        cwp.wait_for_msg_send_status_become_to("发送成功")
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_D_0026():
+        # 推送图片文件
+        # pic_path = os.path.join(PROJECT_PATH, 'bbbresource')
+        # Preconditions.select_mobile('Android-移动').push_folder(pic_path, '/sdcard')
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page_631()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_D_0026(self):
+        """1、在当前聊天会话页面，点击输入框左上方的相册图标 2.选择一张照片，点击左下角的预览按钮"""
+        mess = MessagePage()
+        # 点击我的电脑
+        self.assertTrue(mess.page_should_contain_my_computer())
+        mess.click_my_computer()
+        cwp = ChatWindowPage()
+        # 点击发送图片
+        cwp.click_img_msgs()
+        # 选择图片 选择预览
+        cwp.switch_to_given_folder("pic")
+        cwp.select_items_by_given_orders(1)
+        cwp.click_preview()
+        cppp = ChatPicPreviewPage()
+        cppp.wait_for_page_load()
+        # 判断是否在预览界面
+        self.assertTrue(cppp.is_on_this_page())
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_D_0027():
+        # 推送图片文件
+        # pic_path = os.path.join(PROJECT_PATH, 'bbbresource')
+        # Preconditions.select_mobile('Android-移动').push_folder(pic_path, '/sdcard')
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page_631()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_D_0027(self):
+        """1、在当前聊天会话页面，点击输入框左上方的相册图标 2.选择一张照片，点击左下角的预览按钮 3.直接点击发送按钮"""
+        mess = MessagePage()
+        # 点击我的电脑
+        self.assertTrue(mess.page_should_contain_my_computer())
+        mess.click_my_computer()
+        cwp = ChatWindowPage()
+        # 点击发送图片
+        cwp.click_img_msgs()
+        # 选择图片 选择预览
+        cwp.switch_to_given_folder("pic")
+        cwp.select_items_by_given_orders(1)
+        cwp.click_preview()
+        cppp = ChatPicPreviewPage()
+        cppp.wait_for_page_load()
+        # 点击发送
+        cppp.click_send()
+        # 判断是否发送成功
+        cwp.wait_for_msg_send_status_become_to("发送成功")
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_D_0028():
+        # 推送图片文件
+        # pic_path = os.path.join(PROJECT_PATH, 'bbbresource')
+        # Preconditions.select_mobile('Android-移动').push_folder(pic_path, '/sdcard')
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page_631()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_D_0028(self):
+        """1、在当前聊天会话页面，点击输入框左上方的相册图标 2.选择多张照片，点击左下角的预览按钮 3.查看发送按钮数字"""
+        mess = MessagePage()
+        # 点击我的电脑
+        self.assertTrue(mess.page_should_contain_my_computer())
+        mess.click_my_computer()
+        cwp = ChatWindowPage()
+        # 点击发送图片
+        cwp.click_img_msgs()
+        # 选择图片 选择预览
+        cwp.switch_to_given_folder("pic")
+        cwp.select_items_by_given_orders(1, 2, 3)
+        cwp.click_preview()
+        cppp = ChatPicPreviewPage()
+        cppp.wait_for_page_load()
+        # 判断发送按钮数字与选择图片数是否一致
+        self.assertTrue(cppp.check_send_number(3))
+
+    @staticmethod
+    def setUp_test_msg_huangcaizui_D_0036():
+        # 推送图片文件
+        # pic_path = os.path.join(PROJECT_PATH, 'bbbresource')
+        # Preconditions.select_mobile('Android-移动').push_folder(pic_path, '/sdcard')
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page_631()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_huangcaizui_D_0036(self):
+        """1、在当前聊天会话页面，点击输入框左上方的相册图标 2、选择2张照片后，点击左下角的预览按钮"""
+        mess = MessagePage()
+        # 点击我的电脑
+        self.assertTrue(mess.page_should_contain_my_computer())
+        mess.click_my_computer()
+        cwp = ChatWindowPage()
+        # 点击发送图片
+        cwp.click_img_msgs()
+        # 选择图片 选择预览
+        cwp.switch_to_given_folder("pic")
+        cwp.select_items_by_given_orders(1, 2)
+        cwp.click_preview()
+        cppp = ChatPicPreviewPage()
+        cppp.wait_for_page_load()
+        # 判断是否在预览界面
+        self.assertTrue(cppp.is_on_gallery_page())
+        # 判断编辑按钮是否存在
+        self.assertTrue(cppp.is_exist_edit())
