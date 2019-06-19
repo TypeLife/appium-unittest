@@ -1200,8 +1200,8 @@ class MsgCommonGroupTest(TestCase):
         # 判断消息页面有新的会话窗口
         mess = MessagePage()
         if mess.is_on_this_page():
-            self.assertTrue(mess.is_text_present("和飞信电话"))
-            mess.click_element_by_text("和飞信电话")
+            self.assertTrue(mess.is_text_present("飞信电话"))
+            mess.click_element_by_text("飞信电话")
             chat = SingleChatPage()
             time.sleep(2)
             if gcp.is_text_present("1元/条"):
@@ -6343,7 +6343,7 @@ class MsgCommonGroupAllTest(TestCase):
             gcp.click_text("我知道了")
         if gcp.is_text_present("始终允许"):
             gcp.click_text("始终允许")
-        time.sleep(5)
+        time.sleep(8)
         if not gcp.is_phone_in_calling_state():
             raise AssertionError("没有出现通话界面")
         gcp.pick_up_the_call()

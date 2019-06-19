@@ -445,6 +445,41 @@ class MsgAllPrior(TestCase):
         self.assertTrue(exist)
 
     @staticmethod
+    def setUp_test_me_zhangshuli_112(self):
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_112(self):
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        match_this_page = agreement_detail_page.is_current_activity_match_this_page()
+        if match_this_page:
+            agreement_detail_page.click_agree_button()
+        else:
+            self.assertTrue(False, "没有进入授权页面")
+        time.sleep(1)
+        elements = agreement_detail_page.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        self.assertTrue(len(elements) > 0)
+        # 和包余额 区域id
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        time.sleep(1)
+        title = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/tv_actionbar_title'))
+        self.assertTrue(title == "和包余额")
+        # 断开网络
+        agreement_detail_page.set_network_status(0)
+        # 点击充值
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/id_tv_cash_recharge'))
+        exist = agreement_detail_page.is_toast_exist("当前网络不可用，请检查网络设置")
+        self.assertTrue(exist)
+
+    def tearDown_test_me_zhangshuli_112(self):
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.set_network_status(6)
+
+    @staticmethod
     def setUp_test_me_zhangshuli_116():
         Preconditions.select_mobile('Android-移动')
 
@@ -586,6 +621,37 @@ class MsgAllPrior(TestCase):
         agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/iv_action_bar_help'))
         help_title = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/tv_actionbar_title'))
         self.assertTrue(help_title == '帮助手册')
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_142(self):
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_142(self):
+        # 用例描述为:点击流量
+        # 现版本无流量，修改为;点击和包余额
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        match_this_page = agreement_detail_page.is_current_activity_match_this_page()
+        if match_this_page:
+            agreement_detail_page.click_agree_button()
+        else:
+            self.assertTrue(False, "没有进入授权页面")
+        time.sleep(1)
+        elements = agreement_detail_page.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        self.assertTrue(len(elements) > 0)
+        # 断开网络
+        agreement_detail_page.set_network_status(0)
+        # 和包余额 区域id
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/lv_cash_area'))
+        exist = agreement_detail_page.is_toast_exist("当前网络不可用，请检查网络设置")
+        self.assertTrue(exist)
+
+    def tearDown_test_me_zhangshuli_142(self):
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.set_network_status(6)
 
     @staticmethod
     def setUp_test_me_zhangshuli_143():
@@ -978,6 +1044,53 @@ class MsgAllPrior(TestCase):
         self.assertTrue(message_content == "您的银行卡号有误，请核对后重试")
 
     @staticmethod
+    def setUp_test_me_zhangshuli_173():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_173(self):
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.is_current_activity_match_this_page()
+        time.sleep(5)
+        # 点击银行卡
+        elements = agreement_detail_page.get_elements((MobileBy.CLASS_NAME, 'android.widget.TextView'))
+        for e in elements:
+            if e.text == "银行卡":
+                e.click()
+                # exist = agreement_detail_page.is_toast_exist("当前网络不可用，请检查网络设置")
+                # self.assertTrue(exist)
+                break
+            else:
+                continue
+        time.sleep(3)
+        # 点击 绑定新的银行卡
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs: id / ipos_condition_addcard'))
+        time.sleep(2)
+        # 输入银行卡号
+        card_number = "6214 1803 0000 1315 1981"
+        agreement_detail_page.input_text((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addbankcard_cardnoEdit'),card_number)
+        # 断开网络
+        agreement_detail_page.set_network_status(0)
+        time.sleep(1)
+        # 判断下一步是否可用
+        attribute = agreement_detail_page.get_element_attribute((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'), "enabled")
+        self.assertTrue(attribute == "true")
+        # 点击 下一步
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/ipos_addkjbankcard_next'))
+        # 判定
+        exist = agreement_detail_page.is_text_present("您的网络连接可能存在问题，请检查网络设置")
+        self.assertTrue(exist)
+
+
+    def tearDown_test_me_zhangshuli_173(self):
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.set_network_status(6)
+
+    @staticmethod
     def setUp_test_me_zhangshuli_174():
         Preconditions.select_mobile('Android-移动')
 
@@ -1074,6 +1187,100 @@ class MsgAllPrior(TestCase):
         self.assertTrue(len(elements) > 0)
 
     @staticmethod
+    def setUp_test_me_zhangshuli_284():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_284(self):
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/iv_action_bar_help'))
+        # 断开网络
+        agreement_detail_page.set_network_status(0)
+        elements = agreement_detail_page.get_elements(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/pop_window_list_item_name'))
+        for e in elements:
+            if e.text == "帮助中心":
+                e.click()
+        actionbar_title = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/tv_actionbar_title'))
+        self.assertTrue(actionbar_title == "帮助中心")
+        time.sleep(3)
+        exist = agreement_detail_page.is_text_present("当前网络不可用，请检查网络设置")
+        self.assertTrue(exist)
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/iv_actionbar_left_back'))
+        time.sleep(1)
+
+    def tearDown_test_me_zhangshuli_284(self):
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.set_network_status(6)
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_285():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_285(self):
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/iv_action_bar_help'))
+
+        elements = agreement_detail_page.get_elements(
+            (MobileBy.ID, 'com.chinasofti.rcs:id/pop_window_list_item_name'))
+        for e in elements:
+            if e.text == "帮助中心":
+                e.click()
+        actionbar_title = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/tv_actionbar_title'))
+        self.assertTrue(actionbar_title == "帮助中心")
+        time.sleep(3)
+        # 断开网络
+        agreement_detail_page.set_network_status(0)
+        agreement_detail_page.click_hot_question()
+        exist = agreement_detail_page.is_toast_exist("当前网络不可用，请检查网络设置")
+        self.assertTrue(exist)
+        agreement_detail_page.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/iv_actionbar_left_back'))
+        time.sleep(1)
+
+    def tearDown_test_me_zhangshuli_285(self):
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.set_network_status(6)
+
+    @staticmethod
+    def setUp_test_me_zhangshuli_290():
+        Preconditions.select_mobile('Android-移动')
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_me_zhangshuli_290(self):
+        # 打开‘我’页面
+        me = MePage()
+        me.open_me_page()
+        me.click_element((MobileBy.ID, "com.chinasofti.rcs:id/redpager"))
+        agreement_detail_page = AgreementDetailPage()
+        agreement_detail_page.is_current_activity_match_this_page()
+        time.sleep(3)
+        # 断开网络
+        agreement_detail_page.set_network_status(0)
+        elements = agreement_detail_page.get_elements((MobileBy.CLASS_NAME, 'android.widget.TextView'))
+        for e in elements:
+            if e.text == "活动中心":
+                e.click()
+                exist = agreement_detail_page.is_toast_exist("当前网络不可用，请检查网络设置")
+                self.assertTrue(exist)
+                break
+            else:
+                continue
+        # 返回
+        me.click_element(["id", 'com.chinasofti.rcs:id/iv_actionbar_left_back'], 15)
+        time.sleep(1)
+        text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/tv_actionbar_title'))
+        self.assertTrue(text == "和包支付")
+
+    @staticmethod
     def setUp_test_me_zhangshuli_291():
         Preconditions.select_mobile('Android-移动')
 
@@ -1093,3 +1300,4 @@ class MsgAllPrior(TestCase):
                 e.click()
         text = agreement_detail_page.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/tv_actionbar_title'))
         self.assertTrue(text == "和聚宝")
+

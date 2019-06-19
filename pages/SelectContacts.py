@@ -92,6 +92,7 @@ class SelectContactsPage(BasePage):
         "部门名称": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_department'),
         "禁止": (MobileBy.ID, 'com.android.packageinstaller:id/permission_deny_button'),
         "联系人栏": (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
+        "企业名称": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title'),
 
     }
 
