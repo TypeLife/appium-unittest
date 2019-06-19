@@ -19,6 +19,7 @@ class AgreementDetailPage(BasePage):
         '不同意': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
         '同意': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_positive_button'),
         # 'android:id/statusBarBackground': (MobileBy.ID, 'android:id/statusBarBackground')
+        '热门问题': (MobileBy.ID, '//android.view.View[@content-desc="1、什么是实名认证？"]'),
     }
 
     @TestLogger.log()
@@ -30,3 +31,8 @@ class AgreementDetailPage(BasePage):
     def click_not_agree_button(self):
         """点击不同意"""
         self.click_element(self.__locators['不同意'])
+
+    @TestLogger.log()
+    def click_hot_question(self):
+        """帮助中心：热点问题"""
+        self.click_element(self.__locators['热门问题'])
