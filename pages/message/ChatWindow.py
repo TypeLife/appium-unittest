@@ -244,3 +244,9 @@ class ChatWindowPage(ChatNoticeDialog, PictureSelector, BaseChatPage,BasePage):
     def click_time_in_setting(self):
         self.click_element(self.__locators['时间'])
 
+    def is_current_activity_match_this_page(self):
+        if self.ACTIVITY == self.is_current_activity_match_this_page():
+            return True
+        else:
+            return False
+

@@ -28,6 +28,12 @@ class ContactListSearchPage(BasePage):
         '联系人号码': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_phone'),
         '分享名片': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_share_card'),
         '搜索结果': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name"]'),
+        '团队搜索结果': (MobileBy.XPATH, '//android.support.v7.widget.RecyclerView[@resource-id'
+                                   '="com.chinasofti.rcs:id/single_result_list"]'),
+        '团队列表项': (MobileBy.ID, '//android.support.v7.widget.RecyclerView[@resource-id="com.'
+                             'chinasofti.rcs:id/single_result_list"]/android.widget.'
+                             'RelativeLayout[1]'),
+
     }
 
     @TestLogger.log('点击返回')
@@ -60,6 +66,25 @@ class ContactListSearchPage(BasePage):
     def click_contact(self, name):
         self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and ' +
                             '@text="{}"]'.format(name)))
+
+    @TestLogger.log('查看是否显示XX团队联系人')
+    def is_team_contact_in_list(self):
+        time.sleep(1)
+        groups = self.mobile.list_iterator(self.__locators['团队搜索结果'], self.__locators['团队列表项'])
+        for group in groups:
+            if group.find_elements((MobileBy.XPATH, '//android.support.v7.widget.RecyclerView[@resource-id="com.'
+                                                    'chinasofti.rcs:id/single_result_list"]/android.widget.'
+                                                    'RelativeLayout[1]/android.widget.LinearLayout[1]/android.'
+                                                    'widget.LinearLayout[1]/android.widget.TextView[1]')):
+                return True
+        return False
+
+    @TestLogger.log('点击团队联系人')
+    def click_team_contact(self):
+        self.click_element((MobileBy.XPATH, '//android.support.v7.widget.RecyclerView[@resource-id="com.chinasofti.'
+                                            'rcs:id/single_result_list"]/android.widget.RelativeLayout[1]/android.'
+                                            'widget.LinearLayout[1]/android.widget.LinearLayout[1]/android.widget.'
+                                            'TextView[1]'))
 
     @TestLogger.log()
     def is_exist_contacts(self):

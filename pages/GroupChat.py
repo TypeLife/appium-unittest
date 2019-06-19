@@ -78,8 +78,10 @@ class GroupChatPage(BaseChatPage):
                   '群成员': (MobileBy.XPATH, "//*[contains(@text, '群成员')]"),
                   '搜索成员输入框': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_search_bar'),
                   '群成员头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
+                  '已读动态': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_has_read'),
                   '置顶聊天': (MobileBy.ID, 'com.chinasofti.rcs:id/chat_set_to_top_switch'),
-                  '移除群成员减号': (MobileBy.XPATH,"/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.support.v7.widget.RecyclerView/android.widget.RelativeLayout[4]/android.view.View"),
+                  '移除群成员减号': (MobileBy.XPATH,
+                              "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.support.v7.widget.RecyclerView/android.widget.RelativeLayout[4]/android.view.View"),
                   '确定移除': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
                   '取消移除': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
                   '加入群聊': (MobileBy.ID, 'com.chinasofti.rcs:id/group_qr_apply_enter'),
@@ -265,11 +267,11 @@ class GroupChatPage(BaseChatPage):
             self.press(el)
             self.click_element(self.__class__.__locators["删除"])
         except:
-                pass
+            pass
         return self
 
     @TestLogger.log()
-    def press_voice_message_to_do(self,text):
+    def press_voice_message_to_do(self, text):
         """长按语言消息体"""
         el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/linearlayout_msg_content'))
         self.press(el)
@@ -278,8 +280,8 @@ class GroupChatPage(BaseChatPage):
     @TestLogger.log()
     def get_width_of_msg_of_text(self):
         """获取文本信息框的大小"""
-        el=self.get_element((MobileBy.ID,'com.chinasofti.rcs:id/tv_message'))
-        rect=el.rect
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'))
+        rect = el.rect
         return rect["width"]
 
     @TestLogger.log()
@@ -347,7 +349,7 @@ class GroupChatPage(BaseChatPage):
     @TestLogger.log()
     def get_multiple_selection_select_box(self):
         """获取多选选择框"""
-        els=self.get_elements(self.__class__.__locators["多选选择框"])
+        els = self.get_elements(self.__class__.__locators["多选选择框"])
         if els:
             return els
         else:
@@ -394,7 +396,7 @@ class GroupChatPage(BaseChatPage):
         self.click_element(self.__class__.__locators["多选转发"])
 
     @TestLogger.log()
-    def press_audio_to_do(self,text):
+    def press_audio_to_do(self, text):
         """长按语音消息体进行操作"""
         els = self.get_elements(self.__class__.__locators["语音消息体"])
         if els:
@@ -485,11 +487,9 @@ class GroupChatPage(BaseChatPage):
         """选择照片"""
         self.click_element(self.__class__.__locators["照片选择框"])
 
-
     @TestLogger.log("文件是否发送成功")
     def check_message_resend_success(self):
         return self._is_element_present(self.__class__.__locators['文件发送成功标志'])
-
 
     @TestLogger.log("当前页面是否有发文件消息")
     def is_exist_msg_file(self):
@@ -508,7 +508,8 @@ class GroupChatPage(BaseChatPage):
 
     @TestLogger.log("撤回文件")
     def recall_file(self, file):
-        el = self.wait_until(condition=lambda x:self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file)))
+        el = self.wait_until(
+            condition=lambda x: self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file)))
         self.press(el)
         self.click_element(self.__class__.__locators['撤回'])
 
@@ -523,7 +524,7 @@ class GroupChatPage(BaseChatPage):
 
     @TestLogger.log("预览文件里的更多按钮是否存在")
     def is_exist_more_button(self):
-        return self.wait_until(condition=lambda x:self._is_element_present(self.__locators['预览文件_更多']))
+        return self.wait_until(condition=lambda x: self._is_element_present(self.__locators['预览文件_更多']))
 
     @TestLogger.log("点击预览文件里的更多按钮")
     def click_more_button(self):
@@ -549,7 +550,8 @@ class GroupChatPage(BaseChatPage):
 
     @TestLogger.log("撤回文件")
     def recall_file(self, file):
-        el = self.wait_until(condition=lambda x:self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file)))
+        el = self.wait_until(
+            condition=lambda x: self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % file)))
         self.press(el)
         self.click_element(self.__class__.__locators['撤回'])
 
@@ -593,6 +595,18 @@ class GroupChatPage(BaseChatPage):
         """输入搜索成员文本信息"""
         self.input_text(self.__class__.__locators["搜索成员输入框"], message)
         return self
+
+    @TestLogger.log()
+    def is_exist_msg_has_read_icon(self):
+        """判断是否有已读动态标志"""
+        el = self.get_elements(self.__locators['已读动态'])
+        return len(el) > 0
+
+    @TestLogger.log()
+    def click_has_read_icon(self):
+        """点击已读动态标志"""
+        els = self.get_elements(self.__class__.__locators["已读动态"])
+        els[-1].click()
 
     @TestLogger.log()
     def press_element_by_text(self, text, times):

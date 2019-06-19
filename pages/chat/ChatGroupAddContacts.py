@@ -27,7 +27,8 @@ class ChatGroupAddContactsPage(BasePage):
                   'com.chinasofti.rcs:id/contact_list_item': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
                   'com.chinasofti.rcs:id/asp_selecttion_contact_content': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/asp_selecttion_contact_content'),
-                  'D': (MobileBy.ID, ''),
+                  'D': (MobileBy.XPATH, '//android.widget.LinearLayout[@resource-id="com.china'
+                                     'softi.rcs:id/contact_index_bar_container"]/android.widget.TextView[4]'),
                   'dx1645': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
                   '15338821645': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_number'),
                   'F': (MobileBy.ID, ''),
@@ -103,6 +104,11 @@ class ChatGroupAddContactsPage(BasePage):
     def click_sure(self):
         """点击确定"""
         self.click_element(self.__class__.__locators["确定"])
+
+    @TestLogger.log()
+    def click_d(self):
+        """点击D"""
+        self.click_element(self.__class__.__locators["D"])
 
     @TestLogger.log()
     def find_element_by_swipe(self, locator, times=10):
