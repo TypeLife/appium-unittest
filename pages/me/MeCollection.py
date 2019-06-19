@@ -22,7 +22,7 @@ class MeCollectionPage(BasePage):
                   'com.chinasofti.rcs:id/tv_head': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_head'),
                   '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name'),
                   '今天': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_time'),
-                  'www.baidu.com': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_tv'),
+                  'www.otherpages.com': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_tv'),
                   'com.chinasofti.rcs:id/favorite_content': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_content'),
                   'com.chinasofti.rcs:id/favorite_image_shortcut': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/favorite_image_shortcut'),

@@ -458,7 +458,6 @@ DEVICES_CONFIG_Nova = {
     },
 }
 
-
 DEVICES_CONFIG_LXD = {
     'M960BDQN229CH': {
         "MODEL": SupportedModel.HUAWEI_P20,
@@ -601,7 +600,7 @@ DEVICES_CONFIG_DEBUG_WQS = {
 DEVICES_CONFIG_DEBUG_ZK = {
     'M960BDQN229CH': {
         "MODEL": SupportedModel.HUAWEI_P20,
-        "SERVER_URL": 'http://127.0.0.1:4724/wd/hub',
+        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "9",
@@ -690,6 +689,30 @@ DEVICES_CONFIG_DEBUG_YMS = {
     },
 }
 
+# DEVICES_CONFIG_WJH = {
+#     'M960BDQN229CH': {
+#         "MODEL": SupportedModel.HUAWEI_P20,
+#         "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
+#         "DEFAULT_CAPABILITY": {
+#             "platformName": "Android",
+#             "platformVersion": "8.0.0",
+#             "deviceName": "8GP4C18720026139",
+#             "udid": "8GP4C18720026139",
+#             "automationName": "UiAutomator2",
+#             "newCommandTimeout": 600,
+#             "appPackage": "com.chinasofti.rcs",
+#             "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
+#         },
+#         'CARDS': [
+#             {
+#                 'TYPE': CardType.CHINA_MOBILE,
+#                 'CARD_NUMBER': '14775451723'
+#             },
+#         ]
+#     },
+# }
+
+
 DEVICES_CONFIG_DEBUG_YL = {
     'M960BDQN229CH': {
         "MODEL": SupportedModel.HUAWEI_P20,
@@ -713,3 +736,31 @@ DEVICES_CONFIG_DEBUG_YL = {
     },
 }
 
+
+DEVICES_CONFIG_WJH = {
+    'M960BDQN229CH': {
+        "MODEL": SupportedModel.HUAWEI_P20,
+        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
+        "DEFAULT_CAPABILITY": {
+            "platformName": "Android",
+            "platformVersion": "8.1.0",
+            "deviceName": "LKX0218814000312",
+            "udid": "LKX0218814000312",
+            "automationName": "UiAutomator2",
+            "newCommandTimeout": 600,
+            "appPackage": "com.chinasofti.rcs",
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
+        },
+        'CARDS': [
+            {
+                'TYPE': CardType.CHINA_MOBILE,
+                'CARD_NUMBER': '13641490071'
+            },
+        ]
+    },
+}
+
+
+def getConf(conf):
+    """获取配置对象"""
+    return eval(conf)

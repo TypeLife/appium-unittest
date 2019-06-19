@@ -56,15 +56,17 @@ class LoginPreconditions(object):
 
         # 跳过引导页
         guide_page.wait_for_page_load(30)
-        guide_page.swipe_to_the_second_banner()
-        guide_page.swipe_to_the_third_banner()
-        current_mobile().hide_keyboard_if_display()
+        # guide_page.swipe_to_the_second_banner()
+        # guide_page.swipe_to_the_third_banner()
+        # current_mobile().hide_keyboard_if_display()
         guide_page.click_start_the_experience()
 
         # 点击权限列表页面的确定按钮
         permission_list = PermissionListPage()
         # permission_list.click_submit_button()
         permission_list.go_permission()
+        if permission_list.page_should_contain_text2("确定"):
+            permission_list.click_text("确定")
         one_key.wait_for_page_load(30)
 
     @staticmethod

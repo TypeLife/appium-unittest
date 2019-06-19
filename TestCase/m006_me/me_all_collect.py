@@ -276,7 +276,7 @@ class Preconditions(object):
         scp = GroupChatPage()
         if scp.is_exist_dialog():
             scp.click_i_have_read()
-        infor = "我是测试工程师15918730974,www.baidu.com "
+        infor = "我是测试工程师15918730974,www.otherpages.com "
         scp.input_message(infor * 40)
         scp.send_message()
         # 3.点击该信息收藏
@@ -563,7 +563,7 @@ class MeAllCollect(TestCase):
         mcp = MeCollectionPage()
         mcp.wait_for_page_load()
         # 3.校验收藏内容不超过三行
-        self.assertEquals(mcp.get_width_of_collection("www.baidu.com", 3), True)
+        self.assertEquals(mcp.get_width_of_collection("www.otherpages.com", 3), True)
         # 4.点击返回
         mep.click_back()
         mep.open_message_page()
