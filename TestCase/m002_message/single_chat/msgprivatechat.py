@@ -31,7 +31,7 @@ class MsgPrivateChatMsgList(TestCase):
     """
     模块：单聊->消息列表
     文件位置：113整理全量测试用例-黄彩最.xlsx
-    表格：单聊
+    表格：单聊8
     """
 
     # @classmethod
