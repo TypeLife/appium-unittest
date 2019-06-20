@@ -2161,3 +2161,39 @@ class MygroupdetailPage(TestCase):
         group_contact.hide_keyboard()
         exists = group_contact.is_exists_contacts_search_result2()
         self.assertEquals(exists, False)
+
+    @tags('ALL', 'CMCC', 'contact', 'my_group')
+    def test_msg_huangmianhua_0107(self):
+        """群成员展示列表页，输入框输入——完整号码搜索群成员"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_search_box()
+        time.sleep(1)
+        group_contact.input_search_message("13888888888")
+        time.sleep(2)
+        group_contact.hide_keyboard()
+        exists = group_contact.is_exists_contacts_search_result2()
+        self.assertEquals(exists, False)
+
+    @tags('ALL', 'CMCC', 'contact', 'my_group')
+    def test_msg_huangmianhua_0108(self):
+        """群成员展示列表页，输入框输入——中文字符搜索群成员"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_search_box()
+        time.sleep(1)
+        group_contact.input_search_message("群")
+        time.sleep(2)
+        group_contact.hide_keyboard()
+        exists = group_contact.is_exists_contacts_search_result2()
+        self.assertEquals(exists, True)
+
+    @tags('ALL', 'CMCC', 'contact', 'my_group')
+    def test_msg_huangmianhua_0109(self):
+        """群成员展示列表页，输入框输入——英文字符搜索群成员"""
+        group_contact = EnterpriseContactsPage()
+        group_contact.click_search_box()
+        time.sleep(1)
+        group_contact.input_search_message("a")
+        time.sleep(2)
+        group_contact.hide_keyboard()
+        exists = group_contact.is_exists_contacts_search_result2()
+        self.assertEquals(exists, True)
