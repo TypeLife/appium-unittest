@@ -458,6 +458,7 @@ DEVICES_CONFIG_Nova = {
     },
 }
 
+
 DEVICES_CONFIG_LXD = {
     'M960BDQN229CH': {
         "MODEL": SupportedModel.HUAWEI_P20,
@@ -600,7 +601,7 @@ DEVICES_CONFIG_DEBUG_WQS = {
 DEVICES_CONFIG_DEBUG_ZK = {
     'M960BDQN229CH': {
         "MODEL": SupportedModel.HUAWEI_P20,
-        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
+        "SERVER_URL": 'http://127.0.0.1:4724/wd/hub',
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "9",
@@ -615,29 +616,6 @@ DEVICES_CONFIG_DEBUG_ZK = {
             {
                 'TYPE': CardType.CHINA_MOBILE,
                 'CARD_NUMBER': '19876463626'
-            },
-        ]
-    },
-}
-
-DEVICES_CONFIG_DEBUG_YSH = {
-    'M960BDQN229CH': {
-        "MODEL": SupportedModel.HUAWEI_P20,
-        "SERVER_URL": 'http://127.0.0.1:4724/wd/hub',
-        "DEFAULT_CAPABILITY": {
-            "platformName": "Android",
-            "platformVersion": "9",
-            "deviceName": "CLB7N18904002073",
-            "udid": "CLB7N18904002073",
-            "automationName": "UiAutomator2",
-            "newCommandTimeout": 600,
-            "appPackage": "com.chinasofti.rcs",
-            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
-        },
-        'CARDS': [
-            {
-                'TYPE': CardType.CHINA_MOBILE,
-                'CARD_NUMBER': '15875537272'
             },
         ]
     },
@@ -684,6 +662,52 @@ DEVICES_CONFIG_DEBUG_YMS = {
             {
                 'TYPE': CardType.CHINA_MOBILE,
                 'CARD_NUMBER': '19849476421'
+            },
+        ]
+    },
+}
+
+DEVICES_CONFIG_HBH = {
+    'M960BDQN229CH': {
+        "MODEL": SupportedModel.HUAWEI_P20,
+        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
+        "DEFAULT_CAPABILITY": {
+            "platformName": "Android",
+            "platformVersion": "8.0.0",
+            "deviceName": "U8EDU18905002648",
+            "udid": "U8EDU18905002648",
+            "automationName": "UiAutomator2",
+            "newCommandTimeout": 6000,
+            "appPackage": "com.chinasofti.rcs",
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
+        },
+        'CARDS': [
+            {
+                'TYPE': CardType.CHINA_MOBILE,
+                'CARD_NUMBER': '14775451723'
+            },
+        ]
+    },
+}
+
+DEVICES_CONFIG_YX = {
+    'M960BDQN229CH': {
+        "MODEL": SupportedModel.HUAWEI_P20,
+        "SERVER_URL": 'http://127.0.0.1:4723/wd/hub',
+        "DEFAULT_CAPABILITY": {
+            "platformName": "Android",
+            "platformVersion": "8.0.0",
+            "deviceName": "B7E5T17612003933",
+            "udid": "B7E5T17612003933",
+            "automationName": "UiAutomator2",
+            "newCommandTimeout": 600,
+            "appPackage": "com.chinasofti.rcs",
+            "appActivity": "com.cmic.module_main.ui.activity.WelcomeActivity",
+        },
+        'CARDS': [
+            {
+                'TYPE': CardType.CHINA_MOBILE,
+                'CARD_NUMBER': '18822825240'
             },
         ]
     },

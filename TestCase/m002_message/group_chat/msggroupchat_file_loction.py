@@ -1,4 +1,5 @@
 import time
+import random
 
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
@@ -1685,3 +1686,226 @@ class MsgGroupChatFileLocationTest(TestCase):
                 raise AssertionError("没有返回到群聊页面,无法删除记录")
             except AssertionError as e:
                 print(e)
+
+    @staticmethod
+    def public_send_location():
+        """发送位置信息"""
+        gcp = GroupChatPage()
+        gcp.click_more()
+        time.sleep(1)
+        more_page = ChatMorePage()
+        more_page.click_location()
+        # 等待位置页面加载
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        time.sleep(1)
+        # 点击发送按钮
+        if not location_page.send_btn_is_enabled():
+            raise AssertionError("位置页面发送按钮不可点击")
+        location_page.click_send()
+        gcp.wait_for_page_load()
+        gcp.click_more()
+        if not gcp.is_address_text_present():
+            raise AssertionError("位置信息发送不成功")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0319(self):
+        """将自己发送的位置转发到普通群"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择一个普通群
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        names = sogp.get_group_name()
+        normal_names = []
+        for name in names:
+            if '企业' not in name:
+                normal_names.append(name)
+        normal_name = random.choice(normal_names)
+        if normal_name:
+            sogp.select_one_group_by_name(normal_name)
+            # 3、点击确定
+            sogp.click_sure_forward()
+            flag = gcp.is_toast_exist("已转发")
+            if not flag:
+                raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        else:
+            raise AssertionError("需要创建普通群")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0320(self):
+        """将自己发送的位置转发到企业群"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择一个企业群
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        names = sogp.get_group_name()
+        firm_names = []
+        for name in names:
+            if '企业' in name:
+                firm_names.append(name)
+        firm_name = random.choice(firm_names)
+        if firm_name:
+            sogp.select_one_group_by_name(firm_name)
+            # 3、点击确定
+            sogp.click_sure_forward()
+            flag = gcp.is_toast_exist("已转发")
+            if not flag:
+                raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        else:
+            raise AssertionError("需要创建企业群")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0321(self):
+        """将自己发送的位置转发到普通群时失败"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择一个普通群
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        names = sogp.get_group_name()
+        normal_names = []
+        for name in names:
+            if '企业' not in name:
+                normal_names.append(name)
+        normal_name = random.choice(normal_names)
+        if normal_name:
+            sogp.select_one_group_by_name(normal_name)
+            # 3、点击确定
+            sogp.set_network_status(0)
+            sogp.click_sure_forward()
+            flag = gcp.is_toast_exist("已转发")
+            if not flag:
+                raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+            # 4、点击返回
+            time.sleep(3)
+            gcp.click_back()
+            scp.wait_for_page_load()
+            scp.click_back()
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            if not mess.is_iv_fail_status_present():
+                raise AssertionError("消息列表没有显示消息发送失败标识")
+        else:
+            raise AssertionError("需要创建普通群")
+
+    def tearDown_test_msg_weifenglian_qun_0321(self):
+        # 重新连接网络
+        mess = MessagePage()
+        mess.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0322(self):
+        """将自己发送的位置转发到企业群时失败"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择一个企业群
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        names = sogp.get_group_name()
+        firm_names = []
+        for name in names:
+            if '企业' in name:
+                firm_names.append(name)
+        firm_name = random.choice(firm_names)
+        if firm_name:
+            sogp.select_one_group_by_name(firm_name)
+            # 3、点击确定
+            sogp.set_network_status(0)
+            sogp.click_sure_forward()
+            flag = gcp.is_toast_exist("已转发")
+            if not flag:
+                raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+            # 4、点击返回
+            time.sleep(3)
+            gcp.click_back()
+            scp.wait_for_page_load()
+            scp.click_back()
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            if not mess.is_iv_fail_status_present():
+                raise AssertionError("消息列表没有显示消息发送失败标识")
+        else:
+            raise AssertionError("需要创建企业群")
+
+    def tearDown_test_msg_weifenglian_qun_0322(self):
+        # 重新连接网络
+        mess = MessagePage()
+        mess.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0323(self):
+        """"将自己发送的位置转发到普通群时点击取消转发"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择一个普通群
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        names = sogp.get_group_name()
+        normal_names = []
+        for name in names:
+            if '企业' not in name:
+                normal_names.append(name)
+        normal_name = random.choice(normal_names)
+        if normal_name:
+            sogp.select_one_group_by_name(normal_name)
+            # 3、点击取消
+            sogp.click_cancel_forward()
+            if not sogp.is_on_this_page():
+                raise AssertionError("不是停留在当前选择一个群页面")
+        else:
+            raise AssertionError("需要创建普通群")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0324(self):
+        """"将自己发送的位置转发到企业群时点击取消转发"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择一个企业群
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        names = sogp.get_group_name()
+        normal_names = []
+        for name in names:
+            if '企业' in name:
+                normal_names.append(name)
+        normal_name = random.choice(normal_names)
+        if normal_name:
+            sogp.select_one_group_by_name(normal_name)
+            # 3、点击取消
+            sogp.click_cancel_forward()
+            if not sogp.is_on_this_page():
+                raise AssertionError("不是停留在当前选择一个群页面")
+        else:
+            raise AssertionError("需要创建企业群")

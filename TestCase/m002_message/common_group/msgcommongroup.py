@@ -1,6 +1,6 @@
 import time
 import unittest
-
+import random
 from selenium.common.exceptions import TimeoutException
 
 import preconditions
@@ -8454,4 +8454,121 @@ class MsgCommonGroupAllTest(TestCase):
         except TimeoutException:
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
         Preconditions.delete_record_group_chat()
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_xiaoqiu_0240(self):
+        """消息草稿-聊天列表显示-输入空格消息"""
+        # 1、删除聊天记录
+        # 2、选择一个群输入先发送一条信息确保在消息页可以看到
+        # 3、再输入空格不发送返回消息页面
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        info = " "
+        gcp.input_message(info)
+        gcp.click_back()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            if mess.is_text_present("草稿"):
+                raise AssertionError("有草稿标识出现")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_xiaoqiu_0241(self):
+        """消息草稿-聊天列表显示-不输入任何消息"""
+        # 1、删除聊天记录
+        # 2、选择一个群输入先发送一条信息确保在消息页可以看到
+        # 3、不输入任何信息返回消息页面
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        info = ""
+        gcp.input_message(info)
+        if gcp.is_on_this_page():
+            if gcp.is_element_exit_("文本发送按钮"):
+                raise AssertionError("有发送按钮")
+        gcp.click_back()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            if mess.is_text_present("草稿"):
+                raise AssertionError("有草稿标识出现")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_xiaoqiu_0244(self):
+        """消息草稿-聊天列表显示-输入特殊字符"""
+        # 1、删除聊天记录
+        # 2、先发送一条信息确保在消息页可以看到
+        # 3、输入特殊字符返回消息页面
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        info = "*……%#"
+        self.message = gcp.input_message(info)
+        gcp.click_back()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            if not mess.is_text_present("草稿"):
+                raise AssertionError("没有草稿标识出现")
 
