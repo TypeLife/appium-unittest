@@ -3376,6 +3376,76 @@ class MsgGroupChatvedioTest(TestCase):
         scp.set_network_status(6)
         time.sleep(6)
 
+    @staticmethod
+    def setUp_test_msg_xiaoliping_D_0034():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_D_0034(self):
+        """群聊会话页面，转发他人发送的图片到陌生人时点击取消转发"""
+        # 1、在当前聊天会话页面，长按他人发送的图片
+        # 2、点击转发
+        # 3、选择任意陌生人
+        # 4、点击取消按钮
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.go_to_group_double(group_name)
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        # 2.点击输入框左上方的相册图标
+        gcp.click_picture()
+        # 3.进入相片页面,选择一张相片
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_pic_fk()
+        # 4.点击预览
+        cpg.click_preview()
+        cpp = ChatPicPreviewPage()
+        cpp.wait_for_page_load()
+        # 5.点击发送,
+        cpp.click_send()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp.wait_for_page_load()
+        gcp.click_element_("消息图片")
+        time.sleep(2)
+        gcp.press_xy()
+        gcp.click_text("转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        gcp.click_element_("取消移除")
+        sc.wait_for_page_load()
+        current_mobile().back()
+        current_mobile().back()
+        current_mobile().back()
+        Preconditions.delete_record_group_chat()
+
 
 
 class MsgGroupChatVideoPicAllTest(TestCase):
