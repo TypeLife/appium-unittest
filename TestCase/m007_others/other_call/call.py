@@ -3181,3 +3181,122 @@ class MsgAllPrior(TestCase):
         search = SearchPage()
         search.assert_contact_name_display('转发短信1')
         search.assert_contact_name_display('转发短信2')
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0433():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist_631(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+        Preconditions.create_group_if_not_exist_not_enter_chat_631('测试群组1', "测试短信1", "测试短信2")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0433(self):
+        """聊天会话页面——长按——撤回——不足一分钟的语音消息"""
+        # 1、网络正常
+        # 2、登录和飞信
+        # 3、已加入普通群
+        # 4、聊天会话页面
+        # 5、存在发送成功时间，小于1分钟的消息
+        # 6、普通群/单聊/企业群/我的电脑/标签分组
+        mess = MessagePage()
+        # Step 进入群聊页面
+        mess.search_and_enter('测试群组1')
+        groupchat = GroupChatPage()
+        chataudio = ChatAudioPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        # Step 清除聊天记录
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        groupset.click_clear_chat_record()
+        groupset.wait_clear_chat_record_confirmation_box_load()
+        groupset.click_determine()
+        groupset.click_back()
+        groupchat.click_audio_btn()
+        # 若第一次进入存在选择语音模式页面，选择仅发送语音
+        if chataudio.wait_for_audio_type_select_page_load(auto_accept_alerts=True):
+            chataudio.click_only_voice_631()
+            chataudio.click_sure()
+        # 若存在语音权限申请弹框，点击允许
+        if chataudio.wait_for_audio_allow_page_load():
+            chataudio.click_allow()
+        # 若当前在智能识别模式，录入语音3s后会弹出设置按钮，设置为仅发送语音
+        if chataudio.is_exist_setting_bottom():
+            chataudio.click_setting_bottom()
+            chataudio.click_only_voice_631()
+            chataudio.click_sure()
+        time.sleep(3)
+        chataudio.click_send_bottom()
+        time.sleep(1)
+        # Step 1、长按发送成功的消息
+        groupchat.press_voice_message()
+        # Checkpoint 弹出的功能列表中，存在撤回功能
+        groupchat.click_recall()
+        groupchat.if_exist_i_know_click()
+        time.sleep(3)
+        # Checkpoint 可以成功撤回此条消息并且在会话窗口展示：你撤回了一条消息
+        mess.page_should_contain_text('你撤回了一条信息')
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0434():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist_631(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+        Preconditions.create_group_if_not_exist_not_enter_chat_631('测试群组1', "测试短信1", "测试短信2")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0434(self):
+        """聊天会话页面——长按撤回——超过一分钟的语音消息"""
+        # 1、网络正常
+        # 2、登录和飞信
+        # 3、已加入普通群
+        # 4、聊天会话页面
+        # 5、存在发送成功时间，小于1分钟的消息
+        # 6、普通群/单聊/企业群/我的电脑/标签分组
+        mess = MessagePage()
+        # Step 进入群聊页面
+        mess.search_and_enter('测试群组1')
+        groupchat = GroupChatPage()
+        chataudio = ChatAudioPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        # Step 清除聊天记录
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        groupset.click_clear_chat_record()
+        groupset.wait_clear_chat_record_confirmation_box_load()
+        groupset.click_determine()
+        groupset.click_back()
+        groupchat.click_audio_btn()
+        # 若第一次进入存在选择语音模式页面，选择仅发送语音
+        if chataudio.wait_for_audio_type_select_page_load(auto_accept_alerts=True):
+            chataudio.click_only_voice_631()
+            chataudio.click_sure()
+        # 若存在语音权限申请弹框，点击允许
+        if chataudio.wait_for_audio_allow_page_load():
+            chataudio.click_allow()
+        # 若当前在智能识别模式，录入语音3s后会弹出设置按钮，设置为仅发送语音
+        if chataudio.is_exist_setting_bottom():
+            chataudio.click_setting_bottom()
+            chataudio.click_only_voice_631()
+            chataudio.click_sure()
+        time.sleep(3)
+        chataudio.click_send_bottom()
+        time.sleep(60)
+        # Step 1、长按发送成功的消息
+        groupchat.press_voice_message()
+        # Checkpoint 弹出的功能列表中，存在撤回功能
+        groupchat.click_recall()
+        groupchat.if_exist_i_know_click()
+        time.sleep(3)
+        # Checkpoint 可以成功撤回此条消息并且在会话窗口展示：你撤回了一条消息
+        mess.page_should_contain_text('你撤回了一条信息')
+
+
+
