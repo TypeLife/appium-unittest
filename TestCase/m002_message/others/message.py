@@ -17,6 +17,7 @@ from preconditions.BasePreconditions import WorkbenchPreconditions
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
     'Android-XX': ''  # 用来发短信
+
 }
 
 
@@ -355,39 +356,39 @@ class MessageScanTest(TestCase):
 class MessageSearchTest(TestCase):
     """消息-全局搜索"""
 
-    @classmethod
-    def setUpClass(cls):
-
-        # 创建联系人
-        fail_time = 0
-        import dataproviders
-        while fail_time < 3:
-            try:
-                required_contacts = dataproviders.get_preset_contacts()
-                conts = ContactsPage()
-                preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
-                current_mobile().hide_keyboard_if_display()
-                for name, number in required_contacts:
-                    preconditions.make_already_in_message_page()
-                    conts.open_contacts_page()
-                    conts.create_contacts_if_not_exits(name, number)
-
-                # 创建群
-                required_group_chats = dataproviders.get_preset_group_chats()
-
-                conts.open_group_chat_list()
-                group_list = GroupListPage()
-                for group_name, members in required_group_chats:
-                    group_list.wait_for_page_load()
-                    group_list.create_group_chats_if_not_exits(group_name, members)
-                group_list.click_back()
-                conts.open_message_page()
-                return
-            except:
-                fail_time += 1
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
+    # @classmethod
+    # def setUpClass(cls):
+    #
+    #     # 创建联系人
+    #     fail_time = 0
+    #     import dataproviders
+    #     while fail_time < 3:
+    #         try:
+    #             required_contacts = dataproviders.get_preset_contacts()
+    #             conts = ContactsPage()
+    #             preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
+    #             current_mobile().hide_keyboard_if_display()
+    #             for name, number in required_contacts:
+    #                 preconditions.make_already_in_message_page()
+    #                 conts.open_contacts_page()
+    #                 conts.create_contacts_if_not_exits(name, number)
+    #
+    #             # 创建群
+    #             required_group_chats = dataproviders.get_preset_group_chats()
+    #
+    #             conts.open_group_chat_list()
+    #             group_list = GroupListPage()
+    #             for group_name, members in required_group_chats:
+    #                 group_list.wait_for_page_load()
+    #                 group_list.create_group_chats_if_not_exits(group_name, members)
+    #             group_list.click_back()
+    #             conts.open_message_page()
+    #             return
+    #         except:
+    #             fail_time += 1
+    #             import traceback
+    #             msg = traceback.format_exc()
+    #             print(msg)
 
     @tags('ALL', 'SMOKE', "CMCC1")
     def test_msg_huangcaizui_E_0001(self):
@@ -402,7 +403,7 @@ class MessageSearchTest(TestCase):
         2、已登录客户端
         3、当前在消息页面
         """
-        preconditions.connect_mobile(REQUIRED_MOBILES['Android-移动'])
+        preconditions.connect_mobile(REQUIRED_MOBILES['IOS-移动'])
         current_mobile().hide_keyboard_if_display()
         preconditions.make_already_in_message_page()
 
