@@ -9,7 +9,6 @@ from preconditions.BasePreconditions import LoginPreconditions
 
 class Preconditions(LoginPreconditions):
     """前置条件"""
-
     @staticmethod
     def make_already_in_message_page(reset=False):
         """确保应用在消息页面"""
@@ -46,6 +45,10 @@ class MsgSelectMoreTest(TestCase):
                 current_mobile().hide_keyboard_if_display()
                 Preconditions.make_already_in_message_page()
                 conts.open_contacts_page()
+                time.sleep(1)
+                mp = MessagePage()
+                mp.click_phone_contact()
+                time.sleep(1)
                 try:
                     if conts.is_text_present("发现SIM卡联系人"):
                         conts.click_text("显示")
@@ -89,7 +92,7 @@ class MsgSelectMoreTest(TestCase):
     def default_tearDown(self):
         pass
 
-    @tags('ALL', 'MES_OTHER', 'YL')
+    @tags('ALL', 'CMCC', 'MES_OTHER', 'YL01')
     def test_msg_huangcaizui_E_0017(self):
         """查看更多联系人"""
         Preconditions.make_already_in_message_page()
@@ -108,7 +111,7 @@ class MsgSelectMoreTest(TestCase):
         # 2.跳转到搜索到的所有联系人显示页面
         select_contacts.is_text_present("手机联系人")
 
-    @tags('ALL', 'MES_OTHER', 'YL')
+    @tags('ALL', 'CMCC', 'MES_OTHER', 'YL')
     def test_msg_huangcaizui_E_0020(self):
         """查看更多联系人"""
         Preconditions.make_already_in_message_page()
@@ -126,3 +129,243 @@ class MsgSelectMoreTest(TestCase):
         select_contacts.is_text_present("群聊1")
         # 2.跳转到搜索到的所有群聊信息页面
         self.assertEquals(select_contacts.is_text_present("查看更多"), False)
+
+    @tags('ALL', 'CMCC', 'MES_OTHER', 'YL')
+    def test_msg_huangmianhua_0078(self):
+        Preconditions.make_already_in_message_page()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 1、点击右上角的+号，发起群聊
+        mess.click_add_icon()
+        time.sleep(1)
+        mess.click_group_chat()
+        sc = SelectContactsPage()
+        self.assertEquals(sc.is_text_present("选择联系人"), True)
+        # 2、点击选择一个群，可以进入到群聊列表展示页面
+        sc.click_select_one_group()
+        time.sleep(1)
+        self.assertEquals(sc.is_text_present("面对面建群"), False)
+        # 3、中文模糊搜索企业群和党群，可以匹配展示搜索结果（有相应“企”或党徽标识）
+        search_page = SearchPage()
+        search_page.click_search_group_hint()
+        search_page.input_search_hint("群聊")
+        time.sleep(3)
+        search_page.hide_keyboard()
+        exist = search_page.is_text_present("群聊1")
+        self.assertEquals(exist, True)
+
+    @tags('ALL', 'CMCC', 'MES_OTHER', 'YL')
+    def test_msg_huangmianhua_0079(self):
+        Preconditions.make_already_in_message_page()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_add_icon()
+        time.sleep(1)
+        mess.click_group_chat()
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        time.sleep(1)
+        search_page = SearchPage()
+        search_page.click_search_group_hint()
+        search_page.input_search_hint("群1")
+        time.sleep(3)
+        search_page.hide_keyboard()
+        # 1、中文模糊搜索企业群和党群，无匹配搜索结果，展示提示：无搜索结果
+        self.assertEquals(search_page.is_text_present("无搜索结果"), True)
+
+    @tags('ALL', 'CMCC', 'MES_OTHER', 'YL')
+    def test_msg_huangmianhua_0080(self):
+        Preconditions.make_already_in_message_page()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_add_icon()
+        time.sleep(1)
+        mess.click_group_chat()
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        time.sleep(1)
+        search_page = SearchPage()
+        search_page.click_search_group_hint()
+        search_page.input_search_hint("群聊1")
+        time.sleep(3)
+        search_page.hide_keyboard()
+        # 1、中文精确搜索企业群和党群，可以匹配展示搜索结果（有相应“企”或党徽标识）
+        glsp = GroupListSearchPage()
+        exist = glsp.is_group_in_list("群聊1")
+        self.assertEquals(exist, True)
+
+    @tags('ALL', 'CMCC', 'MES_OTHER', 'YL')
+    def test_msg_huangmianhua_0081(self):
+        Preconditions.make_already_in_message_page()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_add_icon()
+        time.sleep(1)
+        mess.click_group_chat()
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        time.sleep(1)
+        search_page = SearchPage()
+        search_page.click_search_group_hint()
+        search_page.input_search_hint("群聊20")
+        time.sleep(3)
+        search_page.hide_keyboard()
+        # 1、中文精确搜索企业群和党群，无匹配搜索结果，展示提示：无搜索结果
+        self.assertEquals(search_page.is_text_present("无搜索结果"), True)
+
+    @tags('ALL', 'CMCC', 'MES_OTHER', 'YL')
+    def test_msg_huangmianhua_0082(self):
+        Preconditions.make_already_in_message_page()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_add_icon()
+        time.sleep(1)
+        mess.click_group_chat()
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        time.sleep(1)
+        search_page = SearchPage()
+        search_page.click_search_group_hint()
+        search_page.input_search_hint("testa")
+        time.sleep(3)
+        search_page.hide_keyboard()
+        # 1、英文精确搜索企业群和党群，可以匹配展示搜索结果（有相应“企”或党徽标识）
+        glsp = GroupListSearchPage()
+        exist = glsp.is_group_in_list("testa")
+        self.assertEquals(exist, True)
+
+    @tags('ALL', 'CMCC', 'MES_OTHER', 'YL')
+    def test_msg_huangmianhua_0083(self):
+        Preconditions.make_already_in_message_page()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_add_icon()
+        time.sleep(1)
+        mess.click_group_chat()
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        time.sleep(1)
+        search_page = SearchPage()
+        search_page.click_search_group_hint()
+        search_page.input_search_hint("groupa")
+        time.sleep(3)
+        search_page.hide_keyboard()
+        # 1、英文精确搜索企业群和党群，无匹配搜索结果，展示提示：无搜索结果
+        self.assertEquals(search_page.is_text_present("无搜索结果"), True)
+
+    @tags('ALL', 'CMCC', 'MES_OTHER', 'YL')
+    def test_msg_huangmianhua_0084(self):
+        Preconditions.make_already_in_message_page()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_add_icon()
+        time.sleep(1)
+        mess.click_group_chat()
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        time.sleep(1)
+        search_page = SearchPage()
+        search_page.click_search_group_hint()
+        search_page.input_search_hint(" ")
+        time.sleep(3)
+        search_page.hide_keyboard()
+        # 1、空格精确搜索企业群和党群，可以匹配展示搜索结果（有相应“企”或党徽标识）
+        exist = search_page.is_text_present("test b")
+        self.assertEquals(exist, True)
+
+    @tags('ALL', 'CMCC', 'MES_OTHER', 'YL')
+    def test_msg_huangmianhua_0085(self):
+        Preconditions.make_already_in_message_page()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_add_icon()
+        time.sleep(1)
+        mess.click_group_chat()
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        time.sleep(1)
+        search_page = SearchPage()
+        search_page.click_search_group_hint()
+        search_page.input_search_hint("  ")
+        time.sleep(3)
+        search_page.hide_keyboard()
+        # 1、空格精确搜索企业群和党群，无匹配搜索结果，展示提示：无搜索结果
+        self.assertEquals(search_page.is_text_present("无搜索结果"), True)
+
+    @tags('ALL', 'CMCC', 'MES_OTHER', 'YL')
+    def test_msg_huangmianhua_0086(self):
+        Preconditions.make_already_in_message_page()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_add_icon()
+        time.sleep(1)
+        mess.click_group_chat()
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        time.sleep(1)
+        search_page = SearchPage()
+        search_page.click_search_group_hint()
+        search_page.input_search_hint("001")
+        time.sleep(3)
+        search_page.hide_keyboard()
+        # 1、数字精确搜索企业群和党群，可以匹配展示搜索结果（有相应“企”或党徽标识）
+        exist = search_page.is_text_present("group001")
+        self.assertEquals(exist, True)
+
+    @tags('ALL', 'CMCC', 'MES_OTHER', 'YL')
+    def test_msg_huangmianhua_0087(self):
+        Preconditions.make_already_in_message_page()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_add_icon()
+        time.sleep(1)
+        mess.click_group_chat()
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        time.sleep(1)
+        search_page = SearchPage()
+        search_page.click_search_group_hint()
+        search_page.input_search_hint("999")
+        time.sleep(3)
+        search_page.hide_keyboard()
+        # 1、数字精确搜索企业群和党群，无匹配搜索结果，展示提示：无搜索结果
+        self.assertEquals(search_page.is_text_present("无搜索结果"), True)
+
+    @tags('ALL', 'CMCC', 'MES_OTHER', 'YL')
+    def test_msg_huangmianhua_0088(self):
+        Preconditions.make_already_in_message_page()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_add_icon()
+        time.sleep(1)
+        mess.click_group_chat()
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        time.sleep(1)
+        search_page = SearchPage()
+        search_page.click_search_group_hint()
+        search_page.input_search_hint("###")
+        time.sleep(3)
+        search_page.hide_keyboard()
+        # 1、数字精确搜索企业群和党群，可以匹配展示搜索结果（有相应“企”或党徽标识）
+        exist = search_page.is_text_present("###001")
+        self.assertEquals(exist, True)
+
+    @tags('ALL', 'CMCC', 'MES_OTHER', 'YL')
+    def test_msg_huangmianhua_0089(self):
+        Preconditions.make_already_in_message_page()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.click_add_icon()
+        time.sleep(1)
+        mess.click_group_chat()
+        sc = SelectContactsPage()
+        sc.click_select_one_group()
+        time.sleep(1)
+        search_page = SearchPage()
+        search_page.click_search_group_hint()
+        search_page.input_search_hint("####")
+        time.sleep(3)
+        search_page.hide_keyboard()
+        # 1、数字精确搜索企业群和党群，无匹配搜索结果，展示提示：无搜索结果
+        self.assertEquals(search_page.is_text_present("无搜索结果"), True)
