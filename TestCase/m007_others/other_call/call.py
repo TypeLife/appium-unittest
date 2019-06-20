@@ -3496,7 +3496,126 @@ class MsgAllPrior(TestCase):
         # Checkpoint 不出现重复头像，消息聚合展示
         self.assertTrue(groupchat.is_multi_show())
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0465():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist_631(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+        Preconditions.create_group_if_not_exist_not_enter_chat_631('测试群组1', "测试短信1", "测试短信2")
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0465(self):
+        """查找聊天内容页-选择搜索结果-定位到的搜索结果展示页-输入框会自动填充上一次发送出去的内容"""
+        # 1、网络正常
+        # 2、已登录和飞信
+        # 3、已加入普通群
+        mess = MessagePage()
+        # Step 进入群聊页面
+        mess.search_and_enter('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        # Step 清除聊天记录
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        groupset.click_clear_chat_record()
+        groupset.wait_clear_chat_record_confirmation_box_load()
+        groupset.click_determine()
+        groupset.click_back()
+        groupchat.click_input_box()
+        # Step 1、在群聊会话页，发送一条消息
+        groupchat.input_text_message('测试聚合消息1')
+        groupchat.send_text()
+        # Step 2、再在输入框中，录入内容
+        groupchat.input_text_message('测试聚合消息2')
+        # Step 3、去到群聊设置-查找聊天内容——选择搜索结果——定位到搜索结果页
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        groupset.click_find_chat_record()
+        search = GroupChatSetFindChatContentPage()
+        search.wait_for_page_load()
+        # Step 在查找聊天内容页面，输入框中，输入中文搜索条件
+        search.search('测试聚合消息1')
+        # Step 任意选中一条聊天记录
+        search.click_search_result('测试聚合消息1')
+        # Checkpoint 跳转到聊天记录对应的位置
+        groupchat.is_on_this_page()
+        # Checkpoint 搜索结果展示页的输入框中，不会自动填充内容
+        mess.page_should_contain_text('说点什么...')
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0469():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        # Preconditions.create_contacts_if_not_exist_631(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+        # Preconditions.create_group_if_not_exist_not_enter_chat_631('测试群组1', "测试短信1", "测试短信2")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0469(self):
+        """在消息列表——长按置顶的会话窗口——检查弹出窗口"""
+        # 1、网络正常
+        # 2、已登录和飞信
+        # 3、已加入普通群
+        # 4、置顶聊天开关，开启状态（安卓）
+        mess = MessagePage()
+        mess.search_and_enter('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        if not groupset.get_chat_set_to_top_switch_status():
+            groupset.click_chat_set_to_top_switch()
+        groupset.click_back()
+        groupchat.click_back()
+        ContactListSearchPage().click_back()
+        mess.wait_for_page_load()
+        # Step 1、在消息列表长按置顶成功的会话窗口，弹出的功能列表中是否存在展示为：取消置顶的功能
+        mess.cancel_message_record_stick()
+        mess.search_and_enter('测试群组1')
+        # Step 2、点击取消置顶，取消置顶成功后，去到群聊设置页面，置顶聊天的开关是否已被关闭
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        # Checkpoint 置顶聊天的开关已被关闭
+        self.assertFalse(groupset.get_chat_set_to_top_switch_status())
+
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0550():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist_631(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+        Preconditions.create_group_if_not_exist_not_enter_chat_631('测试群组1', "测试短信1", "测试短信2")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0550(self):
+        """普通群，点击口令弹窗的立即分享按钮，分享群口令"""
+        # 1、网络正常
+        # 2、已加入或创建普通群
+        # 3、已消除红点
+        # 4、群主、群成员
+        # 5、仅限大陆本网和异网号码
+        mess = MessagePage()
+        # Step 1、在群聊设置页面，群口令生成成功后
+        mess.search_and_enter('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        groupset.click_avetor_qq_wechat_friend()
+        # 2、android点击下载再说或者空白处，弹窗是否会消失
+        groupset.wait_for_share_group_load()
+        groupset.click_say_next()
+        # Checkpoint 弹窗消失并且返回到群聊设置页面
+        groupset.wait_for_page_load()
 
 
