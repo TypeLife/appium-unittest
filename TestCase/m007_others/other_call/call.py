@@ -3457,3 +3457,46 @@ class MsgAllPrior(TestCase):
         # Checkpoint 3、在超过10分钟后，点击撤回功能，不可以撤回此条消息
         mess.page_should_not_contain_text('你撤回了一条信息')
 
+    @staticmethod
+    def setUp_test_msg_xiaoqiu_0441():
+        # 启动App
+        Preconditions.select_mobile('Android-移动')
+        # 启动后不论当前在哪个页面，强制进入消息页面
+        Preconditions.force_enter_message_page('Android-移动')
+        # 下面根据用例情况进入相应的页面
+        Preconditions.create_contacts_if_not_exist_631(["测试短信1, 13800138111", "测试短信2, 13800138112"])
+        Preconditions.create_group_if_not_exist_not_enter_chat_631('测试群组1', "测试短信1", "测试短信2")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'prior', 'high')
+    def test_msg_xiaoqiu_0441(self):
+        """（普通消息体）聊天会话页面——5分钟内——连续发送文本消息体"""
+        # 1、网络正常
+        # 2、登录和飞信
+        # 3、已加入普通群
+        # 4、聊天会话页面
+        mess = MessagePage()
+        # Step 进入群聊页面
+        mess.search_and_enter('测试群组1')
+        groupchat = GroupChatPage()
+        groupset = GroupChatSetPage()
+        groupchat.wait_for_page_load()
+        # Step 清除聊天记录
+        groupchat.click_setting()
+        groupset.wait_for_page_load()
+        groupset.click_clear_chat_record()
+        groupset.wait_clear_chat_record_confirmation_box_load()
+        groupset.click_determine()
+        groupset.click_back()
+        groupchat.click_input_box()
+        # Step 1、5分钟内，发送方连续发送文本消息，是否不出现重复头像，消息聚合展示
+        groupchat.input_text_message('测试聚合消息1')
+        groupchat.send_text()
+        groupchat.input_text_message('测试聚合消息2')
+        groupchat.send_text()
+        # Checkpoint 不出现重复头像，消息聚合展示
+        self.assertTrue(groupchat.is_multi_show())
+
+
+
+
+
