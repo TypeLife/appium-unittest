@@ -104,6 +104,11 @@ class CallPage(BasePage):
         return flag
 
     @TestLogger.log()
+    def click_dial_pad(self):
+        """点击拨号盘"""
+        self.click_element(self.__locators["拨号盘"])
+
+    @TestLogger.log()
     def click_one(self):
         """点击拨号键1"""
         self.click_element(self.__locators["拨号键1"])

@@ -22,7 +22,7 @@ class MeCollectionPage(BasePage):
                   'com.chinasofti.rcs:id/tv_head': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_head'),
                   '我': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name'),
                   '今天': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_time'),
-                  'www.baidu.com': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_tv'),
+                  'www.otherpages.com': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_tv'),
                   'com.chinasofti.rcs:id/favorite_content': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_content'),
                   'com.chinasofti.rcs:id/favorite_image_shortcut': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/favorite_image_shortcut'),
@@ -370,3 +370,13 @@ class MeCollectionPage(BasePage):
             self.click_delete_collection()
             self.click_sure_forward()
             self.wait_for_page_load()
+
+    @TestLogger.log()
+    def is_element_exit_(self, text):
+        """指定元素是否存在"""
+        return self._is_element_present(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def click_element_(self, text):
+        """点击元素"""
+        self.click_element(self.__class__.__locators[text])

@@ -2917,7 +2917,7 @@ class MessageOthersAllTest(TestCase):
         # 进入会话页面发送网页消息
         Preconditions.get_into_group_chat_page("群聊1")
         gcp = GroupChatPage()
-        gcp.input_text_message("www.baidu.com")
+        gcp.input_text_message("www.otherpages.com")
         gcp.send_text()
         # 转发网页消息到我的电脑
         gcp.press_message_text_by_number(-1)
@@ -3000,7 +3000,7 @@ class MessageOthersAllTest(TestCase):
         gcs.click_back()
         gcp.wait_for_page_load()
         # 发送网页消息
-        text = "www.baidu.com"
+        text = "www.otherpages.com"
         gcp.input_text_message(text)
         gcp.send_text()
         gcp.press_message_text_by_number(-1)
@@ -3033,7 +3033,7 @@ class MessageOthersAllTest(TestCase):
         Preconditions.get_into_group_chat_page("群聊1")
         gcp = GroupChatPage()
         # 发送网页消息
-        text = "www.baidu.com"
+        text = "www.otherpages.com"
         gcp.input_text_message(text)
         gcp.send_text()
         gcp.press_message_text_by_number(-1)
@@ -3068,7 +3068,7 @@ class MessageOthersAllTest(TestCase):
         gcs.click_back()
         gcp.wait_for_page_load()
         # 发送网页消息
-        text = "www.baidu.com"
+        text = "www.otherpages.com"
         gcp.input_text_message(text)
         gcp.send_text()
         gcp.press_message_text_by_number(-1)

@@ -78,6 +78,9 @@ class MessagePage(FooterPage):
         "确定2":(MobileBy.ID,"com.chinasofti.rcs:id/tv_sure"),
         "群聊名":(MobileBy.ID,"com.chinasofti.rcs:id/et_group_name"),
         "有人@我": (MobileBy.XPATH, "//*[contains(@text,'有人@我')]"),
+        "草稿": (MobileBy.ID, "com.chinasofti.rcs:id/tv_msg_draft_hint"),
+        "手机联系人": (MobileBy.ID, "com.chinasofti.rcs:id/first_item"),
+
     }
 
     @TestLogger.log("点击创建群聊")
@@ -88,6 +91,12 @@ class MessagePage(FooterPage):
     @TestLogger.log("点击选择手机联系人")
     def click_contact_group(self):
         self.click_element(self.__locators["选择手机联系人"])
+        time.sleep(1)
+
+
+    @TestLogger.log("点击手机联系人")
+    def click_phone_contact(self):
+        self.click_element(self.__locators["手机联系人"])
         time.sleep(1)
 
     @TestLogger.log("点击群聊名")
@@ -107,6 +116,11 @@ class MessagePage(FooterPage):
     @TestLogger.log("点击确定")
     def click_sure_button(self):
         self.click_element(self.__locators["确定2"])
+        time.sleep(1)
+
+    @TestLogger.log("点击通话")
+    def click_calls(self):
+        self.click_element(self.__locators["通话"])
         time.sleep(1)
 
 

@@ -215,7 +215,7 @@ class OfficialAccountTest(TestCase):
         official.click_officel_account()
         time.sleep(2)
         official.click_input_box()
-        mesaage ='www.baidu.com'
+        mesaage ='www.otherpages.com'
         official.input_message(mesaage)
         official.click_send_button()
         official.page_should_not_contain_sendfail_element()
