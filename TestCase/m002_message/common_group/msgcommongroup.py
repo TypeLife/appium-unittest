@@ -197,9 +197,9 @@ class Preconditions(object):
 
         # 跳过引导页
         guide_page.wait_for_page_load(30)
-        guide_page.swipe_to_the_second_banner()
-        guide_page.swipe_to_the_third_banner()
-        current_mobile().hide_keyboard_if_display()
+        # guide_page.swipe_to_the_second_banner()
+        # guide_page.swipe_to_the_third_banner()
+        # current_mobile().hide_keyboard_if_display()
         guide_page.click_start_the_experience()
 
         # 点击权限列表页面的确定按钮
