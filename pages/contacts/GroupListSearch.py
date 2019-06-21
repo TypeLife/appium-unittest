@@ -15,6 +15,7 @@ class GroupListSearchPage(BasePage):
         '搜索结果列表': (MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView'),
         '列表项': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/recyclerView"]/*'),
         '群名': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
+        '群聊': (MobileBy.ID, 'com.chinasofti.rcs:id/title_ll'),
     }
 
     @TestLogger.log('点击返回')
@@ -42,3 +43,11 @@ class GroupListSearchPage(BasePage):
     def click_group(self, name):
         self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and ' +
                             '@text="{}"]'.format(name)))
+
+    @TestLogger.log()
+    def is_on_this_page(self):
+        """当前页面是否在搜索群组"""
+        el = self.get_elements(self.__locators['群聊'])
+        if len(el) > 0:
+            return True
+        return False

@@ -1,6 +1,8 @@
 import time
 import random
 
+from selenium.common.exceptions import TimeoutException
+
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
@@ -11,6 +13,7 @@ from pages import ChatLocationPage
 from pages import ChatMorePage
 from pages import ChatSelectFilePage
 from pages import ChatSelectLocalFilePage
+from pages import ChatWindowPage
 from pages import CreateGroupNamePage
 from pages import FindChatRecordPage
 from pages import GroupChatPage
@@ -24,6 +27,7 @@ from pages import SelectContactsPage
 from pages import SelectLocalContactsPage
 from pages import SelectOneGroupPage
 from pages import GroupChatSetPage
+from pages.contacts import GroupListSearchPage
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -1909,3 +1913,262 @@ class MsgGroupChatFileLocationTest(TestCase):
                 raise AssertionError("不是停留在当前选择一个群页面")
         else:
             raise AssertionError("需要创建企业群")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0325(self):
+        """"将自己发送的位置转发到在搜索框输入文字搜索到的群"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择一个群
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        # 3.搜索群组
+        sogp.click_search_group()
+        sogp.input_search_keyword('群聊1')
+        if sogp.is_element_present_result():
+            sogp.click_search_result()
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            if not flag:
+                raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        else:
+            sogp.page_should_contain_text('无搜索结果')
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0326(self):
+        """将自己发送的位置转发到在搜索框输入英文字母搜索到的群"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择一个群
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        # 3.搜索群组
+        sogp.click_search_group()
+        sogp.input_search_keyword("test_group")
+        if sogp.is_element_present_result():
+            sogp.click_search_result()
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            if not flag:
+                raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        else:
+            sogp.page_should_contain_text("无搜索结果")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0327(self):
+        """将自己发送的位置转发到在搜索框输入数字搜索到的群"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择一个群
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        # 3.搜索群组
+        sogp.click_search_group()
+        sogp.input_search_keyword("138138138")
+        if sogp.is_element_present_result():
+            sogp.click_search_result()
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            if not flag:
+                raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        else:
+            sogp.page_should_contain_text("无搜索结果")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0328(self):
+        """将自己发送的位置转发到在搜索框输入标点符号搜索到的群"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择一个群
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        # 3.搜索群组
+        sogp.click_search_group()
+        sogp.input_search_keyword("；，。")
+        if sogp.is_element_present_result():
+            sogp.click_search_result()
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            if not flag:
+                raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        else:
+            sogp.page_should_contain_text("无搜索结果")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0329(self):
+        """将自己发送的位置转发到在搜索框输入特殊字符搜索到的群"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择一个群
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        # 3.搜索群组
+        sogp.click_search_group()
+        sogp.input_search_keyword("&%@")
+        if sogp.is_element_present_result():
+            sogp.click_search_result()
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            if not flag:
+                raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        else:
+            sogp.page_should_contain_text("无搜索结果")
+
+    @tags('ALL', 'CMCC', 'group_chat',  'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0330(self):
+        """将自己发送的位置转发到在搜索框输入空格搜索到的群"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do('转发')
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择一个群
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        # 3.搜索群组
+        sogp.click_search_group()
+        sogp.input_search_keyword(" ")
+        if sogp.is_element_present_result():
+            sogp.click_search_result()
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            if not flag:
+                raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        else:
+            sogp.page_should_contain_text("无搜索结果")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0331(self):
+        """将自己发送的位置转发到在搜索框输入多种字符搜索到的群"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择一个群
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        # 3.搜索群组
+        sogp.click_search_group()
+        sogp.input_search_keyword("a尼6")
+        if sogp.is_element_present_result():
+            sogp.click_search_result()
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            if not flag:
+                raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        else:
+            sogp.page_should_contain_text("无搜索结果")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0332(self):
+        """将自己发送的位置转发到在搜索框输入多种字符搜索到的群"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择一个群
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        # 3.搜索群组
+        sogp.click_search_group()
+        sogp.input_search_keyword("群聊.*a")
+        if sogp.is_element_present_result():
+            sogp.click_search_result()
+            sogp.click_sure_forward()
+            flag = sogp.is_toast_exist("已转发")
+            if not flag:
+                raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        else:
+            sogp.page_should_contain_text("无搜索结果")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0333(self):
+        """将自己发送的位置转发到在搜索框粘贴字符搜索到的群"""
+        gcp = GroupChatPage()
+        # 1.输入群名发送，长按信息并复制
+        gcp.input_message("群聊2")
+        gcp.send_message()
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        gcp.press_file_to_do("群聊2","复制")
+        flag = gcp.is_toast_exist("已复制")
+        if not flag:
+            raise AssertionError("群聊名字复制失败")
+        # 2.发送自己的位置
+        self.public_send_location()
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 3.点击选择一个群
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        # 4.搜索群组
+        sogp.click_search_group()
+        time.sleep(2)
+        # 5.长按搜索框
+        sogp.press_group_search_bar()
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0334(self):
+        """将自己发送的位置转发到搜索到的群时点击取消转发"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        scp.click_select_one_group()
+        # 2.点击选择一个群
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        # 3.搜索群组
+        sogp.click_search_group()
+        sogp.input_search_keyword("群聊1")
+        if sogp.is_element_present_result():
+            sogp.click_search_result()
+            # 4.点击返回
+            sogp.click_cancel_forward()
+            time.sleep(2)
+            glsp = GroupListSearchPage()
+            if not glsp.is_on_this_page():
+                raise AssertionError("当前页面不在搜索群组页面")
+        else:
+            sogp.page_should_contain_text("无搜索结果")
