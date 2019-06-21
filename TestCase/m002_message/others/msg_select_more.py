@@ -369,3 +369,71 @@ class MsgSelectMoreTest(TestCase):
         search_page.hide_keyboard()
         # 1、数字精确搜索企业群和党群，无匹配搜索结果，展示提示：无搜索结果
         self.assertEquals(search_page.is_text_present("无搜索结果"), True)
+
+    @tags('ALL', 'CMCC', 'MES_OTHER', 'YL')
+    def test_msg_huangmianhua_0131(self):
+        Preconditions.make_already_in_message_page()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        time.sleep(1)
+        # 联系 tab
+        mess.open_contacts_page()
+        cp = ContactsPage()
+        cp.wait_for_page_load()
+        # 联系-群聊
+        cp.open_group_chat_list()
+        time.sleep(1)
+        scp = SelectContactsPage()
+        scp.click_group_search()
+        scp.group_search(text="给个红包1")
+        time.sleep(1)
+        scp.hide_keyboard()
+        scp.select_one_group_by_name2("给个红包1")
+        time.sleep(1)
+        scp.click_groupchat_setting_icon()
+        time.sleep(1)
+        # 判定点 1、进入“设置”页面
+        exists = scp.is_toast_exist("群聊设置")
+        self.assertEquals(exists, True)
+        gcsp = GroupChatSetPage()
+        # 点击 清空聊天记录
+        gcsp.click_clear_chat_record2()
+        time.sleep(1)
+        scp.click_clear_record_sure()
+        # 判定点 2、提示“聊天记录清除成功”
+        exists = scp.is_toast_exist("聊天记录清除成功")
+        self.assertEquals(exists, True)
+
+    @tags('ALL', 'CMCC', 'MES_OTHER', 'YL')
+    def test_msg_huangmianhua_0132(self):
+        Preconditions.make_already_in_message_page()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        time.sleep(1)
+        # 联系 tab
+        mess.open_contacts_page()
+        cp = ContactsPage()
+        cp.wait_for_page_load()
+        # 联系-群聊
+        cp.open_group_chat_list()
+        time.sleep(1)
+        scp = SelectContactsPage()
+        scp.click_group_search()
+        scp.group_search(text="给个红包1")
+        time.sleep(1)
+        scp.hide_keyboard()
+        scp.select_one_group_by_name2("给个红包1")
+        time.sleep(1)
+        scp.click_groupchat_setting_icon()
+        time.sleep(1)
+        # 判定点 1、进入“设置”页面
+        exists = scp.is_toast_exist("群聊设置")
+        self.assertEquals(exists, True)
+        gcsp = GroupChatSetPage()
+        # 点击 清空聊天记录
+        gcsp.click_clear_chat_record2()
+        time.sleep(1)
+        # 判定点 2、弹出确认窗口
+        exists = scp.is_toast_exist("是否清空聊天记录?")
+        self.assertEquals(exists, True)
+

@@ -235,6 +235,12 @@ class MePage(FooterPage):
         self.click_element(self.__locators['收藏'])
 
     @TestLogger.log()
+    def click_collection2(self):
+        """点击收藏按钮"""
+        self._find_menu(self.__locators['收藏'])
+        self.click_element(self.__locators['收藏'])
+
+    @TestLogger.log()
     def is_on_this_page(self):
         """当前页面是否在我的页面"""
         el = self.get_elements(self.__locators['查看并编辑个人资料'])

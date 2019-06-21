@@ -39,7 +39,7 @@ class SelectContactsPage(BasePage):
         # 分享二维码的选择联系人页面
         '选择手机联系人': (MobileBy.XPATH, '//*[@text ="选择手机联系人"]'),
         'tel:+86': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_number"]'),
-
+        '群聊页面设置图标': (MobileBy.ID, 'com.chinasofti.rcs:id/coin_img'),
         # 未知号码
         '未知号码': (MobileBy.XPATH, '//*[contains(@text,"未知号码")]'),
         # 选择一个联系人转发消息时的弹框
@@ -69,6 +69,7 @@ class SelectContactsPage(BasePage):
         "分组名":(MobileBy.ID,'com.chinasofti.rcs:id/img_icon_department'),
         "成员ID":(MobileBy.ID, 'com.chinasofti.rcs:id/img_icon_contactlist'),
         "我已阅读": (MobileBy.ID,'com.chinasofti.rcs:id/btn_check'),
+        "确定2": (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
         "确定3": (MobileBy.ID,'com.chinasofti.rcs:id/dialog_btn_ok'),
         "最近聊天联系人":(MobileBy.ID,'com.chinasofti.rcs:id/iv_photo'),
         "群二维码":(MobileBy.ID,'com.chinasofti.rcs:id/imageview_msg_image'),
@@ -227,6 +228,12 @@ class SelectContactsPage(BasePage):
         self.click_element(self.__class__.__locators["返回"])
 
     @TestLogger.log()
+    def click_groupchat_setting_icon(self):
+        """群聊页面 点击 设置图标"""
+        self.click_element(self.__class__.__locators["群聊页面设置图标"])
+
+
+    @TestLogger.log()
     def click_he_back(self):
         """点击 和通讯录返回"""
         self.click_element(self.__class__.__locators["和通讯录返回"])
@@ -311,6 +318,12 @@ class SelectContactsPage(BasePage):
         """通过群名选择一个群"""
         self.click_element(
             (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % name))
+
+    @TestLogger.log()
+    def select_one_group_by_name2(self, name):
+        """通过名称选择一个联系人"""
+        self.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and @text ="%s"]' % name))
 
     @TestLogger.log()
     def select_one_recently_contact_by_name(self, name):
@@ -499,6 +512,11 @@ class SelectContactsPage(BasePage):
     def click_sure_bottom(self):
         """点击确定"""
         self.click_element(self.__class__.__locators['确定'])
+
+    @TestLogger.log()
+    def click_clear_record_sure(self):
+        """是否清空聊天记录？ 点击 确定2"""
+        self.click_element(self.__class__.__locators['确定2'])
 
     @TestLogger.log()
     def sure_icon_is_checkable(self):

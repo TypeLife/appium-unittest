@@ -86,6 +86,8 @@ class GroupChatPage(BaseChatPage):
                   '取消移除': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
                   '加入群聊': (MobileBy.ID, 'com.chinasofti.rcs:id/group_qr_apply_enter'),
                   '添加群成员加号': (MobileBy.XPATH, "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.support.v7.widget.RecyclerView/android.widget.RelativeLayout[2]/android.view.View"),
+                  '关闭视频': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_close'),
+                  '视频播放': (MobileBy.ID, 'com.chinasofti.rcs:id/video_play'),
                   }
 
     def is_exist_msg_videos(self):
@@ -626,3 +628,19 @@ class GroupChatPage(BaseChatPage):
         """长按元素"""
         el=self.get_element(self.__class__.__locators[text])
         self.press(el,times)
+
+    @TestLogger.log()
+    def wait_for_video_load(self, timeout=60, auto_accept_alerts=True):
+        """等待群聊视频加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["视频播放"])
+            )
+        except:
+            message = "视频在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self

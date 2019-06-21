@@ -49,7 +49,7 @@ class GroupChatSetPage(BasePage):
                   'com.chinasofti.rcs:id/tv_serarch_chat_record': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/tv_serarch_chat_record'),
                   '查找聊天内容': (MobileBy.ID, 'com.chinasofti.rcs:id/left_find_chat_record_tv'),
-                  'com.chinasofti.rcs:id/tv_chat_empty': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_chat_empty'),
+                  '清空聊天记录2': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_chat_empty'),
                   '清空聊天记录': (MobileBy.ID, 'com.chinasofti.rcs:id/left_empty_chat_tv'),
                   '删除并退出': (MobileBy.ID, 'com.chinasofti.rcs:id/delete_and_exit'),
                   "确认": (MobileBy.XPATH, '//*[@text ="确认"]'),
@@ -205,6 +205,12 @@ class GroupChatSetPage(BasePage):
         """点击清空聊天记录"""
         self._find_menu(self.__locators['清空聊天记录'])
         self.click_element(self.__locators['清空聊天记录'])
+
+    @TestLogger.log()
+    def click_clear_chat_record2(self):
+        """群聊设置页面 点击清空聊天记录2"""
+        self._find_menu(self.__locators['清空聊天记录2'])
+        self.click_element(self.__locators['清空聊天记录2'])
 
     @TestLogger.log()
     def click_delete_and_exit(self):
