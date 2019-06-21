@@ -501,8 +501,6 @@ class Preconditions(WorkbenchPreconditions):
         """从消息列表进入双机群聊，前提：已经存在双机群聊"""
         mess = MessagePage()
         mess.wait_for_page_load()
-        mess = MessagePage()
-        mess.wait_for_page_load()
         # 点击 +
         mess.click_add_icon()
         # 点击 发起群聊
