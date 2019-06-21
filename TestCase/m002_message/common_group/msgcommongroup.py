@@ -1391,6 +1391,261 @@ class MsgCommonGroupTest(TestCase):
         mcp.click_back()
         mess.open_message_page()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0133(self):
+        """在群聊天会话页面，长按消息体，点击收藏"""
+        gcp = GroupChatPage()
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 1、长按消息体，会弹出功能列表
+        # 2、点击收藏，收藏成功，会提示：已收藏
+        # flag = gcp.is_toast_exist("收藏")
+        # self.assertTrue(flag)
+        # 长按信息并点击收藏
+        gcp.press_file_to_do("哈哈", "收藏")
+        flag = gcp.is_toast_exist("已收藏")
+        self.assertTrue(flag)
+
+    def tearDown_test_msg_huangmianhua_0133(self):
+        gcp = GroupChatPage()
+        # 删除群聊消息记录
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        # 点击删除聊天记录
+        gcsp.click_clear_chat_record2()
+        gcsp.wait_clear_chat_record_confirmation_box_load()
+        # 点击确认
+        gcsp.click_determine()
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0134():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        current_mobile().launch_app()
+        # current_mobile().reset_app()
+        # current_mobile().connect_mobile()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0134(self):
+        """我——收藏——收藏内容展示"""
+        # 进入我页面
+        mess = MessagePage()
+        mess.open_me_page()
+        me = MePage()
+        me.click_collection2()
+        time.sleep(1)
+        if not me.is_text_present("哈哈"):
+            raise AssertionError("收藏的消息内容不能正常展示出来")
+        # 1、我——收藏——收藏内容展示列表
+        # 2、收藏内容展示：内容来源、收藏时间、收藏内容（部分或全部）
+        # '我' locator
+        exists = me.is_text_present("哈哈")
+        self.assertEquals(exists, True)
+        collection_page = MeCollectionPage()
+        exists = collection_page.element_contain_text("我", Preconditions.get_group_chat_name())
+        self.assertEquals(exists, True)
+        collection_page.click_back()
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0135():
+
+        Preconditions.select_mobile('Android-移动')
+        current_mobile().hide_keyboard_if_display()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        current_mobile().launch_app()
+        Preconditions.make_already_in_message_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0135(self):
+        """我——收藏——收藏内展示——点击收藏内容"""
+        # 进入我页面
+        mess = MessagePage()
+        mess.open_me_page()
+        me = MePage()
+        me.click_collection2()
+        time.sleep(1)
+        if not me.is_text_present("哈哈"):
+            raise AssertionError("收藏的消息内容不能正常展示出来")
+        mcp = MeCollectionPage()
+        mcp.click_text("哈哈")
+        time.sleep(1)
+        # 1、收藏内容展示列表，点击收藏内容，会跳转到收藏内容详情页面
+        if not mcp.is_text_present("详情"):
+            raise AssertionError("不能进入到消息展示详情页面")
+        mcp.click_back()
+        time.sleep(1)
+        if not mcp.is_text_present("收藏"):
+            raise AssertionError("不能返回到收藏列表展示页面")
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0136():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0136(self):
+        """我——收藏——收藏内展示——点击收藏内容——点击播放收藏语音文件"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        gcp.hide_keyboard()
+        time.sleep(1)
+        gcp.press_voice_message_to_do("收藏")
+        if not gcp.is_toast_exist("已收藏"):
+            raise AssertionError("收藏失败")
+        gcp.click_back()
+        # sogp = SelectOneGroupPage()
+        # sogp.click_back()
+        # sc = SelectContactsPage()
+        # sc.click_back()
+        # 进入我页面
+        mess = MessagePage()
+        mess.open_me_page()
+        me = MePage()
+        me.click_collection2()
+        time.sleep(1)
+        if not me.is_text_present("秒"):
+            raise AssertionError("收藏的消息内容不能正常展示出来")
+        mcp = MeCollectionPage()
+        mcp.click_text("秒")
+        time.sleep(1)
+        if not mcp.is_text_present("详情"):
+            raise AssertionError("不能进入到消息展示详情页面")
+        # 播放语音消息
+        mcp.click_collection_voice_msg()
+        time.sleep(2)
+        # 暂停语音消息
+        mcp.click_collection_voice_msg()
+        mcp.click_back()
+        time.sleep(2)
+        mcp.click_back()
+        me.open_message_page()
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0137():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0137(self):
+        """我——收藏——收藏内展示——点击收藏内容——点击删除收藏内容"""
+        gcp = GroupChatPage()
+        time.sleep(2)
+        gcp.click_back()
+        # sogp = SelectOneGroupPage()
+        # sogp.click_back()
+        # sc = SelectContactsPage()
+        # sc.click_back()
+        # 进入我页面
+        mess = MessagePage()
+        mess.open_me_page()
+        me = MePage()
+        me.click_collection2()
+        time.sleep(2)
+        # 左滑收藏消息体
+        mcp = MeCollectionPage()
+        mcp.press_and_move_left()
+        # 判断是否有删除按钮
+        if mcp.is_delete_element_present():
+            mcp.click_delete_collection()
+            time.sleep(2)
+            #判断是否会弹出确认弹窗
+            if not mcp.is_text_present("确定"):
+                raise AssertionError("没有弹出确认窗口")
+            #点击取消
+            mcp.click_cancel_forward()
+            flag=mcp.is_delete_element_present()
+            self.assertTrue(flag)
+            time.sleep(1)
+            mcp.click_delete_collection()
+            mcp.click_sure_forward()
+            time.sleep(2)
+            if not mcp.is_toast_exist("取消收藏成功"):
+                raise AssertionError("不可以删除收藏的消息体")
+        else:
+            raise AssertionError("没有删除按钮")
+        mcp.click_back()
+        me.open_message_page()
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0152():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    def test_msg_huangmianhua_0152(self):
+        """在群聊会话窗口，点击页面顶部的通话按钮"""
+        # 1、点击页面顶部的通话按钮，是否会调起通话选择项弹窗
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_mutilcall()
+        time.sleep(2)
+        if not gcp.is_text_present("多方视频"):
+            raise AssertionError("不会调起通话选择项弹窗")
+        gcp.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
     @staticmethod
     def setUp_test_msg_xiaoqiu_0056():
 
@@ -5708,7 +5963,7 @@ class MsgCommonGroupAllTest(TestCase):
         mess = MessagePage()
         mess.open_me_page()
         me = MePage()
-        me.click_collection()
+        me.click_collection2()
         time.sleep(1)
         if not me.is_text_present("秒"):
             raise AssertionError("收藏的消息内容不能正常展示出来")
@@ -5741,7 +5996,7 @@ class MsgCommonGroupAllTest(TestCase):
         mess = MessagePage()
         mess.open_me_page()
         me = MePage()
-        me.click_collection()
+        me.click_collection2()
         time.sleep(2)
         # 左滑收藏消息体
         mcp = MeCollectionPage()
