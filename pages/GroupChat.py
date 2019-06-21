@@ -88,6 +88,7 @@ class GroupChatPage(BaseChatPage):
                   '添加群成员加号': (MobileBy.XPATH, "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.support.v7.widget.RecyclerView/android.widget.RelativeLayout[2]/android.view.View"),
                   '关闭视频': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_close'),
                   '视频播放': (MobileBy.ID, 'com.chinasofti.rcs:id/video_play'),
+                  '群聊拍照': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_take_photo'),
                   }
 
     def is_exist_msg_videos(self):
@@ -126,6 +127,11 @@ class GroupChatPage(BaseChatPage):
     def click_take_picture(self):
         """点击选择富媒体拍照"""
         self.click_element(self.__class__.__locators["富媒体拍照"])
+
+    @TestLogger.log()
+    def click_take_picture2(self):
+        """点击-群聊拍照"""
+        self.click_element(self.__class__.__locators["群聊拍照"])
 
     @TestLogger.log()
     def is_send_sucess(self):

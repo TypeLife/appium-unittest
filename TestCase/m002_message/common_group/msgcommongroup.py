@@ -1,24 +1,23 @@
 import time
 import unittest
-import random
+
 from selenium.common.exceptions import TimeoutException
 
-import preconditions
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.utils.testcasefilter import tags
 from pages import AgreementDetailPage
 from pages import ChatAudioPage
-from pages import ChatFilePage
-from pages import ChatLocationPage
 from pages import ChatMorePage
 from pages import ChatSelectFilePage
+from pages.chat.ChatPhoto import ChatPhotoPage
 from pages import ChatSelectLocalFilePage
 from pages import ChatWindowPage
 from pages import CreateGroupNamePage
 from pages import FindChatRecordPage
 from pages import GroupChatPage
+from pages import GroupChatSetPage
 from pages import GuidePage
 from pages import MeCollectionPage
 from pages import MePage
@@ -28,7 +27,6 @@ from pages import PermissionListPage
 from pages import SelectContactsPage
 from pages import SelectLocalContactsPage
 from pages import SelectOneGroupPage
-from pages import GroupChatSetPage
 from pages import SingleChatPage
 from pages.chat.ChatGroupAddContacts import ChatGroupAddContactsPage
 
@@ -1633,7 +1631,7 @@ class MsgCommonGroupTest(TestCase):
             # current_mobile().reset_app()
             Preconditions.enter_group_chat_page()
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full', 'full-yyx')
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
     def test_msg_huangmianhua_0152(self):
         """在群聊会话窗口，点击页面顶部的通话按钮"""
         # 1、点击页面顶部的通话按钮，是否会调起通话选择项弹窗
@@ -1644,6 +1642,205 @@ class MsgCommonGroupTest(TestCase):
         if not gcp.is_text_present("多方视频"):
             raise AssertionError("不会调起通话选择项弹窗")
         gcp.tap_coordinate([(100, 20), (100, 60), (100, 100)])
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0155():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0155(self):
+        """在群聊会话窗口，点击输入框上方的图片ICON，进入到图片展示列表"""
+        # 1、点击输入框上方的图片ICON，是否可以进入到相册列表页
+        # 2、任意选中一张照片，点击右下角的发送按钮，是否可以发送成功
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        Preconditions.delete_record_group_chat()
+        if gcp.is_text_present("退出"):
+            audio = ChatAudioPage()
+            audio.click_exit()
+            time.sleep(2)
+        gcp.click_picture()
+        time.sleep(2)
+        # 1、点击输入框上方的图片ICON，可以进入到相册列表页
+        if not gcp.is_text_present("原图"):
+            raise AssertionError("不可以进入到相册列表页")
+        gcp.select_picture()
+        time.sleep(2)
+        gcp.click_text("发送")
+        # 2、任意选中一张照片，点击右下角的发送按钮，可以发送成功
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0156():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0156(self):
+        """在群聊会话窗口，点击输入框上方的相机ICON，进入到相机拍摄页"""
+        # 1、点击页面顶部的通话按钮，是否会调起通话选择项弹窗
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        Preconditions.delete_record_group_chat()
+        gcp.click_take_picture2()
+        time.sleep(2)
+        chat_photo = ChatPhotoPage()
+        # 1、点击输入框上方的相机ICON,可以正常调起相机操作页
+        # Checkpoint 可以正常调起相机操作页
+        chat_photo.wait_for_page_load()
+        # Step 轻触拍摄按钮
+        chat_photo.take_photo()
+        # 2、轻触拍摄按钮，会拍摄成功一张照片
+        # 3、点击右下角的“√”按钮，可以发送成功
+        chat_photo.send_photo()
+        time.sleep(5)
+        # Checkpoint 可以发送成功
+        gcp.is_exist_pic_msg()
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0157():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0157(self):
+        """在群聊会话窗口，点击输入框上方的相机ICON，进入到相机拍摄页"""
+        # 1、点击页面顶部的通话按钮，是否会调起通话选择项弹窗
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        Preconditions.delete_record_group_chat()
+        gcp.click_take_picture2()
+        time.sleep(2)
+        chat_photo = ChatPhotoPage()
+        # 1、点击输入框上方的相机ICON,可以正常调起相机操作页
+        chat_photo.wait_for_page_load()
+        # 2、长按拍摄按钮，会进入到录像功能
+        chat_photo.record_video(5000)
+        # 3、录制时间超过1秒钟后，松手，会录制成功的视频
+        # 4、点击右下角的“√”按钮，可以发送成功
+        chat_photo.send_photo()
+        time.sleep(5)
+        # Checkpoint 可以发送成功
+        gcp.is_exist_video_msg()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0167(self):
+        """消息草稿-聊天列表显示-输入空格消息"""
+        # 1、删除聊天记录
+        # 2、选择一个群输入先发送一条信息确保在消息页可以看到
+        # 3、再输入空格不发送返回消息页面
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        info = " "
+        gcp.input_message(info)
+        gcp.click_back()
+        # 聊天页面显示群聊会话窗口页最新一条消息预览，无[草稿]标识
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            if mess.is_text_present("草稿"):
+                raise AssertionError("有草稿标识出现")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0168(self):
+        """消息草稿-聊天列表显示-不输入任何消息"""
+        # 1、删除聊天记录
+        # 2、选择一个群输入先发送一条信息确保在消息页可以看到
+        # 3、不输入任何信息返回消息页面
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        info = ""
+        gcp.input_message(info)
+        if gcp.is_on_this_page():
+            if gcp.is_element_exit_("文本发送按钮"):
+                raise AssertionError("有发送按钮")
+        gcp.click_back()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            if mess.is_text_present("草稿"):
+                raise AssertionError("有草稿标识出现")
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
     @staticmethod
