@@ -2241,3 +2241,45 @@ class MsgGroupChatFileLocationTest(TestCase):
         slcp.click_cancel_forward()
         if not slcp.is_on_this_page():
             raise AssertionError("当前页面不在手机联系人页面")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0338(self):
+        """将自己发送的位置转发到手机联系人时发送失败"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择手机联系人
+        scp.click_phone_contact()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        names = slcp.get_contacts_name_list()
+        name = random.choice(names)
+        if name:
+            slcp.selecting_local_contacts_by_name(name)
+            slcp.set_network_status(0)
+            # 3.点击确认
+            slcp.click_sure_forward()
+            time.sleep(2)
+            if not slcp.is_on_this_page():
+                raise AssertionError("当前页面不在手机联系人页面")
+            if not gcp.is_on_this_page():
+                raise AssertionError("当前页面不在群聊天会话页面")
+            # 4.点击返回
+            time.sleep(3)
+            gcp.click_back()
+            scp.wait_for_page_load()
+            scp.click_back()
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            if not mess.is_iv_fail_status_present():
+                raise AssertionError("消息列表没有显示消息发送失败标识")
+        else:
+            raise AssertionError("需要创建联系人")
+
+    def tearDown_test_msg_weifenglian_qun_0338(self):
+        # 重新连接网络
+        mess = MessagePage()
+        mess.set_network_status(6)
