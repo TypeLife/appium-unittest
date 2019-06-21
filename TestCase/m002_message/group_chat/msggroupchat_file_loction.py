@@ -1738,6 +1738,8 @@ class MsgGroupChatFileLocationTest(TestCase):
             flag = gcp.is_toast_exist("已转发")
             if not flag:
                 raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+            if not gcp.is_on_this_page():
+                raise AssertionError("当前页面不在群聊天会话页面")
         else:
             raise AssertionError("需要创建普通群")
 
@@ -1767,6 +1769,8 @@ class MsgGroupChatFileLocationTest(TestCase):
             flag = gcp.is_toast_exist("已转发")
             if not flag:
                 raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+            if not gcp.is_on_this_page():
+                raise AssertionError("当前页面不在群聊天会话页面")
         else:
             raise AssertionError("需要创建企业群")
 
@@ -1797,6 +1801,8 @@ class MsgGroupChatFileLocationTest(TestCase):
             flag = gcp.is_toast_exist("已转发")
             if not flag:
                 raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+            if not gcp.is_on_this_page():
+                raise AssertionError("当前页面不在群聊天会话页面")
             # 4、点击返回
             time.sleep(3)
             gcp.click_back()
@@ -1841,6 +1847,8 @@ class MsgGroupChatFileLocationTest(TestCase):
             flag = gcp.is_toast_exist("已转发")
             if not flag:
                 raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+            if not gcp.is_on_this_page():
+                raise AssertionError("当前页面不在群聊天会话页面")
             # 4、点击返回
             time.sleep(3)
             gcp.click_back()
@@ -1936,6 +1944,8 @@ class MsgGroupChatFileLocationTest(TestCase):
             flag = sogp.is_toast_exist("已转发")
             if not flag:
                 raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+            if not gcp.is_on_this_page():
+                raise AssertionError("当前页面不在群聊天会话页面")
         else:
             sogp.page_should_contain_text('无搜索结果')
 
@@ -1961,6 +1971,8 @@ class MsgGroupChatFileLocationTest(TestCase):
             flag = sogp.is_toast_exist("已转发")
             if not flag:
                 raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+            if not gcp.is_on_this_page():
+                raise AssertionError("当前页面不在群聊天会话页面")
         else:
             sogp.page_should_contain_text("无搜索结果")
 
@@ -1986,6 +1998,8 @@ class MsgGroupChatFileLocationTest(TestCase):
             flag = sogp.is_toast_exist("已转发")
             if not flag:
                 raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+            if not gcp.is_on_this_page():
+                raise AssertionError("当前页面不在群聊天会话页面")
         else:
             sogp.page_should_contain_text("无搜索结果")
 
@@ -2011,6 +2025,8 @@ class MsgGroupChatFileLocationTest(TestCase):
             flag = sogp.is_toast_exist("已转发")
             if not flag:
                 raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+            if not gcp.is_on_this_page():
+                raise AssertionError("当前页面不在群聊天会话页面")
         else:
             sogp.page_should_contain_text("无搜索结果")
 
@@ -2036,6 +2052,8 @@ class MsgGroupChatFileLocationTest(TestCase):
             flag = sogp.is_toast_exist("已转发")
             if not flag:
                 raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+            if not gcp.is_on_this_page():
+                raise AssertionError("当前页面不在群聊天会话页面")
         else:
             sogp.page_should_contain_text("无搜索结果")
 
@@ -2061,6 +2079,8 @@ class MsgGroupChatFileLocationTest(TestCase):
             flag = sogp.is_toast_exist("已转发")
             if not flag:
                 raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+            if not gcp.is_on_this_page():
+                raise AssertionError("当前页面不在群聊天会话页面")
         else:
             sogp.page_should_contain_text("无搜索结果")
 
@@ -2086,10 +2106,12 @@ class MsgGroupChatFileLocationTest(TestCase):
             flag = sogp.is_toast_exist("已转发")
             if not flag:
                 raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+            if not gcp.is_on_this_page():
+                raise AssertionError("当前页面不在群聊天会话页面")
         else:
             sogp.page_should_contain_text("无搜索结果")
 
-    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+@tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0332(self):
         """将自己发送的位置转发到在搜索框输入多种字符搜索到的群"""
         self.public_send_location()
@@ -2111,6 +2133,8 @@ class MsgGroupChatFileLocationTest(TestCase):
             flag = sogp.is_toast_exist("已转发")
             if not flag:
                 raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+            if not gcp.is_on_this_page():
+                raise AssertionError("当前页面不在群聊天会话页面")
         else:
             sogp.page_should_contain_text("无搜索结果")
 
@@ -2172,3 +2196,29 @@ class MsgGroupChatFileLocationTest(TestCase):
                 raise AssertionError("当前页面不在搜索群组页面")
         else:
             sogp.page_should_contain_text("无搜索结果")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0335(self):
+        """将自己发送的位置转发到滑动右边字母导航栏定位查找的群"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择一个群
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        # 3.根据导航栏的第一个字母定位选择一个群
+        sogp.choose_index_bar_click_element()
+        # 4.点击确定
+        sogp.click_sure_forward()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        flag = gcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        if not gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊天会话页面")
+
+

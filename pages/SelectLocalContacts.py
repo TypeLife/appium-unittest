@@ -397,3 +397,4 @@ class SelectLocalContactsPage(BasePage):
         locator = (MobileBy.XPATH,
                    '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView[@text="%s"]' % name)
         self.click_element(locator)
+
