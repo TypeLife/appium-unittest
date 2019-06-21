@@ -2111,7 +2111,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         else:
             sogp.page_should_contain_text("无搜索结果")
 
-@tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0332(self):
         """将自己发送的位置转发到在搜索框输入多种字符搜索到的群"""
         self.public_send_location()
