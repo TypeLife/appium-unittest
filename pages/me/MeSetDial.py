@@ -18,10 +18,16 @@ class MeSetDialPage(BasePage):
                 '拨号方式': (MobileBy.ID, 'com.chinasofti.rcs:id/call_type_text'),
                 '总是询问': (MobileBy.ID, 'com.chinasofti.rcs:id/call_type_text'),
                 'android:id/statusBarBackground': (MobileBy.ID, 'android:id/statusBarBackground'),
-                'android:id/navigationBarBackground': (MobileBy.ID, 'android:id/navigationBarBackground')
+                'android:id/navigationBarBackground': (MobileBy.ID, 'android:id/navigationBarBackground'),
+                '优先使用飞信电话（免费）': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_call_type_prior_fetioncall'),
+
+
     }
 
     @TestLogger.log('点击拨号方式')
     def click_dial_mode(self):
         self.click_element(self.__locators['拨号方式'])
 
+    @TestLogger.log('选择相应拨号方式')
+    def select_dial_mode(self, type):
+        self.click_element(self.__locators[type])

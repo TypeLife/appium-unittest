@@ -1,3 +1,5 @@
+import time
+
 from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
@@ -29,9 +31,15 @@ class LabelGroupingPage(ContactsSelector, BasePage):
         '标签分组成员数量': (MobileBy.ID, 'com.chinasofti.rcs:id/group_member_num'),
         # 新建分组页面
         '新建分组页面': (MobileBy.ID, 'com.chinasofti.rcs:id/label_toolbar_title'),
+        '新建分组页面返回': (MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn'),
         '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_sure'),
         '为你的分组创建一个名称': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_sub_title'),
         '请输入标签分组名称': (MobileBy.ID, 'com.chinasofti.rcs:id/edit_group_name'),
+        '标签人员列表': (MobileBy.ID, 'com.chinasofti.rcs:id/recycleview'),
+        '列表': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_group_list_item'),
+        '多方电话': (MobileBy.ID, 'com.chinasofti.rcs:id/image_third_colum'),
+        # 6.3.1版本
+        '飞信电话': (MobileBy.ID, 'com.chinasofti.rcs:id/layout_third_item'),
     }
 
     @TestLogger.log('删除全部标签分组')
@@ -364,6 +372,10 @@ class LabelGroupingPage(ContactsSelector, BasePage):
     def click_back(self):
         self.click_element(self.__locators['返回'])
 
+    @TestLogger.log('新建分组页面返回')
+    def new_group_click_back(self):
+        self.click_element(self.__locators['新建分组页面返回'])
+
     @TestLogger.log()
     def page_contain_title(self):
         """页面应该包含的元素-标题"""
@@ -377,3 +389,50 @@ class LabelGroupingPage(ContactsSelector, BasePage):
     @TestLogger.log()
     def sure_btn_is_clickable(self):
         return self._is_clickable(self.__class__.__locators["确定"])
+
+    @TestLogger.log()
+    def is_contacter_in_lable(self, name):
+        """人员列表是否在标签中"""
+        time.sleep(1)
+        groups = self.mobile.list_iterator(self.__locators['标签人员列表'], self.__locators['列表'])
+        for group in groups:
+            if group.find_elements(MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and ' +
+                                                   '@text="{}"]'.format(name)):
+                return True
+        return False
+
+    @TestLogger.log()
+    def create_group1(self, group_name, *member_list):
+        """
+        """
+        self.click_new_create_group()
+        self.wait_for_create_label_grouping_page_load()
+        actual = self.input_label_grouping_name(group_name)
+        self.click_sure()
+
+        if self.is_group_exist_tips_popup():
+            print('群组："{}" 已存在'.format(group_name))
+            self.click_back()
+            return
+
+        # 增加等待步骤，防止点击确定后，系统权限弹窗阻塞下一步操作
+        self.wait_for_contacts_selector_page_load()
+        if not member_list:
+            self.click_back()
+            self.click_back()
+            return actual
+        self.select_local_contacts(*member_list)
+        return actual
+
+    @TestLogger.log('标签分组详情页点击第三个图标多方通话')
+    def click_third_image_call(self):
+        self.click_element(self.__locators['飞信电话'])
+
+    @TestLogger.log('选择指定成员进行多方通话')
+    def select_number_call(self, *member_list):
+        self.click_element(self.__locators['多方电话'])
+        from pages import MultiPartyVideoPage
+        multiparty = MultiPartyVideoPage()
+        member_list = list(member_list)
+        # multiparty.input_contact_search(member_list)
+        multiparty.click_one_contact(member_list)

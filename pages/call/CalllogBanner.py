@@ -16,12 +16,18 @@ class CalllogBannerPage(BasePage):
         '知道了': (MobileBy.XPATH, "//*[contains(@text, '知道了')]"),
         '搜索或输入号码': (MobileBy.ID, "com.chinasofti.rcs:id/contact_search_bar"),
         '复制': (MobileBy.XPATH, "//*[contains(@text, '复制')]"),
+        '多方电话图标': (MobileBy.ID, "com.chinasofti.rcs:id/btnFreeCall"),
     }
 
     @TestLogger.log()
     def click_multiparty_call_by_calllogbanner(self):
         """点击多方通话"""
         self.click_element(self.__locators["多方通话"])
+
+    @TestLogger.log()
+    def click_free_call(self):
+        """点击多方通话图标"""
+        self.click_element(self.__locators["多方电话图标"])
 
     @TestLogger.log()
     def is_on_the_calllog_banner_page(self):
@@ -79,3 +85,10 @@ class CalllogBannerPage(BasePage):
     def is_exist_contact_search_bar(self):
         """是否存在搜索或输入号码"""
         return self._is_element_present(self.__locators["搜索或输入号码"])
+
+    @TestLogger.log("多方通话点击“我知道了”弹框")
+    def click_elsfif_ikonw(self):
+        # 是否存在请先接听“和飞信电话”，点击“我知道了” 并自动允许和飞信管理
+        flag = self._is_element_present(self.__locators["知道了"])
+        if flag:
+            self.click_element(self.__locators["知道了"])

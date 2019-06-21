@@ -28,7 +28,16 @@ class ContactListSearchPage(BasePage):
         '联系人号码': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_phone'),
         '分享名片': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_share_card'),
         '搜索结果': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name"]'),
+        '搜索点击我的团队': (MobileBy.XPATH, "//*[contains(@text, '我的团队')]"),
+        '搜索结果头像': (MobileBy.ID, 'com.chinasofti.rcs:id/img_icon_contactlist'),
     }
+
+    @TestLogger.log('检查分栏是否显示"查看更多"')
+    def is_show_more_display(self):
+        els = self.get_elements((MobileBy.XPATH, '//*[@text="查看更多"]'))
+        if len(els) == 0:
+            return False
+        return True
 
     @TestLogger.log('点击返回')
     def click_back(self):
@@ -65,3 +74,11 @@ class ContactListSearchPage(BasePage):
     def is_exist_contacts(self):
         """是否存在联系人"""
         return self._is_element_present(self.__class__.__locators["联系人名"])
+
+    @TestLogger.log('搜索点击我的团队')
+    def click_myteam(self):
+        self.click_element(self.__locators['搜索点击我的团队'])
+
+    @TestLogger.log('搜索结果头像')
+    def click_result_icon(self):
+        self.click_element(self.__locators['搜索结果头像'])

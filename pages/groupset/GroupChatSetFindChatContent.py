@@ -1,3 +1,5 @@
+import time
+
 from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
@@ -104,3 +106,20 @@ class GroupChatSetFindChatContentPage(BasePage):
     def is_exists_send_time(self):
         """是否存在发送时间"""
         return self._is_element_present(self.__class__.__locators["发送时间"])
+    def check_search_result(self):
+        """校验搜索结果"""
+        self.page_should_contain_element(self.__class__.__locators["发送人头像"])
+        self.page_should_contain_element(self.__class__.__locators["发送人名称"])
+        self.page_should_contain_element(self.__class__.__locators["发送内容"])
+        self.page_should_contain_element(self.__class__.__locators["发送时间"])
+
+    def check_no_search_result(self, timeout=8, auto_accept_alerts=True):
+        """校验无搜索结果"""
+        time.sleep(2)
+        self.page_should_contain_text('无搜索结果')
+
+    @TestLogger.log()
+    def click_search_result(self,result):
+        """点击搜索结果"""
+        self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_content" and @text ="%s"]' % result))
+

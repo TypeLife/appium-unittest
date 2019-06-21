@@ -19,12 +19,25 @@ class AgreementDetailPage(BasePage):
         '不同意': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
         '同意': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_positive_button'),
         # 'android:id/statusBarBackground': (MobileBy.ID, 'android:id/statusBarBackground')
+        # 6.3.1版本元素
+        '同意_631': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_positive_button'),
+        '不同意_631': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_negative_button')
     }
 
     @TestLogger.log()
     def click_agree_button(self):
         """点击同意"""
         self.click_element(self.__locators['同意'])
+
+    @TestLogger.log()
+    def click_agree_button_631(self):
+        """点击同意（6.3.1版本）"""
+        self.click_element(self.__locators['同意_631'])
+
+    @TestLogger.log()
+    def click_not_agree_button_631(self):
+        """点击不同意（6.3.1版本）"""
+        self.click_element(self.__locators['不同意_631'])
 
     @TestLogger.log()
     def click_not_agree_button(self):

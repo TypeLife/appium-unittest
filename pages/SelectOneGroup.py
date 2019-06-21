@@ -183,6 +183,10 @@ class SelectOneGroupPage(BasePage):
     def click_search_result(self):
         self.click_element(self.__class__.__locators['搜索结果展示'])
 
+    @TestLogger.log('点击选择一个群')
+    def click_select_ong_group(self):
+        self.click_element(self.__class__.__locators['选择一个群'])
+
     @TestLogger.log()
     def selecting_one_group_by_name(self, name):
         """根据群名选择一个群"""

@@ -1,7 +1,7 @@
 from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
-
+from library.core.TestLogger import TestLogger
 
 class MeSetUpPage(BasePage):
     """我 -> 设置 页面"""
@@ -42,4 +42,16 @@ class MeSetUpPage(BasePage):
                 '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
                 # 设置-》短信设置
 
+                '通话': (MobileBy.ID, 'com.chinasofti.rcs:id/call'),
+
+
                 }
+
+    @TestLogger.log()
+    def click_call_setting(self, type):
+        """通话》拨号方式 》优先使用和飞信电话（免费）"""
+        self.click_element(self.__locators['通话'])
+        from pages import MeSetDialPage
+        mesetdial = MeSetDialPage()
+        mesetdial.click_dial_mode()
+        mesetdial.select_dial_mode(type)

@@ -64,12 +64,36 @@ class ChatWindowPage(ChatNoticeDialog, PictureSelector, BaseChatPage,BasePage):
         '自动时间-开关按钮': (MobileBy.ID, 'android:id/switch_widget'),
         '日期': (MobileBy.XPATH, '//*[@text="日期"]/../android.widget.TextView[@resource-id="android:id/summary"]'),
         '时间': (MobileBy.XPATH, '//*[@text="时间"]/../android.widget.TextView[@resource-id="android:id/summary"]'),
+        '表情按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_expression'),
+        'gif按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_gif'),
 
     }
+
+    @TestLogger.log('')
+    def is_on_this_page(self):
+        el = self.get_elements(self.__class__.__locators['13537795364'])
+        if len(el) > 0:
+            return True
+        return False
+
+    @TestLogger.log('gif按钮')
+    def click_gif(self):
+        self.click_element(self.__locators['gif按钮'])
+
+    @TestLogger.log('点击拍照')
+    def click_photo(self):
+        self.click_element(self.__locators['拍照'])
+
+    @TestLogger.log('点击图片')
+    def click_img_msgs(self):
+        self.click_element(self.__locators['照片'])
 
     @TestLogger.log('点击返回')
     def click_back(self):
         self.click_element(self.__locators['返回'])
+    @TestLogger.log('点击表情')
+    def click_expression(self):
+        self.click_element(self.__locators['表情按钮'])
 
     @TestLogger.log('点击返回')
     def page_contain_element(self,locator='设置'):
@@ -197,6 +221,16 @@ class ChatWindowPage(ChatNoticeDialog, PictureSelector, BaseChatPage,BasePage):
         return el.text
 
     @TestLogger.log()
+    def click_add_icon(self):
+        """点击+更多选项"""
+        self.click_element(self.__locators['更多'])
+
+    @TestLogger.log()
+    def click_menu_icon(self, menu):
+        """点击+中的选项"""
+        self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text ="%s"]' % menu))
+
+    @TestLogger.log()
     def find_element_by_swipe(self, locator, times=15):
         """找不到元素就滑动"""
         if self._is_element_present(locator):
@@ -244,3 +278,6 @@ class ChatWindowPage(ChatNoticeDialog, PictureSelector, BaseChatPage,BasePage):
     def click_time_in_setting(self):
         self.click_element(self.__locators['时间'])
 
+    @TestLogger.log('点击短信')
+    def click_sms_btn(self):
+        self.click_element(self.__locators['短信'])

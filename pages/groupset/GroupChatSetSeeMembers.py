@@ -20,7 +20,7 @@ class GroupChatSetSeeMembersPage(BasePage):
                   'com.chinasofti.rcs:id/top_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/top_layout'),
                   'com.chinasofti.rcs:id/layout_search': (MobileBy.ID, 'com.chinasofti.rcs:id/layout_search'),
                   '搜索群成员': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_search_bar'),
-                  '还有人未进群,再次邀请': (MobileBy.ID, 'com.chinasofti.rcs:id/stip_text'),
+                  '还有人未进群,再次邀请': (MobileBy.XPATH, '//*[@text ="还有人未进群,再次邀请"]'),
                   'com.chinasofti.rcs:id/bottom_layout': (MobileBy.ID, 'com.chinasofti.rcs:id/bottom_layout'),
                   'com.chinasofti.rcs:id/contact_selection_list_view': (
                   MobileBy.ID, 'com.chinasofti.rcs:id/contact_selection_list_view'),

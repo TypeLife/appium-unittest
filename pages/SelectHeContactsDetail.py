@@ -46,6 +46,7 @@ class SelectHeContactsDetailPage(BasePage):
                   '14775290489': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_position_personal_contactlist'),
                   '张三': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name_personal_contactlist'),
                   '联系人名': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name_personal_contactlist'),
+                  '联系电话': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_number_personal_contactlist'),
                   'com.chinasofti.rcs:id/line_big_contactlist': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/line_big_contactlist'),
                   'com.chinasofti.rcs:id/layout_department_contactlist': (
@@ -63,7 +64,13 @@ class SelectHeContactsDetailPage(BasePage):
                   '确定': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
                   '企业层级': (MobileBy.ID, "android:id/title"),
                   '分享名片': (MobileBy.ID, 'com.chinasofti.rcs:id/send_tv'),
+                  "快捷方式": (MobileBy.ID, 'com.chinasofti.rcs:id/btn_shortcut'),
                   }
+
+    @TestLogger.log("")
+    def page_not_contain_shortcut(self):
+        """当前页面是否存在快捷方式"""
+        return self.page_should_not_contain_element(self.__locators['快捷方式'])
 
     @TestLogger.log()
     def click_sure_forward(self):
@@ -100,6 +107,26 @@ class SelectHeContactsDetailPage(BasePage):
             for el in els:
                 contacts_names.append(el.text)
         return contacts_names
+
+    @TestLogger.log()
+    def is_enabled_search_result(self):
+        """获取联系人名"""
+        els = self.get_elements(self.__class__.__locators['联系人名'])
+        if els:
+            for el in els:
+                if not self._is_enabled(el):
+                    return False
+        return True
+
+    @TestLogger.log()
+    def get_contacts_numbers(self):
+        """获取联系人电话"""
+        els = self.get_elements(self.__class__.__locators['联系电话'])
+        contacts_numbers = []
+        if els:
+            for el in els:
+                contacts_numbers.append(el.text)
+        return contacts_numbers
 
     @TestLogger.log()
     def get_department_names(self):

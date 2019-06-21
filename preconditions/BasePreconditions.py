@@ -1,4 +1,8 @@
+import csv
 import time
+
+from appium.webdriver.common.mobileby import MobileBy
+
 from pages import *
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 import random
@@ -22,13 +26,15 @@ REQUIRED_MOBILES = {
     'Android-移动-移动': 'double_mobile',
     'Android-XX-XX': 'others_double',
 }
+# contacts_call.csv文件的绝对路径如有变动，请在此处页面更新
+# 如果修改contacts_call.csv文件名，请同步修改此页面方法get_contacts_by_row_linename中变量
+File_Paths = {
+    'contacts_call.csv': 'D:\\201902_UiScripts\\自动化框架\\appium-unittest\\Resources\\test_datas\\contacts_call.csv',
+}
 
 
 class LoginPreconditions(object):
     """登录前置条件"""
-
-
-
 
     @staticmethod
     def select_mobile(category, reset=False):
@@ -68,6 +74,33 @@ class LoginPreconditions(object):
         one_key.wait_for_page_load(30)
 
     @staticmethod
+    def make_already_in_one_key_login_page_631():
+        """已经进入一键登录页(6.3.1版本)"""
+        # 如果当前页面已经是一键登录页，不做任何操作
+        one_key = OneKeyLoginPage()
+        if one_key.is_on_this_page():
+            return
+
+        # 如果当前页不是引导页第一页，重新启动app
+        guide_page = GuidePage()
+        if not guide_page.is_on_the_first_guide_page():
+            # current_mobile().launch_app()
+            current_mobile().reset_app()
+            guide_page.wait_for_page_load(20)
+
+        # 跳过引导页
+        guide_page.wait_for_page_load(30)
+        guide_page.swipe_to_the_second_banner()
+        guide_page.swipe_to_the_third_banner()
+        current_mobile().hide_keyboard_if_display()
+        guide_page.click_start_the_experience_631()
+
+        # 点击权限列表页面的确定按钮
+        permission_list = PermissionListPage()
+        permission_list.click_submit_button()
+        one_key.wait_for_page_load(30)
+
+    @staticmethod
     def login_by_one_key_login():
         """
         从一键登录页面登录
@@ -86,6 +119,24 @@ class LoginPreconditions(object):
         agreement = AgreementDetailPage()
         time.sleep(1)
         agreement.click_agree_button()
+        # 等待消息页
+        message_page = MessagePage()
+        message_page.wait_login_success(60)
+
+    @staticmethod
+    def login_by_one_key_login_631():
+        """
+        从一键登录页面登录(6.3.1版本)
+        :return:
+        """
+        # 等待号码加载完成后，点击一键登录
+        one_key = OneKeyLoginPage()
+        one_key.wait_for_page_load()
+        one_key.click_one_key_login()
+        if one_key.have_read_agreement_detail_631():
+            # 同意协议
+            agreement = AgreementDetailPage()
+            agreement.click_agree_button_631()
         # 等待消息页
         message_page = MessagePage()
         message_page.wait_login_success(60)
@@ -120,9 +171,10 @@ class LoginPreconditions(object):
         # 点击‘通讯录’
         mess.open_contacts_page()
         contacts = ContactsPage()
-        contacts.wait_for_page_load()
-        contacts.click_mobile_contacts()
         time.sleep(4)
+        contacts.wait_for_page_load()
+        contacts.click_tel_contacts_631()
+        time.sleep(3)
         names = contacts.get_contacts_name()
         if '本机' in names:
             names.remove('本机')
@@ -146,6 +198,274 @@ class LoginPreconditions(object):
         if flag:
             chat.click_i_have_read()
         chat.wait_for_page_load()
+
+    @staticmethod
+    def check_in_message_page():
+        """判断当前页面是否在消息页，返回True，False"""
+        current_mobile().hide_keyboard_if_display()
+        time.sleep(1)
+        mess = MessagePage()
+        check_result = mess.is_on_this_page()
+        return check_result
+
+    @staticmethod
+    def enter_call_page():
+        """进入通话页面并进行授权等相关操作"""
+        call_page = CallPage()
+        # 打开通话页面
+        call_page.open_call_page()
+        time.sleep(2)
+        # 是否存在多方电话弹出提示
+        if call_page.is_exist_multi_party_telephone():
+            # 存在提示点击跳过
+            call_page.click_multi_party_telephone()
+            # 是否存在知道了弹出提示
+            time.sleep(2)
+            if call_page.is_exist_know():
+                # 存在提示点击跳过
+                call_page.click_know()
+            # 是否存在授权允许弹出提示
+            time.sleep(1)
+            if call_page.is_exist_allow_button():
+                # 存在提示点击允许
+                call_page.click_allow_button(False)
+            # 点击返回按钮返回通话页面
+            time.sleep(1)
+            call_page.click_back()
+        # 等待查看通话页面是否加载
+        call_page.wait_for_page_load()
+
+    @staticmethod
+    def force_enter_message_page(self):
+        """若当前在消息页，直接返回；若当前不在消息页，强制进入消息页"""
+        time.sleep(2)
+        if LoginPreconditions.check_in_message_page():
+            return
+        else:
+            LoginPreconditions.make_already_in_one_key_login_page()
+            LoginPreconditions.login_by_one_key_login()
+
+    @staticmethod
+    def force_enter_message_page_631():
+        """若当前在消息页，直接返回；若当前不在消息页，强制进入消息页(6.3.1版本)"""
+        time.sleep(2)
+        if LoginPreconditions.check_in_message_page():
+            return
+        else:
+            LoginPreconditions.make_already_in_one_key_login_page_631()
+            LoginPreconditions.login_by_one_key_login_631()
+
+    @staticmethod
+    def create_contacts_if_not_exist(member_list):
+        """
+        预置多个联系人
+        :param member_list:['name,number']
+        :return:
+        """
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.wait_for_contact_load()
+        contactspage.click_sim_contact()
+        for member in member_list:
+            name = member.split(',')[0].strip()
+            number = member.split(',')[1].strip()
+            contactspage.create_contacts_if_not_exits(name, number)
+        contactspage.open_message_page()
+
+    @staticmethod
+    def create_group_if_not_exist(group_name, *member_list):
+        """
+        创建群聊并进入群聊页面
+        :param group_name:群聊名称
+        :return:
+        """
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词测试群组1
+        SearchPage().input_search_keyword(group_name)
+        # 如果能搜到对应群组，则点击进入；否则创建群组
+        if mess._is_element_present(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]'% group_name)):
+            mess.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % group_name))
+        else:
+            ContactListSearchPage().click_back()
+            contactspage = ContactsPage()
+            # 打开联系人页
+            contactspage.open_contacts_page()
+            contactspage.wait_for_contact_load()
+            contactspage.click_sim_contact()
+            contactspage.open_group_chat_list()
+            # 点击创建群组
+            GroupListPage().click_create_group()
+            mess.click_element((MobileBy.XPATH, '//*[@text ="选择手机联系人"]'))
+            from pages.components import ContactsSelector
+            ContactsSelector().select_local_contacts(*member_list)
+            BuildGroupChatPage().create_group_chat(group_name)
+
+    @staticmethod
+    def create_group_if_not_exist_not_enter_chat(group_name, *member_list):
+        """
+        创建群聊不进入群聊页面
+        :param group_name:群聊名称
+        :return:
+        """
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词测试群组1
+        SearchPage().input_search_keyword(group_name)
+        # 如果能搜到对应群组，则点击进入；否则创建群组
+        if mess._is_element_present(
+                (
+                MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % group_name)):
+            ContactListSearchPage().click_back()
+        else:
+            ContactListSearchPage().click_back()
+            contactspage = ContactsPage()
+            # 打开联系人页
+            contactspage.open_contacts_page()
+            contactspage.wait_for_contact_load()
+            contactspage.click_sim_contact()
+            contactspage.open_group_chat_list()
+            # 点击创建群组
+            GroupListPage().click_create_group()
+            mess.click_element((MobileBy.XPATH, '//*[@text ="选择手机联系人"]'))
+            from pages.components import ContactsSelector
+            ContactsSelector().select_local_contacts(*member_list)
+            BuildGroupChatPage().create_group_chat(group_name)
+            mess.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/back'))
+            mess.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/left_back'))
+            contactspage.open_message_page()
+
+    @staticmethod
+    def create_contacts_if_not_exist_631(member_list):
+        """
+        预置多个联系人
+        :param member_list:['name,number']
+        :return:
+        """
+        contactspage = ContactsPage()
+        contactspage.open_contacts_page()
+        contactspage.wait_for_contact_load()
+        contactspage.click_sim_contact()
+        for member in member_list:
+            name = member.split(',')[0].strip()
+            number = member.split(',')[1].strip()
+            contactspage.create_contacts_if_not_exits_631(name, number)
+        contactspage.open_message_page()
+
+    @staticmethod
+    def get_contacts_by_row_linename(row, line_name):
+        """获取contact_call.csv中联系人
+            row为行，起始为0
+            line_name为列名，可选值为contacts_name，telephone_num
+        """
+        file_path = File_Paths['contacts_call.csv']
+        csv_file = open(file_path, encoding='utf-8')
+
+        # 读取csv文件，输出一个字典列表
+        csv_reader_dict = csv.DictReader(csv_file)
+        items = list(csv_reader_dict)
+        # 返回row行，列名line_name的值
+        return items[row][line_name]
+	
+	@staticmethod
+    def delete_group_if_exist(group_name):
+        """删除群若存在，返回消息列表页"""
+        mess = MessagePage()
+        mess.click_search()
+        mess.input_search_message_631(group_name)
+        if mess._is_element_present(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % group_name)):
+            mess.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % group_name))
+            groupchat = GroupChatPage()
+            groupset = GroupChatSetPage()
+            groupchat.wait_for_page_load()
+            groupchat.click_setting()
+            # Step 群主在设置页面点击群管理
+            groupset.wait_for_page_load()
+            groupset.click_group_manage()
+            # Step 点击解散群按钮后
+            groupset.wait_exist_and_delete_confirmation_box_load()
+            groupset.click_group_manage_disband_button()
+            SingleChatPage().click_sure()
+            GroupChatPage().click_back()
+            SearchPage().click_back_button()
+        else:
+            SearchPage().click_back_button()
+
+    @staticmethod
+    def create_group_if_not_exist_not_enter_chat_631(group_name, *member_list):
+        """
+        创建群聊不进入群聊页面
+        :param group_name:群聊名称
+        :return:
+        """
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词测试群组1
+        SearchPage().input_search_keyword(group_name)
+        # 如果能搜到对应群组，则点击进入；否则创建群组
+        if mess._is_element_present(
+                (
+                        MobileBy.XPATH,
+                        '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % group_name)):
+            ContactListSearchPage().click_back()
+        else:
+            ContactListSearchPage().click_back()
+            contactspage = ContactsPage()
+            # 打开联系人页
+            contactspage.open_contacts_page()
+            contactspage.wait_for_contact_load()
+            contactspage.click_sim_contact()
+            contactspage.click_group_chat_631()
+            # 点击创建群组
+            GroupListPage().click_create_group()
+            mess.click_element((MobileBy.XPATH, '//*[@text ="选择手机联系人"]'))
+            from pages.components import ContactsSelector
+            ContactsSelector().select_local_contacts(*member_list)
+            BuildGroupChatPage().create_group_chat(group_name)
+
+            mess.click_element((MobileBy.ID, 'com.chinasofti.rcs:id/back_arrow'))
+            contactspage.click_back()
+            contactspage.open_message_page()
+
+    @staticmethod
+    def create_group_if_not_exist_631(group_name, *member_list):
+        """
+        创建群聊并进入群聊页面
+        :param group_name:群聊名称
+        :return:
+        """
+        mess = MessagePage()
+        # 点击消息页搜索
+        mess.click_search()
+        # 搜索关键词测试群组1
+        SearchPage().input_search_keyword(group_name)
+        # 如果能搜到对应群组，则点击进入；否则创建群组
+        if mess._is_element_present(
+                (
+                MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % group_name)):
+            mess.click_element(
+                (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % group_name))
+        else:
+            ContactListSearchPage().click_back()
+            contactspage = ContactsPage()
+            # 打开联系人页
+            contactspage.open_contacts_page()
+            contactspage.wait_for_contact_load()
+            contactspage.click_sim_contact()
+            contactspage.click_group_chat_631()
+            # 点击创建群组
+            GroupListPage().click_create_group()
+            mess.click_element((MobileBy.XPATH, '//*[@text ="选择手机联系人"]'))
+            from pages.components import ContactsSelector
+            ContactsSelector().select_local_contacts(*member_list)
+            BuildGroupChatPage().create_group_chat(group_name)
 
 
 class WorkbenchPreconditions(LoginPreconditions):

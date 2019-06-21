@@ -17,6 +17,10 @@ class CallTypeSelectPage(BasePage):
         '和飞信通话挂断': (MobileBy.ID, "com.chinasofti.rcs:id/ivDecline"),
         '拨号方式': (MobileBy.ID, "com.chinasofti.rcs:id/ll_calltype_fetion"),
         '设置': (MobileBy.XPATH, "//*[contains(@text, '设置')]"),
+        '设置为默认': (MobileBy.ID, "com.chinasofti.rcs:id/ll_calltype_default_setting"),
+        '和飞信电话（免费）': (MobileBy.ID, "com.chinasofti.rcs:id/tv_calltype_fetion"),
+        # 6.3.1版本
+        '飞信电话（免费）': (MobileBy.ID, "com.chinasofti.rcs:id/tv_calltype_fetion"),
     }
 
     @TestLogger.log()
@@ -62,6 +66,11 @@ class CallTypeSelectPage(BasePage):
         self.click_element(self.__locators["和飞信电话"])
 
     @TestLogger.log()
+    def click_call_by_app_631(self):
+        """点击选择和飞信电话"""
+        self.click_element(self.__locators["飞信电话（免费）"])
+
+    @TestLogger.log()
     def click_sure(self):
         """点击允许"""
         if self._is_element_present(self.__class__.__locators["允许"]):
@@ -98,5 +107,33 @@ class CallTypeSelectPage(BasePage):
         """点击设置"""
         self.click_element(self.__locators["设置"])
 
+    @TestLogger.log()
+    def click_setting_default(self):
+        """点击设置为默认"""
+        self.click_element(self.__locators["设置为默认"])
+
+    @TestLogger.log()
+    def is_calltype_selectpage_display(self):
+        """拨号方式选择页面是否展示"""
+        if self.page_should_contain_element(self.__locators['和飞信电话（免费）']):
+            return True
+        else:
+            return False
+
+    @TestLogger.log()
+    def is_calltype_selectpage_display_631(self):
+        """拨号方式选择页面是否展示"""
+        if self.page_should_contain_element(self.__locators['飞信电话（免费）']):
+            return True
+        else:
+            return False
+
+    @TestLogger.log()
+    def is_setting_default_display(self):
+        """设置为默认是否展示"""
+        if self.page_should_contain_element(self.__locators['设置为默认']):
+            return True
+        else:
+            return False
 
 

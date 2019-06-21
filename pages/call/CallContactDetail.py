@@ -54,6 +54,7 @@ class CallContactDetailPage(BasePage):
                   '语音缩放按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/smart_voice_hide'),
                   '正在视频通话': (MobileBy.XPATH, "//*[contains(@text, '视频通话')]"),
                   '正在语音通话': (MobileBy.XPATH, "//*[contains(@text, '语音通话')]"),
+                  '和飞信电话免费': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_andfetion_call'),
                   }
 
     @TestLogger.log()
@@ -157,3 +158,8 @@ class CallContactDetailPage(BasePage):
             if not self._is_element_present(self.__class__.__locators["正在语音通话"]):
                 break
             mark -= 1
+
+    @TestLogger.log()
+    def call_fetion_call(self):
+        """个人profile页面点击和飞信电话（免费）"""
+        self.click_element(self.__locators["和飞信电话免费"])

@@ -139,6 +139,11 @@ class PictureSelector(BasePage):
         '发送': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/button_send"]'),
     }
 
+    @TestLogger.log('点击预览')
+    def click_preview(self):
+        """点击预览"""
+        self.click_element(self.__locators['预览'])
+
     @TestLogger.log('切换到指定文件夹')
     def switch_to_given_folder(self, path):
         import re

@@ -21,6 +21,7 @@ class OneKeyLoginPage(BasePage):
         '提示内容': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_content'),
         '查看详情': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_check_detail'),
         '语言': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_language'),
+        '用户协议与隐私保护': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_dialog_title'),
     }
 
     @TestLogger.log()
@@ -55,6 +56,19 @@ class OneKeyLoginPage(BasePage):
                 timeout=3,
                 auto_accept_permission_alert=True,
                 condition=lambda d: self._is_element_present(self.__class__.__locators["查看详情"])
+            )
+            return True
+        except:
+            return False
+
+    @TestLogger.log()
+    def have_read_agreement_detail_631(self):
+        """是否弹出 用户协议与隐私保护（6.3.1版本）"""
+        try:
+            self.wait_until(
+                timeout=3,
+                auto_accept_permission_alert=True,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["用户协议与隐私保护"])
             )
             return True
         except:
