@@ -274,3 +274,9 @@ class SelectOneGroupPage(BasePage):
         locator = (MobileBy.XPATH,
                    '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView[@text="%s"]' % name)
         self.click_element(locator)
+
+    @TestLogger.log()
+    def press_group_search_bar(self):
+        """长按群-搜索输入框"""
+        el = self.get_element(self.__locators["群-搜索"])
+        self.press(el)
