@@ -2060,7 +2060,6 @@ class MsgCommonGroupTest(TestCase):
         """消息草稿-聊天列表显示-草稿信息发送成功"""
         # 1、删除聊天记录
         # 2、选择一个群输入先发送一条信息确保在消息页可以看到
-        # 3、不输入任何信息返回消息页面
         gcp = GroupChatPage()
         if gcp.is_on_this_page():
             gcp.click_setting()
@@ -2108,7 +2107,51 @@ class MsgCommonGroupTest(TestCase):
         if mess.is_on_this_page():
             exists = mess.is_text_present("草稿")
             self.assertEquals(exists, False)
-        pass
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0175(self):
+        """消息草稿-聊天列表显示-草稿信息删除"""
+        # 1、删除聊天记录
+        # 2、选择一个群输入先发送一条信息确保在消息页可以看到
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+        # 输入信息
+        gcp.input_message("哈哈")
+        gcp.click_back()
+        time.sleep(1)
+        # 1、保存为草稿信息
+        # 2、消息列表，显示[草稿]标红字
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            exists = mess.is_text_present("草稿")
+            self.assertEquals(exists, True)
+        # 点击群名，进入群聊页面
+        sogp = SelectOneGroupPage()
+        group_name = Preconditions.get_group_chat_name()
+        sogp.click_one_contact(group_name)
+        scp = GroupChatPage()
+        scp.wait_for_page_load()
+        # 3、草稿信息删除成功。清空信息
+        gcp.input_message("")
+        gcp.click_back()
+        time.sleep(1)
+        #4、消息列表[草稿]标红字样消失，显示为最近一次消息预览
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            exists = mess.is_text_present("草稿")
+            self.assertEquals(exists, False)
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
     @staticmethod
