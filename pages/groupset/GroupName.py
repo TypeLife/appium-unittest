@@ -56,7 +56,7 @@ class GroupNamePage(BasePage):
         el = self.get_element(self.__class__.__locators["群聊名称编辑框"])
         return el.text
 
-	@TestLogger.log()
+    @TestLogger.log()
     def get_input_group_name(self):
         """获取输入的群聊名称"""
         el = self.get_element(self.__class__.__locators["群聊名称编辑框"])

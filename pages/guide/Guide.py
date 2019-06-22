@@ -57,10 +57,11 @@ class GuidePage(BasePage):
                 auto_accept_permission_alert=True,
                 condition=lambda d: self.is_text_present("开始体验")
             )
+            self.click_text("开始体验", True)
+            return self
         except:
-            raise AssertionError('页面没有包含文本：开始体验')
-        self.click_text("开始体验", True)
-        return self
+            # raise AssertionError('页面没有包含文本：开始体验')
+            self.click_start_the_experience_631()
 
     @TestLogger.log()
     def click_start_the_experience_631(self):
