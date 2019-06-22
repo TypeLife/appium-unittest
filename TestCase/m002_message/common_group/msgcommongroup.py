@@ -2108,7 +2108,7 @@ class MsgCommonGroupTest(TestCase):
         if mess.is_on_this_page():
             exists = mess.is_text_present("草稿")
             self.assertEquals(exists, False)
-
+        pass
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
     @staticmethod
