@@ -21,7 +21,7 @@ class AgreementDetailPage(BasePage):
         # 'android:id/statusBarBackground': (MobileBy.ID, 'android:id/statusBarBackground')
         # 6.3.1版本元素
         '同意_631': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_positive_button'),
-        '不同意_631': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_negative_button')
+        '不同意_631': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_negative_button'),
         '热门问题': (MobileBy.ID, '//android.view.View[@content-desc="1、什么是实名认证？"]'),
     }
 
