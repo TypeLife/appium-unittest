@@ -544,13 +544,9 @@ class Preconditions(object):
         current_mobile().launch_app()
         Preconditions.make_in_message_page(moible_param)
 
-
-
-
 class MsgCommonGroupTest(TestCase):
     """
         模块：消息-普通群
-
         文件位置：冒烟/冒烟测试用例-V20181225.01.xlsx
         表格：消息-普通群
     """
@@ -574,7 +570,6 @@ class MsgCommonGroupTest(TestCase):
             current_mobile().launch_app()
             # current_mobile().reset_app()
             Preconditions.enter_group_chat_page()
-
 
     def default_tearDown(self):
         pass
@@ -637,8 +632,6 @@ class MsgCommonGroupTest(TestCase):
                 raise AssertionError("没有返回到群聊页面，无法删除记录")
             except AssertionError as e:
                 print(e)
-
-
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','high')
     def test_msg_common_group_0003(self):
@@ -1213,7 +1206,6 @@ class MsgCommonGroupTest(TestCase):
             # 最后删除消息记录，返回消息页面结束用例
             mess.press_file_to_do("哈哈","删除")
             chat.click_back()
-
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','high')
     def test_msg_common_group_0016(self):
@@ -1841,6 +1833,282 @@ class MsgCommonGroupTest(TestCase):
         if mess.is_on_this_page():
             if mess.is_text_present("草稿"):
                 raise AssertionError("有草稿标识出现")
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0169(self):
+        """消息草稿-聊天列表显示-输入文本信息"""
+        # 1、删除聊天记录
+        # 2、选择一个群输入先发送一条信息确保在消息页可以看到
+        # 3、不输入任何信息返回消息页面
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 1、发送按钮高亮，可点击
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 2、聊天页面显示输入文本信息预览，有[草稿]标识并标红
+        info = "测试未发送信息"
+        gcp.input_message(info)
+        # if gcp.is_on_this_page():
+        #     if gcp.is_element_exit_("文本发送按钮"):
+        #         raise AssertionError("有发送按钮")
+        gcp.click_back()
+        time.sleep(1)
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            exists =mess.is_text_present("草稿")
+            self.assertEquals(exists, True)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0170(self):
+        """消息草稿-聊天列表显示-输入表情信息"""
+        # 1、删除聊天记录
+        # 2、选择一个群输入先发送一条信息确保在消息页可以看到
+        # 3、不输入任何信息返回消息页面
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+        # 输入信息
+        gcp.input_message("[微笑1]")
+        # 点击发送
+        gcp.send_message()
+        # 1、发送按钮高亮，可点击
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 2、聊天页面显示输入文本信息预览，有[草稿]标识并标红
+        info = "[微笑1]"
+        gcp.input_message(info)
+        # if gcp.is_on_this_page():
+        #     if gcp.is_element_exit_("文本发送按钮"):
+        #         raise AssertionError("有发送按钮")
+        gcp.click_back()
+        time.sleep(1)
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            exists = mess.is_text_present("草稿")
+            self.assertEquals(exists, True)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0171(self):
+        """消息草稿-聊天列表显示-输入特殊字符"""
+        # 1、删除聊天记录
+        # 2、选择一个群输入先发送一条信息确保在消息页可以看到
+        # 3、不输入任何信息返回消息页面
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+        # 输入信息
+        gcp.input_message("#$%*&")
+        # 点击发送
+        gcp.send_message()
+        # 1、发送按钮高亮，可点击
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 2、聊天页面显示输入文本信息预览，有[草稿]标识并标红
+        info = "#$%*&"
+        gcp.input_message(info)
+        # if gcp.is_on_this_page():
+        #     if gcp.is_element_exit_("文本发送按钮"):
+        #         raise AssertionError("有发送按钮")
+        gcp.click_back()
+        time.sleep(1)
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            exists = mess.is_text_present("草稿")
+            self.assertEquals(exists, True)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0172(self):
+        """消息草稿-聊天列表显示-输入空格消息-网络异常"""
+        # 1、删除聊天记录
+        # 2、选择一个群输入先发送一条信息确保在消息页可以看到
+        # 3、不输入任何信息返回消息页面
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+        # 输入信息
+        gcp.input_message(" ")
+        # 点击发送
+        gcp.send_message()
+        # 1、发送按钮高亮，可点击
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            # 控信息是发送不成功的
+            # raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            pass
+        # 2、聊天页面显示输入文本信息预览，有[草稿]标识并标红
+        info = " "
+        gcp.input_message(info)
+        # if gcp.is_on_this_page():
+        #     if gcp.is_element_exit_("文本发送按钮"):
+        #         raise AssertionError("有发送按钮")
+        gcp.click_back()
+        time.sleep(1)
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            exists = mess.is_text_present("草稿")
+            self.assertEquals(exists, False)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0173(self):
+        """消息草稿-聊天列表显示-输入文本信息-网络异常"""
+        # 1、删除聊天记录
+        # 2、选择一个群输入先发送一条信息确保在消息页可以看到
+        # 3、不输入任何信息返回消息页面
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 1、发送按钮高亮，可点击
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 2、聊天页面显示输入文本信息预览，有[草稿]标识并标红
+        info = "测试未发送信息"
+        gcp.input_message(info)
+        # if gcp.is_on_this_page():
+        #     if gcp.is_element_exit_("文本发送按钮"):
+        #         raise AssertionError("有发送按钮")
+        gcp.click_back()
+        time.sleep(1)
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            exists = mess.is_text_present("草稿")
+            self.assertEquals(exists, True)
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0174(self):
+        """消息草稿-聊天列表显示-草稿信息发送成功"""
+        # 1、删除聊天记录
+        # 2、选择一个群输入先发送一条信息确保在消息页可以看到
+        # 3、不输入任何信息返回消息页面
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+        # 输入信息
+        gcp.input_message("哈哈")
+        gcp.click_back()
+        time.sleep(1)
+        # 1、保存为草稿信息
+        # 2、消息列表，显示[草稿]标红字
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            exists = mess.is_text_present("草稿")
+            self.assertEquals(exists, True)
+        # 点击群名，进入群聊页面
+        sogp = SelectOneGroupPage()
+        group_name = Preconditions.get_group_chat_name()
+        sogp.click_one_contact(group_name)
+        scp = GroupChatPage()
+        scp.wait_for_page_load()
+
+        # 点击发送
+        gcp.send_message()
+        # 3、消息发送成功
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        gcp.click_back()
+        time.sleep(1)
+        # 4、消息列表[草稿]标红字样消失，显示为正常消息预览
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            exists = mess.is_text_present("草稿")
+            self.assertEquals(exists, False)
+
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
     @staticmethod
@@ -4729,7 +4997,6 @@ class MsgCommonGroupTest(TestCase):
         if gcp.is_toast_exist("你撤回了一条信息"):
             raise AssertionError("消息超过十秒可以撤回")
 
-
 class MsgCommonGroupPriorityTest(TestCase):
     """
         模块：消息-普通群
@@ -5020,7 +5287,6 @@ class MsgCommonGroupPriorityTest(TestCase):
         if not gcsp.is_toast_exist("修改成功"):
             raise AssertionError("群名称更改为新名称失败")
         gcsp.click_back()
-
 
 class MsgCommonGroupAllTest(TestCase):
     """
