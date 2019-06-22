@@ -27,6 +27,8 @@ class MeCallMultiPage(BasePage):
                   '查看充值记录': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_recharge_record'),
                   '充值套餐': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_recharge_package'),
                   '返回1': (MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn'),
+                  # 6.3.1版本飞信电话可用时长
+                  '分钟_631': (MobileBy.ID, 'com.chinasofti.rcs:id/mutil_call_unit'),
                   }
 
     @TestLogger.log()
@@ -130,4 +132,31 @@ class MeCallMultiPage(BasePage):
     def ele_is_click(self, locator):
         """点击字段选项 """
         self.element_should_be_enabled(self.__locators[locator])
+
+    @TestLogger.log()
+    def is_mutil_call_manage(self):
+        """当前是否在多方电话管理页面"""
+        self.element_should_contain_text((MobileBy.ID, "com.chinasofti.rcs:id/label_toolbar_title"), '多方电话管理')
+
+    @TestLogger.log()
+    def is_mutil_call_manage_631(self):
+        """当前是否在飞信电话管理页面 6.3.1版本"""
+        flag = False
+        element = self.get_elements(self.__locators["多方电话管理"])
+        if len(element) > 0:
+            flag = True
+        return flag
+
+    @TestLogger.log()
+    def click_mutilcall_manage(self):
+        """点击多方电话可用时长"""
+        self.click_element(self.__locators['分钟'])
+
+    @TestLogger.log()
+    def click_mutilcall_manage_631(self):
+        """点击多方电话可用时长 6.3.1版本"""
+        self.click_element(self.__locators['分钟_631'])
+
+
+
 

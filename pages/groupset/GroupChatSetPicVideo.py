@@ -24,6 +24,7 @@ class GroupChatSetPicVideoPage(BasePage):
                   '预览该图片视频': (MobileBy.ID, "com.chinasofti.rcs:id/vp_preview"),
                   '预览该视频': (MobileBy.ID, "com.chinasofti.rcs:id/surface"),
                   '关闭预览视频': (MobileBy.ID, "com.chinasofti.rcs:id/iv_close"),
+                  "识别图中二维码": (MobileBy.XPATH, '//*[@text="识别图中二维码"]'),
                   }
 
     @TestLogger.log()

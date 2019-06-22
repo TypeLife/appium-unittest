@@ -50,11 +50,14 @@ class SingleChatPage(BaseChatPage):
                   '短信资费提醒': (MobileBy.XPATH, '//*[@text="资费提醒"]'),
                   "文本输入框": (MobileBy.ID, "com.chinasofti.rcs:id/et_message"),
                   "文本发送按钮": (MobileBy.ID, "com.chinasofti.rcs:id/ib_send"),
+                  "语音发送按钮": (MobileBy.ID, "com.chinasofti.rcs:id/ib_audio"),
                   "消息免打扰图标": (MobileBy.ID, "com.chinasofti.rcs:id/iv_slient"),
                   '重发按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
                   '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
                   '取消': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
                   '文件名称': (MobileBy.ID, 'com.chinasofti.rcs:id/textview_file_name'),
+                  '和飞信电话（免费）': (MobileBy.XPATH, '//*[@text="和飞信电话（免费）"]'),
+                  '飞信电话（免费）': (MobileBy.XPATH, '//*[@text="飞信电话（免费）"]'),
                   '名片消息名称': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_card_name'),
                   '更多': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
                   '选择名片': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="名片"]'),
@@ -173,6 +176,13 @@ class SingleChatPage(BaseChatPage):
         time.sleep(1)
 
     @TestLogger.log()
+    def send_text_if_not_exist(self, mess):
+        """发送消息如果当前页不存在该消息"""
+        if not self._is_element_present((MobileBy.XPATH, '//*[@text ="%s"]' % mess)):
+            self.input_text_message(mess)
+            self.send_text()
+
+    @TestLogger.log()
     def is_exist_no_disturb_icon(self):
         """是否存在消息免打扰图标"""
         return self._is_element_present(self.__class__.__locators["消息免打扰图标"])
@@ -206,6 +216,21 @@ class SingleChatPage(BaseChatPage):
     def click_cancel(self):
         """点击取消"""
         self.click_element(self.__class__.__locators["取消"])
+
+    @TestLogger.log()
+    def is_exist_cancel_button(self):
+        """是否存在资费提醒取消按钮"""
+        return self._is_element_present(self.__locators["取消"])
+
+    @TestLogger.log()
+    def is_exist_send_audio_button(self):
+        """是否存在语音发送按钮"""
+        return self._is_element_present(self.__locators["语音发送按钮"])
+
+    @TestLogger.log()
+    def is_exist_send_txt_button(self):
+        """是否存在文本发送按钮"""
+        return self._is_element_present(self.__locators["文本发送按钮"])
 
     @TestLogger.log()
     def get_current_file_name(self):
@@ -247,3 +272,31 @@ class SingleChatPage(BaseChatPage):
     def click_profile(self):
         """点击选择名片"""
         self.click_element(self.__class__.__locators["选择名片"])
+		
+    @TestLogger.log()
+    def is_exist_inputtext(self):
+        """是否存在消息输入框"""
+        return self._is_element_present(self.__class__.__locators["文本输入框"])
+
+    @TestLogger.log()
+    def clear_inputtext(self):
+        """清空消息输入框"""
+        time.sleep(2)
+        self.click_element(self.__class__.__locators["短信输入框"])
+        el = self.get_element(self.__class__.__locators["短信输入框"])
+        el.clear()
+
+    @TestLogger.log()
+    def click_hefeixinfree_call(self):
+        """点击和飞信电话（免费）"""
+        self.click_element(self.__class__.__locators["和飞信电话（免费）"])
+
+    @TestLogger.log()
+    def click_hefeixinfree_call_631(self):
+        """点击飞信电话（免费）"""
+        self.click_element(self.__class__.__locators["飞信电话（免费）"])
+
+    @TestLogger.log()
+    def click_back_tubiao(self):
+        """点击返回图标"""
+        self.click_element(self.__class__.__locators["com.chinasofti.rcs:id/back"])

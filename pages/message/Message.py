@@ -81,7 +81,30 @@ class MessagePage(FooterPage):
         "草稿": (MobileBy.ID, "com.chinasofti.rcs:id/tv_msg_draft_hint"),
         "手机联系人": (MobileBy.ID, "com.chinasofti.rcs:id/first_item"),
 
+        "欢迎使用群发助手":(MobileBy.XPATH,"//*[contains(@text,'欢迎使用群发助手')]"),
+        "群发助手欢迎页确定":(MobileBy.ID,"com.chinasofti.rcs:id/confirm_btn"),
+        "搜索输入框":(MobileBy.ID, "com.chinasofti.rcs:id/edit_query01"),
+        '我的电脑': (MobileBy.XPATH, '//*[@text="我的电脑"]'),
     }
+
+    @TestLogger.log()
+    def page_should_contain_my_computer(self):
+        """检查是否存在我的电脑"""
+        if not self._is_element_present(self.__class__.__locators["我的电脑"]):
+            raise AssertionError('没有我的电脑选项,请先登录和飞信电脑版!')
+        return True
+
+    @TestLogger.log("点击我的电脑")
+    def click_my_computer(self):
+        self.click_element(self.__locators["我的电脑"])
+        time.sleep(1)
+
+    @TestLogger.log()
+    def action_welcome_groupsmspage(self):
+        """群发助手欢迎页处理"""
+        time.sleep(2)
+        if self._is_element_present(self.__class__.__locators["欢迎使用群发助手"]):
+            self.click_element(self.__locators["群发助手欢迎页确定"])
 
     @TestLogger.log("点击创建群聊")
     def click_create_group(self):
@@ -122,6 +145,12 @@ class MessagePage(FooterPage):
     def click_calls(self):
         self.click_element(self.__locators["通话"])
         time.sleep(1)
+
+    @TestLogger.log("判断未进群提示次数")
+    def check_group_toast_num(self):
+        from unittest import TestCase
+        TestCase().assertEqual
+        return TestCase().assertEqual(len(self.get_elements((MobileBy.XPATH, '//*[@text ="还有人未进群,再次邀请"]'))), 3)
 
 
     @TestLogger.log('检查顶部搜索框是否显示')
@@ -268,10 +297,31 @@ class MessagePage(FooterPage):
     @TestLogger.log()
     def input_search_message(self, message):
         """输入查询内容"""
-        self.input_text(self.__locators['搜索'], message)
+        self.input_text(self.__class__.__locators["搜索"], message)
 
+    @TestLogger.log()
+    def input_search_message_631(self, message):
+        """输入查询内容"""
+        self.input_text(self.__class__.__locators["搜索输入框"], message)
 
+    @TestLogger.log()
+    def search_and_enter(self, point):
+        """消息页全局搜索内容并进入"""
+        self.click_search()
+        from pages import SearchPage
+        SearchPage().input_search_keyword(point)
+        time.sleep(2)
+        self.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % point))
 
+    @TestLogger.log()
+    def search_and_enter_631(self, point):
+        """消息页全局搜索内容并进入"""
+        self.click_search()
+        from pages import SearchPage
+        SearchPage().input_search_keyword(point)
+        self.click_element(
+            (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text ="%s"]' % point))
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=30, auto_accept_alerts=True):
@@ -570,6 +620,12 @@ class MessagePage(FooterPage):
                 break
             current += 1
             self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        self.click_element(locator)
+
+    @TestLogger.log()
+    def choose_enter_chat(self, name):
+        """通过名字选择一个聊天"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_name" and @text ="%s"]' % name)
         self.click_element(locator)
 
     @TestLogger.log()

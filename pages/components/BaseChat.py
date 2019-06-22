@@ -17,7 +17,7 @@ class BaseChatPage(BasePage):
                   '选择图片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_pic'),
                   '选择相机': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_take_photo'),
                   '选择名片': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_profile'),
-                  '选择gif': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_gif'),
+                  '选择gif': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_gif'),
                   '选择更多': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
                   'com.chinasofti.rcs:id/input_divider_inside': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/input_divider_inside'),
@@ -32,6 +32,7 @@ class BaseChatPage(BasePage):
                   '收藏': (MobileBy.XPATH, "//*[contains(@text, '收藏')]"),
                   '转发': (MobileBy.XPATH, "//*[contains(@text, '转发')]"),
                   '撤回': (MobileBy.XPATH, "//*[contains(@text, '撤回')]"),
+                  '转为短信发送': (MobileBy.XPATH, "//*[contains(@text, '转为短信发送')]"),
                   '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
                   '复制': (MobileBy.XPATH, "//*[contains(@text, '复制')]"),
                   '多选': (MobileBy.XPATH, "//*[contains(@text, '多选')]"),
@@ -87,7 +88,7 @@ class BaseChatPage(BasePage):
                   '预览文件-转发': (MobileBy.XPATH, "//*[contains(@text, '转发')]"),
                   '预览文件-收藏': (MobileBy.XPATH, "//*[contains(@text, '收藏')]"),
                   '其他应用打开': (MobileBy.XPATH, "//*[contains(@text, '其他应用打开')]"),
-
+                  '视频消息': (MobileBy.ID, 'com.chinasofti.rcs:id/video_thumb')
                   }
 
     @TestLogger.log('文件是否存在')
@@ -207,9 +208,23 @@ class BaseChatPage(BasePage):
         self.click_element(self.__class__.__locators['撤回'])
 
     @TestLogger.log()
+    def if_exist_i_know_click(self):
+        """撤回消息时，弹窗处理，点击 我知道了"""
+        time.sleep(2)
+        if self._is_element_present(self.__class__.__locators["我知道了"]):
+            self.click_element(self.__class__.__locators["我知道了"])
+
+    @TestLogger.log()
     def click_i_know(self):
         """撤回消息时，弹窗处理，点击 我知道了"""
         self.click_element(self.__class__.__locators["我知道了"])
+
+    @TestLogger.log()
+    def send_for_sms(self, mess):
+        """转为短信发送"""
+        el = self.get_element((MobileBy.XPATH, "//*[contains(@text, '%s')]" % mess))
+        self.press(el)
+        self.click_element(self.__class__.__locators['转为短信发送'])
 
     @TestLogger.log()
     def press_mess(self, mess):
@@ -484,7 +499,7 @@ class BaseChatPage(BasePage):
     def input_gif(self, message):
         """输入gif搜索框信息"""
         self.input_text(self.__class__.__locators["gif趣图搜索框"], message)
-        # self.driver.hide_keyboard()
+        self.driver.hide_keyboard()
         return self
 
     @TestLogger.log()
@@ -514,6 +529,11 @@ class BaseChatPage(BasePage):
     def is_exist_video_msg(self):
         """是否存在视频消息"""
         return self._is_element_present(self.__class__.__locators['消息视频'])
+
+    @TestLogger.log()
+    def is_exist_video_record(self):
+        """是否存在视频消息"""
+        return self._is_element_present(self.__class__.__locators['视频消息'])
 
     @TestLogger.log()
     def is_exist_pic_msg(self):

@@ -10,6 +10,7 @@ class SelectLocalContactsPage(BasePage):
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.ContactsSelectActivity'
 
     __locators = {'': (MobileBy.ID, ''),
+                  '无搜索结果': (MobileBy.ID, 'com.chinasofti.rcs:id/no_contact_text'),
                   'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
                   'android:id/content': (MobileBy.ID, 'android:id/content'),
                   'com.chinasofti.rcs:id/pop_10g_window_drop_view': (
@@ -26,6 +27,7 @@ class SelectLocalContactsPage(BasePage):
                   'com.chinasofti.rcs:id/contact_selection_list_view': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/contact_selection_list_view'),
                   '容器列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list'),
+                  'com.chinasofti.rcs:id/contact_list_item': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
                   '联系人列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list_item'),
                   'com.chinasofti.rcs:id/asp_selecttion_contact_content': (
                       MobileBy.ID, 'com.chinasofti.rcs:id/asp_selecttion_contact_content'),
@@ -67,7 +69,12 @@ class SelectLocalContactsPage(BasePage):
                   '被选中的联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/avator'),
                   '搜索结果展示': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
                   '已选联系人名': (MobileBy.ID, 'com.chinasofti.rcs:id/image_text'),
+                  '查看更多': (MobileBy.XPATH, '//*[@text ="查看更多"]'),
                   }
+    @TestLogger.log()
+    def click_read_more(self):
+        """点击查看更多"""
+        self.click_element(self.__class__.__locators["查看更多"])
 
     @TestLogger.log()
     def click_sure_forward(self):
@@ -316,6 +323,12 @@ class SelectLocalContactsPage(BasePage):
         """搜索结果判断"""
         els = self.get_elements((MobileBy.XPATH, '//*[contains(@text, "%s")]' % msg))
         return len(els) > 1
+
+    @TestLogger.log()
+    def no_search_result(self):
+        """搜索结果判断"""
+        els = self.get_elements(self.__class__.__locators["无搜索结果"])
+        return len(els) > 0
 
     @TestLogger.log()
     def select_local_contacts(self, n):

@@ -4,11 +4,12 @@ from library.core.TestLogger import TestLogger
 import time
 from pages import MessagePage, MePage, SettingPage, MeSetDialPage, MeSetDialWayPage, GroupListPage, SelectContacts
 from pages.call.CallTypeSelect import CallTypeSelectPage
+from pages.components import FooterPage
 from pages.contacts.local_contact import localContactPage
 from pages.call.MultiPartyVideo import MultiPartyVideoPage
 
 
-class CallPage(BasePage):
+class CallPage(FooterPage,BasePage):
     """主界面-通话tab页"""
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.HomeActivity'
 
@@ -63,7 +64,28 @@ class CallPage(BasePage):
         '多方电话': (MobileBy.XPATH, '//*[@text="多方电话"]'),
         '多方视频': (MobileBy.XPATH, '//*[@text="多方视频"]'),
         '我知道了': (MobileBy.XPATH, '//*[@text="我知道了"]'),
+        '选择联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/title'),
+        '通话类型': (MobileBy.ID, 'com.chinasofti.rcs:id/tvCallManner'),
+        '刚刚': (MobileBy.XPATH, '//*[@text="刚刚"]'),
+        '你正在多方通话': (MobileBy.ID, 'com.chinasofti.rcs:id/status_tv'),
+        '再次呼叫': (MobileBy.ID, 'com.chinasofti.rcs:id/call_again'),
+        '一键建群': (MobileBy.ID, 'com.chinasofti.rcs:id/one_key_new_group'),
+        '<': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
+        # 结束飞信电话并关闭会场管理
+        '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
+        '取消': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
+        # 结束通话弹框
+        '结束通话弹框': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_title'),
+        '你正在飞信电话': (MobileBy.ID, 'com.chinasofti.rcs:id/status_tv'),
+        '呼叫选择飞信电话': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_calltype_fetion'),
+        '结束通话提示框': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_title'),
+        '结束通话提示框-确定': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
     }
+
+    @TestLogger.log()
+    def is_exist_free_call(self):
+        """是否存在“多方通话”文本"""
+        return self._is_element_present(self.__class__.__locators["多方通话"])
 
     @TestLogger.log()
     def click_free_call(self):
@@ -445,6 +467,11 @@ class CallPage(BasePage):
         return self._is_element_present(self.__class__.__locators["指定提示"])
 
     @TestLogger.log()
+    def is_exist_multi_party_telephone(self):
+        """是否存在“多方电话”文本"""
+        return self._is_element_present(self.__class__.__locators["多方电话提示框"])
+
+    @TestLogger.log()
     def click_multi_party_telephone(self):
         """点击多方电话"""
         self.click_element(self.__class__.__locators["多方电话提示框"])
@@ -473,6 +500,21 @@ class CallPage(BasePage):
     def click_allow_button(self, auto_accept_permission_alert=True):
         """点击允许"""
         self.click_element(self.__class__.__locators["始终允许"], auto_accept_permission_alert=auto_accept_permission_alert)
+
+    def wait_for_freemsg_load(self, timeout=8, auto_accept_alerts=True):
+        """等待免费短信页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["选择联系人"])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(timeout)
+            raise AssertionError(
+                message
+            )
+        return self
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=20, auto_accept_alerts=True):
@@ -636,6 +678,91 @@ class CallPage(BasePage):
             auto_accept_permission_alert=True,
             condition=lambda d: self.is_text_present("说点什么..."))
 
+    @TestLogger.log()
+    def get_calltype_history(self, index):
+        """通过下标获取通话记录类型"""
+        elements = self.get_elements(self.__locators["通话类型"])
+        try:
+            if len(elements) > 0:
+                return elements[index].text
+        except:
+            raise IndexError("元素超出索引")
+
+    @TestLogger.log()
+    def is_type_hefeixin(self, index, type ):
+        """判断下标获取通话记录类型是否为指定类型"""
+        text = self.get_calltype_history(index)
+        try:
+            if text == type:
+                return True
+        except:
+            raise AssertionError("通话类型不是{}".format(type))
+
+    @TestLogger.log()
+    def click_ganggang_call_time(self):
+        """点击'刚刚'的通话记录，进入详情页"""
+        self.click_element(self.__locators["刚刚"], auto_accept_permission_alert=False)
+        time.sleep(3)
+
+    @TestLogger.log()
+    def is_hefeixin_page(self, text):
+        """通话记录详情页面标题是否是text？"""
+
+        self.element_should_contain_text((MobileBy.ID, "com.chinasofti.rcs:id/tx_name_multi_call"), text)
+
+    @TestLogger.log()
+    def click_back_to_call(self):
+        """点击你正在多方通话,进入通话会控页"""
+        self.click_element(self.__locators["你正在多方通话"])
+
+    @TestLogger.log()
+    def click_back_to_call_631(self):
+        """点击你正在飞信电话,进入通话会控页"""
+        self.click_element(self.__locators["你正在飞信电话"])
+
+    @TestLogger.log()
+    def is_you_are_calling_exists(self):
+        """页面是否存在“你正在飞信电话”"""
+        self._is_element_present(self.__locators["你正在飞信电话"])
+
+    @TestLogger.log()
+    def click_mutil_call_again(self):
+        """点击再次呼叫"""
+        self.click_element(self.__locators["再次呼叫"], auto_accept_permission_alert=False)
+
+    @TestLogger.log()
+    def click_onekey_build_group(self):
+        """点击一键建群"""
+        self.click_element(self.__locators["一键建群"], auto_accept_permission_alert=False)
+
+    @TestLogger.log()
+    def click_lefticon_back(self):
+        """点击<图标返回"""
+        self.click_element(self.__class__.__locators["<"])
+
+    @TestLogger.log()
+    def wait_for_click_freecal(self):
+        """等待呼叫方式选择界面弹出并点击飞信电话"""
+        self.wait_until(
+            timeout=5,
+            auto_accept_permission_alert=True,
+            condition=lambda d: self._is_element_present(self.__class__.__locators["呼叫选择飞信电话"]))
+        self.click_element(self.__class__.__locators["呼叫选择飞信电话"])
+
+    @TestLogger.log()
+    def hang_up_hefeixin_call_631(self):
+        """挂断和飞信电话"""
+        self.wait_until(
+            timeout=5,
+            auto_accept_permission_alert=True,
+            condition=lambda d: self._is_element_present(self.__class__.__locators["挂断和飞信电话"]))
+        self.click_element(self.__class__.__locators["挂断和飞信电话"])
+        self.wait_until(
+            timeout=5,
+            auto_accept_permission_alert=True,
+            condition=lambda d: self._is_element_present(self.__class__.__locators["结束通话提示框"]))
+        self.click_element(self.__class__.__locators["结束通话提示框-确定"])
+		
     def click_call_history(self):
         """点击通话记录号码"""
         self.click_element(self.__locators['通话记录'])

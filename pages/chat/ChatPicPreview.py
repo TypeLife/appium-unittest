@@ -35,6 +35,26 @@ class ChatPicPreviewPage(BasePage):
                   }
 
     @TestLogger.log()
+    def is_exist_edit(self):
+        """当前页面是否在编辑按钮"""
+        return self._is_element_present(self.__class__.__locators["编辑"])
+
+    @TestLogger.log()
+    def check_send_number(self, number):
+        """当前页面是否在工作台管理页"""
+        text = self.get_text(self.__class__.__locators['发送(2)'])
+        excepted_text = "发送({})".format(str(number))
+        return text == excepted_text
+
+    @TestLogger.log()
+    def is_on_gallery_page(self):
+        """当前页面是否在工作台管理页"""
+        el = self.get_elements(self.__class__.__locators['预览(1/2)'])
+        if len(el) > 0:
+            return True
+        return False
+
+    @TestLogger.log()
     def edit_btn_is_toast(self):
         """获取编辑按钮状态是可点击是否有提示框"""
         return self.is_toast_exist("当前版本仅支持勾选单张图片时进行编辑", 3)

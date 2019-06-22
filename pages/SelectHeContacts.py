@@ -9,6 +9,7 @@ class SelectHeContactsPage(BasePage):
     ACTIVITY = 'com.cmicc.module_enterprise.ui.activity.EnterPriseContactSelectActivity'
 
     __locators = {
+                  '联系人名': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
                   'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
                   'android:id/content': (MobileBy.ID, 'android:id/content'),
                   'com.chinasofti.rcs:id/actionbar_enterprise_contactselect_activity': (
@@ -50,6 +51,23 @@ class SelectHeContactsPage(BasePage):
             raise AssertionError(
                 message
             )
+        return self
+
+    @TestLogger.log("点击搜索第一个联系人")
+    def click_search_phone_contacts(self):
+        self.wait_until(
+            condition=lambda x: self.get_elements(self.__class__.__locators["联系人名"])[0],
+            auto_accept_permission_alert=False
+        ).click()
+
+    @TestLogger.log()
+    def input_search_contact_message(self, message):
+        """输入查询联系人查询信息"""
+        self.input_text(self.__class__.__locators["搜索或输入手机号"], message)
+        try:
+            self.driver.hide_keyboard()
+        except:
+            pass
         return self
 
     @TestLogger.log()

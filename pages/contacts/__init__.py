@@ -20,3 +20,4 @@ from .GroupListSearch import GroupListSearchPage
 from .official_account import OfficialAccountPage
 from .official_account_detail import OfficialAccountDetailPage
 from .search_official_account import SearchOfficialAccountPage
+from .EditContactPage import EditContactPage

@@ -4,6 +4,8 @@ import copy
 from library.core.BasePage import BasePage
 from library.core.TestLogger import TestLogger
 import time
+
+from pages.groupset.GroupChatSetPicVideo import GroupChatSetPicVideoPage
 from pages.message.Message import MessagePage
 from pages.GroupChat import GroupChatPage
 
@@ -12,6 +14,7 @@ class SelectContactsPage(BasePage):
     ACTIVITY = 'com.cmcc.cmrcs.android.ui.activities.ContactsSelectActivity'
 
     __locators = {
+        '无搜索结果':(MobileBy.ID, 'com.chinasofti.rcs:id/no_contact_text'),
         'com.chinasofti.rcs:id/action_bar_root': (MobileBy.ID, 'com.chinasofti.rcs:id/action_bar_root'),
         'android:id/content': (MobileBy.ID, 'android:id/content'),
         'com.chinasofti.rcs:id/pop_10g_window_drop_view': (
@@ -47,6 +50,7 @@ class SelectContactsPage(BasePage):
         '取消转发': (MobileBy.XPATH, "//*[contains(@text, '取消')]"),
         '确定转发': (MobileBy.XPATH, "//*[contains(@text, '确定')]"),
         'local联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
+        '分享名片': (MobileBy.ID, 'com.chinasofti.rcs:id/send_tv'),
         '发送名片': (MobileBy.ID,'com.chinasofti.rcs:id/send_tv'),
         '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
         '右侧字母索引': (MobileBy.XPATH,
@@ -97,6 +101,74 @@ class SelectContactsPage(BasePage):
 
     }
 
+    @TestLogger.log("")
+    def click_search_result_by_name(self, name):
+        """根据名称点击搜索联系人结果"""
+        els = self.get_elements(self.__class__.__locators["联系人横框"])
+        if els:
+            for ele in els:
+                res = ele.get_elements(self.__class__.__locators["aaa"])
+                if res[0].text == name:
+                    self.click_element(ele)
+                    return
+            raise AssertionError("找不到对应的搜索结果")
+        else:
+            raise AssertionError("没有搜索结果")
+
+    @TestLogger.log("")
+    def get_search_result_name(self):
+        """获取搜索联系人名称结果"""
+        els = self.get_elements(self.__class__.__locators["aaa"])
+        contacts = []
+        if els:
+            for el in els:
+                contacts.append(el.text)
+        else:
+            return contacts
+        flag = True
+        while flag:
+            self.swipe_by_percent_on_screen(50, 72, 50, 36, 800)
+            els = self.get_elements(self.__class__.__locators["aaa"])
+            for el in els:
+                if el.text not in contacts:
+                    contacts.append(el.text)
+                    flag = True
+                else:
+                    flag = False
+        return contacts
+
+    @TestLogger.log("")
+    def get_search_result_number(self):
+        """获取搜索联系人电话结果"""
+        els = self.get_elements(self.__class__.__locators["聊天电话"])
+        numbers = []
+        if els:
+            for el in els:
+                numbers.append(el.text)
+        else:
+            return numbers
+        flag = True
+        while flag:
+            self.swipe_by_percent_on_screen(50, 72, 50, 36, 800)
+            els = self.get_elements(self.__class__.__locators["聊天电话"])
+            for el in els:
+                if el.text not in numbers:
+                    numbers.append(el.text)
+                    flag = True
+                else:
+                    flag = False
+        return numbers
+
+    @TestLogger.log()
+    def is_enabled_search_result(self):
+        """判断搜索结果是否高亮展示"""
+        els = self.get_elements(self.__class__.__locators["联系人横框"])
+        if els:
+            for el in els:
+                if not self._is_enabled(el):
+                    return False
+        return True
+
     @TestLogger.log("点击右侧字母")
     def click_right_word(self,text='A'):
         self.click_element(self.__locators[text])
@@ -116,6 +188,13 @@ class SelectContactsPage(BasePage):
         """点击组名"""
         time.sleep(1)
         self.click_element(self.__locators[text])
+
+    @TestLogger.log("识别图中二维码")
+    def click_recognize_code_631(self, text='识别图中二维码'):
+        """点击组名"""
+        time.sleep(2)
+        GroupChatSetPicVideoPage().press_pre_file_to_do(text)
+
 
     @TestLogger.log("最近聊天联系人")
     def click_recent_contact(self, text='最近聊天联系人'):
@@ -242,6 +321,11 @@ class SelectContactsPage(BasePage):
     def click_share_card(self):
         """点击分享名片"""
         self.click_element(self.__class__.__locators['发送名片'])
+
+    @TestLogger.log('搜索联系人：*****')
+    def click_search_local_contactst(self):
+        """点击搜索或输入手机号"""
+        self.click_element(self.__locators['com.chinasofti.rcs:id/local_contacts'])
 
     @TestLogger.log('搜索或输入手机号')
     def click_search_contact(self):
@@ -834,3 +918,12 @@ class SelectContactsPage(BasePage):
     def click_all_contacts(self):
         """"""
 
+    @TestLogger.log('通过名字点击联系人')
+    def click_contact_by_name(self, name):
+        """点击联系人"""
+        self.click_element((MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_name" and ' +
+                            '@text="{}"]'.format(name)))
+
+    @TestLogger.log('清空搜索框')
+    def clear_serchbar_keyword(self):
+        self.click_element(self.__locators['X'])

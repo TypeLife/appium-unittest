@@ -33,6 +33,7 @@ class SelectContactPage(Keyboard, BasePage):
         '搜索结果列表': (MobileBy.XPATH, '//android.support.v7.widget.RecyclerView'),
         '列表项根节点': (MobileBy.XPATH, '//android.support.v7.widget.RecyclerView/*'),
         '搜索和通讯录联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/text_hint'),
+        '选择团队联系人': (MobileBy.XPATH, '//*[@text ="选择团队联系人"]'),
 
     }
 
@@ -63,3 +64,39 @@ class SelectContactPage(Keyboard, BasePage):
             self.hide_keyboard_if_display()
             self.select_the_first_result()
         self.click_ok()
+
+    @TestLogger.log()
+    def is_exist_select_contact_btn(self):
+        """判断选择联系人是否存在"""
+        if not self._is_element_present(self.__class__.__locators["选择联系人"]):
+            raise AssertionError("Page should have contained element '{}' "
+                                 "but did not".format(self.__class__.__locators["选择联系人"]))
+        return True
+
+    @TestLogger.log()
+    def is_exist_selectorinput_toast(self):
+        """判断搜索或输入手机号提示是否存在"""
+        if not self._is_element_present(self.__class__.__locators["搜索或输入手机号"]):
+            raise AssertionError("Page should have contained element '{}' "
+                                 "but did not".format(self.__class__.__locators["搜索或输入手机号"]))
+        return True
+
+    @TestLogger.log()
+    def is_exist_selectortuandui_toast(self):
+        """判断存在选择团队联系人按钮"""
+        if not self._is_element_present(self.__class__.__locators["选择团队联系人"]):
+            raise AssertionError("Page should have contained element '{}' "
+                                 "but did not".format(self.__class__.__locators["选择团队联系人"]))
+        return True
+
+    @TestLogger.log()
+    def check_imagetext_list(self, expect_text):
+        """判断已选联系人列表是否正确"""
+        actual_text = self.get_element(self.__locators['已添加号码列表']).text
+        from unittest import TestCase
+        return TestCase().assertEqual(actual_text, expect_text)
+
+    @TestLogger.log()
+    def click_imagetext_list(self):
+        """点击已选联系人列表"""
+        self.click_element(self.__class__.__locators['已添加号码列表'])
