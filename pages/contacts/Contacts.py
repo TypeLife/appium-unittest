@@ -451,6 +451,7 @@ class ContactsPage(FooterPage):
             contact_search.click_back()
         else:
             contact_search.click_back()
+            self.click_element(self.__class__.__locators['联系-手机联系人'])
             self.click_add()
             from pages import CreateContactPage
             create_page = CreateContactPage()
@@ -459,6 +460,7 @@ class ContactsPage(FooterPage):
             create_page.create_contact(name, number)
             detail_page.wait_for_page_load()
             detail_page.click_back_icon()
+            current_mobile().back()
 
 
 

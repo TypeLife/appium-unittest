@@ -9307,3 +9307,108 @@ class MsgCommonGroupAllTest(TestCase):
             if not mess.is_text_present("草稿"):
                 raise AssertionError("没有草稿标识出现")
 
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_huangmianhua_0024(self):
+        """企业群/党群在消息列表内展示——最新消息时间（修改手机时间可以测试）"""
+        # 1、删除聊天记录
+        # 2、选择一个群输入先发送一条信息确保在消息页可以看到
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        gcp.click_back()
+        mess = MessagePage()
+        exist = mess.is_text_present("刚刚")
+        self.assertEqual(exist, True)
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_huangmianhua_0025(self):
+        """企业群/党群在消息列表内展示——最新消息时间（修改手机时间可以测试）"""
+        # 1、删除聊天记录
+        # 2、选择一个群输入先发送一条信息确保在消息页可以看到
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        gcp.click_back()
+        mess = MessagePage()
+        # 暂时这样判断处理
+        exist = mess.is_text_present(":")
+        self.assertEqual(exist, True)
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_huangmianhua_0031(self):
+        """企业群/党群在消息列表内展示——最新消息展示——文字及表情"""
+        # 1、删除聊天记录
+        # 2、选择一个群输入先发送一条信息确保在消息页可以看到
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+        # 输入信息
+        gcp.input_message("测试超长文字测试超长文字测试超长文字")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        gcp.click_back()
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            exist = mess.is_text_present("…")
+            self.assertEqual(exist, True)
+            # if not mess.is_text_present("测试超长文字"):
+            #     raise AssertionError("测试超长文字")

@@ -152,6 +152,11 @@ class ChatAudioPage(BasePage):
         self.click_element(self.__class__.__locators["仅发送语音"])
 
     @TestLogger.log()
+    def click_only_text_voice(self):
+        """点击 仅发送文字(语音识别)"""
+        self.click_element(self.__class__.__locators["仅发送文字(语音识别)"])
+
+    @TestLogger.log()
     def click_only_voice_631(self):
         """点击仅发送语音"""
         self.click_element(self.__class__.__locators["仅发送语音选择"])
