@@ -26,7 +26,7 @@ class ContactDetailsPage(BasePage):
         '编辑': (MobileBy.ID, 'com.chinasofti.rcs:id/txt_call_detail_edit'),
         '好久不见~打个招呼吧': (MobileBy.ID, 'com.chinasofti.rcs:id/recent_contact_hint'),
         '名片号码': (MobileBy.ID, 'com.chinasofti.rcs:id/phone'),
-        '名片首字母': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_profile_photo_tv'),
+        '名片首字母': (MobileBy.ID, 'com.chinasofti.rcs:id/profile_photo_tv'),
         '联系人头像图片': (MobileBy.ID, 'com.chinasofti.rcs:id/recyclesafeimageview_profile_photo'),
         '头像': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_profile_photo_tv'),
         '消息': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_normal_message'),
@@ -53,13 +53,13 @@ class ContactDetailsPage(BasePage):
         'com.chinasofti.rcs:id/btn_share_card_line': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_share_card_line'),
         '邀请使用': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_invitation_to_use'),
         '大图': (MobileBy.ID, 'com.chinasofti.rcs:id/img_smooth'),
-        '电话号码': (MobileBy.XPATH, '//*[@text="电话"]/../android.widget.EditText[@resource-id="com.chinasofti.rcs:id/et"]'),
+        '电话号码': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/et" and @text="13800138005"]'),
         "确定": (MobileBy.ID, 'com.chinasofti.rcs:id/tv_save_or_sure'),
         "确定删除": (MobileBy.ID, 'com.chinasofti.rcs:id/bt_button2'),
         "删除联系人": (MobileBy.ID, "com.chinasofti.rcs:id/tv_delete_contact"),
         "呼叫(1/8)": (MobileBy.ID, "com.chinasofti.rcs:id/tv_sure"),
         "暂不开启": (MobileBy.ID, "android:id/button2"),
-        "挂断电话": (MobileBy.ID, "com.android.incallui:id/endButton"),
+        "挂断电话": (MobileBy.ID, "com.chinasofti.rcs:id/ivDecline"),
         "结束通话": (MobileBy.ID, "com.chinasofti.rcs:id/smart_call_out_term"),
         "视频通话呼叫中": (MobileBy.XPATH, "//*[@text='	视频通话呼叫中']"),
         "挂断视频通话": (MobileBy.ID, "com.chinasofti.rcs:id/iv_out_Cancel"),
@@ -73,8 +73,86 @@ class ContactDetailsPage(BasePage):
         '快捷方式-确定添加': (MobileBy.ID, "android:id/button1"),
         '快捷方式-取消添加': (MobileBy.ID, "android:id/button2"),
         "和飞信电话-挂断电话": (MobileBy.ID, "com.android.incallui:id/declinebutton"),
-
+        "团队选择一个联系人": (MobileBy.XPATH, "//*[contains(@text,'给个红包1')]"),
+        "团队选择一个联系人2": (MobileBy.XPATH, "//*[contains(@text,'1测试团队保存联系人')]"),
+        "团队选择一个联系人3": (MobileBy.XPATH, "//*[contains(@text,'2测试团队保存联系人子级')]"),
+        "我知道了": (MobileBy.ID, 'com.chinasofti.rcs:id/btn_confirm'),
+        "快捷方式": (MobileBy.ID, 'com.chinasofti.rcs:id/btn_shortcut'),
+        "不再提醒": (MobileBy.ID, 'com.chinasofti.rcs:id/cb_show_again'),
+        '允许': (MobileBy.XPATH, '//*[@text="允许"]'),
+        "继续拨打": (MobileBy.ID, 'com.chinasofti.rcs:id/continue_call'),
+        "以后不再提醒": (MobileBy.ID, 'com.chinasofti.rcs:id/pop_window_not_pop_btn_image'),
     }
+
+    @TestLogger.log("点击继续拨打")
+    def click_continue_call(self):
+        time.sleep(2)
+        if self._is_element_present(self.__class__.__locators['继续拨打']):
+            self.click_element(self.__class__.__locators['继续拨打'])
+        return True
+
+    @TestLogger.log("点击允许权限")
+    def click_allow_button(self):
+        time.sleep(2)
+        if self._is_element_present(self.__class__.__locators['允许']):
+            self.click_element(self.__class__.__locators['允许'])
+        return True
+
+    @TestLogger.log("点击快捷方式")
+    def click_shortcut(self):
+        """点击快捷方式"""
+        self.click_element(self.__locators['快捷方式'])
+
+    @TestLogger.log("")
+    def page_contain_shortcut(self):
+        """当前页面是否存在快捷方式"""
+        return self.page_should_contain_element(self.__locators['快捷方式'])
+
+    @TestLogger.log("")
+    def page_not_contain_i_know(self):
+        """当前页面是否存在快捷方式"""
+        return self.page_should_not_contain_element(self.__locators['我知道了'])
+
+    @TestLogger.log("")
+    def is_on_this_page(self):
+        """当前页面是否在个人详情"""
+        try:
+            self.wait_until(
+                timeout=15,
+                auto_accept_permission_alert=True,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["编辑2"])
+            )
+            return True
+        except:
+            return False
+
+    @TestLogger.log("")
+    def click_i_know(self):
+        """当前页面是否在个人详情"""
+        try:
+            self.wait_until(
+                timeout=15,
+                auto_accept_permission_alert=True,
+                condition=lambda d: self.page_should_contain_element(self.__locators['我知道了'])
+            )
+            self.click_element(self.__locators['我知道了'])
+        except:
+            pass
+
+    @TestLogger.log("")
+    def click_i_know_and_no_remind(self):
+        """当前页面是否在个人详情"""
+        try:
+            self.wait_until(
+                timeout=15,
+                auto_accept_permission_alert=True,
+                condition=lambda d: self.page_should_contain_element(self.__locators['我知道了'])
+            )
+            self.click_element(self.__locators['不再提醒'])
+            time.sleep(1)
+            self.click_element(self.__locators['我知道了'])
+        except:
+            pass
 
     @TestLogger.log("是否在当前页面")
     def is_on_this_page(self):
@@ -104,8 +182,8 @@ class ContactDetailsPage(BasePage):
         self.click_element(self.__locators["快捷方式-确定添加"])
 
     @TestLogger.log("更改手机号码")
-    def change_mobile_number(self,text='13800138789'):
-        self.input_text(self.__locators["电话号码"],text)
+    def change_mobile_number(self):
+        self.input_text(self.__locators["电话号码"], "13800138006")
 
     @TestLogger.log("点击呼叫")
     def send_call_number(self):
@@ -115,12 +193,12 @@ class ContactDetailsPage(BasePage):
 
     @TestLogger.log("设置授权窗口")
     def cancel_permission(self):
-        time.sleep(1)
+        time.sleep(3)
         self.click_element(self.__locators["暂不开启"])
 
     @TestLogger.log("挂断通话")
     def cancel_call(self):
-        time.sleep(4)
+        time.sleep(7)
         self.click_element(self.__locators["挂断电话"])
 
     @TestLogger.log("挂断通话")
@@ -256,7 +334,7 @@ class ContactDetailsPage(BasePage):
     @TestLogger.log("点击头像查看大图")
     def click_avatar(self):
         """点击头像查看大图"""
-        self.click_element(self.__locators['用户头像'])
+        self.click_element(self.__locators['头像'])
 
     @TestLogger.log("点击大图")
     def click_big_avatar(self):
@@ -300,9 +378,9 @@ class ContactDetailsPage(BasePage):
 
     @TestLogger.log("挂断视频通话")
     def end_video_call(self):
-        time.sleep(4)
+        time.sleep(2)
 
-        if self._is_element_present(self.__locators["挂断视频通话"]):
+        if self.get_elements(self.__locators["挂断视频通话"]):
             self.click_element(self.__locators["挂断视频通话"])
         else:
             self.click_element(self.__locators["取消拨打"])
@@ -488,7 +566,31 @@ class ContactDetailsPage(BasePage):
             os.makedirs(path)
         os.popen("adb pull /data/local/tmp/tmp.png " + path + "/" + timestamp + ".png")
         os.popen("adb shell rm /data/local/tmp/tmp.png")
+    @TestLogger.log()
+    def click_star(self):
+        """点击星级图标"""
+        self.click_element(self.__class__.__locators["星标图标"])
 
+    @TestLogger.log()
+    def click_selectone(self):
+        """团队选择一个联系人"""
+        self.click_element(self.__class__.__locators["团队选择一个联系人"])
+
+    @TestLogger.log()
+    def click_selectone2(self):
+        """团队选择一个联系人2"""
+        self.click_element(self.__class__.__locators["团队选择一个联系人2"])
+
+    @TestLogger.log()
+    def click_selectone3(self):
+        """团队选择一个联系人3"""
+        self.click_element(self.__class__.__locators["团队选择一个联系人3"])
+
+    @TestLogger.log('断言：检查页面是否包含文本')
+    def assert_screen_contain_text(self, text):
+        if not self.is_text_present(text):
+            raise AssertionError("Page should have contained text '{}' "
+                                     "but did not".format(text))
     @TestLogger.log()
     def get_people_name(self):
         time.sleep(2)

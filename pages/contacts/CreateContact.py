@@ -1,3 +1,5 @@
+import time
+
 from appium.webdriver.common.mobileby import MobileBy
 
 from library.core.BasePage import BasePage
@@ -29,12 +31,24 @@ class CreateContactPage(Keyboard, BasePage):
 
         '邮箱': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/item_email"]//android.widget.TextView'),
         '输入邮箱': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/item_email"]//android.widget.EditText'),
+        '允许': (MobileBy.XPATH, '//*[@text="允许"]'),
     }
 
     @TestLogger.log('点击保存')
     def click_save(self):
         """点击保存"""
         self.click_element(self.__locators['保存'])
+    @TestLogger.log("点击允许权限")
+    def click_allow_button(self):
+        time.sleep(2)
+        if self._is_element_present(self.__class__.__locators['允许']):
+            self.click_element(self.__class__.__locators['允许'])
+        return True
+
+    @TestLogger.log('判断保存按钮是否不可点击')
+    def assert_save_button_should_not_be_clickable(self):
+        if self._is_enabled(self.__locators['保存']):
+            raise AssertionError("ensure_button_should_not_be_clickable")
 
     @TestLogger.log('点击输入姓名')
     def click_input_name(self):
@@ -70,14 +84,17 @@ class CreateContactPage(Keyboard, BasePage):
     def input_company(self, name):
         self.input_text(self.__locators['输入公司'], name)
 
+    @TestLogger.log('点击输入公司')
+    def click_input_company(self, name):
+        self.click_element(self.__locators['输入公司'], name)
+
     @TestLogger.log('输入公司号码')
     def input_company(self, name):
         self.input_text(self.__locators['输入公司'], name)
 
     @TestLogger.log('点击输入职位')
-    def click_input_position(self):
-        """点击输入职位"""
-        self.click_element(self.__locators['输入职位'])
+    def click_input_position(self, name):
+        self.click_element(self.__locators['输入职位'], name)
 
 
     @TestLogger.log('输入职位')
@@ -85,9 +102,8 @@ class CreateContactPage(Keyboard, BasePage):
         self.input_text(self.__locators['输入职位'], name)
 
     @TestLogger.log('点击输入邮箱')
-    def click_input_email(self):
-        """点击输入邮箱"""
-        self.click_element(self.__locators['输入邮箱'])
+    def click_input_email_address(self, name):
+        self.click_element(self.__locators['输入邮箱'], name)
 
     @TestLogger.log('输入公司号码')
     def get_text_of_box(self, locator='输入公司'):
@@ -120,6 +136,25 @@ class CreateContactPage(Keyboard, BasePage):
         if number:
             self.hide_keyboard_if_display()
             self.input_number(number)
+        if company:
+            self.hide_keyboard_if_display()
+            self.input_company(company)
+        if position:
+            self.hide_keyboard_if_display()
+            self.input_position(position)
+        if email:
+            self.hide_keyboard_if_display()
+            self.input_email_address(email)
+        self.hide_keyboard_if_display()
+        self.save_contact()
+
+    @TestLogger.log('创建只有姓名的联系人')
+    def create_name_only_contact(self, name, number='', company='', position='', email=''):
+        if name:
+            self.hide_keyboard_if_display()
+            self.input_name(name)
+        self.hide_keyboard_if_display()
+        self.input_number(number)
         if company:
             self.hide_keyboard_if_display()
             self.input_company(company)

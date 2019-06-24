@@ -23,6 +23,20 @@ class GroupChatSetManagerPage(BasePage):
                   }
 
     @TestLogger.log()
+    def is_on_groupSetManager_contacts_page(self, timeout=20, auto_accept_alerts=True):
+        """当前页面是否在群管理"""
+
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["群管理"])
+            )
+            return True
+        except:
+            return False
+
+    @TestLogger.log()
     def click_back(self):
         """点击返回"""
         self.click_element(self.__locators['返回'])

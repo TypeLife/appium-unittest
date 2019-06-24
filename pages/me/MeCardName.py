@@ -55,8 +55,10 @@ class MeCardNamePage(BasePage):
 
     @TestLogger.log('获取名片信息')
     def get_name_cards_info(self):
-        name = ['卡名','卡号码','公司','职位']
-        for i in name:
-            if not self.get_text(self.__locators[i]):
-                return False
-        return True
+        info = dict()
+        info['name'] = self.get_text(self.__locators['卡名'])
+        info['tel'] = self.get_text(self.__locators['卡号码'])
+        info['company'] = self.get_text(self.__locators['公司'])
+        info['position'] = self.get_text(self.__locators['职位'])
+        info['email'] = self.get_text(self.__locators['邮箱'])
+        return info

@@ -70,6 +70,7 @@ class ChatAudioPage(BasePage):
                   '发送': (MobileBy.ID, 'com.chinasofti.rcs:id/recodr_audio_finish'),
                   '语音+文字选项': (MobileBy.ID, 'com.chinasofti.rcs:id/select_send_audio_and_text_icon'),
                   '我知道了': (MobileBy.XPATH, "//*[contains(@text, '我知道了')]"),
+                  '仅发送语音选择': (MobileBy.ID, "com.chinasofti.rcs:id/select_send_audio_root"),
                   }
 
     @TestLogger.log()
@@ -151,6 +152,16 @@ class ChatAudioPage(BasePage):
         self.click_element(self.__class__.__locators["仅发送语音"])
 
     @TestLogger.log()
+    def click_only_text_voice(self):
+        """点击 仅发送文字(语音识别)"""
+        self.click_element(self.__class__.__locators["仅发送文字(语音识别)"])
+
+    @TestLogger.log()
+    def click_only_voice_631(self):
+        """点击仅发送语音"""
+        self.click_element(self.__class__.__locators["仅发送语音选择"])
+
+    @TestLogger.log()
     def click_send_bottom(self):
         """点击发送"""
         self.click_element(self.__class__.__locators["发送"])
@@ -159,6 +170,19 @@ class ChatAudioPage(BasePage):
     def click_setting_bottom(self):
         """点击设置"""
         self.click_element(self.__class__.__locators["设置"])
+
+    @TestLogger.log()
+    def is_exist_setting_bottom(self, timeout=4, auto_accept_alerts=True):
+        """设置是否存在"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("设置")
+            )
+            return True
+        except:
+            return False
 
     @TestLogger.log()
     def get_audio_and_text_icon_selected(self):

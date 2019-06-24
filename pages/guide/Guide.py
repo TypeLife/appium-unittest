@@ -50,7 +50,22 @@ class GuidePage(BasePage):
 
     @TestLogger.log()
     def click_start_the_experience(self):
-        """点击引导页第三屏的立即体验"""
+        """点击引导页第三屏的开始体验"""
+        try:
+            self.wait_until(
+                timeout=5,
+                auto_accept_permission_alert=True,
+                condition=lambda d: self.is_text_present("开始体验")
+            )
+            self.click_text("开始体验", True)
+            return self
+        except:
+            # raise AssertionError('页面没有包含文本：开始体验')
+            self.click_start_the_experience_631()
+
+    @TestLogger.log()
+    def click_start_the_experience_631(self):
+        """点击引导页第三屏的立即体验（6.3.1版本）"""
         try:
             self.wait_until(
                 timeout=5,

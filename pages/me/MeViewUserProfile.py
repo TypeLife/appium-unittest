@@ -10,7 +10,7 @@ class MeViewUserProfilePage(BasePage):
     ACTIVITY = 'com.cmicc.module_aboutme.ui.activity.UserProfileShowActivity'
 
     __locators = {'': (MobileBy.ID, ''),
-
+                  '菜单区域': (MobileBy.CLASS_NAME, 'android.widget.ScrollView'),
                   '意见反馈': (MobileBy.XPATH, "//*[contains(@text, '意见反馈')]"),
                   '网上营业厅': (MobileBy.ID, 'com.chinasofti.rcs:id/toolbar_title_tv'),
                   '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/left_back'),
@@ -25,6 +25,20 @@ class MeViewUserProfilePage(BasePage):
                   # 打开编辑图片
                   '编辑图片': (MobileBy.ID, 'com.chinasofti.rcs:id/change_photo'),
                   }
+
+    @TestLogger.log("下一页")
+    def page_down(self):
+        self.wait_until(
+            condition=lambda d: self.get_element(self.__locators['菜单区域'])
+        )
+        self.swipe_by_direction(self.__locators['菜单区域'], 'up')
+
+    @TestLogger.log("上一页")
+    def page_up(self):
+        self.wait_until(
+            condition=lambda d: self.get_element(self.__locators['菜单区域'])
+        )
+        self.swipe_by_direction(self.__locators['菜单区域'], 'down')
 
     @TestLogger.log()
     def wait_for_page_load(self, timeout=8, auto_accept_alerts=True):

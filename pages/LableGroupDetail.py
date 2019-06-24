@@ -1,3 +1,5 @@
+import time
+
 from appium.webdriver.common.mobileby import MobileBy
 from selenium.common.exceptions import TimeoutException
 
@@ -55,7 +57,15 @@ class LableGroupDetailPage(LabelSettingMenu, BasePage):
         'com.chinasofti.rcs:id/contact_index_bar_container': (
             MobileBy.ID, 'com.chinasofti.rcs:id/contact_index_bar_container'),
         'F': (MobileBy.ID, ''),
+        '我知道了': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
     }
+
+    @TestLogger.log("点击我知道了")
+    def click_i_know(self):
+        time.sleep(2)
+        if self._is_element_present(self.__class__.__locators['我知道了']):
+            self.click_element(self.__class__.__locators['我知道了'])
+        return True
 
     @TestLogger.log('获取分组名字')
     def get_group_name(self):
@@ -108,3 +118,8 @@ class LableGroupDetailPage(LabelSettingMenu, BasePage):
             for el in els:
                 names.append(el.text)
         return names
+
+    @TestLogger.log('点击群发信息')
+    def click_send_smsall(self):
+        """点击群发信息"""
+        self.click_element(self.__locators['com.chinasofti.rcs:id/image_second_colum'])

@@ -6,6 +6,7 @@ import uuid
 import warnings
 
 from appium.webdriver.common.mobileby import MobileBy
+from selenium.common.exceptions import TimeoutException
 
 from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
@@ -15,6 +16,7 @@ from pages import *
 from pages.components import BaseChatPage
 from pages.groupset.GroupChatSetPicVideo import GroupChatSetPicVideoPage
 from pages.otherpages.HasRead import HasRead
+from pages.workbench.enterprise_contacts.EnterpriseContacts import EnterpriseContactsPage
 
 from preconditions.BasePreconditions import WorkbenchPreconditions
 
@@ -367,6 +369,48 @@ class Preconditions(WorkbenchPreconditions):
         # sc.click_back()
         # mess.open_me_page()
 
+    @staticmethod
+    def delete_record_group_chat():
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # if not gcsp.is_toast_exist("聊天记录清除成功"):
+            #     raise AssertionError("没有聊天记录清除成功弹窗")
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            if not scp.is_on_this_page():
+                raise AssertionError("没有返回到群聊页面")
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                raise e
+
+    @staticmethod
+    def get_current_activity_name():
+        import os, sys
+        global findExec
+        findExec = 'findstr' if sys.platform == 'win32' else 'grep'
+        device_name = current_driver().capabilities['deviceName']
+        cmd = 'adb -s %s shell dumpsys window | %s mCurrentFocus' % (device_name, findExec)
+        res = os.popen(cmd)
+        time.sleep(2)
+        # 截取出activity名称 == ''为第三方软件
+        current_activity = res.read().split('u0 ')[-1].split('/')[0]
+        res.close()
+        return current_activity
+
 
 class MsgGroupChatVideoPicAllTest(TestCase):
     """
@@ -377,7 +421,8 @@ class MsgGroupChatVideoPicAllTest(TestCase):
     """
 
     @classmethod
-    # def setUpClass(cls):
+    def setUpClass(cls):
+        warnings.simplefilter('ignore',ResourceWarning)
     #
     #     Preconditions.select_mobile('Android-移动')
     #     # 导入测试联系人、群聊
@@ -485,7 +530,6 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         # Preconditions.make_already_in_message_page()
         # cdp = ContactDetailsPage()
         # cdp.delete_all_contact()
-
     # def is_search_contacts_number_full_match(self, number):
     #     """搜索联系人号码是否精准匹配"""
     #     els = self.get_elements(self.__class__.__locators["联系人号码"])
@@ -677,6 +721,81 @@ class MsgGroupChatVideoPicAllTest(TestCase):
             raise RuntimeError('没有找到[已读动态]标识')
 
     @tags('ALL', 'CMCC', 'WJH')
+    def test_msg_xiaoqiu_0081(self):
+        """
+            企业群，发送语音消息——已读状态——已读分类
+        """
+        gcp = GroupChatPage()
+        gcp.click_back()
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语音模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 1、点击语音按钮，设置模式后，开始录制，输入框中识别出内容后，点击发送按钮，进行发送，发送成功后的消息体下方会展示：已读动态，4个字的文案
+        if gcp.is_exist_msg_has_read_icon():
+            # 2、点击下方的已读动态，会跳转页面已读动态详情页面
+            gcp.click_has_read_icon()
+            time.sleep(1)
+            exist =gcp.is_text_present("已读动态")
+            self.assertEqual(exist, True)
+        else:
+            raise RuntimeError('没有找到[已读动态]标识')
+
+    @tags('ALL', 'CMCC', 'WJH')
+    def test_msg_xiaoqiu_0082(self):
+        """
+            企业群，发送语音消息——已读状态——未读分类
+        """
+        gcp = GroupChatPage()
+        gcp.click_back()
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语音模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # 1、点击下方的已读动态，会跳转页面已读动态详情页面
+        if gcp.is_exist_msg_has_read_icon():
+            gcp.click_has_read_icon()
+            time.sleep(1)
+            exist = gcp.is_text_present("已读动态")
+            self.assertEqual(exist, True)
+        else:
+            raise RuntimeError('没有找到[已读动态]标识')
+
+    @tags('ALL', 'CMCC', 'WJH')
     def test_msg_xiaoqiu_0083(self):
         """
             1、点击消息体下方的已读动态，跳转页面已读动态详情页面
@@ -750,3 +869,32 @@ class MsgGroupChatVideoPicAllTest(TestCase):
                 raise RuntimeError('打开联系人详情页面出错')
         else:
             raise RuntimeError('没有找到[已读动态]标识')
+
+    @tags('ALL', 'CMCC', 'WJH')
+    def test_msg_xiaoqiu_0091(self):
+        """语音消息，发送中途，网络异常"""
+        Preconditions.delete_record_group_chat()
+        gcp = GroupChatPage()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语音模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 等待0.1秒
+        time.sleep(0.1)
+        # 恢复网络
+        gcp.set_network_status(6)
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+

@@ -25,16 +25,17 @@ class ContactsPage(FooterPage):
             MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView_contactList'),
         '通讯录列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list'),
         '列表项': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_list"]/*'),
-        '手机联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/first_item'),
-        '群聊': (MobileBy.ID, 'com.chinasofti.rcs:id/second_item'),
-        '标签分组': (MobileBy.XPATH, '//*[@text="标签分组"]'),
+        '群聊': (MobileBy.ID, 'com.chinasofti.rcs:id/first_item'),
+        '群聊631': (MobileBy.ID, 'com.chinasofti.rcs:id/second_item'),
+        '标签分组': (MobileBy.ID, 'com.chinasofti.rcs:id/second_item'),
         '公众号': (MobileBy.ID, 'com.chinasofti.rcs:id/third_item'),
         '创建团队': (MobileBy.XPATH, '//*[@text="创建团队"]'),
         'com.chinasofti.rcs:id/contact_group_chat_item_id': (
             MobileBy.ID, 'com.chinasofti.rcs:id/contact_group_chat_item_id'),
         'com.chinasofti.rcs:id/contact_image': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_image'),
         '和通讯录': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
-        'com.chinasofti.rcs:id/rl_group_list_item': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_group_list_item'),
+        '联系人列表': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_group_list_item'),
+		'com.chinasofti.rcs:id/rl_group_list_item': (MobileBy.ID, 'com.chinasofti.rcs:id/rl_group_list_item'),
         'D': (MobileBy.ID, ''),
         'dx1645': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
         '15338821645': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_phone'),
@@ -60,7 +61,9 @@ class ContactsPage(FooterPage):
         '弹出框点击允许': (MobileBy.ID, 'com.android.packageinstaller:id/permission_allow_button'),
         '弹出框点击禁止': (MobileBy.ID, 'com.android.packageinstaller:id/permission_deny_button'),
         '始终允许': (MobileBy.XPATH, "//*[contains(@text, '始终允许')]"),
-        '和通讯录联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_department'),
+		'和通讯录联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_department'),
+        '团队列表': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_department'),
+
         '和通讯录更多': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_more'),
         '团队管理': (MobileBy.ID, 'com.chinasofti.rcs:id/quit_confirm_tv'),
         '显示':(MobileBy.ID,'com.chinasofti.rcs:id/btn_ok'),
@@ -68,17 +71,138 @@ class ContactsPage(FooterPage):
         '企业群标识': (MobileBy.ID, 'com.chinasofti.rcs:id/group_ep'),
         '群聊列表返回': (MobileBy.ID, 'com.chinasofti.rcs:id/select_picture_custom_toolbar_back_btn'),
         '团队名称': (MobileBy.ID, 'com.chinasofti.rcs:id/img_icon_department'),
-        '索引字母容器': (MobileBy.ID, 'com.chinasofti.rcs:id/indexbarview'),
-        '新建手机联系人-确定': (MobileBy.ID, 'android:id/icon2'),
-        "新建手机联系人-姓名": (MobileBy.XPATH, "//*[@text='姓名']"),
-        "新建手机联系人-电话号码": (MobileBy.XPATH, "//*[@text='电话号码']"),
-        '新建手机联系人': (MobileBy.ID, 'com.android.contacts:id/hw_fab'),
-        '新建手机联系人-下拉按钮': (MobileBy.ID, 'com.android.contacts:id/account_arrow'),
+        '标签分组返回': (MobileBy.ID, 'com.chinasofti.rcs:id/toolbar_back_btn'),
+        '搜索返回': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.View/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.ImageView'),
+        '创建团队': (MobileBy.XPATH,"//*[contains(@text,'创建团队')]"),
+        '创建团队返回': (MobileBy.ID,'com.chinasofti.rcs:id/btn_back_actionbar'),
+        '备份提示': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.view.View/android.support.v4.view.ViewPager/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.RelativeLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout[1]/android.widget.LinearLayout/android.widget.TextView'),
+        '+号返回': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_back'),
+        '分享手机联系人': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout[3]/android.widget.RelativeLayout/android.widget.TextView'),
+        '分享名片选择一个群': (MobileBy.XPATH, '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.widget.FrameLayout/android.widget.RelativeLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout[1]/android.widget.RelativeLayout/android.widget.TextView'),
+        '发送名片': (MobileBy.XPATH, "//*[contains(@text, '发送名片')]"),
+        '星标图标': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_star'),
+        '选择团队测试zrtest': (MobileBy.XPATH, "//*[contains(@text,'测试zrtest')]"),
+        '选择团队测试zrtest子级': (MobileBy.XPATH, "//*[contains(@text,'子部门1')]"),
+        # 创建团队页面
+        '创建团队标题': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_actionbar'),
+        '返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_back_actionbar'),
+        '输入团队名称': (MobileBy.XPATH, '//*[@text="请输入团队名称"]'),
+        '选择所在地': (MobileBy.XPATH, '//*[@text="选择所在地"]'),
+        '选择行业': (MobileBy.XPATH, '//*[@text="选择行业"]'),
+        '输入姓名': (MobileBy.XPATH, '//*[@text="请务必填写真实姓名"]'),
+        '立即创建': (MobileBy.XPATH, '//*[@text="立即创建团队"]'),
+        '完成设置': (MobileBy.XPATH, '//*[@text="完成设置工作台"]'),
+        '进入工作台': (MobileBy.XPATH, '//*[@text="进入工作台"]'),
+        '联系-手机联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/first_item'),
+        '联系-群聊': (MobileBy.ID, 'com.chinasofti.rcs:id/second_item'),
+        '联系-公众号': (MobileBy.ID, 'com.chinasofti.rcs:id/third_item'),
+        # 标签分组(6.3.1版本)
+        '标签分组_631': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_tag_group'),
 
-
-        '已加入团队名称': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_title_department'),
-        '团队联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_name_personal_contactlist'),
     }
+
+    @TestLogger.log()
+    def is_on_this_page(self):
+        """当前页面是否在联系人页面"""
+        el = self.get_elements(self.__locators['搜索'])
+        if len(el) > 0:
+            return True
+        return False
+
+    @TestLogger.log('滑动到顶部')
+    def swipe_to_top(self):
+        while True:
+            self.swipe_by_percent_on_screen(50, 30, 50, 80, 800)
+            # 滑动到顶部还未找到元素则终止滑动
+            els = self.get_elements(self.__class__.__locators['搜索'])
+            if len(els) > 0:
+                break
+
+    @TestLogger.log('点击输入团队名称')
+    def click_input_team(self):
+        """点击输入团队名称"""
+        self.click_element(self.__locators['输入团队名称'])
+
+    @TestLogger.log('输入团队名称')
+    def input_team(self, name):
+        """输入姓名"""
+        self.input_text(self.__locators['输入团队名称'], name)
+
+    @TestLogger.log('选择所在地')
+    def click_select_address(self):
+        """选择所在地"""
+        self.click_element(self.__locators['选择所在地'])
+        time.sleep(1)
+        self.click_element((MobileBy.XPATH, '//*[@text="北京市"]'))
+        time.sleep(1)
+        self.click_element((MobileBy.XPATH, '//*[@text="西城"]'))
+
+    @TestLogger.log('选择行业')
+    def click_select_industry(self):
+        """选择行业"""
+        self.click_element(self.__locators['选择行业'])
+        time.sleep(1)
+        self.click_element((MobileBy.XPATH, '//*[@text="IT服务"]'))
+
+    @TestLogger.log('点击输入姓名')
+    def click_input_name(self):
+        """点击输入姓名"""
+        self.click_element(self.__locators['输入姓名'])
+
+    @TestLogger.log('输入姓名')
+    def input_name(self, name):
+        """输入姓名"""
+        self.input_text(self.__locators['输入姓名'], name)
+
+    @TestLogger.log('立即创建')
+    def click_sure(self):
+        """立即创建"""
+        self.click_element(self.__locators['立即创建'])
+        self.wait_until(
+            condition=lambda d: self.get_element(self.__locators['完成设置'])
+        )
+        self.click_element(self.__locators['完成设置'])
+        self.wait_until(
+            condition=lambda d: self.get_element(self.__locators['进入工作台'])
+        )
+        self.click_element(self.__locators['进入工作台'])
+
+    @TestLogger.log("")
+    def get_all_teams_name(self):
+        """获取全部团队名"""
+        els = self.get_elements(self.__class__.__locators["团队列表"])
+        teams_name = []
+        if els:
+            for el in els:
+                teams_name.append(el.text)
+        else:
+            return teams_name
+        flag = True
+        while flag:
+            self.swipe_half_page_up()
+            els = self.get_elements(self.__class__.__locators["团队列表"])
+            for el in els:
+                if el.text not in teams_name:
+                    teams_name.append(el.text)
+                    flag = True
+                else:
+                    flag = False
+        return teams_name
+
+    @TestLogger.log("通过团队名选择一个团队")
+    def click_team_by_name(self, name):
+        """通过团队名选择一个联系人"""
+        self.click_element((MobileBy.XPATH, '//*[@text ="%s"]' % name))
+
+    @TestLogger.log("点击创建团队")
+    def click_create_team(self,):
+        """点击创建团队"""
+        self.click_element(self.__locators['创建团队'])
+
+    @TestLogger.log("是否存在联系人")
+    def is_exist_contracts_list(self, ):
+        """是否存在联系人"""
+        return self._is_element_present(self.__class__.__locators["联系人名"])
 
     @TestLogger.log("获取所有联系人名")
     def get_contacts_name(self):
@@ -168,6 +292,10 @@ class ContactsPage(FooterPage):
     def open_group_chat_list(self):
         self.click_element(self.__locators['群聊'])
 
+    @TestLogger.log('打开群聊列表')
+    def open_group_chat_list_631(self):
+        self.click_element(self.__locators['群聊631'])
+
     @TestLogger.log("滚动列表到顶部")
     def scroll_to_top(self):
         self.wait_until(
@@ -199,7 +327,7 @@ class ContactsPage(FooterPage):
     @TestLogger.log("获取电话号码")
     def get_phone_number(self):
         """获取电话号码"""
-        els = self.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/tv_number'))
+        els = self.get_elements((MobileBy.ID, 'com.chinasofti.rcs:id/contact_phone'))
         phones = []
         if els:
             for el in els:
@@ -219,6 +347,13 @@ class ContactsPage(FooterPage):
     @TestLogger.log()
     def get_all_contacts_name(self):
         """获取所有联系人名"""
+        max_try = 5
+        current = 0
+        while current < max_try:
+            if self._is_element_present(self.__class__.__locators["联系人名"]):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         els = self.get_elements(self.__class__.__locators["联系人名"])
         contacts_name = []
         if els:
@@ -227,11 +362,7 @@ class ContactsPage(FooterPage):
         else:
             raise AssertionError("No m005_contacts, please add m005_contacts in address book.")
         flag = True
-        current = 0
         while flag:
-            current += 1
-            if current > 20:
-                return
             self.swipe_half_page_up()
             els = self.get_elements(self.__class__.__locators["联系人名"])
             for el in els:
@@ -244,8 +375,14 @@ class ContactsPage(FooterPage):
 
     @TestLogger.log()
     def click_label_grouping(self):
-        """点击标签分组"""
+        """点击标签分组1"""
         self.click_element(self.__class__.__locators['标签分组'])
+
+    @TestLogger.log()
+    def click_label_grouping_631(self):
+        """点击标签分组(6.3.1版本)"""
+        self.click_element(self.__class__.__locators['联系-手机联系人'])
+        self.click_element(self.__class__.__locators['标签分组_631'])
 
     @TestLogger.log()
     def click_and_address(self):
@@ -293,7 +430,7 @@ class ContactsPage(FooterPage):
     #         detail_page.click_back_icon()
 
     @TestLogger.log('创建通讯录联系人')
-    def create_contacts_if_not_exits(self, name, number, company='', position='', email=''):
+    def create_contacts_if_not_exits(self, name, number):
         """
         导入联系人数据
         :param name:
@@ -314,8 +451,39 @@ class ContactsPage(FooterPage):
             contact_search.click_back()
         else:
             contact_search.click_back()
-            self.click_mobile_contacts()
-            time.sleep(1)
+            self.click_add()
+            from pages import CreateContactPage
+            create_page = CreateContactPage()
+            create_page.wait_for_page_load()
+            create_page.hide_keyboard_if_display()
+            create_page.create_contact(name, number)
+            detail_page.wait_for_page_load()
+            detail_page.click_back_icon()
+
+
+
+    @TestLogger.log('创建联系人包含所有信息')
+    def create_contacts_allinfo_if_not_exits(self, name, number, company, position, email):
+        """
+        导入联系人数据
+        :param name:
+        :param number:
+        :return:
+        """
+        from pages import ContactDetailsPage
+        detail_page = ContactDetailsPage()
+
+        self.wait_for_page_load()
+        # 创建联系人
+        self.click_search_box()
+        from pages import ContactListSearchPage
+        contact_search = ContactListSearchPage()
+        contact_search.wait_for_page_load()
+        contact_search.input_search_keyword(name)
+        if contact_search.is_contact_in_list(name):
+            contact_search.click_back()
+        else:
+            contact_search.click_back()
             self.click_add()
             from pages import CreateContactPage
             create_page = CreateContactPage()
@@ -324,8 +492,6 @@ class ContactsPage(FooterPage):
             create_page.create_contact(name, number, company, position, email)
             detail_page.wait_for_page_load()
             detail_page.click_back_icon()
-            time.sleep(1)
-            detail_page.click_back_by_android()
 
     @TestLogger.log()
     def click_and_address(self):
@@ -385,6 +551,19 @@ class ContactsPage(FooterPage):
     def click_he_more(self):
         """点击和通讯录联系人更多"""
         self.click_element(self.__class__.__locators['和通讯录更多'])
+
+    @TestLogger.log()
+    def wait_for_contact_load(self, timeout=8, auto_accept_alerts=True):
+        """等待不显示页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["不显示"])
+            )
+        except:
+            pass
+        return self
 
     @TestLogger.log("处理SIM联系人弹框")
     def click_sim_contact(self):
@@ -448,7 +627,160 @@ class ContactsPage(FooterPage):
             current += 1
             self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
         self.click_element(locator)
+    @TestLogger.log()
+    def click_search_return(self):
+        """点击搜索返回"""
+        self.click_element(self.__class__.__locators['搜索返回'])
 
+    @TestLogger.log()
+    def click_creatteam(self):
+        """点击创建团队"""
+        self.click_element(self.__class__.__locators['创建团队'])
+
+    @TestLogger.log()
+    def click_creatteam_return(self):
+        """点击创建团队返回"""
+        self.click_element(self.__class__.__locators['创建团队返回'])
+
+    @TestLogger.log()
+    def click_label_grouping_return(self):
+        """点击标签分组返回"""
+        self.click_element(self.__class__.__locators['标签分组返回'])
+
+    @TestLogger.log()
+    def is_exist_backup_tips(self):
+        """是否存在备份标志"""
+        return self._is_element_present(self.__class__.__locators["备份提示"])
+
+    @TestLogger.log()
+    def is_exist_backup_tips_text(self):
+        """检查备份的提示内容"""
+        return self.element_should_contain_text(self.__class__.__locators["备份提示"],'备份你的手机通讯录，联系人数据不丢失')
+
+    @TestLogger.log('点击+号返回')
+    def click_add_return(self):
+        """点击+号返回"""
+        self.click_element(self.__locators['+号返回'])
+
+    @TestLogger.log('选择一个群')
+    def share_to_group(self):
+        """点击分享名片并选择一个群"""
+        self.click_element(self.__locators['分享名片选择一个群'])
+
+    @TestLogger.log('选择手机联系人')
+    def share_to_contact(self):
+        """点击分享并选择手机联系人"""
+        self.click_element(self.__locators['分享手机联系人'])
+
+    @TestLogger.log('发送名片')
+    def share_sure(self):
+        """点击发送名片"""
+        self.click_element(self.__locators['发送名片'])
+
+    @TestLogger.log('断言：检查页面是否包含文本')
+    def assert_screen_contain_text(self, text):
+        if not self.is_text_present(text):
+            raise AssertionError("Page should have contained text '{}' "
+                                     "but did not".format(text))
+
+    @TestLogger.log("根据导航栏的第一个字母定位")
+    def choose_index_bar_click_element(self):
+        """点击右侧导航"""
+        self.click_element(
+            ('xpath','//*[@resource-id="com.chinasofti.rcs:id/indexbarview"]'))
+        elements = self.get_elements(self.__class__.__locators["联系人名"])
+        elements[0].click()
+
+
+    @TestLogger.log('com.chinasofti.rcs:id/viewLine')
+    def click_viewline(self):
+        """点击右侧导航"""
+        self.click_element(self.__locators['com.chinasofti.rcs:id/viewLine'])
+
+
+    @TestLogger.log()
+    def is_exists_contact(self):
+        """通讯录列表是否存在"""
+        return self._is_element_present(self.__class__.__locators["通讯录列表"])
+
+    @TestLogger.log()
+    def is_exists_star(self):
+        """星标图标是否存在"""
+        return self._is_element_present(self.__class__.__locators["星标图标"])
+
+    @TestLogger.log('选择团队测试zrtest')
+    def choose_zetest_group(self):
+        """选择预置的团队"""
+        self.click_element(self.__locators['选择团队测试zrtest'])
+
+    @TestLogger.log('选择团队测试zrtest子级')
+    def choose_zetest_group_son(self):
+        """选择预置的团队子级"""
+        self.click_element(self.__locators['选择团队测试zrtest子级'])
+
+    @TestLogger.log('选择团队测试zrtest')
+    def is_exists_star_zetest_group(self):
+        """选择预置的团队"""
+        return self._is_element_present(self.__locators['选择团队测试zrtest'])
+
+
+    @TestLogger.log('点击浮框确定')
+    def click_view_ok(self):
+        """选择预置的团队"""
+        return self._is_element_present(self.__locators['显示'])
+
+    @TestLogger.log('点击团队管理')
+    def click_team_manager(self):
+        """点击团队管理"""
+        return self._is_element_present(self.__locators['团队管理'])
+
+    @TestLogger.log('点击团队管理')
+    def click_team_manager(self):
+        """点击团队管理"""
+        return self._is_element_present(self.__locators['团队管理'])
+
+    @TestLogger.log('点击联系页手机联系人')
+    def click_tel_contacts_631(self):
+        """点击联系页-手机联系人"""
+        return self.click_element(self.__locators['联系-手机联系人'])
+
+    @TestLogger.log('点击联系页群聊')
+    def click_group_chat_631(self):
+        """点击联系页-群聊"""
+        return self.click_element(self.__locators['联系-群聊'])
+
+    @TestLogger.log('创建通讯录联系人')
+    def create_contacts_if_not_exits_631(self, name, number):
+        """
+        导入联系人数据
+        :param name:
+        :param number:
+        :return:
+        """
+        from pages import ContactDetailsPage
+        detail_page = ContactDetailsPage()
+
+        self.wait_for_page_load()
+        # 创建联系人
+        self.click_search_box()
+        from pages import ContactListSearchPage
+        contact_search = ContactListSearchPage()
+        contact_search.wait_for_page_load()
+        contact_search.input_search_keyword(name)
+        if contact_search.is_contact_in_list(name):
+            contact_search.click_back()
+        else:
+            contact_search.click_back()
+            self.click_tel_contacts_631()
+            self.click_add()
+            from pages import CreateContactPage
+            create_page = CreateContactPage()
+            create_page.wait_for_page_load()
+            create_page.hide_keyboard_if_display()
+            create_page.create_contact(name, number)
+            detail_page.wait_for_page_load()
+            detail_page.click_back_icon()
+            self.click_add_return()
     @TestLogger.log()
     def select_group_by_name(self, name):
         """根据名字选择一个团队"""
@@ -499,10 +831,16 @@ class ContactsPage(FooterPage):
 
     @TestLogger.log("根据导航栏的第一个字母定位")
     def choose_index_bar_click_element(self):
+        """点击右侧导航"""
         self.click_element(
-            ('xpath','//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView[1]'))
-        elements = self.get_elements(self.__class__.__locators["群聊名"])
+            ('xpath','//*[@resource-id="com.chinasofti.rcs:id/indexbarview"]'))
+        elements = self.get_elements(self.__class__.__locators["联系人名"])
         elements[0].click()
+
+    @TestLogger.log('com.chinasofti.rcs:id/viewLine')
+    def click_viewline(self):
+        """点击右侧导航"""
+        self.click_element(self.__locators['com.chinasofti.rcs:id/viewLine'])
 
     def get_letters_index(self):
         """获取所有索引字母"""

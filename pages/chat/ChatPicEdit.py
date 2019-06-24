@@ -35,6 +35,14 @@ class ChatPicEditPage(BasePage):
                   }
 
     @TestLogger.log()
+    def is_on_this_page(self):
+        """当前页面是否在群聊天页"""
+        el = self.get_elements(self.__locators['涂鸦'])
+        if len(el) > 0:
+            return True
+        return False
+
+    @TestLogger.log()
     def click_save(self):
         """点击保存"""
         self.click_element(self.__class__.__locators["保存"])

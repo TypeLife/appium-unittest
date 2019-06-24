@@ -1,3 +1,5 @@
+from operator import eq
+
 from appium.webdriver.common.mobileby import MobileBy
 from library.core.TestLogger import TestLogger
 from pages.components.BaseChat import BaseChatPage
@@ -46,6 +48,8 @@ class GroupChatPage(BaseChatPage):
                   '撤回': (MobileBy.XPATH, "//*[contains(@text, '撤回')]"),
                   '多选': (MobileBy.XPATH, "//*[contains(@text, '多选')]"),
                   '复制': (MobileBy.XPATH, "//*[contains(@text, '复制')]"),
+                  '编辑': (MobileBy.XPATH, "//*[contains(@text, '编辑')]"),
+                  '保存图片': (MobileBy.XPATH, "//*[contains(@text, '保存图片')]"),
                   '我知道了': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_btn_ok'),
                   '勾': (MobileBy.ID, 'com.chinasofti.rcs:id/img_message_down_file'),
                   '重发按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/imageview_msg_send_failed'),
@@ -84,16 +88,104 @@ class GroupChatPage(BaseChatPage):
                               "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.support.v7.widget.RecyclerView/android.widget.RelativeLayout[4]/android.view.View"),
                   '确定移除': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
                   '取消移除': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_cancel'),
+                  '富媒体拍照': ('id', 'com.chinasofti.rcs:id/ib_take_photo'),
                   '加入群聊': (MobileBy.ID, 'com.chinasofti.rcs:id/group_qr_apply_enter'),
                   '添加群成员加号': (MobileBy.XPATH, "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.LinearLayout/android.support.v7.widget.RecyclerView/android.widget.RelativeLayout[2]/android.view.View"),
+                  '文件': ('id', 'com.chinasofti.rcs:id/ib_file'),
+                  '超过20M图片': ('id', 'com.chinasofti.rcs:id/layout_loading'),
+                  '放大的图片': (
+                  MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/vp_preview"]/android.widget.ImageView'),
                   '关闭视频': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_close'),
                   '视频播放': (MobileBy.ID, 'com.chinasofti.rcs:id/video_play'),
+                  '群聊拍照': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_take_photo'),
                   }
+
+    @TestLogger.log()
+    def click_collection(self):
+        """点击保存图片"""
+        self.click_element(self.__class__.__locators["收藏"])
+
+    @TestLogger.log()
+    def click_muti_select(self):
+        """点击保存图片"""
+        self.click_element(self.__class__.__locators["多选"])
+
+    def is_on_this_page_631(self):
+        """当前页面是否在群聊天页"""
+        el = self.get_elements(self.__locators['选择照片'])
+        if len(el) > 0:
+            return True
+        return False
+
+    @TestLogger.log()
+    def close_pic_preview(self):
+        """退出图片阅览"""
+        self.click_element(self.__class__.__locators['放大的图片'])
+
+    @TestLogger.log()
+    def click_selection_forward(self):
+        """点击转发"""
+        self.click_element(self.__class__.__locators["转发"])
+
+    @TestLogger.log()
+    def click_save_picture(self):
+        """点击保存图片"""
+        self.click_element(self.__class__.__locators["保存图片"])
+
+    @TestLogger.log()
+    def click_file(self):
+        """点击文件"""
+        self.click_element(self.__class__.__locators["文件"])
+
+    @TestLogger.log()
+    def click_send_failed(self):
+        """点击发送失败标识"""
+        self.click_element(self.__class__.__locators["发送失败标识"])
+
+    @TestLogger.log()
+    def click_edit(self):
+        """点击编辑"""
+        self.click_element(self.__class__.__locators["编辑"])
+
+    @TestLogger.log()
+    def is_exist_edit_page(self):
+        """长按消息"""
+        for option in ["收藏", "转发", "多选", "编辑", "删除"]:
+            el = self.get_elements(self.__locators[option])
+            if len(el) == 0:
+                return False
+        return True
+
+    @TestLogger.log()
+    def is_exist_picture_edit_page(self):
+        """长按消息"""
+        for option in ["转发", "编辑", "保存图片"]:
+            el = self.get_elements(self.__locators[option])
+            if len(el) == 0:
+                return False
+        return True
+
+    @TestLogger.log()
+    def click_picture_msg(self):
+        """点击消息"""
+        els = self.get_elements(self.__locators['超过20M图片'])
+        els[-1].click()
+
+    @TestLogger.log()
+    def press_picture(self):
+        """长按消息"""
+        els = self.get_elements(self.__locators['超过20M图片'])
+        self.press(els[-1])
 
     def is_exist_msg_videos(self):
         """当前页面是否有发视频消息"""
         el = self.get_elements(self.__locators['消息视频'])
         return len(el) > 0
+
+    def is_multi_show(self):
+        """判断当前是否聚合展示"""
+        el = self.get_elements(self.__locators['com.chinasofti.rcs:id/svd_head'])
+        return len(el) == 1
 
     def is_exist_msg_image(self):
         """当前页面是否有发图片消息"""
@@ -126,6 +218,11 @@ class GroupChatPage(BaseChatPage):
     def click_take_picture(self):
         """点击选择富媒体拍照"""
         self.click_element(self.__class__.__locators["富媒体拍照"])
+
+    @TestLogger.log()
+    def click_take_picture2(self):
+        """点击-群聊拍照"""
+        self.click_element(self.__class__.__locators["群聊拍照"])
 
     @TestLogger.log()
     def is_send_sucess(self):
@@ -333,6 +430,11 @@ class GroupChatPage(BaseChatPage):
         return el
 
     @TestLogger.log()
+    def click_input_box(self):
+        """获取输入框"""
+        self.click_element(self.__locators['输入框'])
+
+    @TestLogger.log()
     def is_enabled_of_send_button(self):
         """发送按钮状态"""
         flag = self._is_enabled((MobileBy.ID, 'com.chinasofti.rcs:id/ib_send'))
@@ -354,6 +456,17 @@ class GroupChatPage(BaseChatPage):
         els = self.get_elements(self.__class__.__locators["多选选择框"])
         if els:
             return els
+        else:
+            raise AssertionError("没有找到多选选择框")
+
+    @TestLogger.log()
+    def get_check_all_not_selected(self):
+        """勾选所有未勾选的内容"""
+        els = self.get_elements(self.__class__.__locators["多选选择框"])
+        if els:
+            for el in els:
+                if eq(el.get_attribute('checked'), 'false'):
+                    el.click()
         else:
             raise AssertionError("没有找到多选选择框")
 
@@ -408,6 +521,15 @@ class GroupChatPage(BaseChatPage):
             raise AssertionError("没有找到语音消息体")
 
     @TestLogger.log()
+    def press_audio(self):
+        """长按语音消息体进行操作"""
+        els = self.get_elements(self.__class__.__locators["语音消息体"])
+        if els:
+            self.press(els[0])
+        else:
+            raise AssertionError("没有找到语音消息体")
+
+    @TestLogger.log()
     def get_group_name(self):
         """在群聊页面获取群聊名称"""
         return self.get_element(self.__class__.__locators['群聊001(2)']).text
@@ -428,9 +550,20 @@ class GroupChatPage(BaseChatPage):
         self.press(el)
 
     @TestLogger.log()
+    def press_text_message(self):
+        """长按语言消息体"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'))
+        self.press(el)
+
+    @TestLogger.log()
     def click_return(self):
         """返回上一级"""
         self.click_element(self.__class__.__locators["返回上一级"])
+
+    @TestLogger.log()
+    def return_btn_is_exist(self):
+        """返回上一级"""
+        self.page_should_contain_element(self.__class__.__locators["返回上一级"])
 
     @TestLogger.log()
     def get_height_of_msg_of_text(self):

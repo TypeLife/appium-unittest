@@ -17,6 +17,11 @@ class ChatNoticeDialog(BasePage):
         '确定': (MobileBy.ID, 'com.chinasofti.rcs:id/dialog_btn_ok')
     }
 
+    @TestLogger.log()
+    def is_exist_tips(self):
+        """是否存在用户须知"""
+        return self._is_element_present(self.__class__.__locators["用户须知"])
+
     @TestLogger.log('判断是否显示用户须知提示框')
     def is_tips_display(self, max_wait_time=3):
         try:
@@ -77,10 +82,24 @@ class SuspendedTips(BasePage):
     def click_not_open_now(self):
         self.click_element(self.__locators['暂不开启'])
 
+    @TestLogger.log('现在去开启')
+    def click_open_now(self):
+        self.click_element(self.__locators['现在去开启'])
+        self.click_element((MobileBy.ID, 'android:id/switch_widget'))
+        self.click_element((MobileBy.XPATH, '//android.widget.ImageButton[@content-desc="向上导航"]'))
+
+
     @TestLogger.log('如果弹出“您的手机没有授予悬浮窗权限”提示框，点击暂不开启')
     def ignore_tips_if_tips_display(self):
         try:
             self.click_not_open_now()
+        except:
+            print('没有提示框弹出或没找到提示框')
+
+    @TestLogger.log('如果弹出“您的手机没有授予悬浮窗权限”提示框，点击现在去开启')
+    def actionnow_tips_if_tips_display(self):
+        try:
+            self.click_open_now()
         except:
             print('没有提示框弹出或没找到提示框')
 

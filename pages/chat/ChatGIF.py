@@ -50,6 +50,13 @@ class ChatGIFPage(BasePage):
                   '发送按钮': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_send'),
                   }
 
+    @TestLogger.log('')
+    def is_on_this_page(self):
+        el = self.get_elements(self.__class__.__locators['所有gif'])
+        if len(el) > 0:
+            return True
+        return False
+
     @TestLogger.log()
     def wait_for_page_load(self, timeout=60, auto_accept_alerts=True):
         """等待聊天gif页面加载"""
@@ -102,4 +109,9 @@ class ChatGIFPage(BasePage):
     def is_gif_exist(self):
         """gif是否打开"""
         return self._is_element_present(self.__class__.__locators["关闭gif"])
+
+    @TestLogger.log()
+    def is_gif_head_exist(self):
+        """检验会话窗口是否有gif头像"""
+        return self.page_should_contain_element(self.__class__.__locators["com.chinasofti.rcs:id/svd_head"])
 

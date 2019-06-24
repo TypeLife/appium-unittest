@@ -66,6 +66,8 @@ class GroupChatSetPage(BasePage):
                   '群管理返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
                   '群主管理权转让': (MobileBy.ID, 'com.chinasofti.rcs:id/group_transfer'),
                   '解散群': (MobileBy.ID, 'com.chinasofti.rcs:id/group_disband'),
+                  '添加桌面快捷方式': (MobileBy.XPATH,  '//*[@text ="添加桌面快捷方式"]'),
+                  '我知道': (MobileBy.XPATH, '//*[@text ="我知道了"]'),
 
                   "二维码重置":(MobileBy.ID,'com.chinasofti.rcs:id/group_qr_icon'),
 
@@ -76,6 +78,7 @@ class GroupChatSetPage(BasePage):
                   "再次邀请":(MobileBy.XPATH,'//*[@text="还有人未进群,再次邀请"]'),
                   '群名片': (MobileBy.ID, 'com.chinasofti.rcs:id/my_group_name'),
                   '群名称': (MobileBy.ID, 'com.chinasofti.rcs:id/group_name'),
+                  "邀请微信或QQ好友进群": (MobileBy.ID, 'com.chinasofti.rcs:id/group_password_line'),
                   }
 
     @TestLogger.log("获取控件数量")
@@ -91,6 +94,38 @@ class GroupChatSetPage(BasePage):
                 timeout=timeout,
                 auto_accept_permission_alert=auto_accept_alerts,
                 condition=lambda d: self.is_text_present("群聊设置")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def wait_for_modify_groupname_load(self, timeout=8, auto_accept_alerts=True):
+        """等待修改群名称页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("修改群名称")
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
+
+    @TestLogger.log()
+    def wait_for_modify_mygroupname_load(self, timeout=8, auto_accept_alerts=True):
+        """等待修改群名片页面加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self.is_text_present("修改群名片")
             )
         except:
             message = "页面在{}s内，没有加载成功".format(str(timeout))
@@ -134,6 +169,11 @@ class GroupChatSetPage(BasePage):
         self.click_element(self.__class__.__locators["返回"])
 
     @TestLogger.log()
+    def click_avetor_qq_wechat_friend(self):
+        """点击邀请进群"""
+        self.click_element(self.__class__.__locators["邀请微信或QQ好友进群"])
+
+    @TestLogger.log()
     def click_add_member(self):
         """点击 '+ ': 添加成员"""
         self._find_menu((MobileBy.XPATH, '//*[@resource-id ="com.chinasofti.rcs:id/tv_name"]'))
@@ -150,6 +190,12 @@ class GroupChatSetPage(BasePage):
         """点击 修改群聊名称"""
         self._find_menu(self.__locators['修改群聊名称'])
         self.click_element(self.__locators['修改群聊名称'])
+
+    @TestLogger.log()
+    def click_modify_my_group_name(self):
+        """点击 修改群名片"""
+        self._find_menu(self.__locators['群名片'])
+        self.click_element(self.__locators['群名片'])
 
     @TestLogger.log()
     def click_QRCode(self):
@@ -326,6 +372,17 @@ class GroupChatSetPage(BasePage):
         self.click_element(self.__class__.__locators['完成'])
 
     @TestLogger.log()
+    def check_new_group_name(self, new_name):
+        """确定新群名"""
+        from unittest import TestCase
+        return TestCase().assertEqual(self.get_text((MobileBy.ID, 'com.chinasofti.rcs:id/group_name')), new_name)
+
+    @TestLogger.log()
+    def is_enabled_of_save_group_name_button(self):
+        """判断群名称保存按钮是否置灰"""
+        return self._is_enabled(self.__class__.__locators['完成'])
+
+    @TestLogger.log()
     def click_edit_group_name_back(self):
         """修改群名返回"""
         self.click_element(self.__class__.__locators['修改群名或群名片返回'])
@@ -488,3 +545,53 @@ class GroupChatSetPage(BasePage):
     def click_element_(self, text):
         """点击元素"""
         self.click_element(self.__class__.__locators[text])
+    @TestLogger.log()
+    def click_say_next(self):
+        """点击下次再说"""
+        self.click_element(self.__class__.__locators["下次再说"])
+
+    @TestLogger.log()
+    def click_add_destop_link(self):
+        """点击添加桌面快捷方式"""
+        self._find_menu(self.__locators['添加桌面快捷方式'])
+        self.click_element(self.__locators['添加桌面快捷方式'])
+        time.sleep(1)
+
+    @TestLogger.log()
+    def check_element_for_add_destop_link(self):
+        """添加桌面快捷方式元素校验"""
+        self.page_should_contain_text("已尝试添加到桌面")
+        self.page_should_contain_text("若添加失败，请在手机系统设置中为和飞信打开“创建桌面快捷方式”的权限")
+        self.page_should_contain_text("我知道了")
+        self.page_should_contain_text("不再提醒")
+
+    @TestLogger.log()
+    def click_iknow_but(self):
+        """点击我知道"""
+        self.click_element(self.__locators['我知道'])
+
+    @TestLogger.log()
+    def group_avatar_is_exist(self):
+        """群头像存在性校验"""
+        self.page_should_contain_element(self.__class__.__locators['com.chinasofti.rcs:id/iv_avatar'])
+
+    @TestLogger.log()
+    def group_name_is_exist(self):
+        """群昵称存在性校验"""
+        self.page_should_contain_element(self.__class__.__locators['com.chinasofti.rcs:id/tv_name'])
+
+    @TestLogger.log()
+    def group_chairman_tag_is_exist(self):
+        """群昵称存在性校验"""
+        self.page_should_contain_element(self.__class__.__locators['com.chinasofti.rcs:id/iv_group_chairman_tag'])
+
+    @TestLogger.log()
+    def check_group_nickname(self, name):
+        """群昵称存在性校验"""
+        from unittest import TestCase
+        return TestCase().assertEqual(self.get_text(self.__class__.__locators['群名片']), name)
+
+    @TestLogger.log()
+    def click_group_avatars(self):
+        """点击群二维码"""
+        self.click_element(self.__class__.__locators["com.chinasofti.rcs:id/rl_group_avatars"])
