@@ -372,8 +372,8 @@ class LoginPreconditions(object):
         items = list(csv_reader_dict)
         # 返回row行，列名line_name的值
         return items[row][line_name]
-	
-	@staticmethod
+
+    @staticmethod
     def delete_group_if_exist(group_name):
         """删除群若存在，返回消息列表页"""
         mess = MessagePage()

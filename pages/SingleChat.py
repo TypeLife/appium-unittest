@@ -300,3 +300,19 @@ class SingleChatPage(BaseChatPage):
     def click_back_tubiao(self):
         """点击返回图标"""
         self.click_element(self.__class__.__locators["com.chinasofti.rcs:id/back"])
+
+    @TestLogger.log()
+    def click_element_(self, text):
+        """点击元素"""
+        self.click_element(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def press_element_(self, text,times):
+        """长按元素"""
+        el=self.get_element(self.__class__.__locators[text])
+        self.press(el,times)
+
+    @TestLogger.log()
+    def is_element_exit_(self, text):
+        """指定元素是否存在"""
+        return self._is_element_present(self.__class__.__locators[text])
