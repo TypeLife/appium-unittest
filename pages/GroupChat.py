@@ -1,5 +1,4 @@
 from operator import eq
-
 from appium.webdriver.common.mobileby import MobileBy
 from library.core.TestLogger import TestLogger
 from pages.components.BaseChat import BaseChatPage
@@ -98,6 +97,7 @@ class GroupChatPage(BaseChatPage):
                   '关闭视频': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_close'),
                   '视频播放': (MobileBy.ID, 'com.chinasofti.rcs:id/video_play'),
                   '群聊拍照': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_take_photo'),
+                  '企业群成员头像': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_icon'),
                   }
 
     @TestLogger.log()

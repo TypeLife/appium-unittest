@@ -88,6 +88,7 @@ class BaseChatPage(BasePage):
                   '预览文件-转发': (MobileBy.XPATH, "//*[contains(@text, '转发')]"),
                   '预览文件-收藏': (MobileBy.XPATH, "//*[contains(@text, '收藏')]"),
                   '其他应用打开': (MobileBy.XPATH, "//*[contains(@text, '其他应用打开')]"),
+                  "未读消息气泡": (MobileBy.ID, "com.chinasofti.rcs:id/rnMessageBadge"),
                   '视频消息': (MobileBy.ID, 'com.chinasofti.rcs:id/video_thumb')
                   }
 

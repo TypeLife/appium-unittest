@@ -4394,6 +4394,453 @@ class MsgGroupChatvedioTest(TestCase):
         scp.set_network_status(6)
         time.sleep(6)
 
+    @staticmethod
+    def setUp_test_msg_xiaoliping_D_0068():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_D_0068(self):
+        """群聊会话页面，转发他人发送的视频给陌生人时点击取消转发"""
+        # 1、在当前会话窗口长按他人发送的文件消息
+        # 2、点击转发
+        # 3、点击选择一个群，选择任意陌生人
+        # 4、点击发送按钮
+        # 5、点击取消按钮
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.go_to_group_double(group_name)
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        # 2.点击输入框左上方的相册图标
+        gcp.click_picture()
+        # 3.进入相片页面,选择一段视频
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_video_fk(1)
+        cpg.click_send()
+        time.sleep(5)
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp.wait_for_page_load()
+        gcp.click_element_("消息视频")
+        time.sleep(2)
+        if gcp.is_element_exit_("关闭视频"):
+            gcp.press_xy()
+        else:
+            # 点击后等待视频加载成功
+            gcp.wait_for_video_load()
+            gcp.press_element_("消息视频", 3000)
+        gcp.click_text("转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        gcp.click_element_("取消移除")
+        sc.wait_for_page_load()
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+        Preconditions.delete_record_group_chat()
+
+    @staticmethod
+    def setUp_test_msg_xiaoliping_D_0078():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_D_0078(self):
+        """群聊会话页面，删除他人发送的视频"""
+        # 1、在当前聊天会话页面，长按他人发送的视频
+        # 2、点击删除
+        # 3、点击确定
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.go_to_group_double(group_name)
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        # 2.点击输入框左上方的相册图标
+        gcp.click_picture()
+        # 3.进入相片页面,选择一段视频
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_video_fk(1)
+        cpg.click_send()
+        time.sleep(5)
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp.wait_for_page_load()
+        gcp.press_element_("消息视频", 3000)
+        gcp.click_text("删除")
+        time.sleep(2)
+        if gcp.is_element_exit_("消息视频"):
+            raise AssertionError("删除视频不成功")
+
+    @staticmethod
+    def setUp_test_msg_xiaoliping_D_0080():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_D_0080(self):
+        """群聊会话页面，收藏他人发送的视频"""
+        # 1、在当前聊天会话页面，长按他人发送的视频
+        # 2、收藏该视频
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        # phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.go_to_group_double(group_name)
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        # 2.点击输入框左上方的相册图标
+        gcp.click_picture()
+        # 3.进入相片页面,选择一段视频
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_video_fk(1)
+        cpg.click_send()
+        time.sleep(5)
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp.wait_for_page_load()
+        gcp.click_element_("消息视频")
+        time.sleep(2)
+        if gcp.is_element_exit_("关闭视频"):
+            current_mobile().back()
+            time.sleep(2)
+            gcp.press_element_("消息视频", 3000)
+        else:
+            # 点击后等待视频加载成功
+            gcp.wait_for_video_load()
+            gcp.press_element_("消息视频", 3000)
+        gcp.click_text("收藏")
+        if not gcp.is_toast_exist("已收藏"):
+            raise AssertionError("收藏失败")
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        mess.open_me_page()
+        mep = MePage()
+        mep.wait_for_page_load()
+        # 2.点击我的收藏,进入收藏页面
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        if not mcp.is_element_exit_("收藏的视频"):
+            raise AssertionError("收藏的视频不可见")
+        # 左滑收藏消息体
+        mcp.press_and_move_left()
+        # 判断是否有删除按钮
+        if mcp.is_delete_element_present():
+            mcp.click_delete_collection()
+            mcp.click_sure_forward()
+            time.sleep(2)
+            if not mcp.is_text_present("没有任何收藏"):
+                raise AssertionError("不可以删除收藏的消息体")
+            time.sleep(1)
+            mcp.click_back()
+            mess.open_message_page()
+        else:
+            raise AssertionError("没有删除收藏按钮")
+
+    @tags('ALL', 'CMCC')
+    def test_msg_huangmianhua_0045(self):
+        """企业群/党群在消息列表内展示——红点展示规则"""
+        # 1、展示未读消息数（超过99条显示“99 +”）
+        # 2、免打扰时仅显示一个小红点
+        # 3、自己发送失败的最新消息时展示一个“！”
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(2)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
+        time.sleep(3)
+        sc.wait_for_page_load()
+        sc.click_text("选择一个群")
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        time.sleep(2)
+        sog.input_search_keyword("测试企业群")
+        time.sleep(2)
+        if not sog.is_element_exit("群聊名"):
+            raise AssertionError("没有测试企业群，请创建后重试")
+        sog.click_element_("群聊名")
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.set_network_status(0)
+        time.sleep(8)
+        gcp.input_message("哈哈")
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送失败', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送失败'.format(10))
+        Preconditions.change_mobile('Android-移动')
+        mess.wait_for_page_load()
+        if not mess.is_element_exit_("消息发送失败感叹号"):
+            raise AssertionError("自己发送失败的最新消息时不会展示一个‘！’")
+        mess.press_file_to_do("测试企业群","删除聊天")
+
+    def tearDown_test_msg_huangmianhua_0045(self):
+        # 重新连接网络
+        scp = GroupChatPage()
+        scp.set_network_status(6)
+        time.sleep(6)
+
+    @tags('ALL', 'CMCC')
+    def test_msg_huangmianhua_0111(self):
+        """在群聊设置页面——群主——群成员头像展示"""
+        # 1、群主在群聊天设置页面，展示的群成员头像，最多是否只能展示10个头像
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(2)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
+        time.sleep(3)
+        sc.wait_for_page_load()
+        sc.click_text("选择一个群")
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        time.sleep(2)
+        sog.input_search_keyword("测试企业群")
+        time.sleep(2)
+        if not sog.is_element_exit("群聊名"):
+            raise AssertionError("没有测试企业群，请创建后重试")
+        sog.click_element_("群聊名")
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        time.sleep(2)
+        gcp.click_element_("群成员")
+        time.sleep(3)
+        if not gcp.is_text_present("搜索成员"):
+            raise AssertionError("不可以跳转到群成员列表页")
+        time.sleep(2)
+        # 判断群成员头像是否存在
+        if not gcp.is_element_exit_("企业群成员头像"):
+            raise AssertionError("没有展示出企业群成员头像")
+        # 验证搜索结果
+        current_mobile().back()
+        current_mobile().back()
+        gcp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC')
+    def test_msg_huangmianhua_0112(self):
+        """在群聊设置页面——群成员——群成员头像展示"""
+        # 1、群成员在群聊天设置页面，展示的群成员头像，最多是否只能展示11个头像
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(2)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
+        time.sleep(3)
+        sc.wait_for_page_load()
+        sc.click_text("选择一个群")
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        time.sleep(2)
+        sog.input_search_keyword("测试企业群")
+        time.sleep(2)
+        if not sog.is_element_exit("群聊名"):
+            raise AssertionError("没有测试企业群，请创建后重试")
+        sog.click_element_("群聊名")
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        time.sleep(2)
+        gcp.click_element_("群成员")
+        time.sleep(3)
+        if not gcp.is_text_present("搜索成员"):
+            raise AssertionError("不可以跳转到群成员列表页")
+        time.sleep(2)
+        # 判断群成员头像是否存在
+        if not gcp.is_element_exit_("企业群成员头像"):
+            raise AssertionError("没有展示出企业群成员头像")
+        # 验证搜索结果
+        current_mobile().back()
+        current_mobile().back()
+        gcp.wait_for_page_load()
+    #
+    # @tags('ALL', 'CMCC')
+    # def test_msg_huangmianhua_0128(self):
+    #     """聊天设置页面——打开置顶聊天功能——置顶一个聊天会话窗口"""
+    #     # 1、点击置顶聊天功能右边的开关，是否可以打开置顶聊天功能
+    #     # 2、置顶聊天功能开启后，返回到消息列表，接收一条消息，置顶聊天会话窗口是否会展示到页面顶部并且会话窗口成浅灰色展示
+    #     Preconditions.change_mobile('Android-移动-移动')
+    #     phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+    #     Preconditions.change_mobile('Android-移动')
+    #     mess = MessagePage()
+    #     mess.wait_for_page_load()
+    #     # 点击 +
+    #     mess.click_add_icon()
+    #     # 点击 发起群聊
+    #     mess.click_group_chat()
+    #     # 选择联系人界面，选择一个群
+    #     sc = SelectContactsPage()
+    #     times = 15
+    #     n = 0
+    #     # 重置应用时需要再次点击才会出现选择一个群
+    #     while n < times:
+    #         flag = sc.wait_for_page_load()
+    #         if not flag:
+    #             sc.click_back()
+    #             time.sleep(2)
+    #             mess.click_add_icon()
+    #             mess.click_group_chat()
+    #             sc = SelectContactsPage()
+    #         else:
+    #             break
+    #         n = n + 1
+    #     time.sleep(3)
+    #     sc.wait_for_page_load()
+    #     sc.click_text("选择一个群")
+    #     sog = SelectOneGroupPage()
+    #     sog.wait_for_page_load()
+    #     sog.click_search_group()
+    #     time.sleep(2)
+    #     sog.input_search_keyword("测试企业群")
+    #     time.sleep(2)
+    #     if not sog.is_element_exit("群聊名"):
+    #         raise AssertionError("没有测试企业群，请创建后重试")
+    #     sog.click_element_("群聊名")
+    #     gcp = GroupChatPage()
+    #     gcp.wait_for_page_load()
+    #     gcp.click_setting()
+    #     time.sleep(2)
+    #     gcp.click_element_("群成员")
+    #     time.sleep(3)
+    #     if not gcp.is_text_present("搜索成员"):
+    #         raise AssertionError("不可以跳转到群成员列表页")
+    #     time.sleep(2)
+    #     # 判断群成员头像是否存在
+    #     if not gcp.is_text_present("企业群对象"):
+    #         raise AssertionError("请给企业群加入团队成员对象：名称--‘企业群对象’号码--‘%s’"%phone_number)
+    #     # 验证搜索结果
+    #     current_mobile().back()
+    #     current_mobile().back()
+    #     gcp.wait_for_page_load()
 
 
 

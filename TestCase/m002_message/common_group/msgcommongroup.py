@@ -6213,26 +6213,14 @@ class MsgCommonGroupAllTest(TestCase):
             # if not gcp.get_width_of_msg_of_text() > width:
             #     raise AssertionError("文本消息没有放大展示")
 
-    # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    @unittest.skip("过跳过")
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    # @unittest.skip("过跳过")
     def test_msg_xiaoqiu_0028(self):
         """进入到群聊天会话页面，录入500个表情字符，缩小发送"""
         gcp=GroupChatPage()
         Preconditions.delete_record_group_chat()
-        # 点击表情按钮
-        gcp.click_expression_button()
-        time.sleep(2)
-        # 任意点击一个表情
-        els = gcp.get_expressions()
-        i=0
-        while i<500:
-            els[0].click()
-            i+=1
-        # inputText = gcp.get_input_box().get_attribute("text")
-        # if not inputText == els[0].get_attribute("text")*500:
-        #     raise AssertionError("被选中的表情不可以存放输入框展示")
-
-        # 长按发送按钮并滑动
+        info = "[微笑1]" * 500
+        gcp.input_message(info)
         gcp.press_and_move_down("发送按钮")
         # 验证是否发送成功
         cwp = ChatWindowPage()
@@ -6240,29 +6228,16 @@ class MsgCommonGroupAllTest(TestCase):
             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
         except TimeoutException:
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-        gcp.click_expression_page_close_button()
         gcp.hide_keyboard()
 
-    # @tags('ALL', 'CMCC', 'group_chat', 'full')
-    @unittest.skip("先跳过")
+    @tags('ALL', 'CMCC', 'group_chat', 'full')
+    # @unittest.skip("先跳过")
     def test_msg_xiaoqiu_0032(self):
         """进入到群聊天会话页面，录入500个表情字符，放大发送"""
         gcp = GroupChatPage()
         Preconditions.delete_record_group_chat()
-        # 点击表情按钮
-        gcp.click_expression_button()
-        time.sleep(2)
-        # 任意点击一个表情
-        els = gcp.get_expressions()
-        i = 0
-        while i < 500:
-            els[0].click()
-            i += 1
-        # inputText = gcp.get_input_box().get_attribute("text")
-        # if not inputText == els[0].get_attribute("text") * 500:
-        #     raise AssertionError("被选中的表情不可以存放输入框展示")
-
-        # 长按发送按钮并滑动
+        info = "[微笑1]" * 500
+        gcp.input_message(info)
         gcp.press_and_move_up("发送按钮")
         # 验证是否发送成功
         cwp = ChatWindowPage()
@@ -6270,7 +6245,6 @@ class MsgCommonGroupAllTest(TestCase):
             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
         except TimeoutException:
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
-        gcp.click_expression_page_close_button()
         gcp.hide_keyboard()
 
     @tags('ALL', 'CMCC', 'group_chat', 'full','high')

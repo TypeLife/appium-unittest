@@ -2,6 +2,7 @@ import unittest
 
 from selenium.common.exceptions import TimeoutException
 
+from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, current_driver
 from pages.components import BaseChatPage
 from pages.contacts import OfficialAccountPage, SearchOfficialAccountPage
@@ -192,6 +193,203 @@ class Preconditions(WorkbenchPreconditions):
         app_package = 'com.chinasofti.rcs'
         current_driver().activate_app(app_package)
         current_mobile().reset_app()
+
+    #多人群聊前置条件
+    @staticmethod
+    def select_one_mobile(moible_param):
+        """选择指定的设备连接，并确保在消息列表页面"""
+        Preconditions.select_mobile(moible_param)
+        # 消息页面
+        Preconditions.make_in_message_page(moible_param,reset=False)
+
+    @staticmethod
+    def make_in_message_page(moible_param,reset=False):
+        """确保应用在消息页面"""
+        Preconditions.select_mobile(moible_param, reset)
+        current_mobile().hide_keyboard_if_display()
+        time.sleep(1)
+        # 如果在消息页，不做任何操作
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        # 进入一键登录页
+        Preconditions.make_already_in_one_key_login_page()
+        #  从一键登录页面登录
+        Preconditions.login_by_one_key_login()
+
+    @staticmethod
+    def build_one_new_group_with_number(puhone_number,group_name):
+        """新建一个指定成员和名称的群，如果已存在，不建群"""
+        # 消息页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(2)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
+        time.sleep(3)
+        sc.click_select_one_group()
+        # 群名
+        # group_name = Preconditions.get_group_chat_name()
+        # 获取已有群名
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        time.sleep(2)
+        sog.input_search_keyword(group_name)
+        time.sleep(2)
+        if sog.is_element_exit("群聊名"):
+            current_mobile().back()
+            time.sleep(2)
+            current_mobile().back()
+            return True
+        current_mobile().back()
+        time.sleep(2)
+        current_mobile().back()
+        current_mobile().back()
+        time.sleep(2)
+        current_mobile().back()
+        time.sleep(2)
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        #添加指定电话成员
+        time.sleep(2)
+        sc.input_search_keyword(puhone_number)
+        time.sleep(2)
+        sog.click_text("tel")
+        time.sleep(2)
+        # 从本地联系人中选择成员创建群
+        sc.click_local_contacts()
+        time.sleep(2)
+        slc = SelectLocalContactsPage()
+        a = 0
+        names = {}
+        while a < 3:
+            names = slc.get_contacts_name()
+            num = len(names)
+            if not names:
+                raise AssertionError("No contacts, please add contacts in address book.")
+            if num == 1:
+                sog.page_up()
+                a += 1
+                if a == 3:
+                    raise AssertionError("联系人只有一个，请再添加多个不同名字联系人组成群聊")
+            else:
+                break
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        slc.click_sure()
+        # 创建群
+        cgnp = CreateGroupNamePage()
+        cgnp.input_group_name(group_name)
+        cgnp.click_sure()
+        # 等待群聊页面加载
+        GroupChatPage().wait_for_page_load()
+        return False
+
+    @staticmethod
+    def get_group_chat_name_double():
+        """获取多人群名"""
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        group_name = "多机" + phone_number[-4:]
+        return group_name
+
+    @staticmethod
+    def go_to_group_double(group_name):
+        """从消息列表进入双机群聊，前提：已经存在双机群聊"""
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(2)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
+        time.sleep(3)
+        sc.click_select_one_group()
+        # # 群名
+        # group_name = Preconditions.get_group_chat_name_double()
+        # 获取已有群名
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        time.sleep(2)
+        sog.input_search_keyword(group_name)
+        time.sleep(2)
+        if not sog.is_element_exit("群聊名"):
+            raise AssertionError("没有找到双机群聊，请确认是否创建")
+        sog.click_element_("群聊名")
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+
+    @staticmethod
+    def change_mobile(moible_param):
+        """转换设备连接并且确保在消息列表页面"""
+        Preconditions.select_mobile(moible_param)
+        current_mobile().hide_keyboard_if_display()
+        current_mobile().launch_app()
+        Preconditions.make_in_message_page(moible_param)
+
+    @staticmethod
+    def delete_record_group_chat():
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # if not gcsp.is_toast_exist("聊天记录清除成功"):
+            #     raise AssertionError("没有聊天记录清除成功弹窗")
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            if not scp.is_on_this_page():
+                raise AssertionError("没有返回到群聊页面")
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                raise e
 
 
 class MessageListAllTest(TestCase):
@@ -816,3 +1014,518 @@ class MessageListAllTest(TestCase):
             time.sleep(2)
         # 1.验证是否存在红点提醒
         self.assertEquals(mp.is_exist_news_red_dot(), False)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_B_0016(self):
+        """消息列表未读气泡展示"""
+        # 1、点击消息
+        # 2、在消息列表页面观察消息记录
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp=SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        scp.input_message("嘿嘿")
+        time.sleep(2)
+        scp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.change_mobile('Android-移动')
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        mess.press_file_to_do(phone_number, "删除聊天")
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        if not mess.is_element_exit_("未读消息气泡"):
+            raise AssertionError("没有未读消息气泡")
+        mess.press_file_to_do(phone_number2,"删除聊天")
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_B_0021(self):
+        """进入到会话查看未读消息"""
+        # 1、点击消息列表中的未读消息
+        # 2、点击返回按钮
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp = SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        i=0
+        while i<15:
+            scp.input_message("嘿嘿")
+            time.sleep(2)
+            scp.send_message()
+            # 验证是否发送成功
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            i+=1
+        Preconditions.change_mobile('Android-移动')
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        mess.press_file_to_do(phone_number, "删除聊天")
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        if not mess.is_element_exit_("未读消息气泡"):
+            raise AssertionError("没有未读消息气泡")
+        mess.click_text(phone_number2)
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        scp.click_text("条新消息")
+        time.sleep(2)
+        if not scp.is_text_present("以下为新消息"):
+            raise AssertionError("没有分割线显示以下为未读消息")
+        scp.page_up()
+        scp.page_up()
+        if scp.is_text_present("以下为新消息"):
+            raise AssertionError("下滑不可浏览")
+        current_mobile().back()
+        time.sleep(3)
+        mess.press_file_to_do(phone_number2, "删除聊天")
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_B_0036(self):
+        """消息列表未读气泡窗口长按删除"""
+        # 1、点击窗口长按
+        # 2、选择删除
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp = SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        scp.input_message("嘿嘿")
+        time.sleep(2)
+        scp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.change_mobile('Android-移动')
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        mess.press_file_to_do(phone_number, "删除聊天")
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        if not mess.is_element_exit_("未读消息气泡"):
+            raise AssertionError("没有未读消息气泡")
+        mess.press_file_to_do(phone_number2, "删除聊天")
+        if scp.is_text_present(phone_number2):
+            raise AssertionError("删除窗口不成功")
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_B_0043(self):
+        """已开启免打扰的单聊，接收到新消息"""
+        # 1.开启与A单聊的免打扰模式
+        # 2.在消息列表首页接收到A发送的新消息
+        # 3.拖拽红点气泡，在非原位置释放
+        # 4.点击进入会话框
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp = SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        scp.input_message("嘿嘿")
+        time.sleep(2)
+        scp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        mess.click_text(phone_number2)
+        scp.wait_for_page_load()
+        scp.click_setting()
+        scsp=SingleChatSetPage()
+        scsp.wait_for_page_load()
+        scsp.click_no_disturb()
+        current_mobile().back()
+        current_mobile().back()
+        Preconditions.change_mobile('Android-移动')
+        mess.wait_for_page_load()
+        mess.click_text(phone_number)
+        scp.wait_for_page_load()
+        scp.input_message("嘿嘿")
+        time.sleep(2)
+        scp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.change_mobile('Android-移动')
+        mess.press_file_to_do(phone_number, "删除聊天")
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        if not mess.is_exist_news_red_dot():
+            raise AssertionError("消息红点不存在")
+        mess.click_text(phone_number2)
+        time.sleep(2)
+        current_mobile().back()
+        time.sleep(2)
+        if mess.is_exist_news_red_dot():
+            raise AssertionError("消息红点没有消失")
+        if not mess.is_element_exit_("消息免打扰图标"):
+            raise AssertionError("消息免打扰图标不在")
+        # 关闭消息免打扰
+        mess.click_text(phone_number2)
+        scp.wait_for_page_load()
+        scp.click_setting()
+        scsp.wait_for_page_load()
+        scsp.click_no_disturb()
+        current_mobile().back()
+        current_mobile().back()
+        time.sleep(2)
+        mess.press_file_to_do(phone_number2, "删除聊天")
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_B_0045(self):
+        """未开启免打扰的单聊，收到一条新消息"""
+        # 1未开启免打扰模式
+        # 2.在消息列表首页接收到一条新消息
+        # 3.拖拽红点气泡，在非原位置释放
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp = SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        scp.input_message("嘿嘿")
+        time.sleep(2)
+        scp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.change_mobile('Android-移动')
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        mess.press_file_to_do(phone_number, "删除聊天")
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        if not mess.is_element_exit_("未读消息气泡"):
+            raise AssertionError("没有未读消息气泡")
+        scp.press_and_move_down("未读消息气泡")
+        time.sleep(2)
+        mess.press_file_to_do(phone_number2, "删除聊天")
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_B_0046(self):
+        """未开启免打扰的单聊，收到超过99条新消息"""
+        # 1未开启免打扰模式
+        # 2.在消息列表首页接收到超过99条新消息
+        # 3.拖拽红点气泡，在非原位置释放
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp = SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        i = 0
+        while i < 101:
+            scp.input_message("嘿嘿")
+            time.sleep(2)
+            scp.send_message()
+            # 验证是否发送成功
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            i += 1
+        Preconditions.change_mobile('Android-移动')
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        mess.press_file_to_do(phone_number, "删除聊天")
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        if not mess.is_element_exit_("未读消息气泡"):
+            raise AssertionError("没有未读消息气泡")
+        scp.press_and_move_down("未读消息气泡")
+        time.sleep(2)
+        mess.press_file_to_do(phone_number2, "删除聊天")
+
+    @staticmethod
+    def setUp_test_msg_xiaoliping_B_0047():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_B_0047(self):
+        """已开启免打扰的群聊，接收到新消息"""
+        # 1.开启B群聊的免打扰模式
+        # 2.在消息列表首页接收到B群内发送的新消息
+        # 3.拖拽红点气泡，在非原位置释放
+        # 4.点击进入会话框
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_switch_undisturb()
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp.input_text_message("嘿嘿")
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动-移动')
+        mess=MessagePage()
+        mess.wait_for_page_load()
+        if not mess.is_exist_news_red_dot():
+            raise AssertionError("消息红点不存在")
+        mess.click_text(group_name)
+        time.sleep(2)
+        current_mobile().back()
+        time.sleep(2)
+        if mess.is_exist_news_red_dot():
+            raise AssertionError("消息红点没有消失")
+        if not mess.is_element_exit_("消息免打扰图标"):
+            raise AssertionError("消息免打扰图标不在")
+        # 关闭消息免打扰
+        mess.click_text(group_name)
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_switch_undisturb()
+        Preconditions.change_mobile('Android-移动-移动')
+        Preconditions.go_to_group_double(group_name)
+        Preconditions.delete_record_group_chat()
+
+    @staticmethod
+    def setUp_test_msg_xiaoliping_B_0049():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_B_0049(self):
+        """未开启免打扰的群聊，收到一条新消息"""
+        # 1未开启免打扰模式
+        # 2.在消息列表首页接收到一条新消息
+        # 3.拖拽红点气泡，在非原位置释放
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.input_text_message("嘿嘿")
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动-移动')
+        mess=MessagePage()
+        mess.wait_for_page_load()
+        if not mess.is_element_exit_("未读消息气泡"):
+            raise AssertionError("没有未读消息气泡")
+        gcp.press_and_move_down("未读消息气泡")
+        time.sleep(2)
+        mess.press_file_to_do(group_name, "删除聊天")
+
+    @staticmethod
+    def setUp_test_msg_xiaoliping_B_0050():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_B_0050(self):
+        """未开启免打扰的群聊，收到超过99条新消息"""
+        # 1未开启免打扰模式
+        # 2.在消息列表首页接收到超过99条新消息
+        # 3.拖拽红点气泡，在非原位置释放
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        i = 0
+        while i < 101:
+            gcp.input_message("嘿嘿")
+            time.sleep(2)
+            gcp.send_message()
+            # 验证是否发送成功
+            cwp = ChatWindowPage()
+            try:
+                cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+            except TimeoutException:
+                raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+            i += 1
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动-移动')
+        mess=MessagePage()
+        mess.wait_for_page_load()
+        if not mess.is_element_exit_("未读消息气泡"):
+            raise AssertionError("没有未读消息气泡")
+        gcp.press_and_move_down("未读消息气泡")
+        time.sleep(2)
+        mess.press_file_to_do(group_name, "删除聊天")

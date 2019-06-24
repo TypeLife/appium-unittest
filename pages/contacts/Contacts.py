@@ -27,9 +27,9 @@ class ContactsPage(FooterPage):
         '列表项': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_list"]/*'),
         '群聊': (MobileBy.ID, 'com.chinasofti.rcs:id/second_item'),
         '群聊631': (MobileBy.ID, 'com.chinasofti.rcs:id/second_item'),
-        '标签分组': (MobileBy.ID, 'com.chinasofti.rcs:id/second_item'),
+        '标签分组': (MobileBy.XPATH, '//*[@text="标签分组"]'),
         '公众号': (MobileBy.ID, 'com.chinasofti.rcs:id/third_item'),
-        '创建团队': (MobileBy.XPATH, '//*[@text="创建团队"]'),
+        # '创建团队': (MobileBy.XPATH, '//*[@text="创建团队"]'),
         'com.chinasofti.rcs:id/contact_group_chat_item_id': (
             MobileBy.ID, 'com.chinasofti.rcs:id/contact_group_chat_item_id'),
         'com.chinasofti.rcs:id/contact_image': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_image'),
