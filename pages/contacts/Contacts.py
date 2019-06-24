@@ -25,7 +25,7 @@ class ContactsPage(FooterPage):
             MobileBy.ID, 'com.chinasofti.rcs:id/recyclerView_contactList'),
         '通讯录列表': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_list'),
         '列表项': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/contact_list"]/*'),
-        '群聊': (MobileBy.ID, 'com.chinasofti.rcs:id/first_item'),
+        '群聊': (MobileBy.ID, 'com.chinasofti.rcs:id/second_item'),
         '群聊631': (MobileBy.ID, 'com.chinasofti.rcs:id/second_item'),
         '标签分组': (MobileBy.ID, 'com.chinasofti.rcs:id/second_item'),
         '公众号': (MobileBy.ID, 'com.chinasofti.rcs:id/third_item'),
@@ -451,6 +451,7 @@ class ContactsPage(FooterPage):
             contact_search.click_back()
         else:
             contact_search.click_back()
+            self.click_element(self.__class__.__locators['联系-手机联系人'])
             self.click_add()
             from pages import CreateContactPage
             create_page = CreateContactPage()
@@ -459,6 +460,7 @@ class ContactsPage(FooterPage):
             create_page.create_contact(name, number)
             detail_page.wait_for_page_load()
             detail_page.click_back_icon()
+            current_mobile().back()
 
 
 

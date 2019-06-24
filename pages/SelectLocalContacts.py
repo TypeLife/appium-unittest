@@ -69,6 +69,9 @@ class SelectLocalContactsPage(BasePage):
                   '被选中的联系人': (MobileBy.ID, 'com.chinasofti.rcs:id/avator'),
                   '搜索结果展示': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_name'),
                   '已选联系人名': (MobileBy.ID, 'com.chinasofti.rcs:id/image_text'),
+                  '搜索结果列表': (MobileBy.XPATH, '//android.support.v7.widget.RecyclerView'),
+                  '列表项根节点': (MobileBy.XPATH, '//android.support.v7.widget.RecyclerView/*'),
+                  '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
                   '查看更多': (MobileBy.XPATH, '//*[@text ="查看更多"]'),
                   }
     @TestLogger.log()

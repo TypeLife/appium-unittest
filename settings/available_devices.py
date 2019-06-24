@@ -720,8 +720,8 @@ DEVICES_CONFIG_YX = {
         "DEFAULT_CAPABILITY": {
             "platformName": "Android",
             "platformVersion": "8.0.0",
-            "deviceName": "B7E5T17612003933",
-            "udid": "B7E5T17612003933",
+            "deviceName": "DWT7N18614014715",
+            "udid": "DWT7N18614014715",
             "automationName": "UiAutomator2",
             "newCommandTimeout": 600,
             "appPackage": "com.chinasofti.rcs",

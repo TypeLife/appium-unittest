@@ -1,6 +1,6 @@
 import time
 import random
-
+import warnings
 from selenium.common.exceptions import TimeoutException
 
 from library.core.TestCase import TestCase
@@ -28,6 +28,8 @@ from pages import SelectLocalContactsPage
 from pages import SelectOneGroupPage
 from pages import GroupChatSetPage
 from pages.contacts import GroupListSearchPage
+from pages.contacts.Contacts import ContactsPage
+from preconditions.BasePreconditions import GroupListPage
 
 REQUIRED_MOBILES = {
     'Android-移动': 'M960BDQN229CH',
@@ -44,6 +46,13 @@ REQUIRED_MOBILES = {
 
 class Preconditions(object):
     """前置条件"""
+
+    @staticmethod
+    def connect_mobile(category):
+        """选择手机手机"""
+        client = switch_to_mobile(REQUIRED_MOBILES[category])
+        client.connect_mobile()
+        return client
 
     @staticmethod
     def select_mobile(category, reset=False):
@@ -270,7 +279,40 @@ class MsgGroupChatFileLocationTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        pass
+        warnings.simplefilter('ignore', ResourceWarning)
+        # 创建联系
+        fail_time = 0
+        import dataproviders
+        while fail_time < 3:
+            try:
+                required_contacts = dataproviders.get_preset_contacts()
+                conts = ContactsPage()
+                Preconditions.connect_mobile('Android-移动')
+                current_mobile().hide_keyboard_if_display()
+                Preconditions.make_already_in_message_page()
+                conts.open_contacts_page()
+                try:
+                    if conts.is_text_present("发现SIM卡联系人"):
+                        conts.click_text("显示")
+                except:
+                    pass
+                for name, number in required_contacts:
+                    conts.create_contacts_if_not_exits(name, number)
+                # 创建群
+                required_group_chats = dataproviders.get_preset_group_chats()
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
+                return
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
 
     def default_setUp(self):
         """确保每个用例运行前在群聊聊天会话页面"""
@@ -2126,7 +2168,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         sogp.wait_for_page_load()
         # 3.搜索群组
         sogp.click_search_group()
-        sogp.input_search_keyword("群聊.*a")
+        sogp.input_search_keyword("给个红包1")
         if sogp.is_element_present_result():
             sogp.click_search_result()
             sogp.click_sure_forward()
@@ -2283,3 +2325,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 重新连接网络
         mess = MessagePage()
         mess.set_network_status(6)
+
+
+
+
