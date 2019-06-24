@@ -2365,7 +2365,43 @@ class MsgGroupChatFileLocationTest(TestCase):
         if gcp.is_on_this_page():
             raise AssertionError("当前页面不在群聊页面")
 
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0341(self):
+        """将自己发送的位置转发到在搜索框输入标点符号搜索到的手机联系人"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择手机联系人
+        scp.click_phone_contact()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        slcp.click_search_box()
+        # 3.在搜索框输入标点符号点击搜索到的手机联系人
+        slcp.search_and_select_contact("：，。")
+        if gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊页面")
 
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0342(self):
+        """将自己发送的位置转发到在搜索框输入字母搜索到的手机联系人"""
+        self.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择手机联系人
+        scp.click_phone_contact()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        slcp.click_search_box()
+        # 3.在搜索框输入字母点击搜索到的手机联系人
+        slcp.search_and_select_contact("abc")
+        if gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊页面")
 
 
 
