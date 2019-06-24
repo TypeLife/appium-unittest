@@ -414,3 +414,39 @@ class SelectLocalContactsPage(BasePage):
                    '//*[@resource-id="com.chinasofti.rcs:id/contact_index_bar_container"]/android.widget.TextView[@text="%s"]' % name)
         self.click_element(locator)
 
+    @TestLogger.log("输入搜索关键字")
+    def input_search_key(self, keyword):
+        self.input_text(self.__locators['搜索或输入手机号'], keyword)
+
+    @TestLogger.log('选择搜索结果第一项')
+    def select_the_first_result(self):
+        iterator = self.mobile.list_iterator(self.__locators['搜索结果列表'], self.__locators['列表项根节点'])
+        for item in iterator:
+            if item.find_elements(*self.__locators['联系人头像']):
+                item.click()
+                return
+
+    @TestLogger.log('如果键盘弹出，就收回键盘')
+    def hide_keyboard_if_display(self):
+        if self.mobile.is_keyboard_shown():
+            self.hide_keyboard()
+
+    @TestLogger.log("查找并选择联系人")
+    def search_and_select_contact(self, *contacts):
+        for contact in contacts:
+            self.input_search_key(contact)
+            self.hide_keyboard_if_display()
+            self.select_the_first_result()
+        self.click_sure_forward()
+
+    @TestLogger.log("长按搜索或输入手机号")
+    def press_group_search_bar(self):
+        el = self.get_element(self.__locators['搜索或输入手机号'])
+        self.press(el)
+
+    @TestLogger.log("查找联系人")
+    def search_contact(self, *contacts):
+        for contact in contacts:
+            self.input_search_key(contact)
+            self.hide_keyboard_if_display()
+            self.select_the_first_result()
