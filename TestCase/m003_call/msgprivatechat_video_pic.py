@@ -2938,3 +2938,67 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         mess.press_file_to_do("测试企业群", "删除聊天")
         Preconditions.change_mobile('Android-移动')
         mess.press_file_to_do(phone_number, "删除聊天")
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_C_0059(self):
+        """单聊会话页面，删除他人发送的图片"""
+        # 1、在当前聊天会话页面，长按他人发送的图片
+        # 2、点击删除
+        # 3、点击确定
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp=SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        scp.click_picture()
+        # 3.进入相片页面,选择一张相片
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_pic_fk()
+        # 4.点击预览
+        cpg.click_preview()
+        cpp = ChatPicPreviewPage()
+        cpp.wait_for_page_load()
+        # 5.点击发送,
+        cpp.click_send()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        mess.click_text(phone_number2)
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        scp.press_element_("消息图片", 3000)
+        scp.click_text("删除")
+        time.sleep(2)
+        if scp.is_element_exit_("消息图片"):
+            raise AssertionError("删除图片不成功")
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.press_file_to_do(phone_number2, "删除聊天")
+        Preconditions.change_mobile('Android-移动')
+        mess.press_file_to_do(phone_number, "删除聊天")
