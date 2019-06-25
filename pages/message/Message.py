@@ -914,3 +914,31 @@ class MessagePage(FooterPage):
     def press_groupname_to_do(self, text):
         """弹出框 进行操作 置顶聊天 删除聊天 标为已读"""
         self.click_element(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def selecting_one_group_scroll_by_name(self, name):
+        """根据群名 长按 群"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % name)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        # self.click_element(locator)
+        # el = self.get_element(locator)
+        # self.press(el)
+        self.swipe_by_direction(locator, "left")
+
+    def selecting_one_group_click_by_name(self, name):
+        """根据群名 长按 群"""
+        locator = (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/tv_conv_name" and @text ="%s"]' % name)
+        max_try = 20
+        current = 0
+        while current < max_try:
+            if self._is_element_present(locator):
+                break
+            current += 1
+            self.swipe_by_percent_on_screen(50, 70, 50, 30, 700)
+        self.click_element(locator)
