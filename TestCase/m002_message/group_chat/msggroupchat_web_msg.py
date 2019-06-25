@@ -870,7 +870,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         else:
             raise RuntimeError('没有找到[已读动态]标识')
 
-    @tags('ALL', 'CMCC', 'WJH')
+    @tags('ALL', 'CMCC', 'YL')
     def test_msg_xiaoqiu_0091(self):
         """语音消息，发送中途，网络异常"""
         Preconditions.delete_record_group_chat()
@@ -897,4 +897,136 @@ class MsgGroupChatVideoPicAllTest(TestCase):
             cwp.wait_for_msg_send_status_become_to('发送成功', 10)
         except TimeoutException:
             raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+
+    @tags('ALL', 'CMCC', 'YL')
+    def test_msg_huangmianhua_0046(self):
+        """
+            企业群/党群在消息列表内展示——免打扰
+        """
+        gcp = GroupChatPage()
+        gcp.click_back()
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        # Preconditions.delete_record_group_chat()
+        gcp.click_setting()
+        group_set = GroupChatSetPage()
+        group_set.wait_for_page_load()
+        switch_status = group_set.get_switch_undisturb_status()
+        if not switch_status:
+            group_set.click_switch_undisturb()
+            time.sleep(2)
+        # 免打扰时右下角免打扰标识
+        group_set.click_back()
+        time.sleep(1)
+        gcp.click_back()
+        time.sleep(1)
+        mess = MessagePage()
+        flag = mess.is_exist_no_disturb_icon()
+        self.assertEqual(flag, True)
+
+    @tags('ALL', 'CMCC', 'YL')
+    def test_msg_huangmianhua_0047(self):
+        """
+            企业群/党群在消息列表内展示——长按/左划出功能选择弹窗——安卓（长按）
+        """
+        gcp = GroupChatPage()
+        gcp.click_back()
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        Preconditions.delete_record_group_chat()
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        time.sleep(1)
+        gcp.click_back()
+        time.sleep(1)
+        mess = MessagePage()
+        mess.selecting_one_group_press_by_name('测试企业群')
+        # 1.弹窗本身:弹窗本身样式是否正常,点击弹窗外应收回弹窗
+        # 2.标为已读:无未读则不出现该选项
+        time.sleep(1)
+        exist = mess.is_text_present("置顶聊天")
+        self.assertEqual(exist, True)
+        exist = mess.is_text_present("标为已读")
+        self.assertEqual(exist, False)
+        gcp.click_back_by_android()
+        time.sleep(1)
+        exist = mess.is_text_present("置顶聊天")
+        self.assertEqual(exist, False)
+        # 3.置顶聊天:已置顶则显示“取消置顶”
+        mess.selecting_one_group_press_by_name('测试企业群')
+        time.sleep(1)
+        mess.press_groupname_to_do("置顶聊天")
+        # 置顶聊天后，再次显示：取消置顶
+        mess.selecting_one_group_press_by_name('测试企业群')
+        time.sleep(1)
+        exist = mess.is_text_present("取消置顶")
+        self.assertEqual(exist, True)
+        # 4.删除聊天
+        # 删除聊天前，取消置顶
+        mess.press_groupname_to_do("取消置顶")
+        time.sleep(1)
+        # 再次 删除聊天
+        mess.selecting_one_group_press_by_name('测试企业群')
+        time.sleep(1)
+        mess.press_groupname_to_do("删除聊天")
+        exist = mess.is_text_present("测试企业群")
+        self.assertEqual(exist, False)
+
+    @tags('ALL', 'CMCC', 'YL')
+    def test_msg_huangmianhua_0048(self):
+        """
+            企业群/党群在消息列表内展示——长按/左划出功能选择弹窗
+        """
+        gcp = GroupChatPage()
+        gcp.click_back()
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        Preconditions.delete_record_group_chat()
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        time.sleep(1)
+        gcp.click_back()
+        time.sleep(1)
+        mess = MessagePage()
+
+        mess.selecting_one_group_press_by_name('测试企业群')
+        # 1.弹窗本身:弹窗本身样式是否正常,点击弹窗外应收回弹窗
+        # 2.标为已读:无未读则不出现该选项
+        time.sleep(1)
+        exist = mess.is_text_present("置顶聊天")
+        self.assertEqual(exist, True)
+        # exist = mess.is_text_present("标为已读")
+        # self.assertEqual(exist, False)
+        gcp.click_back_by_android()
+        time.sleep(1)
+        exist = mess.is_text_present("置顶聊天")
+        self.assertEqual(exist, False)
+        # 3.置顶聊天:已置顶则显示“取消置顶”
+        mess.selecting_one_group_press_by_name('测试企业群')
+        time.sleep(1)
+        mess.press_groupname_to_do("置顶聊天")
+        # 置顶聊天后，再次显示：取消置顶
+        mess.selecting_one_group_press_by_name('测试企业群')
+        time.sleep(1)
+        exist = mess.is_text_present("取消置顶")
+        self.assertEqual(exist, True)
+        # 4.删除聊天
+        # 删除聊天前，取消置顶
+        mess.press_groupname_to_do("取消置顶")
+        time.sleep(1)
+        # 再次 删除聊天
+        mess.selecting_one_group_press_by_name('测试企业群')
+        time.sleep(1)
+        mess.press_groupname_to_do("删除聊天")
+        exist = mess.is_text_present("测试企业群")
+        self.assertEqual(exist, False)
+
+
+
+
+
 

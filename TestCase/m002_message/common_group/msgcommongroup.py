@@ -5331,6 +5331,124 @@ class MsgCommonGroupPriorityTest(TestCase):
             raise AssertionError("群名称更改为新名称失败")
         gcsp.click_back()
 
+    @tags('ALL', 'Priority', 'CMCC', 'high')
+    def test_msg_huangmianhua_0049(self):
+        """1.默认头像 2.群名称：超长时后面加“...”（是否超长按宽度来计算"""
+        gcp = GroupChatPage()
+        gcp.click_setting()
+        gcsp = GroupChatSetPage()
+        gcsp.wait_for_page_load()
+        gcsp.click_modify_group_name()
+        time.sleep(1)
+        gcsp.clear_group_name()
+        time.sleep(1)
+        # 录入新群名 "adcdefghijklmnopqrstuvwxyz"
+        gcsp.input_new_group_name("adcdefghijklmnopqrstuvwxyz")
+        time.sleep(1)
+        gcsp.save_group_name()
+        if not gcsp.is_toast_exist("修改成功"):
+            raise AssertionError("群名称更改为新名称失败")
+        time.sleep(1)
+        gcsp.click_back()
+        gcp.wait_for_page_load()
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 回到消息列表界面
+        gcp.click_back()
+        time.sleep(1)
+        # 判定
+        mess = MessagePage()
+        exist = mess.is_text_present("…")
+        self.assertEqual(exist, True)
+        mess.selecting_one_group_click_by_name("adcdefghijklmnopqrstuvwxyz")
+        # 恢复群名
+        gcp.click_setting()
+        gcsp.wait_for_page_load()
+        gcsp.click_modify_group_name()
+        time.sleep(1)
+        gcsp.clear_group_name()
+        time.sleep(1)
+        group_name = Preconditions.get_group_chat_name()
+        gcsp.input_new_group_name(group_name)
+        time.sleep(1)
+        if not gcsp.is_enabled_of_group_name_save_button():
+            raise AssertionError("页面右上角的确定按钮没有高亮展示")
+        gcsp.save_group_name()
+        if not gcsp.is_toast_exist("修改成功"):
+            raise AssertionError("群名称更改为新名称失败")
+        gcsp.click_back()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_huangmianhua_0050(self):
+        """系统消息入口——系统消息展示规则——时间展示规则"""
+        # 1、删除聊天记录
+        # 2、选择一个群输入先发送一条信息确保在消息页可以看到
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        gcp.click_back()
+        mess = MessagePage()
+        exist = mess.is_text_present("刚刚")
+        self.assertEqual(exist, True)
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_huangmianhua_0051(self):
+        """系统消息入口——系统消息展示规则——时间展示规则"""
+        # 1、删除聊天记录
+        # 2、选择一个群输入先发送一条信息确保在消息页可以看到
+        gcp = GroupChatPage()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        gcp.click_back()
+        mess = MessagePage()
+        # 暂时这样判断处理
+        exist = mess.is_text_present(":")
+        self.assertEqual(exist, True)
+
 class MsgCommonGroupAllTest(TestCase):
     """
             模块：消息-普通群
