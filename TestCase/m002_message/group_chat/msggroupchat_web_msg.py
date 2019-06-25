@@ -1025,6 +1025,48 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         exist = mess.is_text_present("测试企业群")
         self.assertEqual(exist, False)
 
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_huangmianhua_0113(self):
+        """在群聊设置页面中——群成员头像展示"""
+        gcp = GroupChatPage()
+        gcp.click_back()
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        # Preconditions.delete_record_group_chat()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 最少会展示一个头像 yaolei
+            exist = gcp.is_text_present("Y")
+            self.assertEqual(exist, True)
+            time.sleep(1)
+            # 回到聊天界面
+            gcsp.click_back()
+            time.sleep(1)
+        # 回到信息列表界面
+        gcp.click_back()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_huangmianhua_0114(self):
+        """在群聊设置页面中——群成员头像展示"""
+        gcp = GroupChatPage()
+        gcp.click_back()
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # Checkpoint 校验群主头像皇冠
+            GroupChatSetPage().group_chairman_tag_is_exist()
+            time.sleep(1)
+            # 回到聊天界面
+            gcsp.click_back()
+            time.sleep(1)
+        # 回到信息列表界面
+        gcp.click_back()
+
 
 
 
