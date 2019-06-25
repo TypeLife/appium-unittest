@@ -239,3 +239,11 @@ class SelectHeContactsDetailPage(BasePage):
             condition=lambda x: self.get_elements(self.__locators['联系人名'])[0],
             auto_accept_permission_alert=False
         ).click()
+
+    @TestLogger.log()
+    def is_on_this_page(self):
+        """当前页面是否在团队联系人"""
+        el = self.get_elements(self.__locators['搜索'])
+        if len(el) > 0:
+            return True
+        return False
