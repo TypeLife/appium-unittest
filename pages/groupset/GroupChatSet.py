@@ -55,6 +55,7 @@ class GroupChatSetPage(BasePage):
                   "确认": (MobileBy.XPATH, '//*[@text ="确认"]'),
                   "确定": (MobileBy.XPATH, '//*[@text ="确定"]'),
                   "取消": (MobileBy.XPATH, '//*[@text ="取消"]'),
+                  "退出": (MobileBy.XPATH, '//*[@text ="退出"]'),
                   '群成员': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_head'),
                   '完成': (MobileBy.ID, 'com.chinasofti.rcs:id/group_name_save'),
                   '修改群名或群名片返回': (MobileBy.ID, 'com.chinasofti.rcs:id/back'),
@@ -219,6 +220,11 @@ class GroupChatSetPage(BasePage):
         """点击消息免打扰开关"""
         self._find_menu(self.__locators['消息免打扰开关'])
         self.click_element(self.__locators['消息免打扰开关'])
+
+    @TestLogger.log()
+    def click_btn_logout(self):
+        """点击消息免打扰开关"""
+        self.click_element(self.__locators['退出'])
 
     @TestLogger.log()
     def get_switch_undisturb_status(self):

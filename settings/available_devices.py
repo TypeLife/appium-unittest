@@ -767,8 +767,8 @@ DEVICES_CONFIG_DEBUG_YL = {
         "DEFAULT_CAPABILITY": {
 "platformName": "Android",
 "platformVersion": "7.0",
-"deviceName": "XPUGL18808000100",
-"udid": "XPUGL18808000100",
+"deviceName": "WGY0217A18000024",
+"udid": "WGY0217A18000024",
 "automationName": "UiAutomator2",
 "newCommandTimeout": 600,
 "appPackage": "com.chinasofti.rcs",

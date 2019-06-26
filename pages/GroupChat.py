@@ -98,6 +98,8 @@ class GroupChatPage(BaseChatPage):
                   '视频播放': (MobileBy.ID, 'com.chinasofti.rcs:id/video_play'),
                   '群聊拍照': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_take_photo'),
                   '企业群成员头像': (MobileBy.ID, 'com.chinasofti.rcs:id/contact_icon'),
+                  '飞信电话(免费)': (MobileBy.XPATH, '//*[@text="飞信电话（免费）"]'),
+                  '多方视频': (MobileBy.XPATH, '//*[@text="多方视频"]'),
                   }
 
     @TestLogger.log()
@@ -777,3 +779,19 @@ class GroupChatPage(BaseChatPage):
                 message
             )
         return self
+
+    @TestLogger.log('点击飞信电话(免费)')
+    def click_hf_tel(self):
+        """点击飞信电话(免费)"""
+        self.click_element(self.__locators['飞信电话(免费)'])
+
+    @TestLogger.log('点击多方视频')
+    def click_multi_videos(self):
+        """点击多方视频"""
+        self.click_element(self.__locators['多方视频'])
+
+    @TestLogger.log('点击始终允许')
+    def click_always_allow(self):
+        """点击始终允许"""
+        self.click_element(self.__locators['始终允许'])
+

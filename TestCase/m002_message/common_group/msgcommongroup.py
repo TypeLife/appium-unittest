@@ -1636,6 +1636,71 @@ class MsgCommonGroupTest(TestCase):
         gcp.tap_coordinate([(100, 20), (100, 60), (100, 100)])
 
     @staticmethod
+    def setUp_test_msg_huangmianhua_0153():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0153(self):
+        """在群聊会话窗口，点击通话按钮——拨打多方电话"""
+        # 1、点击页面顶部的通话按钮，是否会调起通话选择项弹窗
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_mutilcall()
+        time.sleep(2)
+        lgdp = GroupChatPage()
+        lgdp.click_hf_tel()
+        time.sleep(1)
+        exsit = gcp.is_text_present("搜索成员")
+        self.assertEqual(exsit, True)
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0154():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0154(self):
+        """在群聊会话窗口，点击通话按钮——拨打多方视频"""
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_mutilcall()
+        time.sleep(2)
+        lgdp = GroupChatPage()
+        lgdp.click_multi_videos()
+        mess = MessagePage()
+        for i in range(2):
+            print(" i ==== " + str(i))
+            if gcp.is_text_present("始终允许"):
+                mess.click_text("始终允许")
+                time.sleep(2)
+        time.sleep(1)
+        exsit = gcp.is_text_present("搜索成员")
+        self.assertEqual(exsit, True)
+
+    @staticmethod
     def setUp_test_msg_huangmianhua_0155():
         Preconditions.select_mobile('Android-移动')
         mess = MessagePage()
@@ -5039,6 +5104,60 @@ class MsgCommonGroupTest(TestCase):
             gcp.click_text("知道了")
         if gcp.is_toast_exist("你撤回了一条信息"):
             raise AssertionError("消息超过十秒可以撤回")
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0206():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0206(self):
+        """收到一条：该群已解散——系统消息"""
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.click_setting()
+        time.sleep(1)
+        group_set = GroupChatSetPage()
+        group_set.click_delete_and_exit2()
+        time.sleep(1)
+        # 解散退出群
+        group_set.click_btn_logout()
+        time.sleep(1)
+        gcp.click_back()
+        mess = MessagePage()
+        mess.selecting_one_group_click_by_name("系统消息")
+        # 判定点
+        exsit = gcp.is_text_present("该群已解散")
+        self.assertEqual(exsit, True)
+        groupname = Preconditions.get_group_chat_name()
+        exsit = gcp.is_text_present(groupname)
+        self.assertEqual(exsit, True)
+
+    def tearDown_test_msg_huangmianhua_0206(self):
+        gcp = GroupChatPage()
+        gcp.click_back_by_android()
+        time.sleep(1)
+        # 删除 消息（系统消息 群组名）
+        mess = MessagePage()
+        # 长按 "测试企业群"
+        mess.selecting_one_group_press_by_name('系统消息')
+        mess.press_groupname_to_do("删除聊天")
+        time.sleep(1)
+        groupname = Preconditions.get_group_chat_name()
+        mess.selecting_one_group_press_by_name(groupname)
+        mess.press_groupname_to_do("删除聊天")
+
 
 class MsgCommonGroupPriorityTest(TestCase):
     """
