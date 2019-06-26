@@ -1025,6 +1025,218 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         exist = mess.is_text_present("测试企业群")
         self.assertEqual(exist, False)
 
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_huangmianhua_0101(self):
+        """在群聊设置页面，群成员头像展示"""
+        gcp = GroupChatPage()
+        gcp.click_back()
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        # Preconditions.delete_record_group_chat()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 没有头像展示为对应昵称的首字母或数字大写 yaolei "Y"
+            exist = gcp.is_text_present("Y")
+            self.assertEqual(exist, True)
+            time.sleep(1)
+            # 回到聊天界面
+            gcsp.click_back()
+            time.sleep(1)
+        # 回到信息列表界面
+        gcp.click_back()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_huangmianhua_0102(self):
+        """在群聊设置页面，群成员头像上方文案展示"""
+        gcp = GroupChatPage()
+        gcp.click_back()
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            exist = gcp.is_text_present("群成员")
+            self.assertEqual(exist, True)
+            exist = gcp.is_text_present("群聊设置")
+            self.assertEqual(exist, True)
+            time.sleep(1)
+            # 返回到聊天界面
+            gcsp.click_back()
+            exist = gcp.is_text_present("群聊设置")
+            self.assertEqual(exist, False)
+            time.sleep(1)
+        # 回到信息列表界面
+        gcp.click_back()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_huangmianhua_0103(self):
+        """在群聊设置页面，群成员头像上方文案展示"""
+        gcp = GroupChatPage()
+        gcp.click_back()
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            exist = gcp.is_text_present("D")
+            self.assertEqual(exist, True)
+            exist = gcp.is_text_present("大佬1")
+            self.assertEqual(exist, True)
+            time.sleep(1)
+            # 返回到聊天界面
+            gcsp.click_back()
+            time.sleep(1)
+        # 回到信息列表界面
+        gcp.click_back()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_huangmianhua_0104(self):
+        """在群聊设置页面，群成员头像上方文案展示"""
+        gcp = GroupChatPage()
+        gcp.click_back()
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            gcsp.click_group_member_show()
+            time.sleep(1)
+            exist = gcp.is_text_present("群成员")
+            self.assertEqual(exist, True)
+            #  选择一个群成员
+            gcp.click_text("大佬1")
+            time.sleep(1)
+            exist = gcp.is_text_present("交换名片")
+            self.assertEqual(exist, False)
+            gcsp.click_back_by_android()
+            time.sleep(1)
+            gcsp.click_back_by_android()
+            time.sleep(1)
+            # 返回到聊天界面
+            gcsp.click_back()
+            time.sleep(1)
+        # 回到信息列表界面
+        gcp.click_back()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_huangmianhua_0113(self):
+        """在群聊设置页面中——群成员头像展示"""
+        gcp = GroupChatPage()
+        gcp.click_back()
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        # Preconditions.delete_record_group_chat()
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 最少会展示一个头像 yaolei
+            exist = gcp.is_text_present("Y")
+            self.assertEqual(exist, True)
+            time.sleep(1)
+            # 回到聊天界面
+            gcsp.click_back()
+            time.sleep(1)
+        # 回到信息列表界面
+        gcp.click_back()
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_huangmianhua_0114(self):
+        """在群聊设置页面中——群成员头像展示"""
+        gcp = GroupChatPage()
+        gcp.click_back()
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # Checkpoint 校验群主头像皇冠
+            GroupChatSetPage().group_chairman_tag_is_exist()
+            time.sleep(1)
+            # 回到聊天界面
+            gcsp.click_back()
+            time.sleep(1)
+        # 回到信息列表界面
+        gcp.click_back()
+
+    @tags('ALL', 'CMCC', 'YL')
+    def test_msg_huangmianhua_0204(self):
+        """
+            消息列表——长按——删除会话窗口
+        """
+        gcp = GroupChatPage()
+        gcp.click_back()
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        Preconditions.delete_record_group_chat()
+        # 输入信息
+        gcp.input_message("哈哈")
+        # 点击发送
+        gcp.send_message()
+        time.sleep(1)
+        gcp.click_back()
+        time.sleep(1)
+        mess = MessagePage()
+        # 长按 "测试企业群"
+        mess.selecting_one_group_press_by_name('测试企业群')
+        # 1、长按消息列表的会话窗口，会弹出功能菜单列表
+        time.sleep(1)
+        exist = mess.is_text_present("置顶聊天")
+        self.assertEqual(exist, True)
+        # 消息列表 删除"测试企业群"记录
+        mess.press_groupname_to_do("删除聊天")
+        exist = mess.is_text_present("测试企业群")
+        self.assertEqual(exist, False)
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        exist = mess.is_text_present("哈哈")
+        self.assertEqual(exist, False)
+        # 返回到消息列表界面
+        gcp.click_back_by_android()
+        time.sleep(1)
+
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_huangmianhua_0212(self):
+        """在群聊设置页面，群成员头像上方文案展示"""
+        gcp = GroupChatPage()
+        gcp.click_back()
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # "群成员展开 >
+            gcsp.click_group_member_show()
+            time.sleep(1)
+            # exist = gcp.is_text_present("群成员")
+            # self.assertEqual(exist, True)
+            #  选择一个群成员
+            gcp.click_text("大佬1")
+            time.sleep(1)
+            exist = gcp.is_text_present("保存到通讯录")
+            if exist:
+                gcp.click_text("保存到通讯录")
+                time.sleep(1)
+                gcp.click_text("保存")
+                time.sleep(1)
+            # 判定
+            exist = gcp.is_text_present("分享名片")
+            self.assertEqual(exist, True)
+            exist = gcp.is_text_present("编辑")
+            self.assertEqual(exist, True)
+
+
+
+
+
+
 
 
 

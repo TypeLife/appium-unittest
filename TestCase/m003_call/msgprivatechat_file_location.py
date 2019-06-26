@@ -5,6 +5,7 @@ import unittest
 from selenium.common.exceptions import TimeoutException
 
 from library.core.TestCase import TestCase
+from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, current_driver
 from pages.components import BaseChatPage
 from preconditions.BasePreconditions import WorkbenchPreconditions
@@ -325,6 +326,203 @@ class Preconditions(WorkbenchPreconditions):
             # 选择当前团队
             shc.click_department_name(workbench_name)
             time.sleep(2)
+
+    @staticmethod
+    def delete_record_group_chat():
+        # 删除聊天记录
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            scp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # 点击删除聊天记录
+            gcsp.click_clear_chat_record()
+            gcsp.wait_clear_chat_record_confirmation_box_load()
+            # 点击确认
+            gcsp.click_determine()
+            time.sleep(3)
+            # if not gcsp.is_toast_exist("聊天记录清除成功"):
+            #     raise AssertionError("没有聊天记录清除成功弹窗")
+            # 点击返回群聊页面
+            gcsp.click_back()
+            time.sleep(2)
+            # 判断是否返回到群聊页面
+            if not scp.is_on_this_page():
+                raise AssertionError("没有返回到群聊页面")
+        else:
+            try:
+                raise AssertionError("没有返回到群聊页面，无法删除记录")
+            except AssertionError as e:
+                raise e
+
+    #多人群聊前置条件
+    @staticmethod
+    def select_one_mobile(moible_param):
+        """选择指定的设备连接，并确保在消息列表页面"""
+        Preconditions.select_mobile(moible_param)
+        # 消息页面
+        Preconditions.make_in_message_page(moible_param,reset=False)
+
+    @staticmethod
+    def make_in_message_page(moible_param,reset=False):
+        """确保应用在消息页面"""
+        Preconditions.select_mobile(moible_param, reset)
+        current_mobile().hide_keyboard_if_display()
+        time.sleep(1)
+        # 如果在消息页，不做任何操作
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            return
+        # 进入一键登录页
+        Preconditions.make_already_in_one_key_login_page()
+        #  从一键登录页面登录
+        Preconditions.login_by_one_key_login()
+
+    @staticmethod
+    def build_one_new_group_with_number(puhone_number,group_name):
+        """新建一个指定成员和名称的群，如果已存在，不建群"""
+        # 消息页面
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(2)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
+        time.sleep(3)
+        sc.click_select_one_group()
+        # 群名
+        # group_name = Preconditions.get_group_chat_name()
+        # 获取已有群名
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        time.sleep(2)
+        sog.input_search_keyword(group_name)
+        time.sleep(2)
+        if sog.is_element_exit("群聊名"):
+            current_mobile().back()
+            time.sleep(2)
+            current_mobile().back()
+            return True
+        current_mobile().back()
+        time.sleep(2)
+        current_mobile().back()
+        current_mobile().back()
+        time.sleep(2)
+        current_mobile().back()
+        time.sleep(2)
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        #添加指定电话成员
+        time.sleep(2)
+        sc.input_search_keyword(puhone_number)
+        time.sleep(2)
+        sog.click_text("tel")
+        time.sleep(2)
+        # 从本地联系人中选择成员创建群
+        sc.click_local_contacts()
+        time.sleep(2)
+        slc = SelectLocalContactsPage()
+        a = 0
+        names = {}
+        while a < 3:
+            names = slc.get_contacts_name()
+            num = len(names)
+            if not names:
+                raise AssertionError("No contacts, please add contacts in address book.")
+            if num == 1:
+                sog.page_up()
+                a += 1
+                if a == 3:
+                    raise AssertionError("联系人只有一个，请再添加多个不同名字联系人组成群聊")
+            else:
+                break
+        # 选择成员
+        for name in names:
+            slc.select_one_member_by_name(name)
+        slc.click_sure()
+        # 创建群
+        cgnp = CreateGroupNamePage()
+        cgnp.input_group_name(group_name)
+        cgnp.click_sure()
+        # 等待群聊页面加载
+        GroupChatPage().wait_for_page_load()
+        return False
+
+    @staticmethod
+    def get_group_chat_name_double():
+        """获取多人群名"""
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        group_name = "多机" + phone_number[-4:]
+        return group_name
+
+    @staticmethod
+    def go_to_group_double(group_name):
+        """从消息列表进入双机群聊，前提：已经存在双机群聊"""
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面，选择一个群
+        sc = SelectContactsPage()
+        times = 15
+        n = 0
+        # 重置应用时需要再次点击才会出现选择一个群
+        while n < times:
+            flag = sc.wait_for_page_load()
+            if not flag:
+                sc.click_back()
+                time.sleep(2)
+                mess.click_add_icon()
+                mess.click_group_chat()
+                sc = SelectContactsPage()
+            else:
+                break
+            n = n + 1
+        time.sleep(3)
+        sc.click_select_one_group()
+        # # 群名
+        # group_name = Preconditions.get_group_chat_name_double()
+        # 获取已有群名
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        time.sleep(2)
+        sog.input_search_keyword(group_name)
+        time.sleep(2)
+        if not sog.is_element_exit("群聊名"):
+            raise AssertionError("没有找到双机群聊，请确认是否创建")
+        sog.click_element_("群聊名")
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+
+    @staticmethod
+    def change_mobile(moible_param):
+        """转换设备连接并且确保在消息列表页面"""
+        Preconditions.select_mobile(moible_param)
+        current_mobile().hide_keyboard_if_display()
+        current_mobile().launch_app()
+        Preconditions.make_in_message_page(moible_param)
 
 
 class MsgPrivateChatFileLocationTest(TestCase):
@@ -3522,3 +3720,439 @@ class MsgPrivateChatAllTest(TestCase):
         # 返回单聊会话页面
         scg.click_back()
         scp.wait_for_page_load()
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_weifenglian_1V1_0133(self):
+        """将接收到的文件转发到普通群"""
+        # 1、在当前会话窗口长按接收到的文件消息
+        # 2、点击转发
+        # 3、点击选择一个群
+        # 4、选择任意普通群
+        # 5、点击发送按钮
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp=SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        mess.click_text(phone_number2)
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        # 1.长按接受到的文件并转发
+        scp.click_element_("消息文件")
+        scp.wait_for_file_load()
+        scp.press_element_("消息文件",3000)
+        scp.click_text("转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text("选择一个群")
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        time.sleep(2)
+        sog.input_search_keyword("给个红包1")
+        time.sleep(2)
+        if not sog.is_element_exit("群聊名"):
+            raise AssertionError("没有给个红包1群，请创建后重试")
+        sog.click_element_("群聊名")
+        time.sleep(2)
+        scp.click_element_("确定")
+        if not scp.is_toast_exist("已转发"):
+            raise AssertionError("转发失败")
+        current_mobile().back()
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.click_text("给个红包1")
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        current_mobile().back()
+        time.sleep(2)
+        mess.press_file_to_do(phone_number2, "删除聊天")
+        mess.press_file_to_do('给个红包1', "删除聊天")
+        Preconditions.change_mobile('Android-移动')
+        mess.press_file_to_do(phone_number, "删除聊天")
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_weifenglian_1V1_0134(self):
+        """将接收到的文件转发到企业群"""
+        # 1、在当前会话窗口长按接收到的文件消息
+        # 2、点击转发
+        # 3、点击选择一个群
+        # 4、选择任意企业群
+        # 5、点击发送按钮
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp=SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        mess.click_text(phone_number2)
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        # 1.长按接受到的文件并转发
+        scp.click_element_("消息文件")
+        scp.wait_for_file_load()
+        scp.press_element_("消息文件",3000)
+        scp.click_text("转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text("选择一个群")
+        sog = SelectOneGroupPage()
+        sog.wait_for_page_load()
+        sog.click_search_group()
+        time.sleep(2)
+        sog.input_search_keyword("测试企业群")
+        time.sleep(2)
+        if not sog.is_element_exit("群聊名"):
+            raise AssertionError("没有测试企业群，请创建后重试")
+        sog.click_element_("群聊名")
+        time.sleep(2)
+        scp.click_element_("确定")
+        if not scp.is_toast_exist("已转发"):
+            raise AssertionError("转发失败")
+        current_mobile().back()
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.click_text("测试企业群")
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        current_mobile().back()
+        time.sleep(2)
+        mess.press_file_to_do(phone_number2, "删除聊天")
+        mess.press_file_to_do('测试企业群', "删除聊天")
+        Preconditions.change_mobile('Android-移动')
+        mess.press_file_to_do(phone_number, "删除聊天")
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_weifenglian_1V1_0163(self):
+        """将接收到的文件转发到团队未置灰的联系人"""
+        # 1、在当前会话窗口长按接收到的文件消息
+        # 2、点击转发
+        # 3、点击选择团队联系人
+        # 4、选择任意企业下的未置灰的联系人
+        # 5、点击发送按钮
+        Preconditions.select_mobile('Android-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp=SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess.wait_for_page_load()
+        mess.click_text(phone_number2)
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        # 1.长按接受到的文件并转发
+        scp.click_element_("消息文件")
+        scp.wait_for_file_load()
+        scp.press_element_("消息文件",3000)
+        scp.click_text("转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text("选择团队联系人")
+        time.sleep(2)
+        sc.click_element_("企业名称")
+        time.sleep(2)
+        sc.click_one_contact("大佬3")
+        scp.click_element_("确定")
+        if not scp.is_toast_exist("已转发"):
+            raise AssertionError("转发失败")
+        current_mobile().back()
+        Preconditions.change_mobile('Android-移动')
+        mess.click_text("大佬3")
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        current_mobile().back()
+        time.sleep(2)
+        mess.press_file_to_do(phone_number2, "删除聊天")
+        mess.press_file_to_do('大佬3', "删除聊天")
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.press_file_to_do(phone_number, "删除聊天")
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_weifenglian_1V1_0183(self):
+        """将接收到的文件转发到我的电脑"""
+        # 1、在当前会话窗口长按接收到的文件消息
+        # 2、点击转发
+        # 3、点击搜索框输入我的电脑进行搜索
+        # 4、选择搜索结果：我的电脑
+        # 5、点击发送按钮
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp=SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        mess.click_text(phone_number2)
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        # 1.长按接受到的文件并转发
+        scp.click_element_("消息文件")
+        scp.wait_for_file_load()
+        scp.press_element_("消息文件",3000)
+        scp.click_text("转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.input_search_keyword("我的")
+        time.sleep(2)
+        sc.click_text("我的电脑")
+        time.sleep(2)
+        scp.click_element_("确定")
+        if not scp.is_toast_exist("已转发"):
+            raise AssertionError("转发失败")
+        current_mobile().back()
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.click_text("我的电脑")
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        current_mobile().back()
+        time.sleep(2)
+        mess.press_file_to_do(phone_number2, "删除聊天")
+        mess.press_file_to_do('我的电脑', "删除聊天")
+        Preconditions.change_mobile('Android-移动')
+        mess.press_file_to_do(phone_number, "删除聊天")
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_weifenglian_1V1_0184(self):
+        """将接收到的文件转发到最近聊天"""
+        # 1、在当前会话窗口长按接收到的文件消息
+        # 2、点击转发
+        # 3、点击选择最近聊天
+        # 4、点击发送按钮
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp=SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        mess.click_text(phone_number2)
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        # 1.长按接受到的文件并转发
+        scp.click_element_("消息文件")
+        scp.wait_for_file_load()
+        scp.press_element_("消息文件",3000)
+        scp.click_text("转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text(phone_number2)
+        time.sleep(2)
+        scp.click_element_("确定")
+        if not scp.is_toast_exist("已转发"):
+            raise AssertionError("转发失败")
+        current_mobile().back()
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.click_text(phone_number2)
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        current_mobile().back()
+        time.sleep(2)
+        mess.press_file_to_do(phone_number2, "删除聊天")
+        Preconditions.change_mobile('Android-移动')
+        mess.press_file_to_do(phone_number, "删除聊天")
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_weifenglian_1V1_0187(self):
+        """对接收到的文件消息进行删除"""
+        # 1、在当前会话窗口长按接收到的文件消息
+        # 2、点击删除
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp=SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        mess.click_text(phone_number2)
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        # 1.长按接受到的文件并删除
+        scp.click_element_("消息文件")
+        scp.wait_for_file_load()
+        scp.press_element_("消息文件",3000)
+        scp.click_text("删除")
+        time.sleep(2)
+        if scp.is_element_exit_("消息文件"):
+            raise AssertionError("删除文件不成功")
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.press_file_to_do(phone_number2, "删除聊天")
+        Preconditions.change_mobile('Android-移动')
+        mess.press_file_to_do(phone_number, "删除聊天")
