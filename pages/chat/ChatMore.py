@@ -37,6 +37,7 @@ class ChatMorePage(BasePage):
                   'com.chinasofti.rcs:id/chat_rich_media_vp': (MobileBy.ID, 'com.chinasofti.rcs:id/chat_rich_media_vp'),
                   'com.chinasofti.rcs:id/iocn_img': (MobileBy.ID, 'com.chinasofti.rcs:id/iocn_img'),
                   '文件': (MobileBy.XPATH, '//*[@text="文件"]'),
+                  '文件图标': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_file'),
                   '群短信': (MobileBy.XPATH, '//*[@text="群短信"]'),
                   '位置': (MobileBy.XPATH, '//*[@text="位置"]'),
                   '红包': (MobileBy.XPATH, '//*[@text="红包"]'),
@@ -61,7 +62,7 @@ class ChatMorePage(BasePage):
     @TestLogger.log()
     def click_file(self):
         """点击文件"""
-        self.click_element(self.__class__.__locators["文件"])
+        self.click_element(self.__class__.__locators["文件图标"])
 
     @TestLogger.log()
     def click_group_smss(self):

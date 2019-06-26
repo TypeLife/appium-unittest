@@ -63,6 +63,8 @@ class SingleChatPage(BaseChatPage):
                   '选择名片': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="名片"]'),
                   '视频播放': (MobileBy.ID, 'com.chinasofti.rcs:id/video_play'),
                   '关闭视频': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_close'),
+                  '消息文件': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_msg'),
+                  '文件下载图标': (MobileBy.ID, 'com.chinasofti.rcs:id/img_message_down_file'),
                   }
 
     @TestLogger.log()
@@ -333,4 +335,18 @@ class SingleChatPage(BaseChatPage):
             raise AssertionError(
                 message
             )
+        return self
+
+    @TestLogger.log()
+    def wait_for_file_load(self, timeout=8, auto_accept_alerts=True):
+        """等待文件加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["文件下载图标"])
+            )
+        except:
+            message = "页面在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(message)
         return self
