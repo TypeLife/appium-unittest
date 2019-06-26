@@ -1004,3 +1004,8 @@ class ContactsPage(FooterPage):
         if self._is_element_present(self.__locators['搜索']):
             return True
         return False
+
+    @TestLogger.log("通过文本点击元素")
+    def click_element_by_text(self, text):
+        ele = ('xpath', '//*[contains(@text, "{}")]'.format(text))
+        self.click_element(ele)
