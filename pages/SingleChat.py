@@ -61,6 +61,8 @@ class SingleChatPage(BaseChatPage):
                   '名片消息名称': (MobileBy.ID, 'com.chinasofti.rcs:id/tv_card_name'),
                   '更多': (MobileBy.ID, 'com.chinasofti.rcs:id/ib_more'),
                   '选择名片': (MobileBy.XPATH, '//*[@resource-id="com.chinasofti.rcs:id/iocn_tv" and @text="名片"]'),
+                  '视频播放': (MobileBy.ID, 'com.chinasofti.rcs:id/video_play'),
+                  '关闭视频': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_close'),
                   }
 
     @TestLogger.log()
@@ -316,3 +318,19 @@ class SingleChatPage(BaseChatPage):
     def is_element_exit_(self, text):
         """指定元素是否存在"""
         return self._is_element_present(self.__class__.__locators[text])
+
+    @TestLogger.log()
+    def wait_for_video_load(self, timeout=60, auto_accept_alerts=True):
+        """等待群聊视频加载"""
+        try:
+            self.wait_until(
+                timeout=timeout,
+                auto_accept_permission_alert=auto_accept_alerts,
+                condition=lambda d: self._is_element_present(self.__class__.__locators["视频播放"])
+            )
+        except:
+            message = "视频在{}s内，没有加载成功".format(str(timeout))
+            raise AssertionError(
+                message
+            )
+        return self
