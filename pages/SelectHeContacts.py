@@ -6,6 +6,7 @@ from library.core.TestLogger import TestLogger
 
 class SelectHeContactsPage(BasePage):
     """选择和通讯录页面"""
+    """选择和通讯录联系人页面"""
     ACTIVITY = 'com.cmicc.module_enterprise.ui.activity.EnterPriseContactSelectActivity'
 
     __locators = {

@@ -7,7 +7,7 @@ from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, switch_to_mobile
 from library.core.utils.testcasefilter import tags
-from pages import AgreementDetailPage
+from pages import AgreementDetailPage, SelectHeContactsPage, WorkbenchPage, CreateTeamPage
 from pages import ChatFilePage
 from pages import ChatLocationPage
 from pages import ChatMorePage
@@ -29,6 +29,7 @@ from pages import SelectOneGroupPage
 from pages import GroupChatSetPage
 from pages.contacts import GroupListSearchPage
 from pages.contacts.Contacts import ContactsPage
+from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
 from preconditions.BasePreconditions import GroupListPage
 from preconditions.BasePreconditions import SelectHeContactsDetailPage
 
@@ -268,6 +269,91 @@ class Preconditions(object):
             local_file.click_back()
             csf.click_back()
         chat.wait_for_page_load()
+
+    # @staticmethod
+    # def make_sure_group_have_member():
+    #     fail_time = 5
+    #     Preconditions.make_already_in_message_page()
+    #     while fail_time:
+    #         try:
+    #             Preconditions.make_already_in_message_page()
+    #             contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
+    #             Preconditions.create_he_contacts(contact_names)
+    #             contact_names2 = [("b测算", "13800137001"), ("c平5", "13800137002"), ('哈 马上', "13800137003"),
+    #                               ('陈丹丹', "13800137004"), ('alice', "13800137005"), ('郑海', "13802883296")]
+    #             Preconditions.create_he_contacts2(contact_names2)
+    #             fail_time = 0
+    #         except:
+    #             fail_time -= 1
+    #     Preconditions.make_already_in_me_all_page()
+
+    @staticmethod
+    def create_team_select_contacts(team_name):
+        """创建团队并添加指定名字联系人为团队成员"""
+        gcp = GroupChatPage()
+        gcp.click_back()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        mess.open_workbench_page()
+        workbench = WorkbenchPage()
+        if workbench.is_on_welcome_page():
+            workbench.click_now_create_team()
+        else:
+            workbench.wait_for_page_load()
+            workbench.click_create_team()
+        team = CreateTeamPage()
+        team.wait_for_page_load()
+        team.input_team_name(team_name)
+        team.choose_location()
+        team.choose_industry()
+        team.input_real_name("admin")
+        # 立即创建团队
+        team.click_immediately_create_team()
+        # 点击完成设置工作台
+        team.wait_for_setting_workbench_page_load()
+        team.click_finish_setting_workbench()
+        team.wait_for_create_team_success_page_load()
+        # 点击邀请成员
+        team.click_invite_member()
+        time.sleep(3)
+        osp = OrganizationStructurePage()
+        osp.click_text("从手机通讯录添加")
+        time.sleep(2)
+        sc = SelectContactsPage()
+        slc = SelectLocalContactsPage()
+        # 选择联系人加入团队
+        slc.wait_for_page_load()
+        name_contacts = ["大佬1", "给个红包1", "English", "特殊!@$", "1122", "：，。", "a a"]
+        for name_contact in name_contacts:
+            time.sleep(2)
+            slc.selecting_local_contacts_by_name(name_contact)
+        # 点击确认
+        slc.click_sure()
+        slc.wait_for_page_load()
+        # 点击取消返回工作台页面
+        slc.click_cancle()
+        workbench.click_message_icon()
+
+    @staticmethod
+    def public_send_location():
+        """发送位置信息"""
+        gcp = GroupChatPage()
+        gcp.click_more()
+        time.sleep(1)
+        more_page = ChatMorePage()
+        more_page.click_location()
+        # 等待位置页面加载
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        time.sleep(1)
+        # 点击发送按钮
+        if not location_page.send_btn_is_enabled():
+            raise AssertionError("位置页面发送按钮不可点击")
+        location_page.click_send()
+        gcp.wait_for_page_load()
+        gcp.click_more()
+        if not gcp.is_address_text_present():
+            raise AssertionError("位置信息发送不成功")
 
 
 class MsgGroupChatFileLocationTest(TestCase):
@@ -1734,31 +1820,10 @@ class MsgGroupChatFileLocationTest(TestCase):
             except AssertionError as e:
                 print(e)
 
-    @staticmethod
-    def public_send_location():
-        """发送位置信息"""
-        gcp = GroupChatPage()
-        gcp.click_more()
-        time.sleep(1)
-        more_page = ChatMorePage()
-        more_page.click_location()
-        # 等待位置页面加载
-        location_page = ChatLocationPage()
-        location_page.wait_for_page_load()
-        time.sleep(1)
-        # 点击发送按钮
-        if not location_page.send_btn_is_enabled():
-            raise AssertionError("位置页面发送按钮不可点击")
-        location_page.click_send()
-        gcp.wait_for_page_load()
-        gcp.click_more()
-        if not gcp.is_address_text_present():
-            raise AssertionError("位置信息发送不成功")
-
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0319(self):
         """将自己发送的位置转发到普通群"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -1789,7 +1854,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0320(self):
         """将自己发送的位置转发到企业群"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -1820,7 +1885,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0321(self):
         """将自己发送的位置转发到普通群时失败"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -1866,7 +1931,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0322(self):
         """将自己发送的位置转发到企业群时失败"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -1912,7 +1977,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0323(self):
         """"将自己发送的位置转发到普通群时点击取消转发"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -1940,7 +2005,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0324(self):
         """"将自己发送的位置转发到企业群时点击取消转发"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -1968,7 +2033,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0325(self):
         """"将自己发送的位置转发到在搜索框输入文字搜索到的群"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -1995,7 +2060,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0326(self):
         """将自己发送的位置转发到在搜索框输入英文字母搜索到的群"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -2022,7 +2087,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0327(self):
         """将自己发送的位置转发到在搜索框输入数字搜索到的群"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -2049,7 +2114,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0328(self):
         """将自己发送的位置转发到在搜索框输入标点符号搜索到的群"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -2076,7 +2141,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0329(self):
         """将自己发送的位置转发到在搜索框输入特殊字符搜索到的群"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -2103,7 +2168,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat',  'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0330(self):
         """将自己发送的位置转发到在搜索框输入空格搜索到的群"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do('转发')
@@ -2130,7 +2195,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0331(self):
         """将自己发送的位置转发到在搜索框输入多种字符搜索到的群"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -2157,7 +2222,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0332(self):
         """将自己发送的位置转发到在搜索框输入多种字符搜索到的群"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -2198,7 +2263,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         if not flag:
             raise AssertionError("群聊名字复制失败")
         # 2.发送自己的位置
-        self.public_send_location()
+        Preconditions.public_send_location()
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
         scp = SelectContactsPage()
@@ -2216,7 +2281,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0334(self):
         """将自己发送的位置转发到搜索到的群时点击取消转发"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -2243,7 +2308,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0335(self):
         """将自己发送的位置转发到滑动右边字母导航栏定位查找的群"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -2267,7 +2332,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0337(self):
         """将自己发送的位置转发到手机联系人时点击取消转发"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -2288,7 +2353,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0338(self):
         """将自己发送的位置转发到手机联系人时发送失败"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -2330,7 +2395,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0339(self):
         """将自己发送的位置转发到在搜索框输入多种字符搜索到的手机联系人"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -2349,7 +2414,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0340(self):
         """将自己发送的位置转发到在搜索框输入数字搜索到的手机联系人"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -2368,7 +2433,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0341(self):
         """将自己发送的位置转发到在搜索框输入标点符号搜索到的手机联系人"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -2387,7 +2452,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0342(self):
         """将自己发送的位置转发到在搜索框输入字母搜索到的手机联系人"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -2406,7 +2471,7 @@ class MsgGroupChatFileLocationTest(TestCase):
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0343(self):
         """将自己发送的位置转发到在搜索框输入空格搜索到的手机联系人"""
-        self.public_send_location()
+        Preconditions.public_send_location()
         # 1.长按位置消息体转发
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
@@ -2439,7 +2504,7 @@ class MsgGroupChatFileLocationTest(TestCase):
         if not flag:
             raise AssertionError("群聊名字复制失败")
         # 2.发送自己的位置
-        self.public_send_location()
+        Preconditions.public_send_location()
         gcp = GroupChatPage()
         gcp.press_message_to_do("转发")
         scp = SelectContactsPage()
@@ -2450,7 +2515,96 @@ class MsgGroupChatFileLocationTest(TestCase):
         slcp.wait_for_page_load()
         # 4.点击搜索框长按粘贴
         slcp.click_search_box()
-        slcp.press_group_search_bar()
+        slcp.press_search_bar()
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0345(self):
+        """将自己发送的位置转发到在搜索框输入号码搜索到的手机联系人"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择手机联系人
+        scp.click_phone_contact()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        slcp.click_search_box()
+        # 3.在搜索框输入号码点击搜索到的手机联系人
+        slcp.search_and_select_contact("012560")
+        if gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊页面")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0346(self):
+        """将自己发送的位置转发到在搜索框进行搜索到的手机联系人时取消转发"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择手机联系人
+        scp.click_phone_contact()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        slcp.click_search_box()
+        # 3.在搜索框输入手机联系人
+        slcp.search_contact("大佬1")
+        # 4.点击取消
+        slcp.click_cancel_forward()
+        if not slcp.is_on_this_page():
+            raise AssertionError("当前页面不在选择联系人页面")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0347(self):
+        """将自己发送的位置转发到滑动右边字母导航栏定位查找的手机联系人"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择手机联系人
+        scp.click_phone_contact()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        # 3.根据导航栏的第一个字母定位选择一个群
+        slcp.choose_index_bar_click_element()
+        # 4.点击确定
+        slcp.click_sure_forward()
+        gcp = GroupChatPage()
+        gcp.wait_for_page_load()
+        flag = gcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        if not gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊天会话页面")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0348(self):
+        """将自己发送的位置转发到滑动右边字母导航栏定位查找的手机联系人时点击取消转发"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击选择手机联系人
+        scp.click_phone_contact()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        # 3.根据导航栏的第一个字母定位选择一个群
+        slcp.choose_index_bar_click_element()
+        # 4.点击取消
+        slcp.click_cancel_forward()
+        if not slcp.is_on_this_page():
+            raise AssertionError("当前页面不在选择联系人页面")
+
+
+
+
 
 
 

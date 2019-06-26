@@ -3002,3 +3002,226 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         mess.press_file_to_do(phone_number2, "删除聊天")
         Preconditions.change_mobile('Android-移动')
         mess.press_file_to_do(phone_number, "删除聊天")
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_C_0061(self):
+        """单聊会话页面，收藏他人发送的照片"""
+        # 1、在当前聊天会话页面，长按他人发送的图片
+        # 2.收藏该图片
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp = SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        scp.click_picture()
+        # 3.进入相片页面,选择一张相片
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_pic_fk()
+        # 4.点击预览
+        cpg.click_preview()
+        cpp = ChatPicPreviewPage()
+        cpp.wait_for_page_load()
+        # 5.点击发送,
+        cpp.click_send()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        mess.click_text(phone_number2)
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        scp.press_element_("消息图片", 3000)
+        scp.click_text("收藏")
+        if not scp.is_toast_exist("已收藏"):
+            raise AssertionError("收藏失败")
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.press_file_to_do(phone_number2, "删除聊天")
+        mess.wait_for_page_load()
+        mess.open_me_page()
+        mep = MePage()
+        mep.wait_for_page_load()
+        # 2.点击我的收藏,进入收藏页面
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        if not mcp.is_element_exit_("收藏的图片"):
+            raise AssertionError("收藏的图片不可见")
+        # 左滑收藏消息体
+        mcp.press_and_move_left()
+        # 判断是否有删除按钮
+        if mcp.is_delete_element_present():
+            mcp.click_delete_collection()
+            mcp.click_sure_forward()
+            time.sleep(2)
+            if not mcp.is_text_present("没有任何收藏"):
+                raise AssertionError("不可以删除收藏的消息体")
+            time.sleep(1)
+            mcp.click_back()
+            mess.open_message_page()
+        else:
+            raise AssertionError("没有删除收藏按钮")
+        Preconditions.change_mobile('Android-移动')
+        mess.press_file_to_do(phone_number, "删除聊天")
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_C_0063(self):
+        """单聊会话页面，转发他人发送的视频给手机联系人"""
+        # 1、在当前聊天会话页面，长按他人发送的视频
+        # 2、点击转发
+        # 3、选择任意手机联系人
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp=SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        scp.click_picture()
+        # 3.进入相片页面,选择一段视频
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_video_fk(1)
+        cpg.click_send()
+        time.sleep(5)
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        mess.click_text(phone_number2)
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        scp.click_element_("消息视频")
+        time.sleep(2)
+        if scp.is_element_exit_("关闭视频"):
+            scp.press_xy()
+        else:
+            # 点击后等待视频加载成功
+            scp.wait_for_video_load()
+            scp.press_element_("消息视频", 3000)
+        scp.click_text("转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text(phone_number2)
+        scp.click_element_("确定")
+        if not scp.is_toast_exist("已转发"):
+            raise AssertionError("转发失败")
+        time.sleep(2)
+        if scp.is_element_exit_("关闭视频"):
+            current_mobile().back()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.press_file_to_do(phone_number2, "删除聊天")
+        Preconditions.change_mobile('Android-移动')
+        mess.press_file_to_do(phone_number, "删除聊天")
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_C_0069(self):
+        """单聊会话页面，删除他人发送的视频"""
+        # 1、在当前聊天会话页面，长按他人发送的视频
+        # 2、点击删除
+        # 3、点击确定
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp=SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        scp.click_picture()
+        # 3.进入相片页面,选择一段视频
+        cpg = ChatPicPage()
+        cpg.wait_for_page_load()
+        cpg.select_video_fk(1)
+        cpg.click_send()
+        time.sleep(5)
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        mess.click_text(phone_number2)
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        scp.press_element_("消息视频", 3000)
+        scp.click_text("删除")
+        time.sleep(2)
+        if scp.is_element_exit_("消息视频"):
+            raise AssertionError("删除视频不成功")
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.press_file_to_do(phone_number2, "删除聊天")
+        Preconditions.change_mobile('Android-移动')
+        mess.press_file_to_do(phone_number, "删除聊天")

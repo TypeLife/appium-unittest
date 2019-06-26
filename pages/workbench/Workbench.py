@@ -608,3 +608,7 @@ class WorkbenchPage(FooterPage):
     def click_element_(self, text):
         """点击元素"""
         self.click_element(self.__class__.__locators[text])
+
+    @TestLogger.log("点击消息图标")
+    def click_message_icon(self):
+        self.click_element(self.__locators['消息'])

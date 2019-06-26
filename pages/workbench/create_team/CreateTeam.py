@@ -49,6 +49,7 @@ class CreateTeamPage(BasePage):
         '搜索框': (MobileBy.XPATH, '//*[@content-desc="搜索"]'),
         '天气预报': (MobileBy.XPATH, '//*[@content-desc="天气预报"]'),
         '删除': (MobileBy.XPATH, '//*[@content-desc="删除"]'),
+        '邀请成员': (MobileBy.XPATH, '//*[@text="邀请成员"]'),
 
     }
 
@@ -287,4 +288,10 @@ class CreateTeamPage(BasePage):
         """获取团队名字"""
         el=self.get_element(self.__class__.__locators["邮箱"])
         return el.text
+
+    @TestLogger.log()
+    def click_invite_member(self):
+        """点击邀请成员"""
+        self.click_element(self.__class__.__locators['邀请成员'])
+
 

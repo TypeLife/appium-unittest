@@ -73,7 +73,10 @@ class SelectLocalContactsPage(BasePage):
                   '列表项根节点': (MobileBy.XPATH, '//android.support.v7.widget.RecyclerView/*'),
                   '联系人头像': (MobileBy.ID, 'com.chinasofti.rcs:id/head_tv'),
                   '查看更多': (MobileBy.XPATH, '//*[@text ="查看更多"]'),
+                  '关闭返回': (MobileBy.ID, 'com.chinasofti.rcs:id/btn_close_actionbar'),
                   }
+
+
     @TestLogger.log()
     def click_read_more(self):
         """点击查看更多"""
@@ -440,7 +443,7 @@ class SelectLocalContactsPage(BasePage):
         self.click_sure_forward()
 
     @TestLogger.log("长按搜索或输入手机号")
-    def press_group_search_bar(self):
+    def press_search_bar(self):
         el = self.get_element(self.__locators['搜索或输入手机号'])
         self.press(el)
 
@@ -450,3 +453,8 @@ class SelectLocalContactsPage(BasePage):
             self.input_search_key(contact)
             self.hide_keyboard_if_display()
             self.select_the_first_result()
+
+    @TestLogger.log()
+    def click_cancle(self):
+        """点击关闭返回"""
+        self.click_element(self.__class__.__locators["关闭返回"])
