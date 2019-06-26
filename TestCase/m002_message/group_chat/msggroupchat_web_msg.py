@@ -1201,6 +1201,39 @@ class MsgGroupChatVideoPicAllTest(TestCase):
         gcp.click_back_by_android()
         time.sleep(1)
 
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_huangmianhua_0212(self):
+        """在群聊设置页面，群成员头像上方文案展示"""
+        gcp = GroupChatPage()
+        gcp.click_back()
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # "群成员展开 >
+            gcsp.click_group_member_show()
+            time.sleep(1)
+            # exist = gcp.is_text_present("群成员")
+            # self.assertEqual(exist, True)
+            #  选择一个群成员
+            gcp.click_text("大佬1")
+            time.sleep(1)
+            exist = gcp.is_text_present("保存到通讯录")
+            if exist:
+                gcp.click_text("保存到通讯录")
+                time.sleep(1)
+                gcp.click_text("保存")
+                time.sleep(1)
+            # 判定
+            exist = gcp.is_text_present("分享名片")
+            self.assertEqual(exist, True)
+            exist = gcp.is_text_present("编辑")
+            self.assertEqual(exist, True)
+
+
+
 
 
 
