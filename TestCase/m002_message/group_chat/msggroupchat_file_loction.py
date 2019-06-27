@@ -2821,23 +2821,6 @@ class MsgGroupChatFileLocationTest(TestCase):
         if not slcp.is_on_this_page():
             raise AssertionError("当前页面不在选择联系人页面")
 
-    @staticmethod
-    def setUp_test_msg_weifenglian_qun_0377():
-        """确保有一个多人的群聊"""
-        Preconditions.select_mobile('Android-移动-移动')
-        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
-        Preconditions.change_mobile('Android-移动')
-        group_name = Preconditions.get_group_chat_name_double()
-        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
-        if not flag:
-            Preconditions.change_mobile('Android-移动-移动')
-            mess = MessagePage()
-            mess.wait_for_page_load()
-            mess.click_text("系统消息")
-            time.sleep(3)
-            mess.click_text("同意")
-        Preconditions.change_mobile('Android-移动')
-        Preconditions.go_to_group_double(group_name)
     @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
     def test_msg_weifenglian_qun_0349(self):
         """将自己发送的位置转发到团队未置灰的联系人"""
@@ -3364,22 +3347,23 @@ class MsgGroupChatFileLocationTest(TestCase):
         if not flag:
             raise AssertionError("当前页面不在选择和通讯录联系人页面")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @staticmethod
+    def setUp_test_msg_weifenglian_qun_0377():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
 
     @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_weifenglian_qun_0377(self):
