@@ -3003,6 +3003,39 @@ class MsgGroupChatFileLocationTest(TestCase):
         if not gcp.is_on_this_page():
             raise AssertionError("当前页面不在群聊页面")
 
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0363(self):
+        """将自己发送的位置转发到在企业列表搜索框粘贴字符搜索到的团队联系人"""
+        gcp = GroupChatPage()
+        # 1.输入团队联系人名字发送，长按信息并复制
+        gcp.input_message("大佬1")
+        gcp.send_message()
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        gcp.press_file_to_do("大佬1", "复制")
+        flag = gcp.is_toast_exist("已复制")
+        if not flag:
+            raise AssertionError("团队联系人名字复制失败")
+        Preconditions.public_send_location()
+        # 2.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.点击搜索：当前组织框
+        shc.click_search_box()
+        time.sleep(2)
+        # 4.长按搜索:当前组织框
+        shc.press_search_bar()
+        time.sleep(2)
+
 
 
 
