@@ -3078,8 +3078,7 @@ class MsgPrivateChatVideoPicAllTest(TestCase):
         if mcp.is_delete_element_present():
             mcp.click_delete_collection()
             mcp.click_sure_forward()
-            time.sleep(2)
-            if not mcp.is_text_present("没有任何收藏"):
+            if not mcp.is_toast_exist("取消收藏成功"):
                 raise AssertionError("不可以删除收藏的消息体")
             time.sleep(1)
             mcp.click_back()

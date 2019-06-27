@@ -4156,3 +4156,137 @@ class MsgPrivateChatAllTest(TestCase):
         mess.press_file_to_do(phone_number2, "删除聊天")
         Preconditions.change_mobile('Android-移动')
         mess.press_file_to_do(phone_number, "删除聊天")
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_weifenglian_1V1_0188(self):
+        """对接收到的已下载文件消息进行收藏"""
+        # 1、在当前会话窗口长按接收到的已下载文件消息
+        # 2、点击收藏
+        # 3、去收藏列表查看
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp=SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        mess.click_text(phone_number2)
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        # 1.长按接受到的文件并收藏
+        scp.click_element_("消息文件")
+        scp.wait_for_file_load()
+        scp.press_element_("消息文件", 3000)
+        scp.click_text("收藏")
+        if not scp.is_toast_exist("已收藏"):
+            raise AssertionError("收藏失败")
+        Preconditions.change_mobile('Android-移动-移动')
+        mess = MessagePage()
+        mess.open_me_page()
+        mep = MePage()
+        mep.wait_for_page_load()
+        # 2.点击我的收藏,进入收藏页面
+        mep.click_collection()
+        mcp = MeCollectionPage()
+        mcp.wait_for_page_load()
+        if not mcp.is_element_exit_("收藏的文件"):
+            raise AssertionError("收藏的视频不可见")
+        # 左滑收藏消息体
+        mcp.press_and_move_left()
+        # 判断是否有删除按钮
+        if mcp.is_delete_element_present():
+            mcp.click_delete_collection()
+            mcp.click_sure_forward()
+            if not mcp.is_toast_exist("取消收藏成功"):
+                raise AssertionError("不可以删除收藏的消息体")
+            time.sleep(1)
+            mcp.click_back()
+            mess.open_message_page()
+        else:
+            raise AssertionError("没有删除收藏按钮")
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.press_file_to_do(phone_number2, "删除聊天")
+        Preconditions.change_mobile('Android-移动')
+        mess.press_file_to_do(phone_number, "删除聊天")
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_weifenglian_1V1_0189(self):
+        """对接收到的未下载文件消息进行收藏"""
+        # 1、在当前会话窗口长按接收到的未下载文件消息
+        # 2、点击收藏
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp=SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        file_type = ".txt"
+        # 确保当前聊天页面已有文件
+        if not scp.is_exist_file_by_type(file_type):
+            Preconditions.send_file_by_type(file_type)
+        # 等待单聊会话页面加载
+        scp.wait_for_page_load()
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        mess.click_text(phone_number2)
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        time.sleep(2)
+        # 1.长按接受到的文件并收藏
+        # scp.click_element_("消息文件")
+        # scp.wait_for_file_load()
+        scp.press_element_("消息文件", 3000)
+        scp.click_text("收藏")
+        if not scp.is_toast_exist("请先下载文件"):
+            raise AssertionError("没有出现‘请先下载文件’toast")
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.press_file_to_do(phone_number2, "删除聊天")
+        Preconditions.change_mobile('Android-移动')
+        mess.press_file_to_do(phone_number, "删除聊天")

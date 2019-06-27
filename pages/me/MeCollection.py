@@ -55,6 +55,7 @@ class MeCollectionPage(BasePage):
                   '收藏内容': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_tv'),
                   '文件大小': (MobileBy.ID, 'com.chinasofti.rcs:id/file_size'),
                   '文件列表': (MobileBy.ID, 'com.chinasofti.rcs:id/swipe_content'),
+                  '收藏的文件': (MobileBy.ID, 'com.chinasofti.rcs:id/favorite_file_name_size'),
                   }
 
     @TestLogger.log()
