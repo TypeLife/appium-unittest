@@ -3123,6 +3123,29 @@ class MsgGroupChatFileLocationTest(TestCase):
         if not gcp.is_on_this_page():
             raise AssertionError("当前页面不在群聊页面")
 
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0367(self):
+        """将自己发送的位置转发到在企业列表搜索框进行搜索到的团队联系人时取消转发"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.在搜索框输入团队联系人
+        shc.input_search("大佬1")
+        # 4.点击搜索的团队联系人
+        shc.click_search_team_contacts()
+        # 5.点击取消
+        shc.click_cancel_forward()
+        flag = shc.is_on_this_page()
+        if not flag:
+            raise AssertionError("当前页面不在选择和通讯录联系人页面")
+
 
 
 
