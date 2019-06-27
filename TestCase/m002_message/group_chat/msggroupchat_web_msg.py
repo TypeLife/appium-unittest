@@ -1203,7 +1203,7 @@ class MsgGroupChatVideoPicAllTest(TestCase):
 
     @tags('ALL', 'CMCC', 'group_chat')
     def test_msg_huangmianhua_0212(self):
-        """在群聊设置页面，群成员头像上方文案展示"""
+        """企业群profile优化：群聊设置页--“>”群成员列表"""
         gcp = GroupChatPage()
         gcp.click_back()
         # 打开企业群
@@ -1232,7 +1232,64 @@ class MsgGroupChatVideoPicAllTest(TestCase):
             exist = gcp.is_text_present("编辑")
             self.assertEqual(exist, True)
 
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_huangmianhua_0213(self):
+        """企业群profile优化：群聊设置页--“>”群成员列表--搜索结果"""
+        gcp = GroupChatPage()
+        gcp.click_back()
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # "群成员展开 >
+            gcsp.click_group_member_show()
+            time.sleep(1)
+            gcp.input_member_message("大佬")
+            time.sleep(1)
+            #  1、点击已保存本地的联系人成员头像进入profile页 --选择一个群成员
+            gcp.click_text("大佬1")
+            time.sleep(1)
+            exist = gcp.is_text_present("保存到通讯录")
+            if exist:
+                gcp.click_text("保存到通讯录")
+                time.sleep(1)
+                gcp.click_text("保存")
+                time.sleep(1)
+            # 判定
+            exist = gcp.is_text_present("分享名片")
+            self.assertEqual(exist, True)
+            exist = gcp.is_text_present("编辑")
+            self.assertEqual(exist, True)
 
+    @tags('ALL', 'CMCC', 'group_chat')
+    def test_msg_huangmianhua_0214(self):
+        """企业群profile优化：消息界面——点击消息头像"""
+        gcp = GroupChatPage()
+        gcp.click_back()
+        # 打开企业群
+        Preconditions.get_into_group_chat_page('测试企业群')
+        if gcp.is_on_this_page():
+            gcp.click_setting()
+            gcsp = GroupChatSetPage()
+            gcsp.wait_for_page_load()
+            # "群成员展开 >
+            gcsp.click_group_member_show()
+            time.sleep(1)
+            gcp.click_text("大佬1")
+            time.sleep(1)
+            exist = gcp.is_text_present("保存到通讯录")
+            if exist:
+                gcp.click_text("保存到通讯录")
+                time.sleep(1)
+                gcp.click_text("保存")
+                time.sleep(1)
+            # 判定
+            exist = gcp.is_text_present("分享名片")
+            self.assertEqual(exist, True)
+            exist = gcp.is_text_present("编辑")
+            self.assertEqual(exist, True)
 
 
 

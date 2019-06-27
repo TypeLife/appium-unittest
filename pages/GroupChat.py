@@ -379,6 +379,16 @@ class GroupChatPage(BaseChatPage):
         self.click_element(self.__class__.__locators[text])
 
     @TestLogger.log()
+    def press_message_longclick(self):
+        """长按消息体"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/linearlayout_msg_content'))
+        self.press(el)
+
+    @TestLogger.log()
+    def click_message(self, text):
+        self.click_element(self.__class__.__locators[text])
+
+    @TestLogger.log()
     def get_width_of_msg_of_text(self):
         """获取文本信息框的大小"""
         el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'))
