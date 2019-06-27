@@ -927,3 +927,4 @@ class SelectContactsPage(BasePage):
     @TestLogger.log('清空搜索框')
     def clear_serchbar_keyword(self):
         self.click_element(self.__locators['X'])
+

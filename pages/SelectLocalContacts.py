@@ -458,3 +458,9 @@ class SelectLocalContactsPage(BasePage):
     def click_cancle(self):
         """点击关闭返回"""
         self.click_element(self.__class__.__locators["关闭返回"])
+
+    @TestLogger.log()
+    def press_contact_search_bar(self):
+        """长按本地联系人-搜索输入框"""
+        el = self.get_element(self.__locators["搜索或输入手机号"])
+        self.press(el)

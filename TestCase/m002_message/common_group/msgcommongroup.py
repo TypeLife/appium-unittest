@@ -2602,11 +2602,6 @@ class MsgCommonGroupTest(TestCase):
         gcp.tap_coordinate([(100, 20), (100, 60), (100, 100)])
         time.sleep(2)
 
-
-
-
-
-
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','428','high')
     def test_msg_xiaoqiu_0046(self):
         """发送一组数字：18431931414，发送成功后，是否会被识别为号码"""
@@ -2792,7 +2787,6 @@ class MsgCommonGroupTest(TestCase):
                 raise AssertionError("没有返回到群聊页面，无法删除记录")
             except AssertionError as e:
                 raise e
-
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat')
     def test_msg_common_group_0053(self):
@@ -3118,8 +3112,6 @@ class MsgCommonGroupTest(TestCase):
             raise AssertionError("群二维码保存失败")
         gcsp.click_qecode_back_button()
         gcsp.click_back()
-
-
 
     @tags('ALL', 'SMOKE', 'CMCC', 'group_chat','xin')
     def test_msg_common_group_0076(self):
@@ -5156,6 +5148,336 @@ class MsgCommonGroupTest(TestCase):
         groupname = Preconditions.get_group_chat_name()
         mess.selecting_one_group_press_by_name(groupname)
         mess.press_groupname_to_do("删除聊天")
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0219():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0219(self):
+        """聊天会话窗口的批量选择器——页面展示"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        for num in range(3):
+            gcp.input_message("哈哈")
+            gcp.send_message()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        # cwp = ChatWindowPage()
+        # try:
+        #     cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        # except TimeoutException:
+        #     raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        gcp.hide_keyboard()
+        time.sleep(1)
+        # 1.弹出操作列表
+        # 2.进入聊天会话窗口的批量选择器页面
+        # gcp.press_voice_message_to_do("多选")
+        gcp.press_message_longclick()
+        gcp.click_message("多选")
+        # 显示左上角的【×】关闭按钮，有勾选消息时，左上角文案展示为： 已选择+数量
+        if not gcp.is_exist_multiple_selection_back():
+            raise AssertionError("没有显示【×】关闭按钮")
+        # 验证有勾选信息
+        els = gcp.get_multiple_selection_select_box()
+        if els[3].get_attribute("checked") == "true":
+            if gcp.is_exist_multiple_selection_count():
+                if not gcp.is_text_present("已选择"):
+                    raise AssertionError("没有显示‘已选择+数量’字样")
+            else:
+                raise AssertionError("没有显示‘已选择+数量’字样")
+            # 底部删除、转发按钮，高亮展示
+            if not gcp.is_enabled_multiple_selection_delete():
+                raise AssertionError("勾选信息后底部删除按钮没有高亮展示")
+            if not gcp.is_enabled_multiple_selection_forward():
+                raise AssertionError("勾选信息后底部转发按钮没有高亮展示")
+        else:
+            raise AssertionError("没有勾选信息")
+        # 取消勾选信息
+        els[3].click()
+        time.sleep(1)
+        # 未选择任何消息时，左上角文案展示为：未选择，底部删除，转发按钮默认置灰展示
+        if not gcp.is_text_present("未选择"):
+            raise AssertionError("未选择任何消息时没有展示‘未选择’")
+        # 底部删除、转发按钮，置灰展示
+        if gcp.is_enabled_multiple_selection_delete():
+            raise AssertionError("未勾选信息后底部删除按钮没有置灰展示")
+        if gcp.is_enabled_multiple_selection_forward():
+            raise AssertionError("未勾选信息后底部转发按钮没有置灰展示")
+        gcp.click_multiple_selection_back()
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0220():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0220(self):
+        """下拉——加载历史消息"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        for num in range(3):
+            gcp.input_message("哈哈")
+            gcp.send_message()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        # cwp = ChatWindowPage()
+        # try:
+        #     cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        # except TimeoutException:
+        #     raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        gcp.hide_keyboard()
+        time.sleep(1)
+        # 1.弹出操作列表
+        # 2.进入聊天会话窗口的批量选择器页面
+        # gcp.press_voice_message_to_do("多选")
+        gcp.press_message_longclick()
+        if not gcp.is_toast_exist("多选"):
+            raise AssertionError("多选-功能项没找到")
+        gcp.click_message("多选")
+        if not gcp.is_toast_exist("已选择"):
+            raise AssertionError("多选-点击失败")
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0221():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0221(self):
+        """取消多选模式"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        for num in range(3):
+            gcp.input_message("哈哈")
+            gcp.send_message()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        # cwp = ChatWindowPage()
+        # try:
+        #     cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        # except TimeoutException:
+        #     raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        gcp.hide_keyboard()
+        time.sleep(1)
+        # 1.弹出操作列表
+        # 2.进入聊天会话窗口的批量选择器页面
+        # gcp.press_voice_message_to_do("多选")
+        gcp.press_message_longclick()
+        if not gcp.is_toast_exist("多选"):
+            raise AssertionError("多选-功能项没找到")
+        gcp.click_message("多选")
+        if not gcp.is_toast_exist("已选择"):
+            raise AssertionError("多选-点击失败")
+        # 3.复选框消失，转发操作选项直接消失，出现底部聊天输入框，自动返回聊天会话窗口
+        # 点击 “X”按钮
+        gcp.click_multiple_selection_back()
+        exist = gcp.is_toast_exist("转发")
+        self.assertEqual(exist, False)
+        exist = gcp.is_toast_exist("说点什么")
+        self.assertEqual(exist, True)
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0222():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0222(self):
+        """转发——不支持转发的——默认选中项（1条）"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        for num in range(3):
+            gcp.input_message("哈哈")
+            gcp.send_message()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        # cwp = ChatWindowPage()
+        # try:
+        #     cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        # except TimeoutException:
+        #     raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        gcp.hide_keyboard()
+        time.sleep(1)
+        # 1.弹出操作列表
+        # 2.进入聊天会话窗口的批量选择器页面
+        # gcp.press_voice_message_to_do("多选")
+        gcp.press_message_longclick()
+        if not gcp.is_toast_exist("多选"):
+            raise AssertionError("多选-功能项没找到")
+        gcp.click_message("多选")
+        if not gcp.is_toast_exist("已选择"):
+            raise AssertionError("多选-点击失败")
+        # 3.复选框消失，转发操作选项直接消失，出现底部聊天输入框，自动返回聊天会话窗口
+        # 点击 “转发”按钮
+        gcp.click_multiple_selection_forward()
+        exist = gcp.is_toast_exist("转发提示")
+        self.assertEqual(exist, True)
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0223():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0223(self):
+        """转发——不支持转发的——默认选中项（1条）"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        for num in range(3):
+            gcp.input_message("哈哈")
+            gcp.send_message()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        # cwp = ChatWindowPage()
+        # try:
+        #     cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        # except TimeoutException:
+        #     raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        gcp.hide_keyboard()
+        time.sleep(1)
+        # 1.弹出操作列表
+        # 2.进入聊天会话窗口的批量选择器页面
+        # gcp.press_voice_message_to_do("多选")
+        gcp.press_message_longclick()
+        if not gcp.is_toast_exist("多选"):
+            raise AssertionError("多选-功能项没找到")
+        gcp.click_message("多选")
+        if not gcp.is_toast_exist("已选择"):
+            raise AssertionError("多选-点击失败1")
+        # 3.复选框消失，转发操作选项直接消失，出现底部聊天输入框，自动返回聊天会话窗口
+        # 点击 “转发”按钮
+        gcp.click_multiple_selection_forward()
+        exist = gcp.is_toast_exist("转发提示")
+        self.assertEqual(exist, True)
+        # 返回 弹出框消失
+        gcp.click_back_by_android()
+        time.sleep(1)
+        exist = gcp.is_toast_exist("转发提示")
+        self.assertEqual(exist, False)
+        if not gcp.is_toast_exist("已选择"):
+            raise AssertionError("多选-点击失败2")
+
+
+
+
+
 
 
 class MsgCommonGroupPriorityTest(TestCase):

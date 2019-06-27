@@ -247,3 +247,13 @@ class SelectHeContactsDetailPage(BasePage):
         if len(el) > 0:
             return True
         return False
+
+    @TestLogger.log()
+    def click_search_box(self):
+        """点击搜索：当前组织框"""
+        self.click_element(self.__class__.__locators['搜索'])
+
+    @TestLogger.log("长按搜索：当前组织框")
+    def press_search_bar(self):
+        el = self.get_element(self.__locators['搜索'])
+        self.press(el)

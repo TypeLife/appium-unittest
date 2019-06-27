@@ -379,6 +379,16 @@ class GroupChatPage(BaseChatPage):
         self.click_element(self.__class__.__locators[text])
 
     @TestLogger.log()
+    def press_message_longclick(self):
+        """长按消息体"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/linearlayout_msg_content'))
+        self.press(el)
+
+    @TestLogger.log()
+    def click_message(self, text):
+        self.click_element(self.__class__.__locators[text])
+
+    @TestLogger.log()
     def get_width_of_msg_of_text(self):
         """获取文本信息框的大小"""
         el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'))
@@ -795,3 +805,16 @@ class GroupChatPage(BaseChatPage):
         """点击始终允许"""
         self.click_element(self.__locators['始终允许'])
 
+
+    @TestLogger.log()
+    def press_last_file(self):
+        """长按最后一个文件"""
+        el = self.get_elements(('id', 'com.chinasofti.rcs:id/ll_msg'))[-1]
+        self.press(el)
+
+    @TestLogger.log()
+    def press_last_file_to_do(self, text):
+        """长按最后一个文件进行操作"""
+        el = self.get_elements(('id', 'com.chinasofti.rcs:id/ll_msg'))[-1]
+        self.press(el)
+        self.click_element(self.__class__.__locators[text])

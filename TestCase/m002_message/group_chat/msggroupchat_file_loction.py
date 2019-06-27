@@ -323,7 +323,7 @@ class Preconditions(WorkbenchPreconditions):
         slc = SelectLocalContactsPage()
         # 选择联系人加入团队
         slc.wait_for_page_load()
-        name_contacts = ["大佬1", "给个红包1", "English", "特殊!@$", "1122", "：，。", "a a"]
+        name_contacts = ["a a", "aa1122",  "大佬1", "给个红包1", "English", "特殊!@$"]
         for name_contact in name_contacts:
             time.sleep(2)
             slc.selecting_local_contacts_by_name(name_contact)
@@ -556,6 +556,24 @@ class Preconditions(WorkbenchPreconditions):
         current_mobile().launch_app()
         Preconditions.make_in_message_page(moible_param)
 
+    @staticmethod
+    def press_group_file():
+        group_chat_page = GroupChatPage()
+        group_chat_page.wait_for_page_load()
+        if group_chat_page.is_exist_msg_file():
+            pass
+        else:
+            chat_more = ChatMorePage()
+            chat_more.close_more()
+            chat_more.click_file1()
+            select_file_type = ChatSelectFilePage()
+            select_file_type.wait_for_page_load()
+            select_file_type.click_local_file()
+            local_file = ChatSelectLocalFilePage()
+            local_file.click_preset_file_dir()
+            local_file.select_file(".txt")
+            local_file.click_send()
+            group_chat_page.wait_for_page_load()
 
 class MsgGroupChatFileLocationTest(TestCase):
     """
@@ -569,38 +587,38 @@ class MsgGroupChatFileLocationTest(TestCase):
     def setUpClass(cls):
         warnings.simplefilter('ignore', ResourceWarning)
         # 创建联系
-        # fail_time = 0
-        # import dataproviders
-        # while fail_time < 3:
-        #     try:
-        #         required_contacts = dataproviders.get_preset_contacts()
-        #         conts = ContactsPage()
-        #         Preconditions.connect_mobile('Android-移动')
-        #         current_mobile().hide_keyboard_if_display()
-        #         Preconditions.make_already_in_message_page()
-        #         conts.open_contacts_page()
-        #         try:
-        #             if conts.is_text_present("发现SIM卡联系人"):
-        #                 conts.click_text("显示")
-        #         except:
-        #             pass
-        #         for name, number in required_contacts:
-        #             conts.create_contacts_if_not_exits(name, number)
-        #         # 创建群
-        #         required_group_chats = dataproviders.get_preset_group_chats()
-        #         conts.open_group_chat_list()
-        #         group_list = GroupListPage()
-        #         for group_name, members in required_group_chats:
-        #             group_list.wait_for_page_load()
-        #             group_list.create_group_chats_if_not_exits(group_name, members)
-        #         group_list.click_back()
-        #         conts.open_message_page()
-        #         return
-        #     except:
-        #         fail_time += 1
-        #         import traceback
-        #         msg = traceback.format_exc()
-        #         print(msg)
+        fail_time = 0
+        import dataproviders
+        while fail_time < 3:
+            try:
+                required_contacts = dataproviders.get_preset_contacts()
+                conts = ContactsPage()
+                Preconditions.connect_mobile('Android-移动')
+                current_mobile().hide_keyboard_if_display()
+                Preconditions.make_already_in_message_page()
+                conts.open_contacts_page()
+                try:
+                    if conts.is_text_present("发现SIM卡联系人"):
+                        conts.click_text("显示")
+                except:
+                    pass
+                for name, number in required_contacts:
+                    conts.create_contacts_if_not_exits(name, number)
+                # 创建群
+                required_group_chats = dataproviders.get_preset_group_chats()
+                conts.open_group_chat_list()
+                group_list = GroupListPage()
+                for group_name, members in required_group_chats:
+                    group_list.wait_for_page_load()
+                    group_list.create_group_chats_if_not_exits(group_name, members)
+                group_list.click_back()
+                conts.open_message_page()
+                return
+            except:
+                fail_time += 1
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
 
     def default_setUp(self):
         """确保每个用例运行前在群聊聊天会话页面"""
@@ -2820,6 +2838,548 @@ class MsgGroupChatFileLocationTest(TestCase):
             mess.click_text("同意")
         Preconditions.change_mobile('Android-移动')
         Preconditions.go_to_group_double(group_name)
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0349(self):
+        """将自己发送的位置转发到团队未置灰的联系人"""
+        # # 1.创建测试团队1
+        # Preconditions.create_team_select_contacts("测试团队")
+        gcp = GroupChatPage()
+        # gcp.click_back()
+        # Preconditions.enter_group_chat_page()
+        # # 2.创建测试团队2
+        # Preconditions.create_team_select_contacts("测试团队2")
+        # gcp = GroupChatPage()
+        # gcp.click_back()
+        # Preconditions.enter_group_chat_page()
+        Preconditions.public_send_location()
+        # 3.长按位置消息体转发
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 4.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 5.选择团队
+        shc.click_department_name("测试团队1")
+        # 6.在搜索框输入多种字符
+        shc.input_search("大佬1")
+        # 7.点击搜索的团队联系人
+        shc.click_search_team_contacts()
+        shc.click_sure_forward()
+        flag = gcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        if not gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊页面")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0350(self):
+        """将自己发送的位置转发到团队置灰的联系人"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.在搜索框输入置灰的联系人
+        shc.input_search("admin")
+        # 4.点击搜索的团队联系人
+        shc.click_search_team_contacts()
+        flag = shc.is_toast_exist("该联系人不可选择")
+        if not flag:
+            raise AssertionError("在转发发送自己的位置时，没有‘该联系人不可选择’提示")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0351(self):
+        """将自己发送的位置转发到团队未置灰的联系人时点击取消转发"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.选择团队
+        shc.click_department_name("测试团队1")
+        # 4.在搜索框输入多种字符
+        shc.input_search("大佬1")
+        # 5.点击搜索的团队联系人
+        shc.click_search_team_contacts()
+        # 6.点击取消
+        shc.click_cancel_forward()
+        if not shc.is_on_this_page():
+            raise AssertionError("当前页面不在选择团队联系人页面")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0352(self):
+        """将自己发送的位置转发到团队联系人时发送失败"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.选择团队
+        shc.click_department_name("测试团队1")
+        # 4.在搜索框输入多种字符
+        shc.input_search("大佬1")
+        # 5.点击搜索的团队联系人
+        shc.click_search_team_contacts()
+        # 6.断开网络
+        shc.set_network_status(0)
+        # 7.点击确认转发
+        shc.click_sure_forward()
+        flag = gcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        if not gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊页面")
+        time.sleep(2)
+        # 5.点击返回至消息页面
+        gcp.click_back()
+        scp.wait_for_page_load()
+        scp.click_back()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        if not mess.is_iv_fail_status_present():
+            raise AssertionError("消息列表没有显示消息发送失败标识")
+
+    def tearDown_test_msg_weifenglian_qun_0352(self):
+        # 重新连接网络
+        mess = MessagePage()
+        mess.set_network_status(6)
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0353(self):
+        """将自己发送的位置转发到在企业列表搜索框输入多种字符搜索到的团队联系人"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.在搜索框输入多种字符
+        shc.input_search("给个红包1")
+        # 4.点击搜索的团队联系人
+        shc.click_search_team_contacts()
+        # 5.点击确认转发
+        shc.click_sure_forward()
+        flag = gcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        if not gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊页面")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0354(self):
+        """将自己发送的位置转发到在企业内搜索框输入多种字符搜索到的团队联系人"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.选择团队
+        shc.click_department_name("测试团队1")
+        # 4.在搜索框输入多种字符
+        shc.input_search("给个红包1")
+        # 5.点击搜索的团队联系人
+        shc.click_search_team_contacts()
+        # 6.点击确认转发
+        shc.click_sure_forward()
+        flag = gcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        if not gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊页面")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0355(self):
+        """将自己发送的位置转发到在企业列表搜索框输入数字搜索到的团队联系人"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.在搜索框输入数字
+        shc.input_search("1122")
+        # 4.点击搜索的团队联系人
+        shc.click_search_team_contacts()
+        # 5.点击确认转发
+        shc.click_sure_forward()
+        flag = gcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        if not gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊页面")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0356(self):
+        """将自己发送的位置转发到在企业内搜索框输入数字搜索到的团队联系人"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.选择团队
+        shc.click_department_name("测试团队1")
+        # 4.在搜索框输入数字
+        shc.input_search("1122")
+        # 5.点击搜索的团队联系人
+        shc.click_search_team_contacts()
+        # 6.点击确认转发
+        shc.click_sure_forward()
+        flag = gcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        if not gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊页面")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0357(self):
+        """将自己发送的位置转发到在企业列表搜索框输入标点符号搜索到的团队联系人"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.在搜索框输入标点符号
+        shc.input_search("。")
+        # 4.点击搜索的团队联系人
+        shc.click_search_team_contacts()
+        # 5.点击确认转发
+        shc.click_sure_forward()
+        flag = gcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        if not gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊页面")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0358(self):
+        """将自己发送的位置转发到在企业内搜索框输入标点符号搜索到的团队联系人"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.选择团队
+        shc.click_department_name("测试团队1")
+        # 4.在搜索框标点符号
+        shc.input_search("。")
+        # 5.点击搜索的团队联系人
+        shc.click_search_team_contacts()
+        # 6.点击确认转发
+        shc.click_sure_forward()
+        flag = gcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        if not gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊页面")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0359(self):
+        """将自己发送的位置转发到在企业列表搜索框输入字母搜索到的团队联系人"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.在搜索框输入字母
+        shc.input_search("English")
+        # 4.点击搜索的团队联系人
+        shc.click_search_team_contacts()
+        # 5.点击确认转发
+        shc.click_sure_forward()
+        flag = gcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        if not gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊页面")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0360(self):
+        """将自己发送的位置转发到在企业内搜索框输入英文搜索到的团队联系人"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.选择团队
+        shc.click_department_name("测试团队1")
+        # 4.在搜索框输入字母
+        shc.input_search("English")
+        # 5.点击搜索的团队联系人
+        shc.click_search_team_contacts()
+        # 6.点击确认转发
+        shc.click_sure_forward()
+        flag = gcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        if not gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊页面")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0361(self):
+        """将自己发送的位置转发到在企业列表搜索框输入空格搜索到的团队联系人"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.在搜索框输入含有空格名字
+        shc.input_search("a a")
+        # 4.点击搜索的团队联系人
+        shc.click_search_team_contacts()
+        # 5.点击确认转发
+        shc.click_sure_forward()
+        flag = gcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        if not gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊页面")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0362(self):
+        """将自己发送的位置转发到在企业内搜索框输入空格搜索到的团队联系人"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.选择团队
+        shc.click_department_name("测试团队1")
+        # 4.在搜索框输入含有空格名字
+        shc.input_search("a a")
+        # 5.点击搜索的团队联系人
+        shc.click_search_team_contacts()
+        # 6.点击确认转发
+        shc.click_sure_forward()
+        flag = gcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        if not gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊页面")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0363(self):
+        """将自己发送的位置转发到在企业列表搜索框粘贴字符搜索到的团队联系人"""
+        gcp = GroupChatPage()
+        # 1.输入团队联系人名字发送，长按信息并复制
+        gcp.input_message("大佬1")
+        gcp.send_message()
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        gcp.press_file_to_do("大佬1", "复制")
+        flag = gcp.is_toast_exist("已复制")
+        if not flag:
+            raise AssertionError("团队联系人名字复制失败")
+        Preconditions.public_send_location()
+        # 2.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.点击搜索：当前组织框
+        shc.click_search_box()
+        time.sleep(2)
+        # 4.长按搜索:当前组织框
+        shc.press_search_bar()
+        time.sleep(2)
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0364(self):
+        """将自己发送的位置转发到在企业内搜索框粘贴字符搜索到的团队联系人"""
+        gcp = GroupChatPage()
+        # 1.输入团队联系人名字发送，长按信息并复制
+        gcp.input_message("大佬1")
+        gcp.send_message()
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        gcp.press_file_to_do("大佬1", "复制")
+        flag = gcp.is_toast_exist("已复制")
+        if not flag:
+            raise AssertionError("团队联系人名字复制失败")
+        Preconditions.public_send_location()
+        # 2.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 4.选择团队
+        shc.click_department_name("测试团队1")
+        # 5.点击搜索：当前组织框
+        shc.click_search_box()
+        time.sleep(2)
+        # 6.长按搜索:当前组织框
+        shc.press_search_bar()
+        time.sleep(2)
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0365(self):
+        """将自己发送的位置转发到在企业列表搜索框输入号码搜索到的团队联系人"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.在搜索框输入号码
+        shc.input_search("13800138005")
+        # 4.点击搜索的团队联系人
+        shc.click_search_team_contacts()
+        # 5.点击确认转发
+        shc.click_sure_forward()
+        flag = gcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        if not gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊页面")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0366(self):
+        """将自己发送的位置转发到在企业内搜索框输入空格搜索到的团队联系人"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.选择团队
+        shc.click_department_name("测试团队1")
+        # 4.在搜索框输入号码
+        shc.input_search("13800138005")
+        # 5.点击搜索的团队联系人
+        shc.click_search_team_contacts()
+        # 6.点击确认转发
+        shc.click_sure_forward()
+        flag = gcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        if not gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊页面")
+
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0367(self):
+        """将自己发送的位置转发到在企业列表搜索框进行搜索到的团队联系人时取消转发"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.点击“选择和通讯录联系人”菜单
+        scp.click_he_contacts()
+        shc = SelectHeContactsDetailPage()
+        shc.wait_for_he_contacts_page_load()
+        # 3.在搜索框输入团队联系人
+        shc.input_search("大佬1")
+        # 4.点击搜索的团队联系人
+        shc.click_search_team_contacts()
+        # 5.点击取消
+        shc.click_cancel_forward()
+        flag = shc.is_on_this_page()
+        if not flag:
+            raise AssertionError("当前页面不在选择和通讯录联系人页面")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
     def test_msg_weifenglian_qun_0377(self):
