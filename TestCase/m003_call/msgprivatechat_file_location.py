@@ -8,6 +8,7 @@ from library.core.TestCase import TestCase
 from library.core.common.simcardtype import CardType
 from library.core.utils.applicationcache import current_mobile, current_driver
 from pages.components import BaseChatPage
+from pages.workbench.organization.OrganizationStructure import OrganizationStructurePage
 from preconditions.BasePreconditions import WorkbenchPreconditions
 from library.core.utils.testcasefilter import tags
 from pages import *
@@ -326,6 +327,31 @@ class Preconditions(WorkbenchPreconditions):
             # 选择当前团队
             shc.click_department_name(workbench_name)
             time.sleep(2)
+
+    @staticmethod
+    def public_send_location():
+        """发送位置信息"""
+        scp = SingleChatPage()
+        scp.click_more()
+        time.sleep(1)
+        more_page = ChatMorePage()
+        more_page.click_location()
+        # 等待位置页面加载
+        location_page = ChatLocationPage()
+        location_page.wait_for_page_load()
+        time.sleep(1)
+        # 点击发送按钮
+        if not location_page.send_btn_is_enabled():
+            raise AssertionError("位置页面发送按钮不可点击")
+        location_page.click_send()
+        scp.wait_for_page_load()
+        scp.click_more()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
 
     @staticmethod
     def delete_record_group_chat():
@@ -1109,84 +1135,84 @@ class MsgPrivateChatAllTest(TestCase):
     Author:刘晓东
     """
 
-    @classmethod
-    def setUpClass(cls):
-
-        Preconditions.select_mobile('Android-移动')
-        # 导入测试联系人、群聊
-        fail_time1 = 0
-        flag1 = False
-        import dataproviders
-        while fail_time1 < 3:
-            try:
-                required_contacts = dataproviders.get_preset_contacts()
-                conts = ContactsPage()
-                current_mobile().hide_keyboard_if_display()
-                Preconditions.make_already_in_message_page()
-                conts.open_contacts_page()
-                try:
-                    if conts.is_text_present("发现SIM卡联系人"):
-                        conts.click_text("显示")
-                except:
-                    pass
-                # 创建联系人
-                for name, number in required_contacts:
-                    conts.create_contacts_if_not_exits(name, number)
-
-                # 创建符合搜索结果的联系人
-                contacts = [('test_contact', '13300133000'), ('123987', '13300133001'), ('。：、', '13300133002'),
-                            ('b马9', '13300133003')]
-                for name, number in contacts:
-                    conts.create_contacts_if_not_exits(name, number)
-
-                required_group_chats = dataproviders.get_preset_group_chats()
-                conts.open_group_chat_list()
-                group_list = GroupListPage()
-                # 创建群
-                for group_name, members in required_group_chats:
-                    group_list.wait_for_page_load()
-                    group_list.create_group_chats_if_not_exits(group_name, members)
-
-                # 创建符合搜索结果的群聊
-                group_chats = [('测试测试群', ['大佬1', '大佬2']), ('test_group', ['大佬1', '大佬2']), ('138138138', ['大佬1', '大佬2']),
-                               ('；，。', ['大佬1', '大佬2']), ('&%@', ['大佬1', '大佬2']), ('a尼6', ['大佬1', '大佬2'])]
-                for group_name, members in group_chats:
-                    group_list.wait_for_page_load()
-                    group_list.create_group_chats_if_not_exits(group_name, members)
-                group_list.click_back()
-                conts.open_message_page()
-                flag1 = True
-            except:
-                fail_time1 += 1
-            if flag1:
-                break
-
-        # 导入团队联系人
-        fail_time2 = 0
-        flag2 = False
-        while fail_time2 < 5:
-            try:
-                Preconditions.make_already_in_message_page()
-                contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
-                Preconditions.create_he_contacts(contact_names)
-                flag2 = True
-            except:
-                fail_time2 += 1
-            if flag2:
-                break
-
-        # 确保有企业群
-        fail_time3 = 0
-        flag3 = False
-        while fail_time3 < 5:
-            try:
-                Preconditions.make_already_in_message_page()
-                Preconditions.ensure_have_enterprise_group()
-                flag3 = True
-            except:
-                fail_time3 += 1
-            if flag3:
-                break
+    # @classmethod
+    # def setUpClass(cls):
+    #
+    #     Preconditions.select_mobile('Android-移动')
+    #     # 导入测试联系人、群聊
+    #     fail_time1 = 0
+    #     flag1 = False
+    #     import dataproviders
+    #     while fail_time1 < 3:
+    #         try:
+    #             required_contacts = dataproviders.get_preset_contacts()
+    #             conts = ContactsPage()
+    #             current_mobile().hide_keyboard_if_display()
+    #             Preconditions.make_already_in_message_page()
+    #             conts.open_contacts_page()
+    #             try:
+    #                 if conts.is_text_present("发现SIM卡联系人"):
+    #                     conts.click_text("显示")
+    #             except:
+    #                 pass
+    #             # 创建联系人
+    #             for name, number in required_contacts:
+    #                 conts.create_contacts_if_not_exits(name, number)
+    #
+    #             # 创建符合搜索结果的联系人
+    #             contacts = [('test_contact', '13300133000'), ('123987', '13300133001'), ('。：、', '13300133002'),
+    #                         ('b马9', '13300133003')]
+    #             for name, number in contacts:
+    #                 conts.create_contacts_if_not_exits(name, number)
+    #
+    #             required_group_chats = dataproviders.get_preset_group_chats()
+    #             conts.open_group_chat_list()
+    #             group_list = GroupListPage()
+    #             # 创建群
+    #             for group_name, members in required_group_chats:
+    #                 group_list.wait_for_page_load()
+    #                 group_list.create_group_chats_if_not_exits(group_name, members)
+    #
+    #             # 创建符合搜索结果的群聊
+    #             group_chats = [('测试测试群', ['大佬1', '大佬2']), ('test_group', ['大佬1', '大佬2']), ('138138138', ['大佬1', '大佬2']),
+    #                            ('；，。', ['大佬1', '大佬2']), ('&%@', ['大佬1', '大佬2']), ('a尼6', ['大佬1', '大佬2'])]
+    #             for group_name, members in group_chats:
+    #                 group_list.wait_for_page_load()
+    #                 group_list.create_group_chats_if_not_exits(group_name, members)
+    #             group_list.click_back()
+    #             conts.open_message_page()
+    #             flag1 = True
+    #         except:
+    #             fail_time1 += 1
+    #         if flag1:
+    #             break
+    #
+    #     # 导入团队联系人
+    #     fail_time2 = 0
+    #     flag2 = False
+    #     while fail_time2 < 5:
+    #         try:
+    #             Preconditions.make_already_in_message_page()
+    #             contact_names = ["大佬1", "大佬2", "大佬3", "大佬4"]
+    #             Preconditions.create_he_contacts(contact_names)
+    #             flag2 = True
+    #         except:
+    #             fail_time2 += 1
+    #         if flag2:
+    #             break
+    #
+    #     # 确保有企业群
+    #     fail_time3 = 0
+    #     flag3 = False
+    #     while fail_time3 < 5:
+    #         try:
+    #             Preconditions.make_already_in_message_page()
+    #             Preconditions.ensure_have_enterprise_group()
+    #             flag3 = True
+    #         except:
+    #             fail_time3 += 1
+    #         if flag3:
+    #             break
 
     def default_setUp(self):
         """
@@ -4290,3 +4316,179 @@ class MsgPrivateChatAllTest(TestCase):
         mess.press_file_to_do(phone_number2, "删除聊天")
         Preconditions.change_mobile('Android-移动')
         mess.press_file_to_do(phone_number, "删除聊天")
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_weifenglian_1V1_0386(self):
+        """将接收到的位置转发到手机联系人"""
+        # 1、在当前会话窗口长按接收到的位置消息
+        # 2、点击转发
+        # 3、点击选择手机联系人
+        # 4、选择任意联系人
+        # 5、点击发送按钮
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp = SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        Preconditions.public_send_location()
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        mess.click_text(phone_number2)
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        time.sleep(3)
+        scp.press_message_to_do("转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text("选择手机联系人")
+        time.sleep(2)
+        scp.click_one_contact("飞信电话")
+        time.sleep(2)
+        sc.click_element_("确定")
+        if not sc.is_toast_exist("已转发"):
+            raise AssertionError("转发失败")
+        Preconditions.change_mobile('Android-移动-移动')
+        mess=MessagePage()
+        mess.wait_for_page_load()
+        mess.click_text("飞信电话")
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.press_file_to_do("飞信电话","删除聊天")
+        mess.press_file_to_do(phone_number2, "删除聊天")
+        Preconditions.change_mobile('Android-移动')
+        mess.press_file_to_do(phone_number, "删除聊天")
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_weifenglian_1V1_0399(self):
+        """将接收到的位置转发到团队未置灰的联系人"""
+        # 1、在当前会话窗口长按接收到的位置消息
+        # 2、点击转发
+        # 3、点击选择团队联系人
+        # 4、选择任意企业下的未置灰的联系人
+        # 5、点击发送按钮
+        Preconditions.select_mobile('Android-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp = SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        Preconditions.public_send_location()
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess.wait_for_page_load()
+        mess.click_text(phone_number2)
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        time.sleep(3)
+        scp.press_message_to_do("转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        sc.click_text("选择团队联系人")
+        time.sleep(2)
+        if sc.is_text_present("当前组织"):
+            sc.click_one_contact("yyx")
+            scp.click_element_("确定")
+            if not scp.is_toast_exist("已转发"):
+                raise AssertionError("转发失败")
+        else:
+            Preconditions.change_mobile('Android-移动')
+            Preconditions.enter_organization_page()
+            osp = OrganizationStructurePage()
+            osp.wait_for_page_load()
+            if not osp.swipe_and_find_element("yyx"):
+                osp.click_text("添加联系人")
+                time.sleep(1)
+                osp.click_text("手动输入添加")
+                time.sleep(1)
+                osp.input_contacts_name("yyx")
+                osp.input_contacts_number("18920736596")
+                time.sleep(2)
+                osp.click_text("完成")
+                if not osp.is_toast_exist("成功"):
+                    raise AssertionError("手动添加失败")
+                osp.wait_for_page_load()
+            current_mobile().back()
+            workbench = WorkbenchPage()
+            workbench.wait_for_page_load()
+            workbench.open_message_page()
+            mess.wait_for_page_load()
+            mess.click_text(phone_number2)
+            scp.wait_for_page_load()
+            time.sleep(3)
+            scp.press_message_to_do("转发")
+            sc = SelectContactsPage()
+            sc.wait_for_page_load()
+            sc.click_text("选择团队联系人")
+            time.sleep(2)
+            sc.click_element_("企业名称")
+            time.sleep(2)
+            sc.click_one_contact("yyx")
+            scp.click_element_("确定")
+            if not scp.is_toast_exist("已转发"):
+                raise AssertionError("转发失败")
+        Preconditions.change_mobile('Android-移动')
+        mess=MessagePage()
+        mess.wait_for_page_load()
+        mess.click_text("yyx")
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.change_mobile('Android-移动')
+        mess.press_file_to_do("yyx","删除聊天")
+        mess.press_file_to_do(phone_number2, "删除聊天")
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.press_file_to_do(phone_number, "删除聊天")
+
+
