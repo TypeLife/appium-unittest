@@ -65,6 +65,13 @@ class SingleChatPage(BaseChatPage):
                   '关闭视频': (MobileBy.ID, 'com.chinasofti.rcs:id/iv_close'),
                   '消息文件': (MobileBy.ID, 'com.chinasofti.rcs:id/ll_msg'),
                   '文件下载图标': (MobileBy.ID, 'com.chinasofti.rcs:id/img_message_down_file'),
+                  '收藏': (MobileBy.XPATH, "//*[contains(@text, '收藏')]"),
+                  '转发': (MobileBy.XPATH, "//*[contains(@text, '转发')]"),
+                  '删除': (MobileBy.XPATH, "//*[contains(@text, '删除')]"),
+                  '撤回': (MobileBy.XPATH, "//*[contains(@text, '撤回')]"),
+                  '多选': (MobileBy.XPATH, "//*[contains(@text, '多选')]"),
+                  '复制': (MobileBy.XPATH, "//*[contains(@text, '复制')]"),
+                  '编辑': (MobileBy.XPATH, "//*[contains(@text, '编辑')]"),
                   }
 
     @TestLogger.log()
@@ -350,3 +357,10 @@ class SingleChatPage(BaseChatPage):
             message = "页面在{}s内，没有加载成功".format(str(timeout))
             raise AssertionError(message)
         return self
+
+    @TestLogger.log()
+    def press_message_to_do(self, text):
+        """长按指定信息进行操作"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/lloc_famous_address_text'))
+        self.press(el)
+        self.click_element(self.__class__.__locators[text])

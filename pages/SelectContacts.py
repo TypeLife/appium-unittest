@@ -73,6 +73,7 @@ class SelectContactsPage(BasePage):
         "分组名":(MobileBy.ID,'com.chinasofti.rcs:id/img_icon_department'),
         "成员ID":(MobileBy.ID, 'com.chinasofti.rcs:id/img_icon_contactlist'),
         "我已阅读": (MobileBy.ID,'com.chinasofti.rcs:id/btn_check'),
+        "确定": (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
         "确定2": (MobileBy.ID, 'com.chinasofti.rcs:id/btn_ok'),
         "确定3": (MobileBy.ID,'com.chinasofti.rcs:id/dialog_btn_ok'),
         "最近聊天联系人":(MobileBy.ID,'com.chinasofti.rcs:id/iv_photo'),
