@@ -72,6 +72,7 @@ class SingleChatPage(BaseChatPage):
                   '多选': (MobileBy.XPATH, "//*[contains(@text, '多选')]"),
                   '复制': (MobileBy.XPATH, "//*[contains(@text, '复制')]"),
                   '编辑': (MobileBy.XPATH, "//*[contains(@text, '编辑')]"),
+                  '消息位置': (MobileBy.ID, 'com.chinasofti.rcs:id/lloc_famous_address_text'),
                   }
 
     @TestLogger.log()
