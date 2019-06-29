@@ -4859,4 +4859,68 @@ class MsgPrivateChatAllTest(TestCase):
         Preconditions.change_mobile('Android-移动')
         mess.press_file_to_do(phone_number, "删除聊天")
 
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_weifenglian_1V1_0439_03(self):
+        """长按接收到的位置消息体进行转发、删除、收藏等操作"""
+        # 1.在聊天会话页面，长按接收到位置消息，是否会展示：转发、收藏、删除等功能_
+        # 2.检查这些功能是否可以正常使用
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        mess = MessagePage()
+        # 等待消息页加载
+        mess.wait_for_page_load()
+        # 点击 +
+        mess.click_add_icon()
+        # 点击 发起群聊
+        mess.click_group_chat()
+        # 选择联系人界面
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.input_search_keyword(phone_number)
+        time.sleep(2)
+        sc.click_text("tel")
+        time.sleep(2)
+        sc.click_text("确定")
+        time.sleep(3)
+        scp = SingleChatPage()
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        Preconditions.public_send_location()
+        phone_number2 = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.wait_for_page_load()
+        mess.click_text(phone_number2)
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        scp.wait_for_page_load()
+        time.sleep(3)
+        scp.press_message_to_do("转发")
+        sc = SelectContactsPage()
+        sc.wait_for_page_load()
+        time.sleep(2)
+        sc.click_text(phone_number2)
+        time.sleep(2)
+        scp.click_element_("确定")
+        if not sc.is_toast_exist("已转发"):
+            raise AssertionError("转发失败")
+        Preconditions.change_mobile('Android-移动-移动')
+        mess=MessagePage()
+        mess.wait_for_page_load()
+        mess.click_text(phone_number2)
+        if scp.is_text_present("1元/条"):
+            scp.click_i_have_read()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.change_mobile('Android-移动-移动')
+        mess.press_file_to_do(phone_number2, "删除聊天")
+        Preconditions.change_mobile('Android-移动')
+        mess.press_file_to_do(phone_number, "删除聊天")
+
 
