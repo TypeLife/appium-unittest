@@ -3764,5 +3764,65 @@ class MsgGroupChatFileLocationTest(TestCase):
         else:
             raise AssertionError("需要创建企业群")
 
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0077(self):
+        """将自己发送的文件转发到企业群"""
+        gcp = GroupChatPage()
+        # 1.点击文件
+        gcp.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        # 2.点击本地文件
+        csf.click_local_file()
+        # 3.选择任意文件，点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        # 4.进入预置文件目录，选择文件发送
+        local_file.push_preset_file()
+        local_file.click_preset_file_dir()
+        # 5.点击选择发送文件
+        local_file.select_file('.txt')
+        local_file.click_send()
+        # 6.长按最后一个文件转发
+        gcp.press_last_file_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 7.点击选择一个企业群
+        scp.click_select_one_group()
+        sogp = SelectOneGroupPage()
+        sogp.wait_for_page_load()
+        names = sogp.get_group_name()
+        firm_names = []
+        for name in names:
+            if '企业' in name:
+                firm_names.append(name)
+        firm_name = random.choice(firm_names)
+        if firm_name:
+            sogp.select_one_group_by_name(firm_name)
+            # 8.断开网络
+            sogp.set_network_status(0)
+            # 9.点击确定
+            sogp.click_sure_forward()
+            flag = gcp.is_toast_exist("已转发")
+            if not flag:
+                raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+            if not gcp.is_on_this_page():
+                raise AssertionError("当前页面不在群聊天会话页面")
+            time.sleep(2)
+            # 10.点击返回至消息页面
+            gcp.click_back()
+            scp.wait_for_page_load()
+            scp.click_back()
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            if not mess.is_iv_fail_status_present():
+                raise AssertionError("消息列表没有显示消息发送失败标识")
+        else:
+            raise AssertionError("需要创建企业群")
+
+    def tearDown_test_msg_weifenglian_qun_0077(self):
+        # 重新连接网络
+        mess = MessagePage()
+        mess.set_network_status(6)
+
 
 
