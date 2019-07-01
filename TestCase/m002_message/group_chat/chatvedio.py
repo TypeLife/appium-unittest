@@ -546,6 +546,37 @@ class Preconditions(WorkbenchPreconditions):
         current_mobile().launch_app()
         Preconditions.make_in_message_page(moible_param)
 
+    @staticmethod
+    def public_send_file(file_type):
+        """选择指定类型文件发送"""
+        # 1、在当前聊天会话页面，点击更多富媒体的文件按钮
+        chat = GroupChatPage()
+        chat.wait_for_page_load()
+        chat.click_more()
+        # 2、点击本地文件
+        more_page = ChatMorePage()
+        more_page.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        # 3、选择任意文件，点击发送按钮
+        local_file = ChatSelectLocalFilePage()
+        # 没有预置文件，则上传
+        flag = local_file.push_preset_file()
+        if flag:
+            local_file.click_back()
+            csf.click_local_file()
+        # 进入预置文件目录，选择文件发送
+        local_file.click_preset_file_dir()
+        file = local_file.select_file_by_text(file_type)
+        if file:
+            local_file.click_send()
+        else:
+            local_file.click_back()
+            local_file.click_back()
+            csf.click_back()
+        chat.wait_for_page_load()
+
 
 class MsgGroupChatvedioTest(TestCase):
     """
@@ -5064,6 +5095,144 @@ class MsgGroupChatvedioTest(TestCase):
         time.sleep(2)
         chat.click_back()
 
+    @staticmethod
+    def setUp_test_msg_xiaoliping_D_0192():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_D_0192(self):
+        """长按接收到老版本和飞信发送过来的大于20M的图片-转发"""
+        # 1、在当前页面接收到长按未下载的大于20M的图片
+        # 2、点击转发按钮进行转发操作
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.go_to_group_double(group_name)
+        Preconditions.public_send_file("十五兆")
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp=GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.press_element_("消息图片", 3000)
+        gcp.click_text("转发")
+        if not gcp.is_toast_exist("请先下载图片"):
+            raise AssertionError("没有提示请先下载图片")
+        Preconditions.delete_record_group_chat()
+
+    @staticmethod
+    def setUp_test_msg_xiaoliping_D_0193():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_D_0193(self):
+        """长按接收到老版本和飞信发送过来的大于20M的图片-多选-转发"""
+        # 1、在当前页面接收到长按未下载的大于20M的图片
+        # 2、点击转发按钮进行转发操作
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.go_to_group_double(group_name)
+        Preconditions.public_send_file("十五兆")
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp=GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.press_element_("消息图片", 3000)
+        gcp.click_text("多选")
+        time.sleep(3)
+        gcp.click_text("转发")
+        time.sleep(2)
+        if gcp.is_text_present("转发提示"):
+            gcp.click_text("确定")
+            time.sleep(2)
+        else:
+            raise AssertionError("没有出现未下载图片不支持转发提示")
+        current_mobile().back()
+        Preconditions.delete_record_group_chat()
+
+    @staticmethod
+    def setUp_test_msg_xiaoliping_D_0194():
+        """确保有一个多人的群聊"""
+        Preconditions.select_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.change_mobile('Android-移动')
+        group_name = Preconditions.get_group_chat_name_double()
+        flag = Preconditions.build_one_new_group_with_number(phone_number, group_name)
+        if not flag:
+            Preconditions.change_mobile('Android-移动-移动')
+            mess = MessagePage()
+            mess.wait_for_page_load()
+            mess.click_text("系统消息")
+            time.sleep(3)
+            mess.click_text("同意")
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+
+    @tags('ALL', 'CMCC_double', 'full', 'full-yyx')
+    def test_msg_xiaoliping_D_0194(self):
+        """长按接收到老版本和飞信发送过来的大于20M的图片-收藏"""
+        # 1、在当前页面接收到长按未下载的大于20M的图片
+        # 2、点击收藏按钮
+        group_name = Preconditions.get_group_chat_name_double()
+        Preconditions.change_mobile('Android-移动-移动')
+        phone_number = current_mobile().get_cards(CardType.CHINA_MOBILE)[0]
+        Preconditions.go_to_group_double(group_name)
+        Preconditions.public_send_file("十五兆")
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        Preconditions.delete_record_group_chat()
+        Preconditions.change_mobile('Android-移动')
+        Preconditions.go_to_group_double(group_name)
+        gcp=GroupChatPage()
+        gcp.wait_for_page_load()
+        gcp.press_element_("消息图片", 3000)
+        gcp.click_text("收藏")
+        if not gcp.is_toast_exist("请先下载文件"):
+            raise AssertionError("没有提示请先下载文件")
+        Preconditions.delete_record_group_chat()
 
 
 class MsgGroupChatVideoPicAllTest(TestCase):
