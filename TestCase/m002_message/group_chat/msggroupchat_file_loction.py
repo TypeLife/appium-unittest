@@ -3669,5 +3669,22 @@ class MsgGroupChatFileLocationTest(TestCase):
             if not shc.is_on_this_page():
                 raise AssertionError("当前页面不在选择团队联系人页面")
 
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0371(self):
+        """将自己发送的位置转发到最近聊天时点击取消转发"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.选择最近聊天联系人列表的第一个
+        scp.select_recent_chat_by_number(0)
+        # 3.点击取消发送
+        scp.click_cancel_forward()
+        flag = scp.is_on_this_page()
+        if not flag:
+            raise AssertionError("当前页面不在选择联系人页面")
+
 
 
