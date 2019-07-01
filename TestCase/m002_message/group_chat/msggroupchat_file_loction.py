@@ -3686,5 +3686,39 @@ class MsgGroupChatFileLocationTest(TestCase):
         if not flag:
             raise AssertionError("当前页面不在选择联系人页面")
 
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0372(self):
+        """将自己发送的位置转发到最近聊天时转发失败"""
+        Preconditions.public_send_location()
+        # 1.长按位置消息体转发
+        gcp = GroupChatPage()
+        gcp.press_message_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 2.选择最近聊天联系人列表的第一个
+        scp.select_recent_chat_by_number(0)
+        # 3.断开网络
+        scp.set_network_status(0)
+        # 4.点击确定发送
+        scp.click_sure_forward()
+        flag = gcp.is_toast_exist("已转发")
+        if not flag:
+            raise AssertionError("在转发发送自己的位置时，没有‘已转发’提示")
+        if not gcp.is_on_this_page():
+            raise AssertionError("当前页面不在群聊页面")
+        # 5.点击返回消息页面
+        gcp.click_back()
+        scp.wait_for_page_load()
+        scp.click_back()
+        mess = MessagePage()
+        mess.wait_for_page_load()
+        if not mess.is_iv_fail_status_present():
+            raise AssertionError("消息列表没有显示消息发送失败标识")
+
+    def tearDown_test_msg_weifenglian_qun_0372(self):
+        # 重新连接网络
+        mess = MessagePage()
+        mess.set_network_status(6)
+
 
 
