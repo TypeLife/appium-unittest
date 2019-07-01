@@ -3905,6 +3905,43 @@ class MsgGroupChatFileLocationTest(TestCase):
         # 6.长按搜索框
         sogp.press_group_search_bar()
 
+    @tags('ALL', 'CMCC', 'group_chat', 'full', 'high', 'yx')
+    def test_msg_weifenglian_qun_0099(self):
+        """将自己发送的文件转发到在搜索框粘贴字符搜索到的手机联系人"""
+        gcp = GroupChatPage()
+        # 1.输入联系人名字发送，长按信息并复制
+        gcp.input_message("大佬1")
+        gcp.send_message()
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        gcp.press_file_to_do("大佬1", "复制")
+        flag = gcp.is_toast_exist("已复制")
+        if not flag:
+            raise AssertionError("联系人名字复制失败")
+        # 2.点击本地文件，选择文件发送
+        gcp.click_file()
+        csf = ChatSelectFilePage()
+        csf.wait_for_page_load()
+        csf.click_local_file()
+        local_file = ChatSelectLocalFilePage()
+        local_file.push_preset_file()
+        local_file.click_preset_file_dir()
+        local_file.select_file('.txt')
+        local_file.click_send()
+        # 3.长按最后一个文件转发
+        gcp.press_last_file_to_do("转发")
+        scp = SelectContactsPage()
+        scp.wait_for_page_load()
+        # 4.点击选择联系人
+        scp.click_phone_contact()
+        slcp = SelectLocalContactsPage()
+        slcp.wait_for_page_load()
+        # 5.长按搜索框
+        slcp.press_contact_search_bar()
+
 
 
 
