@@ -385,6 +385,12 @@ class GroupChatPage(BaseChatPage):
         self.press(el)
 
     @TestLogger.log()
+    def press_message_longclick2(self):
+        """长按文本消息体"""
+        el = self.get_element((MobileBy.ID, 'com.chinasofti.rcs:id/tv_message'))
+        self.press(el)
+
+    @TestLogger.log()
     def click_message(self, text):
         self.click_element(self.__class__.__locators[text])
 
