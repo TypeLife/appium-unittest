@@ -5474,11 +5474,825 @@ class MsgCommonGroupTest(TestCase):
         if not gcp.is_toast_exist("已选择"):
             raise AssertionError("多选-点击失败2")
 
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0240():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0240(self):
+        """聊天会话页面——长按——撤回——发送失败的文本消息"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 断网
+        mess = MessagePage()
+        mess.set_network_status(0)
+        time.sleep(1)
+        for num in range(3):
+            gcp.input_message("哈哈")
+            gcp.send_message()
+        gcp.hide_keyboard()
+        mess.set_network_status(6)
+        time.sleep(1)
+        # 1、长按发送失败的消息
+        # 2、弹出的功能列表中，不存在撤回功能（发送失败的消息，不允许进行撤回操作）
+        gcp.press_message_longclick2()
+        if gcp.is_toast_exist("撤回"):
+            raise AssertionError("存在--撤回功能")
 
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0241():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0241(self):
+        """聊天会话页面——长按——撤回——发送中途的文本消息---暂时以失败方式实现"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # 断网
+        mess = MessagePage()
+        mess.set_network_status(0)
+        time.sleep(1)
+        for num in range(3):
+            gcp.input_message("哈哈")
+            gcp.send_message()
+        gcp.hide_keyboard()
+        mess.set_network_status(6)
+        time.sleep(1)
+        # 1、长按发送失败的消息
+        # 2、弹出的功能列表中，不存在撤回功能（发送失败的消息，不允许进行撤回操作）
+        gcp.press_message_longclick2()
+        if gcp.is_toast_exist("撤回"):
+            raise AssertionError("存在--撤回功能")
 
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0242():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
 
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0242(self):
+        """聊天会话页面——第一次使用撤回功能"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("始终允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            if cwp.is_text_present("退出"):
+                cwp.click_text("退出")
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        gcp.hide_keyboard()
+        # 等待超过一分钟
+        # a = 1
+        # while a < 3:
+        #     time.sleep(60)
+        #     gcp.get_input_box()
+        #     print("{}分钟".format(a))
+        #     a += 1
+        gcp.press_message_longclick()
+        if not gcp.is_text_present("撤回"):
+            raise AssertionError("撤回-功能按钮没有显示")
+        gcp.click_message("撤回")
+        if gcp.is_text_present("我知道了"):
+            gcp.click_text("我知道了")
+        time.sleep(2)
+        if not gcp.is_text_present("你撤回了一条信息"):
+            raise AssertionError("没有成功撤回信息")
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0243():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_common_group_0243(self):
+        """聊天会话页面——长按——撤回——不足一分钟的文本消息"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.input_message("哈哈")
+        gcp.send_message()
+        gcp.hide_keyboard()
+        # 等待超过一分钟
+        # a = 1
+        # while a < 3:
+        #     time.sleep(60)
+        #     gcp.get_input_box()
+        #     print("{}分钟".format(a))
+        #     a += 1
+        gcp.press_message_longclick2()
+        if not gcp.is_text_present("撤回"):
+            raise AssertionError("撤回-功能按钮没有显示")
+        gcp.click_message("撤回")
+        if gcp.is_text_present("我知道了"):
+            gcp.click_text("我知道了")
+        time.sleep(2)
+        if not gcp.is_text_present("你撤回了一条信息"):
+            raise AssertionError("没有成功撤回信息")
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0244():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0244(self):
+        """聊天会话页面——长按——撤回——超过一分钟的文本消息"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.input_message("哈哈")
+        gcp.send_message()
+        gcp.hide_keyboard()
+        # 等待超过一分钟
+        a = 0
+        while a < 1:
+            time.sleep(61)
+            # gcp.get_input_box()
+            # print("{}分钟".format(a))
+            a += 1
+        gcp.press_message_longclick2()
+        if not gcp.is_text_present("撤回"):
+            raise AssertionError("撤回-功能按钮没有显示")
+        gcp.click_message("撤回")
+        if gcp.is_text_present("我知道了"):
+            gcp.click_text("我知道了")
+        time.sleep(2)
+        if not gcp.is_text_present("你撤回了一条信息"):
+            raise AssertionError("没有成功撤回信息")
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0245():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0245(self):
+        """聊天会话页面——长按撤回——等于10分钟的文本消息 """
+        # 暂时已1分钟替代
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.input_message("哈哈")
+        gcp.send_message()
+        gcp.hide_keyboard()
+        # 等待超过一分钟
+        a = 0
+        while a < 1:
+            time.sleep(61)
+            # gcp.get_input_box()
+            # print("{}分钟".format(a))
+            a += 1
+        gcp.press_message_longclick2()
+        if not gcp.is_text_present("撤回"):
+            raise AssertionError("撤回-功能按钮没有显示")
+        gcp.click_message("撤回")
+        if gcp.is_text_present("我知道了"):
+            gcp.click_text("我知道了")
+        time.sleep(2)
+        if not gcp.is_text_present("你撤回了一条信息"):
+            raise AssertionError("没有成功撤回信息")
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0246():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0246(self):
+        """聊天会话页面——长按撤回——大于10分钟的文本消息 """
+        # 测试时，暂时失败信息替代
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        # gcp.set_network_status(0)
+        time.sleep(1)
+        gcp.input_message("哈哈")
+        gcp.send_message()
+        gcp.hide_keyboard()
+        # 等待超过十分钟
+        a = 0
+        while a < 1:
+            time.sleep(601)
+            a += 1
+        gcp.press_message_longclick2()
+        if gcp.is_text_present("撤回"):
+            raise AssertionError("撤回-功能按钮 有显示")
+        # gcp.set_network_status(6)
+        time.sleep(1)
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0247():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0247(self):
+        """更改手机系统时间后——长按——撤回消息 """
+        # 暂时已1分钟替代
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.input_message("哈哈")
+        gcp.send_message()
+        gcp.hide_keyboard()
+        # 等待超过一分钟
+        a = 0
+        while a < 1:
+            time.sleep(61)
+            # gcp.get_input_box()
+            # print("{}分钟".format(a))
+            a += 1
+        gcp.press_message_longclick2()
+        if not gcp.is_text_present("撤回"):
+            raise AssertionError("撤回-功能按钮没有显示")
+        gcp.click_message("撤回")
+        if gcp.is_text_present("我知道了"):
+            gcp.click_text("我知道了")
+        time.sleep(2)
+        if not gcp.is_text_present("你撤回了一条信息"):
+            raise AssertionError("没有成功撤回信息")
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0248():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0248(self):
+        """聊天会话页面——长按——撤回——发送失败的语音消息"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("始终允许"):
+            audio.click_allow()
+        time.sleep(3)
+        # 断网
+        gcp.set_network_status(0)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        # cwp = ChatWindowPage()
+        # try:
+        #     cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        # except TimeoutException:
+        #     if cwp.is_text_present("退出"):
+        #         cwp.click_text("退出")
+        #     raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # audio.click_exit()
+        time.sleep(1)
+        gcp.hide_keyboard()
+        gcp.press_message_longclick()
+        if gcp.is_text_present("撤回"):
+            raise AssertionError("撤回-功能按钮-有显示")
+
+    def tearDown_test_msg_huangmianhua_0248(self):
+        #重连网络
+        gcp = GroupChatPage()
+        gcp.set_network_status(6)
+        time.sleep(1)
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0249():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0249(self):
+        """聊天会话页面——长按——撤回——发送中途的语音消息"""
+        # 暂时msg_huangmianhua_0248用例的实现方式
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("始终允许"):
+            audio.click_allow()
+        time.sleep(3)
+        # 断网
+        gcp.set_network_status(0)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        # cwp = ChatWindowPage()
+        # try:
+        #     cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        # except TimeoutException:
+        #     if cwp.is_text_present("退出"):
+        #         cwp.click_text("退出")
+        #     raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        # audio.click_exit()
+        time.sleep(1)
+        gcp.hide_keyboard()
+        gcp.press_message_longclick()
+        if gcp.is_text_present("撤回"):
+            raise AssertionError("撤回-功能按钮-有显示")
+
+    def tearDown_test_msg_huangmianhua_0249(self):
+        # 重连网络
+        gcp = GroupChatPage()
+        gcp.set_network_status(6)
+        time.sleep(1)
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0250():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0250(self):
+        """天会话页面——长按——撤回——不足一分钟的语音消息"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("始终允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            if cwp.is_text_present("退出"):
+                cwp.click_text("退出")
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        time.sleep(1)
+        gcp.hide_keyboard()
+        gcp.press_message_longclick()
+        if not gcp.is_text_present("撤回"):
+            raise AssertionError("撤回-功能按钮没有显示")
+        gcp.click_message("撤回")
+        if gcp.is_text_present("我知道了"):
+            gcp.click_text("我知道了")
+        time.sleep(2)
+        if not gcp.is_text_present("你撤回了一条信息"):
+            raise AssertionError("没有成功撤回信息")
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0251():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0251(self):
+        """聊天会话页面——长按撤回——超过一分钟的语音消息"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("始终允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            if cwp.is_text_present("退出"):
+                cwp.click_text("退出")
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        time.sleep(1)
+        gcp.hide_keyboard()
+        # 等待超过一分钟
+        a = 0
+        while a < 1:
+            time.sleep(61)
+            a += 1
+        gcp.press_message_longclick()
+        if not gcp.is_text_present("撤回"):
+            raise AssertionError("撤回-功能按钮没有显示")
+        gcp.click_message("撤回")
+        if gcp.is_text_present("我知道了"):
+            gcp.click_text("我知道了")
+        time.sleep(2)
+        if not gcp.is_text_present("你撤回了一条信息"):
+            raise AssertionError("没有成功撤回信息")
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0252():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0252(self):
+        """聊天会话页面——长按撤回——等于10分钟的语音消息"""
+        # 暂以超过1分钟用例代替 同msg_huangmianhua_0252用例
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("始终允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            if cwp.is_text_present("退出"):
+                cwp.click_text("退出")
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        time.sleep(1)
+        gcp.hide_keyboard()
+        # 等待超过一分钟
+        a = 0
+        while a < 1:
+            time.sleep(61)
+            a += 1
+        gcp.press_message_longclick()
+        if not gcp.is_text_present("撤回"):
+            raise AssertionError("撤回-功能按钮没有显示")
+        gcp.click_message("撤回")
+        if gcp.is_text_present("我知道了"):
+            gcp.click_text("我知道了")
+        time.sleep(2)
+        if not gcp.is_text_present("你撤回了一条信息"):
+            raise AssertionError("没有成功撤回信息")
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0253():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0253(self):
+        """聊天会话页面——长按撤回——大于10分钟的语音消息"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("始终允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            if cwp.is_text_present("退出"):
+                cwp.click_text("退出")
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        time.sleep(1)
+        gcp.hide_keyboard()
+        # 等待超过十分钟
+        a = 0
+        while a < 1:
+            time.sleep(601)
+            a += 1
+        gcp.press_message_longclick()
+        if gcp.is_text_present("撤回"):
+            raise AssertionError("撤回功能按钮--有显示")
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0254():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0254(self):
+        """更改手机系统时间后——长按撤回语音消息，已发送10分钟内的消息进行脚本编写"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("始终允许"):
+            audio.click_allow()
+        time.sleep(3)
+        audio.click_send_bottom()
+        # 验证是否发送成功
+        cwp = ChatWindowPage()
+        try:
+            cwp.wait_for_msg_send_status_become_to('发送成功', 10)
+        except TimeoutException:
+            if cwp.is_text_present("退出"):
+                cwp.click_text("退出")
+            raise AssertionError('消息在 {}s 内没有发送成功'.format(10))
+        audio.click_exit()
+        time.sleep(1)
+        gcp.hide_keyboard()
+        # 等待超过十分钟
+        # a = 0
+        # while a < 1:
+        #     time.sleep(601)
+        #     a += 1
+        gcp.press_message_longclick()
+        if not gcp.is_text_present("撤回"):
+            raise AssertionError("撤回功能按钮--没有显示")
+        gcp.click_message("撤回")
+        if gcp.is_text_present("我知道了"):
+            gcp.click_text("我知道了")
+        time.sleep(2)
+        if not gcp.is_text_present("你撤回了一条信息"):
+            raise AssertionError("没有成功撤回信息")
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0256():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0256(self):
+        """聊天会话页面——长按——不支持撤回的消息体"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.click_audio_btn()
+        audio = ChatAudioPage()
+        if audio.wait_for_audio_type_select_page_load():
+            # 点击只发送语言模式
+            audio.click_only_voice()
+            audio.click_sure()
+        # 权限申请允许弹窗判断
+        time.sleep(1)
+        if gcp.is_text_present("始终允许"):
+            audio.click_allow()
+        time.sleep(3)
+        # 断网
+        gcp.set_network_status(0)
+        audio.click_send_bottom()
+        time.sleep(1)
+        gcp.hide_keyboard()
+        gcp.press_message_longclick()
+        if gcp.is_text_present("撤回"):
+            raise AssertionError("撤回-功能按钮-有显示")
+
+    def tearDown_test_msg_huangmianhua_0256(self):
+        #重连网络
+        gcp = GroupChatPage()
+        gcp.set_network_status(6)
+        time.sleep(1)
+
+    @staticmethod
+    def setUp_test_msg_huangmianhua_0257():
+        Preconditions.select_mobile('Android-移动')
+        mess = MessagePage()
+        if mess.is_on_this_page():
+            Preconditions.enter_group_chat_page()
+            return
+        scp = GroupChatPage()
+        if scp.is_on_this_page():
+            current_mobile().hide_keyboard_if_display()
+            return
+        else:
+            current_mobile().launch_app()
+            # current_mobile().reset_app()
+            Preconditions.enter_group_chat_page()
+
+    @tags('ALL', 'SMOKE', 'CMCC', 'group_chat', 'high')
+    def test_msg_huangmianhua_0257(self):
+        """聊天会话页面——在10分钟内长按——弹出功能菜单列表——10分钟后撤回"""
+        gcp = GroupChatPage()
+        Preconditions.delete_record_group_chat()
+        gcp.input_message("哈哈")
+        gcp.send_message()
+        gcp.hide_keyboard()
+        gcp.press_message_longclick2()
+        if not gcp.is_text_present("撤回"):
+            raise AssertionError("撤回功能按钮--没有显示")
+        # 等待超过十分钟
+        a = 0
+        while a < 1:
+            time.sleep(601)
+            a += 1
+        gcp.click_message("撤回")
+        time.sleep(2)
+        if gcp.is_text_present("你撤回了一条信息"):
+            raise AssertionError("成功撤回了信息")
 
 class MsgCommonGroupPriorityTest(TestCase):
     """
@@ -5507,7 +6321,6 @@ class MsgCommonGroupPriorityTest(TestCase):
             current_mobile().launch_app()
             # current_mobile().reset_app()
             Preconditions.enter_group_chat_page()
-
 
     def default_tearDown(self):
         pass
@@ -7060,7 +7873,6 @@ class MsgCommonGroupAllTest(TestCase):
             raise AssertionError("没有删除按钮")
         mcp.click_back()
         me.open_message_page()
-
 
     @tags('ALL', 'CMCC', 'group_chat', 'full','a','high')
     def test_msg_xiaoqiu_0050(self):
@@ -9577,7 +10389,6 @@ class MsgCommonGroupAllTest(TestCase):
         time.sleep(2)
         gcp.click_element_("确定移除")
         time.sleep(3)
-
 
     @staticmethod
     def setUp_test_msg_xiaoqiu_0401():
